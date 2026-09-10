@@ -1,26 +1,73 @@
 # vLLM Serving Benchmark Lab
 
-A reproducible LLM serving experiment using **vLLM** and **Qwen3-4B** on a single NVIDIA RTX 3090.
+A reproducible LLM serving and overload-control experiment using **vLLM** and **Qwen3-4B-Instruct** on a single NVIDIA RTX 3090.
 
-The goal of this project is to understand how request concurrency affects LLM serving throughput, time-to-first-token (TTFT), decode latency, and tail latency.
+The project studies two related questions:
+
+1. How does increasing request concurrency affect LLM serving throughput and latency?
+2. Under sustained overload, can bounded admission control protect tail latency without unnecessarily rejecting healthy traffic?
+
+The second phase extends the original serving benchmark into a production-style reliability experiment using a streaming FastAPI gateway, bounded concurrency, bounded waiting capacity, and HTTP 503 load shedding.
+
+---
 
 ## Architecture
 
-Client / OpenAI Python SDK  
-↓ HTTP `/v1/chat/completions`  
-vLLM OpenAI-Compatible API Server  
-↓  
-vLLM Engine / Scheduler  
-↓  
-PyTorch / CUDA  
-↓  
-NVIDIA RTX 3090  
-↓  
-Qwen3-4B-Instruct
+### Baseline serving path
 
-Both non-streaming and streaming inference were validated through the OpenAI-compatible API.
+```text
+Client / OpenAI-compatible API
+        |
+        v
+HTTP /v1/chat/completions
+        |
+        v
+vLLM OpenAI-Compatible API Server
+        |
+        v
+vLLM Engine / Scheduler
+        |
+        v
+PyTorch / CUDA
+        |
+        v
+NVIDIA RTX 3090
+        |
+        v
+Qwen3-4B-Instruct
+```
+
+### Overload-control path
+
+```text
+Open-loop benchmark client
+        |
+        v
+FastAPI admission gateway :8080
+        |
+        +--> bounded in-flight requests
+        +--> bounded waiting capacity
+        +--> HTTP 503 load shedding
+        |
+        v
+vLLM OpenAI-Compatible API Server :8000
+        |
+        v
+vLLM Engine / Scheduler
+        |
+        v
+RTX 3090
+```
+
+When admission capacity is exceeded, the gateway returns HTTP `503` instead of allowing backlog to grow without bound.
+
+The gateway preserves streaming semantics so client-observed TTFT remains meaningful.
+
+---
 
 ## Environment
+
+### Original concurrency benchmark
 
 - GPU: NVIDIA RTX 3090 24 GB
 - Model: `Qwen/Qwen3-4B-Instruct-2507`
@@ -30,35 +77,46 @@ Both non-streaming and streaming inference were validated through the OpenAI-com
 - Max model length: `8192`
 - GPU memory utilization target: `0.90`
 
-## Start the Server
+### Sustained-load / overload-control experiment
 
-    vllm serve Qwen/Qwen3-4B-Instruct-2507 \
-      --host 0.0.0.0 \
-      --port 8000 \
-      --gpu-memory-utilization 0.90 \
-      --max-model-len 8192
+- GPU: NVIDIA RTX 3090 24 GB
+- Model: `Qwen/Qwen3-4B-Instruct-2507`
+- vLLM: `0.29.0`
+- PyTorch: `2.8.0+cu128`
+- Python: `3.12.3`
+- Max model length: `8192`
+- GPU memory utilization target: `0.90`
+- Cloud environment: RunPod
 
-The model's default context length was 262,144 tokens. With the available GPU memory, this exceeded the KV-cache capacity required for a worst-case maximum-length request.
+---
 
-For this benchmark, the maximum model length was reduced to 8,192 tokens.
+## Start the vLLM Server
 
-At startup, vLLM reported approximately:
+```bash
+vllm serve Qwen/Qwen3-4B-Instruct-2507 \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --gpu-memory-utilization 0.90 \
+  --max-model-len 8192
+```
 
-- Model weights: 7.64 GiB
-- Available KV-cache memory: 11.86 GiB
-- GPU KV-cache capacity: 86,320 tokens
+The model's default context length was much larger than required for the benchmark. The maximum model length was reduced to 8,192 tokens to fit the available KV-cache budget on a single RTX 3090.
+
+---
 
 ## Client Examples
 
 `non_streaming.py` demonstrates a standard OpenAI-compatible chat-completion request.
 
-`streaming.py` uses `stream=True` and consumes incremental response chunks through:
+`streaming.py` validates incremental token delivery with `stream=True`.
 
-    chunk.choices[0].delta.content
+---
 
-## Benchmark Methodology
+# Phase 1 — Concurrency Benchmark
 
-The workload was held constant while maximum request concurrency was varied.
+## Methodology
+
+The first experiment held the request workload constant while varying maximum request concurrency.
 
 Fixed configuration:
 
@@ -66,22 +124,24 @@ Fixed configuration:
 - Input length: 256 tokens/request
 - Output length: 128 tokens/request
 - Temperature: 0
-- EOS ignored to keep output length consistent
+- EOS ignored
 - Concurrency: 1, 4, 8, 16, 32, 64
 
 Benchmark command template:
 
-    vllm bench serve \
-      --backend openai-chat \
-      --model Qwen/Qwen3-4B-Instruct-2507 \
-      --endpoint /v1/chat/completions \
-      --dataset-name random \
-      --num-prompts 100 \
-      --random-input-len 256 \
-      --random-output-len 128 \
-      --max-concurrency <CONCURRENCY> \
-      --ignore-eos \
-      --temperature 0
+```bash
+vllm bench serve \
+  --backend openai-chat \
+  --model Qwen/Qwen3-4B-Instruct-2507 \
+  --endpoint /v1/chat/completions \
+  --dataset-name random \
+  --num-prompts 100 \
+  --random-input-len 256 \
+  --random-output-len 128 \
+  --max-concurrency <CONCURRENCY> \
+  --ignore-eos \
+  --temperature 0
+```
 
 ## Results
 
@@ -98,71 +158,331 @@ All formal benchmark runs completed with zero failed requests.
 
 ## Analysis
 
-Increasing concurrency from 1 to 64 increased output throughput from:
+Increasing concurrency from 1 to 64 increased output throughput from `81.96` to `2665.72` tokens/s, approximately a **32.5x throughput increase** for a 64x increase in maximum concurrency.
 
-    81.96 -> 2665.72 tokens/s
+The throughput gain came with increasing per-request latency:
 
-This represents approximately a **32.5x throughput increase** for a 64x increase in maximum concurrency.
+```text
+Mean TTFT: 61.24 -> 345.10 ms
+Mean TPOT: 11.81 -> 16.71 ms
+P99 TTFT: 72.37 -> 454.55 ms
+```
 
-The throughput improvement came with increasing per-request latency:
+At low concurrency, additional requests improve batching efficiency and aggregate throughput. At higher concurrency, throughput continues to increase but scaling becomes increasingly sublinear while TTFT and TPOT rise.
 
-    Mean TTFT: 61.24 -> 345.10 ms
-    Mean TPOT: 11.81 -> 16.71 ms
-    P99 TTFT: 72.37 -> 454.55 ms
+GPU utilization reached 100% during higher-concurrency testing, but throughput continued increasing afterward. Therefore:
 
-At low concurrency, additional requests substantially improved batching efficiency and aggregate throughput.
+> **GPU utilization alone is not sufficient evidence that an inference server has reached throughput saturation.**
 
-At higher concurrency, throughput continued to increase but scaling became increasingly sublinear while TTFT and TPOT increased.
+This experiment established the throughput-versus-latency tradeoff, but did not establish steady-state overload behavior.
 
-This demonstrates the fundamental serving trade-off:
+---
 
-    higher concurrency
-          |
-          +--> better batching / GPU utilization
-          |          |
-          |          +--> higher aggregate throughput
-          |
-          +--> more scheduling / execution contention
-                     |
-                     +--> higher per-request latency
+# Phase 2 — Sustained Arrival-Rate Benchmark
 
-GPU utilization reached 100% during higher-concurrency testing. However, throughput continued to increase substantially beyond the first observation of 100% utilization.
+## Why a second benchmark was needed
 
-Therefore, **GPU utilization alone is not sufficient evidence that an inference server has reached throughput saturation**.
+The original benchmark used a fixed number of requests and varied maximum concurrency. That does not directly answer what happens when requests arrive continuously faster than the server can sustainably process them.
 
-The tested range demonstrates a clear throughput-versus-latency trade-off and increasingly sublinear scaling, but it does not establish a hard throughput plateau.
+The second experiment therefore uses an **open-loop sustained arrival rate**. Requests are scheduled at fixed intervals:
 
-## Operational Observations
+```text
+arrival interval = 1 / target RPS
+```
 
-Two failures encountered during the experiment were useful for distinguishing availability failures from performance saturation:
+New requests continue arriving regardless of whether previous requests have completed. This allows backlog and tail-latency collapse to emerge naturally when arrival rate exceeds sustainable service capacity.
 
-- A `ConnectionRefusedError` indicated that the API server was unavailable, rather than overloaded.
-- A second attempted vLLM server failed with `OSError: [Errno 98] Address already in use` because an existing server was already bound to port 8000.
+## Sustained load generator
 
-The existing server continued serving benchmark traffic successfully.
+`sustained_load.py` sends streaming requests through the gateway and records:
 
-These incidents reinforced the distinction between process failure, service availability, and serving-performance degradation.
+- target RPS
+- successful requests
+- HTTP 503 rejected requests
+- failed requests
+- scheduling lag
+- P50 / P95 / P99 TTFT
+- P50 / P99 end-to-end latency
 
-## Limitations
+The load generator uses absolute monotonic-time scheduling so request completion time does not control the arrival rate. It also uses a large HTTP connection pool to avoid client-side connection limits becoming the bottleneck.
 
-This experiment intentionally uses a bounded baseline:
+## Baseline sustained-load results
+
+Fixed workload:
+
+- Input: approximately 256 tokens
+- Output: 128 tokens
+- Temperature: 0
+- Streaming enabled
+- Duration: 60 seconds
+
+| Arrival Rate | Success | Failed | P50 TTFT | P99 TTFT | P50 E2E | P99 E2E |
+|---:|---:|---:|---:|---:|---:|---:|
+| 10 RPS | 600 | 0 | 0.130 s | 0.236 s | 1.869 s | 2.004 s |
+| 12 RPS | 720 | 0 | 0.133 s | 0.283 s | 1.970 s | 2.158 s |
+| 15 RPS | 900 | 0 | 0.107 s | 1.077 s | 2.112 s | 3.262 s |
+| 20 RPS | 1200 | 0 | 0.145 s | 1.549 s | 2.693 s | 4.383 s |
+| 30 RPS | 1799 | 1 | 4.254 s | 13.449 s | 11.362 s | 18.772 s |
+
+### Interpretation
+
+The healthy low-tail-latency region was approximately `<= 12 RPS`. A clear latency knee appeared between `12–15 RPS`.
+
+At 30 RPS, the system entered severe overload:
+
+```text
+P99 TTFT: 13.449 s
+P99 E2E: 18.772 s
+```
+
+Median latency remained relatively stable at lower arrival rates while tail latency degraded first. This matters operationally because overload can become visible in P99 latency before request failures occur.
+
+---
+
+# Phase 3 — Admission Control
+
+## Gateway design
+
+The gateway supports two modes:
+
+```text
+ADMISSION_MODE=baseline
+ADMISSION_MODE=protected
+```
+
+Protected mode uses:
+
+- bounded in-flight concurrency
+- bounded waiting capacity
+- HTTP 503 load shedding
+- streaming proxy behavior
+- metrics for accepted, rejected, failed, waiting, and in-flight requests
+
+Requests are rejected when total admitted work exceeds the configured capacity.
+
+The purpose is not to make the GPU faster. The purpose is to prevent unbounded queue growth from degrading every admitted request.
+
+## Threshold experiments
+
+Three configurations were tested:
+
+```text
+32 in-flight / 8 waiting
+48 in-flight / 8 waiting
+64 in-flight / 8 waiting
+```
+
+### 32 / 8
+
+At 20 RPS:
+
+- 799 successful
+- 401 rejected
+- reject rate: ~33.4%
+- P99 TTFT: 1.886 s
+- P99 E2E: 3.808 s
+
+At 30 RPS:
+
+- 719 successful
+- 1081 rejected
+- reject rate: ~60.1%
+- P99 TTFT: 2.999 s
+- P99 E2E: 4.888 s
+
+This configuration strongly protected latency under severe overload, but was too aggressive at moderate load.
+
+### 48 / 8
+
+At 20 RPS:
+
+- 976 successful
+- 224 rejected
+- reject rate: ~18.7%
+- P99 TTFT: 2.789 s
+- P99 E2E: 4.870 s
+
+At 30 RPS:
+
+- 855 successful
+- 945 rejected
+- reject rate: ~52.5%
+- P99 TTFT: 4.016 s
+- P99 E2E: 6.186 s
+
+This configuration reduced rejection compared with 32/8, but provided weaker latency protection and still performed poorly at moderate load.
+
+### 64 / 8 — selected configuration
+
+At 20 RPS:
+
+- 1193 successful
+- 7 rejected
+- reject rate: ~0.58%
+- P99 TTFT: 1.341 s
+- P99 E2E: 3.874 s
+
+At 30 RPS:
+
+- 1136 successful
+- 664 rejected
+- reject rate: ~36.9%
+- successful requests / arrival window: 18.93 req/s
+- P99 TTFT: 3.037 s
+- P99 E2E: 5.195 s
+
+This configuration produced the best latency-versus-availability tradeoff among the tested static thresholds.
+
+---
+
+# Final Before / After Result
+
+## 20 RPS
+
+| Metric | Baseline | Protected 64 / 8 |
+|---|---:|---:|
+| Reject rate | 0% | 0.58% |
+| P99 TTFT | 1.549 s | 1.341 s |
+| P99 E2E | 4.383 s | 3.874 s |
+
+At moderate load, admission control introduced almost no availability penalty while preserving similar or slightly better tail latency.
+
+## 30 RPS
+
+| Metric | Baseline | Protected 64 / 8 | Change |
+|---|---:|---:|---:|
+| Reject rate | 0% | 36.9% | intentional load shedding |
+| P99 TTFT | 13.449 s | 3.037 s | **~77% lower** |
+| P99 E2E | 18.772 s | 5.195 s | **~72% lower** |
+| Successful requests / arrival window | 29.98 req/s | 18.93 req/s | bounded useful traffic |
+
+Under severe overload, bounded admission control prevented unbounded queue growth and reduced P99 TTFT from `13.45 s` to `3.04 s`, while shedding excess work with controlled HTTP 503 responses.
+
+---
+
+# Engineering Lessons
+
+## 1. Tail latency reveals overload before outright failure
+
+At 15–20 RPS, the server still completed all requests, but P99 TTFT degraded sharply. Availability alone would not have revealed the problem.
+
+## 2. Admission control trades availability for bounded latency
+
+Rejecting excess traffic can produce a better service than accepting every request and allowing all requests to experience multi-second queueing delay.
+
+## 3. Thresholds must account for continuous batching
+
+A low concurrency cap was not automatically better. `32/8` protected severe-overload latency but rejected too aggressively and likely reduced vLLM batching efficiency. `64/8` produced a better latency-versus-availability tradeoff.
+
+## 4. TTFT is an outcome metric, not a per-request admission signal
+
+TTFT is only known after a request has already been admitted. The gateway therefore uses current admitted work as the leading control signal and uses P99 TTFT to evaluate and tune the threshold.
+
+## 5. GPU utilization is insufficient as an overload signal
+
+The earlier concurrency benchmark showed throughput continuing to improve even after GPU utilization reached 100%.
+
+## 6. Streaming semantics must be preserved
+
+A proxy that buffers the complete model response would corrupt client-observed TTFT. The gateway forwards streamed chunks as they arrive.
+
+## 7. Availability failure must be separated from overload
+
+One attempted 12 RPS run produced 720 failures because both vLLM and the gateway were down. That run was excluded from performance analysis and rerun successfully after service health checks.
+
+This reinforced the distinction between:
+
+- service availability failure
+- performance saturation
+- overload-induced latency degradation
+
+---
+
+## Gateway Dependency Setup
+
+```bash
+pip install fastapi uvicorn httpx
+```
+
+## Start the Gateway
+
+### Baseline mode
+
+```bash
+ADMISSION_MODE=baseline \
+uvicorn gateway:app --host 0.0.0.0 --port 8080
+```
+
+### Protected mode
+
+The selected configuration is:
+
+```text
+MAX_IN_FLIGHT=64
+MAX_WAITING=8
+```
+
+Start it with:
+
+```bash
+ADMISSION_MODE=protected \
+MAX_IN_FLIGHT=64 \
+MAX_WAITING=8 \
+uvicorn gateway:app --host 0.0.0.0 --port 8080
+```
+
+## Gateway Metrics
+
+```bash
+curl http://localhost:8080/metrics
+```
+
+Example metrics include:
+
+- `current_in_flight`
+- `current_waiting`
+- `accepted_requests`
+- `rejected_requests`
+- `failed_requests`
+- `max_waiting`
+
+## Run Sustained-Load Benchmark
+
+```bash
+python3 sustained_load.py --rps 20 --duration 60
+```
+
+or:
+
+```bash
+python3 sustained_load.py --rps 30 --duration 60
+```
+
+---
+
+## Current Limitations
 
 - Single NVIDIA RTX 3090
 - Single model
-- Fixed 256-token input workload
-- Fixed 128-token output workload
-- 100 requests per benchmark
-- No multi-GPU / tensor-parallel experiment
-- No sustained-load saturation experiment
+- Fixed request shape
+- Static admission thresholds
+- No deadline-aware scheduling
+- No adaptive queue control
+- No multi-GPU / tensor parallelism
+- No distributed gateway
+- No production retry/backoff policy
+- `max_waiting` is supporting instrumentation rather than a precise measurement of vLLM's internal scheduler queue
 
-Because only 100 requests were used per run, increasing maximum concurrency beyond 64 would not provide a strong steady-state saturation measurement without redesigning the workload.
+The experiment intentionally focuses on one narrow production reliability question rather than building a complete serving platform.
 
 ## Next Steps
 
-The next phase extends this baseline toward production-oriented inference serving:
+- Export benchmark results to CSV
+- Add a baseline-vs-protected P99 TTFT graph
+- Add benchmark health checks
+- Expose richer telemetry
+- Evaluate retry/backoff behavior
+- Explore adaptive admission thresholds
+- Test heterogeneous request lengths
 
-- Define latency and availability SLOs
-- Add structured serving telemetry
-- Test failure and recovery behavior
-- Introduce overload / admission-control behavior
-- Evaluate serving behavior against explicit reliability objectives
+The core overload-control experiment is complete.
