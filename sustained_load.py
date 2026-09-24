@@ -8,24 +8,62 @@ from typing import Optional
 
 import httpx
 
-
 GATEWAY_URL = "http://localhost:8080/v1/chat/completions"
-PROMPT = " ".join(
-    [
-        "Explain how an inference gateway manages admission control, request scheduling,"
-        " streaming token delivery, time-to-first-token measurement, throughput, and tail"
-        " latency under sustained load. Describe the trade-offs between bounded concurrency,"
-        " queueing, backpressure, batching efficiency, fairness, overload rejection, and"
-        " observability. Use precise technical language and discuss how a fixed prompt and"
-        " fixed output limit improve benchmark comparability across repeated experiments."
-    ]
-    * 3
+
+@dataclass(frozen=True)
+class WorkloadSpec:
+    name: str
+    prompt: str
+    max_tokens: int
+
+
+SHORT_PROMPT = (
+    "Explain admission control in an LLM serving system in a few sentences."
 )
 
+MEDIUM_PROMPT = " ".join(
+    [
+        "Explain how an inference gateway manages admission control, request scheduling, "
+        "streaming token delivery, time-to-first-token measurement, throughput, and tail latency."
+    ] * 3
+)
+
+LONG_PROMPT = " ".join(
+    [
+        "Explain how an inference gateway manages admission control, request scheduling, "
+        "streaming token delivery, time-to-first-token measurement, throughput, tail latency, "
+        "bounded concurrency, queueing, backpressure, batching efficiency, fairness, overload "
+        "rejection, KV-cache pressure, and observability."
+    ] * 12
+)
+
+WORKLOADS = [
+    WorkloadSpec(
+        name="short_interactive",
+        prompt=SHORT_PROMPT,
+        max_tokens=64,
+    ),
+    WorkloadSpec(
+        name="medium",
+        prompt=MEDIUM_PROMPT,
+        max_tokens=128,
+    ),
+    WorkloadSpec(
+        name="long_context",
+        prompt=LONG_PROMPT,
+        max_tokens=128,
+    ),
+    WorkloadSpec(
+        name="long_output",
+        prompt=SHORT_PROMPT,
+        max_tokens=512,
+    ),
+]
 
 @dataclass
 class RequestResult:
     scheduled_at: float
+    workload: str
     started_at: Optional[float] = None
     status: Optional[int] = None
     ttft: Optional[float] = None
@@ -38,14 +76,15 @@ async def consume_request(
     client: httpx.AsyncClient,
     scheduled_at: float,
     model: str,
+    workload: WorkloadSpec,
 ) -> RequestResult:
-    result = RequestResult(scheduled_at=scheduled_at)
+    result = RequestResult(scheduled_at=scheduled_at, workload=workload.name,)
     result.started_at = time.monotonic()
     payload = {
         "model": model,
-        "messages": [{"role": "user", "content": PROMPT}],
+        "messages": [{"role": "user", "content": workload.prompt}],
         "temperature": 0,
-        "max_tokens": 128,
+        "max_tokens": workload.max_tokens,
         "stream": True,
     }
 
@@ -101,7 +140,13 @@ async def run_benchmark(rps: float, duration: float, model: str) -> list[Request
                 await asyncio.sleep(wait)
             if scheduled_at >= start + duration:
                 break
-            tasks.append(asyncio.create_task(consume_request(client, scheduled_at, model)))
+            workload = WORKLOADS[request_number % len(WORKLOADS)]
+            print(
+                f"request={request_number}, "
+                f"workload={workload.name}, "
+                f"max_tokens={workload.max_tokens}"
+            )
+            tasks.append(asyncio.create_task(consume_request(client, scheduled_at, model, workload)))
             request_number += 1
 
         if tasks:
@@ -148,7 +193,35 @@ def print_summary(results: list[RequestResult], rps: float, duration: float) -> 
     print(f"P99 TTFT: {format_seconds(percentile(ttft_values, 99))}")
     print(f"P50 end-to-end latency: {format_seconds(percentile(latency_values, 50))}")
     print(f"P99 end-to-end latency: {format_seconds(percentile(latency_values, 99))}")
+    print("\nPer-workload metrics:")
 
+    for workload in WORKLOADS:
+        workload_results = [
+            result
+            for result in successful
+            if result.workload == workload.name
+        ]
+
+        workload_ttft = [
+            result.ttft
+            for result in workload_results
+            if result.ttft is not None
+        ]
+
+        workload_latency = [
+            result.end_to_end
+            for result in workload_results
+            if result.end_to_end is not None
+        ]
+
+        print(
+            f"{workload.name}: "
+            f"count={len(workload_results)}, "
+            f"P50 TTFT={format_seconds(percentile(workload_ttft, 50))}, "
+            f"P99 TTFT={format_seconds(percentile(workload_ttft, 99))}, "
+            f"P50 E2E={format_seconds(percentile(workload_latency, 50))}, "
+            f"P99 E2E={format_seconds(percentile(workload_latency, 99))}"
+        )
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run a sustained arrival-rate benchmark.")
