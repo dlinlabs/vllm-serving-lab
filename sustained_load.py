@@ -196,27 +196,60 @@ def print_summary(results: list[RequestResult], rps: float, duration: float) -> 
     print("\nPer-workload metrics:")
 
     for workload in WORKLOADS:
-        workload_results = [
+        # All client-side attempts for this workload.
+        # This does NOT mean the gateway necessarily received every request.
+        workload_all_results = [
             result
-            for result in successful
+            for result in results
             if result.workload == workload.name
+        ]
+
+        attempted_count = len(workload_all_results)
+
+        success_count = sum(
+            result.success
+            for result in workload_all_results
+        )
+
+        rejected_count = sum(
+            result.rejected
+            for result in workload_all_results
+        )
+
+        failed_count = attempted_count - success_count - rejected_count
+
+        reject_rate = (
+            rejected_count / attempted_count
+            if attempted_count > 0
+            else 0.0
+        )
+
+        # Latency metrics should only use successful requests.
+        workload_successful_results = [
+            result
+            for result in workload_all_results
+            if result.success
         ]
 
         workload_ttft = [
             result.ttft
-            for result in workload_results
+            for result in workload_successful_results
             if result.ttft is not None
         ]
 
         workload_latency = [
             result.end_to_end
-            for result in workload_results
+            for result in workload_successful_results
             if result.end_to_end is not None
         ]
 
         print(
             f"{workload.name}: "
-            f"count={len(workload_results)}, "
+            f"attempted={attempted_count}, "
+            f"success={success_count}, "
+            f"rejected={rejected_count}, "
+            f"failed={failed_count}, "
+            f"reject_rate={reject_rate:.2%}, "
             f"P50 TTFT={format_seconds(percentile(workload_ttft, 50))}, "
             f"P99 TTFT={format_seconds(percentile(workload_ttft, 99))}, "
             f"P50 E2E={format_seconds(percentile(workload_latency, 50))}, "
