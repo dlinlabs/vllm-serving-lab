@@ -360,6 +360,61 @@ Under severe overload, bounded admission control prevented unbounded queue growt
 
 ---
 
+# Phase 4 — Heterogeneous Workload Benchmark
+
+The benchmark now includes a deterministic mixed workload instead of only one fixed request shape:
+
+```text
+short_interactive -> medium -> long_context -> long_output -> repeat
+```
+
+The four classes vary prompt size and output cap so the gateway is tested against non-uniform request costs.
+
+### Baseline mixed-workload sweep
+
+| Target RPS | Success | Reject rate | P50 TTFT | P99 TTFT | P50 E2E | P99 E2E |
+|---:|---:|---:|---:|---:|---:|---:|
+| 5 | 100/100 | 0% | 0.0777 s | 0.1047 s | 1.4815 s | 1.6855 s |
+| 10 | 200/200 | 0% | 0.0822 s | 0.1278 s | 1.6489 s | 1.9107 s |
+| 20 | 400/400 | 0% | 0.0878 s | 0.2275 s | 1.8687 s | 2.4990 s |
+| 25 | 500/500 | 0% | 0.1657 s | 1.6064 s | 3.3102 s | 4.7673 s |
+| 30 | 600/600 | 0% | 0.3160 s | 1.1534 s | 3.1606 s | 4.3891 s |
+
+The mixed workload entered a clear queueing/degradation region around **20–30 RPS**. The 25 RPS and 30 RPS one-shot results were not monotonic, so the exact knee should not be treated as a single precise RPS without repeated trials.
+
+### Static admission under heterogeneous load
+
+At 25 RPS, a very small `4 in-flight / 2 waiting` bound was far too aggressive:
+
+- success: 66 / 500
+- reject rate: **86.8%**
+- P99 TTFT: 1.6417 s
+- P99 E2E: 3.0012 s
+
+The low cap likely reduced continuous-batching efficiency while still adding gateway queueing.
+
+A larger `64 in-flight / 8 waiting` bound behaved much better at 25 RPS:
+
+- success: 500 / 500
+- reject rate: **0%**
+- P99 TTFT: 0.4124 s
+- P99 E2E: 3.3049 s
+
+However, the same `64/8` policy at 30 RPS did not generalize cleanly:
+
+- success: 534 / 600
+- reject rate: **11.0%**
+- P99 TTFT: 1.9759 s
+- P99 E2E: 4.2836 s
+
+This is the key Phase 4 result: **a fixed request-count admission threshold can be strongly workload- and load-dependent.** A threshold that looks good at one operating point can reject too aggressively, reduce batching efficiency, or fail to protect TTFT at another.
+
+The detailed environment notes, every run, every per-workload metric, and the exact static-policy comparisons are recorded in:
+
+[experiments/heterogeneous-workload-2026-09-23.md](experiments/heterogeneous-workload-2026-09-23.md)
+
+---
+
 # Engineering Lessons
 
 ## 1. Tail latency reveals overload before outright failure
@@ -464,7 +519,7 @@ python3 sustained_load.py --rps 30 --duration 60
 
 - Single NVIDIA RTX 3090
 - Single model
-- Fixed request shape
+- Synthetic heterogeneous request shapes are now tested, but realized input/output token counts are not yet recorded
 - Static admission thresholds
 - No deadline-aware scheduling
 - No adaptive queue control
@@ -483,6 +538,8 @@ The experiment intentionally focuses on one narrow production reliability questi
 - Expose richer telemetry
 - Evaluate retry/backoff behavior
 - Explore adaptive admission thresholds
-- Test heterogeneous request lengths
+- Record realized input/output token counts and benchmark drain time
+- Add repeated trials for confidence around the 20–30 RPS knee
+- Implement and compare workload-aware / token-cost-aware admission
 
-The core overload-control experiment is complete.
+The static overload-control experiment is complete. The next phase is workload-aware / token-cost-aware admission under heterogeneous traffic.
