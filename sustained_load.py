@@ -68,6 +68,10 @@ class RequestResult:
     status: Optional[int] = None
     ttft: Optional[float] = None
     end_to_end: Optional[float] = None
+    input_tokens: Optional[int] = None
+    output_tokens: Optional[int] = None
+    total_tokens: Optional[int] = None
+    max_output_tokens: Optional[int] = None
     success: bool = False
     rejected: bool = False
 
@@ -78,7 +82,11 @@ async def consume_request(
     model: str,
     workload: WorkloadSpec,
 ) -> RequestResult:
-    result = RequestResult(scheduled_at=scheduled_at, workload=workload.name,)
+    result = RequestResult(
+        scheduled_at=scheduled_at,
+        workload=workload.name,
+        max_output_tokens=workload.max_tokens,
+    )
     result.started_at = time.monotonic()
     payload = {
         "model": model,
@@ -86,6 +94,7 @@ async def consume_request(
         "temperature": 0,
         "max_tokens": workload.max_tokens,
         "stream": True,
+        "stream_options": {"include_usage": True},
     }
 
     try:
@@ -98,7 +107,7 @@ async def consume_request(
                 return result
 
             async for line in response.aiter_lines():
-                if result.ttft is not None or not line.startswith("data:"):
+                if not line.startswith("data:"):
                     continue
                 data = line[5:].strip()
                 if data == "[DONE]":
@@ -107,9 +116,20 @@ async def consume_request(
                     event = json.loads(data)
                 except json.JSONDecodeError:
                     continue
+
+                usage = event.get("usage")
+                if usage:
+                    result.input_tokens = usage.get("prompt_tokens")
+                    result.output_tokens = usage.get("completion_tokens")
+                    result.total_tokens = usage.get("total_tokens")
+
                 choices = event.get("choices", [])
-                content = choices[0].get("delta", {}).get("content") if choices else None
-                if content:
+                content = (
+                    choices[0].get("delta", {}).get("content")
+                    if choices
+                    else None
+                )
+                if content and result.ttft is None:
                     result.ttft = time.monotonic() - result.started_at
 
             result.success = response.is_success
@@ -165,6 +185,14 @@ def percentile(values: list[float], percent: float) -> Optional[float]:
 
 def format_seconds(value: Optional[float]) -> str:
     return f"{value:.4f}s" if value is not None else "n/a"
+
+
+def average(values: list[int]) -> Optional[float]:
+    return sum(values) / len(values) if values else None
+
+
+def format_number(value: Optional[float]) -> str:
+    return f"{value:.1f}" if value is not None else "n/a"
 
 
 def print_summary(results: list[RequestResult], rps: float, duration: float) -> None:
@@ -231,6 +259,23 @@ def print_summary(results: list[RequestResult], rps: float, duration: float) -> 
             if result.success
         ]
 
+        workload_input_tokens = [
+            result.input_tokens
+            for result in workload_successful_results
+            if result.input_tokens is not None
+        ]
+
+        workload_output_tokens = [
+            result.output_tokens
+            for result in workload_successful_results
+            if result.output_tokens is not None
+        ]
+
+        usage_missing = sum(
+            result.input_tokens is None or result.output_tokens is None
+            for result in workload_successful_results
+        )
+
         workload_ttft = [
             result.ttft
             for result in workload_successful_results
@@ -250,6 +295,9 @@ def print_summary(results: list[RequestResult], rps: float, duration: float) -> 
             f"rejected={rejected_count}, "
             f"failed={failed_count}, "
             f"reject_rate={reject_rate:.2%}, "
+            f"avg_input_tokens={format_number(average(workload_input_tokens))}, "
+            f"avg_output_tokens={format_number(average(workload_output_tokens))}, "
+            f"usage_missing={usage_missing}, "
             f"P50 TTFT={format_seconds(percentile(workload_ttft, 50))}, "
             f"P99 TTFT={format_seconds(percentile(workload_ttft, 99))}, "
             f"P50 E2E={format_seconds(percentile(workload_latency, 50))}, "
