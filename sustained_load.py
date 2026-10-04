@@ -2,8 +2,9 @@ import argparse
 import asyncio
 import json
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from statistics import quantiles
+from pathlib import Path
 from typing import Optional
 
 import httpx
@@ -141,7 +142,12 @@ async def consume_request(
     return result
 
 
-async def run_benchmark(rps: float, duration: float, model: str) -> list[RequestResult]:
+async def run_benchmark(
+    rps: float,
+    duration: float,
+    model: str,
+    workload_name: Optional[str] = None,
+) -> list[RequestResult]:
     interval = 1.0 / rps
     results: list[RequestResult] = []
     tasks: list[asyncio.Task[RequestResult]] = []
@@ -160,7 +166,10 @@ async def run_benchmark(rps: float, duration: float, model: str) -> list[Request
                 await asyncio.sleep(wait)
             if scheduled_at >= start + duration:
                 break
-            workload = WORKLOADS[request_number % len(WORKLOADS)]
+            if workload_name is None:
+                workload = WORKLOADS[request_number % len(WORKLOADS)]
+            else:
+                workload = next(item for item in WORKLOADS if item.name == workload_name)
             print(
                 f"request={request_number}, "
                 f"workload={workload.name}, "
@@ -304,11 +313,45 @@ def print_summary(results: list[RequestResult], rps: float, duration: float) -> 
             f"P99 E2E={format_seconds(percentile(workload_latency, 99))}"
         )
 
+
+def export_results(
+    path: str,
+    results: list[RequestResult],
+    rps: float,
+    duration: float,
+    model: str,
+    workload_name: Optional[str],
+) -> None:
+    payload = {
+        "config": {
+            "target_rps": rps,
+            "duration_seconds": duration,
+            "model": model,
+            "workload": workload_name or "heterogeneous",
+        },
+        "requests": [asdict(result) for result in results],
+    }
+    output_path = Path(path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run a sustained arrival-rate benchmark.")
     parser.add_argument("--rps", type=float, required=True)
     parser.add_argument("--duration", type=float, default=60)
     parser.add_argument("--model", default="Qwen/Qwen3-4B-Instruct-2507")
+    parser.add_argument(
+        "--workload",
+        choices=[workload.name for workload in WORKLOADS],
+        default=None,
+        help="Run one workload class only. Omit for the deterministic heterogeneous mix.",
+    )
+    parser.add_argument(
+        "--json-out",
+        default=None,
+        help="Optional path for machine-readable per-request benchmark results.",
+    )
     return parser.parse_args()
 
 
@@ -316,8 +359,17 @@ async def main() -> None:
     args = parse_args()
     if args.rps <= 0 or args.duration <= 0:
         raise SystemExit("--rps and --duration must be greater than zero")
-    results = await run_benchmark(args.rps, args.duration, args.model)
+    results = await run_benchmark(args.rps, args.duration, args.model, args.workload)
     print_summary(results, args.rps, args.duration)
+    if args.json_out:
+        export_results(
+            args.json_out,
+            results,
+            args.rps,
+            args.duration,
+            args.model,
+            args.workload,
+        )
 
 
 if __name__ == "__main__":
