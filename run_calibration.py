@@ -76,7 +76,11 @@ def run_case(
     if sweep == "input":
         command.extend(["--prompt-repeat", str(target), "--max-tokens", "128"])
     else:
-        command.extend(["--prompt-repeat", "8", "--max-tokens", str(target)])
+        command.extend([
+            "--prompt-repeat", "8",
+            "--max-tokens", str(target),
+            "--ignore-eos",
+        ])
 
     print(f"\n=== {sweep} target={target} run={repeat} ===", flush=True)
     subprocess.run(command, check=True)
