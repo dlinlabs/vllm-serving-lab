@@ -84,6 +84,7 @@ async def consume_request(
     workload: WorkloadSpec,
     prompt_override: Optional[str] = None,
     max_tokens_override: Optional[int] = None,
+    ignore_eos: bool = False,
 ) -> RequestResult:
     result = RequestResult(
         scheduled_at=scheduled_at,
@@ -98,6 +99,7 @@ async def consume_request(
         "max_tokens": max_tokens_override or workload.max_tokens,
         "stream": True,
         "stream_options": {"include_usage": True},
+        "ignore_eos": ignore_eos,
     }
 
     try:
@@ -151,6 +153,7 @@ async def run_benchmark(
     workload_name: Optional[str] = None,
     prompt_override: Optional[str] = None,
     max_tokens_override: Optional[int] = None,
+    ignore_eos: bool = False,
 ) -> list[RequestResult]:
     interval = 1.0 / rps
     results: list[RequestResult] = []
@@ -188,6 +191,7 @@ async def run_benchmark(
                         workload,
                         prompt_override,
                         max_tokens_override,
+                        ignore_eos,
                     )
                 )
             )
@@ -338,6 +342,7 @@ def export_results(
     workload_name: Optional[str],
     prompt_repeat: Optional[int] = None,
     max_tokens_override: Optional[int] = None,
+    ignore_eos: bool = False,
 ) -> None:
     payload = {
         "config": {
@@ -347,6 +352,7 @@ def export_results(
             "workload": workload_name or "heterogeneous",
             "prompt_repeat": prompt_repeat,
             "max_tokens_override": max_tokens_override,
+            "ignore_eos": ignore_eos,
         },
         "requests": [asdict(result) for result in results],
     }
@@ -379,6 +385,11 @@ def parse_args() -> argparse.Namespace:
         help="Override the workload output-token cap.",
     )
     parser.add_argument(
+        "--ignore-eos",
+        action="store_true",
+        help="Ignore EOS and continue generation until max_tokens. Intended for controlled output calibration.",
+    )
+    parser.add_argument(
         "--json-out",
         default=None,
         help="Optional path for machine-readable per-request benchmark results.",
@@ -409,6 +420,7 @@ async def main() -> None:
         args.workload,
         prompt_override,
         args.max_tokens,
+        args.ignore_eos,
     )
     print_summary(results, args.rps, args.duration)
     if args.json_out:
@@ -421,6 +433,7 @@ async def main() -> None:
             args.workload,
             args.prompt_repeat,
             args.max_tokens,
+            args.ignore_eos,
         )
 
 
