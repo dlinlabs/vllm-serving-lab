@@ -415,6 +415,25 @@ The detailed environment notes, every run, every per-workload metric, and the ex
 
 ---
 
+
+# Phase 5 — Token-Cost Calibration
+
+Low-load calibration was added to separate the effects of request shape from queueing pressure. The benchmark treats serving load as a function of three core workload variables:
+
+```text
+Load = f(RPS, input tokens, output tokens)
+```
+
+At 1 RPS on the RTX 3090, realized input length increased from 32 to 1,418 tokens while output stayed near 128 tokens; P50 TTFT increased from 68.8 ms to 76.1 ms. In the output sweep, input stayed at 98 realized tokens while output was forced to 32, 128, 256, 512, and 1,024 tokens using `ignore_eos=true`. P50 E2E increased from 0.418 s to 13.972 s and was approximately linear with generated-token count.
+
+The calibration confirms that equal request counts do not imply equal serving cost, but the isolated latency slopes are not used directly as admission weights. The next experiment will measure saturation RPS for controlled short, long-input, and long-output request shapes before deriving the first workload-aware admission policy.
+
+Detailed methodology, complete results, and interpretation:
+
+[experiments/token-cost-calibration-2026-10-04.md](experiments/token-cost-calibration-2026-10-04.md)
+
+---
+
 # Engineering Lessons
 
 ## 1. Tail latency reveals overload before outright failure
@@ -519,7 +538,7 @@ python3 sustained_load.py --rps 30 --duration 60
 
 - Single NVIDIA RTX 3090
 - Single model
-- Synthetic heterogeneous request shapes are now tested, but realized input/output token counts are not yet recorded
+- Realized input/output token counts are recorded for calibration and benchmark analysis
 - Static admission thresholds
 - No deadline-aware scheduling
 - No adaptive queue control
@@ -532,14 +551,12 @@ The experiment intentionally focuses on one narrow production reliability questi
 
 ## Next Steps
 
-- Export benchmark results to CSV
+- Run workload-shape saturation sweeps across short, long-input, and long-output requests
+- Derive workload-cost weights from saturation behavior
+- Implement and compare workload-aware / token-cost-aware admission
 - Add a baseline-vs-protected P99 TTFT graph
-- Add benchmark health checks
-- Expose richer telemetry
+- Add benchmark health checks and richer telemetry
 - Evaluate retry/backoff behavior
 - Explore adaptive admission thresholds
-- Record realized input/output token counts and benchmark drain time
-- Add repeated trials for confidence around the 20–30 RPS knee
-- Implement and compare workload-aware / token-cost-aware admission
 
 The static overload-control experiment is complete. The next phase is workload-aware / token-cost-aware admission under heterogeneous traffic.
