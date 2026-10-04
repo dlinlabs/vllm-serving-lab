@@ -578,7 +578,7 @@ uvicorn gateway:app --host 0.0.0.0 --port 8080
 
 ### Protected mode
 
-The selected configuration is:
+The selected static request-count configuration is:
 
 ```text
 MAX_IN_FLIGHT=64
@@ -594,6 +594,51 @@ MAX_WAITING=8 \
 uvicorn gateway:app --host 0.0.0.0 --port 8080
 ```
 
+### Cost-aware V1 mode
+
+The V1 controller estimates each request's admission cost before forwarding it to vLLM:
+
+```text
+request_cost =
+    COST_INTERCEPT
+    + INPUT_TOKEN_COST * estimated_input_tokens
+    + OUTPUT_TOKEN_COST * max_tokens
+```
+
+The default RTX 3090 coefficients are derived from the Phase 6 saturation-capacity anchors:
+
+```text
+COST_INTERCEPT=0.259
+INPUT_TOKEN_COST=0.000758
+OUTPUT_TOKEN_COST=0.0052083333
+```
+
+These values normalize the measured request shapes to approximately:
+
+```text
+98 input / 128 output    -> 1 cost unit
+1418 input / 128 output  -> 2 cost units
+98 input / 512 output    -> 3 cost units
+```
+
+The gateway admits a request only when:
+
+```text
+current_admitted_cost + request_cost <= MAX_ADMITTED_COST
+```
+
+Start the first V1 experiment with a 64-unit budget:
+
+```bash
+ADMISSION_MODE=cost_aware \
+MAX_ADMITTED_COST=64 \
+uvicorn gateway:app --host 0.0.0.0 --port 8080
+```
+
+The gateway uses the locally cached model tokenizer to estimate prompt tokens with the model's chat template. If the tokenizer is unavailable, it falls back to a deterministic character-based approximation and increments `tokenizer_fallback_requests`.
+
+The coefficients and budget are configuration parameters rather than universal constants. A different GPU, model, serving engine, or batching configuration may require recalibration.
+
 ## Gateway Metrics
 
 ```bash
@@ -608,6 +653,11 @@ Example metrics include:
 - `rejected_requests`
 - `failed_requests`
 - `max_waiting`
+- `current_admitted_cost`
+- `peak_admitted_cost`
+- `accepted_cost`
+- `rejected_cost`
+- `tokenizer_fallback_requests`
 
 ## Run Sustained-Load Benchmark
 
@@ -628,7 +678,7 @@ python3 sustained_load.py --rps 30 --duration 60
 - Single NVIDIA RTX 3090
 - Single model
 - Realized input/output token counts are recorded for calibration and benchmark analysis
-- Static request-count admission remains the implemented controller; token-cost-aware admission is the next phase
+- V1 token-cost-aware admission uses fixed calibrated coefficients and a fixed cost budget; it is workload-aware but not yet feedback-adaptive
 - No deadline-aware scheduling
 - No adaptive queue control
 - No multi-GPU / tensor parallelism
@@ -640,12 +690,11 @@ The experiment intentionally focuses on one narrow production reliability questi
 
 ## Next Steps
 
-- Derive the first token-cost model from the measured saturation-capacity ratios
-- Implement workload-aware / token-cost-aware admission in the gateway
+- Validate the V1 token-cost model and tune only the cost budget under controlled mixed traffic
 - Compare baseline, static 64/8, and cost-aware admission under mixed heterogeneous traffic
 - Evaluate P99 TTFT, P99 E2E, rejection rate, throughput, and SLO goodput
 - Add benchmark health checks and richer telemetry
 - Add comparison graphs for the final experiment
 - Evaluate retry/backoff behavior and adaptive admission thresholds
 
-The workload-shape saturation phase is complete. The next phase is implementing and validating cost-aware admission under heterogeneous traffic.
+The workload-shape saturation phase and V1 cost-aware gateway implementation are complete. The next phase is validating the controller under heterogeneous traffic and measuring whether it improves SLO goodput and tail latency versus static request-count admission.
