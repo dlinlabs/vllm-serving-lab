@@ -177,7 +177,7 @@ async def run_benchmark(
             print(
                 f"request={request_number}, "
                 f"workload={workload.name}, "
-                f"max_tokens={workload.max_tokens}"
+                f"max_tokens={max_tokens_override or workload.max_tokens}"
             )
             tasks.append(
                 asyncio.create_task(
@@ -336,6 +336,8 @@ def export_results(
     duration: float,
     model: str,
     workload_name: Optional[str],
+    prompt_repeat: Optional[int] = None,
+    max_tokens_override: Optional[int] = None,
 ) -> None:
     payload = {
         "config": {
@@ -343,6 +345,8 @@ def export_results(
             "duration_seconds": duration,
             "model": model,
             "workload": workload_name or "heterogeneous",
+            "prompt_repeat": prompt_repeat,
+            "max_tokens_override": max_tokens_override,
         },
         "requests": [asdict(result) for result in results],
     }
@@ -415,6 +419,8 @@ async def main() -> None:
             args.duration,
             args.model,
             args.workload,
+            args.prompt_repeat,
+            args.max_tokens,
         )
 
 
