@@ -426,11 +426,100 @@ Load = f(RPS, input tokens, output tokens)
 
 At 1 RPS on the RTX 3090, realized input length increased from 32 to 1,418 tokens while output stayed near 128 tokens; P50 TTFT increased from 68.8 ms to 76.1 ms. In the output sweep, input stayed at 98 realized tokens while output was forced to 32, 128, 256, 512, and 1,024 tokens using `ignore_eos=true`. P50 E2E increased from 0.418 s to 13.972 s and was approximately linear with generated-token count.
 
-The calibration confirms that equal request counts do not imply equal serving cost, but the isolated latency slopes are not used directly as admission weights. The next experiment will measure saturation RPS for controlled short, long-input, and long-output request shapes before deriving the first workload-aware admission policy.
+The calibration confirms that equal request counts do not imply equal serving cost, but the isolated latency slopes are not used directly as admission weights.
 
 Detailed methodology, complete results, and interpretation:
 
 [experiments/token-cost-calibration-2026-10-04.md](experiments/token-cost-calibration-2026-10-04.md)
+
+---
+
+# Phase 6 — Workload-Shape Saturation
+
+To convert token-shape differences into system-level admission signals, the benchmark held request shape fixed and increased arrival rate until queueing and tail latency collapsed.
+
+Three controlled shapes were used:
+
+| Shape | Realized input | Realized output | Purpose |
+|---|---:|---:|---|
+| Baseline | 98 tokens | 128 tokens | Reference request |
+| Prefill-heavy | 1,418 tokens | 128 tokens | Isolate long-input / prefill pressure |
+| Decode-heavy | 98 tokens | 512 tokens | Isolate long-output / decode pressure |
+
+Each RPS point was repeated three times and the median was used to reduce run-to-run serving noise.
+
+## Baseline saturation
+
+| RPS | P99 TTFT | P99 E2E |
+|---:|---:|---:|
+| 10 | 0.126 s | 1.847 s |
+| 15 | 0.217 s | 2.081 s |
+| 20 | 0.740 s | 2.832 s |
+| 25 | 1.747 s | 5.477 s |
+| 30 | 2.855 s | 6.907 s |
+| 35 | 4.612 s | 11.745 s |
+
+The baseline workload remained comparatively healthy through about **20 RPS**, with a clear latency knee between **20 and 25 RPS**.
+
+## Prefill-heavy saturation
+
+| RPS | P99 TTFT | P99 E2E |
+|---:|---:|---:|
+| 5 | 0.150 s | 2.164 s |
+| 8 | 0.154 s | 2.598 s |
+| 10 | 0.197 s | 5.048 s |
+| 12 | 0.903 s | 19.821 s |
+| 15 | 18.093 s | 34.847 s |
+| 20 | 30.029 s | 42.659 s |
+
+The prefill-heavy workload showed a sharp nonlinear degradation between **10 and 12 RPS**. A reasonable first approximation for sustainable capacity is therefore about **10 RPS**.
+
+## Decode-heavy saturation
+
+| RPS | P99 TTFT | P99 E2E |
+|---:|---:|---:|
+| 5 | 0.115 s | 9.247 s |
+| 8 | 0.440 s | 18.046 s |
+| 10 | 0.426 s | 26.759 s |
+| 12 | 11.608 s | 34.137 s |
+| 15 | 23.189 s | 44.665 s |
+| 20 | 39.353 s | 58.229 s |
+
+The decode-heavy workload accumulated substantial end-to-end latency even before TTFT collapsed. The most obvious cliff appeared by **12 RPS**, while the practical healthy region was closer to roughly **5–8 RPS**.
+
+## Capacity-derived request-cost intuition
+
+Using the baseline workload as normalized cost 1 and comparing approximate sustainable arrival rates:
+
+```text
+baseline:       ~20 RPS  -> cost ~1x
+prefill-heavy:  ~10 RPS  -> cost ~2x
+decode-heavy:   ~5–8 RPS -> cost ~2.5–4x
+```
+
+A convenient first-order intuition is therefore approximately:
+
+```text
+baseline : prefill-heavy : decode-heavy ~= 1 : 2 : 3
+```
+
+These are **empirical serving-capacity ratios**, not hard-coded production weights. The important result is that one admitted request is not one unit of serving work.
+
+This directly motivates replacing static request-count admission with a token-shape-aware cost estimate such as:
+
+```text
+estimated_cost = alpha * input_tokens + beta * expected_output_tokens
+```
+
+The coefficients should be derived and validated against mixed-traffic saturation behavior rather than copied directly from low-load latency slopes.
+
+Raw runs and medians are recorded under:
+
+```text
+results/saturation_baseline/
+results/saturation_prefill/
+results/saturation_decode/
+```
 
 ---
 
@@ -539,7 +628,7 @@ python3 sustained_load.py --rps 30 --duration 60
 - Single NVIDIA RTX 3090
 - Single model
 - Realized input/output token counts are recorded for calibration and benchmark analysis
-- Static admission thresholds
+- Static request-count admission remains the implemented controller; token-cost-aware admission is the next phase
 - No deadline-aware scheduling
 - No adaptive queue control
 - No multi-GPU / tensor parallelism
@@ -551,12 +640,12 @@ The experiment intentionally focuses on one narrow production reliability questi
 
 ## Next Steps
 
-- Run workload-shape saturation sweeps across short, long-input, and long-output requests
-- Derive workload-cost weights from saturation behavior
-- Implement and compare workload-aware / token-cost-aware admission
-- Add a baseline-vs-protected P99 TTFT graph
+- Derive the first token-cost model from the measured saturation-capacity ratios
+- Implement workload-aware / token-cost-aware admission in the gateway
+- Compare baseline, static 64/8, and cost-aware admission under mixed heterogeneous traffic
+- Evaluate P99 TTFT, P99 E2E, rejection rate, throughput, and SLO goodput
 - Add benchmark health checks and richer telemetry
-- Evaluate retry/backoff behavior
-- Explore adaptive admission thresholds
+- Add comparison graphs for the final experiment
+- Evaluate retry/backoff behavior and adaptive admission thresholds
 
-The static overload-control experiment is complete. The next phase is workload-aware / token-cost-aware admission under heterogeneous traffic.
+The workload-shape saturation phase is complete. The next phase is implementing and validating cost-aware admission under heterogeneous traffic.
