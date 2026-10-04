@@ -82,18 +82,20 @@ async def consume_request(
     scheduled_at: float,
     model: str,
     workload: WorkloadSpec,
+    prompt_override: Optional[str] = None,
+    max_tokens_override: Optional[int] = None,
 ) -> RequestResult:
     result = RequestResult(
         scheduled_at=scheduled_at,
         workload=workload.name,
-        max_output_tokens=workload.max_tokens,
+        max_output_tokens=max_tokens_override or workload.max_tokens,
     )
     result.started_at = time.monotonic()
     payload = {
         "model": model,
-        "messages": [{"role": "user", "content": workload.prompt}],
+        "messages": [{"role": "user", "content": prompt_override or workload.prompt}],
         "temperature": 0,
-        "max_tokens": workload.max_tokens,
+        "max_tokens": max_tokens_override or workload.max_tokens,
         "stream": True,
         "stream_options": {"include_usage": True},
     }
@@ -147,6 +149,8 @@ async def run_benchmark(
     duration: float,
     model: str,
     workload_name: Optional[str] = None,
+    prompt_override: Optional[str] = None,
+    max_tokens_override: Optional[int] = None,
 ) -> list[RequestResult]:
     interval = 1.0 / rps
     results: list[RequestResult] = []
@@ -175,7 +179,18 @@ async def run_benchmark(
                 f"workload={workload.name}, "
                 f"max_tokens={workload.max_tokens}"
             )
-            tasks.append(asyncio.create_task(consume_request(client, scheduled_at, model, workload)))
+            tasks.append(
+                asyncio.create_task(
+                    consume_request(
+                        client,
+                        scheduled_at,
+                        model,
+                        workload,
+                        prompt_override,
+                        max_tokens_override,
+                    )
+                )
+            )
             request_number += 1
 
         if tasks:
@@ -348,6 +363,18 @@ def parse_args() -> argparse.Namespace:
         help="Run one workload class only. Omit for the deterministic heterogeneous mix.",
     )
     parser.add_argument(
+        "--prompt-repeat",
+        type=int,
+        default=None,
+        help="Repeat a deterministic calibration sentence N times as the request prompt.",
+    )
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        default=None,
+        help="Override the workload output-token cap.",
+    )
+    parser.add_argument(
         "--json-out",
         default=None,
         help="Optional path for machine-readable per-request benchmark results.",
@@ -359,7 +386,26 @@ async def main() -> None:
     args = parse_args()
     if args.rps <= 0 or args.duration <= 0:
         raise SystemExit("--rps and --duration must be greater than zero")
-    results = await run_benchmark(args.rps, args.duration, args.model, args.workload)
+    if args.prompt_repeat is not None and args.prompt_repeat <= 0:
+        raise SystemExit("--prompt-repeat must be greater than zero")
+    if args.max_tokens is not None and args.max_tokens <= 0:
+        raise SystemExit("--max-tokens must be greater than zero")
+
+    prompt_override = None
+    if args.prompt_repeat is not None:
+        calibration_sentence = (
+            "Explain one practical consideration when serving large language models efficiently. "
+        )
+        prompt_override = calibration_sentence * args.prompt_repeat
+
+    results = await run_benchmark(
+        args.rps,
+        args.duration,
+        args.model,
+        args.workload,
+        prompt_override,
+        args.max_tokens,
+    )
     print_summary(results, args.rps, args.duration)
     if args.json_out:
         export_results(
