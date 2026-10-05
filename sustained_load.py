@@ -65,6 +65,8 @@ WORKLOADS = [
 class RequestResult:
     scheduled_at: float
     workload: str
+    request_id: Optional[str] = None
+    stream_complete: bool = False
     started_at: Optional[float] = None
     status: Optional[int] = None
     ttft: Optional[float] = None
@@ -104,6 +106,7 @@ async def consume_request(
 
     try:
         async with client.stream("POST", GATEWAY_URL, json=payload) as response:
+            result.request_id = response.headers.get("x-request-id")
             result.status = response.status_code
             result.rejected = response.status_code == 503
             if result.rejected:
@@ -116,6 +119,7 @@ async def consume_request(
                     continue
                 data = line[5:].strip()
                 if data == "[DONE]":
+                    result.stream_complete = True
                     continue
                 try:
                     event = json.loads(data)
@@ -137,7 +141,7 @@ async def consume_request(
                 if content and result.ttft is None:
                     result.ttft = time.monotonic() - result.started_at
 
-            result.success = response.is_success
+            result.success = response.is_success and result.stream_complete
     except httpx.HTTPError:
         result.success = False
     finally:
