@@ -1,147 +1,121 @@
 # vLLM Serving Benchmark Lab
 
-A reproducible LLM serving and overload-control experiment using **vLLM** and **Qwen3-4B-Instruct** on a single NVIDIA RTX 3090.
+A reproducible single-GPU LLM serving experiment built around **vLLM**, **Qwen3-4B-Instruct**, and an OpenAI-compatible FastAPI gateway.
 
-The project studies two related questions:
+The project started as a concurrency benchmark and evolved into an overload-control study:
 
-1. How does increasing request concurrency affect LLM serving throughput and latency?
-2. Under sustained overload, can bounded admission control protect tail latency without unnecessarily rejecting healthy traffic?
+> How should an inference gateway decide whether to admit a request when requests have very different prompt and output costs?
 
-The second phase extends the original serving benchmark into a production-style reliability experiment using a streaming FastAPI gateway, bounded concurrency, bounded waiting capacity, and HTTP 503 load shedding.
+The final V1 design compares three policies under the same heterogeneous traffic:
+
+1. **Baseline** — admit everything.
+2. **Static protected** — bound request count with fixed in-flight and waiting limits.
+3. **Token-cost-aware** — estimate request cost from prompt tokens and output cap, then admit only while total estimated work remains below a cost budget.
+
+The final result is intentionally nuanced: token-cost-aware admission provides a controllable latency-vs-rejection frontier and strongly protects tail latency under overload, but this first-order linear cost model does **not** dominate a well-tuned static concurrency limiter at matched rejection/throughput.
 
 ---
 
-## Architecture
-
-### Baseline serving path
-
-```text
-Client / OpenAI-compatible API
-        |
-        v
-HTTP /v1/chat/completions
-        |
-        v
-vLLM OpenAI-Compatible API Server
-        |
-        v
-vLLM Engine / Scheduler
-        |
-        v
-PyTorch / CUDA
-        |
-        v
-NVIDIA RTX 3090
-        |
-        v
-Qwen3-4B-Instruct
-```
-
-### Overload-control path
+## 1. Final Architecture
 
 ```text
 Open-loop benchmark client
         |
+        | streaming /v1/chat/completions
         v
-FastAPI admission gateway :8080
++----------------------------------------------+
+| FastAPI Admission Gateway :8080              |
+|                                              |
+|  ADMISSION_MODE=baseline                     |
+|      -> pass through                         |
+|                                              |
+|  ADMISSION_MODE=protected                    |
+|      -> MAX_IN_FLIGHT                        |
+|      -> MAX_WAITING                          |
+|      -> reject excess work with HTTP 503     |
+|                                              |
+|  ADMISSION_MODE=cost_aware                   |
+|      -> apply Qwen chat template/tokenizer   |
+|      -> estimate prompt tokens               |
+|      -> estimate request cost                |
+|      -> track current admitted cost          |
+|      -> reject if budget would be exceeded   |
++----------------------------------------------+
         |
-        +--> bounded in-flight requests
-        +--> bounded waiting capacity
-        +--> HTTP 503 load shedding
+        | streaming proxy
+        v
+vLLM OpenAI-Compatible Server :8000
         |
         v
-vLLM OpenAI-Compatible API Server :8000
+vLLM scheduler / continuous batching / KV cache
         |
         v
-vLLM Engine / Scheduler
+Qwen/Qwen3-4B-Instruct-2507
         |
         v
-RTX 3090
+NVIDIA RTX 3090 24 GB
 ```
 
-When admission capacity is exceeded, the gateway returns HTTP `503` instead of allowing backlog to grow without bound.
-
-The gateway preserves streaming semantics so client-observed TTFT remains meaningful.
+The gateway preserves streaming semantics. This is important because buffering the complete response in the proxy would invalidate client-observed **TTFT (time to first token)**.
 
 ---
 
-## Environment
+## 2. Final V1 Environment
 
-### Original concurrency benchmark
-
-- GPU: NVIDIA RTX 3090 24 GB
-- Model: `Qwen/Qwen3-4B-Instruct-2507`
-- vLLM: `0.28.0`
-- PyTorch: `2.13.0+cu132`
-- Python: `3.12`
-- Max model length: `8192`
-- GPU memory utilization target: `0.90`
-
-### Sustained-load / overload-control experiment
+The final cost-aware validation and A/B/C comparison used:
 
 - GPU: NVIDIA RTX 3090 24 GB
 - Model: `Qwen/Qwen3-4B-Instruct-2507`
-- vLLM: `0.29.0`
-- PyTorch: `2.8.0+cu128`
+- vLLM: `0.30.0`
+- PyTorch: `2.13.0+cu130`
+- CUDA: `13.0`
 - Python: `3.12.3`
 - Max model length: `8192`
-- GPU memory utilization target: `0.90`
+- Streaming: enabled
 - Cloud environment: RunPod
 
----
+Earlier phases were run while the project was evolving and used earlier vLLM/PyTorch builds. Final policy comparisons were rerun under one common environment so the A/B/C result is internally comparable.
 
-## Start the vLLM Server
+Start vLLM:
 
 ```bash
 vllm serve Qwen/Qwen3-4B-Instruct-2507 \
   --host 0.0.0.0 \
   --port 8000 \
-  --gpu-memory-utilization 0.90 \
   --max-model-len 8192
 ```
 
-The model's default context length was much larger than required for the benchmark. The maximum model length was reduced to 8,192 tokens to fit the available KV-cache budget on a single RTX 3090.
+---
+
+## 3. Experiment Roadmap
+
+| Phase | Question | Main independent variable | Why it was needed | Main conclusion |
+|---|---|---|---|---|
+| 1. Concurrency | Does more concurrency improve throughput? | Max concurrency | Establish batching/latency tradeoff | Throughput rises strongly, but TTFT/TPOT also rise |
+| 2. Sustained load | Where does steady-state overload begin? | Arrival RPS | Fixed request counts do not expose queue growth | Tail latency collapses before outright failure |
+| 3. Static admission | Can bounded request count protect latency? | In-flight / waiting limits | Prevent unbounded backlog | 64/8 gave the best tested static tradeoff |
+| 4. Heterogeneous traffic | Does one request equal one unit of work? | Request shape | Real traffic has different prompt/output sizes | Fixed request-count thresholds are workload-dependent |
+| 5. Token calibration | How do input/output tokens affect service time? | Input tokens / output tokens | Separate request shape from queueing | Input and output length contribute differently |
+| 6. Shape saturation | How much capacity does each shape consume? | Shape + RPS | Convert shape into system-level cost | Approximate capacity ratio ~1:2:3 |
+| 7. V1 cost-aware admission | Can the gateway admit by estimated work instead of count? | Cost budget | Replace “one request = one slot” | Works as a controllable overload policy |
+| 8. Final A/B/C | Does V1 beat baseline/static protection? | Admission policy | Validate the actual project hypothesis | Beats unprotected baseline under overload, but not static at matched rejection |
 
 ---
 
-## Client Examples
+# 4. Phase 1 — Fixed-Concurrency Benchmark
 
-`non_streaming.py` demonstrates a standard OpenAI-compatible chat-completion request.
+## Reason
 
-`streaming.py` validates incremental token delivery with `stream=True`.
+The first question was basic capacity characterization: how much throughput does vLLM gain from continuous batching as more requests are allowed to run concurrently?
 
----
+## Controlled workload
 
-# Phase 1 — Concurrency Benchmark
-
-## Methodology
-
-The first experiment held the request workload constant while varying maximum request concurrency.
-
-Fixed configuration:
-
-- Requests per run: 100
-- Input length: 256 tokens/request
-- Output length: 128 tokens/request
-- Temperature: 0
+- 100 requests per run
+- 256 input tokens/request
+- 128 output tokens/request
+- Temperature 0
 - EOS ignored
-- Concurrency: 1, 4, 8, 16, 32, 64
-
-Benchmark command template:
-
-```bash
-vllm bench serve \
-  --backend openai-chat \
-  --model Qwen/Qwen3-4B-Instruct-2507 \
-  --endpoint /v1/chat/completions \
-  --dataset-name random \
-  --num-prompts 100 \
-  --random-input-len 256 \
-  --random-output-len 128 \
-  --max-concurrency <CONCURRENCY> \
-  --ignore-eos \
-  --temperature 0
-```
+- Max concurrency: `1, 4, 8, 16, 32, 64`
 
 ## Results
 
@@ -154,117 +128,74 @@ vllm bench serve \
 | 32 | 1632.44 | 202.30 ms | 350.69 ms | 14.68 ms |
 | 64 | 2665.72 | 345.10 ms | 454.55 ms | 16.71 ms |
 
-All formal benchmark runs completed with zero failed requests.
+## Conclusion
 
-## Analysis
+Concurrency from 1 to 64 increased output throughput by about **32.5x**, but scaling became increasingly sublinear and per-request latency rose.
 
-Increasing concurrency from 1 to 64 increased output throughput from `81.96` to `2665.72` tokens/s, approximately a **32.5x throughput increase** for a 64x increase in maximum concurrency.
+GPU utilization reached 100% before throughput stopped increasing, so:
 
-The throughput gain came with increasing per-request latency:
+> **GPU utilization alone is not proof of inference-server saturation.**
 
-```text
-Mean TTFT: 61.24 -> 345.10 ms
-Mean TPOT: 11.81 -> 16.71 ms
-P99 TTFT: 72.37 -> 454.55 ms
-```
-
-At low concurrency, additional requests improve batching efficiency and aggregate throughput. At higher concurrency, throughput continues to increase but scaling becomes increasingly sublinear while TTFT and TPOT rise.
-
-GPU utilization reached 100% during higher-concurrency testing, but throughput continued increasing afterward. Therefore:
-
-> **GPU utilization alone is not sufficient evidence that an inference server has reached throughput saturation.**
-
-This experiment established the throughput-versus-latency tradeoff, but did not establish steady-state overload behavior.
+This phase measured batching behavior, not steady-state overload.
 
 ---
 
-# Phase 2 — Sustained Arrival-Rate Benchmark
+# 5. Phase 2 — Open-Loop Sustained Load
 
-## Why a second benchmark was needed
+## Reason
 
-The original benchmark used a fixed number of requests and varied maximum concurrency. That does not directly answer what happens when requests arrive continuously faster than the server can sustainably process them.
+A fixed number of requests cannot reveal what happens when new work keeps arriving faster than the server can finish it.
 
-The second experiment therefore uses an **open-loop sustained arrival rate**. Requests are scheduled at fixed intervals:
+The benchmark was changed to **open-loop arrival scheduling**:
 
 ```text
 arrival interval = 1 / target RPS
 ```
 
-New requests continue arriving regardless of whether previous requests have completed. This allows backlog and tail-latency collapse to emerge naturally when arrival rate exceeds sustainable service capacity.
+Request completion does not slow future arrivals, allowing queue growth and overload to emerge naturally.
 
-## Sustained load generator
+## Metrics
 
-`sustained_load.py` sends streaming requests through the gateway and records:
+`sustained_load.py` records:
 
-- target RPS
-- successful requests
-- HTTP 503 rejected requests
-- failed requests
+- success / rejection / failure counts
 - scheduling lag
 - P50 / P95 / P99 TTFT
 - P50 / P99 end-to-end latency
+- realized prompt/output tokens
 
-The load generator uses absolute monotonic-time scheduling so request completion time does not control the arrival rate. It also uses a large HTTP connection pool to avoid client-side connection limits becoming the bottleneck.
+## Representative fixed-workload result
 
-## Baseline sustained-load results
+| RPS | P99 TTFT | P99 E2E |
+|---:|---:|---:|
+| 10 | 0.236 s | 2.004 s |
+| 12 | 0.283 s | 2.158 s |
+| 15 | 1.077 s | 3.262 s |
+| 20 | 1.549 s | 4.383 s |
+| 30 | 13.449 s | 18.772 s |
 
-Fixed workload:
+## Conclusion
 
-- Input: approximately 256 tokens
-- Output: 128 tokens
-- Temperature: 0
-- Streaming enabled
-- Duration: 60 seconds
+Tail latency degraded sharply before request failures became common. At 30 RPS the server still accepted almost everything, but queueing made the service effectively unusable.
 
-| Arrival Rate | Success | Failed | P50 TTFT | P99 TTFT | P50 E2E | P99 E2E |
-|---:|---:|---:|---:|---:|---:|---:|
-| 10 RPS | 600 | 0 | 0.130 s | 0.236 s | 1.869 s | 2.004 s |
-| 12 RPS | 720 | 0 | 0.133 s | 0.283 s | 1.970 s | 2.158 s |
-| 15 RPS | 900 | 0 | 0.107 s | 1.077 s | 2.112 s | 3.262 s |
-| 20 RPS | 1200 | 0 | 0.145 s | 1.549 s | 2.693 s | 4.383 s |
-| 30 RPS | 1799 | 1 | 4.254 s | 13.449 s | 11.362 s | 18.772 s |
-
-### Interpretation
-
-The healthy low-tail-latency region was approximately `<= 12 RPS`. A clear latency knee appeared between `12–15 RPS`.
-
-At 30 RPS, the system entered severe overload:
-
-```text
-P99 TTFT: 13.449 s
-P99 E2E: 18.772 s
-```
-
-Median latency remained relatively stable at lower arrival rates while tail latency degraded first. This matters operationally because overload can become visible in P99 latency before request failures occur.
+This motivated explicit admission control.
 
 ---
 
-# Phase 3 — Admission Control
+# 6. Phase 3 — Static Request-Count Admission
 
-## Gateway design
+## Architecture difference
 
-The gateway supports two modes:
+Protected mode adds two fixed limits:
 
 ```text
-ADMISSION_MODE=baseline
-ADMISSION_MODE=protected
+MAX_IN_FLIGHT
+MAX_WAITING
 ```
 
-Protected mode uses:
+If the gateway cannot admit more work, it returns HTTP `503` rather than allowing backlog to grow without bound.
 
-- bounded in-flight concurrency
-- bounded waiting capacity
-- HTTP 503 load shedding
-- streaming proxy behavior
-- metrics for accepted, rejected, failed, waiting, and in-flight requests
-
-Requests are rejected when total admitted work exceeds the configured capacity.
-
-The purpose is not to make the GPU faster. The purpose is to prevent unbounded queue growth from degrading every admitted request.
-
-## Threshold experiments
-
-Three configurations were tested:
+Tested configurations:
 
 ```text
 32 in-flight / 8 waiting
@@ -272,274 +203,615 @@ Three configurations were tested:
 64 in-flight / 8 waiting
 ```
 
-### 32 / 8
+## Result
 
-At 20 RPS:
+`64/8` was the best tested static configuration.
 
-- 799 successful
-- 401 rejected
-- reject rate: ~33.4%
-- P99 TTFT: 1.886 s
-- P99 E2E: 3.808 s
+Historical severe-overload comparison at 30 RPS:
 
-At 30 RPS:
-
-- 719 successful
-- 1081 rejected
-- reject rate: ~60.1%
-- P99 TTFT: 2.999 s
-- P99 E2E: 4.888 s
-
-This configuration strongly protected latency under severe overload, but was too aggressive at moderate load.
-
-### 48 / 8
-
-At 20 RPS:
-
-- 976 successful
-- 224 rejected
-- reject rate: ~18.7%
-- P99 TTFT: 2.789 s
-- P99 E2E: 4.870 s
-
-At 30 RPS:
-
-- 855 successful
-- 945 rejected
-- reject rate: ~52.5%
-- P99 TTFT: 4.016 s
-- P99 E2E: 6.186 s
-
-This configuration reduced rejection compared with 32/8, but provided weaker latency protection and still performed poorly at moderate load.
-
-### 64 / 8 — selected configuration
-
-At 20 RPS:
-
-- 1193 successful
-- 7 rejected
-- reject rate: ~0.58%
-- P99 TTFT: 1.341 s
-- P99 E2E: 3.874 s
-
-At 30 RPS:
-
-- 1136 successful
-- 664 rejected
-- reject rate: ~36.9%
-- successful requests / arrival window: 18.93 req/s
-- P99 TTFT: 3.037 s
-- P99 E2E: 5.195 s
-
-This configuration produced the best latency-versus-availability tradeoff among the tested static thresholds.
-
----
-
-# Final Before / After Result
-
-## 20 RPS
-
-| Metric | Baseline | Protected 64 / 8 |
+| Metric | Baseline | Static 64/8 |
 |---|---:|---:|
-| Reject rate | 0% | 0.58% |
-| P99 TTFT | 1.549 s | 1.341 s |
-| P99 E2E | 4.383 s | 3.874 s |
+| Reject rate | 0% | 36.9% |
+| P99 TTFT | 13.449 s | 3.037 s |
+| P99 E2E | 18.772 s | 5.195 s |
 
-At moderate load, admission control introduced almost no availability penalty while preserving similar or slightly better tail latency.
+## Conclusion
 
-## 30 RPS
+Admission control does not make the GPU faster. It prevents unlimited queue growth by deliberately trading some availability for bounded latency.
 
-| Metric | Baseline | Protected 64 / 8 | Change |
-|---|---:|---:|---:|
-| Reject rate | 0% | 36.9% | intentional load shedding |
-| P99 TTFT | 13.449 s | 3.037 s | **~77% lower** |
-| P99 E2E | 18.772 s | 5.195 s | **~72% lower** |
-| Successful requests / arrival window | 29.98 req/s | 18.93 req/s | bounded useful traffic |
+However, this policy still assumes:
 
-Under severe overload, bounded admission control prevented unbounded queue growth and reduced P99 TTFT from `13.45 s` to `3.04 s`, while shedding excess work with controlled HTTP 503 responses.
+> **one request = one unit of capacity**
+
+That assumption became the next problem.
 
 ---
 
-# Phase 4 — Heterogeneous Workload Benchmark
+# 7. Phase 4 — Heterogeneous Traffic
 
-The benchmark now includes a deterministic mixed workload instead of only one fixed request shape:
+## Reason
+
+Production inference requests do not have identical prompt/output lengths.
+
+The deterministic benchmark cycles through:
 
 ```text
 short_interactive -> medium -> long_context -> long_output -> repeat
 ```
 
-The four classes vary prompt size and output cap so the gateway is tested against non-uniform request costs.
+Current workload definitions:
 
-### Baseline mixed-workload sweep
+| Workload | Prompt characteristic | max_tokens |
+|---|---|---:|
+| short_interactive | short prompt | 64 |
+| medium | repeated medium prompt | 128 |
+| long_context | long repeated prompt | 128 |
+| long_output | short prompt | 512 |
 
-| Target RPS | Success | Reject rate | P50 TTFT | P99 TTFT | P50 E2E | P99 E2E |
-|---:|---:|---:|---:|---:|---:|---:|
-| 5 | 100/100 | 0% | 0.0777 s | 0.1047 s | 1.4815 s | 1.6855 s |
-| 10 | 200/200 | 0% | 0.0822 s | 0.1278 s | 1.6489 s | 1.9107 s |
-| 20 | 400/400 | 0% | 0.0878 s | 0.2275 s | 1.8687 s | 2.4990 s |
-| 25 | 500/500 | 0% | 0.1657 s | 1.6064 s | 3.3102 s | 4.7673 s |
-| 30 | 600/600 | 0% | 0.3160 s | 1.1534 s | 3.1606 s | 4.3891 s |
+This isolates two important forms of work:
 
-The mixed workload entered a clear queueing/degradation region around **20–30 RPS**. The 25 RPS and 30 RPS one-shot results were not monotonic, so the exact knee should not be treated as a single precise RPS without repeated trials.
+- **prefill pressure** from long prompts
+- **decode pressure** from long generated outputs
 
-### Static admission under heterogeneous load
+## Key result
 
-At 25 RPS, a very small `4 in-flight / 2 waiting` bound was far too aggressive:
+A fixed `64/8` policy behaved well at one mixed-load operating point and less well at another.
 
-- success: 66 / 500
-- reject rate: **86.8%**
-- P99 TTFT: 1.6417 s
-- P99 E2E: 3.0012 s
+Historical mixed-workload examples:
 
-The low cap likely reduced continuous-batching efficiency while still adding gateway queueing.
+| Policy / Load | Reject | P99 TTFT | P99 E2E |
+|---|---:|---:|---:|
+| Static 4/2 @ 25 RPS | 86.8% | 1.642 s | 3.001 s |
+| Static 64/8 @ 25 RPS | 0% | 0.412 s | 3.305 s |
+| Static 64/8 @ 30 RPS | 11.0% | 1.976 s | 4.284 s |
 
-A larger `64 in-flight / 8 waiting` bound behaved much better at 25 RPS:
+## Conclusion
 
-- success: 500 / 500
-- reject rate: **0%**
-- P99 TTFT: 0.4124 s
-- P99 E2E: 3.3049 s
+A low request-count cap can reject too much and reduce batching efficiency. A larger cap can work well under one mix/load and poorly under another.
 
-However, the same `64/8` policy at 30 RPS did not generalize cleanly:
+> **Static request-count admission is workload- and load-dependent.**
 
-- success: 534 / 600
-- reject rate: **11.0%**
-- P99 TTFT: 1.9759 s
-- P99 E2E: 4.2836 s
-
-This is the key Phase 4 result: **a fixed request-count admission threshold can be strongly workload- and load-dependent.** A threshold that looks good at one operating point can reject too aggressively, reduce batching efficiency, or fail to protect TTFT at another.
-
-The detailed environment notes, every run, every per-workload metric, and the exact static-policy comparisons are recorded in:
+Detailed Phase 4 notes:
 
 [experiments/heterogeneous-workload-2026-09-23.md](experiments/heterogeneous-workload-2026-09-23.md)
 
 ---
 
-# Engineering Lessons
+# 8. Phase 5 — Token-Cost Calibration
 
-## 1. Tail latency reveals overload before outright failure
+## Reason
 
-At 15–20 RPS, the server still completed all requests, but P99 TTFT degraded sharply. Availability alone would not have revealed the problem.
+The gateway needed a better representation of “how expensive is this request?”
 
-## 2. Admission control trades availability for bounded latency
+Low-load calibration separated request shape from queueing:
 
-Rejecting excess traffic can produce a better service than accepting every request and allowing all requests to experience multi-second queueing delay.
+```text
+Load = f(arrival rate, input tokens, output tokens)
+```
 
-## 3. Thresholds must account for continuous batching
+### Input sweep
 
-A low concurrency cap was not automatically better. `32/8` protected severe-overload latency but rejected too aggressively and likely reduced vLLM batching efficiency. `64/8` produced a better latency-versus-availability tradeoff.
+Output stayed near 128 tokens while realized input grew from 32 to 1,418 tokens.
 
-## 4. TTFT is an outcome metric, not a per-request admission signal
+P50 TTFT increased approximately:
 
-TTFT is only known after a request has already been admitted. The gateway therefore uses current admitted work as the leading control signal and uses P99 TTFT to evaluate and tune the threshold.
+```text
+68.8 ms -> 76.1 ms
+```
 
-## 5. GPU utilization is insufficient as an overload signal
+### Output sweep
 
-The earlier concurrency benchmark showed throughput continuing to improve even after GPU utilization reached 100%.
+Input stayed near 98 tokens while output was forced to:
 
-## 6. Streaming semantics must be preserved
+```text
+32, 128, 256, 512, 1024
+```
 
-A proxy that buffers the complete model response would corrupt client-observed TTFT. The gateway forwards streamed chunks as they arrive.
+P50 E2E increased approximately:
 
-## 7. Availability failure must be separated from overload
+```text
+0.418 s -> 13.972 s
+```
 
-One attempted 12 RPS run produced 720 failures because both vLLM and the gateway were down. That run was excluded from performance analysis and rerun successfully after service health checks.
+## Conclusion
 
-This reinforced the distinction between:
+Input and output token counts both matter, but low-load latency slopes are **not** sufficient admission weights because vLLM batching changes system behavior under load.
 
-- service availability failure
-- performance saturation
-- overload-induced latency degradation
+Detailed calibration:
+
+[experiments/token-cost-calibration-2026-10-04.md](experiments/token-cost-calibration-2026-10-04.md)
 
 ---
 
-## Gateway Dependency Setup
+# 9. Phase 6 — Workload-Shape Saturation
 
-```bash
-pip install fastapi uvicorn httpx
-```
+## Reason
 
-## Start the Gateway
+Instead of deriving request cost from isolated latency alone, the next experiment measured how much sustainable arrival capacity each request shape consumed.
 
-### Baseline mode
+Three fixed shapes were driven toward saturation:
 
-```bash
-ADMISSION_MODE=baseline \
-uvicorn gateway:app --host 0.0.0.0 --port 8080
-```
+| Shape | Realized input | Realized output |
+|---|---:|---:|
+| Baseline | 98 | 128 |
+| Prefill-heavy | 1,418 | 128 |
+| Decode-heavy | 98 | 512 |
 
-### Protected mode
+Each point was repeated three times and medians were used.
 
-The selected configuration is:
+## Saturation results
+
+### Baseline
+
+| RPS | P99 TTFT | P99 E2E |
+|---:|---:|---:|
+| 10 | 0.126 s | 1.847 s |
+| 15 | 0.217 s | 2.081 s |
+| 20 | 0.740 s | 2.832 s |
+| 25 | 1.747 s | 5.477 s |
+| 30 | 2.855 s | 6.907 s |
+| 35 | 4.612 s | 11.745 s |
+
+Healthy region: roughly **20 RPS**.
+
+### Prefill-heavy
+
+| RPS | P99 TTFT | P99 E2E |
+|---:|---:|---:|
+| 5 | 0.150 s | 2.164 s |
+| 8 | 0.154 s | 2.598 s |
+| 10 | 0.197 s | 5.048 s |
+| 12 | 0.903 s | 19.821 s |
+| 15 | 18.093 s | 34.847 s |
+| 20 | 30.029 s | 42.659 s |
+
+Healthy region: roughly **10 RPS**.
+
+### Decode-heavy
+
+| RPS | P99 TTFT | P99 E2E |
+|---:|---:|---:|
+| 5 | 0.115 s | 9.247 s |
+| 8 | 0.440 s | 18.046 s |
+| 10 | 0.426 s | 26.759 s |
+| 12 | 11.608 s | 34.137 s |
+| 15 | 23.189 s | 44.665 s |
+| 20 | 39.353 s | 58.229 s |
+
+Practical healthy region: roughly **5–8 RPS**.
+
+## Capacity-derived cost intuition
+
+Using baseline capacity as normalized cost 1:
 
 ```text
+baseline       ~20 RPS -> ~1x
+prefill-heavy  ~10 RPS -> ~2x
+decode-heavy   ~5-8 RPS -> ~2.5-4x
+```
+
+A convenient V1 approximation is:
+
+```text
+baseline : prefill-heavy : decode-heavy ~= 1 : 2 : 3
+```
+
+This is an empirical serving-capacity approximation, not a universal physical law.
+
+---
+
+# 10. Phase 7 — V1 Token-Cost-Aware Admission
+
+## Cost model
+
+The gateway uses:
+
+```text
+C(I, O) = c + alpha * I + beta * O
+```
+
+where:
+
+- `I` = estimated prompt tokens before admission
+- `O` = requested `max_tokens`
+- actual output tokens are unavailable before the request runs, so V1 uses the output cap conservatively
+
+The three calibration anchors are:
+
+```text
+C(98, 128)   ~= 1
+C(1418, 128) ~= 2
+C(98, 512)   ~= 3
+```
+
+Solving gives:
+
+```text
+COST_INTERCEPT  = 0.259
+INPUT_TOKEN_COST = 0.000758
+OUTPUT_TOKEN_COST = 0.0052083333
+```
+
+Therefore:
+
+```text
+request_cost =
+    0.259
+    + 0.000758 * estimated_input_tokens
+    + 0.0052083333 * max_tokens
+```
+
+Admission condition:
+
+```text
+current_admitted_cost + request_cost <= MAX_ADMITTED_COST
+```
+
+If false, the gateway rejects the request with HTTP `503`.
+
+## Runtime validation
+
+The online tokenizer/cost path was validated against the same three shapes:
+
+| Shape | Estimated input | max_tokens | Estimated cost |
+|---|---:|---:|---:|
+| Baseline | 98 | 128 | 1.000 |
+| Prefill-heavy | 1,418 | 128 | 2.001 |
+| Decode-heavy | 98 | 512 | 3.000 |
+
+During this validation, a tokenizer integration bug was found: `BatchEncoding` length was being interpreted as token count. The gateway was fixed to explicitly read `input_ids`.
+
+That failure was useful because it validated the end-to-end feature definition rather than assuming the offline and online token counts matched.
+
+---
+
+# 11. V1 Budget Tuning
+
+## Reason
+
+The cost model estimates **relative request weight**. `MAX_ADMITTED_COST` controls **how much total estimated work may be active at once**.
+
+For example, with a budget of 80:
+
+```text
+80 baseline-cost requests      ~= budget 80
+40 prefill-heavy requests      ~= budget 80
+~26 decode-heavy requests      ~= budget 80
+```
+
+Real traffic is mixed, so the gateway tracks the sum of request costs rather than a request count.
+
+## Controlled tuning experiment
+
+Held constant:
+
+- heterogeneous deterministic workload
+- 25 RPS
+- 30 seconds/run
+- 3 repeats
+- median reported
+
+Changed only:
+
+```text
+MAX_ADMITTED_COST = 48, 64, 80
+```
+
+## Results
+
+| Cost budget | Reject rate | P99 TTFT | P99 E2E |
+|---:|---:|---:|---:|
+| 48 | 25.60% | 1.320 s | 3.224 s |
+| 64 | 17.73% | 1.564 s | 3.643 s |
+| 80 | 10.53% | 1.747 s | 3.970 s |
+
+## Conclusion
+
+Increasing the budget moves along a clear latency-vs-rejection frontier:
+
+- lower budget -> reject more, protect tail latency more aggressively
+- higher budget -> accept more, allow more queueing/tail latency
+
+Budget 80 was selected for the full A/B/C comparison because it accepted substantially more traffic than 48/64 without yet showing a severe latency cliff.
+
+---
+
+# 12. Phase 8 — Final A/B/C Comparison
+
+## Experimental design
+
+Three policies were compared:
+
+### A. Baseline
+
+```text
+ADMISSION_MODE=baseline
+```
+
+No gateway-side overload protection.
+
+### B. Static protected
+
+```text
+ADMISSION_MODE=protected
 MAX_IN_FLIGHT=64
 MAX_WAITING=8
 ```
 
-Start it with:
+Every request consumes one logical concurrency slot regardless of request shape.
+
+### C. Cost-aware V1
+
+```text
+ADMISSION_MODE=cost_aware
+MAX_ADMITTED_COST=80
+```
+
+Requests consume different amounts of the common cost budget.
+
+## Controlled variables
+
+All policies used:
+
+- same RTX 3090
+- same model
+- same vLLM server configuration
+- same deterministic heterogeneous workload
+- same RPS points: `20, 25, 30`
+- 30 seconds/run
+- 3 repeats per point
+- median across repeats
+- streaming enabled
+- temperature 0
+
+The only intended difference was the admission policy.
+
+## Final results
+
+| RPS | Policy | Reject | P99 TTFT | P99 E2E |
+|---:|---|---:|---:|---:|
+| 20 | Baseline | 0.00% | 1.182 s | 3.533 s |
+| 20 | Static 64/8 | 0.00% | 1.292 s | 3.785 s |
+| 20 | Cost-aware 80 | 0.50% | **1.127 s** | **3.290 s** |
+| 25 | Baseline | 0.00% | 2.390 s | 8.590 s |
+| 25 | Static 64/8 | 1.87% | 1.859 s | 4.287 s |
+| 25 | Cost-aware 80 | 11.07% | **1.795 s** | **4.151 s** |
+| 30 | Baseline | 0.00% | 3.911 s | 9.208 s |
+| 30 | Static 64/8 | 13.89% | 2.521 s | 4.815 s |
+| 30 | Cost-aware 80 | 23.56% | **1.827 s** | **4.089 s** |
+
+## Strongest overload result
+
+At 30 RPS, cost-aware 80 versus unprotected baseline:
+
+```text
+P99 TTFT: 3.911 -> 1.827 s   (~53% lower)
+P99 E2E:  9.208 -> 4.089 s   (~56% lower)
+```
+
+However, this improvement came with a 23.56% rejection rate.
+
+Against static 64/8 at the same 30 RPS:
+
+```text
+P99 TTFT: 2.521 -> 1.827 s   (~27.5% lower)
+P99 E2E:  4.815 -> 4.089 s   (~15.1% lower)
+Reject:    13.89% -> 23.56%
+```
+
+This showed better tail latency, but not a fair dominance result because cost-aware 80 rejected substantially more traffic.
+
+---
+
+# 13. Matched-Rejection Follow-Up
+
+## Reason
+
+A lower P99 is not meaningful evidence of a better controller if it is achieved only by rejecting much more work.
+
+The final follow-up increased the cost budget at 30 RPS to move cost-aware admission toward the static policy's rejection/throughput region.
+
+## Results
+
+| Policy | Reject | Approx. accepted req/s | P99 TTFT | P99 E2E |
+|---|---:|---:|---:|---:|
+| Static 64/8 | 13.89% | 25.83 | **2.521 s** | **4.815 s** |
+| Cost-aware 80 | 23.56% | 22.93 | 1.827 s | 4.089 s |
+| Cost-aware 96 | 18.33% | 24.50 | 2.190 s | 4.818 s |
+| Cost-aware 112 | 15.67% | 25.30 | 2.724 s | 5.455 s |
+
+Cost-aware 112 came close to static 64/8 in rejection rate and accepted throughput:
+
+```text
+Static reject:    13.89%
+Cost-aware 112:   15.67%
+
+Static accepted:  ~25.83 req/s
+Cost-aware 112:   ~25.30 req/s
+```
+
+At that comparable operating point, static admission was better:
+
+```text
+P99 TTFT:
+static 64/8     2.521 s
+cost-aware 112  2.724 s
+
+P99 E2E:
+static 64/8     4.815 s
+cost-aware 112  5.455 s
+```
+
+## Final interpretation
+
+The V1 cost-aware controller is **not** a universal improvement over a tuned static limiter.
+
+What the experiment does show:
+
+1. Heterogeneous requests consume measurably different serving capacity.
+2. A scalar token-cost model can convert those differences into an online admission signal.
+3. The cost budget provides a clean way to move along the rejection-vs-tail-latency frontier.
+4. Under severe overload, cost-aware admission can strongly reduce tail latency relative to unprotected serving.
+5. At comparable rejection/throughput, this first-order linear V1 did not beat static 64/8.
+
+That last result matters. It suggests that the remaining error is not simply “choose another budget”; the model itself omits important serving dynamics.
+
+---
+
+# 14. Why V1 Does Not Fully Model vLLM Cost
+
+V1 compresses every request into one scalar:
+
+```text
+cost = intercept + alpha * input_tokens + beta * max_tokens
+```
+
+Real vLLM serving cost is more complex and nonlinear. It also depends on:
+
+- continuous-batching composition
+- number of active decode sequences
+- realized output length, not only `max_tokens`
+- KV-cache occupancy
+- prompt/decode overlap
+- scheduler state
+- workload mix
+- current queue/load
+- GPU/model/runtime configuration
+
+Therefore the V1 controller is **workload-aware**, but it is not **feedback-adaptive**.
+
+A logical future progression is:
+
+```text
+V1: fixed token-cost model + fixed budget        <- completed
+V2: fixed cost model + feedback-adaptive budget
+V3: richer state model / predictive control
+```
+
+Possible V2/V3 signals include observed TTFT, admitted-cost pressure, queue depth, KV-cache state, active sequence count, and workload mix.
+
+The project intentionally stops at V1 rather than expanding into multi-GPU scheduling, RAG, Kubernetes, or a full production serving platform.
+
+---
+
+# 15. Reproducing the Final Experiment
+
+## Baseline
+
+```bash
+ADMISSION_MODE=baseline \
+python gateway.py
+```
+
+## Static protected
 
 ```bash
 ADMISSION_MODE=protected \
 MAX_IN_FLIGHT=64 \
 MAX_WAITING=8 \
-uvicorn gateway:app --host 0.0.0.0 --port 8080
+python gateway.py
 ```
 
-## Gateway Metrics
+## Cost-aware
+
+```bash
+ADMISSION_MODE=cost_aware \
+MAX_ADMITTED_COST=80 \
+python gateway.py
+```
+
+Check gateway state:
 
 ```bash
 curl http://localhost:8080/metrics
 ```
 
-Example metrics include:
+For a formal cost-aware run, verify:
 
-- `current_in_flight`
-- `current_waiting`
-- `accepted_requests`
-- `rejected_requests`
-- `failed_requests`
-- `max_waiting`
-
-## Run Sustained-Load Benchmark
-
-```bash
-python3 sustained_load.py --rps 20 --duration 60
+```text
+admission_mode = cost_aware
+tokenizer_available = true
+tokenizer_fallback_requests = 0
 ```
 
-or:
+Run the repeated heterogeneous benchmark:
 
 ```bash
-python3 sustained_load.py --rps 30 --duration 60
+python run_experiments.py \
+  --rps 20 25 30 \
+  --duration 30 \
+  --repeats 3 \
+  --workload heterogeneous \
+  --output-dir results/<experiment-name>
+```
+
+The runner stores:
+
+```text
+results/<experiment-name>/raw/
+results/<experiment-name>/runs.csv
+results/<experiment-name>/medians.csv
 ```
 
 ---
 
-## Current Limitations
+# 16. Result Directories
 
-- Single NVIDIA RTX 3090
-- Single model
-- Synthetic heterogeneous request shapes are now tested, but realized input/output token counts are not yet recorded
-- Static admission thresholds
-- No deadline-aware scheduling
-- No adaptive queue control
-- No multi-GPU / tensor parallelism
-- No distributed gateway
-- No production retry/backoff policy
-- `max_waiting` is supporting instrumentation rather than a precise measurement of vLLM's internal scheduler queue
+Final and tuning data are committed under:
 
-The experiment intentionally focuses on one narrow production reliability question rather than building a complete serving platform.
+```text
+results/final_baseline/
+results/final_protected/
+results/final_cost80/
 
-## Next Steps
+results/cost48/
+results/cost64/
+results/cost80/
+results/cost96_rps30/
+results/cost112_rps30/
 
-- Export benchmark results to CSV
-- Add a baseline-vs-protected P99 TTFT graph
-- Add benchmark health checks
-- Expose richer telemetry
-- Evaluate retry/backoff behavior
-- Explore adaptive admission thresholds
-- Record realized input/output token counts and benchmark drain time
-- Add repeated trials for confidence around the 20–30 RPS knee
-- Implement and compare workload-aware / token-cost-aware admission
+results/saturation_baseline/
+results/saturation_prefill/
+results/saturation_decode/
+```
 
-The static overload-control experiment is complete. The next phase is workload-aware / token-cost-aware admission under heterogeneous traffic.
+Supporting experiment notes:
+
+- [Heterogeneous workload study](experiments/heterogeneous-workload-2026-09-23.md)
+- [Token-cost calibration](experiments/token-cost-calibration-2026-10-04.md)
+
+---
+
+# 17. Engineering Takeaways
+
+1. **Tail latency reveals overload before failure rate does.** A service can keep returning 200s while becoming unusably slow.
+2. **Admission control is a tradeoff, not free capacity.** Lower latency is often purchased with deliberate rejection.
+3. **Continuous batching makes naive concurrency limits non-obvious.** A lower cap can actually hurt efficiency.
+4. **One request is not one unit of inference work.** Prompt and decode shapes have materially different saturation capacities.
+5. **Offline features must match online features.** The tokenizer bug found during V1 validation showed why end-to-end feature validation matters.
+6. **A better-looking latency number is not enough.** Controllers must be compared at similar rejection/throughput, not only at identical offered load.
+7. **The first-order cost model is useful but incomplete.** Static 64/8 remained competitive at matched operating points, motivating feedback/state-aware control rather than more manual budget tuning.
+8. **GPU utilization alone is not a sufficient saturation metric.** Throughput, TTFT, E2E latency, rejection, and queueing behavior must be evaluated together.
+
+---
+
+## Project Status
+
+**V1 complete.**
+
+Implemented and validated:
+
+- open-loop sustained-load generator
+- deterministic heterogeneous workloads
+- machine-readable raw and median results
+- repeated calibration and saturation sweeps
+- streaming FastAPI gateway
+- baseline and static protected modes
+- tokenizer-based pre-admission prompt estimation
+- token-cost-aware admission
+- configurable cost budget
+- overload rejection with HTTP 503
+- final A/B/C comparison
+- matched-rejection follow-up
+
+The project has reached its intended resume-ready stopping point: the design, tradeoffs, negative result, and measured conclusions are all reproducible and documented.
