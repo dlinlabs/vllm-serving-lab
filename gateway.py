@@ -100,14 +100,25 @@ def estimate_input_tokens(payload: Dict[str, Any]) -> tuple[int, bool]:
 
     if tokenizer is not None and isinstance(messages, list):
         try:
-            token_ids = tokenizer.apply_chat_template(
+            tokenized = tokenizer.apply_chat_template(
                 messages,
                 tokenize=True,
                 add_generation_prompt=True,
+                return_dict=True,
             )
-            if isinstance(token_ids, dict):
-                token_ids = token_ids.get("input_ids", [])
-            return max(1, len(token_ids)), False
+
+            input_ids = tokenized["input_ids"]
+
+            # Transformers may return a flat list, a batch-shaped nested list,
+            # or a tensor depending on tokenizer/version/options.
+            if hasattr(input_ids, "shape"):
+                token_count = int(input_ids.shape[-1])
+            elif input_ids and isinstance(input_ids[0], (list, tuple)):
+                token_count = len(input_ids[0])
+            else:
+                token_count = len(input_ids)
+
+            return max(1, token_count), False
         except Exception:
             # Fall through to the deterministic approximation below. The
             # metrics endpoint records how often this path is used.
