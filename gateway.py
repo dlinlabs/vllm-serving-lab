@@ -2,6 +2,8 @@ import asyncio
 import json
 import math
 import os
+import secrets
+from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 import httpx
@@ -10,6 +12,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 
 VLLM_URL = os.getenv("VLLM_URL", "http://localhost:8000")
 MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen3-4B-Instruct-2507")
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "")
 ADMISSION_MODE = os.getenv("ADMISSION_MODE", "baseline").strip().lower()
 
 # Static request-count admission settings.
@@ -35,8 +38,8 @@ if MAX_IN_FLIGHT <= 0:
     raise RuntimeError("MAX_IN_FLIGHT must be greater than zero.")
 if MAX_WAITING < 0:
     raise RuntimeError("MAX_WAITING must be non-negative.")
-if MAX_ADMITTED_COST <= 0:
-    raise RuntimeError("MAX_ADMITTED_COST must be greater than zero.")
+if not math.isfinite(MAX_ADMITTED_COST) or MAX_ADMITTED_COST <= 0:
+    raise RuntimeError("MAX_ADMITTED_COST must be finite and greater than zero.")
 
 # The admission model was calibrated using vLLM-reported prompt token counts.
 # Reusing the model tokenizer at the gateway keeps the runtime estimate aligned
@@ -60,6 +63,8 @@ state_lock = asyncio.Lock()
 sem = asyncio.Semaphore(MAX_IN_FLIGHT) if ADMISSION_MODE == "protected" else None
 
 state: Dict[str, Any] = {
+    "admission_budget": MAX_ADMITTED_COST,
+    "budget_version": 0,
     "current_in_flight": 0,
     "current_waiting": 0,
     "accepted_requests": 0,
@@ -160,7 +165,8 @@ async def snapshot_metrics() -> Dict[str, Any]:
             "admission_mode": ADMISSION_MODE,
             "max_in_flight": MAX_IN_FLIGHT,
             "max_waiting_capacity": MAX_WAITING,
-            "max_admitted_cost": MAX_ADMITTED_COST,
+            "max_admitted_cost": metrics["admission_budget"],
+            "initial_admission_budget": MAX_ADMITTED_COST,
             "cost_intercept": COST_INTERCEPT,
             "input_token_cost": INPUT_TOKEN_COST,
             "output_token_cost": OUTPUT_TOKEN_COST,
@@ -172,11 +178,20 @@ async def snapshot_metrics() -> Dict[str, Any]:
     return metrics
 
 
-async def begin_request(request_cost: float, used_tokenizer_fallback: bool) -> bool:
+@dataclass(frozen=True)
+class AdmissionDecision:
+    accepted: bool
+    budget: Optional[float] = None
+    budget_version: Optional[int] = None
+
+
+async def begin_request(
+    request_cost: float, used_tokenizer_fallback: bool
+) -> AdmissionDecision:
     if ADMISSION_MODE == "baseline":
         async with state_lock:
             state["accepted_requests"] += 1
-        return True
+        return AdmissionDecision(True)
 
     if ADMISSION_MODE == "cost_aware":
         async with state_lock:
@@ -184,10 +199,12 @@ async def begin_request(request_cost: float, used_tokenizer_fallback: bool) -> b
                 state["tokenizer_fallback_requests"] += 1
 
             projected_cost = state["current_admitted_cost"] + request_cost
-            if projected_cost > MAX_ADMITTED_COST:
+            budget = state["admission_budget"]
+            version = state["budget_version"]
+            if projected_cost > budget:
                 state["rejected_requests"] += 1
                 state["rejected_cost"] += request_cost
-                return False
+                return AdmissionDecision(False, budget, version)
 
             state["accepted_requests"] += 1
             state["accepted_cost"] += request_cost
@@ -197,13 +214,13 @@ async def begin_request(request_cost: float, used_tokenizer_fallback: bool) -> b
                 state["peak_admitted_cost"],
                 projected_cost,
             )
-        return True
+        return AdmissionDecision(True)
 
     async with state_lock:
         outstanding = state["current_in_flight"] + state["current_waiting"]
         if outstanding >= MAX_OUTSTANDING:
             state["rejected_requests"] += 1
-            return False
+            return AdmissionDecision(False)
 
         state["accepted_requests"] += 1
         state["current_waiting"] += 1
@@ -216,7 +233,7 @@ async def begin_request(request_cost: float, used_tokenizer_fallback: bool) -> b
         async with state_lock:
             state["current_waiting"] -= 1
             state["current_in_flight"] += 1
-        return True
+        return AdmissionDecision(True)
     except BaseException:
         if semaphore_acquired:
             sem.release()
@@ -274,14 +291,16 @@ async def proxy_chat_completions(request: Request):
             used_tokenizer_fallback,
         ) = estimate_request_cost(payload)
 
-    if not await begin_request(request_cost, used_tokenizer_fallback):
+    decision = await begin_request(request_cost, used_tokenizer_fallback)
+    if not decision.accepted:
         return JSONResponse(
             {
                 "detail": "request rejected: admission capacity exceeded",
                 "estimated_request_cost": request_cost,
                 "estimated_input_tokens": estimated_input_tokens,
                 "estimated_output_tokens": estimated_output_tokens,
-                "max_admitted_cost": MAX_ADMITTED_COST,
+                "max_admitted_cost": decision.budget,
+                "budget_version": decision.budget_version,
             },
             status_code=503,
         )
@@ -335,6 +354,47 @@ async def proxy_chat_completions(request: Request):
         },
         media_type=upstream.headers.get("content-type"),
     )
+
+
+@app.post("/admin/budget")
+async def update_budget(request: Request):
+    # This state belongs to one process. Run the experiment with one worker.
+    if not ADMIN_API_KEY:
+        return JSONResponse({"detail": "budget updates disabled"}, status_code=503)
+    supplied_key = request.headers.get("x-admin-api-key", "")
+    if not secrets.compare_digest(supplied_key.encode(), ADMIN_API_KEY.encode()):
+        return JSONResponse({"detail": "invalid admin API key"}, status_code=401)
+    if ADMISSION_MODE != "cost_aware":
+        return JSONResponse(
+            {"detail": "budget updates require cost_aware mode"}, status_code=409
+        )
+
+    try:
+        payload = await request.json()
+        value = payload.get("budget") if isinstance(payload, dict) else None
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError("budget must be a number")
+        budget = float(value)
+        if not math.isfinite(budget) or budget <= 0:
+            raise ValueError("budget must be finite and greater than zero")
+    except (ValueError, OverflowError, UnicodeDecodeError):
+        return JSONResponse(
+            {"detail": "budget must be a finite number greater than zero"},
+            status_code=422,
+        )
+
+    async with state_lock:
+        previous_budget = state["admission_budget"]
+        state["admission_budget"] = budget
+        state["budget_version"] += 1
+        result = {
+            "previous_budget": previous_budget,
+            "budget": budget,
+            "current_admitted_cost": state["current_admitted_cost"],
+            "budget_version": state["budget_version"],
+        }
+    # Existing requests retain their reservations, even after a budget reduction.
+    return result
 
 
 @app.get("/metrics")
