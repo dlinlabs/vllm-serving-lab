@@ -3,12 +3,16 @@ import json
 import math
 import os
 import secrets
+from contextlib import asynccontextmanager
+from pathlib import Path
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 import httpx
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, StreamingResponse
+from starlette.background import BackgroundTask
+from telemetry import Telemetry, SSEObserver
 
 VLLM_URL = os.getenv("VLLM_URL", "http://localhost:8000")
 MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen3-4B-Instruct-2507")
@@ -58,7 +62,32 @@ try:
 except Exception as exc:  # pragma: no cover - environment-dependent fallback
     tokenizer_load_error = f"{type(exc).__name__}: {exc}"
 
-app = FastAPI(title="vLLM Admission Gateway")
+telemetry = Telemetry()
+TELEMETRY_JSONL = os.getenv("TELEMETRY_JSONL", "")
+
+
+@asynccontextmanager
+async def lifespan(app):
+    stop = asyncio.Event()
+    task = None
+    if TELEMETRY_JSONL:
+        path = Path(TELEMETRY_JSONL)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # Fail startup if the experiment log cannot be opened.
+        with path.open("a", encoding="utf-8"):
+            pass
+        telemetry.enabled = True
+        task = asyncio.create_task(telemetry.run(path, snapshot_metrics, stop))
+    try:
+        yield
+    finally:
+        stop.set()
+        if task is not None:
+            await task
+        telemetry.enabled = False
+
+
+app = FastAPI(title="vLLM Admission Gateway", lifespan=lifespan)
 state_lock = asyncio.Lock()
 sem = asyncio.Semaphore(MAX_IN_FLIGHT) if ADMISSION_MODE == "protected" else None
 
@@ -162,6 +191,9 @@ async def snapshot_metrics() -> Dict[str, Any]:
 
     metrics.update(
         {
+            "telemetry_run_id": telemetry.run_id,
+            "telemetry_dropped_records": telemetry.dropped,
+            "telemetry_write_errors": telemetry.write_errors,
             "admission_mode": ADMISSION_MODE,
             "max_in_flight": MAX_IN_FLIGHT,
             "max_waiting_capacity": MAX_WAITING,
@@ -214,7 +246,7 @@ async def begin_request(
                 state["peak_admitted_cost"],
                 projected_cost,
             )
-        return AdmissionDecision(True)
+        return AdmissionDecision(True, budget, version)
 
     async with state_lock:
         outstanding = state["current_in_flight"] + state["current_waiting"]
@@ -263,96 +295,124 @@ async def finish_request(request_cost: float) -> None:
 
 @app.post("/v1/chat/completions")
 async def proxy_chat_completions(request: Request):
-    body = await request.body()
-    headers = {
-        key: value
-        for key, value in request.headers.items()
-        if key.lower() not in {"host", "content-length"}
-    }
-
-    payload: Dict[str, Any] = {}
-    if ADMISSION_MODE == "cost_aware":
-        try:
-            parsed = json.loads(body)
-            if isinstance(parsed, dict):
-                payload = parsed
-        except (json.JSONDecodeError, UnicodeDecodeError):
-            payload = {}
-
+    request_id = telemetry.received()
+    reserved = False
+    cleaned = False
     request_cost = 0.0
-    estimated_input_tokens = 0
-    estimated_output_tokens = 0
-    used_tokenizer_fallback = False
-    if ADMISSION_MODE == "cost_aware":
-        (
-            request_cost,
-            estimated_input_tokens,
-            estimated_output_tokens,
-            used_tokenizer_fallback,
-        ) = estimate_request_cost(payload)
-
-    decision = await begin_request(request_cost, used_tokenizer_fallback)
-    if not decision.accepted:
-        return JSONResponse(
-            {
-                "detail": "request rejected: admission capacity exceeded",
-                "estimated_request_cost": request_cost,
-                "estimated_input_tokens": estimated_input_tokens,
-                "estimated_output_tokens": estimated_output_tokens,
-                "max_admitted_cost": decision.budget,
-                "budget_version": decision.budget_version,
-            },
-            status_code=503,
-        )
-
-    client = httpx.AsyncClient()
+    client = None
     upstream = None
-    try:
-        upstream_request = client.build_request(
-            method=request.method,
-            url=f"{VLLM_URL}/v1/chat/completions",
-            content=body,
-            headers=headers,
-            timeout=60.0,
-        )
-        upstream = await client.send(upstream_request, stream=True)
-    except httpx.HTTPError:
-        async with state_lock:
-            state["failed_requests"] += 1
-        return JSONResponse({"detail": "upstream request failed"}, status_code=502)
-    finally:
-        if upstream is None:
-            try:
-                await client.aclose()
-            finally:
-                await finish_request(request_cost)
 
-    async def stream_upstream():
+    async def cleanup(outcome):
+        nonlocal cleaned
+        if cleaned:
+            return
+        cleaned = True
         try:
-            async for chunk in upstream.aiter_raw():
-                yield chunk
-        except httpx.HTTPError:
-            async with state_lock:
-                state["failed_requests"] += 1
-            raise
+            if upstream is not None:
+                await upstream.aclose()
         finally:
             try:
-                await upstream.aclose()
-            finally:
-                try:
+                if client is not None:
                     await client.aclose()
-                finally:
+            finally:
+                if reserved:
                     await finish_request(request_cost)
+                telemetry.terminal(request_id, outcome)
+                if outcome == "failed":
+                    async with state_lock:
+                        state["failed_requests"] += 1
+
+    async def safe_cleanup(outcome):
+        # Cleanup survives cancellation of the downstream response task.
+        task = asyncio.create_task(cleanup(outcome))
+        try:
+            await asyncio.shield(task)
+        except asyncio.CancelledError:
+            await task
+            raise
+
+    try:
+        body = await request.body()
+        headers = {
+            key: value for key, value in request.headers.items()
+            if key.lower() not in {"host", "content-length", "x-admin-api-key"}
+        }
+        headers["x-request-id"] = request_id
+        headers["accept-encoding"] = "identity"
+        try:
+            parsed = json.loads(body)
+            payload = parsed if isinstance(parsed, dict) else {}
+        except (ValueError, UnicodeDecodeError):
+            payload = {}
+
+        estimated_input_tokens = estimated_output_tokens = 0
+        used_tokenizer_fallback = False
+        if ADMISSION_MODE == "cost_aware":
+            (request_cost, estimated_input_tokens, estimated_output_tokens,
+             used_tokenizer_fallback) = estimate_request_cost(payload)
+
+        decision = await begin_request(request_cost, used_tokenizer_fallback)
+        if not decision.accepted:
+            telemetry.terminal(request_id, "rejected", budget=decision.budget,
+                               budget_version=decision.budget_version)
+            return JSONResponse(
+                {"detail": "request rejected: admission capacity exceeded",
+                 "estimated_request_cost": request_cost,
+                 "estimated_input_tokens": estimated_input_tokens,
+                 "estimated_output_tokens": estimated_output_tokens,
+                 "max_admitted_cost": decision.budget,
+                 "budget_version": decision.budget_version},
+                status_code=503, headers={"x-request-id": request_id},
+            )
+        reserved = True
+        telemetry.admitted(request_id, request_cost=request_cost,
+                           estimated_input_tokens=estimated_input_tokens,
+                           max_output_tokens=estimated_output_tokens,
+                           budget=decision.budget, budget_version=decision.budget_version)
+        client = httpx.AsyncClient()
+        upstream_request = client.build_request(
+            method=request.method, url=f"{VLLM_URL}/v1/chat/completions",
+            content=body, headers=headers, timeout=60.0,
+        )
+        telemetry.emit("backend_sent", request_id)
+        upstream = await client.send(upstream_request, stream=True)
+    except httpx.HTTPError:
+        await safe_cleanup("failed")
+        return JSONResponse({"detail": "upstream request failed"}, status_code=502,
+                            headers={"x-request-id": request_id})
+    except BaseException as exc:
+        await safe_cleanup("cancelled" if isinstance(exc, asyncio.CancelledError) else "failed")
+        raise
+
+    async def stream_upstream():
+        observer = SSEObserver()
+        is_sse = "text/event-stream" in upstream.headers.get("content-type", "")
+        streaming_expected = bool(payload.get("stream")) or is_sse
+        outcome = "cancelled"
+        try:
+            async for chunk in upstream.aiter_bytes():
+                if is_sse and upstream.is_success:
+                    observer.feed(chunk)
+                    if observer.has_content:
+                        telemetry.first_content(request_id)
+                yield chunk
+            complete = upstream.is_success and (
+                not streaming_expected or (observer.done and not observer.invalid)
+            )
+            outcome = "completed" if complete else "failed"
+        except Exception:
+            outcome = "failed"
+            raise
+        finally:
+            await safe_cleanup(outcome)
 
     return StreamingResponse(
-        stream_upstream(),
-        status_code=upstream.status_code,
-        headers={
-            key: value
-            for key, value in upstream.headers.items()
-            if key.lower() not in {"content-length", "transfer-encoding"}
-        },
+        stream_upstream(), status_code=upstream.status_code,
+        headers={**{key: value for key, value in upstream.headers.items()
+                    if key.lower() not in {"content-length", "transfer-encoding", "content-encoding", "x-request-id"}},
+                 "x-request-id": request_id},
         media_type=upstream.headers.get("content-type"),
+        background=BackgroundTask(safe_cleanup, "cancelled"),
     )
 
 
@@ -393,6 +453,7 @@ async def update_budget(request: Request):
             "current_admitted_cost": state["current_admitted_cost"],
             "budget_version": state["budget_version"],
         }
+    telemetry.emit("budget_updated", **result)
     # Existing requests retain their reservations, even after a budget reduction.
     return result
 
