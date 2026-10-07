@@ -46,6 +46,13 @@ def wait_ready(process, timeout, fetch, sleep=time.sleep):
     raise RuntimeError('Model startup timed out; inspect vllm.log for download, CUDA or KV-cache errors')
 
 
+def check_port(port=8000):
+    # A live listener still blocks this bind, but TIME_WAIT from a prior run does not.
+    with socket.socket() as sock:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(('127.0.0.1', port))
+
+
 def run(args):
     if platform.system() != 'Linux' or platform.machine() not in ('x86_64', 'AMD64'):
         raise RuntimeError('This setup targets Linux x86_64 NVIDIA rental machines')
@@ -63,8 +70,7 @@ def run(args):
     print('NVIDIA GPU / driver / VRAM:\n' + gpu.stdout, flush=True)
     record('host.json', {'python': sys.version, 'gpu': gpu.stdout, 'platform': platform.platform()})
     # Do not collide with or terminate an existing server.
-    with socket.socket() as sock:
-        sock.bind(('127.0.0.1', 8000))
+    check_port()
     venv = ROOT / '.venv'
     python = venv / 'bin' / 'python'
     if not venv.exists():
