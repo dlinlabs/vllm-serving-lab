@@ -49,6 +49,10 @@ def test_analysis_rejects_missing_and_mismatched_events(tmp_path):
         (tmp_path / 'gateway.jsonl').write_text('\n'.join(map(json.dumps, records)))
     write()
     assert analyze(tmp_path, plot=False)['valid']
+    records[-1]['monotonic'] = 1.0
+    write()
+    assert not analyze(tmp_path, plot=False)['valid']
+    records[-1]['monotonic'] = 2.0
     records.pop(3)
     write()
     assert not analyze(tmp_path, plot=False)['valid']
@@ -78,7 +82,7 @@ def test_full_runner_with_mock_vllm(tmp_path):
 from fastapi.responses import StreamingResponse
 app = FastAPI()
 @app.get('/v1/models')
-def models(): return {"data": [{"id": "mock-model"}]}
+def models(): return {"data": [{"id": "mock-model", "max_model_len": 8192}]}
 @app.post('/v1/chat/completions')
 def completion():
     async def stream():
@@ -111,3 +115,32 @@ def completion():
     finally:
         process.terminate()
         process.wait(timeout=5)
+
+
+def test_finalization_stops_gateway_when_save_fails(tmp_path, monkeypatch):
+    import run_budget_pilot as pilot
+    class Process:
+        stopped = False
+        def poll(self): return None
+        def terminate(self): self.stopped = True
+        def wait(self, timeout=None): return 0
+    process = Process()
+    def fail(*args): raise OSError('disk full')
+    monkeypatch.setattr(pilot, 'save', fail)
+    with pytest.raises(OSError, match='disk full'):
+        asyncio.run(pilot.finalize(process, tmp_path, {}, [], [], []))
+    assert process.stopped
+
+
+def test_pilot_rejects_wrong_context():
+    from run_budget_pilot import validate_model
+    for length in (None, 262144, 4096):
+        with pytest.raises(RuntimeError, match='8192'):
+            validate_model({'data': [{'id': 'model', 'max_model_len': length}]}, 'model')
+    validate_model({'data': [{'id': 'model', 'max_model_len': 8192}]}, 'model')
+
+
+def test_incomplete_analysis_produces_invalid_report(tmp_path):
+    report = analyze(tmp_path, plot=False)
+    assert not report['valid']
+    assert json.loads((tmp_path / 'report.json').read_text()) == report
