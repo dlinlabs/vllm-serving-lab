@@ -9,6 +9,7 @@ import math
 import os
 from pathlib import Path
 import secrets
+import signal
 import subprocess
 import sys
 import time
@@ -67,6 +68,29 @@ async def steps(client, key, budgets, seconds, start, changes):
         changes.append(dict(target=target, sent=before, acknowledged=time.monotonic(), **result))
 
 
+def validate_model(models, model):
+    served = next((item for item in models.get('data', []) if item.get('id') == model), None)
+    if served is None or served.get('max_model_len') != 8192:
+        raise RuntimeError('Requested model must be served with max_model_len=8192')
+
+
+async def finalize(process, output, manifest, rows, warmup, changes):
+    # Saving can fail (e.g. disk full); that must never skip process cleanup.
+    try:
+        save(output / 'client.json', {'requests': rows})
+        save(output / 'warmup.json', {'requests': warmup})
+        save(output / 'budget_changes.json', changes)
+    finally:
+        if process is not None and process.poll() is None:
+            process.terminate()
+            try:
+                await asyncio.to_thread(process.wait, timeout=15)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                await asyncio.to_thread(process.wait)
+                manifest['forced_gateway_kill'] = True
+
+
 async def run(args, output, manifest):
     key = secrets.token_hex(32)
     env = dict(os.environ, ADMISSION_MODE='cost_aware', MAX_ADMITTED_COST=str(args.budgets[0]),
@@ -86,8 +110,7 @@ async def run(args, output, manifest):
         response = await control.get(args.vllm_url.rstrip('/') + '/v1/models')
         response.raise_for_status()
         models = response.json()
-        if args.model not in [item['id'] for item in models.get('data', [])]:
-            raise RuntimeError('Requested model is not listed by vLLM')
+        validate_model(models, args.model)
         manifest['models'] = models
         with (output / 'gateway-process.log').open('w') as log:
             try:
@@ -143,17 +166,7 @@ async def run(args, output, manifest):
                 # Allow a post-drain snapshot before graceful shutdown flushes the log.
                 await asyncio.sleep(1.1)
             finally:
-                save(output / 'client.json', {'requests': rows})
-                save(output / 'warmup.json', {'requests': warmup})
-                save(output / 'budget_changes.json', changes)
-                if process is not None and process.poll() is None:
-                    process.terminate()
-                    try:
-                        await asyncio.to_thread(process.wait, timeout=15)
-                    except subprocess.TimeoutExpired:
-                        process.kill()
-                        await asyncio.to_thread(process.wait)
-                        manifest['forced_gateway_kill'] = True
+                await finalize(process, output, manifest, rows, warmup, changes)
 
 
 def main():
@@ -184,11 +197,14 @@ def main():
             manifest['packages'][package] = importlib.metadata.version(package)
         except importlib.metadata.PackageNotFoundError:
             manifest['packages'][package] = None
-    if shutil.which('nvidia-smi'):
-        gpu = subprocess.run(['nvidia-smi', '--query-gpu=name,driver_version,memory.total',
-                              '--format=csv,noheader'], capture_output=True, text=True, timeout=10)
-        manifest['gpu'] = gpu.stdout.strip()
+    def terminate(signum, frame):
+        raise KeyboardInterrupt
+    signal.signal(signal.SIGTERM, terminate)
     try:
+        if shutil.which('nvidia-smi'):
+            gpu = subprocess.run(['nvidia-smi', '--query-gpu=name,driver_version,memory.total',
+                                  '--format=csv,noheader'], capture_output=True, text=True, timeout=10)
+            manifest['gpu'] = gpu.stdout.strip()
         asyncio.run(run(args, output, manifest))
         if manifest.get('forced_gateway_kill'):
             raise RuntimeError('Gateway needed forced shutdown; telemetry may be incomplete')
