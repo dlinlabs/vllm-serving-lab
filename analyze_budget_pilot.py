@@ -15,7 +15,7 @@ def percentile(values, p):
     return values[lo] + (values[hi] - values[lo]) * (index - lo)
 
 
-def analyze(output, plot=True):
+def _analyze(output, plot=True):
     output = Path(output)
     manifest = json.loads((output / 'manifest.json').read_text())
     clients = json.loads((output / 'client.json').read_text())['requests']
@@ -36,6 +36,9 @@ def analyze(output, plot=True):
             break
     if snapshots and (snapshots[-1]['active_requests'] or abs(snapshots[-1]['current_admitted_cost']) > 1e-6):
         issues.append('Final snapshot is not drained')
+    terminal_times = [r['monotonic'] for r in records if r['event'] in ('completed', 'failed', 'cancelled', 'rejected')]
+    if snapshots and terminal_times and snapshots[-1]['monotonic'] < max(terminal_times):
+        issues.append('Missing final snapshot after request termination')
     events = defaultdict(list)
     for r in records:
         if 'request_id' in r:
@@ -106,6 +109,15 @@ def analyze(output, plot=True):
         fig.savefig(output / 'timeseries.png', dpi=160)
         plt.close(fig)
     return report
+
+
+def analyze(output, plot=True):
+    try:
+        return _analyze(output, plot)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        report = {'valid': False, 'issues': [f'Incomplete or malformed experiment data: {exc}']}
+        (Path(output) / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
+        return report
 
 
 if __name__ == '__main__':
