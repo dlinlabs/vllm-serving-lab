@@ -34,6 +34,23 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(len(calls), 2)
         setup.check_models(result)
 
+    def test_port_reuse_and_live_listener(self):
+        import socket
+        listener = socket.socket()
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        listener.bind(('127.0.0.1', 0))
+        port = listener.getsockname()[1]
+        listener.listen()
+        with self.assertRaises(OSError):
+            setup.check_port(port)
+        client = socket.create_connection(('127.0.0.1', port))
+        connection, _ = listener.accept()
+        connection.close()  # Server initiates close, leaving TIME_WAIT.
+        client.recv(1)
+        client.close()
+        listener.close()
+        setup.check_port(port)
+
     def test_exit_and_timeout(self):
         class Dead:
             def poll(self): return 1
