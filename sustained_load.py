@@ -75,6 +75,9 @@ class RequestResult:
     output_tokens: Optional[int] = None
     total_tokens: Optional[int] = None
     max_output_tokens: Optional[int] = None
+    error_type: Optional[str] = None
+    error_message: Optional[str] = None
+    error_phase: Optional[str] = None
     success: bool = False
     rejected: bool = False
 
@@ -142,8 +145,11 @@ async def consume_request(
                     result.ttft = time.monotonic() - result.started_at
 
             result.success = response.is_success and result.stream_complete
-    except httpx.HTTPError:
+    except httpx.HTTPError as exc:
         result.success = False
+        result.error_type = type(exc).__name__
+        result.error_message = str(exc)
+        result.error_phase = "before_response_headers" if result.status is None else "response_body"
     finally:
         result.end_to_end = time.monotonic() - result.started_at
 
