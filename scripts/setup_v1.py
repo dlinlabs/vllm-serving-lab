@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import platform
 import signal
+import shutil
 import socket
 import subprocess
 import sys
@@ -16,6 +17,14 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 MODEL = 'Qwen/Qwen3-4B-Instruct-2507'
 CONTEXT_LENGTH = 8192
+
+
+def venv_environment(venv):
+    env = os.environ.copy()
+    env['VIRTUAL_ENV'] = str(venv)
+    env['PATH'] = str(venv / 'bin') + os.pathsep + env.get('PATH', os.defpath)
+    env.pop('PYTHONHOME', None)
+    return env
 
 
 def command(python):
@@ -77,14 +86,19 @@ def run(args):
         subprocess.run([sys.executable, '-m', 'venv', str(venv)], check=True)
     if not python.is_file():
         raise RuntimeError('.venv exists but is not a Linux venv; move it aside explicitly')
-    subprocess.run([str(python), '-c', 'import sys; assert sys.version_info[:2] == (3,12), "Existing .venv must use Python 3.12"'], check=True)
+    child_env = venv_environment(venv)
+    subprocess.run([str(python), '-c', 'import sys; assert sys.version_info[:2] == (3,12), "Existing .venv must use Python 3.12"'], check=True, env=child_env)
     if not args.skip_install:
         # Resolve together so vLLM cannot silently replace the required Torch build.
         subprocess.run([str(python), '-m', 'pip', 'install', '--only-binary=:all:',
                         '--extra-index-url', 'https://download.pytorch.org/whl/cu130',
                         '-r', str(ROOT / 'requirements-v1.txt'),
-                        '--report', str(logs / 'install-report.json')], check=True)
-    subprocess.run([str(python), '-m', 'pip', 'check'], check=True)
+                        '--report', str(logs / 'install-report.json')], check=True, env=child_env)
+    subprocess.run([str(python), '-m', 'pip', 'check'], check=True, env=child_env)
+    ninja = shutil.which('ninja', path=child_env['PATH'])
+    if ninja is None:
+        raise RuntimeError('ninja is missing; rerun setup without --skip-install')
+    subprocess.run([ninja, '--version'], check=True, env=child_env)
     probe = '''import json, importlib.metadata as m, torch
 assert m.version('vllm') == '0.30.0', 'Wrong vLLM version'
 assert torch.__version__ == '2.13.0+cu130', 'Wrong Torch build'
@@ -95,17 +109,17 @@ assert b[0,0].item() == 32, 'CUDA compute check failed'
 print(json.dumps({'vllm':m.version('vllm'), 'torch':torch.__version__, 'cuda_runtime':torch.version.cuda,
                   'visible_gpus':[torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]}))
 '''
-    result = subprocess.run([str(python), '-c', probe], check=True, capture_output=True, text=True)
+    result = subprocess.run([str(python), '-c', probe], check=True, env=child_env, capture_output=True, text=True)
     record('runtime.json', json.loads(result.stdout))
     with (logs / 'pip-freeze.txt').open('w') as handle:
-        subprocess.run([str(python), '-m', 'pip', 'freeze'], check=True, stdout=handle)
+        subprocess.run([str(python), '-m', 'pip', 'freeze'], check=True, env=child_env, stdout=handle)
     launch = command(python)
     record('launch.json', {'argv': launch, 'model': MODEL, 'max_model_len': CONTEXT_LENGTH})
     print(f'Starting Qwen with explicit context length {CONTEXT_LENGTH}. Logs: {logs}', flush=True)
     # Keep the parent running; Ctrl+C terminates only the process group we own.
     with (logs / 'vllm.log').open('w') as handle:
         process = subprocess.Popen(launch, cwd=ROOT, stdout=handle, stderr=subprocess.STDOUT,
-                                   start_new_session=True)
+                                   start_new_session=True, env=child_env)
         try:
             opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
             def fetch():
@@ -115,7 +129,7 @@ print(json.dumps({'vllm':m.version('vllm'), 'torch':torch.__version__, 'cuda_run
             record('models.json', payload)
             # Verify gateway's local-only tokenizer path after the model download.
             subprocess.run([str(python), '-c',
-                'from transformers import AutoTokenizer; AutoTokenizer.from_pretrained(' + repr(MODEL) + ',local_files_only=True)'], check=True)
+                'from transformers import AutoTokenizer; AutoTokenizer.from_pretrained(' + repr(MODEL) + ',local_files_only=True)'], check=True, env=child_env)
             print('READY: Qwen is loaded; server max_model_len=8192 verified.\n'
                   'Keep this terminal open. In a second terminal: source .venv/bin/activate\n'
                   'Then run the smoke/pilot commands. Ctrl+C stops this vLLM server.', flush=True)
