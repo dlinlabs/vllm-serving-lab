@@ -16,6 +16,10 @@ PYTHON_BIN=python3 bash setup_and_start.sh
 The script checks Python, GPU/driver visibility via `nvidia-smi`, creates a local
 `.venv`, installs the recorded V1 core pins, runs `pip check`, verifies the actual
 Torch CUDA runtime, performs a GPU matrix multiplication, then starts vLLM.
+Manual activation is not required for setup: child processes receive `.venv/bin`
+at the front of `PATH`, so FlashInfer can find `ninja`. Setup checks `ninja` before
+launching vLLM, including with `--skip-install`.
+
 It does not install or replace the host NVIDIA driver or system Python. Use an
 appropriate template if these prerequisites are missing. V1 used Python 3.12.3;
 the script accepts Python 3.12.x and records the exact patch version.
