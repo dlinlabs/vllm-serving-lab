@@ -1,0 +1,82 @@
+{
+  "valid": true,
+  "issues": [],
+  "load_fidelity": {
+    "valid": false,
+    "issues": [
+      "Load generator exceeded predeclared maximum scheduling lag"
+    ],
+    "p99_scheduling_lag": 0.005972914516460149,
+    "max_scheduling_lag": 0.1753814696567133
+  },
+  "performance": {
+    "attempted": 7643,
+    "success": 2220,
+    "rejected": 5423,
+    "failed": 0,
+    "client_p99_ttft": 2.9449183192336914,
+    "scheduled_p99_ttft": 2.945468264806548,
+    "client_p99_e2e": 8.846757779894396,
+    "slo_successes": 659,
+    "slo_goodput_per_arrival_second": 2.1966666666666668,
+    "slo_success_fraction_of_offered": 0.08622268742640324,
+    "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+  },
+  "gateway_terminal_counts": {
+    "completed": 2223,
+    "rejected": 5423
+  },
+  "failed_without_gateway_record": 0,
+  "state_poll_errors": 0,
+  "cache_policy_self_reported": "disabled",
+  "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+  "performance_by_input_size": {
+    "medium_input": {
+      "attempted": 1424,
+      "success": 510,
+      "rejected": 914,
+      "failed": 0,
+      "client_p99_ttft": 3.0374592577572868,
+      "scheduled_p99_ttft": 3.039545128869354,
+      "client_p99_e2e": 8.866795601934427,
+      "slo_successes": 182,
+      "slo_goodput_per_arrival_second": 0.6066666666666667,
+      "slo_success_fraction_of_offered": 0.12780898876404495,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    },
+    "long_input": {
+      "attempted": 6035,
+      "success": 1642,
+      "rejected": 4393,
+      "failed": 0,
+      "client_p99_ttft": 2.862223244952027,
+      "scheduled_p99_ttft": 2.864438900636731,
+      "client_p99_e2e": 8.81241080484702,
+      "slo_successes": 447,
+      "slo_goodput_per_arrival_second": 1.49,
+      "slo_success_fraction_of_offered": 0.07406793703396852,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    },
+    "short_input": {
+      "attempted": 184,
+      "success": 68,
+      "rejected": 116,
+      "failed": 0,
+      "client_p99_ttft": 2.7598963386914677,
+      "scheduled_p99_ttft": 2.7604682753339858,
+      "client_p99_e2e": 8.774691384648904,
+      "slo_successes": 30,
+      "slo_goodput_per_arrival_second": 0.1,
+      "slo_success_fraction_of_offered": 0.16304347826086957,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    }
+  },
+  "timing": {
+    "p99_state_age": 0.0033897320926189593,
+    "max_state_age": 0.005402929964475334,
+    "p99_metrics_roundtrip": 0.05079824124463063,
+    "max_state_poll_gap": 1.4603749240050092,
+    "p99_event_loop_lag": 0.040003901501186205,
+    "max_event_loop_lag": 0.77907224802766
+  }
+}
