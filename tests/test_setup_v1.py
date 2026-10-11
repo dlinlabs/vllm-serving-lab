@@ -8,6 +8,57 @@ spec.loader.exec_module(setup)
 
 
 class SetupTests(unittest.TestCase):
+    def test_descendant_finds_ninja_without_activation(self):
+        import os
+        import subprocess
+        import sys
+        import tempfile
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            venv = Path(tmp) / '.venv'
+            bindir = venv / 'bin'
+            bindir.mkdir(parents=True)
+            ninja = bindir / 'ninja'
+            ninja.write_text('#!/bin/sh\nprintf "venv-ninja\\n"\n')
+            ninja.chmod(0o755)
+            with patch.dict(os.environ, {'PATH': '/usr/bin:/bin', 'VIRTUAL_ENV': '/other',
+                                         'PYTHONHOME': '/invalid'}):
+                env = setup.venv_environment(venv)
+                self.assertEqual(os.environ['VIRTUAL_ENV'], '/other')
+                self.assertNotIn('PYTHONHOME', env)
+                result = subprocess.run([sys.executable, '-c',
+                    'import subprocess; subprocess.run(["ninja", "--version"], check=True)'],
+                    env=env, check=True, capture_output=True, text=True)
+                self.assertEqual(result.stdout.strip(), 'venv-ninja')
+
+    def test_setup_passes_venv_environment_to_server(self):
+        import argparse
+        import tempfile
+        from unittest.mock import patch, Mock
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / '.venv/bin').mkdir(parents=True)
+            (root / '.venv/bin/python').touch()
+            proc = Mock()
+            proc.wait.return_value = 0
+            proc.poll.return_value = 0
+            def run_command(argv, **kwargs):
+                if argv[0] == 'nvidia-smi':
+                    return Mock(stdout='NVIDIA mock')
+                self.assertEqual(kwargs['env']['VIRTUAL_ENV'], str(root / '.venv'))
+                self.assertTrue(kwargs['env']['PATH'].startswith(str(root / '.venv/bin')))
+                return Mock(stdout='{}')
+            with patch.object(setup.platform, 'platform', return_value='Linux'), \
+                 patch.object(setup, 'ROOT', root), patch.object(setup, 'check_port'), \
+                 patch.object(setup.shutil, 'which', return_value=str(root / '.venv/bin/ninja')), \
+                 patch.object(setup.subprocess, 'run', side_effect=run_command), \
+                 patch.object(setup.subprocess, 'Popen', return_value=proc) as spawn, \
+                 patch.object(setup, 'wait_ready', return_value={}):
+                setup.run(argparse.Namespace(skip_install=False, startup_timeout=10))
+            env = spawn.call_args.kwargs['env']
+            self.assertEqual(env['VIRTUAL_ENV'], str(root / '.venv'))
+            self.assertTrue(env['PATH'].startswith(str(root / '.venv/bin')))
+
     def test_launch_pins_context(self):
         args = setup.command(Path('/tmp/env/bin/python'))
         self.assertEqual(args[args.index('--max-model-len') + 1], '8192')
