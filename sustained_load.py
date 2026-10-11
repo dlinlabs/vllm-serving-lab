@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 import httpx
+from telemetry import has_sse_content
 
 GATEWAY_URL = "http://localhost:8080/v1/chat/completions"
 
@@ -66,8 +67,11 @@ class RequestResult:
     scheduled_at: float
     workload: str
     request_id: Optional[str] = None
+    client_request_id: Optional[str] = None
     stream_complete: bool = False
     started_at: Optional[float] = None
+    first_content_at: Optional[float] = None
+    finished_at: Optional[float] = None
     status: Optional[int] = None
     ttft: Optional[float] = None
     end_to_end: Optional[float] = None
@@ -90,11 +94,14 @@ async def consume_request(
     prompt_override: Optional[str] = None,
     max_tokens_override: Optional[int] = None,
     ignore_eos: bool = False,
+    client_request_id: Optional[str] = None,
+    capture_cancelled: bool = False,
 ) -> RequestResult:
     result = RequestResult(
         scheduled_at=scheduled_at,
         workload=workload.name,
         max_output_tokens=max_tokens_override or workload.max_tokens,
+        client_request_id=client_request_id,
     )
     result.started_at = time.monotonic()
     payload = {
@@ -106,14 +113,26 @@ async def consume_request(
         "stream_options": {"include_usage": True},
         "ignore_eos": ignore_eos,
     }
+    invalid_sse = False
 
     try:
-        async with client.stream("POST", GATEWAY_URL, json=payload) as response:
+        headers = {'x-benchmark-request-id': client_request_id} if client_request_id else {}
+        async with client.stream("POST", GATEWAY_URL, json=payload, headers=headers) as response:
             result.request_id = response.headers.get("x-request-id")
             result.status = response.status_code
-            result.rejected = response.status_code == 503
-            if result.rejected:
-                await response.aread()
+            if response.status_code == 503:
+                raw = await response.aread()
+                try:
+                    rejection = json.loads(raw)
+                    result.rejected = (isinstance(rejection, dict) and
+                                       rejection.get('detail') == 'request rejected: admission capacity exceeded' and
+                                       'estimated_request_cost' in rejection)
+                except (ValueError, UnicodeDecodeError):
+                    pass
+                if not result.rejected:
+                    result.error_type = 'HTTPStatusError'
+                    result.error_message = 'upstream returned HTTP 503'
+                    result.error_phase = 'response_body'
                 result.end_to_end = time.monotonic() - result.started_at
                 return result
 
@@ -126,7 +145,9 @@ async def consume_request(
                     continue
                 try:
                     event = json.loads(data)
-                except json.JSONDecodeError:
+                    has_content = has_sse_content(event)
+                except ValueError:
+                    invalid_sse = True
                     continue
 
                 usage = event.get("usage")
@@ -135,23 +156,31 @@ async def consume_request(
                     result.output_tokens = usage.get("completion_tokens")
                     result.total_tokens = usage.get("total_tokens")
 
-                choices = event.get("choices", [])
-                content = (
-                    choices[0].get("delta", {}).get("content")
-                    if choices
-                    else None
-                )
-                if content and result.ttft is None:
-                    result.ttft = time.monotonic() - result.started_at
+                if has_content and result.ttft is None:
+                    result.first_content_at = time.monotonic()
+                    result.ttft = result.first_content_at - result.started_at
 
-            result.success = response.is_success and result.stream_complete
+            result.success = response.is_success and result.stream_complete and result.ttft is not None and not invalid_sse
+            if not result.success:
+                result.error_type = ('InvalidSSE' if invalid_sse else 'IncompleteStream' if not result.stream_complete
+                                     else 'EmptyContentStream') if response.is_success else 'HTTPStatusError'
+                result.error_message = result.error_type if response.is_success else f'HTTP {response.status_code}'
+                result.error_phase = 'response_body'
     except httpx.HTTPError as exc:
         result.success = False
         result.error_type = type(exc).__name__
         result.error_message = str(exc)
         result.error_phase = "before_response_headers" if result.status is None else "response_body"
+    except asyncio.CancelledError:
+        if not capture_cancelled:
+            raise
+        result.success = False
+        result.error_type = 'CancelledError'
+        result.error_message = 'replay drain timeout or collection interrupted'
+        result.error_phase = 'before_response_headers' if result.status is None else 'response_body'
     finally:
-        result.end_to_end = time.monotonic() - result.started_at
+        result.finished_at = time.monotonic()
+        result.end_to_end = result.finished_at - result.started_at
 
     return result
 

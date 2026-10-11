@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "protocol_version": "azure-prefix-v1",
+  "presets": {
+    "smoke": {
+      "purpose": "Replay and measurement validation; not model fitting or final evaluation",
+      "start": "2024-05-12T00:00:00.001163+00:00",
+      "duration_seconds": 30,
+      "sample_probability": 1,
+      "seed": 1,
+      "output_cap": 128,
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "source_sha256": "242489b81db35abe68b5d15d5ff3a7cc0e75a06184d104c7a0fe89a5fa66fb16"
+    },
+    "experiment": {
+      "purpose": "Initial fixed-budget comparison and calibration; not held-out MPC evaluation",
+      "start": "2024-05-12T00:01:00+00:00",
+      "duration_seconds": 300,
+      "sample_probability": 1,
+      "seed": 1,
+      "output_cap": 128,
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "source_sha256": "242489b81db35abe68b5d15d5ff3a7cc0e75a06184d104c7a0fe89a5fa66fb16"
+    }
+  }
+}

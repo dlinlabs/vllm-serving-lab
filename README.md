@@ -819,6 +819,21 @@ The V1 design, tradeoffs, negative result, and measured conclusions are document
 
 ## MPC Budget Step Pilot (October 2026)
 
+The next experiment uses production-derived arrival times and input token counts:
+[real-trace replay instructions](experiments/trace-replay.md). It prepares an Azure
+trace window, replays it with a fixed output cap and natural EOS, and separately
+checks record integrity and offered-load fidelity. Historical output lengths are
+kept offline and are not supplied as an oracle to admission control. Fixed-budget
+comparison is the foundation for model identification and MPC evaluation; this
+change does not yet demonstrate an MPC benefit.
+
+Use `prepare_trace.py --preset smoke` for the fixed 30-second validation window,
+or `--preset experiment` for a separate five-minute comparison window. The
+[versioned presets](experiments/trace-presets.json) freeze source checksum, window,
+seed, model, and output cap; each result retains the exact protocol. Supply
+`--source` and `--output-dir` as shown in the replay instructions. Custom windows
+remain available through `--start`.
+
 The first dynamic-budget pilot exercised the gateway at a fixed offered load while stepping the admission budget through **80 → 96 → 112 → 96 → 80**, with 30 seconds per step. It used an RTX 3090, Qwen3-4B-Instruct-2507, and vLLM 0.30.0 with an 8,192-token context limit.
 
 ![Budget step pilot time series](results/pilot-02/timeseries.png)
