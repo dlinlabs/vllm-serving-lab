@@ -9,7 +9,7 @@ import httpx
 import pytest
 
 from prepare_trace import prepare
-from run_trace_pilot import replay
+from run_trace_pilot import prepare_replay, replay
 from trace_workload import synthetic_prompt, validate_trace
 from telemetry import Telemetry
 from sustained_load import consume_request, WORKLOADS
@@ -96,6 +96,25 @@ def test_open_loop_overlapping_requests_and_pre_header_failure_accounting():
         assert rows[1]['error_type'] == 'ConnectError'
         assert rows[0]['success'] and rows[2]['success']
         assert all(c[2]['ignore_eos'] is False and c[2]['max_tokens'] == 128 for c in calls)
+    asyncio.run(scenario())
+
+
+def test_preassigned_requests_are_reused_without_allocation_during_replay(monkeypatch):
+    async def scenario():
+        data, run_id = trace(), uuid.uuid4().hex
+        rows = prepare_replay(data, run_id)
+        identifiers = [r['client_request_id'] for r in rows]
+        assert all(r['scheduled_at'] is None and r['error_type'] == 'NotLaunched' for r in rows)
+        def forbidden(*args):
+            raise AssertionError('Replay must not allocate IDs after the clock origin is chosen')
+        monkeypatch.setattr('run_trace_pilot.prepare_replay', forbidden)
+        async with httpx.AsyncClient(transport=httpx.MockTransport(
+                lambda r: sse(r.headers['x-benchmark-request-id'])), trust_env=False) as client:
+            start = time.monotonic() + .02
+            await replay(client, data, start, run_id, 1, 10, rows)
+        assert all(r['success'] for r in rows)
+        assert [r['client_request_id'] for r in rows] == identifiers
+        assert [r['scheduled_at'] - start for r in rows] == pytest.approx([0, .01, .02])
     asyncio.run(scenario())
 
 
@@ -239,6 +258,26 @@ async def completion(request: Request):
         assert report['performance']['slo_goodput_per_arrival_second'] == 10
         client_path = output / 'client.json'
         raw_clients = client_path.read_text()
+        # Internally consistent client timestamps must still respect gateway causality.
+        records = [json.loads(line) for line in (output / 'gateway.jsonl').read_text().splitlines()]
+        clients = json.loads(raw_clients)
+        first_row = clients['requests'][0]
+        gateway_first = next(r['monotonic'] for r in records if r['event'] == 'first_content' and
+                             r['request_id'] == first_row['client_request_id'])
+        first_row['first_content_at'] = gateway_first - .0001
+        first_row['ttft'] = first_row['first_content_at'] - first_row['started_at']
+        client_path.write_text(json.dumps(clients))
+        assert 'Client first content precedes gateway first content' in analyze(output, plot=False)['issues']
+        clients = json.loads(raw_clients)
+        first_row = clients['requests'][0]
+        gateway_received = next(r['monotonic'] for r in records if r['event'] == 'received' and
+                                r['request_id'] == first_row['client_request_id'])
+        first_row['started_at'] = gateway_received + .0001
+        first_row['ttft'] = first_row['first_content_at'] - first_row['started_at']
+        first_row['end_to_end'] = first_row['finished_at'] - first_row['started_at']
+        client_path.write_text(json.dumps(clients))
+        assert 'Gateway received precedes client start' in analyze(output, plot=False)['issues']
+        client_path.write_text(raw_clients)
         clients = json.loads(raw_clients)
         clients['requests'][0]['input_tokens'] += 1
         client_path.write_text(json.dumps(clients))
@@ -342,6 +381,10 @@ def test_shutdown_does_not_hide_final_flush_failure(gateway, monkeypatch, tmp_pa
 @pytest.mark.parametrize('body,error', [
     ('data: [DONE]\n\n', 'EmptyContentStream'),
     ('data: broken-json\n\ndata: {"choices":[{"delta":{"content":"hi"}}]}\n\ndata: [DONE]\n\n', 'InvalidSSE'),
+    ('data: {"choices":[{"delta":{"content":{"bad":"object"}}}]}\n\ndata: [DONE]\n\n', 'InvalidSSE'),
+    ('data: {"choices":[{"delta":{"content":"hi"}}],"usage":[]}\n\ndata: [DONE]\n\n', 'InvalidSSE'),
+    ('data: {"choices":[{"delta":{"content":"hi"}},42]}\n\ndata: [DONE]\n\n', 'InvalidSSE'),
+    ('data: {"choices":[{"delta":{"content":"hi"}}]}\n\ndata: {"error":{"message":"failed"}}\n\ndata: [DONE]\n\n', 'InvalidSSE'),
 ])
 def test_empty_and_corrupt_streams_are_failures(body, error):
     async def scenario():
@@ -350,3 +393,8 @@ def test_empty_and_corrupt_streams_are_failures(body, error):
         assert not result.success and not result.rejected
         assert result.error_type == error and result.finished_at is not None
     asyncio.run(scenario())
+    from telemetry import SSEObserver
+    observer = SSEObserver()
+    observer.feed(body.encode())
+    if error == 'InvalidSSE':
+        assert observer.invalid

@@ -8,6 +8,29 @@ import time
 import uuid
 
 
+def has_sse_content(event):
+    """Validate text-stream fields before counting any chunk as first content."""
+    if not isinstance(event, dict):
+        raise ValueError('SSE payload must be an object')
+    if event.get('error') is not None:
+        raise ValueError('SSE reports an upstream error')
+    usage = event.get('usage')
+    if usage is not None and not isinstance(usage, dict):
+        raise ValueError('SSE usage must be an object or null')
+    choices = event.get('choices', [])
+    if not isinstance(choices, list):
+        raise ValueError('SSE choices must be a list')
+    content_seen = False
+    for choice in choices:
+        if not isinstance(choice, dict) or not isinstance(choice.get('delta', {}), dict):
+            raise ValueError('SSE choice and delta must be objects')
+        content = choice.get('delta', {}).get('content')
+        if content is not None and not isinstance(content, str):
+            raise ValueError('SSE text content must be a string or null')
+        content_seen |= bool(content)
+    return content_seen
+
+
 class SSEObserver:
     """Observe complete SSE events without delaying forwarding of byte chunks."""
     def __init__(self):
@@ -39,10 +62,7 @@ class SSEObserver:
                     continue
                 try:
                     event = json.loads(data)
-                    self.has_content |= any(
-                        bool(choice.get('delta', {}).get('content'))
-                        for choice in event.get('choices', [])
-                    )
+                    self.has_content |= has_sse_content(event)
                 except (ValueError, AttributeError, TypeError):
                     self.invalid = True
 

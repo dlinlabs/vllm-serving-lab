@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 import httpx
+from telemetry import has_sse_content
 
 GATEWAY_URL = "http://localhost:8080/v1/chat/completions"
 
@@ -144,10 +145,8 @@ async def consume_request(
                     continue
                 try:
                     event = json.loads(data)
-                except json.JSONDecodeError:
-                    invalid_sse = True
-                    continue
-                if not isinstance(event, dict):
+                    has_content = has_sse_content(event)
+                except ValueError:
                     invalid_sse = True
                     continue
 
@@ -157,17 +156,7 @@ async def consume_request(
                     result.output_tokens = usage.get("completion_tokens")
                     result.total_tokens = usage.get("total_tokens")
 
-                choices = event.get("choices", [])
-                if not isinstance(choices, list) or (choices and (
-                    not isinstance(choices[0], dict) or not isinstance(choices[0].get('delta', {}), dict))):
-                    invalid_sse = True
-                    continue
-                content = (
-                    choices[0].get("delta", {}).get("content")
-                    if choices
-                    else None
-                )
-                if content and result.ttft is None:
+                if has_content and result.ttft is None:
                     result.first_content_at = time.monotonic()
                     result.ttft = result.first_content_at - result.started_at
 

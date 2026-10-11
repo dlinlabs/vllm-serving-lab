@@ -32,19 +32,28 @@ def unlaunched(row, scheduled, identifier, reason):
                 error_type='NotLaunched', error_message=reason, error_phase='scheduler')
 
 
+def prepare_replay(trace, run_id):
+    """Allocate IDs and outcomes before choosing the measurement clock origin."""
+    namespace = uuid.UUID(run_id)
+    return [unlaunched(row, None, uuid.uuid5(namespace, row['trace_id']).hex, 'collection interrupted')
+            for row in trace['requests']]
+
+
 async def replay(client, trace, start, run_id, drain_timeout, max_pending, rows):
     """Never wait for a response to schedule the next arrival; preserve every outcome."""
     active, errors = set(), []
-    identifiers = [uuid.uuid5(uuid.UUID(run_id), row['trace_id']).hex for row in trace['requests']]
-    rows.extend(unlaunched(row, start + row['arrival_seconds'], identifier, 'collection interrupted')
-                for row, identifier in zip(trace['requests'], identifiers))
+    # Keep direct callers supported; the production runner preallocates before warmup.
+    if not rows:
+        rows.extend(prepare_replay(trace, run_id))
+    if len(rows) != len(trace['requests']):
+        raise ValueError('Prepared replay row count differs from trace')
 
     async def send(index, row):
         try:
             result = await consume_request(
                 client, start + row['arrival_seconds'], trace['model'],
                 WorkloadSpec('trace', row['prompt'], row['max_tokens']),
-                client_request_id=identifiers[index], capture_cancelled=True)
+                client_request_id=rows[index]['client_request_id'], capture_cancelled=True)
             rows[index] = dict(asdict(result), trace_id=row['trace_id'],
                                expected_input_tokens=row['input_tokens'])
         except Exception as exc:
@@ -72,6 +81,11 @@ async def replay(client, trace, start, run_id, drain_timeout, max_pending, rows)
         for task in remaining:
             task.cancel()
         await asyncio.gather(*remaining, return_exceptions=True)
+        # Fill schedules for unlaunched/implementation-error rows after collection,
+        # rather than scanning the full trace on the arrival scheduler's path.
+        for result, row in zip(rows, trace['requests']):
+            if result['scheduled_at'] is None:
+                result['scheduled_at'] = start + row['arrival_seconds']
 
 
 async def poll_state(client, stop, records, interval=1.0):
@@ -95,7 +109,7 @@ async def poll_state(client, stop, records, interval=1.0):
 async def run(args, trace, output, manifest):
     key = secrets.token_hex(32)
     env = dict(os.environ, ADMISSION_MODE='cost_aware', MAX_ADMITTED_COST=str(args.budget),
-               ADMIN_API_KEY=key, MODEL_NAME=trace['model'], VLLM_URL=args.vllm_url,
+               ADMIN_API_KEY=key, MODEL_NAME=trace['model'], VLLM_URL=args.vllm_url.rstrip('/'),
                TELEMETRY_JSONL=str(output / 'gateway.jsonl'),
                TELEMETRY_STATUS_JSON=str(output / 'telemetry_status.json'),
                BENCHMARK_REQUEST_IDS='1', LOOP_LAG_TELEMETRY='1')
@@ -134,6 +148,7 @@ async def run(args, trace, output, manifest):
                     raise RuntimeError('Gateway tokenizer is unavailable')
                 manifest['run_id'] = metrics['telemetry_run_id']
                 manifest['initial_metrics'] = metrics
+                rows.extend(prepare_replay(trace, manifest['run_id']))
                 limits = httpx.Limits(max_connections=args.max_pending, max_keepalive_connections=args.max_pending)
                 async with httpx.AsyncClient(timeout=args.request_timeout, limits=limits, trust_env=False) as traffic:
                     for _ in range(args.warmup_requests):

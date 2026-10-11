@@ -130,6 +130,11 @@ def _analyze(output, plot):
                     'Client duration disagrees with timestamps')
         else:
             require(False, 'Missing client start time')
+        if history and row['started_at'] is not None:
+            # Runner and gateway share the same host monotonic clock. Terminal
+            # cleanup may finish after the client; do not impose that ordering.
+            require(history[0]['monotonic'] >= row['started_at'] - 1e-6,
+                    'Gateway received precedes client start')
         if row['success']:
             require(row['status'] == 200 and row['stream_complete'] and row.get('first_content_at') is not None,
                     'Success without a complete content stream')
@@ -138,6 +143,10 @@ def _analyze(output, plot):
             require(type(row.get('input_tokens')) is int and type(row.get('output_tokens')) is int,
                     'Successful request is missing token usage')
             require(row.get('error_type') is None, 'Success has a client error')
+            first = next((r for r in history if r['event'] == 'first_content'), None)
+            if first:
+                require(first['monotonic'] <= row['first_content_at'] + 1e-6,
+                        'Client first content precedes gateway first content')
         if 'trace_id' in row:
             planned = expected[row['trace_id']]
             require(identifier == uuid.uuid5(uuid.UUID(manifest['run_id']), row['trace_id']).hex,

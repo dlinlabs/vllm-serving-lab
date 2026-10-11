@@ -133,7 +133,8 @@ result requires a documented protocol revision and rerunning comparisons.
 
 The runner owns one gateway, validates the existing model and 8192 context, warms
 up, and drains before measurement. It schedules independently of responses,
-assigns IDs before sending, never retries, and never silently skips traffic when
+allocates request IDs and outcome rows before warmup and before choosing the
+measurement clock origin, never retries, and never silently skips traffic when
 its pending limit is exceeded. Pending-limit overflow invalidates collection,
 with explicit not-launched rows. Requests pending beyond the drain deadline retain
 their cancellation outcome. Existing per-request upstream HTTP clients remain.
@@ -156,7 +157,9 @@ The report separates:
 
 - **Integrity** (`valid`): planned rows and unique IDs, lifecycle ordering,
   cumulative counters, token counts, budget application, timestamps, final drain,
-  and telemetry loss.
+  and telemetry loss. The shared-host monotonic clock also checks that gateway
+  receipt follows client start and client first content follows gateway first
+  content. Gateway terminal cleanup may finish after the client.
 - **Load fidelity** (`load_fidelity.valid`): all traffic launched and scheduling
   lag stayed within the predeclared limit. Start time is not an exact wire-send
   probe; connection-pool/transport delay remains in client-to-handler latency.
@@ -169,6 +172,8 @@ Recorded connection failure before the handler runs can pass integrity. A backen
 completion with failed client delivery counts as a client failure, preserving both
 observations. Backend HTTP 503 is a failure; admission-capacity 503 is a rejection.
 Neither is removed from the denominator. Tail spikes stay in primary metrics.
+Client and gateway use the same text-SSE field validation: non-text content,
+malformed choices/usage, and explicit error events cannot count as success.
 Correct records with inaccurate scheduling remain integrity-valid but
 load-fidelity-invalid. CLI exits nonzero if either check fails.
 
