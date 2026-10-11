@@ -27,9 +27,12 @@ def venv_environment(venv):
     return env
 
 
-def command(python):
-    return [str(python.parent / 'vllm'), 'serve', MODEL, '--host', '127.0.0.1',
+def command(python, disable_prefix_caching=False):
+    argv = [str(python.parent / 'vllm'), 'serve', MODEL, '--host', '127.0.0.1',
             '--port', '8000', '--max-model-len', str(CONTEXT_LENGTH)]
+    if disable_prefix_caching:
+        argv.append('--no-enable-prefix-caching')
+    return argv
 
 
 def check_models(payload):
@@ -113,7 +116,7 @@ print(json.dumps({'vllm':m.version('vllm'), 'torch':torch.__version__, 'cuda_run
     record('runtime.json', json.loads(result.stdout))
     with (logs / 'pip-freeze.txt').open('w') as handle:
         subprocess.run([str(python), '-m', 'pip', 'freeze'], check=True, env=child_env, stdout=handle)
-    launch = command(python)
+    launch = command(python, getattr(args, 'disable_prefix_caching', False))
     record('launch.json', {'argv': launch, 'model': MODEL, 'max_model_len': CONTEXT_LENGTH})
     print(f'Starting Qwen with explicit context length {CONTEXT_LENGTH}. Logs: {logs}', flush=True)
     # Keep the parent running; Ctrl+C terminates only the process group we own.
@@ -149,6 +152,8 @@ print(json.dumps({'vllm':m.version('vllm'), 'torch':torch.__version__, 'cuda_run
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--skip-install', action='store_true', help='Reuse .venv, still verify all core versions and CUDA')
+    parser.add_argument('--disable-prefix-caching', action='store_true',
+                        help='Disable prefix caching for repeated trace comparisons; default setup is unchanged')
     parser.add_argument('--startup-timeout', type=int, default=1800, help='Model download/load timeout in seconds')
     args = parser.parse_args()
     if args.startup_timeout <= 0:

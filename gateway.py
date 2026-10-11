@@ -3,6 +3,8 @@ import json
 import math
 import os
 import secrets
+import time
+import re
 from contextlib import asynccontextmanager
 from pathlib import Path
 from dataclasses import dataclass
@@ -64,12 +66,17 @@ except Exception as exc:  # pragma: no cover - environment-dependent fallback
 
 telemetry = Telemetry()
 TELEMETRY_JSONL = os.getenv("TELEMETRY_JSONL", "")
+BENCHMARK_REQUEST_IDS = os.getenv("BENCHMARK_REQUEST_IDS", "0") == "1"
+LOOP_LAG_TELEMETRY = os.getenv("LOOP_LAG_TELEMETRY", "0") == "1"
+TELEMETRY_STATUS_JSON = os.getenv('TELEMETRY_STATUS_JSON', '')
+benchmark_ids = set()
 
 
 @asynccontextmanager
 async def lifespan(app):
     stop = asyncio.Event()
     task = None
+    lag_task = None
     if TELEMETRY_JSONL:
         path = Path(TELEMETRY_JSONL)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -78,13 +85,28 @@ async def lifespan(app):
             pass
         telemetry.enabled = True
         task = asyncio.create_task(telemetry.run(path, snapshot_metrics, stop))
+        if LOOP_LAG_TELEMETRY:
+            lag_task = asyncio.create_task(telemetry.monitor_loop(stop))
     try:
         yield
     finally:
         stop.set()
+        if lag_task is not None:
+            await lag_task
         if task is not None:
             await task
         telemetry.enabled = False
+        if TELEMETRY_STATUS_JSON:
+            status = dict(run_id=telemetry.run_id, status='closed', closed_at=time.monotonic(),
+                          dropped=telemetry.dropped, write_errors=telemetry.write_errors)
+            def persist_status():
+                path = Path(TELEMETRY_STATUS_JSON)
+                temporary = path.with_suffix('.tmp')
+                temporary.write_text(json.dumps(status, allow_nan=False) + '\n')
+                temporary.replace(path)
+            await asyncio.to_thread(persist_status)
+        if TELEMETRY_JSONL and (telemetry.dropped or telemetry.write_errors):
+            raise RuntimeError('Experiment telemetry was lost or could not be persisted')
 
 
 app = FastAPI(title="vLLM Admission Gateway", lifespan=lifespan)
@@ -188,6 +210,8 @@ def estimate_request_cost(payload: Dict[str, Any]) -> tuple[float, int, int, boo
 async def snapshot_metrics() -> Dict[str, Any]:
     async with state_lock:
         metrics = dict(state)
+        metrics['state_sampled_at'] = time.monotonic()
+        metrics.update(telemetry.observed_state(metrics['state_sampled_at']))
 
     metrics.update(
         {
@@ -295,7 +319,19 @@ async def finish_request(request_cost: float) -> None:
 
 @app.post("/v1/chat/completions")
 async def proxy_chat_completions(request: Request):
-    request_id = telemetry.received()
+    request_id = None
+    if BENCHMARK_REQUEST_IDS:
+        request_id = request.headers.get('x-benchmark-request-id')
+        if request_id is not None:
+            if not re.fullmatch(r'[0-9a-f]{32}', request_id):
+                return JSONResponse({'detail': 'invalid benchmark request ID'}, status_code=400)
+            if request_id in benchmark_ids:
+                return JSONResponse({'detail': 'duplicate benchmark request ID'}, status_code=409)
+            # Finite experiment-only ID registry; refuse instead of evicting IDs.
+            if len(benchmark_ids) >= 100000:
+                return JSONResponse({'detail': 'benchmark ID capacity exceeded'}, status_code=503)
+            benchmark_ids.add(request_id)
+    request_id = telemetry.received(request_id)
     reserved = False
     cleaned = False
     request_cost = 0.0
@@ -335,7 +371,7 @@ async def proxy_chat_completions(request: Request):
         body = await request.body()
         headers = {
             key: value for key, value in request.headers.items()
-            if key.lower() not in {"host", "content-length", "x-admin-api-key"}
+            if key.lower() not in {"host", "content-length", "x-admin-api-key", "x-benchmark-request-id"}
         }
         headers["x-request-id"] = request_id
         headers["accept-encoding"] = "identity"
@@ -354,7 +390,10 @@ async def proxy_chat_completions(request: Request):
         decision = await begin_request(request_cost, used_tokenizer_fallback)
         if not decision.accepted:
             telemetry.terminal(request_id, "rejected", budget=decision.budget,
-                               budget_version=decision.budget_version)
+                               budget_version=decision.budget_version,
+                               estimated_input_tokens=estimated_input_tokens,
+                               max_output_tokens=estimated_output_tokens,
+                               request_cost=request_cost)
             return JSONResponse(
                 {"detail": "request rejected: admission capacity exceeded",
                  "estimated_request_cost": request_cost,
@@ -447,11 +486,13 @@ async def update_budget(request: Request):
         previous_budget = state["admission_budget"]
         state["admission_budget"] = budget
         state["budget_version"] += 1
+        applied_at = time.monotonic()
         result = {
             "previous_budget": previous_budget,
             "budget": budget,
             "current_admitted_cost": state["current_admitted_cost"],
             "budget_version": state["budget_version"],
+            "applied_at": applied_at,
         }
     telemetry.emit("budget_updated", **result)
     # Existing requests retain their reservations, even after a budget reduction.

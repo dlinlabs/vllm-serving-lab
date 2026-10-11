@@ -30,7 +30,9 @@ def test_api_validation_and_metrics(gateway):
             assert gateway.state['admission_budget'] == 80
             assert gateway.state['budget_version'] == 0
             response = await client.post('/admin/budget', json={'budget': 96}, headers=headers)
-            assert response.json() == {'previous_budget': 80, 'budget': 96, 'current_admitted_cost': 0, 'budget_version': 1}
+            updated = response.json()
+            assert isinstance(updated.pop('applied_at'), float)
+            assert updated == {'previous_budget': 80, 'budget': 96, 'current_admitted_cost': 0, 'budget_version': 1}
             metrics = (await client.get('/metrics')).json()
             assert metrics['max_admitted_cost'] == metrics['admission_budget'] == 96
             assert metrics['initial_admission_budget'] == 80
