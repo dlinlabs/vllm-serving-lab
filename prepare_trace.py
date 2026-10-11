@@ -11,6 +11,8 @@ from trace_workload import (MODEL, MAX_MODEL_LEN, sha256_file, synthetic_prompt,
                             validate_trace, input_tokens, tokenizer_fingerprint)
 
 SOURCE_URL = 'https://github.com/Azure/AzurePublicDataset/blob/master/AzureLLMInferenceDataset2024.md'
+PRESET_FILE = Path(__file__).resolve().parent / 'experiments' / 'trace-presets.json'
+DEFAULTS = dict(duration_seconds=300, sample_probability=1, seed=1, output_cap=128, model=MODEL)
 
 
 def timestamp(value):
@@ -84,22 +86,57 @@ def prepare(source, start, duration, sample_probability, seed, output_cap, token
     return trace, audit
 
 
-def main():
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True)
-    parser.add_argument('--start', required=True, help='ISO source timestamp; inclusive')
-    parser.add_argument('--duration-seconds', type=float, default=300)
-    parser.add_argument('--sample-probability', type=float, default=1)
-    parser.add_argument('--seed', type=int, default=1)
-    parser.add_argument('--output-cap', type=int, default=128)
-    parser.add_argument('--model', default=MODEL)
+    selection = parser.add_mutually_exclusive_group(required=True)
+    selection.add_argument('--start', help='Custom ISO source timestamp; inclusive')
+    selection.add_argument('--preset', choices=('smoke', 'experiment'),
+                           help='Versioned, fixed source window and preparation settings')
+    parser.add_argument('--duration-seconds', type=float)
+    parser.add_argument('--sample-probability', type=float)
+    parser.add_argument('--seed', type=int)
+    parser.add_argument('--output-cap', type=int)
+    parser.add_argument('--model')
     parser.add_argument('--output-dir', required=True)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    args.preset_record = None
+    if args.preset:
+        overrides = [name for name in DEFAULTS if getattr(args, name) is not None]
+        if overrides:
+            parser.error('Preset settings are frozen; use --start for custom settings instead of overriding '
+                         + ', '.join('--' + name.replace('_', '-') for name in overrides))
+        # Hash the same bytes that we parse so the recorded protocol is unambiguous.
+        raw = PRESET_FILE.read_bytes()
+        config = json.loads(raw)
+        if config['schema_version'] != 1:
+            parser.error('Unsupported preset schema version')
+        profile = config['presets'][args.preset]
+        for name in ('start', *DEFAULTS):
+            setattr(args, name, profile[name])
+        args.preset_record = dict(name=args.preset, protocol_version=config['protocol_version'],
+                                  config_sha256=hashlib.sha256(raw).hexdigest(), settings=profile)
+        if sha256_file(args.source) != profile['source_sha256']:
+            parser.error('Preset source checksum mismatch; use the documented prefix download, '
+                         'or --start for a custom source')
+    else:
+        for name, value in DEFAULTS.items():
+            if getattr(args, name) is None:
+                setattr(args, name, value)
+    return args
+
+
+def main():
+    args = parse_args()
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.model, local_files_only=True)
     revision = tokenizer.init_kwargs.get('_commit_hash')
     trace, audit = prepare(args.source, args.start, args.duration_seconds, args.sample_probability,
                            args.seed, args.output_cap, tokenizer, args.model, revision)
+    if args.preset_record:
+        if trace['provenance']['source_sha256'] != args.preset_record['settings']['source_sha256']:
+            raise ValueError('Preset source changed during preparation')
+        trace['provenance']['preset'] = args.preset_record
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=False)
     (output / 'trace.json').write_text(json.dumps(trace, indent=2, allow_nan=False) + '\n')

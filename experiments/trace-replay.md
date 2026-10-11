@@ -40,20 +40,49 @@ root = Path('results/trace-source')
 PY
 ```
 
-After normal setup caches Qwen's tokenizer, prepare a 30-second smoke input:
+After normal setup caches Qwen's tokenizer, prepare the fixed 30-second smoke input:
 
 ```bash
 source .venv/bin/activate
 python prepare_trace.py \
   --source results/trace-source/azure-conversation-prefix.csv \
-  --start 2024-05-12T00:00:00.001163+00:00 \
-  --duration-seconds 30 --output-cap 128 --seed 1 \
+  --preset smoke \
   --output-dir results/trace-smoke-input
 ```
 
-Use `--duration-seconds 300` and a new directory for a five-minute input.
+Prepare the separate fixed five-minute comparison input:
+
+```bash
+python prepare_trace.py \
+  --source results/trace-source/azure-conversation-prefix.csv \
+  --preset experiment \
+  --output-dir results/trace-experiment-input
+```
+
+Both presets are versioned in [trace-presets.json](trace-presets.json). They pin
+the exact prefix CSV SHA-256, model, window, seed, output cap, and sampling
+probability. Smoke selects `[00:00:00.001163, 00:00:30.001163)` on May 12, 2024;
+experiment selects `[00:01:00, 00:06:00)` in source timestamp coordinates. They do
+not overlap. These are convenient initial validation/calibration windows, not a
+random or representative sample of the full dataset or held-out MPC evaluation.
+Presets only prepare inputs; the replay command below actually runs the experiment.
+Reuse one prepared trace across policies and repetitions, rather than selecting a
+new window per run. The trace records preset name, complete settings, protocol
+version, and configuration SHA-256; the runner copies it into every result.
+
+Preset settings cannot be overridden. Revise the configuration and protocol
+version for a new frozen protocol. For a custom source or window, retain the
+explicit CLI instead:
+
+```bash
+python prepare_trace.py \
+  --source results/trace-source/azure-conversation-prefix.csv \
+  --start 2024-05-12T00:07:00+00:00 --duration-seconds 300 \
+  --output-dir results/trace-custom-input
+```
+
 `--sample-probability 0.5` deterministically thins arrivals without compressing
-time. Select the probability from source statistics and a separate calibration
+time in custom mode. Select the probability from source statistics and a separate calibration
 run, then freeze it for comparisons. Thinning changes fine-scale burst structure
 as well as intensity: report it. Retained timestamps and ties preserve their
 original order. Naive timestamps are interpreted as UTC for relative arithmetic;
@@ -151,6 +180,11 @@ timing disturbances, not their CPU/GC/GPU root cause. Keep instrumentation ident
 across comparisons; its overhead has not yet been GPU-benchmarked.
 
 Reanalyze with `python analyze_trace_pilot.py results/trace-smoke-96`.
+
+For the five-minute preset, use `--trace results/trace-experiment-input/trace.json`
+and a fresh output directory such as `results/trace-experiment-96-r1`. Keep budget,
+SLO, cache policy, and run order explicit in replay commands; the preset freezes
+the offered input, not the controller setting being compared.
 
 ## Comparison protocol after smoke passes
 

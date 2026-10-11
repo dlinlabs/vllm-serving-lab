@@ -827,6 +827,13 @@ kept offline and are not supplied as an oracle to admission control. Fixed-budge
 comparison is the foundation for model identification and MPC evaluation; this
 change does not yet demonstrate an MPC benefit.
 
+Use `prepare_trace.py --preset smoke` for the fixed 30-second validation window,
+or `--preset experiment` for a separate five-minute comparison window. The
+[versioned presets](experiments/trace-presets.json) freeze source checksum, window,
+seed, model, and output cap; each result retains the exact protocol. Supply
+`--source` and `--output-dir` as shown in the replay instructions. Custom windows
+remain available through `--start`.
+
 The first dynamic-budget pilot exercised the gateway at a fixed offered load while stepping the admission budget through **80 → 96 → 112 → 96 → 80**, with 30 seconds per step. It used an RTX 3090, Qwen3-4B-Instruct-2507, and vLLM 0.30.0 with an 8,192-token context limit.
 
 ![Budget step pilot time series](results/pilot-02/timeseries.png)
