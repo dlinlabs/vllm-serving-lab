@@ -690,7 +690,7 @@ V3: richer state model / predictive control
 
 Possible V2/V3 signals include observed TTFT, admitted-cost pressure, queue depth, KV-cache state, active sequence count, and workload mix.
 
-The project intentionally stops at V1 rather than expanding into multi-GPU scheduling, RAG, Kubernetes, or a full production serving platform.
+The completed V1 study is now being extended toward predictive admission control on the same single-GPU setup. The current work focuses on gateway diagnosis, system identification, and a future MPC comparison.
 
 ---
 
@@ -797,7 +797,7 @@ Supporting experiment notes:
 
 ## Project Status
 
-**V1 complete.**
+**V1 complete; MPC preparation in progress.**
 
 Implemented and validated:
 
@@ -814,4 +814,45 @@ Implemented and validated:
 - final A/B/C comparison
 - matched-rejection follow-up
 
-The project has reached its intended resume-ready stopping point: the design, tradeoffs, negative result, and measured conclusions are all reproducible and documented.
+The V1 design, tradeoffs, negative result, and measured conclusions are documented. The MPC extension has a validated budget-step pilot; a predictive controller and its performance benefit have not yet been demonstrated.
+
+
+## MPC Budget Step Pilot (October 2026)
+
+The first dynamic-budget pilot exercised the gateway at a fixed offered load while stepping the admission budget through **80 → 96 → 112 → 96 → 80**, with 30 seconds per step. It used an RTX 3090, Qwen3-4B-Instruct-2507, and vLLM 0.30.0 with an 8,192-token context limit.
+
+![Budget step pilot time series](results/pilot-02/timeseries.png)
+
+The validated repeat scheduled 4,500 measurement requests at 30 RPS: **3,402 succeeded, 1,098 were rejected (24.4%), and zero failed**. Client-observed P99 TTFT was **1.854 s**; P99 scheduling lag was **7.2 ms**. The run passed data-integrity validation, with no missing/duplicate IDs or telemetry loss.
+
+This is a **step-response pilot, not evidence that MPC improves serving**. Budget changes visibly moved admitted cost and concurrent streaming work, but the run has only one sequence of budget steps and contains recurring latency spikes. More repeated runs and system-identification work are needed before fitting a predictive model or claiming a controller benefit.
+
+Raw per-request records, gateway lifecycle events, warmup data, run manifest, budget acknowledgments, and validation report are in [results/pilot-02](results/pilot-02/). The earlier invalid run and low-rate smoke run should be added separately when their complete raw output is committed.
+
+
+### Pilot diagnosis: separate gateway delay from serving delay
+
+The offline analysis joins every measurement request to its gateway lifecycle by request ID. The slowest 35 successful requests (approximately 1%) averaged **2.021 s client TTFT**, of which **1.431 s (70.8%)** occurred between client start and gateway handler receipt. This attribution uses the same requests; percentiles of separate latency segments are not added or subtracted.
+
+![Pilot latency decomposition](results/pilot-02-analysis/latency_diagnosis.png)
+
+Five gateway event gaps lasted **0.67–1.09 s**, about 25–26 seconds apart. No snapshots were emitted inside the gaps, while the separate load process continued to start requests. These gaps did not coincide with budget changes. Gateway processing or host scheduling slowdown is consistent with the evidence, but the cause remains unconfirmed without event-loop, CPU, GC, and engine timing instrumentation.
+
+![Pilot budget and arrival diagnosis](results/pilot-02-analysis/budget_diagnosis.png)
+
+Higher budgets coincided with more streaming requests, but stage rejection rates were not monotonic. Lowering the budget from 112 to 96 and from 96 to 80 took **0.393 s** and **0.317 s**, respectively, for reserved cost to first fit the new limit; these are reservation-release times, not latency settling times.
+
+The `long_output` workload requested up to **512 tokens** but successful requests generated only **93.9 tokens on average**, while its rejection rate was **51.6%**. Admission still reserved the output cap. This shows a cap/realized-length mismatch, not a measurement of true per-request GPU cost.
+
+The current state signals are not yet validated for out-of-sample prediction. The next experiment will measure gateway event-loop lag, CPU/RSS, and GC pauses, and compare per-request versus shared upstream HTTP clients before collecting richer budget/load/mix excitation.
+
+See the [full diagnosis](results/pilot-02-analysis/report.md), [aligned second-by-second data](results/pilot-02-analysis/aligned_seconds.csv), and [analysis summary with raw-file hashes](results/pilot-02-analysis/summary.json).
+
+Reproduce without changing the raw pilot files:
+
+```bash
+python analyze_budget_dynamics.py results/pilot-02 \
+  --output-dir results/pilot-02-analysis
+```
+
+The offline analysis requires NumPy and Matplotlib. This is one-run diagnosis; it does not demonstrate MPC performance improvement.
