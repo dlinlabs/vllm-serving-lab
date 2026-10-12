@@ -16,6 +16,116 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Current work: RTX 4090 trace-analysis handoff (2026-10-11)
+
+**Start here for an independent analysis.** The current task is to verify the
+uploaded smoke/r1/r2 records, align lifecycle events with gateway pauses and client
+lateness, and test whether the two repeats reproduce the same pattern. This is
+pre-MPC diagnosis; a predictive controller has not been implemented or evaluated.
+The RTX 3090 V1 study below is historical and uses a different workload.
+
+### Uploaded data and experiment boundary
+
+Raw-data commit: [`1cafbda`](https://github.com/dlinlabs/vllm-serving-lab/commit/1cafbda60a9d140e1f023c7e42a58bf00a2d10bc).
+Recorded experiment code: `a3cdf68bcce2d2d933a575538da5889b538c5366`.
+
+| Run | Raw directory | Arrival window | Offered / successful / rejected / failed | Integrity | Load fidelity | Maximum client scheduling lag |
+|---|---|---:|---|---|---|---:|
+| Smoke | [trace-smoke-96](results/trace-smoke-96/) | 30 s | 787 / 248 / 539 / 0 | PASS | PASS | 8.41 ms |
+| r1 | [trace-experiment-96-r1](results/trace-experiment-96-r1/) | 300 s | 7,643 / 2,239 / 5,404 / 0 | PASS | **FAILED** | 208.07 ms |
+| r2 | [trace-experiment-96-r2](results/trace-experiment-96-r2/) | 300 s | 7,643 / 2,220 / 5,423 / 0 | PASS | **FAILED** | 175.38 ms |
+
+All three directories contain ten nonempty collected artifacts:
+`manifest.json`, `trace.json`, `client.json`, `warmup.json`, `gateway.jsonl`,
+`budget_changes.json`, `state_observations.json`, `telemetry_status.json`,
+`report.json`, and `timeseries.png`. This confirms the uploaded replay bundle,
+**not all machine logs**: `gateway-process.log` and vLLM launch logs are absent
+from this upload. Do not infer launch flags or engine warnings from their absence.
+
+Common setup: **RTX 4090 / driver 580.159.04 / 24,564 MiB**, Python 3.12.3,
+vLLM 0.30.0, PyTorch **2.13.0+cu130**, Qwen/Qwen3-4B-Instruct-2507,
+context limit 8,192. Fixed budget **96**, output cap **128**, natural EOS,
+TTFT SLO **0.5 s**, predeclared maximum client scheduling lag **50 ms**.
+Cache policy `disabled` is self-reported; launch logs are needed to verify it.
+Three successful warmup requests per run are excluded from measurement performance
+but included in gateway cumulative counters.
+
+The repeats use an identical trace SHA-256:
+`62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e`.
+Their source window begins **2024-05-12 00:01:00 UTC** and lasts 300 s;
+7,652 source rows minus nine too-short contexts gives 7,643 retained rows.
+No thinning or context-overflow exclusions. The
+[versioned presets](experiments/trace-presets.json),
+[replay protocol](experiments/trace-replay.md), and
+[source download record](results/trace-source/download.json) describe provenance.
+Azure arrivals and input lengths are replayed with synthetic prompts. Historical
+output lengths are audit-only. All successful measurement requests in these runs
+actually generated 128 tokens, so variable decode demand is not covered yet.
+
+### How to align and review the records
+
+1. **Re-audit completeness first.** Check trace/file hashes, run IDs, telemetry
+   persistence, request-ID uniqueness, terminal outcomes, and final drain. Preserve
+   the separate integrity and load-fidelity verdicts; do not drop late requests or
+   relax the 50 ms limit after observing results.
+2. **Join by `client_request_id`**, matching gateway `request_id`. Measurement
+   rows are in `client.json`; warmups are separate. Runner and gateway share the
+   same host monotonic clock. Normalize each run by its own manifest
+   `measurement_start`; do not compare absolute monotonic timestamps across runs.
+3. **Decompose the same successful requests:** client `started_at` → gateway
+   `received` → `accepted` → `backend_sent` → gateway `first_content` → client
+   `first_content_at`. Each sum must reconcile to client TTFT. Do not subtract
+   independent P99 values. `received` means handler entry, not socket arrival;
+   `backend_sent` is logged before awaiting upstream HTTP send, not GPU execution.
+4. **Locate pauses and client lateness separately.** Use `event_loop_lag` callback
+   due/resume times, nearby adjacent lifecycle gaps, planned→started client lag,
+   and metrics-poll RTT/gaps. Callback lateness and missing lifecycle activity are
+   symptoms; neither directly measures a CPU, GC, or GPU pause. Check timing
+   overlap explicitly rather than assuming the processes stalled together.
+5. **Compare cadence and tail attribution.** Examine both wall-time spacing and
+   admitted-request increments between pauses, original vs handler arrival peaks,
+   input mix, and reserved cost. Treat gateway awaiting/streaming/cost as state
+   proxies, not engine queue length or measured GPU work. Keep any diagnosis
+   descriptive until a discriminating experiment identifies a cause.
+6. **Report limits and next measurements.** Both long runs failed load fidelity,
+   there are only two repeats, output demand is fixed, and budget never changes.
+   These records cannot establish MPC benefit, optimal update frequency, or the
+   causal response to changing budget.
+
+### Existing analysis available for independent review
+
+[PR #11](https://github.com/dlinlabs/vllm-serving-lab/pull/11) contains an
+offline analyzer, raw-file hashes, same-cohort tail attribution, pause alignment,
+and next-experiment proposals. These are review inputs, not confirmed root causes.
+Read the raw records first if performing an independent diagnosis.
+
+- [Pinned diagnosis report](https://github.com/dlinlabs/vllm-serving-lab/blob/4ea4ef8610d4ad12b814435fafdd9329164a68fb/results/trace-budget96-analysis/report.md)
+- [Pinned audit summary](https://github.com/dlinlabs/vllm-serving-lab/blob/4ea4ef8610d4ad12b814435fafdd9329164a68fb/results/trace-budget96-analysis/summary.json)
+- [Pinned analyzer](https://github.com/dlinlabs/vllm-serving-lab/blob/4ea4ef8610d4ad12b814435fafdd9329164a68fb/analyze_trace_dynamics.py)
+
+Reproduce that analysis in a separate checkout (CPU only; dependencies: NumPy,
+Matplotlib, and HTTPX). The analyzer runs the existing auditor in a temporary
+directory and writes new outputs separately, preserving raw reports and figures:
+
+```bash
+git fetch origin main
+git worktree add --detach ../trace-review 4ea4ef8610d4ad12b814435fafdd9329164a68fb
+cd ../trace-review
+python analyze_trace_dynamics.py \
+  results/trace-smoke-96 \
+  results/trace-experiment-96-r1 \
+  results/trace-experiment-96-r2 \
+  --output-dir results/trace-independent-analysis
+```
+
+The analysis files are included in this repository through PR #11. The pinned
+links above preserve the initial diagnosis for reproducibility. The review output
+should distinguish
+**verified observation → plausible mechanism → evidence needed to discriminate**,
+with reproducible calculations and links to the relevant raw requests/events.
+
+---
+
 ## 1. Final Architecture
 
 ```text
