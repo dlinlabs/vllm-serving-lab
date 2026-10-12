@@ -16,9 +16,59 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
-## Current work: RTX 4090 trace-analysis handoff (2026-10-11)
+## Latest results: RTX 4090 diagnostics (2026-10-12)
 
-**Start here for an independent analysis.** The current task is to verify the
+**[Read the diagnostic findings and reproduction steps](results/diagnostics-20261012/report.md).**
+This round adds measured GC/CPU and engine observations to the earlier trace
+investigation. Admission budget remains **96**; no MPC controller is evaluated.
+The GPU has been returned; the complete capture and native validation evidence
+are preserved in the repository.
+
+| Capture | Offered / successful / rejected / failed | Data integrity | Load fidelity | Diagnostic integrity | Max client scheduling lag | SLO goodput |
+|---|---|---|---|---|---:|---:|
+| [Diagnostic smoke, 30 s](results/trace-diag-smoke-96-r1/report.json) | 787 / 233 / 554 / 0 | PASS | PASS | PASS | 5.30 ms | 3.533/s |
+| [Diagnostic experiment r1, 300 s](results/trace-diag-experiment-96-r1/report.json) | 7,643 / 2,063 / 5,580 / 0 | PASS | **FAIL** | PASS | 146.53 ms | 1.363/s |
+
+The long run has **409 SLO successes**, client TTFT P99 **2.814 s**, and nine
+launches beyond the predeclared **50 ms** maximum scheduling-lag gate. It remains
+useful for diagnosis, but is not a load-fidelity-passing policy comparison.
+
+- Four long generation-2 GC spans on the gateway event-loop thread last
+  **384–485 ms**, overlapping **66.2%** of the summed four monitor-overdue
+  intervals. This identifies an important component of these pauses, not their
+  sole cause or the expected improvement from disabling GC.
+- **93.72%** of the slowest 21 successful requests' summed TTFT is post-dispatch.
+  None of those intervals directly overlaps the long GC spans; sampled engine
+  backlog and admission/refill waves also matter. This is not exclusive GPU
+  timing or proof of GPU saturation.
+- Native Linux CPU validation: **135 passed**. External-only fake-backend
+  success/rejection/failure cases: **all passed**. Five saved capture reports
+  and the uploaded dynamics summary were independently reproduced exactly.
+
+![Diagnostic TTFT, backlog and client scheduling](results/diagnostics-20261012/diagnostic_overview.png)
+
+![Actual overlap of gateway overdue intervals and long GC](results/diagnostics-20261012/gc_overlap.png)
+
+Evidence and handoff:
+[complete raw archive, 21.1 MB / 81 files](results/diagnostics-20261012/raw-bundle/),
+[computed facts and all raw hashes](results/diagnostics-20261012/facts.json),
+[native validation](results/diagnostics-20261012/native-validation/),
+[verified launch flags](results/diagnostics-20261012/setup/launch.json), and
+[downloadable self-contained Chinese HTML report](results/diagnostics-20261012/vllm-diagnostics-report-20261012.html).
+The small diagnostic run directories expose reports/manifests for browsing;
+extract the archive to access their full raw captures and reproduce analysis.
+Recorded code is `f1f7cef`; driver **580.178.04**, Torch **2.13.0+cu130**,
+Qwen3-4B-Instruct-2507, context 8,192, prefix caching disabled with launch evidence.
+
+**Next:** compare fixed budgets on the same trace, then measure predeclared budget
+steps with actual applied timestamps for system identification. Neither MPC
+benefit nor negligible diagnostic overhead has been demonstrated.
+
+---
+
+## Previous capture: RTX 4090 trace-analysis handoff (2026-10-11)
+
+**Historical handoff for the earlier capture.** Its task was to verify the
 uploaded smoke/r1/r2 records, align lifecycle events with gateway pauses and client
 lateness, and test whether the two repeats reproduce the same pattern. This is
 pre-MPC diagnosis; a predictive controller has not been implemented or evaluated.
@@ -132,8 +182,9 @@ new investigation outputs do not overwrite raw bundles. See
 [trace replay](experiments/trace-replay.md) for the flags and artifacts, and
 [runtime telemetry](experiments/runtime-telemetry.md) for measurement boundaries.
 The implementation changes no admission policy and introduces no MPC controller.
-Full-suite validation is handed off separately; no GPU capture, negligible-overhead
-result, historical GC/prefill diagnosis, or policy benefit is claimed.
+At the time of this earlier handoff, full-suite validation and new GPU diagnostics
+were pending. The 2026-10-12 section above records their completion; negligible
+overhead, historical causal attribution, and policy benefit remain unestablished.
 
 ---
 
