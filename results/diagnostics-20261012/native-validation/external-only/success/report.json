@@ -1,0 +1,64 @@
+{
+  "valid": true,
+  "issues": [],
+  "load_fidelity": {
+    "valid": true,
+    "issues": [],
+    "p99_scheduling_lag": 0.0011252509499900044,
+    "max_scheduling_lag": 0.001134076010202989
+  },
+  "performance": {
+    "attempted": 3,
+    "success": 3,
+    "rejected": 0,
+    "failed": 0,
+    "client_p99_ttft": 0.026974231222411618,
+    "scheduled_p99_ttft": 0.027652978073456326,
+    "client_p99_e2e": 0.027346869605535177,
+    "slo_successes": 3,
+    "slo_goodput_per_arrival_second": 10.0,
+    "slo_success_fraction_of_offered": 1.0,
+    "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+  },
+  "gateway_terminal_counts": {
+    "completed": 4
+  },
+  "failed_without_gateway_record": 0,
+  "state_poll_errors": 0,
+  "cache_policy_self_reported": "unknown",
+  "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+  "performance_by_input_size": {
+    "short_input": {
+      "attempted": 3,
+      "success": 3,
+      "rejected": 0,
+      "failed": 0,
+      "client_p99_ttft": 0.026974231222411618,
+      "scheduled_p99_ttft": 0.027652978073456326,
+      "client_p99_e2e": 0.027346869605535177,
+      "slo_successes": 3,
+      "slo_goodput_per_arrival_second": 10.0,
+      "slo_success_fraction_of_offered": 1.0,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    }
+  },
+  "timing": {
+    "p99_state_age": null,
+    "max_state_age": null,
+    "p99_metrics_roundtrip": null,
+    "max_state_poll_gap": null,
+    "p99_event_loop_lag": 0.0006510244132368825,
+    "max_event_loop_lag": 0.0006557549932040274
+  },
+  "diagnostic_integrity": {
+    "valid": true,
+    "issues": [],
+    "gateway_mode": "disabled",
+    "external_mode": "enabled",
+    "gc_coverage_complete": false,
+    "request_linked_prefill": "unavailable",
+    "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+    "engine_samples": 2,
+    "engine_counter_epochs": 1
+  }
+}
