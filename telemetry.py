@@ -1,11 +1,236 @@
-"""Gateway observations; all mutable state is owned by the event-loop thread."""
+"""Loop-owned gateway observations, with an optional bounded GC callback inbox."""
 import asyncio
 import codecs
-from collections import Counter
+from collections import Counter, defaultdict, deque
+from contextlib import contextmanager
+import gc
+from itertools import count
 import json
+import os
 from pathlib import Path
+import sys
+import threading
 import time
 import uuid
+
+
+DIAGNOSTICS_SCHEMA = 1
+INVESTIGATION_PROTOCOL = 'periodic-peaks-v1'
+REQUEST_PHASES = ('body_read', 'json_parse', 'cost_estimation', 'admission_lock_wait',
+                  'client_construction', 'http_send_headers', 'upstream_close',
+                  'client_close', 'reservation_release')
+
+
+class CallbackCounter:
+    """CPython/GIL tickets; only the consumer reads, including its own probe tickets."""
+    def __init__(self):
+        self.tickets, self.probes = count(), 0
+
+    def take(self):
+        return next(self.tickets)
+
+    def read(self):
+        value = next(self.tickets) - self.probes
+        self.probes += 1
+        return value
+
+
+class RequestDiagnostics:
+    def __init__(self, emit, request_id):
+        self.emit, self.request_id = emit, request_id
+        self.started_at = time.monotonic()
+        self.phases, self.milestones = {}, {}
+        self.finished = False
+
+    def begin(self, name):
+        self.phases[name] = dict(start=time.monotonic(), end=None, status='incomplete')
+
+    def end(self, name, error=None):
+        phase = self.phases[name]
+        phase.update(end=time.monotonic(), status=('completed' if error is None else
+                     'cancelled' if isinstance(error, asyncio.CancelledError) else 'failed'))
+        if error is not None:
+            phase['error_type'] = type(error).__name__
+
+    @contextmanager
+    def phase(self, name):
+        self.begin(name)
+        try:
+            yield
+        except BaseException as exc:
+            self.end(name, exc)
+            raise
+        else:
+            self.end(name)
+
+    def mark(self, name):
+        if name not in self.milestones:
+            self.milestones[name] = time.monotonic()
+
+    def abort(self, error):
+        for name, phase in self.phases.items():
+            if phase['end'] is None:
+                self.end(name, error)
+
+    def finish(self, outcome, cleanup_complete):
+        if self.finished:
+            return
+        self.finished = True
+        now = time.monotonic()
+        for phase in self.phases.values():
+            if phase['end'] is None:
+                phase.update(end=now, status='cancelled' if outcome == 'cancelled' else 'failed')
+        self.emit('request_diagnostics', self.request_id, diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                  span_start=self.started_at, span_end=now, outcome=outcome,
+                  cleanup_complete=cleanup_complete,
+                  phases={k: self.phases.get(k, dict(start=None, end=None, status='not_reached'))
+                          for k in REQUEST_PHASES},
+                  first_body_at=self.milestones.get('first_body'),
+                  first_content_at=self.milestones.get('first_content'))
+
+
+class GatewayDiagnostics:
+    """Bounded primitive-only deque; callbacks never call the loop-owned emitter."""
+    def __init__(self, emit, capacity=4096):
+        if sys.implementation.name != 'cpython' or not getattr(sys, '_is_gil_enabled', lambda: True)():
+            raise RuntimeError('Gateway diagnostics require CPython with the GIL enabled')
+        if capacity < 2:
+            raise ValueError('GC callback capacity must be at least two')
+        self.emit, self.capacity = emit, capacity
+        self.inbox = deque(maxlen=capacity)
+        self.entered, self.exited, self.produced, self.errors = (CallbackCounter() for _ in range(4))
+        self.accepting = False
+        self.callback = self._callback
+        self.loop_thread_id = threading.get_ident()
+        self.pending = defaultdict(list)
+        self.pending_count = self.received = self.unmatched = self.spans = self.cpu_samples = 0
+        self.closed = False
+        self.quiesced = False
+        self.registration_missing = False
+
+    @staticmethod
+    def gc_state():
+        return dict(enabled=gc.isenabled(), thresholds=gc.get_threshold(), counts=gc.get_count())
+
+    def start(self):
+        self.coverage_start = time.monotonic()
+        self.accepting = True
+        gc.callbacks.append(self.callback)
+        self.emit('diagnostics_started', diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                  coverage_start=self.coverage_start, process_id=os.getpid(),
+                  loop_thread_id=self.loop_thread_id, loop_native_thread_id=threading.get_native_id(),
+                  callback_capacity=self.capacity, python_implementation=sys.implementation.name,
+                  gil_enabled=True, gc=self.gc_state())
+        self.sample()
+
+    def _callback(self, phase, info):
+        self.entered.take()
+        try:
+            if not self.accepting:
+                return
+            sequence = self.produced.take()
+            # Only built-in primitives: bounded eviction cannot execute user finalizers.
+            self.inbox.append((sequence, phase, info['generation'], threading.get_ident(),
+                               threading.get_native_id(), time.monotonic(), time.thread_time(),
+                               info.get('collected'), info.get('uncollectable')))
+        except MemoryError:
+            self.errors.take()
+        finally:
+            self.exited.take()
+
+    def _unmatched(self, edge, reason):
+        self.unmatched += 1
+        self.emit('gc_unmatched', diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                  sequence=edge[0], phase=edge[1], generation=edge[2], callback_thread_id=edge[3],
+                  observed_at=edge[5], callback_thread_cpu_seconds=edge[6], reason=reason)
+
+    def drain(self, final=False):
+        edges = []
+        for _ in range(self.capacity):
+            try:
+                edges.append(self.inbox.popleft())
+            except IndexError:
+                break
+        for edge in sorted(edges):
+            self.received += 1
+            sequence, phase, generation, thread_id, native_id, at, cpu, collected, uncollectable = edge
+            key = (thread_id, generation)
+            if phase == 'start':
+                if self.pending_count >= self.capacity:
+                    self._unmatched(edge, 'pending_span_capacity_exceeded')
+                else:
+                    self.pending[key].append(edge)
+                    self.pending_count += 1
+            elif phase == 'stop' and self.pending.get(key):
+                start = self.pending[key].pop()
+                self.pending_count -= 1
+                if not self.pending[key]:
+                    del self.pending[key]
+                self.spans += 1
+                self.emit('gc_span', diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                          start_sequence=start[0], stop_sequence=sequence, generation=generation,
+                          callback_thread_id=thread_id, callback_native_thread_id=native_id,
+                          on_loop_thread=thread_id == self.loop_thread_id,
+                          span_start=start[5], span_end=at, callback_thread_cpu_seconds=cpu-start[6],
+                          collected=collected, uncollectable=uncollectable)
+            else:
+                self._unmatched(edge, 'start_not_observed' if phase == 'stop' else 'unknown_phase')
+        if final:
+            for pending in self.pending.values():
+                for edge in pending:
+                    self._unmatched(edge, 'stop_not_observed')
+            self.pending.clear()
+            self.pending_count = 0
+
+    def health(self):
+        produced = self.produced.read()
+        inflight = max(0, self.entered.read() - self.exited.read())
+        result = dict(callback_capacity=self.capacity, callbacks_produced=produced,
+                      callbacks_received=self.received, buffered_callbacks=len(self.inbox),
+                      inflight_callbacks=inflight, callback_errors=self.errors.read(),
+                      pending_spans=self.pending_count, unmatched_boundaries=self.unmatched,
+                      gc_spans=self.spans, cpu_samples=self.cpu_samples, closed=self.closed,
+                      quiesced=self.quiesced, registration_missing=self.registration_missing)
+        # Before quiescence, undelivered includes in-flight callbacks, not just eviction.
+        result['undelivered_callbacks'] = produced - self.received
+        result['lost_callbacks'] = produced - self.received if self.closed and self.quiesced else None
+        result['complete'] = (self.closed and self.quiesced and not self.registration_missing and
+                              not any(result[k] for k in ('undelivered_callbacks', 'buffered_callbacks',
+                                  'inflight_callbacks', 'callback_errors', 'pending_spans', 'unmatched_boundaries')))
+        return result
+
+    def sample(self):
+        if self.closed:
+            return
+        self.drain()
+        self.cpu_samples += 1
+        self.emit('diagnostic_cpu', diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                  sampled_at=time.monotonic(), loop_thread_id=threading.get_ident(),
+                  loop_thread_cpu_seconds=time.thread_time(), process_cpu_seconds=time.process_time(),
+                  gc=self.gc_state(), health=self.health())
+
+    async def stop(self, timeout=2.0):
+        self.accepting = False
+        self.coverage_end = time.monotonic()
+        if self.callback in gc.callbacks:
+            gc.callbacks.remove(self.callback)
+        else:
+            self.registration_missing = True
+        deadline = time.monotonic() + timeout
+        while self.entered.read() != self.exited.read():
+            if time.monotonic() >= deadline:
+                break
+            await asyncio.sleep(.001)
+        else:
+            self.quiesced = True
+        self.sample()
+        self.drain(final=True)
+        self.closed = True
+        self.emit('diagnostics_stopped', diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                  coverage_start=self.coverage_start, coverage_end=self.coverage_end, health=self.health())
+
+    def request(self, request_id):
+        return RequestDiagnostics(self.emit, request_id)
 
 
 def has_sse_content(event):
@@ -78,6 +303,7 @@ class Telemetry:
         self.dropped = 0
         self.write_errors = 0
         self.last_sample = time.monotonic()
+        self.diagnostics = None
 
     def emit(self, event, request_id=None, **fields):
         record = dict(event=event, run_id=self.run_id, timestamp=time.time(),
@@ -125,6 +351,8 @@ class Telemetry:
                     active_requests=len(self.active))
 
     def sample(self, metrics):
+        if self.diagnostics is not None:
+            self.diagnostics.sample()
         now = time.monotonic()
         counts = {k: self.totals[k] - self.previous[k] for k in
                   ('received', 'accepted', 'rejected', 'completed', 'failed', 'cancelled')}

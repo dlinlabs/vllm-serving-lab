@@ -8,7 +8,7 @@ import uuid
 
 import pytest
 
-from analyze_trace_dynamics import analyze_run, figures, hashes, join_requests, main, request_windows
+from analyze_trace_dynamics import analyze_run, figures, hashes, interval_overlap, join_diagnostics, join_requests, main, request_windows
 
 
 RUN_ID = '12345678123456781234567812345678'
@@ -140,6 +140,44 @@ def test_windows_reconcile_outcomes_tokens_boundaries_and_drain():
     assert windows['windows'][-1]['start_s'] == 8
     assert not windows['windows'][-1]['arrival_window']
     assert windows['windows'][-1]['admitted_input_tokens_unknown_requests'] == 1
+
+
+def test_diagnostic_actual_times_union_cpu_and_async_wait_are_not_causal_sums():
+    joined = [dict(request_id='one', dispatch_s=0., gateway_content_s=1.)]
+    records = [
+        dict(event='gc_span', span_start=100.2, span_end=100.6, monotonic=102.,
+             callback_thread_cpu_seconds=.1, on_loop_thread=True),
+        dict(event='gc_span', span_start=100.4, span_end=100.8, monotonic=103.,
+             callback_thread_cpu_seconds=.2, on_loop_thread=False),
+        dict(event='event_loop_lag', scheduled_at=100., monotonic=101., lag_seconds=1.),
+        dict(event='request_diagnostics', request_id='one', cleanup_complete=True,
+             phases=dict(http_send_headers=dict(start=100., end=100.9, status='completed'))),
+        dict(event='diagnostic_cpu', sampled_at=100., loop_thread_cpu_seconds=5., process_cpu_seconds=7., loop_thread_id=1),
+        dict(event='diagnostic_cpu', sampled_at=101., loop_thread_cpu_seconds=5.1, process_cpu_seconds=7.2, loop_thread_id=1),
+    ]
+    manifest = dict(investigation_protocol='periodic-peaks-v1', gateway_diagnostics_requested=True)
+    report = dict(diagnostic_integrity=dict(valid=True, gc_coverage_complete=True, external_mode='disabled'))
+    result = join_diagnostics(joined, records, [], 100., manifest, report)
+    assert joined[0]['diagnostics']['post_dispatch_gc_overlap_s'] == pytest.approx(.6)
+    assert joined[0]['diagnostics']['post_dispatch_loop_gc_overlap_s'] == pytest.approx(.4)
+    monitor, = result['monitor_overdue_intervals']
+    assert monitor['gc_overlap_s'] == pytest.approx(.6)
+    assert monitor['observed_phase_overlap_s']['http_send_headers'] == pytest.approx(.9)
+    assert result['cpu_intervals'][0]['loop_thread_cpu_seconds'] == pytest.approx(.1)
+    assert result['request_linked_prefill'] == 'unavailable'
+    assert interval_overlap(None, 1, [(0, 1)]) is None
+    # A measured non-GC CPU interval is not fabricated GC or exclusive request CPU.
+    no_gc = [r for r in records if r['event'] != 'gc_span']
+    result = join_diagnostics(joined, no_gc, [], 100., manifest, report)
+    assert result['monitor_overdue_intervals'][0]['gc_overlap_s'] == 0
+    # An unqualified/disabled/legacy absence is different from measured zero GC.
+    for current_manifest, current_report in [
+        (manifest, dict(diagnostic_integrity=dict(valid=False, gc_coverage_complete=False))),
+        (dict(investigation_protocol='periodic-peaks-v1', gateway_diagnostics_requested=False), {}),
+        ({}, {}),
+    ]:
+        join_diagnostics(joined, no_gc, [], 100., current_manifest, current_report)
+        assert joined[0]['diagnostics']['post_dispatch_gc_overlap_s'] is None
 
 
 def test_incomplete_zero_success_run_retains_invalid_audit_and_plots(tmp_path, monkeypatch):

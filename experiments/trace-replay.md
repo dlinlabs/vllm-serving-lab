@@ -228,6 +228,61 @@ and a fresh output directory such as `results/trace-experiment-96-r1`. Keep budg
 SLO, cache policy, and run order explicit in replay commands; the preset freezes
 the offered input, not the controller setting being compared.
 
+## Optional diagnostic protocol
+
+Every new trace-runner manifest records
+`investigation_protocol="periodic-peaks-v1"` and `diagnostics_schema_version=1`,
+requested/observed modes, warmup boundaries, source/package fingerprints, selected
+gateway settings, host/process identity and sampler configuration. Existing
+schema-1 bundles without that protocol keep their original audit path and report
+definitions. Offline investigation output uses schema 2.
+
+| Flags | Gateway probes | External engine/resource sampler |
+|---|---|---|
+| Neither | Off, explicitly overriding any enabled parent environment | Off |
+| `--gateway-diagnostics` | On | On |
+| `--engine-observations` only | Off | On |
+
+For a separately approved capture against an already running backend, add
+`--gateway-diagnostics` to the existing replay command and choose a new output
+directory. There is no automatic GPU launch, changed trace preset, extra replay,
+or required overhead campaign. The one-attempt, five-minute initial-capture cap
+in the investigation protocol is an approval limit, not a new runner default.
+
+Enabled captures retain diagnostic rows in `gateway.jsonl`, final callback and
+persistence health in `telemetry_status.json`, and worker-written
+`engine_observations.jsonl` / `engine_observations_status.json`. The sampler runs
+before warmup and takes a fresh sample after drain before gateway termination.
+Explicitly disabled observations produce no diagnostic artifacts or request
+phase state. Missing enabled artifacts, unavailable required metric families,
+loss, unmatched spans, mode disagreement or failed persistence fail diagnostic
+qualification; none is silently treated as zero activity.
+
+The auditor keeps three distinct verdicts: original `valid` client/lifecycle
+integrity, original `load_fidelity.valid`, and conditional
+`diagnostic_integrity.valid`. New-run CLI success requires all applicable gates.
+Descriptive data remains available when a gate fails. Complete gateway GC
+coverage has its own flag: an external sampler failure can invalidate overall
+diagnostic qualification without erasing valid gateway spans.
+
+The existing dynamics analyzer joins compact request phases, actual GC spans,
+overdue-monitor intervals, adjacent loop/process CPU samples and engine/resource
+observations. Overlapping wall intervals use their union, not double-counted
+durations; overlapping CPU categories are explicitly non-additive. A zero GC
+overlap is emitted only for qualified gateway coverage of the interval. Legacy,
+disabled, missing or unqualified coverage stays null. Request-linked prefill
+attribution remains `unavailable`; aggregate histograms and unrelated percentiles
+cannot supply it. Offline analysis hashes diagnostic artifacts too and still
+writes only outside raw run directories.
+
+Runner package/source fingerprints describe the runner and launch inputs, not
+the remote backend's verified package version, launch arguments or cache state.
+The manifest explicitly marks backend launch provenance unobserved. Archive and
+verify those separately for any approved GPU capture; the `--cache-policy` label
+is not proof. Never publish raw metric labels without reviewing their contents.
+See [runtime telemetry](runtime-telemetry.md) for collector limits, measurement
+boundaries, and the outstanding full-suite validation handoff.
+
 ## Comparison protocol after smoke passes
 
 Freeze inputs and server settings. Reserve separate chronological source windows

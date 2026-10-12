@@ -1,7 +1,10 @@
 # Periodic pauses and TTFT waves: reviewed experiment plan
 
-Status: proposed, plan-only. No diagnostic code, policy changes, GPU runs, or
-performance improvements are delivered by this document.
+Status: A+B are implemented in this PR in separate, reviewable commit groups.
+The user's implementation handoff supersedes the earlier A-only proposal: keep
+both groups in PR #12 and keep it open for review. Focused CPU checks are recorded
+in the PR; the user has delegated remaining full-suite validation to another
+agent. No GPU capture, policy change, MPC or performance benefit is delivered.
 
 Source reviewed: `68fdfa5073b278fa50e408f165facc14a869b21b`, which merged
 PR #11 on October 11, 2026 at 18:22:46 PDT (October 12 at 01:22:46 UTC).
@@ -10,7 +13,8 @@ analyzer or treat PR #11 as an unmerged dependency.
 
 ## In plain language
 
-First analyze the existing logs, then add timing probes as a separate change.
+Analyze the existing logs and add timing probes in a separate implementation
+group in the same PR.
 Neither change introduces a new controller or changes admission policy:
 
 - Count every request, including rejections and failures, rather than studying
@@ -137,15 +141,16 @@ those files' identity. The uploaded bundles lack gateway process and vLLM launch
 logs, and disabled prefix caching was self-reported. A new run must close these
 provenance gaps, not infer settings from the old upload.
 
-## 3. Exactly what code would change
+## 3. Implementation groups and invariants
 
-This is a specification for subsequent implementation, not changes made by this
-plan. Define two independently reviewable initial deliverables:
+The following specification is implemented as two independently reviewable
+deliverables in this PR; A remains usable without enabling B:
 
 - **A: offline accounting.** Use existing artifacts for the all-request outcome/
   deadline ledger, available same-request latency stages, `scheduled_e2e`, and
   admission/completion/input-token windows. Include offline fixtures and preserve
-  frozen reports. A can merge and be used without B or any new runtime events.
+  frozen reports. A can be used without B or any new runtime events; the two
+  implementation groups remain in the same PR.
 - **B: minimum opt-in diagnostics.** Deliver collection, diagnostic span joins,
   auditing, and the required correctness tests together. All gateway, telemetry,
   runner, and diagnostic-auditor changes below belong to B.
@@ -160,14 +165,15 @@ follow-ups. Splitting A and B does not make B's measurement invariants optional.
 | `telemetry.py::Telemetry`, `run`, `flush`, `monitor_loop` | Add an opt-in GC callback collector, gateway process/loop-thread CPU observations, bounded callback handoff, and explicit diagnostic health. Drain actual spans through the loop-owned emitter. | No cross-thread mutation of `records`/`active`; no lost records reported as zero activity; keep the 100 ms monitor semantics. |
 | `gateway.py::lifespan`, `proxy_chat_completions`, `begin_request`, `finish_request` | Register/remove diagnostics with lifespan; collect per-request phase boundaries, including admission-lock wait and actual reservation release. Use optional timing context where helper signatures need it. | Keep cost formula, budget logic, HTTP-client lifetime, headers, byte forwarding, timeouts, and cancellation-safe exactly-once cleanup unchanged. |
 | `run_trace_pilot.py::main`, `run`, `poll_state` | Add a default-off diagnostic option, protocol/arm/pair metadata, complete code/package fingerprints, explicit health/artifact collection, and controlled engine/resource sampling. Reuse `finalize` rather than forking the runner. | Preserve `prepare_replay` preallocation and `replay` scheduling; do not serialize JSON, tokenize, or synchronously sample resources on the arrival path. |
+| `diagnostic_sampling.py`; `requirements-v1.txt` | Worker-thread Prometheus and current-RSS/CPU observations, live family inventory, reset epochs, bounded response reads and persistence status; add `psutil` and `prometheus-client`. | Sampling is outside gateway/arrival loops. Unavailable metrics are explicit; final observations bracket drain before gateway termination. |
 | `analyze_trace_pilot.py::_analyze` and runner exit handling | Validate diagnostic schemas, span timing, final persistence, and mode agreement when the new protocol requests them. Keep a separate diagnostic-integrity verdict and require it for diagnostic qualification. | Existing schema-1 bundles must reproduce the same original report; absent legacy diagnostics are not zero GC. Existing integrity/fidelity fields and definitions remain unchanged. |
 | Existing telemetry, replay, budget-lifecycle, and client-error tests; new `tests\test_trace_dynamics.py` | A: add offline accounting/analysis fixtures. B: add diagnostic fixtures and extend existing subprocess/streaming tests. | A covers all outcomes, missing stages, zero-success cohorts, and frozen-report compatibility. B retains bounded-buffer, cross-thread/reentrant callback, cancellation, exactly-once cleanup, shutdown, and legacy-compatibility requirements. |
-| `experiments\runtime-telemetry.md`, `experiments\trace-replay.md`, and this plan | Document opt-in schema, commands after implementation, qualification, and the new protocol identifier. | Do not silently change frozen presets, thresholds, source window, or historical conclusions. |
+| `README.md`, `experiments\runtime-telemetry.md`, `experiments\trace-replay.md`, and this plan | Document implemented modes/schema/artifacts, qualification, evidence limits and delegated validation. | Do not silently change frozen presets, thresholds, source window, or historical conclusions. |
 
 Paired-run statistical reporting is deferred with the paired studies; it is not
 a requirement for the first instrumentation change.
 
-Proposed interface, not implemented: `--gateway-diagnostics` enables
+Implemented interface: `--gateway-diagnostics` enables
 `GATEWAY_DIAGNOSTICS=1`; omission disables it. The runner must explicitly set
 `GATEWAY_DIAGNOSTICS` to `1` or `0` for the chosen mode, rather than inherit it
 from the parent environment. Record a new
@@ -179,6 +185,15 @@ diagnostic qualification; explicitly disabled observations are not missing data.
 Fingerprint changed runtime files, the analyzer, and relevant packages including
 `httpcore`. Archive allowlisted launch/configuration details, not the entire
 environment or unredacted credentials.
+
+`--gateway-diagnostics` also enables the external sampler.
+`--engine-observations` alone provides that same sampler with gateway diagnostics
+off for a later common-monitoring control. The implemented protocol is
+`periodic-peaks-v1`, diagnostic schema 1, with separate client integrity, fidelity,
+diagnostic integrity and gateway GC-coverage results. Read
+`experiments\runtime-telemetry.md` and `experiments\trace-replay.md` for the exact
+events, artifacts and interpretation. Full Linux/subprocess-suite execution is a
+validation handoff, not a completed acceptance claim.
 
 `sustained_load.py::consume_request` already records scheduled/start/first-content/
 finish timestamps and failed/cancelled outcomes. It needs no change for A or the
@@ -348,8 +363,9 @@ Port-bound integration tests skipped because another service is running do not
 count as exercised coverage; use an isolated test allocation, not process killing.
 
 Exit B: diagnostic schema and failures are covered, legacy audits reproduce, and
-there is a concrete Q1/Q2 evidence table to collect. No runtime changes are part
-of this plan-only document.
+there is a concrete Q1/Q2 evidence table to collect. Runtime changes and focused
+CPU coverage are included in this PR. Remaining full-suite/subprocess validation
+is delegated to another agent and remains a review item before acceptance.
 
 ### P1. Optional single-run diagnostic capture
 
@@ -519,8 +535,9 @@ failure-path correctness, and no claim stronger than the evidence.
 | PR #11 was described as an unmerged dependency. | Pin the merged source and extend its existing analyzer. |
 | A single fixed-budget, fixed-output window could be generalized to MPC. | Restrict conclusions to diagnosis; keep identification and held-out controller evaluation separate. |
 
-**Review verdict:** suitable for implementing observability first, with no
-mandatory long GPU campaign: A first, B separately, and qualified identification
+**Review verdict:** observability first, with no mandatory long GPU campaign:
+A and B are separate implementation groups in this PR, with remaining full-suite
+validation handed off. Qualified identification can proceed
 alongside deeper diagnosis when its observations suffice. It is not an approved
 production SLO contract or a completed causal/performance result. TTFT-only and
 joint-compliance claims have different gates. Stronger overhead, historical

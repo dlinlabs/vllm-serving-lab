@@ -5,7 +5,7 @@ import os
 import secrets
 import time
 import re
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, nullcontext
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
@@ -14,7 +14,7 @@ import httpx
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.background import BackgroundTask
-from telemetry import Telemetry, SSEObserver
+from telemetry import Telemetry, SSEObserver, GatewayDiagnostics, DIAGNOSTICS_SCHEMA
 
 VLLM_URL = os.getenv("VLLM_URL", "http://localhost:8000")
 MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen3-4B-Instruct-2507")
@@ -69,6 +69,8 @@ TELEMETRY_JSONL = os.getenv("TELEMETRY_JSONL", "")
 BENCHMARK_REQUEST_IDS = os.getenv("BENCHMARK_REQUEST_IDS", "0") == "1"
 LOOP_LAG_TELEMETRY = os.getenv("LOOP_LAG_TELEMETRY", "0") == "1"
 TELEMETRY_STATUS_JSON = os.getenv('TELEMETRY_STATUS_JSON', '')
+GATEWAY_DIAGNOSTICS = os.getenv('GATEWAY_DIAGNOSTICS', '0') == '1'
+NO_PHASE = nullcontext()
 benchmark_ids = set()
 
 
@@ -77,36 +79,59 @@ async def lifespan(app):
     stop = asyncio.Event()
     task = None
     lag_task = None
-    if TELEMETRY_JSONL:
-        path = Path(TELEMETRY_JSONL)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        # Fail startup if the experiment log cannot be opened.
-        with path.open("a", encoding="utf-8"):
-            pass
-        telemetry.enabled = True
-        task = asyncio.create_task(telemetry.run(path, snapshot_metrics, stop))
-        if LOOP_LAG_TELEMETRY:
-            lag_task = asyncio.create_task(telemetry.monitor_loop(stop))
+    started = False
+    if GATEWAY_DIAGNOSTICS and not (TELEMETRY_JSONL and TELEMETRY_STATUS_JSON):
+        raise RuntimeError('Gateway diagnostics require telemetry log and shutdown status paths')
     try:
+        if TELEMETRY_JSONL:
+            path = Path(TELEMETRY_JSONL)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            # Fail startup if the experiment log cannot be opened.
+            with path.open("a", encoding="utf-8"):
+                pass
+            telemetry.enabled = True
+            if GATEWAY_DIAGNOSTICS:
+                telemetry.diagnostics = GatewayDiagnostics(telemetry.emit)
+                telemetry.diagnostics.start()
+            task = asyncio.create_task(telemetry.run(path, snapshot_metrics, stop))
+            if LOOP_LAG_TELEMETRY:
+                lag_task = asyncio.create_task(telemetry.monitor_loop(stop))
+        started = True
         yield
     finally:
         stop.set()
-        if lag_task is not None:
-            await lag_task
-        if task is not None:
-            await task
+        results = await asyncio.gather(*(t for t in (lag_task, task) if t is not None),
+                                       return_exceptions=True)
+        if telemetry.diagnostics is not None:
+            async def final_drain():
+                await telemetry.diagnostics.stop()
+                telemetry.sample(await snapshot_metrics())
+                await telemetry.flush(TELEMETRY_JSONL)
+            results.extend(await asyncio.gather(final_drain(), return_exceptions=True))
+        errors = [result for result in results if isinstance(result, BaseException)]
         telemetry.enabled = False
         if TELEMETRY_STATUS_JSON:
-            status = dict(run_id=telemetry.run_id, status='closed', closed_at=time.monotonic(),
+            failed = (not started or errors or telemetry.dropped or telemetry.write_errors or
+                      (telemetry.diagnostics is not None and not telemetry.diagnostics.health()['complete']))
+            status = dict(run_id=telemetry.run_id, status='failed' if failed else 'closed', closed_at=time.monotonic(),
                           dropped=telemetry.dropped, write_errors=telemetry.write_errors)
+            if errors:
+                status['error_types'] = [type(error).__name__ for error in errors]
+            if telemetry.diagnostics is not None:
+                status.update(diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                              diagnostics=telemetry.diagnostics.health())
             def persist_status():
                 path = Path(TELEMETRY_STATUS_JSON)
                 temporary = path.with_suffix('.tmp')
                 temporary.write_text(json.dumps(status, allow_nan=False) + '\n')
                 temporary.replace(path)
             await asyncio.to_thread(persist_status)
+        if errors:
+            raise errors[0]
         if TELEMETRY_JSONL and (telemetry.dropped or telemetry.write_errors):
             raise RuntimeError('Experiment telemetry was lost or could not be persisted')
+        if telemetry.diagnostics is not None and not telemetry.diagnostics.health()['complete']:
+            raise RuntimeError('Gateway diagnostic callback coverage is incomplete')
 
 
 app = FastAPI(title="vLLM Admission Gateway", lifespan=lifespan)
@@ -229,8 +254,12 @@ async def snapshot_metrics() -> Dict[str, Any]:
             "tokenizer_model": MODEL_NAME,
             "tokenizer_available": tokenizer is not None,
             "tokenizer_load_error": tokenizer_load_error,
+            "gateway_diagnostics": telemetry.diagnostics is not None,
         }
     )
+    if telemetry.diagnostics is not None:
+        metrics['diagnostics'] = dict(gc=telemetry.diagnostics.gc_state(),
+                                     health=telemetry.diagnostics.health(), sampled_at=time.monotonic())
     return metrics
 
 
@@ -242,15 +271,21 @@ class AdmissionDecision:
 
 
 async def begin_request(
-    request_cost: float, used_tokenizer_fallback: bool
+    request_cost: float, used_tokenizer_fallback: bool, phases=None
 ) -> AdmissionDecision:
+    if phases is not None:
+        phases.begin('admission_lock_wait')
     if ADMISSION_MODE == "baseline":
         async with state_lock:
+            if phases is not None:
+                phases.end('admission_lock_wait')
             state["accepted_requests"] += 1
         return AdmissionDecision(True)
 
     if ADMISSION_MODE == "cost_aware":
         async with state_lock:
+            if phases is not None:
+                phases.end('admission_lock_wait')
             if used_tokenizer_fallback:
                 state["tokenizer_fallback_requests"] += 1
 
@@ -273,6 +308,8 @@ async def begin_request(
         return AdmissionDecision(True, budget, version)
 
     async with state_lock:
+        if phases is not None:
+            phases.end('admission_lock_wait')
         outstanding = state["current_in_flight"] + state["current_waiting"]
         if outstanding >= MAX_OUTSTANDING:
             state["rejected_requests"] += 1
@@ -332,43 +369,64 @@ async def proxy_chat_completions(request: Request):
                 return JSONResponse({'detail': 'benchmark ID capacity exceeded'}, status_code=503)
             benchmark_ids.add(request_id)
     request_id = telemetry.received(request_id)
+    phases = telemetry.diagnostics.request(request_id) if telemetry.diagnostics is not None else None
     reserved = False
     cleaned = False
     request_cost = 0.0
     client = None
     upstream = None
+    cleanup_task = None
 
     async def cleanup(outcome):
         nonlocal cleaned
         if cleaned:
             return
         cleaned = True
+        terminal_recorded = False
         try:
-            if upstream is not None:
-                await upstream.aclose()
-        finally:
             try:
-                if client is not None:
-                    await client.aclose()
+                if upstream is not None:
+                    with phases.phase('upstream_close') if phases else NO_PHASE:
+                        await upstream.aclose()
             finally:
-                if reserved:
-                    await finish_request(request_cost)
-                telemetry.terminal(request_id, outcome)
-                if outcome == "failed":
-                    async with state_lock:
-                        state["failed_requests"] += 1
+                try:
+                    if client is not None:
+                        with phases.phase('client_close') if phases else NO_PHASE:
+                            await client.aclose()
+                finally:
+                    if reserved:
+                        with phases.phase('reservation_release') if phases else NO_PHASE:
+                            await finish_request(request_cost)
+                    telemetry.terminal(request_id, outcome)
+                    terminal_recorded = True
+                    if outcome == "failed":
+                        async with state_lock:
+                            state["failed_requests"] += 1
+        finally:
+            if phases is not None:
+                phases.finish(outcome, cleanup_complete=terminal_recorded and
+                              all(phases.phases.get(name, {}).get('status', 'not_reached') in
+                                  {'completed', 'not_reached'} for name in
+                                  ('upstream_close', 'client_close', 'reservation_release')))
 
     async def safe_cleanup(outcome):
-        # Cleanup survives cancellation of the downstream response task.
-        task = asyncio.create_task(cleanup(outcome))
-        try:
-            await asyncio.shield(task)
-        except asyncio.CancelledError:
-            await task
-            raise
+        nonlocal cleanup_task
+        if cleanup_task is None:
+            cleanup_task = asyncio.create_task(cleanup(outcome))
+        cancellation = None
+        # Repeated downstream cancellation must not cancel the one cleanup task.
+        while not cleanup_task.done():
+            try:
+                await asyncio.shield(cleanup_task)
+            except asyncio.CancelledError as exc:
+                cancellation = exc
+        cleanup_task.result()
+        if cancellation is not None:
+            raise cancellation
 
     try:
-        body = await request.body()
+        with phases.phase('body_read') if phases else NO_PHASE:
+            body = await request.body()
         headers = {
             key: value for key, value in request.headers.items()
             if key.lower() not in {"host", "content-length", "x-admin-api-key", "x-benchmark-request-id"}
@@ -376,24 +434,28 @@ async def proxy_chat_completions(request: Request):
         headers["x-request-id"] = request_id
         headers["accept-encoding"] = "identity"
         try:
-            parsed = json.loads(body)
-            payload = parsed if isinstance(parsed, dict) else {}
+            with phases.phase('json_parse') if phases else NO_PHASE:
+                parsed = json.loads(body)
+                payload = parsed if isinstance(parsed, dict) else {}
         except (ValueError, UnicodeDecodeError):
             payload = {}
 
         estimated_input_tokens = estimated_output_tokens = 0
         used_tokenizer_fallback = False
         if ADMISSION_MODE == "cost_aware":
-            (request_cost, estimated_input_tokens, estimated_output_tokens,
-             used_tokenizer_fallback) = estimate_request_cost(payload)
+            with phases.phase('cost_estimation') if phases else NO_PHASE:
+                (request_cost, estimated_input_tokens, estimated_output_tokens,
+                 used_tokenizer_fallback) = estimate_request_cost(payload)
 
-        decision = await begin_request(request_cost, used_tokenizer_fallback)
+        decision = await begin_request(request_cost, used_tokenizer_fallback, phases)
         if not decision.accepted:
             telemetry.terminal(request_id, "rejected", budget=decision.budget,
                                budget_version=decision.budget_version,
                                estimated_input_tokens=estimated_input_tokens,
                                max_output_tokens=estimated_output_tokens,
                                request_cost=request_cost)
+            if phases is not None:
+                phases.finish("rejected", cleanup_complete=True)
             return JSONResponse(
                 {"detail": "request rejected: admission capacity exceeded",
                  "estimated_request_cost": request_cost,
@@ -408,18 +470,24 @@ async def proxy_chat_completions(request: Request):
                            estimated_input_tokens=estimated_input_tokens,
                            max_output_tokens=estimated_output_tokens,
                            budget=decision.budget, budget_version=decision.budget_version)
-        client = httpx.AsyncClient()
+        with phases.phase('client_construction') if phases else NO_PHASE:
+            client = httpx.AsyncClient()
         upstream_request = client.build_request(
             method=request.method, url=f"{VLLM_URL}/v1/chat/completions",
             content=body, headers=headers, timeout=60.0,
         )
-        telemetry.emit("backend_sent", request_id)
-        upstream = await client.send(upstream_request, stream=True)
-    except httpx.HTTPError:
+        with phases.phase('http_send_headers') if phases else NO_PHASE:
+            telemetry.emit("backend_sent", request_id)
+            upstream = await client.send(upstream_request, stream=True)
+    except httpx.HTTPError as exc:
+        if phases is not None:
+            phases.abort(exc)
         await safe_cleanup("failed")
         return JSONResponse({"detail": "upstream request failed"}, status_code=502,
                             headers={"x-request-id": request_id})
     except BaseException as exc:
+        if phases is not None:
+            phases.abort(exc)
         await safe_cleanup("cancelled" if isinstance(exc, asyncio.CancelledError) else "failed")
         raise
 
@@ -430,9 +498,13 @@ async def proxy_chat_completions(request: Request):
         outcome = "cancelled"
         try:
             async for chunk in upstream.aiter_bytes():
+                if phases is not None and chunk:
+                    phases.mark('first_body')
                 if is_sse and upstream.is_success:
                     observer.feed(chunk)
                     if observer.has_content:
+                        if phases is not None:
+                            phases.mark('first_content')
                         telemetry.first_content(request_id)
                 yield chunk
             complete = upstream.is_success and (

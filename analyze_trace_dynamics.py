@@ -21,6 +21,8 @@ from analyze_trace_pilot import LIFECYCLE, TERMINAL, analyze as audit
 RAW = ('manifest.json', 'client.json', 'warmup.json', 'gateway.jsonl', 'trace.json',
        'budget_changes.json', 'state_observations.json', 'telemetry_status.json',
        'report.json', 'timeseries.png')
+LEGACY_RAW = RAW
+RAW += ('engine_observations.jsonl', 'engine_observations_status.json')
 STAGES = ('ingress', 'admission', 'client_build', 'post_dispatch', 'delivery')
 LABELS = ('Client start → handler', 'Handler → accepted', 'Accepted → dispatch',
           'Dispatch → gateway content', 'Gateway → client content')
@@ -52,6 +54,121 @@ def finite(value):
 
 def difference(end, start):
     return end - start if finite(end) and finite(start) else None
+
+
+def read_jsonl(path):
+    records, malformed = [], []
+    if path.is_file():
+        for number, line in enumerate(path.read_text().splitlines(), 1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except ValueError:
+                malformed.append(number)
+                continue
+            if isinstance(record, dict):
+                records.append(record)
+            else:
+                malformed.append(number)
+    return records, malformed
+
+
+def interval_overlap(left, right, spans):
+    """Intersect with an interval union, never sum overlapping wall intervals."""
+    if not finite(left) or not finite(right) or right < left:
+        return None
+    intervals = sorted((max(left, a), min(right, b)) for a, b in spans
+                       if finite(a) and finite(b) and a <= b)
+    total, previous_end = 0., -math.inf
+    for a, b in intervals:
+        if b > a:
+            total += max(0., b - max(a, previous_end))
+            previous_end = max(previous_end, b)
+    return total
+
+
+def join_diagnostics(joined, records, observations, start, manifest, report):
+    integrity = report.get('diagnostic_integrity')
+    requested = manifest.get('gateway_diagnostics_requested')
+    mode = ('legacy_unavailable' if 'investigation_protocol' not in manifest else
+            'enabled' if requested is True else 'disabled' if requested is False else 'unknown')
+    complete = bool(integrity and integrity.get('gc_coverage_complete'))
+    phase_records = defaultdict(list)
+    gc_records, cpu_records, phase_spans = [], [], defaultdict(list)
+    for record in records:
+        if record.get('event') == 'request_diagnostics':
+            phase_records[record.get('request_id')].append(record)
+            phases = record.get('phases', {})
+            if isinstance(phases, dict):
+                for name, phase in phases.items():
+                    if isinstance(phase, dict):
+                        phase_spans[name].append((phase.get('start'), phase.get('end')))
+        elif record.get('event') == 'gc_span' and all(finite(record.get(k)) for k in ('span_start', 'span_end')):
+            if record['span_start'] <= record['span_end']:
+                gc_records.append(dict(start_s=record['span_start']-start, end_s=record['span_end']-start,
+                    emission_s=difference(record.get('monotonic'), start),
+                    on_loop_thread=record.get('on_loop_thread') if type(record.get('on_loop_thread')) is bool else None,
+                    callback_thread_cpu_seconds=record.get('callback_thread_cpu_seconds')
+                        if finite(record.get('callback_thread_cpu_seconds')) else None))
+        elif record.get('event') == 'diagnostic_cpu' and all(finite(record.get(k)) for k in
+                ('sampled_at', 'loop_thread_cpu_seconds', 'process_cpu_seconds')):
+            cpu_records.append(record)
+    gc_spans = [(r['start_s'], r['end_s']) for r in gc_records]
+    loop_gc_spans = [(r['start_s'], r['end_s']) for r in gc_records if r['on_loop_thread']]
+    for row in joined:
+        summaries = phase_records.get(row['request_id'], [])
+        observed = summaries[0] if len(summaries) == 1 else None
+        phase_output = {}
+        if observed is not None and isinstance(observed.get('phases'), dict):
+            for name, phase in observed['phases'].items():
+                if not isinstance(phase, dict):
+                    continue
+                duration = difference(phase.get('end'), phase.get('start'))
+                phase_output[name] = dict(start_s=difference(phase.get('start'), start),
+                    end_s=difference(phase.get('end'), start),
+                    elapsed_s=duration if duration is not None and duration >= 0 else None,
+                    status=phase.get('status'))
+        row['diagnostics'] = dict(mode=mode, summaries=len(summaries),
+            phases=phase_output or None, cleanup_complete=observed.get('cleanup_complete') if observed else None,
+            first_body_s=difference(observed.get('first_body_at'), start) if observed else None,
+            first_content_s=difference(observed.get('first_content_at'), start) if observed else None,
+            post_dispatch_gc_overlap_s=interval_overlap(row['dispatch_s'], row['gateway_content_s'], gc_spans) if complete else None,
+            post_dispatch_loop_gc_overlap_s=interval_overlap(row['dispatch_s'], row['gateway_content_s'], loop_gc_spans) if complete else None)
+    monitors = []
+    for row in records:
+        if row.get('event') != 'event_loop_lag' or not all(finite(row.get(k)) for k in ('scheduled_at', 'monotonic')):
+            continue
+        a, b = row['scheduled_at'], row['monotonic']
+        if b < a:
+            continue
+        monitors.append(dict(due_s=a-start, emission_s=b-start, overdue_s=b-a,
+            gc_overlap_s=interval_overlap(a-start, b-start, gc_spans) if complete else None,
+            loop_gc_overlap_s=interval_overlap(a-start, b-start, loop_gc_spans) if complete else None,
+            observed_phase_overlap_s={name: interval_overlap(a, b, spans) for name, spans in phase_spans.items()}))
+    cpu_intervals = []
+    for previous, current in zip(cpu_records, cpu_records[1:]):
+        a, b = previous['sampled_at'], current['sampled_at']
+        loop_cpu = current['loop_thread_cpu_seconds'] - previous['loop_thread_cpu_seconds']
+        process_cpu = current['process_cpu_seconds'] - previous['process_cpu_seconds']
+        if b <= a or min(loop_cpu, process_cpu) < 0 or previous.get('loop_thread_id') != current.get('loop_thread_id'):
+            continue
+        cpu_intervals.append(dict(start_s=a-start, end_s=b-start, elapsed_s=b-a,
+                                 loop_thread_cpu_seconds=loop_cpu, process_cpu_seconds=process_cpu))
+    external_qualified = bool(integrity and integrity.get('valid') and integrity.get('external_mode') == 'enabled')
+    engine_points = [dict(sent_s=row['sent_at']-start, received_s=row['received_at']-start,
+                         finished_s=row['finished_at']-start, counter_epoch=row['counter_epoch'],
+                         counter_resets=row['counter_resets'], disappeared_counters=row['disappeared_counters'],
+                         metrics=row['metrics'], resources=row['resources']) for row in observations] if external_qualified else None
+    return dict(gateway_mode=mode, integrity=integrity, gc_coverage_complete=complete,
+                gc_spans=gc_records if requested is True else None,
+                cpu_intervals=cpu_intervals if requested is True else None,
+                monitor_overdue_intervals=monitors if requested is True else None,
+                engine_observation_count=len(observations), engine_observations=engine_points,
+                request_linked_prefill='unavailable',
+                note='GC overlap uses actual spans, not emission times. Overlap categories and CPU counters are not additive '
+                     'causal attribution. Async phase time is not blocked CPU time. Engine samples are aggregate observations, '
+                     'not per-request queue/prefill attribution. Missing or unqualified GC coverage is null, never zero.')
 
 
 def join_requests(clients, trace, histories, start, slo, run_id):
@@ -210,20 +327,8 @@ def analyze_run(root, stall_threshold):
                 shutil.copyfile(root / name, temporary / name)
         checked = audit(temporary, plot=False)
     clients = json.loads((root / 'client.json').read_text())['requests'] if (root / 'client.json').is_file() else []
-    records, malformed_lines = [], []
-    if (root / 'gateway.jsonl').is_file():
-        for line_number, line in enumerate((root / 'gateway.jsonl').read_text().splitlines(), 1):
-            if not line.strip():
-                continue
-            try:
-                record = json.loads(line)
-            except ValueError:
-                malformed_lines.append(line_number)
-                continue
-            if isinstance(record, dict):
-                records.append(record)
-            else:
-                malformed_lines.append(line_number)
+    records, malformed_lines = read_jsonl(root / 'gateway.jsonl')
+    engine, malformed_engine_lines = read_jsonl(root / 'engine_observations.jsonl')
     start, end = manifest['measurement_start'], manifest['measurement_end']
     if not finite(start) or not finite(end) or end <= start:
         raise ValueError('Investigation requires finite, ordered measurement boundaries')
@@ -271,16 +376,8 @@ def analyze_run(root, stall_threshold):
                            received_count_at_gap_start=bisect_right(received_times, a['monotonic'])))
     def overlap(row):
         # Union of delayed-monitor intervals: empirical timing association only.
-        if row['dispatch_s'] is None or row['gateway_content_s'] is None:
-            return None
-        intervals = sorted((max(row['dispatch_s'], s['due_s']), min(row['gateway_content_s'], s['resumed_s']))
-                           for s in stalls)
-        total, previous_end = 0., -math.inf
-        for left, right in intervals:
-            if right > left:
-                total += max(0., right-max(left, previous_end))
-                previous_end = max(previous_end, right)
-        return total
+        return interval_overlap(row['dispatch_s'], row['gateway_content_s'],
+                                [(s['due_s'], s['resumed_s']) for s in stalls])
     stage_stats = {k: distribution([r['stages'][k] for r in successful if r['stages'][k] is not None]) for k in STAGES}
     complete_tail = [r for r in tail if r['stages_complete']]
     tail_means = {k: distribution([r['stages'][k] for r in complete_tail])['mean'] for k in STAGES}
@@ -293,10 +390,13 @@ def analyze_run(root, stall_threshold):
     expected_counts = {k: sum(0 <= value <= bins[-1] for value in relative(k)) for k in arrivals}
     if any(sum(arrivals[k]) != expected_counts[k] for k in arrivals):
         raise ValueError('Arrival bins do not reconcile')
-    summary = dict(name=root.name, raw_sha256=before, missing_raw_files=[n for n in RAW if n not in before],
+    required_raw = RAW if manifest.get('sampler', {}).get('enabled') else LEGACY_RAW
+    summary = dict(name=root.name, raw_sha256=before, missing_raw_files=[n for n in required_raw if n not in before],
                    malformed_gateway_lines=malformed_lines,
+                   malformed_engine_lines=malformed_engine_lines,
                    original_report_reproduced=checked == original, saved_report=original,
-                   qualified_for_comparison=bool(checked['valid'] and checked['load_fidelity']['valid'] and checked == original),
+                   qualified_for_comparison=bool(checked['valid'] and checked['load_fidelity']['valid'] and checked == original and
+                                                 checked.get('diagnostic_integrity', {'valid': True})['valid']),
                    manifest_git_commit=manifest.get('git_commit'), recorded_git_dirty=manifest.get('git_dirty'),
                    runtime_code_matches={name: hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()==sha
                                          if (Path(__file__).parent/name).is_file() else None
@@ -332,6 +432,7 @@ def analyze_run(root, stall_threshold):
                    client_late_overlapping_large_monitor_count=sum(any(s['due_s'] < r['started_s'] and
                        s['resumed_s'] > r['scheduled_s'] for s in stalls) for r in joined
                        if finite(r['scheduling_lag_s']) and r['scheduling_lag_s'] > manifest['config']['max_scheduling_lag']))
+    summary['diagnostics'] = join_diagnostics(joined, records, engine, start, manifest, checked)
     if hashes(root) != before:
         raise ValueError('Raw files changed during analysis')
     return summary, joined, records, start
@@ -380,7 +481,9 @@ def figures(output, data, stall_threshold):
         ax.set_ylabel('Requests / 1s bin')
         fidelity = 'PASS' if summary['report']['load_fidelity']['valid'] else 'FAILED'
         integrity = 'PASS' if summary['report']['valid'] else 'FAILED'
-        ax.set_title(summary['name']+'\nIntegrity '+integrity+' / load fidelity '+fidelity)
+        diagnostic = summary['report'].get('diagnostic_integrity')
+        diagnostic_label = (' / diagnostics '+('PASS' if diagnostic['valid'] else 'FAILED')) if diagnostic else ''
+        ax.set_title(summary['name']+'\nIntegrity '+integrity+' / load fidelity '+fidelity+diagnostic_label)
         ax = axes[1, column]
         timed = [r for r in joined if finite(r['scheduling_lag_s'])]
         ax.scatter([r['scheduled_s'] for r in timed], [1000*r['scheduling_lag_s'] for r in timed], s=5, label='Client scheduling lag', color='#286e99')
@@ -445,6 +548,7 @@ def main():
                 stream.write(json.dumps(row, allow_nan=False)+'\n')
     figures(output, data, args.stall_threshold)
     print(json.dumps({s['name']: dict(integrity=s['report']['valid'], fidelity=s['report']['load_fidelity']['valid'],
+                       diagnostics=s['report'].get('diagnostic_integrity', {}).get('valid'),
                        tail_post_dispatch_fraction=s['slowest_one_percent']['post_dispatch_fraction'],
                        large_monitor_delays=len(s['large_monitor_delays'])) for s, _, _, _ in data}, indent=2))
 
