@@ -94,7 +94,7 @@ actually generated 128 tokens, so variable decode demand is not covered yet.
 
 ### Existing analysis available for independent review
 
-[Draft PR #11](https://github.com/dlinlabs/vllm-serving-lab/pull/11) contains an
+[PR #11](https://github.com/dlinlabs/vllm-serving-lab/pull/11) contains an
 offline analyzer, raw-file hashes, same-cohort tail attribution, pause alignment,
 and next-experiment proposals. These are review inputs, not confirmed root causes.
 Read the raw records first if performing an independent diagnosis.
@@ -108,7 +108,7 @@ Matplotlib, and HTTPX). The analyzer runs the existing auditor in a temporary
 directory and writes new outputs separately, preserving raw reports and figures:
 
 ```bash
-git fetch origin analysis/trace-budget96
+git fetch origin main
 git worktree add --detach ../trace-review 4ea4ef8610d4ad12b814435fafdd9329164a68fb
 cd ../trace-review
 python analyze_trace_dynamics.py \
@@ -118,8 +118,9 @@ python analyze_trace_dynamics.py \
   --output-dir results/trace-independent-analysis
 ```
 
-PR #11 has not been merged. Its analysis files are available in the pinned commit
-above; they are not yet files on `main`. The review output should distinguish
+The analysis files are included in this repository through PR #11. The pinned
+links above preserve the initial diagnosis for reproducibility. The review output
+should distinguish
 **verified observation → plausible mechanism → evidence needed to discriminate**,
 with reproducible calculations and links to the relevant raw requests/events.
 
@@ -980,3 +981,51 @@ python analyze_budget_dynamics.py results/pilot-02 \
 ```
 
 The offline analysis requires NumPy and Matplotlib. This is one-run diagnosis; it does not demonstrate MPC performance improvement.
+
+
+### RTX 4090 Azure replay: two budget-96 repeats
+
+The Azure trace smoke and two five-minute repeats are now in
+[results](results/). Both repeats replay exactly **7,643 requests** from the same
+source window with variable input lengths, fixed budget 96, and a 128-token output
+cap. Their raw integrity audits pass, but **both fail the predeclared 50 ms maximum
+client scheduling-lag limit**. These are diagnostic results, not qualified MPC
+benchmarks.
+
+| Five-minute repeat | Successful / rejected / failed | Client P99 TTFT | Scheduled-arrival SLO goodput | Maximum client scheduling lag |
+|---|---|---|---|---|
+| r1 | 2,239 / 5,404 / 0 | 2.489 s | 2.403 requests/s | 208.07 ms |
+| r2 | 2,220 / 5,423 / 0 | 2.945 s | 2.197 requests/s | 175.38 ms |
+
+The slowest 23 successful requests in each repeat spend **97.7% / 97.9%** of
+their mean client TTFT between dispatch and gateway first content. That stage
+includes transport, engine queue/compute, and gateway scheduling; it is not a
+GPU-only measurement. None of those tail stages overlaps the selected large
+loop-monitor delay intervals.
+
+![Azure replay latency stages](results/trace-budget96-analysis/latency_stages.png)
+
+Each repeat has four gateway monitor delays above 300 ms. Between their nearby
+lifecycle gaps, accepted-count increments are **472–524 requests**, while time
+spacings vary. This is a work-count-related hypothesis to investigate, not a
+confirmed GC or HTTP-client cause. Generator scheduling delays also occur away
+from gateway pauses. Every successful request generated exactly 128 tokens, so
+these runs do not yet cover variable decode demand.
+
+![Azure replay stall alignment](results/trace-budget96-analysis/stall_alignment.png)
+
+The [full diagnosis and next experiment design](results/trace-budget96-analysis/report.md)
+and [audited summary with raw hashes](results/trace-budget96-analysis/summary.json)
+separate observations from causal hypotheses. Next: qualify offered-load replay,
+sweep fixed budgets on the same GPU/configuration, then identify budget-response
+dynamics before comparing MPC with fixed and reactive baselines.
+
+Reproduce offline without changing raw reports:
+
+```bash
+python analyze_trace_dynamics.py \
+  results/trace-smoke-96 \
+  results/trace-experiment-96-r1 \
+  results/trace-experiment-96-r2 \
+  --output-dir results/trace-budget96-analysis
+```
