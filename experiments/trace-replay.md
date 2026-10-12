@@ -186,6 +186,43 @@ across comparisons; its overhead has not yet been GPU-benchmarked.
 
 Reanalyze with `python analyze_trace_pilot.py results/trace-smoke-96`.
 
+### Offline all-request investigation
+
+Use the existing dynamics analyzer to write a separate investigation directory:
+
+```bash
+python analyze_trace_dynamics.py results/trace-smoke-96 \
+  results/trace-experiment-96-r1 results/trace-experiment-96-r2 \
+  --output-dir results/trace-all-request-investigation
+```
+
+The investigation schema is version 2; the original audit schema and reports are
+unchanged. Every client outcome is exported to `<run>-requests.jsonl`, including
+rejections, failed/incomplete streams, cancellations, and explicit `NotLaunched`
+rows. Missing client outcomes get separate planned rows, not invented successes
+or inferred never-launched outcomes. Duplicate/extra records remain visible.
+`--all-requests` is retained for compatibility; full export is now the default.
+
+The ledger separates successful scheduled-TTFT hits, misses, and unknown timings.
+It keeps client-start `end_to_end` and adds `scheduled_e2e =
+finished_at - scheduled_at`; neither is engine last-token latency. There is no
+E2E deadline or joint-compliance claim. Available same-request stages are retained
+for every outcome; missing stages are `null`, never zero. Tail stage means use
+only complete decompositions within the selected tail and report that denominator.
+
+`summary.json` retains both the saved report and the independent re-audit,
+all-outcome/input-size counts, E2E distributions, and half-open one-second
+admission/completion/input-token windows including drain. Token windows sum known
+gateway estimates and count unknown estimates separately. Missing lifecycle
+events are not evidence of zero work. Invalid audits, fidelity failures, missing
+artifacts, malformed log lines, and report mismatches remain visible; their
+descriptive ledgers do not qualify a performance comparison.
+
+Raw files are hashed before and after analysis; audit copies and new outputs are
+outside the raw directories. Preserve raw bytes when checking out on Windows:
+Git newline conversion changes trace hashes. The frozen-fixture tests accept
+`TRACE_BASELINE_ROOT` pointing to a byte-preserving export of the three bundles.
+
 For the five-minute preset, use `--trace results/trace-experiment-input/trace.json`
 and a fresh output directory such as `results/trace-experiment-96-r1`. Keep budget,
 SLO, cache policy, and run order explicit in replay commands; the preset freezes

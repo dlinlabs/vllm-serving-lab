@@ -5,16 +5,18 @@ use the same successful-request cohort, not differences between percentiles.
 """
 import argparse
 from bisect import bisect_right
-from collections import defaultdict
+from collections import Counter, defaultdict
 import hashlib
 import json
 import math
 from pathlib import Path
+import shutil
 import tempfile
+import uuid
 
 import numpy as np
 
-from analyze_trace_pilot import LIFECYCLE, analyze as audit
+from analyze_trace_pilot import LIFECYCLE, TERMINAL, analyze as audit
 
 RAW = ('manifest.json', 'client.json', 'warmup.json', 'gateway.jsonl', 'trace.json',
        'budget_changes.json', 'state_observations.json', 'telemetry_status.json',
@@ -26,7 +28,8 @@ COLORS = ('#7199c1', '#b0c5dc', '#edb965', '#366a56', '#ce8598')
 
 
 def hashes(root):
-    return {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in RAW}
+    return {name: hashlib.sha256((root / name).read_bytes()).hexdigest()
+            for name in RAW if (root / name).is_file()}
 
 
 def distribution(values):
@@ -43,59 +46,207 @@ def dump(path, value):
     path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n')
 
 
+def finite(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def difference(end, start):
+    return end - start if finite(end) and finite(start) else None
+
+
+def join_requests(clients, trace, histories, start, slo, run_id):
+    """Keep observed outcomes, including invalid/incomplete ones, separate from qualification."""
+    planned = defaultdict(list)
+    for row in trace['requests']:
+        planned[row['trace_id']].append(row)
+    rows = list(clients)
+    recorded = Counter(r.get('trace_id') for r in rows)
+    for identifier, plans in planned.items():
+        for plan in plans[recorded[identifier]:]:
+            rows.append(dict(trace_id=identifier, outcome_missing=True,
+                             scheduled_at=start + plan['arrival_seconds'],
+                             client_request_id=uuid.uuid5(uuid.UUID(run_id), identifier).hex))
+    joined = []
+    matched = Counter()
+    for client in rows:
+        identifier = client.get('client_request_id')
+        trace_id = client.get('trace_id')
+        plans = planned.get(trace_id, [])
+        plan = plans[matched[trace_id]] if matched[trace_id] < len(plans) else {}
+        matched[trace_id] += 1
+        history = histories.get(identifier, {})
+        issues = []
+        def event_time(name):
+            events = history.get(name, [])
+            if len(events) > 1:
+                issues.append(f'duplicate {name}')
+            return events[0].get('monotonic') if len(events) == 1 else None
+        times = [client.get('started_at')] + [event_time(k) for k in
+                 ('received', 'accepted', 'backend_sent', 'first_content')] + [client.get('first_content_at')]
+        stages = {}
+        for name, left, right in zip(STAGES, times, times[1:]):
+            value = difference(right, left)
+            if value is not None and value < -1e-6:
+                issues.append(f'negative {name} duration')
+                value = None
+            stages[name] = value
+        complete_stages = all(value is not None for value in stages.values())
+        ttft = client.get('ttft')
+        if complete_stages and (not finite(ttft) or abs(sum(stages.values()) - ttft) > 1e-6):
+            issues.append('stage sum differs from client TTFT')
+        scheduled = client.get('scheduled_at')
+        scheduled_ttft = difference(client.get('first_content_at'), scheduled)
+        scheduled_e2e = difference(client.get('finished_at'), scheduled)
+        if scheduled_ttft is not None and scheduled_ttft < 0:
+            issues.append('negative scheduled TTFT')
+            scheduled_ttft = None
+        if scheduled_e2e is not None and scheduled_e2e < 0:
+            issues.append('negative scheduled E2E')
+            scheduled_e2e = None
+        success, rejected = client.get('success'), client.get('rejected')
+        if client.get('outcome_missing'):
+            outcome = 'missing_client_outcome'
+        elif success and (rejected or client.get('stream_complete') is not True):
+            outcome = 'inconsistent_success'
+        elif success:
+            outcome = ('successful_ttft_unknown' if scheduled_ttft is None else
+                       'successful_within_ttft' if scheduled_ttft <= slo else 'successful_over_ttft')
+        elif client.get('error_type') == 'NotLaunched' and client.get('started_at') is None:
+            outcome = 'never_launched'
+        elif rejected:
+            outcome = 'rejected'
+        elif client.get('error_type') == 'CancelledError':
+            outcome = 'cancelled'
+        else:
+            outcome = 'failed'
+        terminal = [e for name in TERMINAL for e in history.get(name, [])]
+        deadline = scheduled + slo if finite(scheduled) else None
+        row = dict(request_id=identifier, trace_id=client.get('trace_id'), outcome=outcome,
+                   planned=bool(plan), client_outcome_present=not client.get('outcome_missing', False),
+                   schedule_source='planned' if client.get('outcome_missing') else 'client',
+                   planned_scheduled_s=plan.get('arrival_seconds'),
+                   scheduled_s=difference(scheduled, start), started_s=difference(times[0], start),
+                   received_s=difference(times[1], start), admitted_s=difference(times[2], start),
+                   dispatch_s=difference(times[3], start), gateway_content_s=difference(times[4], start),
+                   finished_s=difference(client.get('finished_at'), start),
+                   scheduling_lag_s=difference(times[0], scheduled),
+                   input_tokens=client.get('expected_input_tokens', plan.get('input_tokens')),
+                   actual_input_tokens=client.get('input_tokens'), output_tokens=client.get('output_tokens'),
+                   success=success is True, rejected=rejected is True, ttft_s=ttft if finite(ttft) else None,
+                   end_to_end=client.get('end_to_end') if finite(client.get('end_to_end')) else None, scheduled_ttft=scheduled_ttft,
+                   scheduled_e2e=scheduled_e2e, error_type=client.get('error_type'),
+                   error_phase=client.get('error_phase'), stream_complete=client.get('stream_complete'),
+                   stages=stages, stages_complete=complete_stages and not issues,
+                   missing_stages=[k for k, v in stages.items() if v is None],
+                   measurement_issues=issues, gateway_events={k: len(v) for k, v in history.items()},
+                   gateway_outcome=terminal[0]['event'] if len(terminal) == 1 else None,
+                   gateway_terminal_s=difference(terminal[0].get('monotonic'), start) if len(terminal) == 1 else None,
+                   deadline_remaining_at_admission_s=difference(deadline, times[2]))
+        joined.append(row)
+    return joined, dict(planned=len(trace['requests']), unique_planned_ids=len(planned),
+                        recorded_client_rows=len(clients), ledger_rows=len(joined),
+                        missing_client_outcomes=sum(r['outcome'] == 'missing_client_outcome' for r in joined),
+                        extra_client_rows=sum(not r['planned'] for r in joined),
+                        duplicate_planned_ids={k: len(v) for k, v in planned.items() if len(v) > 1},
+                        duplicate_trace_ids={k: v for k, v in recorded.items() if v > 1},
+                        outcomes=dict(Counter(r['outcome'] for r in joined)))
+
+
+def request_windows(joined, lifecycle, start, end):
+    """Half-open one-second windows, including drain; counts are observed, not imputed."""
+    identifiers = {r['request_id'] for r in joined if r['request_id'] is not None}
+    events = [e for e in lifecycle if e.get('request_id') in identifiers]
+    latest = max([end - start] + [r[k] for r in joined for k in ('finished_s', 'started_s', 'scheduled_s') if finite(r[k])] +
+                 [e['monotonic'] - start for e in events if finite(e.get('monotonic'))])
+    count = max(1, math.floor(latest) + 1)
+    windows = [dict(start_s=i, end_s=i + 1, arrival_window=i < end-start,
+                    scheduled=0, started=0, received=0, accepted=0, completed=0, rejected=0,
+                    failed=0, cancelled=0, admitted_input_tokens_known=0,
+                    admitted_input_tokens_unknown_requests=0) for i in range(count)]
+    unbinned = Counter()
+    def bucket(value, field):
+        if not finite(value) or value < 0:
+            unbinned[field] += 1
+            return None
+        index = math.floor(value)
+        if index >= len(windows):
+            unbinned[field] += 1
+            return None
+        return windows[index]
+    for row in joined:
+        for field, key in (('scheduled', 'scheduled_s'), ('started', 'started_s')):
+            window = bucket(row[key], field)
+            if window is not None:
+                window[field] += 1
+    for event in events:
+        field = event['event']
+        if field not in {'received', 'accepted', *TERMINAL}:
+            continue
+        window = bucket(difference(event.get('monotonic'), start), field)
+        if window is None:
+            continue
+        window[field] += 1
+        if field == 'accepted':
+            tokens = event.get('estimated_input_tokens')
+            if type(tokens) is int and tokens >= 0:
+                window['admitted_input_tokens_known'] += tokens
+            else:
+                window['admitted_input_tokens_unknown_requests'] += 1
+    return dict(width_s=1, interval='[start_s, end_s)', windows=windows, unbinned=dict(unbinned),
+                note='Observed gateway admissions/completions; missing lifecycle events are not zero work. '
+                     'Input tokens are gateway admission estimates. Drain windows are retained.')
+
+
 def analyze_run(root, stall_threshold):
     before = hashes(root)
     manifest = json.loads((root / 'manifest.json').read_text())
-    original = json.loads((root / 'report.json').read_text())
-    # The existing auditor writes report.json even with plotting disabled.
-    # Symlink its read-only inputs, but keep its report output separate.
+    trace = json.loads((root / 'trace.json').read_text())
+    original = json.loads((root / 'report.json').read_text()) if (root / 'report.json').is_file() else None
+    # Copies also work on hosts that cannot create symlinks. Never audit in place.
     with tempfile.TemporaryDirectory() as scratch:
         temporary = Path(scratch)
         for name in RAW:
-            if name not in {'report.json', 'timeseries.png'}:
-                (temporary / name).symlink_to(root / name)
+            if name not in {'report.json', 'timeseries.png'} and (root / name).is_file():
+                shutil.copyfile(root / name, temporary / name)
         checked = audit(temporary, plot=False)
-    if not checked['valid']:
-        raise ValueError(f'{root.name}: integrity audit failed: {checked["issues"]}')
-    if checked != original:
-        raise ValueError(f'{root.name}: saved report differs from re-audit')
-    clients = json.loads((root / 'client.json').read_text())['requests']
-    records = [json.loads(line) for line in (root / 'gateway.jsonl').read_text().splitlines() if line.strip()]
+    clients = json.loads((root / 'client.json').read_text())['requests'] if (root / 'client.json').is_file() else []
+    records, malformed_lines = [], []
+    if (root / 'gateway.jsonl').is_file():
+        for line_number, line in enumerate((root / 'gateway.jsonl').read_text().splitlines(), 1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except ValueError:
+                malformed_lines.append(line_number)
+                continue
+            if isinstance(record, dict):
+                records.append(record)
+            else:
+                malformed_lines.append(line_number)
     start, end = manifest['measurement_start'], manifest['measurement_end']
-    histories = defaultdict(dict)
+    if not finite(start) or not finite(end) or end <= start:
+        raise ValueError('Investigation requires finite, ordered measurement boundaries')
+    histories = defaultdict(lambda: defaultdict(list))
     lifecycle = []
     for event in records:
-        if event['event'] in LIFECYCLE:
-            histories[event['request_id']][event['event']] = event
+        if event.get('event') in LIFECYCLE and event.get('request_id') is not None:
+            histories[event['request_id']][event['event']].append(event)
             lifecycle.append(event)
     # Cumulative counts include the three warmup requests; increments do not.
-    accepted_times = [e['monotonic'] for e in lifecycle if e['event'] == 'accepted']
-    received_times = [e['monotonic'] for e in lifecycle if e['event'] == 'received']
-    pairs = list(zip(lifecycle, lifecycle[1:]))
-    joined = []
-    for client in clients:
-        history = histories[client['client_request_id']]
-        row = dict(request_id=client['client_request_id'], trace_id=client['trace_id'],
-                   scheduled_s=client['scheduled_at']-start, started_s=client['started_at']-start,
-                   received_s=history['received']['monotonic']-start,
-                   scheduling_lag_s=client['started_at']-client['scheduled_at'],
-                   input_tokens=client['expected_input_tokens'], output_tokens=client['output_tokens'],
-                   success=client['success'], rejected=client['rejected'], ttft_s=client['ttft'])
-        if client['success']:
-            times = [client['started_at']] + [history[k]['monotonic'] for k in
-                     ('received', 'accepted', 'backend_sent', 'first_content')] + [client['first_content_at']]
-            stages = dict(zip(STAGES, np.diff(times).tolist()))
-            if min(stages.values()) < -1e-6 or abs(sum(stages.values())-client['ttft']) > 1e-6:
-                raise ValueError('Latency decomposition does not reconcile')
-            row.update(stages=stages, dispatch_s=times[3]-start, gateway_content_s=times[4]-start)
-        joined.append(row)
-    successful = [r for r in joined if r['success']]
-    if not successful:
-        raise ValueError(f'{root.name}: latency decomposition requires a successful request')
+    timed_lifecycle = sorted((e for e in lifecycle if finite(e.get('monotonic'))), key=lambda e: e['monotonic'])
+    accepted_times = [e['monotonic'] for e in timed_lifecycle if e['event'] == 'accepted']
+    received_times = [e['monotonic'] for e in timed_lifecycle if e['event'] == 'received']
+    pairs = list(zip(timed_lifecycle, timed_lifecycle[1:]))
+    joined, accounting = join_requests(clients, trace, histories, start,
+                                       manifest['config']['ttft_slo'], manifest['run_id'])
+    successful = [r for r in joined if r['outcome'].startswith('successful_') and finite(r['ttft_s'])]
     tail = sorted(successful, key=lambda r: r['ttft_s'], reverse=True)[:math.ceil(len(successful)*.01)]
     stalls = []
     for monitor in records:
-        if monitor['event'] != 'event_loop_lag' or monitor['lag_seconds'] <= stall_threshold:
+        if (monitor.get('event') != 'event_loop_lag' or not finite(monitor.get('lag_seconds')) or
+                monitor['lag_seconds'] <= stall_threshold or not finite(monitor.get('scheduled_at')) or
+                not finite(monitor.get('monotonic'))):
             continue
         if not start <= monitor['scheduled_at'] < end:
             continue
@@ -104,9 +255,12 @@ def analyze_run(root, stall_threshold):
         # became due. This gap is not proof of continuous event-loop blocking.
         nearby = [(a, b) for a, b in pairs if a['monotonic'] < resumed and b['monotonic'] > due-.2]
         if not nearby:
-            raise ValueError('No lifecycle events near monitor delay')
+            stalls.append(dict(due_s=due-start, resumed_s=resumed-start, lag_s=monitor['lag_seconds'],
+                               gap_start_s=None, gap_end_s=None, gap_s=None,
+                               accepted_count_at_gap_start=None, received_count_at_gap_start=None))
+            continue
         a, b = max(nearby, key=lambda pair: pair[1]['monotonic']-pair[0]['monotonic'])
-        feature = next((histories[a['request_id']][k] for k in ('accepted', 'rejected')
+        feature = next((histories[a['request_id']][k][0] for k in ('accepted', 'rejected')
                         if k in histories[a['request_id']]), {})
         stalls.append(dict(due_s=due-start, resumed_s=resumed-start, lag_s=monitor['lag_seconds'],
                            gap_start_s=a['monotonic']-start, gap_end_s=b['monotonic']-start,
@@ -117,6 +271,8 @@ def analyze_run(root, stall_threshold):
                            received_count_at_gap_start=bisect_right(received_times, a['monotonic'])))
     def overlap(row):
         # Union of delayed-monitor intervals: empirical timing association only.
+        if row['dispatch_s'] is None or row['gateway_content_s'] is None:
+            return None
         intervals = sorted((max(row['dispatch_s'], s['due_s']), min(row['gateway_content_s'], s['resumed_s']))
                            for s in stalls)
         total, previous_end = 0., -math.inf
@@ -125,38 +281,57 @@ def analyze_run(root, stall_threshold):
                 total += max(0., right-max(left, previous_end))
                 previous_end = max(previous_end, right)
         return total
-    stage_stats = {k: distribution([r['stages'][k] for r in successful]) for k in STAGES}
-    tail_means = {k: float(np.mean([r['stages'][k] for r in tail])) for k in STAGES}
-    tail_ttft = float(np.mean([r['ttft_s'] for r in tail]))
-    relative = lambda key: [r[key] for r in joined]
+    stage_stats = {k: distribution([r['stages'][k] for r in successful if r['stages'][k] is not None]) for k in STAGES}
+    complete_tail = [r for r in tail if r['stages_complete']]
+    tail_means = {k: distribution([r['stages'][k] for r in complete_tail])['mean'] for k in STAGES}
+    tail_ttft = distribution([r['ttft_s'] for r in tail])['mean']
+    decomposed_ttft = distribution([r['ttft_s'] for r in complete_tail])['mean']
+    relative = lambda key: [r[key] for r in joined if finite(r[key])]
     bins = np.arange(0, math.ceil(end-start)+1)
     arrivals = {key: np.histogram(relative(key), bins=bins)[0].tolist()
                 for key in ('scheduled_s', 'started_s', 'received_s')}
-    expected_counts = {'scheduled_s': len(joined), 'started_s': len(joined),
-                       'received_s': sum(0 <= r['received_s'] <= end-start for r in joined)}
+    expected_counts = {k: sum(0 <= value <= bins[-1] for value in relative(k)) for k in arrivals}
     if any(sum(arrivals[k]) != expected_counts[k] for k in arrivals):
         raise ValueError('Arrival bins do not reconcile')
-    summary = dict(name=root.name, raw_sha256=before, original_report_reproduced=True,
-                   manifest_git_commit=manifest['git_commit'], recorded_git_dirty=manifest['git_dirty'],
+    summary = dict(name=root.name, raw_sha256=before, missing_raw_files=[n for n in RAW if n not in before],
+                   malformed_gateway_lines=malformed_lines,
+                   original_report_reproduced=checked == original, saved_report=original,
+                   qualified_for_comparison=bool(checked['valid'] and checked['load_fidelity']['valid'] and checked == original),
+                   manifest_git_commit=manifest.get('git_commit'), recorded_git_dirty=manifest.get('git_dirty'),
                    runtime_code_matches={name: hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()==sha
-                                         for name, sha in manifest['code_sha256'].items()},
-                   trace_sha256=manifest['trace_sha256'], gpu=manifest['gpu'], packages=manifest['packages'],
+                                         if (Path(__file__).parent/name).is_file() else None
+                                         for name, sha in manifest.get('code_sha256', {}).items()},
+                   trace_sha256=manifest.get('trace_sha256'), gpu=manifest.get('gpu'), packages=manifest.get('packages'),
                    config=manifest['config'], duration_s=end-start, report=checked,
-                   scheduling_delayed_count=sum(r['scheduling_lag_s'] > manifest['config']['max_scheduling_lag'] for r in joined),
-                   successful_output=distribution([r['output_tokens'] for r in successful]),
-                   output_at_cap_count=sum(r['output_tokens']==r['max_output_tokens'] for r in clients if r['success']),
+                   accounting=accounting,
+                   outcomes_by_input_size={label: dict(Counter(r['outcome'] for r in joined
+                       if ('unknown' if not finite(r['input_tokens']) else 'short_input' if r['input_tokens'] <= 128
+                           else 'medium_input' if r['input_tokens'] <= 512 else 'long_input') == label))
+                       for label in ('short_input', 'medium_input', 'long_input', 'unknown')},
+                   e2e_seconds={outcome: {key: distribution([r[key] for r in joined if r['outcome'] == outcome and finite(r[key])])
+                                         for key in ('end_to_end', 'scheduled_e2e')}
+                                for outcome in accounting['outcomes']},
+                   request_windows=request_windows(joined, lifecycle, start, end),
+                   scheduling_delayed_count=sum(r['scheduling_lag_s'] > manifest['config']['max_scheduling_lag']
+                                                for r in joined if finite(r['scheduling_lag_s'])),
+                   successful_output=distribution([r['output_tokens'] for r in successful if finite(r['output_tokens'])]),
+                   output_at_cap_count=sum(r.get('output_tokens') == r.get('max_output_tokens') for r in clients
+                                           if r.get('success') and r.get('output_tokens') is not None),
                    stage_seconds=stage_stats,
                    slowest_one_percent=dict(count=len(tail), request_ids=[r['request_id'] for r in tail],
                        mean_ttft_s=tail_ttft, mean_stage_seconds=tail_means,
-                       post_dispatch_fraction=tail_means['post_dispatch']/tail_ttft,
-                       post_dispatch_monitor_overlap_count=sum(overlap(r)>0 for r in tail)),
+                       decomposed_count=len(complete_tail), decomposed_mean_ttft_s=decomposed_ttft,
+                       post_dispatch_fraction=tail_means['post_dispatch']/decomposed_ttft if decomposed_ttft else None,
+                       post_dispatch_monitor_overlap_count=sum(overlap(r)>0 for r in tail if overlap(r) is not None),
+                       post_dispatch_monitor_overlap_unknown_count=sum(overlap(r) is None for r in tail)),
                    large_monitor_delays=stalls,
                    delay_due_spacing_s=np.diff([s['due_s'] for s in stalls]).tolist(),
-                   delay_accepted_spacing=np.diff([s['accepted_count_at_gap_start'] for s in stalls]).tolist(),
+                   delay_accepted_spacing=[difference(b['accepted_count_at_gap_start'], a['accepted_count_at_gap_start'])
+                                           for a, b in zip(stalls, stalls[1:])],
                    arrival_counts_per_second=arrivals,
                    client_late_overlapping_large_monitor_count=sum(any(s['due_s'] < r['started_s'] and
                        s['resumed_s'] > r['scheduled_s'] for s in stalls) for r in joined
-                       if r['scheduling_lag_s'] > manifest['config']['max_scheduling_lag']))
+                       if finite(r['scheduling_lag_s']) and r['scheduling_lag_s'] > manifest['config']['max_scheduling_lag']))
     if hashes(root) != before:
         raise ValueError('Raw files changed during analysis')
     return summary, joined, records, start
@@ -175,15 +350,18 @@ def figures(output, data, stall_threshold):
         groups.append(summary['slowest_one_percent'])
     left = np.zeros(len(groups))
     for key, label, color in zip(STAGES, LABELS, COLORS):
-        values = np.array([g['mean_stage_seconds'][key] for g in groups])
+        values = np.array([g['mean_stage_seconds'][key] or 0 for g in groups])
         ax.barh(np.arange(len(groups)), values, left=left, label=label, color=color)
         left += values
     for i, group in enumerate(groups):
-        ax.text(left[i]+.04, i, f'{left[i]:.3f}s; post-dispatch {100*group["post_dispatch_fraction"]:.1f}%\nn={group["count"]}', va='center', fontsize=9)
+        fraction = group['post_dispatch_fraction']
+        text = ('No complete decomposition' if fraction is None else
+                f'{left[i]:.3f}s; post-dispatch {100*fraction:.1f}%')
+        ax.text(left[i]+.04, i, text+f'\ndecomposed n={group["decomposed_count"]}; tail n={group["count"]}', va='center', fontsize=9)
     ax.set_yticks(np.arange(len(groups)), labels)
     ax.invert_yaxis()
-    ax.set_xlim(0, max(left)*1.45)
-    ax.set_xlabel('Mean client TTFT (seconds), same slowest ceil(1%) successful requests')
+    ax.set_xlim(0, max(1, max(left)*1.45))
+    ax.set_xlabel('Mean client TTFT (seconds), complete decompositions within slowest ceil(1%) successes')
     ax.set_title('Trace replay — where tail latency occurs\nPost-dispatch includes transport, engine queue/compute, and gateway scheduling')
     ax.legend(loc='upper center', bbox_to_anchor=(.5, -.16), ncol=3, frameon=False)
     ax.grid(axis='x', alpha=.2)
@@ -193,17 +371,21 @@ def figures(output, data, stall_threshold):
     repeats = [d for d in data if d[0]['duration_s'] > 30] or data
     fig, axes = plt.subplots(4, len(repeats), figsize=(14, 11), sharex='col', squeeze=False)
     for column, (summary, joined, records, start) in enumerate(repeats):
-        successful = [r for r in joined if r['success']]
+        successful = [r for r in joined if r['outcome'].startswith('successful_') and
+                      finite(r['started_s']) and finite(r['stages']['post_dispatch'])]
         arrivals = summary['arrival_counts_per_second']
         ax = axes[0, column]
         for key, label, color in [('scheduled_s','Planned arrivals','#888888'), ('received_s','Gateway received','#286e99')]:
             ax.step(np.arange(len(arrivals[key])), arrivals[key], where='post', label=label, color=color, alpha=.8)
         ax.set_ylabel('Requests / 1s bin')
         fidelity = 'PASS' if summary['report']['load_fidelity']['valid'] else 'FAILED'
-        ax.set_title(summary['name']+'\nIntegrity PASS / load fidelity '+fidelity)
+        integrity = 'PASS' if summary['report']['valid'] else 'FAILED'
+        ax.set_title(summary['name']+'\nIntegrity '+integrity+' / load fidelity '+fidelity)
         ax = axes[1, column]
-        ax.scatter([r['scheduled_s'] for r in joined], [1000*r['scheduling_lag_s'] for r in joined], s=5, label='Client scheduling lag', color='#286e99')
-        loop = [e for e in records if e['event']=='event_loop_lag' and start <= e['scheduled_at'] < start+summary['duration_s']]
+        timed = [r for r in joined if finite(r['scheduling_lag_s'])]
+        ax.scatter([r['scheduled_s'] for r in timed], [1000*r['scheduling_lag_s'] for r in timed], s=5, label='Client scheduling lag', color='#286e99')
+        loop = [e for e in records if e.get('event')=='event_loop_lag' and finite(e.get('scheduled_at')) and
+                finite(e.get('lag_seconds')) and start <= e['scheduled_at'] < start+summary['duration_s']]
         ax.plot([e['scheduled_at']-start for e in loop], [1000*e['lag_seconds'] for e in loop], label='Gateway loop monitor lag', color='#ba5537', linewidth=.7)
         limit_ms = 1000*summary['config']['max_scheduling_lag']
         ax.axhline(limit_ms, ls='--', color='black', linewidth=.6, label=f'Client fidelity limit: {limit_ms:g}ms')
@@ -215,7 +397,8 @@ def figures(output, data, stall_threshold):
         ax.scatter([r['started_s'] for r in tail], [r['stages']['post_dispatch'] for r in tail], s=22, marker='x', color='#b32e32', label='Slowest 1% client TTFT')
         ax.set_ylabel('Seconds')
         ax = axes[3, column]
-        snapshots = [e for e in records if e['event']=='snapshot' and start <= e['monotonic'] < start+summary['duration_s']]
+        snapshots = [e for e in records if e.get('event')=='snapshot' and finite(e.get('monotonic')) and
+                     finite(e.get('current_admitted_cost')) and start <= e['monotonic'] < start+summary['duration_s']]
         ax.plot([e['monotonic']-start for e in snapshots], [e['current_admitted_cost'] for e in snapshots], label='Reserved cost (gateway proxy)', color='#8662a2')
         ax.axhline(summary['config']['budget'], color='black', ls='--', label='Fixed budget')
         ax.set_ylabel('Cost units')
@@ -240,7 +423,7 @@ def main():
     parser.add_argument('--stall-threshold', type=float, default=.3,
                         help='Exploratory monitor-delay selection only; never changes fidelity limits')
     parser.add_argument('--all-requests', action='store_true',
-                        help='Also export all joined measurement requests (several MB per run)')
+                        help='Compatibility option: all offered requests are now always exported')
     args = parser.parse_args()
     if not np.isfinite(args.stall_threshold) or args.stall_threshold <= 0:
         parser.error('--stall-threshold must be positive and finite')
@@ -251,18 +434,14 @@ def main():
         parser.error('Output must be separate from raw run directories')
     data = [analyze_run(root, args.stall_threshold) for root in roots]
     output.mkdir(parents=True, exist_ok=True)
-    dump(output/'summary.json', dict(schema_version=1, analyst_stall_threshold_s=args.stall_threshold,
+    dump(output/'summary.json', dict(schema_version=2, analyst_stall_threshold_s=args.stall_threshold,
          analysis_code_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
          runs=[d[0] for d in data],
          repeat_trace_identical=(len({d[0]['trace_sha256'] for d in data if d[0]['duration_s'] > 30})==1
                                 if sum(d[0]['duration_s'] > 30 for d in data) >= 2 else None)))
     for summary, joined, _, _ in data:
-        tail_ids = set(summary['slowest_one_percent']['request_ids'])
-        selected = joined if args.all_requests else [r for r in joined if r['request_id'] in tail_ids or
-                    r['scheduling_lag_s'] > summary['config']['max_scheduling_lag']]
-        suffix = '-requests.jsonl' if args.all_requests else '-tail-and-late.jsonl'
-        with (output/(summary['name']+suffix)).open('w') as stream:
-            for row in selected:
+        with (output/(summary['name']+'-requests.jsonl')).open('w') as stream:
+            for row in joined:
                 stream.write(json.dumps(row, allow_nan=False)+'\n')
     figures(output, data, args.stall_threshold)
     print(json.dumps({s['name']: dict(integrity=s['report']['valid'], fidelity=s['report']['load_fidelity']['valid'],
