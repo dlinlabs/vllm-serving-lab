@@ -15,6 +15,256 @@ LIFECYCLE = {'received', 'accepted', 'backend_sent', 'first_content'} | TERMINAL
 PRE_HEADER_ERRORS = {'ConnectError', 'ConnectTimeout', 'ReadError', 'ReadTimeout', 'WriteError',
                      'WriteTimeout', 'PoolTimeout', 'RemoteProtocolError', 'LocalProtocolError',
                      'ProxyError', 'UnsupportedProtocol', 'DecodingError', 'CancelledError'}
+DIAGNOSTIC_EVENTS = {'diagnostics_started', 'diagnostics_stopped', 'diagnostic_cpu',
+                     'gc_span', 'gc_unmatched', 'request_diagnostics'}
+
+
+def diagnostic_audit(output, manifest, records, clients, warmup, shutdown):
+    """Separate opt-in evidence integrity from the unchanged client/fidelity verdicts."""
+    from telemetry import DIAGNOSTICS_SCHEMA, INVESTIGATION_PROTOCOL, REQUEST_PHASES
+    issues = []
+    result = dict(valid=False, issues=issues, gateway_mode='unknown', external_mode='unknown',
+                  gc_coverage_complete=False, request_linked_prefill='unavailable',
+                  note='Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.')
+
+    def require(condition, message):
+        if not condition and message not in issues:
+            issues.append(message)
+
+    def number(value):
+        return type(value) in (int, float) and math.isfinite(value)
+
+    def interval(left, right):
+        return number(left) and number(right) and left <= right
+
+    def gc_state(state):
+        return (isinstance(state, dict) and type(state.get('enabled')) is bool and
+                all(isinstance(state.get(k), (tuple, list)) and len(state[k]) == 3 and
+                    all(type(v) is int and v >= 0 for v in state[k]) for k in ('counts', 'thresholds')))
+
+    try:
+        require(manifest['investigation_protocol'] == INVESTIGATION_PROTOCOL and
+                manifest['diagnostics_schema_version'] == DIAGNOSTICS_SCHEMA, 'Unsupported diagnostic protocol/schema')
+        enabled = manifest['gateway_diagnostics_requested']
+        external = manifest['sampler']['enabled']
+        require(type(enabled) is bool and type(external) is bool, 'Diagnostic modes must be explicit booleans')
+        result.update(gateway_mode='enabled' if enabled else 'disabled',
+                      external_mode='enabled' if external else 'disabled')
+        require(enabled == manifest['config']['gateway_diagnostics'] == manifest['gateway_diagnostics_observed'],
+                'Requested and observed diagnostic modes differ')
+        require(external == (enabled or manifest['config']['engine_observations']),
+                'External sampler mode differs from selected options')
+        require(not enabled or external, 'Gateway diagnostics require external observations')
+        metric_records = [manifest['initial_metrics'], manifest['post_warmup_metrics'], manifest['final_metrics']]
+        metric_records += [r for r in records if r['event'] == 'snapshot']
+        require(all(r.get('gateway_diagnostics') is enabled for r in metric_records),
+                'Gateway metrics disagree with selected diagnostic mode')
+        require(interval(manifest['warmup_start'], manifest['warmup_end']) and
+                manifest['warmup_end'] <= manifest['measurement_start'], 'Invalid warmup boundaries')
+        require(all(manifest['warmup_start'] <= r['started_at'] <= r['finished_at'] <= manifest['warmup_end']
+                    for r in warmup), 'Warmup requests are outside recorded boundaries')
+        require(not manifest.get('collector_errors'), 'A diagnostic collector failed')
+        fingerprints = manifest['code_sha256']
+        required_files = ('gateway.py', 'telemetry.py', 'run_trace_pilot.py', 'run_budget_pilot.py',
+                          'sustained_load.py', 'trace_workload.py', 'diagnostic_sampling.py',
+                          'analyze_trace_pilot.py', 'analyze_trace_dynamics.py', 'requirements-v1.txt')
+        require(all(isinstance(fingerprints.get(k), str) and len(fingerprints[k]) == 64 and
+                    all(c in '0123456789abcdef' for c in fingerprints[k]) for k in required_files),
+                'Incomplete code fingerprints')
+        packages = ('httpx', 'httpcore', 'fastapi', 'uvicorn') + (('psutil', 'prometheus-client') if external else ())
+        require(all(isinstance(manifest['packages'].get(k), str) for k in packages),
+                'Incomplete package fingerprints')
+        diagnostic = [r for r in records if r['event'] in DIAGNOSTIC_EVENTS]
+        require(all(r.get('diagnostics_schema_version') == DIAGNOSTICS_SCHEMA for r in diagnostic),
+                'Diagnostic event schema mismatch')
+        require(shutdown['status'] == 'closed' and shutdown['run_id'] == manifest['run_id'] and
+                shutdown['dropped'] == shutdown['write_errors'] == 0,
+                'Gateway diagnostic persistence is incomplete')
+        finish = max([manifest['measurement_end']] +
+                     [r['finished_at'] for r in clients + warmup if number(r.get('finished_at'))] +
+                     [r['monotonic'] for r in records if r['event'] in TERMINAL])
+        if not enabled:
+            require(not diagnostic and 'diagnostics' not in shutdown,
+                    'Disabled gateway produced diagnostic observations')
+        else:
+            starts = [r for r in diagnostic if r['event'] == 'diagnostics_started']
+            stops = [r for r in diagnostic if r['event'] == 'diagnostics_stopped']
+            require(len(starts) == len(stops) == 1, 'Missing or duplicate diagnostic coverage boundaries')
+            begin, stop = starts[0], stops[0]
+            left, right = begin['coverage_start'], stop['coverage_end']
+            result.update(coverage_start=left, coverage_end=right)
+            require(interval(left, right) and left <= manifest['warmup_start'] and right >= finish and
+                    stop['coverage_start'] == left and right <= stop['monotonic'] <= shutdown['closed_at'],
+                    'Diagnostic coverage does not bracket warmup, measurement and drain')
+            require(begin['process_id'] == manifest['gateway_launch']['process_id'] and
+                    begin['python_implementation'] == 'cpython' and begin['gil_enabled'] is True,
+                    'Unsupported diagnostic process/runtime identity')
+            require(gc_state(begin.get('gc')) and all(gc_state(r.get('diagnostics', {}).get('gc'))
+                                                     for r in metric_records),
+                    'Missing GC enabled/threshold/count observations')
+            health = shutdown['diagnostics']
+            require(shutdown['diagnostics_schema_version'] == DIAGNOSTICS_SCHEMA and health == stop['health'],
+                    'Final diagnostic health does not match shutdown')
+            require(health['closed'] is True and health['quiesced'] is True and health['complete'] is True and
+                    health['registration_missing'] is False and
+                    all(health[k] == 0 for k in ('lost_callbacks', 'undelivered_callbacks', 'buffered_callbacks',
+                        'inflight_callbacks', 'callback_errors', 'pending_spans', 'unmatched_boundaries')),
+                    'GC callback coverage is incomplete')
+            spans = [r for r in diagnostic if r['event'] == 'gc_span']
+            cpu = [r for r in diagnostic if r['event'] == 'diagnostic_cpu']
+            unmatched = [r for r in diagnostic if r['event'] == 'gc_unmatched']
+            require(health['callbacks_produced'] == health['callbacks_received'] == 2 * len(spans) + len(unmatched) and
+                    health['gc_spans'] == len(spans) and health['unmatched_boundaries'] == len(unmatched) and
+                    not unmatched, 'GC edge/span counts do not reconcile')
+            sequences = []
+            for span in spans:
+                require(interval(span['span_start'], span['span_end']) and
+                        left <= span['span_start'] <= span['span_end'] <= right and
+                        span['span_end'] <= span['monotonic'], 'Invalid GC actual-span/emission timestamps')
+                require(type(span['generation']) is int and span['generation'] in (0, 1, 2) and
+                        type(span['callback_thread_id']) is int and type(span['callback_native_thread_id']) is int and
+                        span['on_loop_thread'] is (span['callback_thread_id'] == begin['loop_thread_id']),
+                        'Invalid GC thread/generation identity')
+                require(number(span['callback_thread_cpu_seconds']) and span['callback_thread_cpu_seconds'] >= 0,
+                        'Invalid GC callback-thread CPU duration')
+                require(all(type(span[k]) is int and span[k] >= 0 for k in
+                            ('start_sequence', 'stop_sequence', 'collected', 'uncollectable')) and
+                        span['start_sequence'] < span['stop_sequence'], 'Invalid GC sequence or collection counts')
+                sequences.extend([span['start_sequence'], span['stop_sequence']])
+            require(len(set(sequences)) == len(sequences), 'Duplicate GC boundary sequences')
+            require(len(cpu) >= 2 and health['cpu_samples'] == len(cpu) and
+                    cpu[0]['sampled_at'] <= manifest['warmup_start'] and cpu[-1]['sampled_at'] >= finish,
+                    'Gateway CPU observations do not bracket warmup, measurement and drain')
+            for row in cpu:
+                require(interval(row['sampled_at'], row['monotonic']) and
+                        left <= row['sampled_at'] <= stop['monotonic'] and
+                        row['loop_thread_id'] == begin['loop_thread_id'] and gc_state(row.get('gc')),
+                        'Invalid loop-thread CPU identity/timestamp')
+                require(all(number(row[k]) and row[k] >= 0 for k in
+                            ('loop_thread_cpu_seconds', 'process_cpu_seconds')), 'Invalid gateway CPU counters')
+            for previous, current in zip(cpu, cpu[1:]):
+                require(all(previous[k] <= current[k] for k in
+                            ('sampled_at', 'loop_thread_cpu_seconds', 'process_cpu_seconds')),
+                        'Gateway CPU observations went backwards')
+            histories, summaries = defaultdict(list), defaultdict(list)
+            for row in records:
+                if row['event'] in LIFECYCLE:
+                    histories[row['request_id']].append(row)
+                elif row['event'] == 'request_diagnostics':
+                    summaries[row['request_id']].append(row)
+            require(set(summaries) == set(histories) and all(len(v) == 1 for v in summaries.values()),
+                    'Missing, extra or duplicate request diagnostic summaries')
+            for identifier, values in summaries.items():
+                summary = values[0]
+                history = histories[identifier]
+                terminal = [r for r in history if r['event'] in TERMINAL]
+                require(len(terminal) == 1 and summary['outcome'] == terminal[0]['event'] and
+                        summary['cleanup_complete'] is True, 'Request diagnostic terminal/cleanup mismatch')
+                require(interval(summary['span_start'], summary['span_end']) and
+                        left <= history[0]['monotonic'] <= summary['span_start'] <= terminal[0]['monotonic'] <=
+                        summary['span_end'] <= summary['monotonic'] <= right,
+                        'Request summary was emitted before cleanup or outside coverage')
+                phases = summary['phases']
+                require(set(phases) == set(REQUEST_PHASES), 'Request phase schema mismatch')
+                previous_end = summary['span_start']
+                for name in REQUEST_PHASES:
+                    phase = phases[name]
+                    if phase['status'] == 'not_reached':
+                        require(phase['start'] is phase['end'] is None, 'Unreached phase contains timestamps')
+                    else:
+                        require(phase['status'] in {'completed', 'failed', 'cancelled'} and
+                                interval(phase['start'], phase['end']) and previous_end <= phase['start'] and
+                                phase['end'] <= summary['span_end'], 'Invalid, incomplete or out-of-order request phase')
+                        previous_end = phase['end']
+                require(phases['body_read']['status'] != 'not_reached', 'Missing request body-read phase')
+                for name in ('first_body_at', 'first_content_at'):
+                    if summary[name] is not None:
+                        require(number(summary[name]) and summary['span_start'] <= summary[name] <= summary['span_end'] and
+                                phases['http_send_headers']['end'] <= summary[name],
+                                'Invalid first-body/content milestone')
+                first = [r for r in history if r['event'] == 'first_content']
+                require(bool(first) == (summary['first_content_at'] is not None), 'Missing or extra first-content milestone')
+                if first:
+                    require(interval(summary['first_body_at'], summary['first_content_at']) and
+                            summary['first_content_at'] <= first[0]['monotonic'], 'Content milestone ordering is invalid')
+            result.update(gc_coverage_complete=not issues, gc_spans=len(spans), cpu_samples=len(cpu),
+                          request_summaries=sum(map(len, summaries.values())))
+        paths = (output / 'engine_observations.jsonl', output / 'engine_observations_status.json')
+        if not external:
+            require(not any(path.exists() for path in paths), 'Disabled external sampler produced observations')
+        else:
+            from diagnostic_sampling import metric_inventory, REQUIRED_METRICS
+            observations = [json.loads(line) for line in paths[0].read_text().splitlines() if line.strip()]
+            status = json.loads(paths[1].read_text())
+            require(status['run_id'] == manifest['run_id'] and status['status'] == 'closed' and
+                    status['diagnostics_schema_version'] == DIAGNOSTICS_SCHEMA and
+                    status['samples'] == len(observations) and status['sample_errors'] == status['write_errors'] == 0,
+                    'External collector persistence/health is incomplete')
+            require(len(observations) >= 2 and observations[0]['finished_at'] <= manifest['warmup_start'] and
+                    observations[-1]['sent_at'] >= finish and status['started_at'] <= observations[0]['sent_at'] and
+                    observations[-1]['finished_at'] <= status['closed_at'] <= shutdown['closed_at'],
+                    'External observations do not bracket warmup, measurement and drain')
+            previous_counters, previous_exporter, epoch = {}, None, 0
+            identities = {}
+            for i, row in enumerate(observations):
+                require(row['run_id'] == manifest['run_id'] and row['diagnostics_schema_version'] == DIAGNOSTICS_SCHEMA and
+                        row['host'] == manifest['host'] and row['source'] == observations[0]['source'],
+                        'External observation identity/schema mismatch')
+                require(row['interval_seconds'] == status['interval_seconds'] == manifest['sampler']['interval_seconds'] and
+                        number(row['interval_seconds']) and row['interval_seconds'] > 0,
+                        'External sampler cadence mismatch')
+                require(interval(row['sent_at'], row['received_at']) and interval(row['received_at'], row['finished_at']) and
+                        (i == 0 or observations[i-1]['finished_at'] <= row['sent_at']),
+                        'Invalid external observation timestamps')
+                require(row['error_type'] is None and not row['unavailable_metrics'],
+                        'Required engine observations are unavailable')
+                if isinstance(row['raw_metrics'], str) and row['error_type'] is None:
+                    inventory, counters, exporter = metric_inventory(row['raw_metrics'])
+                    require(row['metrics'] == inventory and set(inventory) == set(REQUIRED_METRICS) and
+                            all(v['available'] for v in inventory.values()) and row['exporter_identity'] == exporter,
+                            'Engine inventory does not match raw metrics')
+                    resets = sorted(k for k, v in counters.items() if k in previous_counters and v < previous_counters[k])
+                    disappeared = sorted(previous_counters.keys() - counters.keys())
+                    changed = previous_exporter is not None and previous_exporter != exporter
+                    epoch += bool(resets or disappeared or changed)
+                    require(sorted(row['counter_resets']) == resets and row['disappeared_counters'] == disappeared and
+                            row['exporter_identity_changed'] == changed and row['counter_epoch'] == epoch,
+                            'Engine counter reset/epoch mismatch')
+                    previous_counters, previous_exporter = counters, exporter
+                else:
+                    require(False, 'Raw engine metrics are missing')
+                for name in ('gateway', 'runner', 'host_cpu'):
+                    resource = row['resources'][name]
+                    require(resource['available'] is True, 'Required current RSS/CPU observations are unavailable')
+                    require(interval(resource['sample_start'], resource['sample_end']) and
+                            row['received_at'] <= resource['sample_start'] <= resource['sample_end'] <= row['finished_at'],
+                            'Invalid resource observation timestamps')
+                    if not resource['available']:
+                        continue
+                    if name != 'host_cpu':
+                        expected_pid = (manifest['gateway_launch']['process_id'] if name == 'gateway'
+                                        else manifest['runner_process_id'])
+                        require(resource['pid'] == expected_pid and number(resource['process_created_unix']) and
+                                type(resource['rss_bytes']) is int and resource['rss_bytes'] >= 0 and
+                                all(number(resource[k]) and resource[k] >= 0 for k in
+                                    ('user_cpu_seconds', 'system_cpu_seconds')),
+                                'Invalid current RSS/process CPU identity or counters')
+                        identity = (resource['pid'], resource['process_created_unix'])
+                        require(name not in identities or identities[name] == identity, 'Observed resource process restarted')
+                        identities[name] = identity
+                        if i and observations[i-1]['resources'][name]['available']:
+                            require(all(observations[i-1]['resources'][name][k] <= resource[k] for k in
+                                        ('user_cpu_seconds', 'system_cpu_seconds')), 'Process CPU counters went backwards')
+                    else:
+                        require(type(resource['logical_cpus']) is int and resource['logical_cpus'] > 0 and
+                                bool(resource['cpu_seconds']) and
+                                all(number(v) and v >= 0 for v in resource['cpu_seconds'].values()),
+                                'Invalid host CPU observations')
+            result.update(engine_samples=len(observations), engine_counter_epochs=epoch + 1)
+    except (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError) as exc:
+        issues.append(f'Incomplete or malformed diagnostic data: {type(exc).__name__}: {exc}')
+    result['valid'] = not issues
+    return result
 
 
 def stats(rows, duration, slo):
@@ -207,6 +457,8 @@ def _analyze(output, plot):
                           p99_metrics_roundtrip=percentile([r['received_at'] - r['sent_at'] for r in polls], .99),
                           max_state_poll_gap=max((b['received_at'] - a['received_at'] for a, b in zip(polls, polls[1:])), default=None),
                           p99_event_loop_lag=percentile(loop, .99), max_event_loop_lag=max(loop, default=None))
+    if 'investigation_protocol' in manifest:
+        report['diagnostic_integrity'] = diagnostic_audit(output, manifest, records, clients, warmup, shutdown)
     save(output / 'report.json', report)
     if plot:
         render(output, manifest, trace, clients, records, events, report)
@@ -269,6 +521,15 @@ def analyze(output, plot=True):
     except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
         report = dict(valid=False, issues=[f'Incomplete or malformed replay data: {exc}'],
                       load_fidelity=dict(valid=False, issues=['Cannot audit load fidelity']), performance=None)
+        try:
+            manifest = json.loads((output / 'manifest.json').read_text())
+        except (OSError, ValueError) as metadata_error:
+            report['issues'].append(f'Cannot determine diagnostic protocol: {metadata_error}')
+        else:
+            if isinstance(manifest, dict) and 'investigation_protocol' in manifest:
+                report['diagnostic_integrity'] = dict(valid=False,
+                    issues=['Core replay artifacts are incomplete; diagnostic coverage cannot be qualified'],
+                    gc_coverage_complete=False, request_linked_prefill='unavailable')
         save(output / 'report.json', report)
         return report
 
@@ -279,4 +540,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     report = analyze(args.output_dir)
     print(json.dumps(report, indent=2))
-    raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] else 1)
+    raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] and
+                     report.get('diagnostic_integrity', {'valid': True})['valid'] else 1)

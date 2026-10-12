@@ -181,7 +181,8 @@ def test_upstream_503_is_failure_not_admission_rejection():
     asyncio.run(scenario())
 
 
-def test_full_trace_runner_and_adversarial_analysis(tmp_path):
+@pytest.mark.parametrize('diagnostics', [False, True])
+def test_full_trace_runner_and_adversarial_analysis(tmp_path, diagnostics):
     """Real subprocesses, HTTP, SSE, shutdown and plots; explicitly not a GPU benchmark."""
     import os
     from pathlib import Path
@@ -189,6 +190,8 @@ def test_full_trace_runner_and_adversarial_analysis(tmp_path):
     import subprocess
     import sys
     from analyze_trace_pilot import analyze
+    from analyze_trace_dynamics import analyze_run, hashes
+    from test_diagnostic_sampling import metrics_text
     from trace_workload import sha256_file
     root = Path(__file__).resolve().parents[1]
     for port in (8000, 8080):
@@ -222,7 +225,11 @@ async def completion(request: Request):
         yield b'data: [DONE]\\n\\n'
     return StreamingResponse(stream(), media_type='text/event-stream')
 ''')
+    with (tmp_path / 'mock_vllm.py').open('a') as handle:
+        handle.write("\nfrom fastapi.responses import Response\n@app.get('/metrics')\n"
+                     f"def metrics(): return Response({metrics_text()!r}, media_type='text/plain')\n")
     env = dict({k: v for k, v in os.environ.items() if not k.lower().endswith('_proxy')},
+               GATEWAY_DIAGNOSTICS='1',
                PYTHONPATH=str(tmp_path) + os.pathsep + str(root))
     process = subprocess.Popen([sys.executable, '-m', 'uvicorn', 'mock_vllm:app', '--port', '8000'],
                                cwd=tmp_path, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -246,13 +253,31 @@ async def completion(request: Request):
             output = tmp_path / name
             result = subprocess.run([sys.executable, 'run_trace_pilot.py', '--trace', str(source),
                          '--output-dir', str(output), '--budget', str(budget), '--ttft-slo', '1',
-                         '--warmup-requests', '1', '--drain-timeout', '2', '--max-scheduling-lag', '1'],
+                         '--warmup-requests', '1', '--drain-timeout', '2', '--max-scheduling-lag', '1'] +
+                         (['--gateway-diagnostics'] if diagnostics else []),
                          cwd=root, env=env, capture_output=True, text=True, timeout=30)
             assert result.returncode == 0, result.stdout + result.stderr
             report = json.loads((output / 'report.json').read_text())
             assert report['valid'] and report['performance'][name] == 3
             assert report['performance']['attempted'] == 3
+            assert report['diagnostic_integrity']['valid'], report['diagnostic_integrity']
+            assert report['diagnostic_integrity']['gateway_mode'] == ('enabled' if diagnostics else 'disabled')
             assert (output / 'timeseries.png').stat().st_size > 1000
+            before = hashes(output)
+            summary, joined, _, _ = analyze_run(output, .3)
+            assert summary['original_report_reproduced'] and hashes(output) == before
+            assert len(joined) == summary['accounting']['ledger_rows'] == 3
+            assert all((r['diagnostics']['phases'] is not None) == diagnostics for r in joined)
+            if diagnostics:
+                assert summary['diagnostics']['engine_observations']
+                assert summary['diagnostics']['gc_coverage_complete']
+                engine_path = output / 'engine_observations.jsonl'
+                raw_engine = engine_path.read_text()
+                engine_path.write_text('')
+                damaged = analyze(output, plot=False)
+                assert damaged['valid'] and not damaged['diagnostic_integrity']['valid']
+                engine_path.write_text(raw_engine)
+                analyze(output, plot=False)
         output = tmp_path / 'success'
         report = analyze(output, plot=False)
         assert report['performance']['slo_goodput_per_arrival_second'] == 10

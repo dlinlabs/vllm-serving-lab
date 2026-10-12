@@ -90,15 +90,137 @@ if the log cannot be opened. Runtime write failures count lost records and allow
 serving to continue. Graceful shutdown flushes queued records; abrupt process
 termination can lose unflushed records. Run one worker only.
 
-## Validation
+## Opt-in periodic-peak diagnostics
+
+The trace runner's `--gateway-diagnostics` flag enables gateway timing and the
+external engine/resource sampler. Omission explicitly sets `GATEWAY_DIAGNOSTICS=0`,
+even if the parent environment has enabled it. `--engine-observations` enables
+only the external sampler, for a future control with common external monitoring.
+Neither option changes admission policy, cost coefficients, per-request HTTP
+clients, forwarding bytes/headers, output lengths, or the 60-second upstream
+timeout. The original lifecycle and 100 ms loop monitor remain enabled.
+
+The gateway mode requires CPython with its GIL enabled and both persistent
+telemetry paths; unsupported runtimes or missing paths fail startup explicitly.
+Disabled mode creates no diagnostic collector, request phase objects, GC
+callbacks, or diagnostic tasks. This is not a measured zero-overhead claim.
+
+Diagnostic rows use `diagnostics_schema_version=1`, the existing `run_id`, and
+normal log-emission `monotonic`. Actual operation timestamps are separate:
+
+| Event | Meaning |
+|---|---|
+| `diagnostics_started` | Coverage start, process and loop-thread identities, Python/GIL and GC state. |
+| `diagnostic_cpu` | Actual sample time, cumulative process CPU and loop-thread CPU, in seconds; GC state and collector health. |
+| `gc_span` | Matched callback boundaries: actual `span_start`/`span_end`, generation, Python/native thread identity, callback-thread CPU duration, collected/uncollectable counts. |
+| `gc_unmatched` | Unmatched start/stop boundary; incomplete coverage, not zero GC. |
+| `request_diagnostics` | Exactly one terminal summary after cleanup, with outcome, phases and first-body/first-content milestones. |
+| `diagnostics_stopped` | Coverage end and final producer/buffer/loss health. |
+
+Request phases are `body_read`, `json_parse`, `cost_estimation`,
+`admission_lock_wait`, `client_construction`, `http_send_headers`,
+`upstream_close`, `client_close`, and `reservation_release`. Each phase has actual
+start/end and completed/failed/cancelled/not-reached status. Unreached milestones
+are null. A streaming response's construction is not its completion: the summary
+follows body termination, closes and reservation release. Repeated downstream
+cancellation shields the same cleanup task, not multiple cleanup attempts.
+
+The callback writes primitive tuples into a bounded 4,096-edge handoff, without
+logging, JSON, locks, heap walks, or waiting for the loop. The loop owns emission
+and matching; pending starts are bounded too. Health records include produced/
+received/buffered/in-flight callbacks, errors, unmatched boundaries, lost and
+undelivered callbacks, quiescence, registration and closure. Counter probes can
+leave sequence-number gaps; gaps alone are **not** callback loss. Exact loss is
+reconciled after quiescence. A quiescence timeout leaves loss unknown and coverage
+incomplete. Shutdown removes the callback, awaits in-flight producers, drains,
+flushes and writes final status; incomplete coverage or failed persistence cannot
+produce a successful diagnostic verdict. No collection is forced and GC policy
+and thresholds are unchanged.
+
+Join GC and phase spans by their actual timestamps, never their later emission
+time. CPU observations at activation and shutdown bracket warmup, measurement
+and drain; a missing boundary sample fails qualification. The monitor interval
+`scheduled_at -> monotonic` means an overdue callback,
+not an uninterrupted CPU stall. A long HTTP/lock await is elapsed time, not its
+request's exclusive CPU time. Process, loop-thread and GC CPU evidence overlaps;
+do not add them or assign all CPU between awaits to one request.
+
+### External engine/resource observations
+
+`diagnostic_sampling.py` runs synchronous HTTP, OS reads, parsing and file writes
+in a worker thread, outside both arrival and gateway loops. Default cadence is
+one second; each observation records actual request/header/response/resource
+times and collection-duration overrun. The retained `late_by_seconds` field is
+`max(finished_at - sent_at - interval_seconds, 0)`, not worker start lateness;
+use actual timestamps to reconstruct inter-sample gaps.
+HTTP uses two-second operation timeouts; body reads check a
+five-second deadline between chunks and stop at four MiB. These limits do not
+turn a partial body into a valid sample. A fresh final sample follows stop,
+including when stop arrives during an earlier HTTP request, before gateway
+termination.
+
+The live Prometheus inventory checks exported family names, types, finite
+nonnegative values and histogram bucket/count/sum presence. Required observations
+are waiting/running requests; queue/prefill/decode duration histograms; KV-cache
+usage (including the legacy GPU-cache alias); and preemption, prompt-token and
+generation-token counters. Raw exposition, unavailable reasons, errors, exporter
+identity where available, counter resets/disappearing series and counter epochs
+are retained. Missing data is not a measured zero. Epoch boundaries must not be
+crossed when deriving counter changes.
+
+Process observations identify gateway and runner PID/creation time/host and sample
+**current RSS** and cumulative user/system CPU. Before each process read on Linux,
+the collector checks `self/status` under the configured `psutil.PROCFS_PATH`.
+Its `NStgid` field must contain exactly one PID, equal to the collector's
+`os.getpid()`, so the collector and procfs view agree on the PID namespace.
+Matching a numeric PID or stable creation time alone is insufficient: another
+namespace can contain an unrelated process with that same PID.
+Nested, missing, malformed, duplicate or unreadable namespace metadata produces
+`available=false` with `error_reason="procfs_pid_namespace_unverified"`, without
+reading CPU/RSS for the requested PID. OS read failures also retain `error_type`.
+These samples count as collector errors and fail diagnostic qualification; no
+PID remapping or fallback to unverified resources is attempted. Compatible
+procfs views retain existing missing-process errors, and non-Linux process
+collection is unchanged.
+
+Host observations are cumulative
+CPU counters and logical CPU count, not an inferred GPU utilization percentage.
+Exporter PID/start-time metrics are not proof of the vLLM engine process identity.
+Raw metric labels are retained; review their contents before publishing a capture.
+The runner omits backend URL credentials/query/fragment from its manifest and
+omits HTTP error URLs; it never archives the full environment or admin key.
+
+These are aggregate engine observations, not request-linked prefill timing.
+Post-dispatch delay still includes transport, frontend, engine queue/compute and
+gateway observation. Even aligned GC spans identify candidates for a new run,
+not proof of what caused the historical R1/R2 peaks.
+
+## CPU validation and handoff
 
 ```bash
-python -m pip install fastapi httpx pytest
+python -m pip install pytest fastapi httpx uvicorn numpy matplotlib psutil prometheus-client
 python -m pytest -q
 ```
 
-Tests use mock upstream streaming responses; no GPU is needed. They cover budget
-updates, streaming cleanup, fragmented UTF-8/SSE, terminal counters, periodic file
-output, incomplete streams, and client/gateway request ID correlation. Real GPU
-smoke testing and measurement of instrumentation overhead remain necessary before
-using the data for system identification.
+Tests use mock upstream streaming responses; no GPU is needed. New coverage
+includes deterministic off/on byte and lifecycle parity, disabled allocation,
+failed/cancelled phases, repeated cancellation, close/flush/status-write failure,
+bounded/reentrant/cross-thread GC delivery, late delivery and shutdown, sampler
+errors/counter epochs, parent-environment override, and collection-to-audit-to-
+offline-analysis integration with damaged-artifact cases. Process identity
+regressions cover existing-PID collisions, unverifiable procfs metadata and
+persisted unavailable resources failing diagnostic qualification.
+
+The implementation has focused CPU checks on Windows/CPython 3.14; completion of
+the full applicable suite is explicitly delegated to another agent, not claimed
+here. Run the suite on Linux, preferably also CPython 3.12 matching the recorded
+baseline, with a compatible PID/procfs view and no PID-remapping bridge.
+Failing closed on an incompatible host is not a successful diagnostic capture.
+The real subprocess replay test now covers diagnostics off/on, but was
+not executed for this handoff. It uses ports 8000/8080 and may skip if occupied;
+a skip is not coverage. Existing process-termination, POSIX ninja and socket-reuse
+tests have known Windows incompatibilities. No Linux CI or GPU campaign was added.
+
+See the PR handoff for exact executed checks and remaining validation. A CPU mock
+pass does not establish GPU-host load fidelity, observer overhead or policy
+benefit. Any GPU capture and stronger comparisons remain separately approved.

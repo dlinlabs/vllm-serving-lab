@@ -186,10 +186,102 @@ across comparisons; its overhead has not yet been GPU-benchmarked.
 
 Reanalyze with `python analyze_trace_pilot.py results/trace-smoke-96`.
 
+### Offline all-request investigation
+
+Use the existing dynamics analyzer to write a separate investigation directory:
+
+```bash
+python analyze_trace_dynamics.py results/trace-smoke-96 \
+  results/trace-experiment-96-r1 results/trace-experiment-96-r2 \
+  --output-dir results/trace-all-request-investigation
+```
+
+The investigation schema is version 2; the original audit schema and reports are
+unchanged. Every client outcome is exported to `<run>-requests.jsonl`, including
+rejections, failed/incomplete streams, cancellations, and explicit `NotLaunched`
+rows. Missing client outcomes get separate planned rows, not invented successes
+or inferred never-launched outcomes. Duplicate/extra records remain visible.
+`--all-requests` is retained for compatibility; full export is now the default.
+
+The ledger separates successful scheduled-TTFT hits, misses, and unknown timings.
+It keeps client-start `end_to_end` and adds `scheduled_e2e =
+finished_at - scheduled_at`; neither is engine last-token latency. There is no
+E2E deadline or joint-compliance claim. Available same-request stages are retained
+for every outcome; missing stages are `null`, never zero. Tail stage means use
+only complete decompositions within the selected tail and report that denominator.
+
+`summary.json` retains both the saved report and the independent re-audit,
+all-outcome/input-size counts, E2E distributions, and half-open one-second
+admission/completion/input-token windows including drain. Token windows sum known
+gateway estimates and count unknown estimates separately. Missing lifecycle
+events are not evidence of zero work. Invalid audits, fidelity failures, missing
+artifacts, malformed log lines, and report mismatches remain visible; their
+descriptive ledgers do not qualify a performance comparison.
+
+Raw files are hashed before and after analysis; audit copies and new outputs are
+outside the raw directories. Preserve raw bytes when checking out on Windows:
+Git newline conversion changes trace hashes. The frozen-fixture tests accept
+`TRACE_BASELINE_ROOT` pointing to a byte-preserving export of the three bundles.
+
 For the five-minute preset, use `--trace results/trace-experiment-input/trace.json`
 and a fresh output directory such as `results/trace-experiment-96-r1`. Keep budget,
 SLO, cache policy, and run order explicit in replay commands; the preset freezes
 the offered input, not the controller setting being compared.
+
+## Optional diagnostic protocol
+
+Every new trace-runner manifest records
+`investigation_protocol="periodic-peaks-v1"` and `diagnostics_schema_version=1`,
+requested/observed modes, warmup boundaries, source/package fingerprints, selected
+gateway settings, host/process identity and sampler configuration. Existing
+schema-1 bundles without that protocol keep their original audit path and report
+definitions. Offline investigation output uses schema 2.
+
+| Flags | Gateway probes | External engine/resource sampler |
+|---|---|---|
+| Neither | Off, explicitly overriding any enabled parent environment | Off |
+| `--gateway-diagnostics` | On | On |
+| `--engine-observations` only | Off | On |
+
+For a separately approved capture against an already running backend, add
+`--gateway-diagnostics` to the existing replay command and choose a new output
+directory. There is no automatic GPU launch, changed trace preset, extra replay,
+or required overhead campaign. The one-attempt, five-minute initial-capture cap
+in the investigation protocol is an approval limit, not a new runner default.
+
+Enabled captures retain diagnostic rows in `gateway.jsonl`, final callback and
+persistence health in `telemetry_status.json`, and worker-written
+`engine_observations.jsonl` / `engine_observations_status.json`. The sampler runs
+before warmup and takes a fresh sample after drain before gateway termination.
+Explicitly disabled observations produce no diagnostic artifacts or request
+phase state. Missing enabled artifacts, unavailable required metric families,
+loss, unmatched spans, mode disagreement or failed persistence fail diagnostic
+qualification; none is silently treated as zero activity.
+
+The auditor keeps three distinct verdicts: original `valid` client/lifecycle
+integrity, original `load_fidelity.valid`, and conditional
+`diagnostic_integrity.valid`. New-run CLI success requires all applicable gates.
+Descriptive data remains available when a gate fails. Complete gateway GC
+coverage has its own flag: an external sampler failure can invalidate overall
+diagnostic qualification without erasing valid gateway spans.
+
+The existing dynamics analyzer joins compact request phases, actual GC spans,
+overdue-monitor intervals, adjacent loop/process CPU samples and engine/resource
+observations. Overlapping wall intervals use their union, not double-counted
+durations; overlapping CPU categories are explicitly non-additive. A zero GC
+overlap is emitted only for qualified gateway coverage of the interval. Legacy,
+disabled, missing or unqualified coverage stays null. Request-linked prefill
+attribution remains `unavailable`; aggregate histograms and unrelated percentiles
+cannot supply it. Offline analysis hashes diagnostic artifacts too and still
+writes only outside raw run directories.
+
+Runner package/source fingerprints describe the runner and launch inputs, not
+the remote backend's verified package version, launch arguments or cache state.
+The manifest explicitly marks backend launch provenance unobserved. Archive and
+verify those separately for any approved GPU capture; the `--cache-policy` label
+is not proof. Never publish raw metric labels without reviewing their contents.
+See [runtime telemetry](runtime-telemetry.md) for collector limits, measurement
+boundaries, and the outstanding full-suite validation handoff.
 
 ## Comparison protocol after smoke passes
 

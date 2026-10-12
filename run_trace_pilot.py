@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import secrets
 import signal
+import socket
 import subprocess
 import sys
 import time
@@ -106,16 +107,32 @@ async def poll_state(client, stop, records, interval=1.0):
             pass
 
 
-async def run(args, trace, output, manifest):
-    key = secrets.token_hex(32)
-    env = dict(os.environ, ADMISSION_MODE='cost_aware', MAX_ADMITTED_COST=str(args.budget),
+def gateway_environment(args, trace, output, key):
+    return dict(os.environ, ADMISSION_MODE='cost_aware', MAX_ADMITTED_COST=str(args.budget),
                ADMIN_API_KEY=key, MODEL_NAME=trace['model'], VLLM_URL=args.vllm_url.rstrip('/'),
                TELEMETRY_JSONL=str(output / 'gateway.jsonl'),
                TELEMETRY_STATUS_JSON=str(output / 'telemetry_status.json'),
-               BENCHMARK_REQUEST_IDS='1', LOOP_LAG_TELEMETRY='1')
+               BENCHMARK_REQUEST_IDS='1', LOOP_LAG_TELEMETRY='1',
+               GATEWAY_DIAGNOSTICS='1' if args.gateway_diagnostics else '0')
+
+
+async def run(args, trace, output, manifest):
+    from telemetry import DIAGNOSTICS_SCHEMA, INVESTIGATION_PROTOCOL
+    key = secrets.token_hex(32)
+    env = gateway_environment(args, trace, output, key)
+    sampler_enabled = args.gateway_diagnostics or args.engine_observations
+    manifest.update(investigation_protocol=INVESTIGATION_PROTOCOL, diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                    gateway_diagnostics_requested=args.gateway_diagnostics,
+                    runner_process_id=os.getpid(), host=socket.gethostname(),
+                    sampler=dict(enabled=sampler_enabled, interval_seconds=1.0,
+                                 resources=['gateway_current_rss_cpu', 'runner_current_rss_cpu', 'host_cpu'],
+                                 gpu='not_collected', request_linked_engine_trace='not_collected'),
+                    package_scope='Runner Python environment; not proof of a remote backend version',
+                    backend_launch_provenance='Not observed by this runner; archive and verify backend launch records separately')
     process = None
     rows, warmup, changes, observations = [], [], [], []
     stop, poll_task = asyncio.Event(), None
+    sampler, sampler_task = None, None
     async with httpx.AsyncClient(timeout=10, trust_env=False) as control:
         try:
             await control.get('http://127.0.0.1:8080/metrics')
@@ -148,9 +165,28 @@ async def run(args, trace, output, manifest):
                     raise RuntimeError('Gateway tokenizer is unavailable')
                 manifest['run_id'] = metrics['telemetry_run_id']
                 manifest['initial_metrics'] = metrics
+                manifest['gateway_diagnostics_observed'] = metrics.get('gateway_diagnostics')
+                if metrics.get('gateway_diagnostics') is not args.gateway_diagnostics:
+                    raise RuntimeError('Requested and observed gateway diagnostic modes differ')
+                manifest['gateway_launch'] = dict(process_id=process.pid, executable=sys.executable,
+                    entrypoint='gateway.py', settings={name: env[name] for name in
+                        ('ADMISSION_MODE', 'MAX_ADMITTED_COST', 'MODEL_NAME', 'GATEWAY_DIAGNOSTICS',
+                         'BENCHMARK_REQUEST_IDS', 'LOOP_LAG_TELEMETRY')})
                 rows.extend(prepare_replay(trace, manifest['run_id']))
+                if sampler_enabled:
+                    from diagnostic_sampling import ObservationSampler
+                    sampler = ObservationSampler(output, args.vllm_url, process.pid, manifest['run_id'])
+                    sampler_task = asyncio.create_task(asyncio.to_thread(sampler.run))
+                    if not await asyncio.to_thread(sampler.ready.wait, args.startup_timeout):
+                        raise RuntimeError('External diagnostic sampler startup timed out')
+                    if not sampler.status['samples'] or sampler.status['write_errors']:
+                        raise RuntimeError('External diagnostic sampler could not persist its startup sample')
+                    if sampler_task.done():
+                        await sampler_task
+                        raise RuntimeError('External diagnostic sampler stopped before warmup')
                 limits = httpx.Limits(max_connections=args.max_pending, max_keepalive_connections=args.max_pending)
                 async with httpx.AsyncClient(timeout=args.request_timeout, limits=limits, trust_env=False) as traffic:
+                    manifest['warmup_start'] = time.monotonic()
                     for _ in range(args.warmup_requests):
                         result = await consume_request(traffic, time.monotonic(), trace['model'], WORKLOADS[0],
                                                        client_request_id=uuid.uuid4().hex)
@@ -163,6 +199,8 @@ async def run(args, trace, output, manifest):
                         response = await control.get('http://127.0.0.1:8080/metrics')
                         response.raise_for_status()
                         if response.json()['current_in_flight'] == 0:
+                            manifest['post_warmup_metrics'] = response.json()
+                            manifest['warmup_end'] = time.monotonic()
                             break
                         if time.monotonic() >= deadline:
                             raise RuntimeError('Warmup failed to drain')
@@ -189,10 +227,16 @@ async def run(args, trace, output, manifest):
                 manifest['final_metrics'] = metrics
             finally:
                 stop.set()
+                if sampler is not None:
+                    sampler.stop.set()
                 try:
-                    if poll_task is not None:
-                        await poll_task
+                    tasks = [task for task in (poll_task, sampler_task) if task is not None]
+                    results = await asyncio.gather(*tasks, return_exceptions=True)
                     save(output / 'state_observations.json', observations)
+                    errors = [result for result in results if isinstance(result, BaseException)]
+                    if errors:
+                        manifest['collector_errors'] = [type(error).__name__ for error in errors]
+                        raise errors[0]
                 finally:
                     await finalize(process, output, manifest, rows, warmup, changes)
                 # Uvicorn re-raises handled SIGTERM after graceful shutdown on some versions.
@@ -215,6 +259,10 @@ def main():
     parser.add_argument('--max-scheduling-lag', type=float, default=.05)
     parser.add_argument('--cache-policy', choices=['disabled', 'enabled', 'unknown'], default='unknown',
                         help='Self-reported server prefix-cache setting; not verified by /v1/models')
+    parser.add_argument('--gateway-diagnostics', action='store_true',
+                        help='Opt in to gateway phases/GC/CPU and external engine/resource observations')
+    parser.add_argument('--engine-observations', action='store_true',
+                        help='External sampling without enabling gateway diagnostics (for a later matched control)')
     args = parser.parse_args()
     for value in (args.budget, args.request_timeout, args.drain_timeout, args.startup_timeout,
                   args.ttft_slo, args.max_scheduling_lag):
@@ -232,16 +280,21 @@ def main():
     output = Path(args.output_dir).resolve()
     output.mkdir(parents=True, exist_ok=False)
     save(output / 'trace.json', trace)
-    manifest = dict(schema_version=1, config=vars(args), created_at=time.time(), status='running',
+    config = dict(vars(args))
+    config['vllm_url'] = str(httpx.URL(args.vllm_url).copy_with(username='', password='', query=None, fragment=None))
+    manifest = dict(schema_version=1, config=config, created_at=time.time(), status='running',
                     trace_sha256=sha256_file(output / 'trace.json'),
                     input_trace_sha256=sha256_file(args.trace), python=sys.version,
                     git_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                     packages={})
     manifest['code_sha256'] = {name: sha256_file(ROOT / name) for name in
                               ('run_trace_pilot.py', 'trace_workload.py', 'gateway.py',
-                               'telemetry.py', 'sustained_load.py')}
+                               'telemetry.py', 'sustained_load.py', 'run_budget_pilot.py',
+                               'diagnostic_sampling.py', 'analyze_budget_pilot.py',
+                               'analyze_trace_pilot.py', 'analyze_trace_dynamics.py', 'requirements-v1.txt')}
     manifest['git_dirty'] = bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT, text=True))
-    for package in ('vllm', 'torch', 'transformers', 'fastapi', 'httpx', 'uvicorn'):
+    for package in ('vllm', 'torch', 'transformers', 'fastapi', 'httpx', 'httpcore',
+                    'uvicorn', 'psutil', 'prometheus-client', 'numpy', 'matplotlib'):
         try:
             manifest['packages'][package] = importlib.metadata.version(package)
         except importlib.metadata.PackageNotFoundError:
@@ -260,13 +313,19 @@ def main():
         manifest['status'] = 'collected'
     except (Exception, KeyboardInterrupt) as exc:
         manifest['status'] = 'failed'
-        manifest['error'] = f'{type(exc).__name__}: {exc}'
+        if isinstance(exc, httpx.HTTPError):
+            manifest['error'] = f'{type(exc).__name__}: HTTP request failed (URL omitted)'
+            if isinstance(exc, httpx.HTTPStatusError):
+                manifest['error_http_status'] = exc.response.status_code
+        else:
+            manifest['error'] = f'{type(exc).__name__}: {exc}'
     finally:
         save(output / 'manifest.json', manifest)
     from analyze_trace_pilot import analyze
     report = analyze(output)
     print(json.dumps(report, indent=2))
-    raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] else 1)
+    raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] and
+                     report.get('diagnostic_integrity', {'valid': True})['valid'] else 1)
 
 
 if __name__ == '__main__':

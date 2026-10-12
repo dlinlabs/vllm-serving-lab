@@ -124,6 +124,17 @@ should distinguish
 **verified observation → plausible mechanism → evidence needed to discriminate**,
 with reproducible calculations and links to the relevant raw requests/events.
 
+The [periodic-pauses investigation protocol](experiments/periodic-peaks-investigation.md)
+now has two implementation groups in PR #12: offline accounting for every offered
+request, and default-off gateway/GC/CPU diagnostics with external engine/resource
+sampling and separate diagnostic audits. Existing schema-1 logs remain usable;
+new investigation outputs do not overwrite raw bundles. See
+[trace replay](experiments/trace-replay.md) for the flags and artifacts, and
+[runtime telemetry](experiments/runtime-telemetry.md) for measurement boundaries.
+The implementation changes no admission policy and introduces no MPC controller.
+Full-suite validation is handed off separately; no GPU capture, negligible-overhead
+result, historical GC/prefill diagnosis, or policy benefit is claimed.
+
 ---
 
 ## 1. Final Architecture
