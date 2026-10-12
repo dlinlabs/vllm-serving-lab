@@ -124,6 +124,11 @@ should distinguish
 **verified observation → plausible mechanism → evidence needed to discriminate**,
 with reproducible calculations and links to the relevant raw requests/events.
 
+The proposed [periodic-pauses investigation plan](experiments/periodic-peaks-investigation.md)
+specifies the next code changes, separates diagnostic overhead from causal and
+SLO-benefit experiments, and records a self-review of the design. It is plan-only:
+the proposed instrumentation and GPU comparisons have not been implemented or run.
+
 ---
 
 ## 1. Final Architecture
