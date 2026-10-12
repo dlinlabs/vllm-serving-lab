@@ -10,7 +10,8 @@ analyzer or treat PR #11 as an unmerged dependency.
 
 ## In plain language
 
-The next code change adds timing probes, not a new controller:
+First analyze the existing logs, then add timing probes as a separate change.
+Neither change introduces a new controller or changes admission policy:
 
 - Count every request, including rejections and failures, rather than studying
   only the tallest peaks.
@@ -20,6 +21,8 @@ The next code change adds timing probes, not a new controller:
   one existing five-minute replay, not six runs.
 - Use the findings to choose one follow-up experiment. Judge a later fix by
   requests completed within their deadlines, not just smoother graphs.
+- Qualified studies of how the system responds to budget changes can proceed
+  alongside deeper pause diagnosis; they need not wait for every cause to be known.
 
 ## 1. Are we investigating the right thing?
 
@@ -33,32 +36,47 @@ The immediate investigation has three distinct questions:
 |---|---|---|
 | Q1. What produces recurring gateway callback delays? | Measured operation/thread timing and a targeted intervention consistent with that mechanism. | A roughly 500-admission cadence, an adjacent log gap, or assuming GC. |
 | Q2. Where do TTFT deadline misses accumulate, and how are they associated with admission waves? | All-request deadline accounting, same-request timing, and engine observations where available. | Only examining the slowest 1%, calling all post-dispatch time prefill, or correlating plot peaks. |
-| Q3. Can an admission change increase SLO-compliant service? | A later, qualified policy comparison with unchanged offered work, explicit deadlines, and per-input-size outcomes. | Removing pauses alone, admitting less without improving goodput, or demonstrating instrumentation overhead. |
+| Q3. Can an admission change improve the stated SLO metric? | A qualified policy comparison with unchanged offered work, deadlines for the claimed metric, explicit guardrails, and per-input-size outcomes. TTFT-only results are allowed; joint TTFT/E2E compliance needs both deadlines. | Removing pauses alone, admitting less without improving goodput, or presenting TTFT-only improvement as joint compliance. |
 
-**No 30-minute campaign is required now.** The first implementation deliverable
-is opt-in instrumentation with CPU-only regression coverage, not GPU results.
+**No 30-minute campaign is required now.** Deliver A, offline accounting from
+existing logs, first; deliver B, minimum opt-in diagnostics with collection,
+auditing, and CPU-only regression coverage, separately. Neither requires GPU results.
 When a real capture is approved, start with at most one existing five-minute
 replay. Dedicated overhead/repeatability comparisons are deferred; a single
 capture can reveal a candidate mechanism, but cannot establish negligible
 overhead, historical causation, or policy benefit.
 
-### Metrics and missing product decisions
+### Metrics and claim-specific decisions
 
-Preserve the existing benchmark definition from `analyze_trace_pilot.py::stats`:
+Preserve the client fields from `sustained_load.py::consume_request` and the
+scheduled-arrival TTFT goodput definition from `analyze_trace_pilot.py::stats`.
+Add scheduled-arrival E2E only as a separately named offline investigation field:
 
 ```text
-TTFT_i = first_content_at_i - scheduled_at_i
-E2E_i  = finished_at_i - scheduled_at_i
+Existing client fields (unchanged):
+  ttft_i       = first_content_at_i - started_at_i
+  end_to_end_i = finished_at_i - started_at_i
 
-TTFT goodput =
-  count(successful complete streams with TTFT_i <= 0.5 seconds)
+Existing TTFT goodput =
+  count(successful complete streams with
+        first_content_at_i - scheduled_at_i <= 0.5 seconds)
   / arrival-window seconds
+
+New field in separate offline investigation output:
+  scheduled_e2e_i = finished_at_i - scheduled_at_i
 
 Future joint goodput =
   count(successful complete streams with
-        TTFT_i <= TTFT_budget_i and E2E_i <= E2E_budget_i)
+        first_content_at_i - scheduled_at_i <= TTFT_budget_i and
+        scheduled_e2e_i <= E2E_budget_i)
   / arrival-window seconds
 ```
+
+Keep `client_p99_e2e` based on successful requests' existing `end_to_end`,
+not `scheduled_e2e`. Preserve the existing client/scheduled TTFT report fields
+and cohorts too. Missing timestamps yield unknown values, not zero latency.
+Report successful-stream E2E distributions separately from rejection/failure
+termination times; fast rejection is not successful completion.
 
 `scheduled_at` is the benchmark's original arrival, not gateway admission.
 Client-start TTFT/E2E remain separately labeled diagnostic metrics. Gateway
@@ -68,8 +86,15 @@ steady-state completion rate.
 
 The baseline's 0.5-second TTFT target is an experimental setting, not an approved
 product requirement. There is **no existing E2E SLO**. Do not invent one or claim
-joint TTFT/E2E success. Before Q3, agree on TTFT/E2E budgets, any request classes,
-the tolerated admitted-request violation rate, and rejection/fairness guardrails.
+joint TTFT/E2E success. A qualified, explicitly **TTFT-only comparison** may use
+the existing 0.5-second target without a new E2E deadline. It must report both
+E2E timebases, failures, rejections, admitted-request TTFT misses, and input-stratum
+effects, with predeclared comparison criteria and guardrails. Its conclusion is
+about TTFT goodput, not joint compliance or a production SLO commitment.
+
+Before claiming **joint TTFT/E2E compliance**, agree on both budgets, any request
+classes, the tolerated admitted-request violation rate, and rejection/fairness
+guardrails. An E2E contract is not a prerequisite for every TTFT-only experiment.
 If the requirement is zero observed admitted-request violations, evaluate every
 admitted request; P99 cannot substitute for that requirement, and a finite passing
 run cannot guarantee future zero violations.
@@ -92,6 +117,11 @@ evidence, not newly collected results:
   combined TTFT after `backend_sent`. Their selected post-dispatch intervals do
   not overlap the selected large monitor-overdue intervals. This does not rule
   out indirect queue effects or smaller delays.
+- The raw `report.json` totals contain 1,518 successful TTFT misses in R1
+  (`2239 - 721`) and 1,561 in R2 (`2220 - 659`). The 23 tail requests per run are
+  1.52% / 1.47% of those successful misses, approximately 1.5%. This motivates
+  all-request accounting first; it is cohort coverage, not an estimate of the
+  misses that burst smoothing or another intervention would prevent.
 - `backend_sent` precedes HTTP send. Its interval includes transport, frontend,
   engine queue/compute, and gateway observation. It is not GPU-only time.
 - Four large monitor delays appear per long run, with approximately 65-73 seconds
@@ -110,17 +140,28 @@ provenance gaps, not infer settings from the old upload.
 ## 3. Exactly what code would change
 
 This is a specification for subsequent implementation, not changes made by this
-plan. Start with offline accounting, then deliver the diagnostics, collection,
-auditing, and tests together. Keep policy interventions in separate changes.
+plan. Define two independently reviewable initial deliverables:
+
+- **A: offline accounting.** Use existing artifacts for the all-request outcome/
+  deadline ledger, available same-request latency stages, `scheduled_e2e`, and
+  admission/completion/input-token windows. Include offline fixtures and preserve
+  frozen reports. A can merge and be used without B or any new runtime events.
+- **B: minimum opt-in diagnostics.** Deliver collection, diagnostic span joins,
+  auditing, and the required correctness tests together. All gateway, telemetry,
+  runner, and diagnostic-auditor changes below belong to B.
+
+Request-linked engine tracing, detailed transport profiling, confirmatory
+overhead studies, and policy interventions remain conditional, separately scoped
+follow-ups. Splitting A and B does not make B's measurement invariants optional.
 
 | File and existing entry points | Required change | Invariant / acceptance |
 |---|---|---|
-| `analyze_trace_dynamics.py::analyze_run`, `figures`, `main` | Extend the existing all-request join with deadline/outcome accounting, diagnostic span joins, and admission/completion/token-window features. Export an investigation summary separately from frozen raw reports. | Reconcile same-request stage sums; retain all outcomes; overlapping evidence categories are not additive causal attribution. |
+| `analyze_trace_dynamics.py::analyze_run`, `figures`, `main` | A: extend the existing join with all-request deadline/outcome accounting, available latency stages, `scheduled_e2e`, and admission/completion/input-token windows. B: add diagnostic span joins. Write investigation outputs separately from frozen reports. | Reconcile stage sums where the necessary events exist; retain missing stages and all outcomes explicitly; overlapping evidence categories are not additive causal attribution. |
 | `telemetry.py::Telemetry`, `run`, `flush`, `monitor_loop` | Add an opt-in GC callback collector, gateway process/loop-thread CPU observations, bounded callback handoff, and explicit diagnostic health. Drain actual spans through the loop-owned emitter. | No cross-thread mutation of `records`/`active`; no lost records reported as zero activity; keep the 100 ms monitor semantics. |
 | `gateway.py::lifespan`, `proxy_chat_completions`, `begin_request`, `finish_request` | Register/remove diagnostics with lifespan; collect per-request phase boundaries, including admission-lock wait and actual reservation release. Use optional timing context where helper signatures need it. | Keep cost formula, budget logic, HTTP-client lifetime, headers, byte forwarding, timeouts, and cancellation-safe exactly-once cleanup unchanged. |
 | `run_trace_pilot.py::main`, `run`, `poll_state` | Add a default-off diagnostic option, protocol/arm/pair metadata, complete code/package fingerprints, explicit health/artifact collection, and controlled engine/resource sampling. Reuse `finalize` rather than forking the runner. | Preserve `prepare_replay` preallocation and `replay` scheduling; do not serialize JSON, tokenize, or synchronously sample resources on the arrival path. |
 | `analyze_trace_pilot.py::_analyze` and runner exit handling | Validate diagnostic schemas, span timing, final persistence, and mode agreement when the new protocol requests them. Keep a separate diagnostic-integrity verdict and require it for diagnostic qualification. | Existing schema-1 bundles must reproduce the same original report; absent legacy diagnostics are not zero GC. Existing integrity/fidelity fields and definitions remain unchanged. |
-| Existing telemetry, replay, budget-lifecycle, and client-error tests; new `tests\test_trace_dynamics.py` | Add deterministic diagnostic/analysis fixtures and extend existing subprocess/streaming tests. The new test module covers the existing offline analyzer. | Test failures, cross-thread/reentrant callbacks, cancellation, final drain, missing data, and backward compatibility, not just a successful request. |
+| Existing telemetry, replay, budget-lifecycle, and client-error tests; new `tests\test_trace_dynamics.py` | A: add offline accounting/analysis fixtures. B: add diagnostic fixtures and extend existing subprocess/streaming tests. | A covers all outcomes, missing stages, zero-success cohorts, and frozen-report compatibility. B retains bounded-buffer, cross-thread/reentrant callback, cancellation, exactly-once cleanup, shutdown, and legacy-compatibility requirements. |
 | `experiments\runtime-telemetry.md`, `experiments\trace-replay.md`, and this plan | Document opt-in schema, commands after implementation, qualification, and the new protocol identifier. | Do not silently change frozen presets, thresholds, source window, or historical conclusions. |
 
 Paired-run statistical reporting is deferred with the paired studies; it is not
@@ -140,9 +181,9 @@ Fingerprint changed runtime files, the analyzer, and relevant packages including
 environment or unredacted credentials.
 
 `sustained_load.py::consume_request` already records scheduled/start/first-content/
-finish timestamps and failed/cancelled outcomes. It needs no change for the
-initial gateway diagnostics. Calculate scheduled-arrival E2E offline without
-renaming its existing client-start `end_to_end` field.
+finish timestamps and failed/cancelled outcomes. It needs no change for A or the
+initial gateway diagnostics. Calculate the new `scheduled_e2e` offline without
+renaming or redefining the existing client-start `end_to_end` or `client_p99_e2e`.
 
 Do not initially change `experiments\trace-presets.json`, `setup_and_start.sh`,
 cost coefficients, GC policy, HTTP-client reuse, output lengths, or admission
@@ -253,26 +294,46 @@ from TTFT P99 or treat missing engine evidence as confirmation of prefill.
 
 ## 5. Staged protocol
 
-### P0. CPU-only preparation and prioritization
+The stages below organize scopes, not a requirement to finish every diagnosis
+before model work. A comes first for existing-data prioritization. Separately
+approved, qualified budget-response identification may proceed alongside B or
+deeper pause diagnosis, as specified in P3; it does not require a P2 root-cause verdict.
+
+### P0-A. Offline accounting and prioritization
 
 1. Reuse the existing auditor and analyzer against the frozen artifacts without
-   overwriting them. Export all requests, not only tail/late rows.
+   overwriting them. Export all requests, not only tail/late rows. Do not require
+   new diagnostic events to produce A's output.
 2. Build an all-offered outcome ledger: rejected, failed/cancelled, successful
-   within TTFT deadline, and successful but late. Add scheduled E2E distributions.
-   For admitted misses, report gateway/transport/engine evidence and its timing
-   relative to the deadline. Show overlaps and unknowns explicitly; a coincident
-   span is not a counterfactual explanation of the miss.
+   within TTFT deadline, and successful but late. Add `scheduled_e2e` distributions
+   without changing existing client E2E fields. Join available same-request stages
+   and admission/completion/input-token windows. Show unavailable gateway,
+   transport, or engine evidence as unknown; an adjacent log gap is not that
+   request's phase duration or a counterfactual explanation of its miss.
 3. Determine whether the visually large peaks account for an important share of
    misses, rather than selecting work solely by maximum TTFT. If a prompt class
    remains slow under low contention, plan a separately labeled low-load
    feasibility reference before promising admission can meet its deadline.
-4. Test mock replay with ties, slow streams, pre-header errors, cancellation,
+
+Use offline fixtures for missing timestamps/lifecycle events, never-launched
+requests, zero-success cohorts, incomplete streams, and deadlines crossed before
+admission. A fast first token followed by stream failure is not goodput. Check
+cohort/count reconciliation and preserve the original report exactly; a
+failed-fidelity baseline remains
+failed-fidelity even when its ledger is useful.
+
+Exit A: reproducible all-request accounting and evidence priorities from existing
+logs, with unknowns preserved. No runtime instrumentation or GPU capture is needed.
+
+### P0-B. Minimum opt-in diagnostics and correctness
+
+1. Test mock replay with ties, slow streams, pre-header errors, cancellation,
    pending-limit overflow, and shutdown failures. Add synthetic GC, non-GC CPU,
    overdue-callback, async-wait, and delayed-emission fixtures so the analyzer can
    distinguish them.
-5. Implement and test the minimal diagnostics before any GPU pilot. Use existing
-   test fixtures and the project's pytest runner. A mock run qualifies code
-   behavior, not the actual shared GPU host's load fidelity.
+2. Implement and test the minimal diagnostics before the P1 instrumented capture.
+   Use existing test fixtures and the project's pytest runner. A mock run qualifies
+   code behavior, not the actual shared GPU host's load fidelity.
 
 Mandatory regression cases include a fast first token followed by stream failure
 (not goodput); a deadline crossed by client/gateway waiting; overlapping diagnostic
@@ -286,7 +347,7 @@ omitted; the runner must still launch diagnostics off.
 Port-bound integration tests skipped because another service is running do not
 count as exercised coverage; use an isolated test allocation, not process killing.
 
-Exit: diagnostic schema and failures are covered, legacy audits reproduce, and
+Exit B: diagnostic schema and failures are covered, legacy audits reproduce, and
 there is a concrete Q1/Q2 evidence table to collect. No runtime changes are part
 of this plan-only document.
 
@@ -367,7 +428,7 @@ protocol openly and compare both under the revision; do not erase the failures.
 
 ### P2. One cause-discriminating experiment
 
-Choose a branch using P0/P1 evidence and its relevance to SLO misses. Keep the
+Choose a branch using P0-A/P0-B/P1 evidence and its relevance to SLO misses. Keep the
 diagnostic configuration fixed between its arms; predeclare the predicted
 signature, run count, and resource limits. Do not run the whole matrix.
 
@@ -396,20 +457,38 @@ Support requires repeated measured timing plus the predicted targeted-interventi
 effect, not overlap alone. A partial or unresolved diagnosis is a valid result;
 do not require eliminating every natural pause before later control research.
 
-### P3. Decide whether to proceed to admission control / MPC
+### P3. Parallel identification and claim-specific policy evaluation
 
-Before claiming policy benefit, resolve the E2E/violation/fairness contract and
-predeclare meaningful goodput improvement, guardrails, independent repeats, and
-held-out source windows. Use qualified all-offered comparisons; do not remove
-real service disturbances from primary metrics.
+Budget-response identification may proceed alongside deeper pause diagnosis when
+the input/state/outcome observations and load fidelity qualify for its declared
+protocol. It does not require every pause to be explained, a P2 causal result,
+or completion of B when existing observations suffice. Preserve real pauses and
+uncertainty in the data and validation; do not remove disturbances to make the
+model look better. Opening this path does not change the R1/R2 fidelity failures
+or qualify those runs for policy comparisons.
 
-A fixed-budget diagnosis cannot identify the response to changing the control
-input. Subsequent MPC work needs deliberate budget/admission excitation, state
+Identification needs a separately scoped and approved protocol with recorded
+applied controls, bounded excitation, resource limits, and sufficient observations.
+Do not insert budget changes into the frozen budget-96 diagnostic capture or treat
+this plan as approval to launch additional runs.
+
+For an explicitly TTFT-only policy result, use the existing experimental target
+and the reporting/guardrails in section 1; no new E2E deadline is required.
+Joint TTFT/E2E compliance requires the agreed joint contract. Predeclare meaningful
+improvement in the claimed metric, guardrails, independent repeats, and held-out
+source windows. Use qualified all-offered comparisons, not only shared successes.
+
+A fixed-budget diagnosis alone does not establish the effect of varying the
+budget. Subsequent MPC work needs deliberate budget/admission excitation, state
 and uncertainty estimation, held-out prediction checks, variable output-demand
 coverage, and comparisons with tuned fixed and simple reactive policies.
-Only information available at decision time may enter the controller: no future
-arrivals or realized future output lengths. GPU utilization remains supporting
-evidence of useful capacity use, not the objective by itself.
+Forecasts of arrivals or output demand computed from information available at
+decision time are allowed. Do not expose realized future trace arrivals or
+realized future output lengths to the controller. Keep offline fitting and model
+selection separate from held-out evaluation data. Predeclared online updates may
+use only observations already available at the decision, never future evaluation
+data. GPU utilization remains supporting evidence of useful capacity use, not
+the objective by itself.
 
 ## 6. Self-review and disposition
 
@@ -420,11 +499,15 @@ failure-path correctness, and no claim stronger than the evidence.
 | Finding in the earlier proposal | Disposition in this plan |
 |---|---|
 | Measuring overhead could become the experiment's goal. | P1 now starts with an optional single diagnostic capture. Dedicated overhead assessment is deferred. |
-| "Baseline" could be confused with the admit-all mode. | The diagnostic capture and any later comparison arms explicitly remain cost-aware at budget 96. |
-| E2E and per-request reliability were not acceptance criteria. | Define their measurement now; block joint-benefit claims until the actual budgets and violation policy are agreed. |
+| "Baseline" could be confused with the admit-all mode. | The diagnostic capture and later diagnostics-off/on controls explicitly remain cost-aware at budget 96; identification uses its separately declared excitation protocol. |
+| E2E and per-request reliability were not acceptance criteria, and the proposed gate could block TTFT-only work. | Permit qualified TTFT-only comparisons with E2E/outcome reporting and guardrails; require agreed E2E budgets and the joint violation policy before joint-compliance claims. |
+| The opening could redefine existing client E2E as scheduled-arrival E2E. | Preserve `end_to_end` and `client_p99_e2e`; add a separately named offline `scheduled_e2e`. Existing TTFT goodput remains unchanged. |
 | Focusing on 23 tail requests could miss most SLO failures. | Require the all-offered deadline/outcome ledger before prioritizing mechanisms. |
+| Bundling offline analysis with runtime diagnostics could delay the inexpensive first result. | Define independently reviewable A/B deliverables. A uses existing logs; B keeps all collection, audit, bounded-buffer, cancellation, cleanup, shutdown, and compatibility requirements. |
+| Serial phase wording could make complete root-cause diagnosis a gate on MPC model work. | Permit separately approved, qualified budget-response identification in parallel; do not waive fidelity, observation, or held-out validation requirements. |
+| "No future arrivals" could incorrectly exclude forecasting. | Allow forecasts computed from decision-time information; prohibit realized future trace arrivals/output lengths and held-out forecast leakage. |
 | A mandatory six-run block was premature for the first diagnosis. | Removed. The instrumentation change needs CPU-only coverage; any first real capture is separately approved and capped at one existing five-minute replay. |
-| Paired-study reporting remained in the first implementation's scope. | Deferred with paired studies; initial analysis serves the single-capture evidence questions. |
+| Paired-study reporting remained in the first implementation's scope. | Deferred with paired studies; A serves existing-data accounting and B adds single-capture diagnostic joins. |
 | An omitted diagnostics flag could inherit an enabled parent setting. | Require explicit runner environment values and an inherited-setting regression case. |
 | Warmup/cache state and run order could confound comparisons. | Pin three drained warmups, verify the new launch's cache setting, and require matched conditions with randomized or counterbalanced order for future pairs. |
 | One capture could be misread as proof of repeatability or negligible overhead. | Restrict it to observed candidates; require separately approved run-level comparisons for stronger claims. |
@@ -437,10 +520,12 @@ failure-path correctness, and no claim stronger than the evidence.
 | A single fixed-budget, fixed-output window could be generalized to MPC. | Restrict conclusions to diagnosis; keep identification and held-out controller evaluation separate. |
 
 **Review verdict:** suitable for implementing observability first, with no
-mandatory long GPU campaign. It is not an approved production SLO contract or a
-completed causal/performance result. Stronger overhead, historical-causation, and
-policy claims still need their separately approved comparisons. GC, prefill
-contention, and a 500-request trigger remain unproven in the old runs.
+mandatory long GPU campaign: A first, B separately, and qualified identification
+alongside deeper diagnosis when its observations suffice. It is not an approved
+production SLO contract or a completed causal/performance result. TTFT-only and
+joint-compliance claims have different gates. Stronger overhead, historical
+causation, and policy claims still need their separately approved comparisons.
+GC, prefill contention, and a 500-request trigger remain unproven in the old runs.
 
 ## References
 
@@ -449,6 +534,9 @@ Repository references are to the reviewed commit unless explicitly pinned above:
 `analyze_trace_pilot.py:20,34`; `analyze_trace_dynamics.py:46,165,236`;
 `sustained_load.py:89`; `experiments\trace-replay.md`;
 `results\trace-budget96-analysis\report.md`.
+The successful-miss counts use `performance.success - performance.slo_successes`
+in `results\trace-experiment-96-r1\report.json` and
+`results\trace-experiment-96-r2\report.json` at the raw-baseline commit.
 
 - [R1] Python 3.12 GC interface and callback semantics:
   `https://docs.python.org/3.12/library/gc.html`
