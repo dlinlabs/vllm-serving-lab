@@ -28,7 +28,22 @@ from trace_workload import sha256_file
 
 
 @pytest.fixture
-def collected_bundle(gateway, monkeypatch, tmp_path):
+def collected_bundle(gateway, monkeypatch, tmp_path, request):
+    namespace_mismatch = getattr(request, 'param', False)
+    if namespace_mismatch:
+        import diagnostic_sampling
+        import psutil
+        assert psutil.Process(os.getpid()).memory_info().rss > 0
+        monkeypatch.setattr(diagnostic_sampling, 'sys', SimpleNamespace(platform='linux'))
+        procfs = Path(getattr(psutil, 'PROCFS_PATH', tmp_path / 'proc-view'))
+        monkeypatch.setattr(psutil, 'PROCFS_PATH', str(procfs), raising=False)
+        original_read = Path.read_bytes
+        def read_bytes(path):
+            if path == procfs / 'self' / 'status':
+                return f'NStgid:\t{os.getpid() + 1000000} {os.getpid()}\n'.encode('ascii')
+            return original_read(path)
+        # Only the namespace metadata is simulated; the numeric PID exists and psutil stays native.
+        monkeypatch.setattr(Path, 'read_bytes', read_bytes)
     async def collect():
         root = Path(__file__).resolve().parents[1]
         real_async, real_sync = httpx.AsyncClient, httpx.Client
@@ -94,7 +109,7 @@ def collected_bundle(gateway, monkeypatch, tmp_path):
         save(tmp_path / 'manifest.json', manifest)
         report = analyze(tmp_path, plot=False)
         assert report['valid'] and report['load_fidelity']['valid'], report
-        assert report['diagnostic_integrity']['valid'], report['diagnostic_integrity']
+        assert report['diagnostic_integrity']['valid'] is (not namespace_mismatch), report['diagnostic_integrity']
     asyncio.run(collect())
     return tmp_path
 
@@ -108,6 +123,29 @@ def test_collected_protocol_round_trips_read_only(collected_bundle):
     assert summary['diagnostics']['gc_coverage_complete']
     assert summary['diagnostics']['engine_observations']
     assert summary['diagnostics']['request_linked_prefill'] == 'unavailable'
+
+
+@pytest.mark.parametrize('collected_bundle', [True], indirect=True, ids=['incompatible-procfs'])
+def test_namespace_mismatch_persists_and_fails_qualification(collected_bundle):
+    rows = [json.loads(line) for line in
+            (collected_bundle / 'engine_observations.jsonl').read_text().splitlines()]
+    status = json.loads((collected_bundle / 'engine_observations_status.json').read_text())
+    assert status['status'] == 'closed' and status['write_errors'] == 0
+    assert status['samples'] == status['sample_errors'] == len(rows) >= 2
+    for row in rows:
+        assert row['error_type'] is None and not row['unavailable_metrics']
+        assert row['resources']['host_cpu']['available']
+        for name in ('gateway', 'runner'):
+            resource = row['resources'][name]
+            assert resource['available'] is False and resource['pid'] == os.getpid()
+            assert resource['error_reason'] == 'procfs_pid_namespace_unverified'
+            assert 'rss_bytes' not in resource
+    report = analyze(collected_bundle, plot=False)
+    assert report['valid'] and report['load_fidelity']['valid']
+    assert not report['diagnostic_integrity']['valid']
+    assert report['diagnostic_integrity']['issues'] == [
+        'External collector persistence/health is incomplete',
+        'Required current RSS/CPU observations are unavailable']
 
 
 @pytest.mark.parametrize('damage', ['missing_summary', 'duplicate_summary', 'unfinished_phase',

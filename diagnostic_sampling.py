@@ -4,6 +4,7 @@ import math
 import os
 from pathlib import Path
 import socket
+import sys
 import threading
 import time
 from urllib.parse import urlsplit
@@ -76,6 +77,17 @@ class ObservationSampler:
     def process_resources(pid):
         import psutil
         start = time.monotonic()
+        if sys.platform == 'linux':
+            try:
+                status = (Path(psutil.PROCFS_PATH) / 'self' / 'status').read_bytes()
+            except OSError as exc:
+                return dict(available=False, pid=pid, sample_start=start, sample_end=time.monotonic(),
+                            error_reason='procfs_pid_namespace_unverified', error_type=type(exc).__name__)
+            namespace_pids = [line.split()[1:] for line in status.splitlines() if line.startswith(b'NStgid:')]
+            # NStgid starts at the procfs mount's namespace; equal numbers alone can collide.
+            if namespace_pids != [[str(os.getpid()).encode('ascii')]]:
+                return dict(available=False, pid=pid, sample_start=start, sample_end=time.monotonic(),
+                            error_reason='procfs_pid_namespace_unverified')
         try:
             process = psutil.Process(pid)
             with process.oneshot():

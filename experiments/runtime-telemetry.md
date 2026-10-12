@@ -150,7 +150,10 @@ do not add them or assign all CPU between awaits to one request.
 `diagnostic_sampling.py` runs synchronous HTTP, OS reads, parsing and file writes
 in a worker thread, outside both arrival and gateway loops. Default cadence is
 one second; each observation records actual request/header/response/resource
-times and lateness. HTTP uses two-second operation timeouts; body reads check a
+times and collection-duration overrun. The retained `late_by_seconds` field is
+`max(finished_at - sent_at - interval_seconds, 0)`, not worker start lateness;
+use actual timestamps to reconstruct inter-sample gaps.
+HTTP uses two-second operation timeouts; body reads check a
 five-second deadline between chunks and stop at four MiB. These limits do not
 turn a partial body into a valid sample. A fresh final sample follows stop,
 including when stop arrives during an earlier HTTP request, before gateway
@@ -166,7 +169,21 @@ are retained. Missing data is not a measured zero. Epoch boundaries must not be
 crossed when deriving counter changes.
 
 Process observations identify gateway and runner PID/creation time/host and sample
-**current RSS** and cumulative user/system CPU. Host observations are cumulative
+**current RSS** and cumulative user/system CPU. Before each process read on Linux,
+the collector checks `self/status` under the configured `psutil.PROCFS_PATH`.
+Its `NStgid` field must contain exactly one PID, equal to the collector's
+`os.getpid()`, so the collector and procfs view agree on the PID namespace.
+Matching a numeric PID or stable creation time alone is insufficient: another
+namespace can contain an unrelated process with that same PID.
+Nested, missing, malformed, duplicate or unreadable namespace metadata produces
+`available=false` with `error_reason="procfs_pid_namespace_unverified"`, without
+reading CPU/RSS for the requested PID. OS read failures also retain `error_type`.
+These samples count as collector errors and fail diagnostic qualification; no
+PID remapping or fallback to unverified resources is attempted. Compatible
+procfs views retain existing missing-process errors, and non-Linux process
+collection is unchanged.
+
+Host observations are cumulative
 CPU counters and logical CPU count, not an inferred GPU utilization percentage.
 Exporter PID/start-time metrics are not proof of the vLLM engine process identity.
 Raw metric labels are retained; review their contents before publishing a capture.
@@ -190,12 +207,16 @@ includes deterministic off/on byte and lifecycle parity, disabled allocation,
 failed/cancelled phases, repeated cancellation, close/flush/status-write failure,
 bounded/reentrant/cross-thread GC delivery, late delivery and shutdown, sampler
 errors/counter epochs, parent-environment override, and collection-to-audit-to-
-offline-analysis integration with damaged-artifact cases.
+offline-analysis integration with damaged-artifact cases. Process identity
+regressions cover existing-PID collisions, unverifiable procfs metadata and
+persisted unavailable resources failing diagnostic qualification.
 
 The implementation has focused CPU checks on Windows/CPython 3.14; completion of
 the full applicable suite is explicitly delegated to another agent, not claimed
 here. Run the suite on Linux, preferably also CPython 3.12 matching the recorded
-baseline. The real subprocess replay test now covers diagnostics off/on, but was
+baseline, with a compatible PID/procfs view and no PID-remapping bridge.
+Failing closed on an incompatible host is not a successful diagnostic capture.
+The real subprocess replay test now covers diagnostics off/on, but was
 not executed for this handoff. It uses ports 8000/8080 and may skip if occupied;
 a skip is not coverage. Existing process-termination, POSIX ninja and socket-reuse
 tests have known Windows incompatibilities. No Linux CI or GPU campaign was added.

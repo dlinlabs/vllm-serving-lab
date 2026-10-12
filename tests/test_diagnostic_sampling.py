@@ -1,12 +1,16 @@
+from contextlib import nullcontext
 import json
 import os
 from pathlib import Path
 import threading
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 import httpx
+import psutil
 import pytest
 
+import diagnostic_sampling
 from diagnostic_sampling import ObservationSampler, REQUIRED_METRICS, metric_inventory
 from run_trace_pilot import gateway_environment
 
@@ -24,6 +28,102 @@ def metrics_text(value=1, exporter_start=100):
             lines.append(f'{name}{"_total" if kind == "counter" else ""} {value}')
     lines.extend(['# TYPE process_start_time_seconds gauge', f'process_start_time_seconds {exporter_start}'])
     return '\n'.join(lines) + '\n'
+
+
+@pytest.fixture
+def linux_procfs(tmp_path, monkeypatch):
+    procfs = tmp_path / 'configured-procfs'
+    (procfs / 'self').mkdir(parents=True)
+    monkeypatch.setattr(diagnostic_sampling, 'sys', SimpleNamespace(platform='linux'))
+    monkeypatch.setattr(diagnostic_sampling, 'os', SimpleNamespace(getpid=lambda: 5))
+    monkeypatch.setattr(psutil, 'PROCFS_PATH', str(procfs), raising=False)
+    return procfs / 'self' / 'status'
+
+
+@pytest.fixture
+def existing_process(monkeypatch):
+    process = SimpleNamespace(oneshot=nullcontext, create_time=lambda: 100.,
+                              memory_info=lambda: SimpleNamespace(rss=4096),
+                              cpu_times=lambda: SimpleNamespace(user=1., system=.5))
+    constructor = Mock(return_value=process)
+    monkeypatch.setattr(psutil, 'Process', constructor)
+    return constructor
+
+
+@pytest.mark.parametrize('pid', [5, 17])
+def test_compatible_linux_procfs_collects_runner_and_child(linux_procfs, existing_process, pid):
+    linux_procfs.write_bytes(b'Name:\tpython-\xff\nTgid:\t5\nNStgid:\t5\nNSpid:\t5\n')
+    resource = ObservationSampler.process_resources(pid)
+    assert resource['available'] and resource['pid'] == pid
+    assert resource['process_created_unix'] == 100. and resource['rss_bytes'] == 4096
+    assert resource['user_cpu_seconds'] == 1. and resource['system_cpu_seconds'] == .5
+    assert resource['sample_start'] <= resource['sample_end']
+    existing_process.assert_called_once_with(pid)
+
+
+@pytest.mark.parametrize('namespace_pids', [b'1569 5', b'5 5', b'6'])
+@pytest.mark.parametrize('pid', [5, 17])
+def test_linux_namespace_mismatch_rejects_existing_colliding_pid(
+        linux_procfs, existing_process, namespace_pids, pid):
+    linux_procfs.write_bytes(b'NStgid:\t' + namespace_pids + b'\n')
+    resource = ObservationSampler.process_resources(pid)
+    assert resource['available'] is False and resource['pid'] == pid
+    assert resource['error_reason'] == 'procfs_pid_namespace_unverified'
+    assert resource['sample_start'] <= resource['sample_end']
+    assert not {'rss_bytes', 'user_cpu_seconds', 'system_cpu_seconds'} & resource.keys()
+    existing_process.assert_not_called()
+
+
+@pytest.mark.parametrize('status', [b'', b'NSpid:\t5\n', b'NStgid:\n',
+                                  b'NStgid:\t5\nNStgid:\t5\n', b'NStgid:\tinvalid\n',
+                                  b'NStgid:\t5 invalid\n', b'NStgid:\t0\n', b'NStgid:\t-1\n'])
+def test_unverifiable_linux_procfs_is_unavailable(linux_procfs, existing_process, status):
+    linux_procfs.write_bytes(status)
+    resource = ObservationSampler.process_resources(5)
+    assert resource['available'] is False
+    assert resource['error_reason'] == 'procfs_pid_namespace_unverified'
+    existing_process.assert_not_called()
+
+
+@pytest.mark.parametrize('error', [FileNotFoundError, PermissionError])
+def test_unreadable_linux_procfs_is_unavailable(linux_procfs, existing_process, monkeypatch, error):
+    original_read = Path.read_bytes
+    def read_bytes(path):
+        if path == linux_procfs:
+            raise error('Cannot read namespace metadata')
+        return original_read(path)
+    monkeypatch.setattr(Path, 'read_bytes', read_bytes)
+    resource = ObservationSampler.process_resources(5)
+    assert resource['available'] is False
+    assert resource['error_reason'] == 'procfs_pid_namespace_unverified'
+    assert resource['error_type'] == error.__name__
+    existing_process.assert_not_called()
+
+
+def test_linux_procfs_compatibility_is_rechecked(linux_procfs, existing_process):
+    linux_procfs.write_bytes(b'NStgid:\t5\n')
+    assert ObservationSampler.process_resources(17)['available']
+    linux_procfs.write_bytes(b'NStgid:\t1569 5\n')
+    assert not ObservationSampler.process_resources(17)['available']
+    existing_process.assert_called_once_with(17)
+
+
+def test_missing_process_failure_is_preserved(linux_procfs, existing_process):
+    linux_procfs.write_bytes(b'NStgid:\t5\n')
+    existing_process.side_effect = psutil.NoSuchProcess(17)
+    resource = ObservationSampler.process_resources(17)
+    assert resource['available'] is False and resource['pid'] == 17
+    assert resource['error_type'] == 'NoSuchProcess'
+    existing_process.assert_called_once_with(17)
+
+
+@pytest.mark.parametrize('platform', ['win32', 'darwin'])
+def test_native_process_collection_does_not_require_procfs(
+        linux_procfs, existing_process, monkeypatch, platform):
+    monkeypatch.setattr(diagnostic_sampling, 'sys', SimpleNamespace(platform=platform))
+    assert not linux_procfs.exists()
+    assert ObservationSampler.process_resources(17)['available']
+    existing_process.assert_called_once_with(17)
 
 
 def test_live_metric_types_aliases_zero_and_unavailability():
