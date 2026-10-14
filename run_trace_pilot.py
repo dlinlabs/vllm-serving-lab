@@ -1,4 +1,4 @@
-"""Open-loop replay of a prepared trace against one fixed-budget gateway."""
+"""Open-loop trace replay with a fixed or predeclared admission-cost budget."""
 import argparse
 import asyncio
 from dataclasses import asdict
@@ -19,6 +19,8 @@ import httpx
 
 from run_budget_pilot import save, validate_model, finalize, set_budget
 from sustained_load import consume_request, WorkloadSpec, WORKLOADS
+from trace_control import (CONTROL_PROTOCOL, PLAN_FILE, initial_control_version, make_plan,
+                           read_plan, validate_response, validate_schedule)
 from trace_workload import load_trace, sha256_file, verify_prompts, tokenizer_fingerprint
 
 ROOT = Path(__file__).resolve().parent
@@ -38,6 +40,12 @@ def prepare_replay(trace, run_id):
     namespace = uuid.UUID(run_id)
     return [unlaunched(row, None, uuid.uuid5(namespace, row['trace_id']).hex, 'collection interrupted')
             for row in trace['requests']]
+
+
+def complete_schedules(rows, trace, start):
+    for result, row in zip(rows, trace['requests']):
+        if result['scheduled_at'] is None:
+            result['scheduled_at'] = start + row['arrival_seconds']
 
 
 async def replay(client, trace, start, run_id, drain_timeout, max_pending, rows):
@@ -84,9 +92,47 @@ async def replay(client, trace, start, run_id, drain_timeout, max_pending, rows)
         await asyncio.gather(*remaining, return_exceptions=True)
         # Fill schedules for unlaunched/implementation-error rows after collection,
         # rather than scanning the full trace on the arrival scheduler's path.
-        for result, row in zip(rows, trace['requests']):
-            if result['scheduled_at'] is None:
-                result['scheduled_at'] = start + row['arrival_seconds']
+        complete_schedules(rows, trace, start)
+
+
+async def apply_budget_step(client, key, plan, index, start, base_version, changes):
+    step = plan['budget_schedule'][index]
+    target = start + step['at_seconds'] if start is not None else None
+    command = dict(step_index=index, requested_budget=step['budget'], target=target,
+                   sent=None, acknowledged=None, status='waiting')
+    changes.append(command)
+    try:
+        if index:
+            if changes[-2]['acknowledged'] > target:
+                raise RuntimeError('Previous budget acknowledgement crossed the next target; no catch-up commands')
+            await asyncio.sleep(max(0, target - time.monotonic()))
+        sent = time.monotonic()
+        if index and (sent < target - 1e-6 or sent - target > plan['max_budget_lag'] or
+                      sent >= start + plan['duration_seconds']):
+            raise RuntimeError('Budget command missed its predeclared send window')
+        command.update(sent=sent, status='sent')
+        response = await set_budget(client, key, step['budget'])
+        command['acknowledged'] = time.monotonic()
+        previous = plan['budget_schedule'][max(0, index - 1)]['budget']
+        command.update(validate_response(response, step['budget'], previous, base_version + index + 1,
+                                         command['sent'], command['acknowledged']))
+        if index and (command['applied_at'] - target > plan['max_budget_lag'] or
+                      command['applied_at'] >= start + plan['duration_seconds']):
+            raise RuntimeError('Budget application missed its predeclared window')
+        command['status'] = 'acknowledged'
+    except asyncio.CancelledError:
+        command.update(status='cancelled', error_type='CancelledError',
+                       error='Control cancelled; an in-flight application may be unknown')
+        raise
+    except (httpx.HTTPError, ValueError, TypeError, KeyError, OverflowError, RuntimeError) as exc:
+        command.update(status='failed', error_type=type(exc).__name__,
+                       error='Budget HTTP request failed (URL omitted)' if isinstance(exc, httpx.HTTPError) else str(exc))
+        raise
+
+
+async def scheduled_budgets(client, key, plan, start, base_version, changes):
+    for index in range(1, len(plan['budget_schedule'])):
+        await apply_budget_step(client, key, plan, index, start, base_version, changes)
 
 
 async def poll_state(client, stop, records, interval=1.0):
@@ -118,6 +164,9 @@ def gateway_environment(args, trace, output, key):
 
 async def run(args, trace, output, manifest):
     from telemetry import DIAGNOSTICS_SCHEMA, INVESTIGATION_PROTOCOL
+    plan = read_plan(output, manifest, trace)
+    if plan is not None and sha256_file(output / 'trace.json') != manifest['trace_sha256']:
+        raise ValueError('Replay trace hash mismatch')
     key = secrets.token_hex(32)
     env = gateway_environment(args, trace, output, key)
     sampler_enabled = args.gateway_diagnostics or args.engine_observations
@@ -203,15 +252,25 @@ async def run(args, trace, output, manifest):
                         if time.monotonic() >= deadline:
                             raise RuntimeError('Warmup failed to drain')
                         await asyncio.sleep(.05)
-                    before = time.monotonic()
-                    applied = await set_budget(control, key, args.budget)
-                    acknowledged = time.monotonic()
+                    if plan is None:
+                        before = time.monotonic()
+                        applied = await set_budget(control, key, args.budget)
+                        changes.append(dict(sent=before, acknowledged=time.monotonic(), **applied))
+                    else:
+                        base_version = initial_control_version(manifest, plan)
+                        await apply_budget_step(control, key, plan, 0, None, base_version, changes)
                     start = time.monotonic() + .2
                     manifest['measurement_start'] = start
                     manifest['measurement_end'] = start + trace['duration_seconds']
-                    changes.append(dict(target=start, sent=before, acknowledged=acknowledged, **applied))
+                    changes[0]['target'] = start
                     poll_task = asyncio.create_task(poll_state(control, stop, observations))
-                    await replay(traffic, trace, start, manifest['run_id'], args.drain_timeout, args.max_pending, rows)
+                    if plan is not None and len(plan['budget_schedule']) > 1:
+                        async with asyncio.TaskGroup() as tasks:
+                            tasks.create_task(scheduled_budgets(control, key, plan, start, base_version, changes))
+                            tasks.create_task(replay(traffic, trace, start, manifest['run_id'],
+                                                     args.drain_timeout, args.max_pending, rows))
+                    else:
+                        await replay(traffic, trace, start, manifest['run_id'], args.drain_timeout, args.max_pending, rows)
                 deadline = time.monotonic() + args.drain_timeout
                 while True:
                     response = await control.get('http://127.0.0.1:8080/metrics')
@@ -239,7 +298,11 @@ async def run(args, trace, output, manifest):
                             manifest['collector_errors'] = [type(error).__name__ for error in errors]
                             raise errors[0]
                     finally:
-                        await finalize(process, output, manifest, rows, warmup, changes)
+                        try:
+                            if 'measurement_start' in manifest:
+                                complete_schedules(rows, trace, manifest['measurement_start'])
+                        finally:
+                            await finalize(process, output, manifest, rows, warmup, changes)
                     # Some Uvicorn versions re-raise SIGTERM after graceful shutdown.
                     if process is not None and process.returncode not in (0, -signal.SIGTERM):
                         raise RuntimeError(f'Gateway exited with status {process.returncode}')
@@ -261,7 +324,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--trace', required=True)
     parser.add_argument('--output-dir', required=True)
-    parser.add_argument('--budget', type=float, default=96)
+    budget = parser.add_mutually_exclusive_group()
+    budget.add_argument('--budget', type=float, help='Fixed cost budget (default: 96)')
+    budget.add_argument('--budget-schedule', help='JSON array of {at_seconds, budget}; first offset must be zero')
     parser.add_argument('--vllm-url', default='http://127.0.0.1:8000')
     parser.add_argument('--warmup-requests', type=int, default=3)
     parser.add_argument('--max-pending', type=int, default=1000)
@@ -269,7 +334,10 @@ def main():
     parser.add_argument('--drain-timeout', type=float, default=120)
     parser.add_argument('--startup-timeout', type=float, default=120)
     parser.add_argument('--ttft-slo', required=True, type=float)
+    parser.add_argument('--e2e-slo', type=float, help='Optional scheduled-arrival completion deadline in seconds')
     parser.add_argument('--max-scheduling-lag', type=float, default=.05)
+    parser.add_argument('--max-budget-lag', type=float, default=.05,
+                        help='Maximum scheduled budget send/application lag in seconds')
     parser.add_argument('--cache-policy', choices=['disabled', 'enabled', 'unknown'], default='unknown',
                         help='Self-reported server prefix-cache setting; not verified by /v1/models')
     parser.add_argument('--gateway-diagnostics', action='store_true',
@@ -281,13 +349,21 @@ def main():
     args = parser.parse_args()
     if args.sampler_mode == 'process' and not (args.gateway_diagnostics or args.engine_observations):
         parser.error('Process sampler requires --engine-observations or --gateway-diagnostics')
-    for value in (args.budget, args.request_timeout, args.drain_timeout, args.startup_timeout,
-                  args.ttft_slo, args.max_scheduling_lag):
+    for value in (args.request_timeout, args.drain_timeout, args.startup_timeout,
+                  args.ttft_slo, args.max_scheduling_lag, args.max_budget_lag,
+                  *([args.budget] if args.budget is not None else []),
+                  *([args.e2e_slo] if args.e2e_slo is not None else [])):
         if not math.isfinite(value) or value <= 0:
             parser.error('Numeric settings must be finite and positive')
     if not 1 <= args.max_pending <= 90000 or not 1 <= args.warmup_requests <= 1000:
         parser.error('Invalid max-pending or warmup count')
     trace = load_trace(args.trace)
+    if args.budget_schedule is not None:
+        schedule = validate_schedule(json.loads(Path(args.budget_schedule).read_text()), trace['duration_seconds'])
+        args.budget = schedule[0]['budget']
+    else:
+        args.budget = 96. if args.budget is None else args.budget
+        schedule = validate_schedule([dict(at_seconds=0, budget=args.budget)], trace['duration_seconds'])
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(trace['model'], local_files_only=True)
     expected_tokenizer = trace.get('provenance', {}).get('tokenizer_sha256')
@@ -304,8 +380,10 @@ def main():
                     input_trace_sha256=sha256_file(args.trace), python=sys.version,
                     git_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                     packages={})
+    save(output / PLAN_FILE, make_plan(config, trace, manifest['trace_sha256'], schedule))
+    manifest.update(control_protocol=CONTROL_PROTOCOL, replay_plan_sha256=sha256_file(output / PLAN_FILE))
     manifest['code_sha256'] = {name: sha256_file(ROOT / name) for name in
-                              ('run_trace_pilot.py', 'trace_workload.py', 'gateway.py',
+                              ('run_trace_pilot.py', 'trace_workload.py', 'trace_control.py', 'gateway.py',
                                'telemetry.py', 'sustained_load.py', 'run_budget_pilot.py',
                                'diagnostic_sampling.py', 'analyze_budget_pilot.py',
                                'analyze_trace_pilot.py', 'analyze_trace_dynamics.py', 'requirements-v1.txt')}
@@ -325,6 +403,7 @@ def main():
         manifest['gpu'] = gpu.stdout.strip()
     except (OSError, subprocess.TimeoutExpired):
         manifest['gpu'] = None
+    save(output / 'manifest.json', manifest)
     try:
         asyncio.run(run(args, trace, output, manifest))
         manifest['status'] = 'collected'
@@ -342,6 +421,7 @@ def main():
     report = analyze(output)
     print(json.dumps(report, indent=2))
     raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] and
+                     report.get('control_fidelity', {'valid': True})['valid'] and
                      report.get('diagnostic_integrity', {'valid': True})['valid'] else 1)
 
 

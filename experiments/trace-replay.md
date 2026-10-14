@@ -1,4 +1,4 @@
-# Real-trace replay: fixed-budget foundation for MPC
+# Real-trace replay: fixed and predeclared budgets for MPC identification
 
 Replay production-derived arrival times and prompt token counts on our Qwen
 server. Natural gateway stalls remain in primary results. This change does not
@@ -131,6 +131,13 @@ it before comparison. The maximum client scheduling lag is also predeclared
 (`--max-scheduling-lag`, default 50 ms). Changing either threshold after seeing a
 result requires a documented protocol revision and rerunning comparisons.
 
+Fixed-budget replay remains the default. For predeclared up/down changes on the
+**same immutable trace**, use `--budget-schedule` instead of `--budget`.
+`--e2e-slo` optionally adds a scheduled-arrival completion deadline and makes the
+primary goodput joint TTFT/E2E. See the
+[schedule format, strict control audit and staged identification protocol](trace-identification.md)
+before declaring a run. No E2E deadline is inferred for historical captures.
+
 The runner owns one gateway, validates the existing model and 8192 context, warms
 up, and drains before measurement. It schedules independently of responses,
 allocates request IDs and outcome rows before warmup and before choosing the
@@ -149,7 +156,8 @@ controller feature. Future controller interfaces must also hide future arrivals.
 
 Outputs: copied `trace.json`, `manifest.json`, `client.json`, `warmup.json`,
 `gateway.jsonl`, `budget_changes.json`, `state_observations.json`, `report.json`,
-`timeseries.png`, `telemetry_status.json`, and process log. Shutdown status confirms
+`timeseries.png`, `telemetry_status.json`, and process log. New CLI runs also save
+the trace-bound `replay_plan.json` with its hash in the manifest. Shutdown status confirms
 the final flush completed without dropped records or write errors. Manifest records input hashes, code revision,
 packages, GPU/driver, configuration, and shared-host monotonic boundaries.
 
@@ -163,10 +171,15 @@ The report separates:
 - **Load fidelity** (`load_fidelity.valid`): all traffic launched and scheduling
   lag stayed within the predeclared limit. Start time is not an exact wire-send
   probe; connection-pool/transport delay remains in client-to-handler latency.
+- **Control fidelity** (`control_fidelity.valid`, new declared-plan runs): exact
+  scheduled command/application evidence and predeclared send/application lag.
+  Initial budget acknowledgement precedes measurement. Missing/extra commands,
+  versions, values or targets also fail core integrity.
 - **Performance**: successful-only latency percentiles alongside all success,
   rejection, and failure counts. SLO goodput requires successful completion and
-  `first_content_at - scheduled_at <= ttft_slo`; denominator is the arrival-window
-  duration. This cohort metric is not steady-state completion throughput.
+  `first_content_at - scheduled_at <= ttft_slo`; with `--e2e-slo` it additionally
+  requires `finished_at - scheduled_at <= e2e_slo`. The denominator is the
+  arrival-window duration. This cohort metric is not steady-state completion throughput.
 
 Recorded connection failure before the handler runs can pass integrity. A backend
 completion with failed client delivery counts as a client failure, preserving both
@@ -175,7 +188,8 @@ Neither is removed from the denominator. Tail spikes stay in primary metrics.
 Client and gateway use the same text-SSE field validation: non-text content,
 malformed choices/usage, and explicit error events cannot count as success.
 Correct records with inaccurate scheduling remain integrity-valid but
-load-fidelity-invalid. CLI exits nonzero if either check fails.
+load-fidelity-invalid. CLI exits nonzero if any applicable integrity, load,
+control or diagnostic gate fails.
 
 The plot aligns planned arrivals, client starts, handler arrivals, reserved cost,
 client TTFT, client-to-handler delay, scheduling lag, and event-loop lag. The loop
@@ -205,8 +219,10 @@ or inferred never-launched outcomes. Duplicate/extra records remain visible.
 
 The ledger separates successful scheduled-TTFT hits, misses, and unknown timings.
 It keeps client-start `end_to_end` and adds `scheduled_e2e =
-finished_at - scheduled_at`; neither is engine last-token latency. There is no
-E2E deadline or joint-compliance claim. Available same-request stages are retained
+finished_at - scheduled_at`; neither is engine last-token latency. Only captures
+with a predeclared E2E deadline gain joint-SLO flags, E2E slack at admission and
+all-offered arrival-cohort SLO windows. Legacy TTFT-only classifications and reports
+retain their original meanings. Available same-request stages are retained
 for every outcome; missing stages are `null`, never zero. Tail stage means use
 only complete decompositions within the selected tail and report that denominator.
 
@@ -275,9 +291,9 @@ phase state. Missing enabled artifacts, unavailable required metric families,
 loss, unmatched spans, mode disagreement or failed persistence fail diagnostic
 qualification; none is silently treated as zero activity.
 
-The auditor keeps three distinct verdicts: original `valid` client/lifecycle
-integrity, original `load_fidelity.valid`, and conditional
-`diagnostic_integrity.valid`. New-run CLI success requires all applicable gates.
+The auditor keeps distinct verdicts: original `valid` client/lifecycle integrity,
+original `load_fidelity.valid`, declared-plan `control_fidelity.valid`, and
+conditional `diagnostic_integrity.valid`. New-run CLI success requires all applicable gates.
 Descriptive data remains available when a gate fails. Complete gateway GC
 coverage has its own flag: an external sampler failure can invalidate overall
 diagnostic qualification without erasing valid gateway spans.
@@ -335,14 +351,13 @@ and budget-response system identification proceed.
 
 ## Comparison protocol after smoke passes
 
-Freeze inputs and server settings. Reserve separate chronological source windows
-for calibration, model validation, and final evaluation; never shuffle neighboring
-seconds across train/test. Obtain additional windows beyond this short download
-before generalization claims. Evaluate budgets 80, 96, 112 on the same five-minute
-trace, initially three repetitions each in interleaved order. Report run-level
-variation, not requests treated as independent repetitions. Include per-input-size
-outcomes so rejecting expensive requests cannot hide behind aggregate percentiles.
+Use the [staged identification protocol](trace-identification.md#staged-gpu-protocol-do-not-start-with-a-matrix):
+one qualified baseline, one lower candidate, then a small predeclared down/up
+experiment. This supersedes the earlier proposed initial 80/96/112-by-three
+matrix. Expand only when a specific unresolved question justifies it.
 
-This PR supplies replay and auditing. Budget excitation, model fitting, intentional
-stall injection, feedback baselines, shadow MPC, and closed-loop evaluation follow
-in separate changes. Real GPU results are required before claiming a benefit.
+Reserve separate chronological windows for calibration, model validation and
+final evaluation; never shuffle neighboring seconds across train/test. Obtain
+additional source windows before generalization claims. Model fitting, feedback
+baselines, shadow MPC and protected closed-loop evaluation remain separate work.
+Collection/audit tooling alone is not evidence of a precise model or MPC benefit.

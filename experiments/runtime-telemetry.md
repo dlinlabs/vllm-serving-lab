@@ -297,9 +297,10 @@ performed by this analysis.
 
 ## CPU validation and handoff
 
-**Deferred acceptance:** the Linux CPU CI configuration does not establish a
-Linux pass. Keep the sampler-isolation PR in draft until the exact revision has
-completed native acceptance. No test or GPU run is scheduled by this change;
+**Deferred acceptance:** merging sampler isolation and the manual Linux CPU
+workflow does not establish a Linux pass. The identification-tooling follow-up
+also needs acceptance of its exact revision; added regression source and static
+checks are not executed tests. No test or GPU run is scheduled by these changes;
 the next native execution is reserved for an available, compatible host.
 
 ### Run later on the rental machine
@@ -333,7 +334,9 @@ Early failures may leave only partial evidence. `valid` remains false unless
 pytest exits zero, **no case fails, errors or skips**, all five real trace-runner
 configurations appear exactly once and the checkout remains unchanged.
 A missing, stale or incomplete JUnit result cannot supply a pass. The five
-configurations each exercise success, rejection and upstream failure.
+configurations each exercise success, rejection, upstream failure and a scheduled
+down/up-budget run with a joint TTFT/E2E objective. Their five JUnit identities
+remain unchanged.
 
 ### Manual GitHub Actions job
 
@@ -344,12 +347,10 @@ scheduled trigger. Adding or updating this PR does not start it. A future
 manual dispatch uses GitHub's Linux host; it does not need access to the rental
 machine or its credentials.
 
-GitHub requires the workflow definition on the default branch before manual
-dispatch is available. Before this PR merges, use the rental-host command
-above for its native merge prerequisite; do not merge merely to expose the
-Actions button. After the definition reaches `main`, an explicitly authorized
+The workflow definition is already on `main`. A future, explicitly authorized
 manual run can select the revision's branch under **Actions > Linux CPU
-acceptance (manual) > Run workflow**.
+acceptance (manual) > Run workflow**. Alternatively use the rental-host command
+above. Neither path is started automatically by publishing a PR.
 
 The job has a 20-minute limit, read-only repository permissions and immutable
 action pins. It attempts to upload the evidence even after failure, with a
@@ -375,7 +376,10 @@ the recorded baseline, with a compatible PID/procfs view and no PID-remapping br
 Failing closed on an incompatible host is not a successful diagnostic capture.
 The real subprocess replay test covers disabled sampling and thread/process
 sampling with gateway diagnostics on or external-only, each across
-success/rejection/failure. It uses ports 8000/8080 and may skip if occupied;
+success/rejection/failure and scheduled-budget/joint-SLO collection. Control
+regressions also cover malformed/missing plans, command/version/timing damage,
+traffic/control cancellation, deadline boundaries and legacy semantics.
+It uses ports 8000/8080 and may skip if occupied;
 a skip is not coverage and the acceptance entry point rejects it. Existing
 process-termination, Linux setup, POSIX ninja and socket-reuse tests have known
 Windows incompatibilities. Local Windows checks are not native acceptance.
@@ -383,3 +387,5 @@ Windows incompatibilities. Local Windows checks are not native acceptance.
 See the PR handoff for exact executed checks and remaining validation. A CPU mock
 pass does not establish GPU-host load fidelity, observer overhead or policy
 benefit. Any GPU capture and stronger comparisons remain separately approved.
+Proceed through the [small staged identification protocol](trace-identification.md),
+not an automatic GPU matrix.

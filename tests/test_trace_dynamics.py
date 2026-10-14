@@ -106,6 +106,65 @@ def test_deadline_equality_missing_first_content_and_invalid_durations():
     assert not rows[0]['stages_complete']
 
 
+def test_joint_deadlines_reconcile_all_offered_cohorts_without_changing_legacy_outcomes():
+    trace, clients, histories = fixture_rows()
+    legacy, legacy_accounting = join_requests(clients, trace, histories, 100., .5, RUN_ID)
+    rows, accounting = join_requests(clients, trace, histories, 100., .5, RUN_ID, 1.)
+    assert accounting['outcomes'] == legacy_accounting['outcomes']
+    assert accounting['joint_slo'] == dict(met=1, missed=6, unknown=1)
+    assert all('joint_slo_met' not in row for row in legacy)
+    assert rows[0]['e2e_slo_met'] is True and rows[0]['joint_slo_met'] is True
+    assert rows[0]['e2e_deadline_remaining_at_admission_s'] == pytest.approx(.88)
+    assert rows[1]['e2e_slo_met'] is True and rows[1]['joint_slo_met'] is False
+    assert all(row['joint_slo_met'] is False for row in rows[2:7])
+    assert rows[7]['joint_slo_met'] is None
+    events = [e for history in histories.values() for group in history.values() for e in group]
+    windows = request_windows(rows, events, 100., 108.)
+    assert sum(w['cohort_slo_successes'] for w in windows['windows']) == 1
+    assert sum(w['cohort_slo_misses'] for w in windows['windows']) == 6
+    assert sum(w['cohort_slo_unknown'] for w in windows['windows']) == 1
+    assert windows['windows'][0]['cohort_slo_successes'] == 1
+    assert windows['windows'][1]['completed'] == 1
+    assert 'cohort_slo_successes' not in request_windows(legacy, events, 100., 108.)['windows'][0]
+
+
+def test_joint_deadline_uses_scheduled_completion_and_preserves_unknowns():
+    trace, clients, histories = fixture_rows()
+    clients[0].update(finished_at=101.05, end_to_end=.95)
+    rows, _ = join_requests(clients, trace, histories, 100., .5, RUN_ID, 1.)
+    assert rows[0]['end_to_end'] < 1. and rows[0]['scheduled_e2e'] > 1.
+    assert rows[0]['outcome'] == 'successful_within_ttft'
+    assert rows[0]['e2e_slo_met'] is False and rows[0]['joint_slo_met'] is False
+    clients[0].update(first_content_at=None, finished_at=100.9, end_to_end=.8)
+    rows, _ = join_requests(clients, trace, histories, 100., .5, RUN_ID, 1.)
+    assert rows[0]['e2e_slo_met'] is True and rows[0]['joint_slo_met'] is None
+    clients[0].update(finished_at=101.05, end_to_end=.95)
+    rows, _ = join_requests(clients, trace, histories, 100., .5, RUN_ID, 1.)
+    assert rows[0]['e2e_slo_met'] is False and rows[0]['joint_slo_met'] is False
+    clients[0].update(first_content_at=100.3, finished_at=None, end_to_end=None)
+    rows, _ = join_requests(clients, trace, histories, 100., .5, RUN_ID, 1.)
+    assert rows[0]['e2e_slo_met'] is None and rows[0]['joint_slo_met'] is None
+    with pytest.raises(ValueError):
+        join_requests(clients, trace, histories, 100., .5, RUN_ID, float('nan'))
+
+
+@pytest.mark.parametrize('damage', ['completion_order', 'content_order', 'success_error', 'missing_success'])
+def test_inconsistent_timing_or_success_is_not_joint_compliance(damage):
+    trace, clients, histories = fixture_rows()
+    if damage == 'completion_order':
+        clients[0].update(finished_at=100.2, end_to_end=.1)
+    elif damage == 'content_order':
+        clients[0].update(first_content_at=100.05, ttft=-.05)
+    elif damage == 'success_error':
+        clients[0]['error_type'] = 'ReadError'
+    else:
+        del clients[0]['success']
+    rows, _ = join_requests(clients, trace, histories, 100., .5, RUN_ID, 1.)
+    assert rows[0]['joint_slo_met'] is None
+    if damage in {'completion_order', 'content_order'}:
+        assert rows[0]['measurement_issues']
+
+
 def test_duplicate_planned_rows_and_truncated_gateway_log_are_visible(tmp_path):
     trace, clients, histories = fixture_rows()
     trace['requests'].append(dict(trace['requests'][-1]))

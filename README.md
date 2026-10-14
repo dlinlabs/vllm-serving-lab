@@ -62,15 +62,20 @@ Qwen3-4B-Instruct-2507, context 8,192, prefix caching disabled with launch evide
 
 **Next:** complete the
 [native Linux CPU acceptance](experiments/runtime-telemetry.md#cpu-validation-and-handoff)
-for the opt-in external sampler process mode. A manual-only CI workflow and the
-same rental-host entry point are provided; execution is deferred until a
-suitable host is available, not claimed by adding the configuration.
-Then run a separately approved, fresh same-commit
-[thread/process comparison](experiments/trace-replay.md#sampler-isolation-ab-after-native-validation)
-without relaxing the 50 ms gate. After reliable load generation, compare fixed
-budgets and measure predeclared budget steps for system identification. Process
-isolation is not yet evidence of lower latency, negligible diagnostic overhead
-or MPC benefit.
+for the opt-in external sampler process mode and identification tooling at the
+exact revision. A manual-only CI workflow and the same rental-host entry point
+are provided; execution is deferred until a suitable host is available, not
+claimed by adding the configuration.
+Then follow the [staged identification protocol](experiments/trace-identification.md):
+one qualified fixed-budget baseline, one lower candidate, then predeclared
+down/up steps on the **same trace**, rather than an initial GPU matrix.
+`--budget-schedule` adds trace-relative control with a saved/audited plan;
+optional `--e2e-slo` makes goodput joint TTFT/E2E with all offered requests
+retained. Model fitting and shadow/closed-loop MPC are not implemented.
+An optional, separately approved [thread/process comparison](experiments/trace-replay.md#sampler-isolation-ab-after-native-validation)
+can investigate observer overhead without relaxing the 50 ms client gate.
+Process isolation is not yet evidence of lower latency, negligible diagnostic
+overhead or MPC benefit.
 
 ---
 

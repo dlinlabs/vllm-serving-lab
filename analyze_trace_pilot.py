@@ -8,7 +8,9 @@ from pathlib import Path
 
 from analyze_budget_pilot import percentile
 from run_budget_pilot import save
-from trace_workload import load_trace, sha256_file
+from trace_control import (RESPONSE_FIELDS, budget_curve, has_control_plan, initial_control_version,
+                           read_plan, validate_response)
+from trace_workload import finite_number, load_trace, sha256_file
 
 TERMINAL = {'completed', 'rejected', 'failed', 'cancelled'}
 LIFECYCLE = {'received', 'accepted', 'backend_sent', 'first_content'} | TERMINAL
@@ -76,6 +78,8 @@ def diagnostic_audit(output, manifest, records, clients, warmup, shutdown):
         required_files = ('gateway.py', 'telemetry.py', 'run_trace_pilot.py', 'run_budget_pilot.py',
                           'sustained_load.py', 'trace_workload.py', 'diagnostic_sampling.py',
                           'analyze_trace_pilot.py', 'analyze_trace_dynamics.py', 'requirements-v1.txt')
+        if has_control_plan(output, manifest):
+            required_files += ('trace_control.py',)
         require(all(isinstance(fingerprints.get(k), str) and len(fingerprints[k]) == 64 and
                     all(c in '0123456789abcdef' for c in fingerprints[k]) for k in required_files),
                 'Incomplete code fingerprints')
@@ -306,23 +310,109 @@ def diagnostic_audit(output, manifest, records, clients, warmup, shutdown):
     return result
 
 
-def stats(rows, duration, slo):
+def control_audit(manifest, plan, changes, records, observations):
+    issues, fidelity = [], []
+    def require(condition, message):
+        if not condition and message not in issues:
+            issues.append(message)
+    start = finite_number(manifest['measurement_start'], 'measurement start')
+    end = finite_number(manifest['measurement_end'], 'measurement end')
+    base = initial_control_version(manifest, plan)
+    schedule = plan['budget_schedule']
+    updates = [r for r in records if r['event'] == 'budget_updated']
+    require(len(changes) == len(updates) == len(schedule), 'Missing or extra scheduled budget commands/applications')
+    sends, applications, roundtrips = [], [], []
+    previous_ack = manifest['warmup_end']
+    for index, (step, command, applied) in enumerate(zip(schedule, changes, updates)):
+        if not isinstance(command, dict) or command.get('status') != 'acknowledged':
+            require(False, 'Budget command did not receive a successful acknowledgement')
+            continue
+        previous_budget = schedule[max(0, index - 1)]['budget']
+        validate_response(command, step['budget'], previous_budget, base + index + 1,
+                          command['sent'], command['acknowledged'])
+        validate_response(applied, step['budget'], previous_budget, base + index + 1,
+                          command['sent'], command['acknowledged'])
+        require(all(command[name] == applied[name] for name in RESPONSE_FIELDS),
+                'Budget acknowledgement differs from the gateway application')
+        require(type(command.get('step_index')) is int and command['step_index'] == index,
+                'Budget command order differs from the schedule')
+        require(finite_number(command['requested_budget'], 'requested budget', True) == step['budget'],
+                'Requested budget differs from the schedule')
+        target = start + step['at_seconds']
+        require(abs(finite_number(command['target'], 'budget target') - target) < 1e-6,
+                'Budget target differs from the shared measurement clock')
+        require(not command.get('error_type') and not command.get('error'), 'Acknowledged budget command has an error')
+        require(previous_ack <= command['sent'] and
+                command['sent'] <= applied['applied_at'] <= applied['monotonic'] <= command['acknowledged'],
+                'Budget application/acknowledgement ordering is invalid')
+        roundtrips.append(command['acknowledged'] - command['sent'])
+        if index == 0:
+            require(command['acknowledged'] <= start, 'Initial budget was not acknowledged before measurement')
+        else:
+            require(previous_ack <= target, 'Previous budget acknowledgement crossed the next target')
+            require(command['sent'] >= target - 1e-6 and applied['applied_at'] < end,
+                    'Scheduled budget was applied early or outside the arrival window')
+            sends.append(command['sent'] - target)
+            applications.append(applied['applied_at'] - target)
+        previous_ack = command['acknowledged']
+    final = manifest['final_metrics']
+    require(type(final['budget_version']) is int and final['budget_version'] == base + len(schedule) and
+            finite_number(final['admission_budget'], 'final budget', True) == schedule[-1]['budget'],
+            'Final budget state differs from the declared schedule')
+    if not issues:
+        metrics = ([final] + [r['metrics'] for r in observations if 'metrics' in r] +
+                   [r for r in records if r['event'] == 'snapshot'])
+        states = [(r, r['state_sampled_at'], 'admission_budget') for r in metrics]
+        # Cost-aware admission emits its decision before yielding the gateway loop.
+        states += [(r, r['monotonic'], 'budget') for r in records if r['event'] in {'accepted', 'rejected'}]
+        for state, timestamp, budget_field in states:
+            sampled = finite_number(timestamp, 'budget state time')
+            count = sum(r['applied_at'] <= sampled for r in updates)
+            require(type(state['budget_version']) is int and state['budget_version'] == base + count and
+                    finite_number(state[budget_field], 'observed budget', True) == schedule[max(0, count - 1)]['budget'],
+                    'Observed budget state differs from application history')
+    if issues:
+        fidelity.append('Cannot qualify an incomplete or inconsistent control ledger')
+    if max(sends + applications, default=0) > plan['max_budget_lag']:
+        fidelity.append('Budget control exceeded predeclared maximum send/application lag')
+    return issues, dict(valid=not fidelity, issues=fidelity, budget_mode=plan['budget_mode'],
+                        planned_commands=len(schedule), recorded_commands=len(changes), gateway_applications=len(updates),
+                        max_budget_lag_limit=plan['max_budget_lag'],
+                        p99_send_lag=percentile(sends, .99), max_send_lag=max(sends, default=None),
+                        p99_application_lag=percentile(applications, .99), max_application_lag=max(applications, default=None),
+                        p99_acknowledgement_roundtrip=percentile(roundtrips, .99),
+                        note='Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only.')
+
+
+def stats(rows, duration, slo, e2e_slo=None):
+    finite_number(slo, 'TTFT SLO', True)
+    if e2e_slo is not None:
+        finite_number(e2e_slo, 'E2E SLO', True)
     successful = [r for r in rows if r['success']]
     actual = [r['ttft'] for r in successful]
     scheduled = [r['first_content_at'] - r['scheduled_at'] for r in successful]
-    good = sum(r['first_content_at'] - r['scheduled_at'] <= slo for r in successful)
-    return dict(attempted=len(rows), success=len(successful), rejected=sum(r['rejected'] for r in rows),
+    good = sum(r['first_content_at'] - r['scheduled_at'] <= slo and
+               (e2e_slo is None or r['finished_at'] - r['scheduled_at'] <= e2e_slo) for r in successful)
+    result = dict(attempted=len(rows), success=len(successful), rejected=sum(r['rejected'] for r in rows),
                 failed=sum(not r['success'] and not r['rejected'] for r in rows),
                 client_p99_ttft=percentile(actual, .99), scheduled_p99_ttft=percentile(scheduled, .99),
                 client_p99_e2e=percentile([r['end_to_end'] for r in successful], .99),
                 slo_successes=good, slo_goodput_per_arrival_second=good / duration,
                 slo_success_fraction_of_offered=good / len(rows) if rows else None,
                 slo_definition='stream completed successfully; first content minus scheduled arrival <= TTFT SLO')
+    if e2e_slo is not None:
+        completed = [r['finished_at'] - r['scheduled_at'] for r in successful]
+        result.update(scheduled_p99_e2e=percentile(completed, .99),
+                      ttft_slo_successes=sum(value <= slo for value in scheduled),
+                      e2e_slo_successes=sum(value <= e2e_slo for value in completed),
+                      slo_definition=result['slo_definition'] + '; completion minus scheduled arrival <= E2E SLO')
+    return result
 
 
 def _analyze(output, plot):
     manifest = json.loads((output / 'manifest.json').read_text())
     trace = load_trace(output / 'trace.json')
+    plan = read_plan(output, manifest, trace)
     clients = json.loads((output / 'client.json').read_text())['requests']
     warmup = json.loads((output / 'warmup.json').read_text())['requests']
     changes = json.loads((output / 'budget_changes.json').read_text())
@@ -450,15 +540,21 @@ def _analyze(output, plot):
             if feature:
                 require(feature['estimated_input_tokens'] == planned['input_tokens'] and
                         feature['max_output_tokens'] == trace['output_cap'], 'Gateway request features differ from trace')
-    updates = [r for r in records if r['event'] == 'budget_updated']
-    require(len(changes) == len(updates) == 1, 'Fixed-budget replay must have one measured budget command')
-    for command, applied in zip(changes, updates):
-        require(command['budget'] == applied['budget'] == manifest['config']['budget'], 'Budget value mismatch')
-        require(command['budget_version'] == applied['budget_version'], 'Budget version mismatch')
-        require(command['applied_at'] == applied['applied_at'], 'Budget application timestamp mismatch')
-        require(command['sent'] <= applied['applied_at'] <= applied['monotonic'] <= command['acknowledged'],
-                'Budget application timing is invalid')
-        require(applied['applied_at'] <= start, 'Initial budget was not applied before measurement')
+    if plan is None:
+        updates = [r for r in records if r['event'] == 'budget_updated']
+        require(not any('step_index' in r or 'requested_budget' in r for r in changes),
+                'Budget command metadata requires a declared control plan')
+        require(len(changes) == len(updates) == 1, 'Fixed-budget replay must have one measured budget command')
+        for command, applied in zip(changes, updates):
+            require(command['budget'] == applied['budget'] == manifest['config']['budget'], 'Budget value mismatch')
+            require(command['budget_version'] == applied['budget_version'], 'Budget version mismatch')
+            require(command['applied_at'] == applied['applied_at'], 'Budget application timestamp mismatch')
+            require(command['sent'] <= applied['applied_at'] <= applied['monotonic'] <= command['acknowledged'],
+                    'Budget application timing is invalid')
+            require(applied['applied_at'] <= start, 'Initial budget was not applied before measurement')
+    else:
+        control_issues, control_fidelity = control_audit(manifest, plan, changes, records, observations)
+        issues.extend(control_issues)
     require(bool(observations), 'No external state observations')
     for observation in observations:
         if 'metrics' in observation:
@@ -476,7 +572,8 @@ def _analyze(output, plot):
     report = dict(valid=not issues, issues=issues,
                   load_fidelity=dict(valid=not fidelity, issues=fidelity, p99_scheduling_lag=percentile(lags, .99),
                                      max_scheduling_lag=max(lags, default=None)),
-                  performance=stats(clients, trace['duration_seconds'], manifest['config']['ttft_slo']) if not issues else None,
+                  performance=stats(clients, trace['duration_seconds'], manifest['config']['ttft_slo'],
+                                    manifest['config'].get('e2e_slo')) if not issues else None,
                   gateway_terminal_counts=dict(Counter(r['event'] for r in records if r['event'] in TERMINAL)),
                   failed_without_gateway_record=sum(not events.get(r.get('client_request_id')) for r in clients),
                   state_poll_errors=sum('error_type' in r for r in observations),
@@ -487,8 +584,11 @@ def _analyze(output, plot):
         for row in clients:
             count = row['expected_input_tokens']
             groups['short_input' if count <= 128 else 'medium_input' if count <= 512 else 'long_input'].append(row)
-        report['performance_by_input_size'] = {k: stats(v, trace['duration_seconds'], manifest['config']['ttft_slo'])
+        report['performance_by_input_size'] = {k: stats(v, trace['duration_seconds'], manifest['config']['ttft_slo'],
+                                                       manifest['config'].get('e2e_slo'))
                                                for k, v in groups.items()}
+    if plan is not None:
+        report['control_fidelity'] = control_fidelity
     polls = [r for r in observations if start <= r['received_at'] <= end]
     ages = [r['state_age_seconds'] for r in polls if 'metrics' in r]
     loop = [r['lag_seconds'] for r in records if r['event'] == 'event_loop_lag' and start <= r['monotonic'] <= end]
@@ -526,11 +626,28 @@ def render(output, manifest, trace, clients, records, events, report):
     snapshots = [r for r in records if r['event'] == 'snapshot' and r['monotonic'] >= start]
     x = [r['monotonic'] - start for r in snapshots]
     axes[1].plot(x, [r['current_admitted_cost'] for r in snapshots], marker='.', label='Reserved cost')
-    axes[1].axhline(manifest['config']['budget'], linestyle='--', label='Fixed budget')
+    if 'control_fidelity' in report:
+        times, budgets = budget_curve(records, start, max([start + duration] + [r['monotonic'] for r in snapshots]))
+        if times:
+            axes[1].step(times, budgets, where='post', linestyle='--', label='Applied budget')
+        else:
+            axes[1].text(.02, .9, 'Applied budget unavailable: no pre-measurement application',
+                         transform=axes[1].transAxes)
+    else:
+        axes[1].axhline(manifest['config']['budget'], linestyle='--', label='Fixed budget')
     axes[1].set_ylabel('Cost')
     successful = [r for r in clients if r['success'] and r['first_content_at'] is not None]
     axes[2].scatter([r['started_at'] - start for r in successful], [r['ttft'] for r in successful],
                     s=8, alpha=.4, label='Client TTFT, successful only')
+    if manifest['config'].get('e2e_slo') is not None:
+        axes[2].scatter([r['scheduled_at'] - start for r in successful],
+                        [r['first_content_at'] - r['scheduled_at'] for r in successful],
+                        s=8, alpha=.4, label='Scheduled TTFT')
+        axes[2].scatter([r['scheduled_at'] - start for r in successful],
+                        [r['finished_at'] - r['scheduled_at'] for r in successful],
+                        s=8, alpha=.4, label='Scheduled E2E')
+        axes[2].axhline(manifest['config']['ttft_slo'], linestyle=':', label='TTFT SLO')
+        axes[2].axhline(manifest['config']['e2e_slo'], linestyle='--', label='E2E SLO')
     ingress = [(r['started_at'] - start, e['monotonic'] - r['started_at']) for r in clients
                if r['started_at'] is not None for e in events.get(r.get('client_request_id'), []) if e['event'] == 'received']
     axes[2].scatter([p[0] for p in ingress], [p[1] for p in ingress], s=8, alpha=.4, label='Client start to handler received')
@@ -547,7 +664,8 @@ def render(output, manifest, trace, clients, records, events, report):
         axis.legend(loc='upper left')
     axes[-1].set_xlabel('Seconds since measurement start; dotted line = end of arrival window')
     fig.suptitle('Trace replay — ' + ('integrity valid' if report['valid'] else 'INVALID DATA') +
-                 ('; load fidelity FAILED' if not report['load_fidelity']['valid'] else ''))
+                 ('; load fidelity FAILED' if not report['load_fidelity']['valid'] else '') +
+                 ('; control fidelity FAILED' if not report.get('control_fidelity', {'valid': True})['valid'] else ''))
     fig.tight_layout()
     fig.savefig(output / 'timeseries.png', dpi=140)
     plt.close(fig)
@@ -557,7 +675,7 @@ def analyze(output, plot=True):
     output = Path(output)
     try:
         return _analyze(output, plot)
-    except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
+    except (OSError, ValueError, KeyError, TypeError, IndexError, OverflowError) as exc:
         report = dict(valid=False, issues=[f'Incomplete or malformed replay data: {exc}'],
                       load_fidelity=dict(valid=False, issues=['Cannot audit load fidelity']), performance=None)
         try:
@@ -565,6 +683,8 @@ def analyze(output, plot=True):
         except (OSError, ValueError) as metadata_error:
             report['issues'].append(f'Cannot determine diagnostic protocol: {metadata_error}')
         else:
+            if isinstance(manifest, dict) and has_control_plan(output, manifest):
+                report['control_fidelity'] = dict(valid=False, issues=['Cannot audit declared budget control'])
             if isinstance(manifest, dict) and 'investigation_protocol' in manifest:
                 report['diagnostic_integrity'] = dict(valid=False,
                     issues=['Core replay artifacts are incomplete; diagnostic coverage cannot be qualified'],
@@ -580,4 +700,5 @@ if __name__ == '__main__':
     report = analyze(args.output_dir)
     print(json.dumps(report, indent=2))
     raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] and
+                     report.get('control_fidelity', {'valid': True})['valid'] and
                      report.get('diagnostic_integrity', {'valid': True})['valid'] else 1)
