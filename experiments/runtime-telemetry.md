@@ -148,7 +148,12 @@ do not add them or assign all CPU between awaits to one request.
 ### External engine/resource observations
 
 `diagnostic_sampling.py` runs synchronous HTTP, OS reads, parsing and file writes
-in a worker thread, outside both arrival and gateway loops. Default cadence is
+outside both arrival and gateway loops. The default `--sampler-mode thread`
+uses a dedicated runner thread; opt-in `--sampler-mode process` uses a separate
+Python interpreter with an explicit multiprocessing `spawn` context. Process
+mode requires `--gateway-diagnostics` or `--engine-observations`; it does not
+implicitly enable monitoring. The gateway remains a separate subprocess in
+either mode. Default cadence is
 one second; each observation records actual request/header/response/resource
 times and collection-duration overrun. The retained `late_by_seconds` field is
 `max(finished_at - sent_at - interval_seconds, 0)`, not worker start lateness;
@@ -158,6 +163,44 @@ five-second deadline between chunks and stop at four MiB. These limits do not
 turn a partial body into a valid sample. A fresh final sample follows stop,
 including when stop arrives during an earlier HTTP request, before gateway
 termination.
+
+Both modes wait for a flushed first observation and atomically written startup
+health before warmup. The sampler writes JSONL directly, without moving metrics
+payloads back through the runner's event loop. The owner reads the small health
+file only at readiness and shutdown. Readiness proves persistence, not that
+every required metric/resource is available; the diagnostic audit still checks
+the full capture. Separate one-way, single-message pipes carry readiness and stop
+signals, without a cross-process event mutex. Readiness is signalled only after
+the atomic status-file replacement returns, not merely when the file becomes
+visible. Losing the owner channel is a worker failure, not a successful stop.
+
+The manifest records `sampler.mode` and `sampler.worker` lifecycle metadata:
+worker PID, start method, readiness/stop times, stopped state, exit code,
+unexpected exit and forced termination. Health and every observation record the
+collector's `sampler_process_id`; health also records the original
+`runner_process_id`. The child receives the original runner PID explicitly, so
+`resources.runner` never silently switches to the collector's own CPU/RSS.
+Thread-mode collector PID must equal the runner PID; process-mode PID must differ
+from both runner and gateway. Old captures without execution metadata remain
+implicit-thread captures, not process-mode evidence.
+
+Cooperative cleanup requests stop, awaits a fresh final sample and atomic final
+health, then terminates the gateway. Repeated asynchronous cancellation cannot
+skip this owned cleanup sequence. Worker failures, invalid health and unexpected
+exits surface at readiness or shutdown; there is no continuous mid-run crash
+supervisor. A process exceeding `--drain-timeout` is terminated, then killed if
+needed, with two seconds allowed for each escalation. Forced termination, a
+nonzero exit or incomplete cleanup cannot qualify a capture. A stuck thread
+instead reports a timeout; Python threads are not forcibly killed. The default
+thread is a daemon, not an asyncio-executor job that holds interpreter shutdown
+indefinitely. Abrupt OS termination and unresponsive OS operations cannot
+guarantee final persistence or cleanup.
+
+This is an isolation mechanism, not evidence of lower latency or lower total
+CPU. It separates sampler interpreter/GIL/heap work from the load generator, not
+host cores, CPU quota, server-side `/metrics` work, state polling or gateway GC.
+Offline analysis already runs after collection. See the
+[separately approved A/B protocol](trace-replay.md#sampler-isolation-ab-after-native-validation).
 
 The live Prometheus inventory checks exported family names, types, finite
 nonnegative values and histogram bucket/count/sum presence. Required observations
@@ -206,7 +249,11 @@ Original audit reports, fidelity limits and raw files are not changed.
 - `sources.runner` and `sources.gateway` difference cumulative user/system CPU.
   `cpu_cores = delta(user + system) / elapsed_seconds`: one means one logical
   CPU's worth of execution averaged over that interval. Values may exceed one;
-  they are not divided by host CPU count. Runner CPU includes sampler work.
+  they are not divided by host CPU count. `cpu_analysis.sampler_mode` identifies
+  scope: runner CPU includes sampler work in thread mode, but excludes the
+  separate collector in process mode. The plot labels follow this distinction.
+  Separate sampler-process CPU is not measured, so a lower runner value across
+  modes is not proof of lower total CPU work or negligible observer overhead.
 - External interval timestamps are the midpoints of each resource's actual
   `sample_start`/`sample_end`, not HTTP send/receive or log-emission times.
   Both original read bounds remain in `sample_bounds_s`. These are estimates of
@@ -250,29 +297,88 @@ performed by this analysis.
 
 ## CPU validation and handoff
 
+**Deferred acceptance:** the Linux CPU CI configuration does not establish a
+Linux pass. Keep the sampler-isolation PR in draft until the exact revision has
+completed native acceptance. No test or GPU run is scheduled by this change;
+the next native execution is reserved for an available, compatible host.
+
+### Run later on the rental machine
+
+Use a clean checkout of the PR revision on Linux x86_64 with CPython 3.12 and
+its matching procfs view. Run this **before** starting vLLM or the gateway:
+ports 8000 and 8080 must be free. No GPU, vLLM/Torch installation or model
+download is needed for these tests. Use a fresh, dedicated CPU-test environment,
+not the GPU server's environment:
+
 ```bash
-python -m pip install pytest fastapi httpx uvicorn numpy matplotlib psutil prometheus-client
-python -m pytest -q
+python3.12 -m venv .venv-cpu-tests
+. .venv-cpu-tests/bin/activate
+python -m pip install -r requirements-cpu-tests.txt
+python scripts/run_linux_cpu_tests.py
 ```
 
-Tests use mock upstream streaming responses; no GPU is needed. New coverage
+The shared entry point checks platform, revision cleanliness, the existing
+PID/procfs guard and ports without terminating any service or remapping PIDs.
+It runs the complete `tests` directory with `python -m pytest -q -ra`, clears
+configuration `addopts`, uses the checked-out frozen fixtures, disables unrelated
+third-party pytest plugin autoloading and refuses inherited
+`PYTEST_ADDOPTS`/`PYTEST_PLUGINS`. Do not use `-k`, deselections or a guard bypass
+as native acceptance.
+
+Each invocation creates a fresh ignored `cpu-ci-artifacts/<UTC-timestamp>/`
+directory. Retain `acceptance.json`, `packages.json`, `pytest.log` and
+`junit.xml` as evidence; they record the exact commit, Python/platform, resource
+preflight, installed package versions, command, exit code and test coverage.
+Early failures may leave only partial evidence. `valid` remains false unless
+pytest exits zero, **no case fails, errors or skips**, all five real trace-runner
+configurations appear exactly once and the checkout remains unchanged.
+A missing, stale or incomplete JUnit result cannot supply a pass. The five
+configurations each exercise success, rejection and upstream failure.
+
+### Manual GitHub Actions job
+
+[`.github/workflows/linux-cpu.yml`](../.github/workflows/linux-cpu.yml) uses a
+GitHub-hosted Ubuntu 24.04 runner, CPython 3.12, CPU-only dependencies and the
+same entry point. It has **only `workflow_dispatch`**: no push, pull-request or
+scheduled trigger. Adding or updating this PR does not start it. A future
+manual dispatch uses GitHub's Linux host; it does not need access to the rental
+machine or its credentials.
+
+GitHub requires the workflow definition on the default branch before manual
+dispatch is available. Before this PR merges, use the rental-host command
+above for its native merge prerequisite; do not merge merely to expose the
+Actions button. After the definition reaches `main`, an explicitly authorized
+manual run can select the revision's branch under **Actions > Linux CPU
+acceptance (manual) > Run workflow**.
+
+The job has a 20-minute limit, read-only repository permissions and immutable
+action pins. It attempts to upload the evidence even after failure, with a
+30-day retention period; download needed evidence before it expires.
+No workflow has been dispatched as part of adding this configuration.
+
+Tests use mock upstream streaming responses; no GPU is needed. Coverage
 includes deterministic off/on byte and lifecycle parity, disabled allocation,
 failed/cancelled phases, repeated cancellation, close/flush/status-write failure,
 bounded/reentrant/cross-thread GC delivery, late delivery and shutdown, sampler
 errors/counter epochs, parent-environment override, and collection-to-audit-to-
 offline-analysis integration with damaged-artifact cases. Process identity
 regressions cover existing-PID collisions, unverifiable procfs metadata and
-persisted unavailable resources failing diagnostic qualification.
+persisted unavailable resources failing diagnostic qualification. Sampler-worker
+regressions use a real spawned process and an ephemeral local HTTP server, plus
+thread/process collection-to-audit cases. They exercise parent/collector PID
+separation, startup/final persistence, in-flight stop, timeout, unexpected exit,
+cancellation, execution-metadata corruption and runner cleanup ordering.
 
-The implementation has focused CPU checks on Windows/CPython 3.14; completion of
-the full applicable suite is explicitly delegated to another agent, not claimed
-here. Run the suite on Linux, preferably also CPython 3.12 matching the recorded
-baseline, with a compatible PID/procfs view and no PID-remapping bridge.
+The original diagnostic implementation's archived Linux results do not validate
+later sampler-isolation changes. Native acceptance uses CPython 3.12 matching
+the recorded baseline, with a compatible PID/procfs view and no PID-remapping bridge.
 Failing closed on an incompatible host is not a successful diagnostic capture.
-The real subprocess replay test now covers diagnostics off/on, but was
-not executed for this handoff. It uses ports 8000/8080 and may skip if occupied;
-a skip is not coverage. Existing process-termination, POSIX ninja and socket-reuse
-tests have known Windows incompatibilities. No Linux CI or GPU campaign was added.
+The real subprocess replay test covers disabled sampling and thread/process
+sampling with gateway diagnostics on or external-only, each across
+success/rejection/failure. It uses ports 8000/8080 and may skip if occupied;
+a skip is not coverage and the acceptance entry point rejects it. Existing
+process-termination, Linux setup, POSIX ninja and socket-reuse tests have known
+Windows incompatibilities. Local Windows checks are not native acceptance.
 
 See the PR handoff for exact executed checks and remaining validation. A CPU mock
 pass does not establish GPU-host load fidelity, observer overhead or policy

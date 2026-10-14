@@ -121,10 +121,12 @@ async def run(args, trace, output, manifest):
     key = secrets.token_hex(32)
     env = gateway_environment(args, trace, output, key)
     sampler_enabled = args.gateway_diagnostics or args.engine_observations
+    if args.sampler_mode == 'process' and not sampler_enabled:
+        raise ValueError('Process sampler requires --engine-observations or --gateway-diagnostics')
     manifest.update(investigation_protocol=INVESTIGATION_PROTOCOL, diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
                     gateway_diagnostics_requested=args.gateway_diagnostics,
                     runner_process_id=os.getpid(), host=socket.gethostname(),
-                    sampler=dict(enabled=sampler_enabled, interval_seconds=1.0,
+                    sampler=dict(enabled=sampler_enabled, mode=args.sampler_mode, interval_seconds=1.0,
                                  resources=['gateway_current_rss_cpu', 'runner_current_rss_cpu', 'host_cpu'],
                                  gpu='not_collected', request_linked_engine_trace='not_collected'),
                     package_scope='Runner Python environment; not proof of a remote backend version',
@@ -132,7 +134,7 @@ async def run(args, trace, output, manifest):
     process = None
     rows, warmup, changes, observations = [], [], [], []
     stop, poll_task = asyncio.Event(), None
-    sampler, sampler_task = None, None
+    sampler = None
     async with httpx.AsyncClient(timeout=10, trust_env=False) as control:
         try:
             await control.get('http://127.0.0.1:8080/metrics')
@@ -174,16 +176,12 @@ async def run(args, trace, output, manifest):
                          'BENCHMARK_REQUEST_IDS', 'LOOP_LAG_TELEMETRY')})
                 rows.extend(prepare_replay(trace, manifest['run_id']))
                 if sampler_enabled:
-                    from diagnostic_sampling import ObservationSampler
-                    sampler = ObservationSampler(output, args.vllm_url, process.pid, manifest['run_id'])
-                    sampler_task = asyncio.create_task(asyncio.to_thread(sampler.run))
-                    if not await asyncio.to_thread(sampler.ready.wait, args.startup_timeout):
-                        raise RuntimeError('External diagnostic sampler startup timed out')
-                    if not sampler.status['samples'] or sampler.status['write_errors']:
-                        raise RuntimeError('External diagnostic sampler could not persist its startup sample')
-                    if sampler_task.done():
-                        await sampler_task
-                        raise RuntimeError('External diagnostic sampler stopped before warmup')
+                    from diagnostic_sampling import SamplerWorker
+                    sampler = SamplerWorker(output, args.vllm_url, process.pid, manifest['runner_process_id'],
+                                            manifest['run_id'], mode=args.sampler_mode)
+                    manifest['sampler']['worker'] = sampler.state
+                    sampler.start()
+                    await sampler.wait_ready(args.startup_timeout)
                 limits = httpx.Limits(max_connections=args.max_pending, max_keepalive_connections=args.max_pending)
                 async with httpx.AsyncClient(timeout=args.request_timeout, limits=limits, trust_env=False) as traffic:
                     manifest['warmup_start'] = time.monotonic()
@@ -226,22 +224,37 @@ async def run(args, trace, output, manifest):
                     await asyncio.sleep(.1)
                 manifest['final_metrics'] = metrics
             finally:
-                stop.set()
-                if sampler is not None:
-                    sampler.stop.set()
-                try:
-                    tasks = [task for task in (poll_task, sampler_task) if task is not None]
-                    results = await asyncio.gather(*tasks, return_exceptions=True)
-                    save(output / 'state_observations.json', observations)
-                    errors = [result for result in results if isinstance(result, BaseException)]
-                    if errors:
-                        manifest['collector_errors'] = [type(error).__name__ for error in errors]
-                        raise errors[0]
-                finally:
-                    await finalize(process, output, manifest, rows, warmup, changes)
-                # Uvicorn re-raises handled SIGTERM after graceful shutdown on some versions.
-                if process is not None and process.returncode not in (0, -signal.SIGTERM):
-                    raise RuntimeError(f'Gateway exited with status {process.returncode}')
+                async def cleanup():
+                    stop.set()
+                    if sampler is not None:
+                        sampler.request_stop()
+                    try:
+                        tasks = [poll_task] if poll_task is not None else []
+                        if sampler is not None:
+                            tasks.append(sampler.close(args.drain_timeout))
+                        results = await asyncio.gather(*tasks, return_exceptions=True)
+                        save(output / 'state_observations.json', observations)
+                        errors = [result for result in results if isinstance(result, BaseException)]
+                        if errors:
+                            manifest['collector_errors'] = [type(error).__name__ for error in errors]
+                            raise errors[0]
+                    finally:
+                        await finalize(process, output, manifest, rows, warmup, changes)
+                    # Some Uvicorn versions re-raise SIGTERM after graceful shutdown.
+                    if process is not None and process.returncode not in (0, -signal.SIGTERM):
+                        raise RuntimeError(f'Gateway exited with status {process.returncode}')
+
+                cleanup_task = asyncio.create_task(cleanup())
+                cancellation = None
+                # Protect the entire ordering, even cancellation before sampler.close starts.
+                while not cleanup_task.done():
+                    try:
+                        await asyncio.shield(cleanup_task)
+                    except asyncio.CancelledError as exc:
+                        cancellation = exc
+                cleanup_task.result()
+                if cancellation is not None:
+                    raise cancellation
 
 
 def main():
@@ -263,7 +276,11 @@ def main():
                         help='Opt in to gateway phases/GC/CPU and external engine/resource observations')
     parser.add_argument('--engine-observations', action='store_true',
                         help='External sampling without enabling gateway diagnostics (for a later matched control)')
+    parser.add_argument('--sampler-mode', choices=['thread', 'process'], default='thread',
+                        help='External sampler execution; process uses spawn and retains the original runner PID')
     args = parser.parse_args()
+    if args.sampler_mode == 'process' and not (args.gateway_diagnostics or args.engine_observations):
+        parser.error('Process sampler requires --engine-observations or --gateway-diagnostics')
     for value in (args.budget, args.request_timeout, args.drain_timeout, args.startup_timeout,
                   args.ttft_slo, args.max_scheduling_lag):
         if not math.isfinite(value) or value <= 0:

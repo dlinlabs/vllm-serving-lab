@@ -181,8 +181,11 @@ def test_upstream_503_is_failure_not_admission_rejection():
     asyncio.run(scenario())
 
 
-@pytest.mark.parametrize('diagnostics', [False, True])
-def test_full_trace_runner_and_adversarial_analysis(tmp_path, diagnostics):
+@pytest.mark.parametrize('diagnostics,external,mode', [
+    (False, False, 'thread'), (True, True, 'thread'), (True, True, 'process'),
+    (False, True, 'thread'), (False, True, 'process'),
+])
+def test_full_trace_runner_and_adversarial_analysis(tmp_path, diagnostics, external, mode):
     """Real subprocesses, HTTP, SSE, shutdown and plots; explicitly not a GPU benchmark."""
     import os
     from pathlib import Path
@@ -253,8 +256,9 @@ async def completion(request: Request):
             output = tmp_path / name
             result = subprocess.run([sys.executable, 'run_trace_pilot.py', '--trace', str(source),
                          '--output-dir', str(output), '--budget', str(budget), '--ttft-slo', '1',
-                         '--warmup-requests', '1', '--drain-timeout', '2', '--max-scheduling-lag', '1'] +
-                         (['--gateway-diagnostics'] if diagnostics else []),
+                         '--warmup-requests', '1', '--drain-timeout', '2', '--max-scheduling-lag', '1',
+                         '--sampler-mode', mode] +
+                         (['--gateway-diagnostics'] if diagnostics else ['--engine-observations'] if external else []),
                          cwd=root, env=env, capture_output=True, text=True, timeout=30)
             assert result.returncode == 0, result.stdout + result.stderr
             report = json.loads((output / 'report.json').read_text())
@@ -262,6 +266,13 @@ async def completion(request: Request):
             assert report['performance']['attempted'] == 3
             assert report['diagnostic_integrity']['valid'], report['diagnostic_integrity']
             assert report['diagnostic_integrity']['gateway_mode'] == ('enabled' if diagnostics else 'disabled')
+            assert report['diagnostic_integrity']['external_mode'] == ('enabled' if external else 'disabled')
+            manifest = json.loads((output / 'manifest.json').read_text())
+            assert manifest['sampler']['mode'] == mode
+            if external:
+                worker = manifest['sampler']['worker']
+                assert worker['stopped'] and not worker['forced_termination']
+                assert (worker['process_id'] == manifest['runner_process_id']) is (mode == 'thread')
             assert (output / 'timeseries.png').stat().st_size > 1000
             before = hashes(output)
             summary, joined, _, _ = analyze_run(output, .3)
@@ -269,8 +280,10 @@ async def completion(request: Request):
             assert len(joined) == summary['accounting']['ledger_rows'] == 3
             assert all((r['diagnostics']['phases'] is not None) == diagnostics for r in joined)
             if diagnostics:
-                assert summary['diagnostics']['engine_observations']
                 assert summary['diagnostics']['gc_coverage_complete']
+            if external:
+                assert summary['diagnostics']['engine_observations']
+                assert summary['cpu_analysis']['sampler_mode'] == mode
                 engine_path = output / 'engine_observations.jsonl'
                 raw_engine = engine_path.read_text()
                 engine_path.write_text('')

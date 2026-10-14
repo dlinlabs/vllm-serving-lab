@@ -253,6 +253,13 @@ definitions. Offline investigation output uses schema 2.
 | `--gateway-diagnostics` | On | On |
 | `--engine-observations` only | Off | On |
 
+The external sampler defaults to `--sampler-mode thread`. Add
+`--sampler-mode process` to either enabled row for a separate spawned collector;
+using process mode with neither observation flag is an error. Cadence, sampled
+metrics, original runner/gateway resource targets and audit gates are unchanged.
+The manifest, collector health and observation PID fields identify the execution
+mode and verify startup/shutdown. A forced or incomplete stop fails qualification.
+
 For a separately approved capture against an already running backend, add
 `--gateway-diagnostics` to the existing replay command and choose a new output
 directory. There is no automatic GPU launch, changed trace preset, extra replay,
@@ -291,7 +298,40 @@ The manifest explicitly marks backend launch provenance unobserved. Archive and
 verify those separately for any approved GPU capture; the `--cache-policy` label
 is not proof. Never publish raw metric labels without reviewing their contents.
 See [runtime telemetry](runtime-telemetry.md) for collector limits, measurement
-boundaries, and the outstanding full-suite validation handoff.
+boundaries, lifecycle guarantees and native validation requirements.
+
+## Sampler-isolation A/B after native validation
+
+Process isolation is available for a **separately approved** fresh comparison;
+this change neither starts a GPU run nor establishes a performance benefit.
+First run the CPU suite on a compatible native Linux/Python environment and
+confirm real subprocess thread/process and external-only cases pass without
+skips. Do not bypass the PID/procfs guard.
+
+Freeze the same commit, trace bytes, backend/model/launch configuration, host
+allocation, budget **96**, warmup, output cap, TTFT SLO **0.5 s**, cache policy
+and diagnostic flags. Preserve the original **50 ms** maximum scheduling-lag
+gate. Initially use two separately authorized five-minute arrival windows:
+fresh A with `--sampler-mode thread`, fresh B with `--sampler-mode process`,
+each with a new output directory. Archive actual launch evidence and run order.
+Do not substitute the October 12 capture for A: both arms must use the same new
+controller implementation, including the dedicated thread lifecycle.
+
+Primary observations are late-launch count, maximum and P99 scheduling lag,
+with client integrity, load fidelity and diagnostic integrity reported
+separately for both arms. A failing arm remains diagnostic evidence, not a
+qualified policy comparison; do not discard its late/rejected/failed arrivals.
+Secondary outcomes are scheduled TTFT, client E2E, rejection/failure counts and
+all-offered SLO goodput, including per-input-size outcomes. Compare equivalent
+CPU source scopes: process-mode runner CPU excludes the separate sampler, whose
+CPU is not measured.
+
+One A/B pair is exploratory. If separately approved, repeat in reverse order
+before claiming a stable improvement; report run-level variation, not requests
+as independent repeats. If process mode still fails fidelity, keep that failure
+and investigate remaining CPU/quota, runner or server work rather than relaxing
+the gate. Only after reliable load generation should fixed-budget comparisons
+and budget-response system identification proceed.
 
 ## Comparison protocol after smoke passes
 

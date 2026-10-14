@@ -16,7 +16,7 @@ import pytest
 
 from analyze_trace_dynamics import analyze_run, hashes
 from analyze_trace_pilot import analyze
-from diagnostic_sampling import ObservationSampler
+from diagnostic_sampling import ObservationSampler, SamplerWorker
 from run_budget_pilot import save, set_budget
 from run_trace_pilot import poll_state, prepare_replay, replay
 from sustained_load import consume_request, WorkloadSpec
@@ -24,12 +24,15 @@ from telemetry import DIAGNOSTICS_SCHEMA, INVESTIGATION_PROTOCOL
 from test_diagnostic_sampling import metrics_text
 from test_dynamic_budget import gateway
 from test_trace_replay import sse, trace
+from test_sampler_worker import metrics_server
 from trace_workload import sha256_file
 
 
 @pytest.fixture
-def collected_bundle(gateway, monkeypatch, tmp_path, request):
-    namespace_mismatch = getattr(request, 'param', False)
+def collected_bundle(gateway, monkeypatch, tmp_path, request, metrics_server):
+    setting = getattr(request, 'param', False)
+    namespace_mismatch = setting is True
+    sampler_mode = setting if setting in ('thread', 'process') else None
     if namespace_mismatch:
         import diagnostic_sampling
         import psutil
@@ -73,10 +76,20 @@ def collected_bundle(gateway, monkeypatch, tmp_path, request):
         async with gateway.lifespan(gateway.app):
             manifest['run_id'] = gateway.telemetry.run_id
             manifest['initial_metrics'] = await gateway.snapshot_metrics()
-            sampler = ObservationSampler(tmp_path, 'http://mock-engine', os.getpid(), manifest['run_id'])
-            sampling = asyncio.create_task(asyncio.to_thread(sampler.run))
+            if sampler_mode:
+                manifest['config']['sampler_mode'] = manifest['sampler']['mode'] = sampler_mode
+                sampler = SamplerWorker(tmp_path, metrics_server.endpoint, os.getpid(), os.getpid(),
+                                        manifest['run_id'], mode=sampler_mode)
+                manifest['sampler']['worker'] = sampler.state
+                sampler.start()
+            else:
+                sampler = ObservationSampler(tmp_path, 'http://mock-engine', os.getpid(), manifest['run_id'])
+                sampling = asyncio.create_task(asyncio.to_thread(sampler.run))
             try:
-                assert await asyncio.to_thread(sampler.ready.wait, 5)
+                if sampler_mode:
+                    await sampler.wait_ready(10)
+                else:
+                    assert await asyncio.to_thread(sampler.ready.wait, 5)
                 rows = prepare_replay(data, manifest['run_id'])
                 async with real_async(transport=httpx.ASGITransport(app=gateway.app), trust_env=False) as client:
                     manifest['warmup_start'] = time.monotonic()
@@ -100,8 +113,11 @@ def collected_bundle(gateway, monkeypatch, tmp_path, request):
                         await polling
                     manifest['final_metrics'] = await gateway.snapshot_metrics()
             finally:
-                sampler.stop.set()
-                await sampling
+                if sampler_mode:
+                    await sampler.close(5)
+                else:
+                    sampler.stop.set()
+                    await sampling
         save(tmp_path / 'client.json', dict(requests=rows))
         save(tmp_path / 'warmup.json', dict(requests=[asdict(warmup)]))
         save(tmp_path / 'budget_changes.json', changes)
@@ -125,6 +141,67 @@ def test_collected_protocol_round_trips_read_only(collected_bundle):
     assert summary['diagnostics']['request_linked_prefill'] == 'unavailable'
     assert summary['cpu_analysis']['sources']['runner']['valid_interval_count'] >= 1
     assert summary['cpu_analysis']['sources']['gateway_loop']['valid_interval_count'] >= 1
+
+
+@pytest.mark.parametrize('collected_bundle', ['thread', 'process'], indirect=True)
+def test_managed_sampler_round_trips_with_original_runner_identity(collected_bundle):
+    before = hashes(collected_bundle)
+    manifest = json.loads((collected_bundle / 'manifest.json').read_text())
+    summary, _, _, _ = analyze_run(collected_bundle, .3)
+    assert summary['original_report_reproduced'] and hashes(collected_bundle) == before
+    assert summary['cpu_analysis']['sampler_mode'] == manifest['sampler']['mode']
+    rows = [json.loads(line) for line in (collected_bundle / 'engine_observations.jsonl').read_text().splitlines()]
+    for row in rows:
+        assert row['resources']['runner']['pid'] == manifest['runner_process_id']
+        assert row['sampler_process_id'] == manifest['sampler']['worker']['process_id']
+
+
+@pytest.mark.parametrize('collected_bundle', ['process'], indirect=True)
+@pytest.mark.parametrize('damage', ['mode', 'collector_pid', 'runner_pid', 'sample_pid', 'missing_pid',
+                                  'forced', 'unjoined', 'exitcode', 'start_method', 'late_stop', 'late_ready',
+                                  'early_ready', 'execution_metadata_removed'])
+def test_sampler_execution_provenance_fails_closed(collected_bundle, damage):
+    manifest_path = collected_bundle / 'manifest.json'
+    status_path = collected_bundle / 'engine_observations_status.json'
+    engine_path = collected_bundle / 'engine_observations.jsonl'
+    manifest = json.loads(manifest_path.read_text())
+    status = json.loads(status_path.read_text())
+    rows = [json.loads(line) for line in engine_path.read_text().splitlines()]
+    worker = manifest['sampler']['worker']
+    if damage == 'mode':
+        manifest['sampler']['mode'] = 'thread'
+    elif damage == 'execution_metadata_removed':
+        manifest['sampler'].pop('mode')
+        manifest['sampler'].pop('worker')
+        manifest['config'].pop('sampler_mode')
+    elif damage == 'collector_pid':
+        worker['process_id'] = manifest['runner_process_id']
+    elif damage == 'runner_pid':
+        status['runner_process_id'] = worker['process_id']
+    elif damage == 'sample_pid':
+        rows[-1]['sampler_process_id'] = manifest['runner_process_id']
+    elif damage == 'missing_pid':
+        rows[-1].pop('sampler_process_id')
+    elif damage == 'forced':
+        worker['forced_termination'] = True
+    elif damage == 'unjoined':
+        worker['stopped'] = False
+    elif damage == 'exitcode':
+        worker['exitcode'] = 1
+    elif damage == 'start_method':
+        worker['start_method'] = 'fork'
+    elif damage == 'late_stop':
+        worker['stop_requested_at'] = rows[-1]['finished_at'] + .1
+    elif damage == 'early_ready':
+        worker['ready_at'] = rows[0]['sent_at']
+    else:
+        worker['ready_at'] = manifest['warmup_end'] + .1
+    save(manifest_path, manifest)
+    save(status_path, status)
+    engine_path.write_text('\n'.join(json.dumps(row) for row in rows) + '\n')
+    report = analyze(collected_bundle, plot=False)
+    assert report['valid'] and report['load_fidelity']['valid']
+    assert not report['diagnostic_integrity']['valid']
 
 
 @pytest.mark.parametrize('collected_bundle', [True], indirect=True, ids=['incompatible-procfs'])

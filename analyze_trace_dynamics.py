@@ -157,6 +157,8 @@ def cpu_intervals(samples, start, host=False):
 def analyze_cpu(joined, records, observations, start, manifest, report):
     """Offline interval context, not CPU attribution to a delayed launch."""
     integrity = report.get('diagnostic_integrity') or {}
+    sampler = manifest.get('sampler', {})
+    sampler_mode = sampler.get('mode', 'thread') if sampler.get('enabled') is True else None
     sources = {}
     for name in ('runner', 'gateway', 'host', 'gateway_loop'):
         internal = name == 'gateway_loop'
@@ -236,7 +238,8 @@ def analyze_cpu(joined, records, observations, start, manifest, report):
         late.append(dict(ledger_index=index, request_id=row['request_id'], trace_id=row['trace_id'],
                          outcome=row['outcome'], scheduled_s=row['scheduled_s'], started_s=row['started_s'],
                          scheduling_lag_s=row['scheduling_lag_s'], cpu_interval_overlaps=overlaps))
-    return dict(schema_version=1, sources=sources, late_launches=late, selection_issue=selection_issue,
+    return dict(schema_version=1, sampler_mode=sampler_mode, sources=sources,
+                late_launches=late, selection_issue=selection_issue,
                 scheduling_lag_limit_s=threshold if finite(threshold) else None,
                 launch_timing_unavailable_count=sum(not finite(row['scheduling_lag_s']) for row in joined),
                 note='CPU rates are whole-interval averages, not instantaneous peaks or CPU spent during a late launch. '
@@ -244,7 +247,9 @@ def analyze_cpu(joined, records, observations, start, manifest, report):
                      'uses sampled_at, not emission time. Overlaps use outer read bounds and may be uncertain at edges; '
                      'never prorate CPU by overlap duration. Process cores are CPU seconds per elapsed second, not '
                      'normalized by host CPU count, and may exceed one. Host non-idle fraction excludes idle/iowait '
-                     'and double-counted fields; it is not container CPU headroom. Runner CPU includes sampler work. '
+                     'and double-counted fields; it is not container CPU headroom. Runner CPU includes sampler work '
+                     'in thread mode, but excludes the separate sampler process in process mode; a lower runner '
+                     'CPU rate across modes is not evidence of less total CPU work. '
                      'Gateway process/loop/GC CPU overlap and must not be added. Missing sampler-thread CPU, runner GC, '
                      'per-core load and CPU quota/throttling remain unknown. Timing overlap does not establish causation.')
 
@@ -687,8 +692,10 @@ def cpu_figure(output, data):
     fig, axes = plt.subplots(3, len(data), figsize=(7*len(data), 10), sharex='col', squeeze=False)
     for column, (summary, joined, _, _) in enumerate(data):
         cpu = summary['cpu_analysis']
+        runner_label = ('Runner process (includes sampler)' if cpu['sampler_mode'] == 'thread' else
+                        'Runner process (sampler separate)' if cpu['sampler_mode'] == 'process' else 'Runner process')
         for name, label, color in (
-                ('runner', 'Runner process (includes sampler)', '#286e99'),
+                ('runner', runner_label, '#286e99'),
                 ('gateway', 'Gateway process (external)', '#ba5537'),
                 ('gateway_loop', 'Gateway loop thread', '#366a56')):
             source = cpu['sources'][name]

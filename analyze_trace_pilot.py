@@ -54,6 +54,14 @@ def diagnostic_audit(output, manifest, records, clients, warmup, shutdown):
                 'Requested and observed diagnostic modes differ')
         require(external == (enabled or manifest['config']['engine_observations']),
                 'External sampler mode differs from selected options')
+        managed_sampler = any(key in manifest['sampler'] for key in ('mode', 'worker')) or 'sampler_mode' in manifest['config']
+        sampler_mode = 'thread'
+        if managed_sampler:
+            sampler_mode = manifest['sampler']['mode']
+            require(sampler_mode in ('thread', 'process') and sampler_mode == manifest['config']['sampler_mode'],
+                    'Requested and observed sampler execution modes differ')
+            require(external or (sampler_mode == 'thread' and manifest['sampler'].get('worker') is None),
+                    'Disabled sampler has an execution worker')
         require(not enabled or external, 'Gateway diagnostics require external observations')
         metric_records = [manifest['initial_metrics'], manifest['post_warmup_metrics'], manifest['final_metrics']]
         metric_records += [r for r in records if r['event'] == 'snapshot']
@@ -196,6 +204,34 @@ def diagnostic_audit(output, manifest, records, clients, warmup, shutdown):
             from diagnostic_sampling import metric_inventory, REQUIRED_METRICS
             observations = [json.loads(line) for line in paths[0].read_text().splitlines() if line.strip()]
             status = json.loads(paths[1].read_text())
+            sampler_pid = manifest['runner_process_id']
+            if managed_sampler:
+                worker = manifest['sampler']['worker']
+                sampler_pid = worker['process_id']
+                require(all(type(pid) is int and pid > 0 for pid in
+                            (sampler_pid, manifest['runner_process_id'], manifest['gateway_launch']['process_id'])) and
+                        (sampler_pid == manifest['runner_process_id'] if sampler_mode == 'thread' else
+                         sampler_pid not in (manifest['runner_process_id'], manifest['gateway_launch']['process_id'])),
+                        'Invalid sampler execution process identity')
+                require(worker['started'] is True and worker['stopped'] is True and
+                        worker['forced_termination'] is False and worker['unexpected_exit'] is False and
+                        (worker['start_method'] is None and worker['exitcode'] is None if sampler_mode == 'thread' else
+                         worker['start_method'] == 'spawn' and type(worker['exitcode']) is int and worker['exitcode'] == 0),
+                        'External sampler worker did not stop cleanly')
+                require(interval(status['started_at'], worker['ready_at']) and
+                        interval(observations[0]['finished_at'], worker['ready_at']) and
+                        worker['ready_at'] <= manifest['warmup_start'] and
+                        interval(finish, worker['stop_requested_at']) and
+                        observations[-1]['sent_at'] >= worker['stop_requested_at'],
+                        'Sampler readiness/final sample does not bracket collection')
+            sampler_identity = (managed_sampler or 'sampler_process_id' in status or
+                                any('sampler_process_id' in row for row in observations))
+            if sampler_identity:
+                require(type(status.get('sampler_process_id')) is int and
+                        type(status.get('runner_process_id')) is int and
+                        status['sampler_process_id'] == sampler_pid and
+                        status.get('runner_process_id') == manifest['runner_process_id'],
+                        'External collector process identity mismatch')
             require(status['run_id'] == manifest['run_id'] and status['status'] == 'closed' and
                     status['diagnostics_schema_version'] == DIAGNOSTICS_SCHEMA and
                     status['samples'] == len(observations) and status['sample_errors'] == status['write_errors'] == 0,
@@ -207,6 +243,9 @@ def diagnostic_audit(output, manifest, records, clients, warmup, shutdown):
             previous_counters, previous_exporter, epoch = {}, None, 0
             identities = {}
             for i, row in enumerate(observations):
+                if sampler_identity:
+                    require(type(row.get('sampler_process_id')) is int and row['sampler_process_id'] == sampler_pid,
+                            'External observation collector process mismatch')
                 require(row['run_id'] == manifest['run_id'] and row['diagnostics_schema_version'] == DIAGNOSTICS_SCHEMA and
                         row['host'] == manifest['host'] and row['source'] == observations[0]['source'],
                         'External observation identity/schema mismatch')

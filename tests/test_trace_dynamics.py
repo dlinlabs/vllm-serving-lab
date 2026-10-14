@@ -437,3 +437,33 @@ def test_cpu_invalid_selection_limit_is_explicit():
     assert result['late_launches'] is None
     assert result['selection_issue'] == 'invalid_scheduling_lag_limit'
     json.dumps(result, allow_nan=False)
+
+
+@pytest.mark.parametrize('mode,label', [
+    ('thread', 'Runner process (includes sampler)'),
+    ('process', 'Runner process (sampler separate)'),
+    ('legacy', 'Runner process (includes sampler)'),
+    ('disabled', 'Runner process: disabled'),
+])
+def test_cpu_scope_and_figure_follow_sampler_execution(tmp_path, monkeypatch, mode, label):
+    import matplotlib.pyplot as plt
+    from analyze_trace_dynamics import cpu_figure
+    manifest, report, records, observations, joined = cpu_fixture()
+    if mode == 'disabled':
+        manifest['sampler']['enabled'] = False
+    elif mode != 'legacy':
+        manifest['sampler']['mode'] = mode
+    cpu = analyze_cpu(joined, records, observations, 100., manifest, report)
+    expected_mode = None if mode == 'disabled' else 'thread' if mode == 'legacy' else mode
+    assert cpu['sampler_mode'] == expected_mode
+    closed, close = [], plt.close
+    def remember_figure(figure=None):
+        if hasattr(figure, 'axes'):
+            closed.append(figure)
+        close(figure)
+    monkeypatch.setattr(plt, 'close', remember_figure)
+    summary = dict(cpu_analysis=cpu, name='scope', duration_s=3.,
+                   report=dict(load_fidelity=dict(valid=False)))
+    cpu_figure(tmp_path, [(summary, joined, None, None)])
+    assert label in closed[-1].axes[0].get_legend_handles_labels()[1]
+    assert (tmp_path / 'cpu_scheduling.png').stat().st_size > 0
