@@ -60,8 +60,12 @@ extract the archive to access their full raw captures and reproduce analysis.
 Recorded code is `f1f7cef`; driver **580.178.04**, Torch **2.13.0+cu130**,
 Qwen3-4B-Instruct-2507, context 8,192, prefix caching disabled with launch evidence.
 
-**Next:** validate the opt-in external sampler process mode, then run a separately
-approved, fresh same-commit
+**Next:** complete the
+[native Linux CPU acceptance](experiments/runtime-telemetry.md#cpu-validation-and-handoff)
+for the opt-in external sampler process mode. A manual-only CI workflow and the
+same rental-host entry point are provided; execution is deferred until a
+suitable host is available, not claimed by adding the configuration.
+Then run a separately approved, fresh same-commit
 [thread/process comparison](experiments/trace-replay.md#sampler-isolation-ab-after-native-validation)
 without relaxing the 50 ms gate. After reliable load generation, compare fixed
 budgets and measure predeclared budget steps for system identification. Process
