@@ -8,7 +8,7 @@ import uuid
 
 import pytest
 
-from analyze_trace_dynamics import analyze_run, figures, hashes, interval_overlap, join_diagnostics, join_requests, main, request_windows
+from analyze_trace_dynamics import analyze_cpu, analyze_run, figures, hashes, interval_overlap, join_diagnostics, join_requests, main, request_windows
 
 
 RUN_ID = '12345678123456781234567812345678'
@@ -209,6 +209,8 @@ def test_incomplete_zero_success_run_retains_invalid_audit_and_plots(tmp_path, m
     figures(output, [data], .3)
     assert (output / 'latency_stages.png').stat().st_size > 1000
     assert (output / 'stall_alignment.png').stat().st_size > 1000
+    assert (output / 'cpu_scheduling.png').stat().st_size > 1000
+    assert summary['cpu_analysis']['sources']['runner']['status'] == 'legacy_unavailable'
     assert hashes(root) == before
     monkeypatch.setattr('sys.argv', ['analyze_trace_dynamics.py', str(root), '--output-dir', str(output)])
     main()
@@ -240,3 +242,198 @@ def test_frozen_reports_reproduce_without_mutating_raw(name, successes, misses):
         assert not summary['report']['load_fidelity']['valid']
         assert not summary['qualified_for_comparison']
     assert {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in root.iterdir() if p.is_file()} == before
+
+
+def cpu_fixture():
+    manifest = dict(investigation_protocol='periodic-peaks-v1', run_id=RUN_ID,
+                    gateway_diagnostics_requested=True, sampler=dict(enabled=True), host='test-host',
+                    runner_process_id=11, gateway_launch=dict(process_id=22),
+                    config=dict(max_scheduling_lag=.05))
+    report = dict(diagnostic_integrity=dict(valid=True, gateway_mode='enabled', external_mode='enabled'))
+    observations, records = [], []
+    for i in range(2):
+        at = 100. + 2*i
+        def process(pid, user, system):
+            return dict(available=True, sample_start=at+.1, sample_end=at+.3, pid=pid,
+                        process_created_unix=10., user_cpu_seconds=user, system_cpu_seconds=system)
+        observations.append(dict(run_id=RUN_ID, host='test-host', counter_epoch=i+1,
+            sent_at=at-10, received_at=at-5, finished_at=at+5,
+            resources=dict(runner=process(11, 10.+2*i, 2.+i),
+                           gateway=process(22, 4.+1.5*i, 1.+.5*i),
+                           host_cpu=dict(available=True, sample_start=at+.1, sample_end=at+.3,
+                               logical_cpus=8, cpu_seconds=dict(user=100.+4*i, nice=10.+i,
+                                   system=50.+2*i, idle=840.+8*i, iowait=10.+i,
+                                   guest=5.+2*i, guest_nice=2.+.5*i)))))
+        records.append(dict(event='diagnostic_cpu', run_id=RUN_ID, sampled_at=at+.7,
+                            monotonic=at+10, loop_thread_id=3, loop_thread_cpu_seconds=3.+.6*i))
+    joined = [dict(request_id='same-id', trace_id=str(i), outcome=outcome,
+                   scheduled_s=1., started_s=1.1, scheduling_lag_s=.1)
+              for i, outcome in enumerate(('successful_within_ttft', 'rejected', 'failed'))]
+    return manifest, report, records, observations, joined
+
+
+def test_cpu_read_times_units_guest_accounting_and_all_late_outcomes():
+    manifest, report, records, observations, joined = cpu_fixture()
+    before = deepcopy((records, observations, joined))
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    runner, = result['sources']['runner']['intervals']
+    assert runner['start_s'] == pytest.approx(.2)
+    assert runner['end_s'] == pytest.approx(2.2)
+    assert runner['elapsed_s'] == pytest.approx(2.)
+    assert runner['cpu_seconds'] == dict(user_cpu_seconds=2., system_cpu_seconds=1.)
+    assert runner['cpu_cores'] == pytest.approx(1.5)  # Not divided by eight host CPUs.
+    assert not runner['issues']  # Engine counter epochs do not reset process CPU.
+    host, = result['sources']['host']['intervals']
+    assert host['host_nonidle_fraction'] == pytest.approx(7/16)
+    assert host['cpu_cores'] is None and host['cpu_seconds']['guest'] == 2
+    loop, = result['sources']['gateway_loop']['intervals']
+    assert loop['start_s'] == pytest.approx(.7)  # Never the later emission time.
+    assert loop['cpu_cores'] == pytest.approx(.3)
+    assert [r['ledger_index'] for r in result['late_launches']] == [0, 1, 2]
+    assert [r['outcome'] for r in result['late_launches']] == [r['outcome'] for r in joined]
+    for late in result['late_launches']:
+        match, = late['cpu_interval_overlaps']['runner']
+        assert match['interval_index'] == 0 and match['possible_overlap_s'] == pytest.approx(.1)
+        assert 'cpu_seconds' not in late  # No proportional CPU attribution.
+    assert (records, observations, joined) == before
+
+
+def test_cpu_overlap_uses_outer_read_bounds_and_excludes_touching_intervals():
+    manifest, report, records, observations, joined = cpu_fixture()
+    joined[0].update(scheduled_s=.11, started_s=.19, scheduling_lag_s=.08)
+    joined[1].update(scheduled_s=2.3+1e-6, started_s=2.4, scheduling_lag_s=.1-1e-6)
+    joined[2].update(started_s=None, scheduling_lag_s=None, outcome='never_launched')
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    match, = result['late_launches'][0]['cpu_interval_overlaps']['runner']
+    assert match['possible_overlap_s'] == pytest.approx(.08)
+    assert result['late_launches'][1]['cpu_interval_overlaps']['runner'] == []
+    assert result['launch_timing_unavailable_count'] == 1
+    joined[0]['scheduling_lag_s'] = .05
+    assert len(analyze_cpu(joined, records, observations, 100., manifest, report)['late_launches']) == 1
+
+
+@pytest.mark.parametrize('field,value', [
+    ('available', False), ('user_cpu_seconds', 9.), ('user_cpu_seconds', float('nan')),
+    ('system_cpu_seconds', True), ('pid', 999), ('process_created_unix', 11.),
+    ('sample_start', None), ('sample_end', 102.), ('sample_start', 100.2),
+])
+def test_bad_cpu_pairs_remain_visible_and_unknown(field, value):
+    manifest, report, records, observations, joined = cpu_fixture()
+    observations[1]['resources']['runner'][field] = value
+    if field == 'user_cpu_seconds' and value == 9.:
+        observations[1]['resources']['runner']['system_cpu_seconds'] = 100.
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    source = result['sources']['runner']
+    interval, = source['intervals']
+    assert source['status'] == 'unavailable' and source['invalid_interval_count'] == 1
+    assert interval['issues'] and interval['cpu_cores'] is None and interval['cpu_seconds'] is None
+    json.dumps(result, allow_nan=False)
+
+
+def test_cpu_missing_sample_is_not_bridged_and_zero_process_cpu_is_measured():
+    manifest, report, records, observations, joined = cpu_fixture()
+    missing = deepcopy(observations[0])
+    missing['resources']['runner'].update(available=False, sample_start=101., sample_end=101.1,
+                                        error_reason='procfs_pid_namespace_unverified')
+    final = deepcopy(observations[1])
+    final['resources']['runner'].update(sample_start=104.1, sample_end=104.3)
+    observations = [observations[0], missing, observations[1], final]
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    source = result['sources']['runner']
+    assert source['status'] == 'partial'
+    assert [r['cpu_cores'] for r in source['intervals']] == [None, None, 0.]
+    assert source['intervals'][2]['previous_sample_index'] == 2
+    observations[1]['resources'].pop('runner')
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    assert [r['cpu_cores'] for r in result['sources']['runner']['intervals']] == [None, None, 0.]
+
+
+@pytest.mark.parametrize('damage', ['count', 'field_set', 'counter_decrease', 'zero_delta', 'unknown_field', 'host'])
+def test_host_cpu_changes_are_unknown_not_idle(damage):
+    manifest, report, records, observations, joined = cpu_fixture()
+    host = observations[1]['resources']['host_cpu']
+    if damage == 'count':
+        host['logical_cpus'] = 16
+    elif damage == 'field_set':
+        host['cpu_seconds'].pop('guest')
+    elif damage == 'counter_decrease':
+        host['cpu_seconds']['idle'] = 839.
+    elif damage == 'zero_delta':
+        host['cpu_seconds'] = deepcopy(observations[0]['resources']['host_cpu']['cpu_seconds'])
+    elif damage == 'unknown_field':
+        host['cpu_seconds']['unrecognized'] = 1.
+    else:
+        observations[1]['host'] = 'other-host'
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    interval, = result['sources']['host']['intervals']
+    assert interval['host_nonidle_fraction'] is None and interval['issues']
+
+
+def test_windows_host_interrupt_and_dpc_are_not_counted_twice():
+    manifest, report, records, observations, joined = cpu_fixture()
+    for i, row in enumerate(observations):
+        row['resources']['host_cpu']['cpu_seconds'] = dict(
+            user=10.+2*i, system=20.+3*i, idle=30.+5*i, interrupt=1.+i, dpc=1.+.5*i)
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    interval, = result['sources']['host']['intervals']
+    assert interval['host_nonidle_fraction'] == pytest.approx(.5)
+
+
+def test_idle_host_is_measured_zero_without_subtractive_roundoff():
+    manifest, report, records, observations, joined = cpu_fixture()
+    for i, row in enumerate(observations):
+        row['resources']['host_cpu']['cpu_seconds'] = dict(user=0., system=0., idle=1.11*i, iowait=.22*i)
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    interval, = result['sources']['host']['intervals']
+    assert not interval['issues'] and interval['host_nonidle_fraction'] == 0.
+
+
+@pytest.mark.parametrize('mode', ['legacy', 'disabled', 'failed', 'external_only', 'missing', 'missing_verdict'])
+def test_cpu_qualification_modes_do_not_fabricate_zero_cpu(mode):
+    manifest, report, records, observations, joined = cpu_fixture()
+    if mode == 'legacy':
+        manifest.pop('investigation_protocol')
+    elif mode == 'disabled':
+        manifest.update(gateway_diagnostics_requested=False, sampler=dict(enabled=False))
+    elif mode == 'failed':
+        report['diagnostic_integrity']['valid'] = False
+    elif mode == 'missing_verdict':
+        report['diagnostic_integrity'] = None
+    elif mode == 'external_only':
+        manifest['gateway_diagnostics_requested'] = False
+    else:
+        observations, records = [], []
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    loop = result['sources']['gateway_loop']
+    assert loop['status'] != 'available'
+    assert loop['intervals'] == ([] if mode == 'missing' else None)
+    runner = result['sources']['runner']
+    if mode == 'external_only':
+        assert runner['status'] == 'available'
+    elif mode == 'missing':
+        assert runner['intervals'] == [] and runner['reason'] == 'fewer_than_two_samples'
+    else:
+        assert runner['intervals'] is None
+        assert result['late_launches'][0]['cpu_interval_overlaps']['runner'] is None
+
+
+def test_cpu_reordered_reads_do_not_create_overlapping_valid_intervals():
+    manifest, report, records, observations, joined = cpu_fixture()
+    base = observations[0]
+    observations = []
+    for at in (100., 103., 102., 104., 105.):
+        row = deepcopy(base)
+        row['resources']['runner'].update(sample_start=at, sample_end=at+.01)
+        observations.append(row)
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    intervals = result['sources']['runner']['intervals']
+    assert [bool(row['issues']) for row in intervals] == [False, True, True, False]
+
+
+def test_cpu_invalid_selection_limit_is_explicit():
+    manifest, report, records, observations, joined = cpu_fixture()
+    manifest['config']['max_scheduling_lag'] = float('nan')
+    result = analyze_cpu(joined, records, observations, 100., manifest, report)
+    assert result['late_launches'] is None
+    assert result['selection_issue'] == 'invalid_scheduling_lag_limit'
+    json.dumps(result, allow_nan=False)

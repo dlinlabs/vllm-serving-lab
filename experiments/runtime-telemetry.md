@@ -195,6 +195,59 @@ Post-dispatch delay still includes transport, frontend, engine queue/compute and
 gateway observation. Even aligned GC spans identify candidates for a new run,
 not proof of what caused the historical R1/R2 peaks.
 
+### Offline CPU interval alignment
+
+Run `analyze_trace_dynamics.py` against a complete saved bundle, with a separate
+`--output-dir`. No new capture, process isolation or runtime probes are needed.
+The investigation's additive `cpu_analysis` section has CPU schema version 1,
+and `cpu_scheduling.png` compares saved CPU intervals with client launch delays.
+Original audit reports, fidelity limits and raw files are not changed.
+
+- `sources.runner` and `sources.gateway` difference cumulative user/system CPU.
+  `cpu_cores = delta(user + system) / elapsed_seconds`: one means one logical
+  CPU's worth of execution averaged over that interval. Values may exceed one;
+  they are not divided by host CPU count. Runner CPU includes sampler work.
+- External interval timestamps are the midpoints of each resource's actual
+  `sample_start`/`sample_end`, not HTTP send/receive or log-emission times.
+  Both original read bounds remain in `sample_bounds_s`. These are estimates of
+  the counter-read times, not a claim of instantaneous sampling. Counter-time
+  granularity can make estimates over very short intervals especially noisy.
+- `sources.gateway_loop` differences loop-thread CPU using `sampled_at`, not
+  later emission time. Gateway process, loop-thread and GC CPU overlap; do not
+  add them. The existing diagnostic process-CPU deltas remain available too.
+  Sources have different sampling windows; do not subtract their rates to infer
+  CPU used by other threads.
+- `sources.host` preserves per-mode CPU deltas and reports a non-idle counter
+  fraction: exclude `idle`/`iowait` from the numerator and avoid counting Linux
+  `guest`/`guest_nice` or Windows interrupt/DPC time twice. Steal time remains
+  part of the non-idle fraction. This is host-level context, not container CPU
+  capacity, quota, per-core load or proof of spare CPU available to the runner.
+- Adjacent samples are never reordered or joined across an unavailable sample.
+  Invalid read times, identity changes, decreasing/nonfinite counters, changed
+  host CPU count/fields and zero host counter progress retain interval issues
+  and null derived values. Zero process CPU progress is a valid measured zero.
+  Engine counter epochs do not reset independent process CPU counters.
+- Disabled, legacy and diagnostic-integrity-failing sources have null intervals,
+  not zero CPU. Enabled sources with fewer than two samples have no intervals
+  and an explicit reason. Valid intervals in partially usable sources remain
+  individually identifiable; inspect each interval's `issues`.
+
+`late_launches` preserves each qualifying ledger row, its outcome and its original
+`scheduled_s -> started_s` interval. CPU references index the source's full
+interval list, including invalid intervals with unknown values. Possible overlap
+uses the outer resource-read bounds, so overlap at a read boundary is uncertain.
+An empty reference list means no overlapping saved interval, not idle CPU.
+Never multiply a full CPU delta by the overlap fraction to invent per-request
+CPU or assume that all work occurred during the late launch. Long sampling gaps
+remain visibly long intervals; interval averages are not instantaneous peaks.
+
+These views can locate CPU activity around delayed launches. They cannot separate
+sampler-thread CPU from other runner work, identify runner GC, measure GIL wait,
+or establish CPU quota/throttling or causality. Those observations were not
+collected. A fidelity-failing run remains exploratory even when its CPU
+observations qualify. No process split, admission change or GPU experiment is
+performed by this analysis.
+
 ## CPU validation and handoff
 
 ```bash

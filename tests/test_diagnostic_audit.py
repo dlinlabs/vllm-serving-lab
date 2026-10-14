@@ -123,6 +123,8 @@ def test_collected_protocol_round_trips_read_only(collected_bundle):
     assert summary['diagnostics']['gc_coverage_complete']
     assert summary['diagnostics']['engine_observations']
     assert summary['diagnostics']['request_linked_prefill'] == 'unavailable'
+    assert summary['cpu_analysis']['sources']['runner']['valid_interval_count'] >= 1
+    assert summary['cpu_analysis']['sources']['gateway_loop']['valid_interval_count'] >= 1
 
 
 @pytest.mark.parametrize('collected_bundle', [True], indirect=True, ids=['incompatible-procfs'])
@@ -146,6 +148,9 @@ def test_namespace_mismatch_persists_and_fails_qualification(collected_bundle):
     assert report['diagnostic_integrity']['issues'] == [
         'External collector persistence/health is incomplete',
         'Required current RSS/CPU observations are unavailable']
+    summary, _, _, _ = analyze_run(collected_bundle, .3)
+    assert summary['cpu_analysis']['sources']['runner']['status'] == 'unqualified'
+    assert summary['cpu_analysis']['sources']['runner']['intervals'] is None
 
 
 @pytest.mark.parametrize('damage', ['missing_summary', 'duplicate_summary', 'unfinished_phase',

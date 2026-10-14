@@ -88,6 +88,167 @@ def interval_overlap(left, right, spans):
     return total
 
 
+def cpu_intervals(samples, start, host=False):
+    """Difference adjacent readings without bridging unavailable or invalid samples."""
+    intervals = []
+    latest_end = -math.inf
+    for index, (previous, current) in enumerate(zip(samples, samples[1:])):
+        issues = list(dict.fromkeys(previous['issues'] + current['issues']))
+        bounds = [[difference(sample.get(key), start) for key in ('start', 'end')]
+                  for sample in (previous, current)]
+        bounds = [[value if finite(value) else None for value in pair] for pair in bounds]
+        timed = all(finite(value) for pair in bounds for value in pair)
+        left = right = elapsed = None
+        if timed:
+            left, right = [a + (b-a)/2 for a, b in bounds]
+            elapsed = right-left
+            if (any(b < a for a, b in bounds) or bounds[0][1] > bounds[1][0] or
+                    not finite(elapsed) or elapsed <= 0):
+                issues.append('invalid_or_overlapping_read_times')
+            if finite(left) and left < latest_end:
+                issues.append('out_of_order_interval')
+            if finite(right):
+                latest_end = max(latest_end, right)
+        else:
+            issues.append('missing_read_times')
+        if previous['identity'] != current['identity']:
+            issues.append('identity_changed')
+        old, new = previous['counters'], current['counters']
+        if (not old or old.keys() != new.keys() or
+                not all(finite(v) and v >= 0 for values in (old, new) for v in values.values())):
+            issues.append('missing_or_invalid_cpu_counters')
+        delta = None
+        if not issues:
+            delta = {key: new[key]-old[key] for key in old}
+            if not all(finite(v) and v >= 0 for v in delta.values()):
+                issues.append('cpu_counter_decreased_or_nonfinite')
+        cores = nonidle = None
+        if not issues:
+            if host:
+                # These fields overlap user/nice (Linux) or system (Windows).
+                duplicate = {'guest', 'guest_nice', 'interrupt', 'dpc'}
+                if 'dpc' in delta:
+                    duplicate.add('irq')
+                counted = {key: value for key, value in delta.items() if key not in duplicate}
+                total = sum(counted.values())
+                if not finite(total) or total <= 0:
+                    issues.append('host_cpu_counters_did_not_advance')
+                else:
+                    nonidle = sum(value for key, value in counted.items() if key not in {'idle', 'iowait'})/total
+                    if not finite(nonidle) or not 0 <= nonidle <= 1:
+                        issues.append('invalid_host_nonidle_fraction')
+            else:
+                cores = sum(delta.values())/elapsed
+                if not finite(cores):
+                    issues.append('nonfinite_cpu_rate')
+        intervals.append(dict(previous_sample_index=index, current_sample_index=index+1,
+            sample_bounds_s=bounds, start_s=left if finite(left) else None, end_s=right if finite(right) else None,
+            elapsed_s=elapsed if finite(elapsed) and elapsed > 0 else None,
+            cpu_seconds=delta if not issues else None, cpu_cores=cores if not issues else None,
+            host_nonidle_fraction=nonidle if not issues else None, issues=issues))
+    valid = sum(not row['issues'] for row in intervals)
+    return dict(sample_count=len(samples), valid_interval_count=valid,
+                invalid_interval_count=len(intervals)-valid, intervals=intervals,
+                status='partial' if valid and valid < len(intervals) else 'available' if valid else 'unavailable',
+                reason=('fewer_than_two_samples' if len(samples) < 2 else
+                        'invalid_intervals' if valid < len(intervals) else None))
+
+
+def analyze_cpu(joined, records, observations, start, manifest, report):
+    """Offline interval context, not CPU attribution to a delayed launch."""
+    integrity = report.get('diagnostic_integrity') or {}
+    sources = {}
+    for name in ('runner', 'gateway', 'host', 'gateway_loop'):
+        internal = name == 'gateway_loop'
+        enabled = (manifest.get('gateway_diagnostics_requested') is True if internal else
+                   manifest.get('sampler', {}).get('enabled') is True)
+        if 'investigation_protocol' not in manifest or not enabled or not integrity.get('valid'):
+            status = ('legacy_unavailable' if 'investigation_protocol' not in manifest else
+                      'disabled' if not enabled else 'unqualified')
+            sources[name] = dict(status=status, reason=status, intervals=None,
+                                 sample_count=None, valid_interval_count=None, invalid_interval_count=None)
+            continue
+        samples = []
+        rows = ([row for row in records if row.get('event') == 'diagnostic_cpu'] if internal else observations)
+        for row in rows:
+            issues = []
+            if internal:
+                sampled = row.get('sampled_at')
+                identity = (row.get('run_id'), row.get('loop_thread_id'))
+                if (identity[0] != manifest.get('run_id') or type(identity[1]) is not int or identity[1] <= 0):
+                    issues.append('invalid_loop_identity')
+                samples.append(dict(start=sampled, end=sampled, identity=identity, issues=issues,
+                                    counters=dict(loop_thread_cpu_seconds=row.get('loop_thread_cpu_seconds'))))
+                continue
+            resources = row.get('resources')
+            resource = resources.get('host_cpu' if name == 'host' else name) if isinstance(resources, dict) else None
+            resource = resource if isinstance(resource, dict) else {}
+            if resource.get('available') is not True:
+                issues.append(resource.get('error_reason') or resource.get('error_type') or 'resource_unavailable')
+            if (row.get('run_id') != manifest.get('run_id') or not row.get('host') or
+                    row.get('host') != manifest.get('host')):
+                issues.append('invalid_observation_identity')
+            identity = (row.get('run_id'), row.get('host'))
+            if name == 'host':
+                count = resource.get('logical_cpus')
+                identity += (count,)
+                if type(count) is not int or count <= 0:
+                    issues.append('invalid_logical_cpu_count')
+                counters = resource.get('cpu_seconds')
+                counters = counters if isinstance(counters, dict) else {}
+                supported = {'user', 'system', 'idle', 'nice', 'iowait', 'irq', 'softirq',
+                             'steal', 'guest', 'guest_nice', 'interrupt', 'dpc'}
+                if not {'user', 'system', 'idle'} <= counters.keys() or not counters.keys() <= supported:
+                    issues.append('unsupported_host_cpu_fields')
+            else:
+                pid, created = resource.get('pid'), resource.get('process_created_unix')
+                expected = (manifest.get('runner_process_id') if name == 'runner' else
+                            manifest.get('gateway_launch', {}).get('process_id'))
+                if type(pid) is not int or pid <= 0 or pid != expected or not finite(created) or created <= 0:
+                    issues.append('invalid_process_identity')
+                identity += (pid, created)
+                counters = {key: resource.get(key) for key in ('user_cpu_seconds', 'system_cpu_seconds')}
+            samples.append(dict(start=resource.get('sample_start'), end=resource.get('sample_end'),
+                                identity=identity, counters=counters, issues=issues))
+        sources[name] = cpu_intervals(samples, start, host=name == 'host')
+    threshold = manifest['config']['max_scheduling_lag']
+    selection_issue = None if finite(threshold) and threshold > 0 else 'invalid_scheduling_lag_limit'
+    late = [] if selection_issue is None else None
+    for index, row in enumerate(joined if selection_issue is None else []):
+        if not finite(row['scheduling_lag_s']) or row['scheduling_lag_s'] <= threshold:
+            continue
+        if not finite(row['scheduled_s']) or not finite(row['started_s']):
+            continue
+        overlaps = {}
+        for name, source in sources.items():
+            if source['intervals'] is None:
+                overlaps[name] = None
+                continue
+            matches = []
+            for number, interval in enumerate(source['intervals']):
+                a, b = interval['sample_bounds_s'][0][0], interval['sample_bounds_s'][1][1]
+                if not finite(a) or not finite(b) or b <= a:
+                    continue
+                overlap = interval_overlap(row['scheduled_s'], row['started_s'], [(a, b)])
+                if overlap > 0:
+                    matches.append(dict(interval_index=number, possible_overlap_s=overlap))
+            overlaps[name] = matches
+        late.append(dict(ledger_index=index, request_id=row['request_id'], trace_id=row['trace_id'],
+                         outcome=row['outcome'], scheduled_s=row['scheduled_s'], started_s=row['started_s'],
+                         scheduling_lag_s=row['scheduling_lag_s'], cpu_interval_overlaps=overlaps))
+    return dict(schema_version=1, sources=sources, late_launches=late, selection_issue=selection_issue,
+                scheduling_lag_limit_s=threshold if finite(threshold) else None,
+                launch_timing_unavailable_count=sum(not finite(row['scheduling_lag_s']) for row in joined),
+                note='CPU rates are whole-interval averages, not instantaneous peaks or CPU spent during a late launch. '
+                     'External rates use resource-read midpoints; original read bounds are retained. Gateway loop CPU '
+                     'uses sampled_at, not emission time. Overlaps use outer read bounds and may be uncertain at edges; '
+                     'never prorate CPU by overlap duration. Process cores are CPU seconds per elapsed second, not '
+                     'normalized by host CPU count, and may exceed one. Host non-idle fraction excludes idle/iowait '
+                     'and double-counted fields; it is not container CPU headroom. Runner CPU includes sampler work. '
+                     'Gateway process/loop/GC CPU overlap and must not be added. Missing sampler-thread CPU, runner GC, '
+                     'per-core load and CPU quota/throttling remain unknown. Timing overlap does not establish causation.')
+
+
 def join_diagnostics(joined, records, observations, start, manifest, report):
     integrity = report.get('diagnostic_integrity')
     requested = manifest.get('gateway_diagnostics_requested')
@@ -433,6 +594,7 @@ def analyze_run(root, stall_threshold):
                        s['resumed_s'] > r['scheduled_s'] for s in stalls) for r in joined
                        if finite(r['scheduling_lag_s']) and r['scheduling_lag_s'] > manifest['config']['max_scheduling_lag']))
     summary['diagnostics'] = join_diagnostics(joined, records, engine, start, manifest, checked)
+    summary['cpu_analysis'] = analyze_cpu(joined, records, engine, start, manifest, checked)
     if hashes(root) != before:
         raise ValueError('Raw files changed during analysis')
     return summary, joined, records, start
@@ -516,6 +678,62 @@ def figures(output, data, stall_threshold):
     fig.suptitle(f'Trace replay timing — shaded bands: monitor delays >{1000*stall_threshold:g}ms\nMonitor delays and event gaps locate symptoms; neither identifies CPU, GC, or GPU causes', fontsize=12)
     fig.tight_layout(rect=(0, 0, 1, .95))
     fig.savefig(output/'stall_alignment.png', dpi=150)
+    plt.close(fig)
+    cpu_figure(output, data)
+
+
+def cpu_figure(output, data):
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(3, len(data), figsize=(7*len(data), 10), sharex='col', squeeze=False)
+    for column, (summary, joined, _, _) in enumerate(data):
+        cpu = summary['cpu_analysis']
+        for name, label, color in (
+                ('runner', 'Runner process (includes sampler)', '#286e99'),
+                ('gateway', 'Gateway process (external)', '#ba5537'),
+                ('gateway_loop', 'Gateway loop thread', '#366a56')):
+            source = cpu['sources'][name]
+            intervals = [row for row in source['intervals'] or [] if not row['issues']]
+            if intervals:
+                axes[0, column].hlines([r['cpu_cores'] for r in intervals],
+                    [r['start_s'] for r in intervals], [r['end_s'] for r in intervals],
+                    color=color, linewidth=1.5, label=label)
+            else:
+                axes[0, column].plot([], [], color=color, label=f'{label}: {source["status"]}')
+        source = cpu['sources']['host']
+        intervals = [row for row in source['intervals'] or [] if not row['issues']]
+        if intervals:
+            axes[1, column].hlines([100*r['host_nonidle_fraction'] for r in intervals],
+                [r['start_s'] for r in intervals], [r['end_s'] for r in intervals],
+                color='#8662a2', label='Host counter fraction (not container capacity)')
+        else:
+            axes[1, column].text(.5, .5, f'Host CPU: {source["status"]}',
+                                transform=axes[1, column].transAxes, ha='center')
+        timed = [row for row in joined if finite(row['scheduling_lag_s']) and finite(row['scheduled_s'])]
+        axes[2, column].scatter([r['scheduled_s'] for r in timed],
+            [1000*r['scheduling_lag_s'] for r in timed], s=8, color='#286e99', label='Client scheduling lag')
+        if cpu['selection_issue'] is None:
+            axes[2, column].axhline(1000*cpu['scheduling_lag_limit_s'], color='black',
+                                   linestyle='--', label='Original fidelity limit')
+        for row in cpu['late_launches'] or []:
+            for ax in axes[:, column]:
+                ax.axvspan(row['scheduled_s'], row['started_s'], color='#ba5537', alpha=.15)
+        axes[0, column].set_title(summary['name']+'\nLoad fidelity '+
+                                 ('PASS' if summary['report']['load_fidelity']['valid'] else 'FAILED'))
+        axes[0, column].set_ylabel('Average CPU cores')
+        axes[1, column].set_ylabel('Host non-idle (%)')
+        axes[2, column].set_ylabel('Launch delay (ms)')
+        axes[2, column].set_xlabel('Seconds since measurement start')
+        for ax in axes[:, column]:
+            ax.set_xlim(0, summary['duration_s'])
+            ax.set_ylim(bottom=0)
+            ax.grid(alpha=.15)
+            if ax.get_legend_handles_labels()[0]:
+                ax.legend(loc='upper right', fontsize=8)
+    fig.suptitle('CPU interval averages and late launches\n'
+                 'Shading = late-launch intervals; CPU averages are not attributed to these intervals',
+                 fontsize=12)
+    fig.tight_layout(rect=(0, 0, 1, .94))
+    fig.savefig(output/'cpu_scheduling.png', dpi=150)
     plt.close(fig)
 
 

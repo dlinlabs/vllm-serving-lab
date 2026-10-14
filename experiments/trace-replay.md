@@ -218,6 +218,16 @@ events are not evidence of zero work. Invalid audits, fidelity failures, missing
 artifacts, malformed log lines, and report mismatches remain visible; their
 descriptive ledgers do not qualify a performance comparison.
 
+The additive `cpu_analysis` section (CPU schema 1) derives qualified runner,
+gateway, gateway-loop-thread and host CPU intervals from already saved counters.
+It references whole CPU intervals overlapping every late launch, including
+rejection and failure, and retains the original scheduling-lag threshold.
+`cpu_scheduling.png` aligns interval-average CPU with launch delays; it does not
+attribute a one-second CPU delta to a shorter delayed request. Missing or
+unqualified observations stay unknown. See
+[CPU interval interpretation](runtime-telemetry.md#offline-cpu-interval-alignment)
+for units, read boundaries, counter discontinuities and evidence limits.
+
 Raw files are hashed before and after analysis; audit copies and new outputs are
 outside the raw directories. Preserve raw bytes when checking out on Windows:
 Git newline conversion changes trace hashes. The frozen-fixture tests accept
