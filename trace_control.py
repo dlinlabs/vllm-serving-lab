@@ -38,9 +38,14 @@ def make_plan(config, trace, trace_hash, schedule):
         raise ValueError('Scheduled control needs a source filename')
     if not scheduled and len(schedule) != 1:
         raise ValueError('Fixed control must have exactly one initial budget')
-    return dict(schema_version=1, trace_sha256=trace_hash, duration_seconds=trace['duration_seconds'],
+    result = dict(schema_version=1, trace_sha256=trace_hash, duration_seconds=trace['duration_seconds'],
                 budget_mode='scheduled' if scheduled else 'fixed', budget_schedule=schedule,
                 **{name: config[name] for name in LIMIT_FIELDS})
+    from runner_gc_control import gc_spec
+    spec = gc_spec(config, trace['duration_seconds'])
+    if spec is not None:
+        result['runner_gc_control'] = spec
+    return result
 
 
 def has_control_plan(root, manifest):

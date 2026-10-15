@@ -185,6 +185,7 @@ async def run(args, trace, output, manifest):
     stop, poll_task = asyncio.Event(), None
     sampler = None
     runner_diagnostics = None
+    gc_control = None
     async with httpx.AsyncClient(timeout=10, trust_env=False) as control:
         try:
             await control.get('http://127.0.0.1:8080/metrics')
@@ -266,18 +267,29 @@ async def run(args, trace, output, manifest):
                     else:
                         base_version = initial_control_version(manifest, plan)
                         await apply_budget_step(control, key, plan, 0, None, base_version, changes)
+                    from runner_gc_control import gc_spec, RunnerGCControl
+                    spec = gc_spec(vars(args), trace['duration_seconds'])
+                    if spec is not None:
+                        manifest['runner_gc_control'] = spec
+                        gc_control = RunnerGCControl(output, manifest['run_id'], spec)
+                        await gc_control.prepare()
                     start = time.monotonic() + .2
                     manifest['measurement_start'] = start
                     manifest['measurement_end'] = start + trace['duration_seconds']
                     changes[0]['target'] = start
                     poll_task = asyncio.create_task(poll_state(control, stop, observations))
-                    if plan is not None and len(plan['budget_schedule']) > 1:
-                        async with asyncio.TaskGroup() as tasks:
-                            tasks.create_task(scheduled_budgets(control, key, plan, start, base_version, changes))
-                            tasks.create_task(replay(traffic, trace, start, manifest['run_id'],
-                                                     args.drain_timeout, args.max_pending, rows))
+                    async def traffic_and_controls():
+                        if plan is not None and len(plan['budget_schedule']) > 1:
+                            async with asyncio.TaskGroup() as tasks:
+                                tasks.create_task(scheduled_budgets(control, key, plan, start, base_version, changes))
+                                tasks.create_task(replay(traffic, trace, start, manifest['run_id'],
+                                                         args.drain_timeout, args.max_pending, rows))
+                        else:
+                            await replay(traffic, trace, start, manifest['run_id'], args.drain_timeout, args.max_pending, rows)
+                    if gc_control is not None:
+                        await gc_control.supervise(traffic_and_controls())
                     else:
-                        await replay(traffic, trace, start, manifest['run_id'], args.drain_timeout, args.max_pending, rows)
+                        await traffic_and_controls()
                 deadline = time.monotonic() + args.drain_timeout
                 while True:
                     response = await control.get('http://127.0.0.1:8080/metrics')
@@ -291,6 +303,8 @@ async def run(args, trace, output, manifest):
                 manifest['final_metrics'] = metrics
             finally:
                 async def cleanup():
+                    if gc_control is not None:
+                        gc_control.restore()
                     stop.set()
                     if sampler is not None:
                         sampler.request_stop()
@@ -310,8 +324,12 @@ async def run(args, trace, output, manifest):
                                 complete_schedules(rows, trace, manifest['measurement_start'])
                         finally:
                             try:
-                                if runner_diagnostics is not None:
-                                    await runner_diagnostics.close()
+                                try:
+                                    if gc_control is not None:
+                                        gc_control.close()
+                                finally:
+                                    if runner_diagnostics is not None:
+                                        await runner_diagnostics.close()
                             finally:
                                 await finalize(process, output, manifest, rows, warmup, changes)
                     # Some Uvicorn versions re-raise SIGTERM after graceful shutdown.
@@ -357,6 +375,10 @@ def main():
                         help='External sampling without enabling gateway diagnostics (for a later matched control)')
     parser.add_argument('--runner-diagnostics', action='store_true',
                         help='Opt in to runner GC spans, loop delays and CPU timing; does not change GC policy')
+    parser.add_argument('--runner-gc-policy', choices=['automatic', 'defer'], default='automatic',
+                        help='Opt in to bounded GC deferral in the request runner during replay/drain')
+    parser.add_argument('--runner-max-rss-mib', type=float,
+                        help='Required sampled RSS ceiling for deferred GC; no implicit memory allowance')
     parser.add_argument('--sampler-mode', choices=['thread', 'process'], default='thread',
                         help='External sampler execution; process uses spawn and retains the original runner PID')
     args = parser.parse_args()
@@ -371,6 +393,11 @@ def main():
     if not 1 <= args.max_pending <= 90000 or not 1 <= args.warmup_requests <= 1000:
         parser.error('Invalid max-pending or warmup count')
     trace = load_trace(args.trace)
+    from runner_gc_control import gc_spec
+    try:
+        gc_spec(vars(args), trace['duration_seconds'])
+    except ValueError as exc:
+        parser.error(str(exc))
     if args.budget_schedule is not None:
         schedule = validate_schedule(json.loads(Path(args.budget_schedule).read_text()), trace['duration_seconds'])
         args.budget = schedule[0]['budget']
@@ -398,7 +425,7 @@ def main():
     manifest['code_sha256'] = {name: sha256_file(ROOT / name) for name in
                               ('run_trace_pilot.py', 'trace_workload.py', 'trace_control.py', 'gateway.py',
                                'telemetry.py', 'sustained_load.py', 'run_budget_pilot.py',
-                               'diagnostic_sampling.py', 'runner_diagnostics.py', 'analyze_budget_pilot.py',
+                               'diagnostic_sampling.py', 'runner_diagnostics.py', 'runner_gc_control.py', 'analyze_budget_pilot.py',
                                'analyze_trace_pilot.py', 'analyze_trace_dynamics.py', 'requirements-v1.txt')}
     manifest['git_dirty'] = bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT, text=True))
     for package in ('vllm', 'torch', 'transformers', 'fastapi', 'httpx', 'httpcore',
@@ -436,6 +463,7 @@ def main():
     raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] and
                      report.get('control_fidelity', {'valid': True})['valid'] and
                      report.get('runner_diagnostic_integrity', {'valid': True})['valid'] and
+                     report.get('runner_gc_integrity', {'valid': True})['valid'] and
                      report.get('diagnostic_integrity', {'valid': True})['valid'] else 1)
 
 

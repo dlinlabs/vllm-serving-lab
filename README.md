@@ -25,6 +25,12 @@ launches; it does not change GC policy, admission, budget or the 50 ms load gate
 See [the rental-host steps and capture protocol](experiments/runner-diagnostics.md).
 This instrumentation is not a latency fix or an MPC performance result.
 
+For the observed runner gen-2 GC stalls, an optional
+[`--runner-gc-policy defer` mode](experiments/runner-gc-control.md) performs a
+pre-measurement collection and bounded deferral during replay/drain, with an
+explicit RSS allowance, watchdog, restoration and separate audit gate.
+Automatic GC remains the default; GPU-host improvement is not yet established.
+
 ## Latest results: RTX 4090 diagnostics (2026-10-12)
 
 **[Read the diagnostic findings and reproduction steps](results/diagnostics-20261012/report.md).**
