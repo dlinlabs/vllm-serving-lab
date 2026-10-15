@@ -345,6 +345,24 @@ async def completion(request: Request):
             figures(figure_output, [malformed], .3)
             assert (figure_output / 'stall_alignment.png').stat().st_size > 1000
             gateway_path.write_text(raw_gateway)
+            # A malformed extra event must not erase an otherwise complete audit during plotting.
+            records = [json.loads(line) for line in raw_gateway.splitlines()]
+            last_update = next(r for r in reversed(records) if r['event'] == 'budget_updated')
+            extra = dict(last_update, previous_budget=last_update['budget'], budget='unknown',
+                         budget_version=last_update['budget_version'] + 1,
+                         applied_at=records[-1]['monotonic'], monotonic=records[-1]['monotonic'])
+            gateway_path.write_text('\n'.join(json.dumps(r) for r in [*records, extra]))
+            damaged = analyze(scheduled_output, plot=False)
+            assert not damaged['valid'] and not damaged['control_fidelity']['valid']
+            assert 'Missing or extra scheduled budget commands/applications' in damaged['issues']
+            assert damaged['control_fidelity']['planned_commands'] == 3
+            assert damaged['control_fidelity']['recorded_commands'] == 3
+            assert damaged['control_fidelity']['gateway_applications'] == 4
+            assert damaged['load_fidelity']['valid'] and damaged['diagnostic_integrity']['valid']
+            assert analyze(scheduled_output) == damaged
+            assert json.loads((scheduled_output / 'report.json').read_text()) == damaged
+            assert (scheduled_output / 'timeseries.png').stat().st_size > 1000
+            gateway_path.write_text(raw_gateway)
         manifest, plan = json.loads(raw_manifest), json.loads(raw_plan)
         # Counterfactual declaration for auditing: coherent data, unqualified actuation.
         manifest['config']['max_budget_lag'] = plan['max_budget_lag'] = 1e-12

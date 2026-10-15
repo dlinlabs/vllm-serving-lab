@@ -627,12 +627,17 @@ def render(output, manifest, trace, clients, records, events, report):
     x = [r['monotonic'] - start for r in snapshots]
     axes[1].plot(x, [r['current_admitted_cost'] for r in snapshots], marker='.', label='Reserved cost')
     if 'control_fidelity' in report:
-        times, budgets = budget_curve(records, start, max([start + duration] + [r['monotonic'] for r in snapshots]))
+        unavailable = 'no pre-measurement application'
+        try:
+            times, budgets = budget_curve(records, start, max([start + duration] + [r['monotonic'] for r in snapshots]))
+        except ValueError as exc:
+            times, budgets = [], []
+            unavailable = str(exc)
         if times:
             axes[1].step(times, budgets, where='post', linestyle='--', label='Applied budget')
         else:
-            axes[1].text(.02, .9, 'Applied budget unavailable: no pre-measurement application',
-                         transform=axes[1].transAxes)
+            axes[1].text(.02, .9, 'Applied budget unavailable: ' + unavailable,
+                         transform=axes[1].transAxes, fontsize=8)
     else:
         axes[1].axhline(manifest['config']['budget'], linestyle='--', label='Fixed budget')
     axes[1].set_ylabel('Cost')

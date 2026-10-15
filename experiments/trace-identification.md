@@ -116,7 +116,8 @@ gates. A gate failure does not establish model or policy performance.
 
 Both budget plots use **actual application times**, not an assumed constant cap.
 An unavailable or malformed control curve is not replaced with an invented
-fixed cap; offline plots label it unavailable.
+fixed cap; both primary and offline plots label it unavailable without replacing
+the audit report.
 With an E2E deadline, performance and input-size reports use joint goodput and
 also expose marginal TTFT/E2E successes and scheduled E2E P99. The offline ledger
 adds `e2e_slo_met`, `joint_slo_met` and E2E slack at admission. Recorded failures
