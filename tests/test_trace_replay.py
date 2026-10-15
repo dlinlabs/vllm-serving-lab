@@ -267,13 +267,36 @@ async def completion(request: Request):
                          '--output-dir', str(output), '--ttft-slo', '1',
                          '--warmup-requests', '1', '--drain-timeout', '2', '--max-scheduling-lag', '1',
                          '--sampler-mode', mode] + control_args +
-                         (['--gateway-diagnostics'] if diagnostics else ['--engine-observations'] if external else []),
+                         (['--gateway-diagnostics'] if diagnostics else ['--engine-observations'] if external else []) +
+                         (['--runner-diagnostics'] if name != 'success' else []),
                          cwd=root, env=env, capture_output=True, text=True, timeout=30)
             assert result.returncode == 0, result.stdout + result.stderr
             report = json.loads((output / 'report.json').read_text())
             assert report['valid'] and report['performance']['success' if scheduled else name] == 3
             assert report['performance']['attempted'] == 3
             assert report['control_fidelity']['valid'], report['control_fidelity']
+            if name != 'success':
+                assert report['runner_diagnostic_integrity']['valid'], report['runner_diagnostic_integrity']
+                assert (output / 'runner_observations.jsonl').stat().st_size > 0
+            if scheduled:
+                runner_status = output / 'runner_observations_status.json'
+                original_runner_status = runner_status.read_text()
+                damaged_runner_status = json.loads(original_runner_status)
+                damaged_runner_status['write_errors'] = 1
+                runner_status.write_text(json.dumps(damaged_runner_status))
+                damaged_runner = analyze(output, plot=False)
+                assert damaged_runner['valid'] and damaged_runner['load_fidelity']['valid']
+                assert not damaged_runner['runner_diagnostic_integrity']['valid']
+                summary, _, _, _ = analyze_run(output, .3)
+                assert not summary['qualified_for_comparison']
+                assert summary['runner_diagnostics']['late_launches'] is None
+                failed_audit = subprocess.run([sys.executable, 'analyze_trace_pilot.py', str(output)],
+                    cwd=root, env=env, capture_output=True, text=True, timeout=30)
+                assert failed_audit.returncode == 1
+                runner_status.write_text(original_runner_status)
+                assert analyze(output, plot=False)['runner_diagnostic_integrity']['valid']
+            elif name == 'success':
+                assert 'runner_diagnostic_integrity' not in report
             assert report['control_fidelity']['planned_commands'] == (3 if scheduled else 1)
             assert report['diagnostic_integrity']['valid'], report['diagnostic_integrity']
             assert report['diagnostic_integrity']['gateway_mode'] == ('enabled' if diagnostics else 'disabled')

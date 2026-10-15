@@ -598,6 +598,10 @@ def _analyze(output, plot):
                           p99_event_loop_lag=percentile(loop, .99), max_event_loop_lag=max(loop, default=None))
     if 'investigation_protocol' in manifest:
         report['diagnostic_integrity'] = diagnostic_audit(output, manifest, records, clients, warmup, shutdown)
+    from runner_diagnostics import audit_runner
+    runner_verdict = audit_runner(output, manifest, clients, warmup)
+    if runner_verdict is not None:
+        report['runner_diagnostic_integrity'] = runner_verdict
     save(output / 'report.json', report)
     if plot:
         render(output, manifest, trace, clients, records, events, report)
@@ -688,6 +692,13 @@ def analyze(output, plot=True):
         except (OSError, ValueError) as metadata_error:
             report['issues'].append(f'Cannot determine diagnostic protocol: {metadata_error}')
         else:
+            from runner_diagnostics import audit_runner
+            if isinstance(manifest, dict):
+                runner_verdict = audit_runner(output, manifest)
+                if runner_verdict is not None:
+                    runner_verdict.update(valid=False, gc_coverage_complete=False)
+                    runner_verdict['issues'].append('Core replay artifacts are incomplete')
+                    report['runner_diagnostic_integrity'] = runner_verdict
             if isinstance(manifest, dict) and has_control_plan(output, manifest):
                 report['control_fidelity'] = dict(valid=False, issues=['Cannot audit declared budget control'])
             if isinstance(manifest, dict) and 'investigation_protocol' in manifest:
@@ -706,4 +717,5 @@ if __name__ == '__main__':
     print(json.dumps(report, indent=2))
     raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] and
                      report.get('control_fidelity', {'valid': True})['valid'] and
+                     report.get('runner_diagnostic_integrity', {'valid': True})['valid'] and
                      report.get('diagnostic_integrity', {'valid': True})['valid'] else 1)

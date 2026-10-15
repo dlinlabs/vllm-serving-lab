@@ -184,6 +184,7 @@ async def run(args, trace, output, manifest):
     rows, warmup, changes, observations = [], [], [], []
     stop, poll_task = asyncio.Event(), None
     sampler = None
+    runner_diagnostics = None
     async with httpx.AsyncClient(timeout=10, trust_env=False) as control:
         try:
             await control.get('http://127.0.0.1:8080/metrics')
@@ -224,6 +225,12 @@ async def run(args, trace, output, manifest):
                         ('ADMISSION_MODE', 'MAX_ADMITTED_COST', 'MODEL_NAME', 'GATEWAY_DIAGNOSTICS',
                          'BENCHMARK_REQUEST_IDS', 'LOOP_LAG_TELEMETRY')})
                 rows.extend(prepare_replay(trace, manifest['run_id']))
+                if getattr(args, 'runner_diagnostics', False):
+                    from runner_diagnostics import RunnerDiagnostics, SCHEMA, LOOP_INTERVAL
+                    manifest['runner_diagnostics'] = dict(schema_version=SCHEMA, enabled=True,
+                        process_id=os.getpid(), interval_seconds=LOOP_INTERVAL)
+                    runner_diagnostics = RunnerDiagnostics(output, manifest['run_id'])
+                    await runner_diagnostics.start()
                 if sampler_enabled:
                     from diagnostic_sampling import SamplerWorker
                     sampler = SamplerWorker(output, args.vllm_url, process.pid, manifest['runner_process_id'],
@@ -302,7 +309,11 @@ async def run(args, trace, output, manifest):
                             if 'measurement_start' in manifest:
                                 complete_schedules(rows, trace, manifest['measurement_start'])
                         finally:
-                            await finalize(process, output, manifest, rows, warmup, changes)
+                            try:
+                                if runner_diagnostics is not None:
+                                    await runner_diagnostics.close()
+                            finally:
+                                await finalize(process, output, manifest, rows, warmup, changes)
                     # Some Uvicorn versions re-raise SIGTERM after graceful shutdown.
                     if process is not None and process.returncode not in (0, -signal.SIGTERM):
                         raise RuntimeError(f'Gateway exited with status {process.returncode}')
@@ -344,6 +355,8 @@ def main():
                         help='Opt in to gateway phases/GC/CPU and external engine/resource observations')
     parser.add_argument('--engine-observations', action='store_true',
                         help='External sampling without enabling gateway diagnostics (for a later matched control)')
+    parser.add_argument('--runner-diagnostics', action='store_true',
+                        help='Opt in to runner GC spans, loop delays and CPU timing; does not change GC policy')
     parser.add_argument('--sampler-mode', choices=['thread', 'process'], default='thread',
                         help='External sampler execution; process uses spawn and retains the original runner PID')
     args = parser.parse_args()
@@ -385,7 +398,7 @@ def main():
     manifest['code_sha256'] = {name: sha256_file(ROOT / name) for name in
                               ('run_trace_pilot.py', 'trace_workload.py', 'trace_control.py', 'gateway.py',
                                'telemetry.py', 'sustained_load.py', 'run_budget_pilot.py',
-                               'diagnostic_sampling.py', 'analyze_budget_pilot.py',
+                               'diagnostic_sampling.py', 'runner_diagnostics.py', 'analyze_budget_pilot.py',
                                'analyze_trace_pilot.py', 'analyze_trace_dynamics.py', 'requirements-v1.txt')}
     manifest['git_dirty'] = bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT, text=True))
     for package in ('vllm', 'torch', 'transformers', 'fastapi', 'httpx', 'httpcore',
@@ -422,6 +435,7 @@ def main():
     print(json.dumps(report, indent=2))
     raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] and
                      report.get('control_fidelity', {'valid': True})['valid'] and
+                     report.get('runner_diagnostic_integrity', {'valid': True})['valid'] and
                      report.get('diagnostic_integrity', {'valid': True})['valid'] else 1)
 
 
