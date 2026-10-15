@@ -29,9 +29,52 @@ For the observed runner gen-2 GC stalls, an optional
 [`--runner-gc-policy defer` mode](experiments/runner-gc-control.md) performs a
 pre-measurement collection and bounded deferral during replay/drain, with an
 explicit RSS allowance, watchdog, restoration and separate audit gate.
-Automatic GC remains the default; GPU-host improvement is not yet established.
+Automatic GC remains the default. The new capture below passes the load gate with
+deferral; a matched causal improvement/observer-overhead claim is not established.
 
-## Latest results: RTX 4090 diagnostics (2026-10-12)
+## Latest results: qualified budget identification (2026-10-15)
+
+**[Findings, raw data and reproduction](results/gc-identification-20261015/report.md).**
+Three five-minute RTX 4090 runs at revision `33a0608` pass all six enabled gates:
+data integrity, client load fidelity, control fidelity, gateway/external diagnostics,
+runner diagnostics and bounded runner-GC evidence. The 50 ms limits are unchanged.
+No MPC controller is evaluated.
+
+| Strategy | Offered / success / rejected / failed | SLO successes | SLO goodput | Max scheduling lag |
+|---|---|---:|---:|---:|
+| [Fixed 96](results/gc-defer-fixed-96-r1/report.json) | 7643 / 2095 / 5548 / 0 | 466 | 1.553/s | 28.44 ms |
+| [Fixed 64](results/gc-defer-fixed-64-r1/report.json) | 7643 / 1814 / 5829 / 0 | 638 | **2.127/s** | 19.70 ms |
+| [96→64→96](results/gc-defer-step-96-64-96-r1/report.json) | 7643 / 1972 / 5671 / 0 | 433 | 1.443/s | 19.70 ms |
+
+- Fixed 64 has 36.9% more observed SLO successes than fixed 96, with more rejection;
+  one run per arm does not establish an optimal cap or a causal improvement rate.
+- **Variation precedes switching:** during the first 100 seconds both the fixed-96
+  and step runs use cap=96, but have 161 versus 95 SLO successes. Full-run totals
+  alone cannot diagnose the effect of switching.
+- The down-step applies when reserved cost is already 62.24, below 64, so this does
+  not identify over-cap drain time. After the up-step, 27 admissions / 44,698 input
+  tokens enter in two seconds; all complete but miss the 0.5 s TTFT deadline.
+- Four original reports, including [smoke](results/gc-defer-smoke-96-r1/report.json),
+  reproduce exactly in independent offline audits. All recorded source hashes match;
+  `git_dirty=true` and the lack of backend launch/cache-flag evidence are retained.
+  This is not full exact-revision native CPU acceptance or MPC benefit evidence.
+
+![Matched trace windows, SLO goodput and first-token backlog](results/gc-identification-20261015/matched-windows.png)
+
+![Actual budget applications and local dynamic response](results/gc-identification-20261015/budget-switches.png)
+
+The [complete byte-identical uploaded archive](results/gc-identification-20261015/raw-bundle/)
+contains **78 original files**. An extraction helper verifies archive/part/file hashes;
+small run directories expose browsing subsets, not complete audit inputs.
+[Computed facts](results/gc-identification-20261015/facts.json),
+[audit verification](results/gc-identification-20261015/verification.json), and
+[the Chinese report](results/gc-identification-20261015/gc-defer-ident-analysis-20261015.html)
+are included. Next: offline causal features and simple forecast baselines, followed
+by a small predeclared repeat/counterbalanced experiment before model/MPC claims.
+
+---
+
+## Previous capture: RTX 4090 diagnostics (2026-10-12)
 
 **[Read the diagnostic findings and reproduction steps](results/diagnostics-20261012/report.md).**
 This round adds measured GC/CPU and engine observations to the earlier trace
@@ -75,7 +118,7 @@ extract the archive to access their full raw captures and reproduce analysis.
 Recorded code is `f1f7cef`; driver **580.178.04**, Torch **2.13.0+cu130**,
 Qwen3-4B-Instruct-2507, context 8,192, prefix caching disabled with launch evidence.
 
-**Next:** complete the
+**Historical handoff at publication:** complete the
 [native Linux CPU acceptance](experiments/runtime-telemetry.md#cpu-validation-and-handoff)
 for the opt-in external sampler process mode and identification tooling at the
 exact revision. A manual-only CI workflow and the same rental-host entry point

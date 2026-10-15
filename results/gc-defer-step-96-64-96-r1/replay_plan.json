@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+  "duration_seconds": 300,
+  "budget_mode": "scheduled",
+  "budget_schedule": [
+    {
+      "at_seconds": 0.0,
+      "budget": 96.0
+    },
+    {
+      "at_seconds": 100.0,
+      "budget": 64.0
+    },
+    {
+      "at_seconds": 200.0,
+      "budget": 96.0
+    }
+  ],
+  "ttft_slo": 0.5,
+  "e2e_slo": null,
+  "max_scheduling_lag": 0.05,
+  "max_budget_lag": 0.05,
+  "runner_gc_control": {
+    "schema_version": 1,
+    "policy": "defer",
+    "max_rss_bytes": 1610612736,
+    "max_disabled_seconds": 421.0,
+    "rss_interval_seconds": 0.1,
+    "max_rss_poll_gap_seconds": 0.5
+  }
+}
