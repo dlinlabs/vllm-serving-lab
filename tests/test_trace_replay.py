@@ -193,8 +193,9 @@ def test_full_trace_runner_and_adversarial_analysis(tmp_path, diagnostics, exter
     import subprocess
     import sys
     from analyze_trace_pilot import analyze
-    from analyze_trace_dynamics import analyze_run, hashes
+    from analyze_trace_dynamics import analyze_run, figures, hashes
     from test_diagnostic_sampling import metrics_text
+    from trace_control import PLAN_FILE
     from trace_workload import sha256_file
     root = Path(__file__).resolve().parents[1]
     for port in (8000, 8080):
@@ -246,24 +247,34 @@ async def completion(request: Request):
                 if time.monotonic() > deadline:
                     raise RuntimeError('Mock startup timed out')
                 time.sleep(.05)
-        for name, budget, unavailable in [('success', 96, False), ('rejected', .75, False), ('failed', 96, True)]:
-            data = trace((0, .1, .2), .3)
+        for name, budget, unavailable in [('success', 96, False), ('rejected', .75, False),
+                                          ('failed', 96, True), ('scheduled', 96, False)]:
+            scheduled = name == 'scheduled'
+            data = trace((0, 1.5, 2.5), 3.) if scheduled else trace((0, .1, .2), .3)
             if unavailable:
                 for row in data['requests']:
                     row['prompt'] = 'unavailable b c d'
             source = tmp_path / f'{name}-trace.json'
             source.write_text(json.dumps(data))
             output = tmp_path / name
+            control_args = ['--budget', str(budget)]
+            if scheduled:
+                schedule = tmp_path / 'budget-schedule.json'
+                schedule.write_text(json.dumps([dict(at_seconds=0, budget=96), dict(at_seconds=1, budget=64),
+                                                dict(at_seconds=2, budget=96)]))
+                control_args = ['--budget-schedule', str(schedule), '--max-budget-lag', '1', '--e2e-slo', '2']
             result = subprocess.run([sys.executable, 'run_trace_pilot.py', '--trace', str(source),
-                         '--output-dir', str(output), '--budget', str(budget), '--ttft-slo', '1',
+                         '--output-dir', str(output), '--ttft-slo', '1',
                          '--warmup-requests', '1', '--drain-timeout', '2', '--max-scheduling-lag', '1',
-                         '--sampler-mode', mode] +
+                         '--sampler-mode', mode] + control_args +
                          (['--gateway-diagnostics'] if diagnostics else ['--engine-observations'] if external else []),
                          cwd=root, env=env, capture_output=True, text=True, timeout=30)
             assert result.returncode == 0, result.stdout + result.stderr
             report = json.loads((output / 'report.json').read_text())
-            assert report['valid'] and report['performance'][name] == 3
+            assert report['valid'] and report['performance']['success' if scheduled else name] == 3
             assert report['performance']['attempted'] == 3
+            assert report['control_fidelity']['valid'], report['control_fidelity']
+            assert report['control_fidelity']['planned_commands'] == (3 if scheduled else 1)
             assert report['diagnostic_integrity']['valid'], report['diagnostic_integrity']
             assert report['diagnostic_integrity']['gateway_mode'] == ('enabled' if diagnostics else 'disabled')
             assert report['diagnostic_integrity']['external_mode'] == ('enabled' if external else 'disabled')
@@ -275,12 +286,26 @@ async def completion(request: Request):
                 assert (worker['process_id'] == manifest['runner_process_id']) is (mode == 'thread')
             assert (output / 'timeseries.png').stat().st_size > 1000
             before = hashes(output)
-            summary, joined, _, _ = analyze_run(output, .3)
+            analyzed = analyze_run(output, .3)
+            summary, joined, _, _ = analyzed
             assert summary['original_report_reproduced'] and hashes(output) == before
+            assert PLAN_FILE in before and not summary['missing_raw_files']
             assert len(joined) == summary['accounting']['ledger_rows'] == 3
             assert all((r['diagnostics']['phases'] is not None) == diagnostics for r in joined)
             if diagnostics:
                 assert summary['diagnostics']['gc_coverage_complete']
+            if scheduled:
+                assert summary['qualified_for_comparison']
+                assert all(r['joint_slo_met'] for r in joined)
+                assert report['performance']['slo_successes'] == 3
+                commands = json.loads((output / 'budget_changes.json').read_text())
+                assert [r['budget'] for r in commands] == [96., 64., 96.]
+                assert [r['budget_version'] for r in commands] == [1, 2, 3]
+                analysis_output = tmp_path / 'scheduled-analysis'
+                analysis_output.mkdir()
+                figures(analysis_output, [analyzed], .3)
+                assert (analysis_output / 'stall_alignment.png').stat().st_size > 1000
+                assert hashes(output) == before
             if external:
                 assert summary['diagnostics']['engine_observations']
                 assert summary['cpu_analysis']['sampler_mode'] == mode
@@ -291,6 +316,70 @@ async def completion(request: Request):
                 assert damaged['valid'] and not damaged['diagnostic_integrity']['valid']
                 engine_path.write_text(raw_engine)
                 analyze(output, plot=False)
+        scheduled_output = tmp_path / 'scheduled'
+        plan_path = scheduled_output / PLAN_FILE
+        raw_plan = plan_path.read_text()
+        plan_path.unlink()
+        damaged = analyze(scheduled_output, plot=False)
+        assert not damaged['valid'] and not damaged['control_fidelity']['valid']
+        plan_path.write_text(raw_plan)
+        manifest_path = scheduled_output / 'manifest.json'
+        raw_manifest = manifest_path.read_text()
+        manifest = json.loads(raw_manifest)
+        del manifest['code_sha256']['trace_control.py']
+        manifest_path.write_text(json.dumps(manifest))
+        damaged = analyze(scheduled_output, plot=False)
+        assert damaged['valid'] and not damaged['diagnostic_integrity']['valid']
+        manifest_path.write_text(raw_manifest)
+        if not external:
+            gateway_path = scheduled_output / 'gateway.jsonl'
+            raw_gateway = gateway_path.read_text()
+            records = [json.loads(line) for line in raw_gateway.splitlines()]
+            next(r for r in records if r['event'] == 'budget_updated')['budget'] = 'unknown'
+            gateway_path.write_text('\n'.join(json.dumps(r) for r in records))
+            damaged = analyze(scheduled_output, plot=False)
+            assert not damaged['valid'] and not damaged['control_fidelity']['valid']
+            malformed = analyze_run(scheduled_output, .3)
+            figure_output = tmp_path / 'malformed-control-analysis'
+            figure_output.mkdir()
+            figures(figure_output, [malformed], .3)
+            assert (figure_output / 'stall_alignment.png').stat().st_size > 1000
+            gateway_path.write_text(raw_gateway)
+            # A malformed extra event must not erase an otherwise complete audit during plotting.
+            records = [json.loads(line) for line in raw_gateway.splitlines()]
+            last_update = next(r for r in reversed(records) if r['event'] == 'budget_updated')
+            extra = dict(last_update, previous_budget=last_update['budget'], budget='unknown',
+                         budget_version=last_update['budget_version'] + 1,
+                         applied_at=records[-1]['monotonic'], monotonic=records[-1]['monotonic'])
+            gateway_path.write_text('\n'.join(json.dumps(r) for r in [*records, extra]))
+            damaged = analyze(scheduled_output, plot=False)
+            assert not damaged['valid'] and not damaged['control_fidelity']['valid']
+            assert 'Missing or extra scheduled budget commands/applications' in damaged['issues']
+            assert damaged['control_fidelity']['planned_commands'] == 3
+            assert damaged['control_fidelity']['recorded_commands'] == 3
+            assert damaged['control_fidelity']['gateway_applications'] == 4
+            assert damaged['load_fidelity']['valid'] and damaged['diagnostic_integrity']['valid']
+            assert analyze(scheduled_output) == damaged
+            assert json.loads((scheduled_output / 'report.json').read_text()) == damaged
+            assert (scheduled_output / 'timeseries.png').stat().st_size > 1000
+            gateway_path.write_text(raw_gateway)
+        manifest, plan = json.loads(raw_manifest), json.loads(raw_plan)
+        # Counterfactual declaration for auditing: coherent data, unqualified actuation.
+        manifest['config']['max_budget_lag'] = plan['max_budget_lag'] = 1e-12
+        plan_path.write_text(json.dumps(plan))
+        manifest['replay_plan_sha256'] = sha256_file(plan_path)
+        manifest_path.write_text(json.dumps(manifest))
+        report = analyze(scheduled_output, plot=False)
+        assert report['valid'] and not report['control_fidelity']['valid']
+        assert report['performance']['attempted'] == 3
+        summary, _, _, _ = analyze_run(scheduled_output, .3)
+        assert summary['original_report_reproduced'] and not summary['qualified_for_comparison']
+        result = subprocess.run([sys.executable, 'analyze_trace_pilot.py', str(scheduled_output)],
+                                cwd=root, env=env, capture_output=True, text=True, timeout=30)
+        assert result.returncode == 1, result.stdout + result.stderr
+        plan_path.write_text(raw_plan)
+        manifest_path.write_text(raw_manifest)
+        assert analyze(scheduled_output, plot=False)['control_fidelity']['valid']
         output = tmp_path / 'success'
         report = analyze(output, plot=False)
         assert report['performance']['slo_goodput_per_arrival_second'] == 10
@@ -334,9 +423,19 @@ async def completion(request: Request):
         manifest = json.loads(original)
         manifest['config']['max_scheduling_lag'] = 1e-9
         manifest_path.write_text(json.dumps(manifest))
+        assert not analyze(output, plot=False)['valid']
+        # A coherently declared stricter threshold remains a separate fidelity failure.
+        plan_path = output / PLAN_FILE
+        original_plan = plan_path.read_text()
+        plan = json.loads(original_plan)
+        plan['max_scheduling_lag'] = 1e-9
+        plan_path.write_text(json.dumps(plan))
+        manifest['replay_plan_sha256'] = sha256_file(plan_path)
+        manifest_path.write_text(json.dumps(manifest))
         report = analyze(output, plot=False)
         assert report['valid'] and not report['load_fidelity']['valid']
         manifest_path.write_text(original)
+        plan_path.write_text(original_plan)
         shutdown_path = output / 'telemetry_status.json'
         raw_shutdown = shutdown_path.read_text()
         shutdown = json.loads(raw_shutdown)

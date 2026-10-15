@@ -17,12 +17,15 @@ import uuid
 import numpy as np
 
 from analyze_trace_pilot import LIFECYCLE, TERMINAL, analyze as audit
+from trace_control import PLAN_FILE, budget_curve, has_control_plan
+from trace_workload import finite_number
 
 RAW = ('manifest.json', 'client.json', 'warmup.json', 'gateway.jsonl', 'trace.json',
        'budget_changes.json', 'state_observations.json', 'telemetry_status.json',
        'report.json', 'timeseries.png')
 LEGACY_RAW = RAW
-RAW += ('engine_observations.jsonl', 'engine_observations_status.json')
+SAMPLER_RAW = ('engine_observations.jsonl', 'engine_observations_status.json')
+RAW += SAMPLER_RAW + (PLAN_FILE,)
 STAGES = ('ingress', 'admission', 'client_build', 'post_dispatch', 'delivery')
 LABELS = ('Client start → handler', 'Handler → accepted', 'Accepted → dispatch',
           'Dispatch → gateway content', 'Gateway → client content')
@@ -337,8 +340,10 @@ def join_diagnostics(joined, records, observations, start, manifest, report):
                      'not per-request queue/prefill attribution. Missing or unqualified GC coverage is null, never zero.')
 
 
-def join_requests(clients, trace, histories, start, slo, run_id):
+def join_requests(clients, trace, histories, start, slo, run_id, e2e_slo=None):
     """Keep observed outcomes, including invalid/incomplete ones, separate from qualification."""
+    if e2e_slo is not None:
+        finite_number(e2e_slo, 'E2E SLO', True)
     planned = defaultdict(list)
     for row in trace['requests']:
         planned[row['trace_id']].append(row)
@@ -404,6 +409,26 @@ def join_requests(clients, trace, histories, start, slo, run_id):
             outcome = 'failed'
         terminal = [e for name in TERMINAL for e in history.get(name, [])]
         deadline = scheduled + slo if finite(scheduled) else None
+        if e2e_slo is not None:
+            e2e_met = joint_met = None
+            if outcome.startswith('successful_') and success is True and rejected is False and not client.get('error_type'):
+                first, finished = client.get('first_content_at'), client.get('finished_at')
+                ttft_valid = scheduled_ttft is not None
+                e2e_valid = scheduled_e2e is not None
+                if finite(first) and finite(times[0]) and first < times[0]:
+                    issues.append('first content precedes client start')
+                    ttft_valid = False
+                if finite(finished) and any(finite(t) and t > finished for t in (times[0], first)):
+                    issues.append('completion precedes client timing')
+                    e2e_valid = False
+                e2e_met = scheduled_e2e <= e2e_slo if e2e_valid else None
+                ttft_met = scheduled_ttft <= slo if ttft_valid else None
+                if e2e_met is False or ttft_met is False:
+                    joint_met = False
+                elif e2e_met is True and ttft_met is True:
+                    joint_met = True
+            elif success is False and outcome != 'missing_client_outcome':
+                e2e_met = joint_met = False
         row = dict(request_id=identifier, trace_id=client.get('trace_id'), outcome=outcome,
                    planned=bool(plan), client_outcome_present=not client.get('outcome_missing', False),
                    schedule_source='planned' if client.get('outcome_missing') else 'client',
@@ -425,14 +450,22 @@ def join_requests(clients, trace, histories, start, slo, run_id):
                    gateway_outcome=terminal[0]['event'] if len(terminal) == 1 else None,
                    gateway_terminal_s=difference(terminal[0].get('monotonic'), start) if len(terminal) == 1 else None,
                    deadline_remaining_at_admission_s=difference(deadline, times[2]))
+        if e2e_slo is not None:
+            e2e_deadline = scheduled + e2e_slo if finite(scheduled) else None
+            row.update(e2e_slo_met=e2e_met, joint_slo_met=joint_met,
+                       e2e_deadline_remaining_at_admission_s=difference(e2e_deadline, times[2]))
         joined.append(row)
-    return joined, dict(planned=len(trace['requests']), unique_planned_ids=len(planned),
+    accounting = dict(planned=len(trace['requests']), unique_planned_ids=len(planned),
                         recorded_client_rows=len(clients), ledger_rows=len(joined),
                         missing_client_outcomes=sum(r['outcome'] == 'missing_client_outcome' for r in joined),
                         extra_client_rows=sum(not r['planned'] for r in joined),
                         duplicate_planned_ids={k: len(v) for k, v in planned.items() if len(v) > 1},
                         duplicate_trace_ids={k: v for k, v in recorded.items() if v > 1},
                         outcomes=dict(Counter(r['outcome'] for r in joined)))
+    if e2e_slo is not None:
+        accounting['joint_slo'] = dict(Counter('met' if r['joint_slo_met'] is True else
+            'missed' if r['joint_slo_met'] is False else 'unknown' for r in joined))
+    return joined, accounting
 
 
 def request_windows(joined, lifecycle, start, end):
@@ -446,6 +479,10 @@ def request_windows(joined, lifecycle, start, end):
                     scheduled=0, started=0, received=0, accepted=0, completed=0, rejected=0,
                     failed=0, cancelled=0, admitted_input_tokens_known=0,
                     admitted_input_tokens_unknown_requests=0) for i in range(count)]
+    joint_slo = any('joint_slo_met' in row for row in joined)
+    if joint_slo:
+        for window in windows:
+            window.update(cohort_slo_successes=0, cohort_slo_misses=0, cohort_slo_unknown=0)
     unbinned = Counter()
     def bucket(value, field):
         if not finite(value) or value < 0:
@@ -459,6 +496,12 @@ def request_windows(joined, lifecycle, start, end):
     for row in joined:
         for field, key in (('scheduled', 'scheduled_s'), ('started', 'started_s')):
             window = bucket(row[key], field)
+            if window is not None:
+                window[field] += 1
+        if joint_slo:
+            met = row.get('joint_slo_met')
+            field = 'cohort_slo_successes' if met is True else 'cohort_slo_misses' if met is False else 'cohort_slo_unknown'
+            window = bucket(row['scheduled_s'], field)
             if window is not None:
                 window[field] += 1
     for event in events:
@@ -477,7 +520,8 @@ def request_windows(joined, lifecycle, start, end):
                 window['admitted_input_tokens_unknown_requests'] += 1
     return dict(width_s=1, interval='[start_s, end_s)', windows=windows, unbinned=dict(unbinned),
                 note='Observed gateway admissions/completions; missing lifecycle events are not zero work. '
-                     'Input tokens are gateway admission estimates. Drain windows are retained.')
+                     'Input tokens are gateway admission estimates. Drain windows are retained.' +
+                     (' Joint SLO outcomes are all-offered arrival cohorts, not completion throughput.' if joint_slo else ''))
 
 
 def analyze_run(root, stall_threshold):
@@ -510,7 +554,8 @@ def analyze_run(root, stall_threshold):
     received_times = [e['monotonic'] for e in timed_lifecycle if e['event'] == 'received']
     pairs = list(zip(timed_lifecycle, timed_lifecycle[1:]))
     joined, accounting = join_requests(clients, trace, histories, start,
-                                       manifest['config']['ttft_slo'], manifest['run_id'])
+                                       manifest['config']['ttft_slo'], manifest['run_id'],
+                                       manifest['config'].get('e2e_slo'))
     successful = [r for r in joined if r['outcome'].startswith('successful_') and finite(r['ttft_s'])]
     tail = sorted(successful, key=lambda r: r['ttft_s'], reverse=True)[:math.ceil(len(successful)*.01)]
     stalls = []
@@ -556,12 +601,15 @@ def analyze_run(root, stall_threshold):
     expected_counts = {k: sum(0 <= value <= bins[-1] for value in relative(k)) for k in arrivals}
     if any(sum(arrivals[k]) != expected_counts[k] for k in arrivals):
         raise ValueError('Arrival bins do not reconcile')
-    required_raw = RAW if manifest.get('sampler', {}).get('enabled') else LEGACY_RAW
+    required_raw = LEGACY_RAW + (SAMPLER_RAW if manifest.get('sampler', {}).get('enabled') else ())
+    if has_control_plan(root, manifest):
+        required_raw += (PLAN_FILE,)
     summary = dict(name=root.name, raw_sha256=before, missing_raw_files=[n for n in required_raw if n not in before],
                    malformed_gateway_lines=malformed_lines,
                    malformed_engine_lines=malformed_engine_lines,
                    original_report_reproduced=checked == original, saved_report=original,
                    qualified_for_comparison=bool(checked['valid'] and checked['load_fidelity']['valid'] and checked == original and
+                                                 checked.get('control_fidelity', {'valid': True})['valid'] and
                                                  checked.get('diagnostic_integrity', {'valid': True})['valid']),
                    manifest_git_commit=manifest.get('git_commit'), recorded_git_dirty=manifest.get('git_dirty'),
                    runtime_code_matches={name: hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()==sha
@@ -613,8 +661,13 @@ def figures(output, data, stall_threshold):
     fig, ax = plt.subplots(figsize=(11, 5))
     labels, groups = [], []
     for summary, _, _, _ in data:
+        fidelity = summary['report']['load_fidelity']['valid']
+        fidelity_label = 'load fidelity'
+        if 'control_fidelity' in summary['report']:
+            fidelity = fidelity and summary['report']['control_fidelity']['valid']
+            fidelity_label = 'load/control fidelity'
         labels.append(summary['name'].replace('trace-experiment-', '').replace('trace-', '')+'\n' +
-                      ('load fidelity PASS' if summary['report']['load_fidelity']['valid'] else 'load fidelity FAILED'))
+                      fidelity_label + (' PASS' if fidelity else ' FAILED'))
         groups.append(summary['slowest_one_percent'])
     left = np.zeros(len(groups))
     for key, label, color in zip(STAGES, LABELS, COLORS):
@@ -650,7 +703,9 @@ def figures(output, data, stall_threshold):
         integrity = 'PASS' if summary['report']['valid'] else 'FAILED'
         diagnostic = summary['report'].get('diagnostic_integrity')
         diagnostic_label = (' / diagnostics '+('PASS' if diagnostic['valid'] else 'FAILED')) if diagnostic else ''
-        ax.set_title(summary['name']+'\nIntegrity '+integrity+' / load fidelity '+fidelity+diagnostic_label)
+        control = summary['report'].get('control_fidelity')
+        control_label = (' / control '+('PASS' if control['valid'] else 'FAILED')) if control else ''
+        ax.set_title(summary['name']+'\nIntegrity '+integrity+' / load fidelity '+fidelity+control_label+diagnostic_label)
         ax = axes[1, column]
         timed = [r for r in joined if finite(r['scheduling_lag_s'])]
         ax.scatter([r['scheduled_s'] for r in timed], [1000*r['scheduling_lag_s'] for r in timed], s=5, label='Client scheduling lag', color='#286e99')
@@ -670,9 +725,22 @@ def figures(output, data, stall_threshold):
         snapshots = [e for e in records if e.get('event')=='snapshot' and finite(e.get('monotonic')) and
                      finite(e.get('current_admitted_cost')) and start <= e['monotonic'] < start+summary['duration_s']]
         ax.plot([e['monotonic']-start for e in snapshots], [e['current_admitted_cost'] for e in snapshots], label='Reserved cost (gateway proxy)', color='#8662a2')
-        ax.axhline(summary['config']['budget'], color='black', ls='--', label='Fixed budget')
+        if control is not None:
+            unavailable = 'no pre-measurement application'
+            try:
+                times, budgets = budget_curve(records, start, start + summary['duration_s'])
+            except ValueError as exc:
+                times, budgets = [], []
+                unavailable = str(exc)
+            if times:
+                ax.step(times, budgets, where='post', color='black', ls='--', label='Applied budget')
+            else:
+                ax.text(.02, .9, 'Applied budget unavailable: ' + unavailable, transform=ax.transAxes, fontsize=8)
+        else:
+            budgets = [summary['config']['budget']]
+            ax.axhline(budgets[0], color='black', ls='--', label='Fixed budget')
         ax.set_ylabel('Cost units')
-        ax.set_ylim(0, summary['config']['budget']*1.1)
+        ax.set_ylim(0, max([1.] + budgets + [e['current_admitted_cost'] for e in snapshots])*1.1)
         ax.set_xlabel('Seconds since measurement start')
         for ax in axes[:, column]:
             for stall in summary['large_monitor_delays']:
@@ -773,6 +841,7 @@ def main():
                 stream.write(json.dumps(row, allow_nan=False)+'\n')
     figures(output, data, args.stall_threshold)
     print(json.dumps({s['name']: dict(integrity=s['report']['valid'], fidelity=s['report']['load_fidelity']['valid'],
+                       control_fidelity=s['report'].get('control_fidelity', {}).get('valid'),
                        diagnostics=s['report'].get('diagnostic_integrity', {}).get('valid'),
                        tail_post_dispatch_fraction=s['slowest_one_percent']['post_dispatch_fraction'],
                        large_monitor_delays=len(s['large_monitor_delays'])) for s, _, _, _ in data}, indent=2))
