@@ -19,13 +19,14 @@ import numpy as np
 from analyze_trace_pilot import LIFECYCLE, TERMINAL, analyze as audit
 from trace_control import PLAN_FILE, budget_curve, has_control_plan
 from trace_workload import finite_number
+from runner_diagnostics import FILES as RUNNER_RAW
 
 RAW = ('manifest.json', 'client.json', 'warmup.json', 'gateway.jsonl', 'trace.json',
        'budget_changes.json', 'state_observations.json', 'telemetry_status.json',
        'report.json', 'timeseries.png')
 LEGACY_RAW = RAW
 SAMPLER_RAW = ('engine_observations.jsonl', 'engine_observations_status.json')
-RAW += SAMPLER_RAW + (PLAN_FILE,)
+RAW += SAMPLER_RAW + (PLAN_FILE,) + RUNNER_RAW
 STAGES = ('ingress', 'admission', 'client_build', 'post_dispatch', 'delivery')
 LABELS = ('Client start → handler', 'Handler → accepted', 'Accepted → dispatch',
           'Dispatch → gateway content', 'Gateway → client content')
@@ -604,11 +605,14 @@ def analyze_run(root, stall_threshold):
     required_raw = LEGACY_RAW + (SAMPLER_RAW if manifest.get('sampler', {}).get('enabled') else ())
     if has_control_plan(root, manifest):
         required_raw += (PLAN_FILE,)
+    if manifest.get('config', {}).get('runner_diagnostics'):
+        required_raw += RUNNER_RAW
     summary = dict(name=root.name, raw_sha256=before, missing_raw_files=[n for n in required_raw if n not in before],
                    malformed_gateway_lines=malformed_lines,
                    malformed_engine_lines=malformed_engine_lines,
                    original_report_reproduced=checked == original, saved_report=original,
                    qualified_for_comparison=bool(checked['valid'] and checked['load_fidelity']['valid'] and checked == original and
+                                                 checked.get('runner_diagnostic_integrity', {'valid': True})['valid'] and
                                                  checked.get('control_fidelity', {'valid': True})['valid'] and
                                                  checked.get('diagnostic_integrity', {'valid': True})['valid']),
                    manifest_git_commit=manifest.get('git_commit'), recorded_git_dirty=manifest.get('git_dirty'),
@@ -648,6 +652,23 @@ def analyze_run(root, stall_threshold):
                        if finite(r['scheduling_lag_s']) and r['scheduling_lag_s'] > manifest['config']['max_scheduling_lag']))
     summary['diagnostics'] = join_diagnostics(joined, records, engine, start, manifest, checked)
     summary['cpu_analysis'] = analyze_cpu(joined, records, engine, start, manifest, checked)
+    if 'runner_diagnostic_integrity' in checked:
+        verdict = checked['runner_diagnostic_integrity']
+        runner_records, malformed = read_jsonl(root / RUNNER_RAW[0])
+        late = None
+        if verdict['valid'] and not malformed:
+            gc = [(r['span_start']-start, r['span_end']-start) for r in runner_records if r['event']=='gc_span']
+            overdue = [(r['scheduled_at']-start, r['resumed_at']-start)
+                       for r in runner_records if r['event']=='event_loop_lag']
+            late = [dict(request_id=r['request_id'], trace_id=r['trace_id'], outcome=r['outcome'],
+                         scheduled_s=r['scheduled_s'], started_s=r['started_s'],
+                         scheduling_lag_s=r['scheduling_lag_s'],
+                         gc_overlap_s=interval_overlap(r['scheduled_s'], r['started_s'], gc),
+                         loop_overdue_overlap_s=interval_overlap(r['scheduled_s'], r['started_s'], overdue))
+                    for r in joined if finite(r['scheduling_lag_s']) and
+                    r['scheduling_lag_s'] > manifest['config']['max_scheduling_lag']]
+        summary['runner_diagnostics'] = dict(integrity=verdict, malformed_lines=malformed,
+            late_launches=late, note='Overlap is timing association, not exclusive CPU or OS scheduling attribution.')
     if hashes(root) != before:
         raise ValueError('Raw files changed during analysis')
     return summary, joined, records, start
@@ -841,6 +862,7 @@ def main():
                 stream.write(json.dumps(row, allow_nan=False)+'\n')
     figures(output, data, args.stall_threshold)
     print(json.dumps({s['name']: dict(integrity=s['report']['valid'], fidelity=s['report']['load_fidelity']['valid'],
+                       runner_diagnostics=s['report'].get('runner_diagnostic_integrity', {}).get('valid'),
                        control_fidelity=s['report'].get('control_fidelity', {}).get('valid'),
                        diagnostics=s['report'].get('diagnostic_integrity', {}).get('valid'),
                        tail_post_dispatch_fraction=s['slowest_one_percent']['post_dispatch_fraction'],

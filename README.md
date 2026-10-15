@@ -16,6 +16,15 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Runner launch-delay diagnostics
+
+Opt-in `--runner-diagnostics` records the request runner's GC spans, event-loop
+delays and CPU timing separately from the gateway and external sampler. It adds
+a separate `runner_diagnostic_integrity` gate and offline alignment for all late
+launches; it does not change GC policy, admission, budget or the 50 ms load gate.
+See [the rental-host steps and capture protocol](experiments/runner-diagnostics.md).
+This instrumentation is not a latency fix or an MPC performance result.
+
 ## Latest results: RTX 4090 diagnostics (2026-10-12)
 
 **[Read the diagnostic findings and reproduction steps](results/diagnostics-20261012/report.md).**
