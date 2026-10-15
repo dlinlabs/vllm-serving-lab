@@ -263,6 +263,8 @@ async def completion(request: Request):
                 schedule.write_text(json.dumps([dict(at_seconds=0, budget=96), dict(at_seconds=1, budget=64),
                                                 dict(at_seconds=2, budget=96)]))
                 control_args = ['--budget-schedule', str(schedule), '--max-budget-lag', '1', '--e2e-slo', '2']
+                if mode == 'process':
+                    control_args += ['--runner-gc-policy', 'defer', '--runner-max-rss-mib', '1536']
             result = subprocess.run([sys.executable, 'run_trace_pilot.py', '--trace', str(source),
                          '--output-dir', str(output), '--ttft-slo', '1',
                          '--warmup-requests', '1', '--drain-timeout', '2', '--max-scheduling-lag', '1',
@@ -275,6 +277,11 @@ async def completion(request: Request):
             assert report['valid'] and report['performance']['success' if scheduled else name] == 3
             assert report['performance']['attempted'] == 3
             assert report['control_fidelity']['valid'], report['control_fidelity']
+            if scheduled and mode == 'process':
+                assert report['runner_gc_integrity']['valid'], report['runner_gc_integrity']
+                assert (output / 'runner_gc_control.json').is_file()
+            else:
+                assert 'runner_gc_integrity' not in report
             if name != 'success':
                 assert report['runner_diagnostic_integrity']['valid'], report['runner_diagnostic_integrity']
                 assert (output / 'runner_observations.jsonl').stat().st_size > 0

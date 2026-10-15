@@ -602,6 +602,10 @@ def _analyze(output, plot):
     runner_verdict = audit_runner(output, manifest, clients, warmup)
     if runner_verdict is not None:
         report['runner_diagnostic_integrity'] = runner_verdict
+    from runner_gc_control import audit_gc_control
+    gc_verdict = audit_gc_control(output, manifest, clients, runner_verdict)
+    if gc_verdict is not None:
+        report['runner_gc_integrity'] = gc_verdict
     save(output / 'report.json', report)
     if plot:
         render(output, manifest, trace, clients, records, events, report)
@@ -699,6 +703,12 @@ def analyze(output, plot=True):
                     runner_verdict.update(valid=False, gc_coverage_complete=False)
                     runner_verdict['issues'].append('Core replay artifacts are incomplete')
                     report['runner_diagnostic_integrity'] = runner_verdict
+                from runner_gc_control import audit_gc_control
+                gc_verdict = audit_gc_control(output, manifest)
+                if gc_verdict is not None:
+                    gc_verdict['valid'] = False
+                    gc_verdict['issues'].append('Core replay artifacts are incomplete')
+                    report['runner_gc_integrity'] = gc_verdict
             if isinstance(manifest, dict) and has_control_plan(output, manifest):
                 report['control_fidelity'] = dict(valid=False, issues=['Cannot audit declared budget control'])
             if isinstance(manifest, dict) and 'investigation_protocol' in manifest:
@@ -718,4 +728,5 @@ if __name__ == '__main__':
     raise SystemExit(0 if report['valid'] and report['load_fidelity']['valid'] and
                      report.get('control_fidelity', {'valid': True})['valid'] and
                      report.get('runner_diagnostic_integrity', {'valid': True})['valid'] and
+                     report.get('runner_gc_integrity', {'valid': True})['valid'] and
                      report.get('diagnostic_integrity', {'valid': True})['valid'] else 1)

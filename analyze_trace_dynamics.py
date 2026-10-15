@@ -20,13 +20,14 @@ from analyze_trace_pilot import LIFECYCLE, TERMINAL, analyze as audit
 from trace_control import PLAN_FILE, budget_curve, has_control_plan
 from trace_workload import finite_number
 from runner_diagnostics import FILES as RUNNER_RAW
+from runner_gc_control import FILE as GC_RAW
 
 RAW = ('manifest.json', 'client.json', 'warmup.json', 'gateway.jsonl', 'trace.json',
        'budget_changes.json', 'state_observations.json', 'telemetry_status.json',
        'report.json', 'timeseries.png')
 LEGACY_RAW = RAW
 SAMPLER_RAW = ('engine_observations.jsonl', 'engine_observations_status.json')
-RAW += SAMPLER_RAW + (PLAN_FILE,) + RUNNER_RAW
+RAW += SAMPLER_RAW + (PLAN_FILE,) + RUNNER_RAW + (GC_RAW,)
 STAGES = ('ingress', 'admission', 'client_build', 'post_dispatch', 'delivery')
 LABELS = ('Client start → handler', 'Handler → accepted', 'Accepted → dispatch',
           'Dispatch → gateway content', 'Gateway → client content')
@@ -607,12 +608,15 @@ def analyze_run(root, stall_threshold):
         required_raw += (PLAN_FILE,)
     if manifest.get('config', {}).get('runner_diagnostics'):
         required_raw += RUNNER_RAW
+    if manifest.get('config', {}).get('runner_gc_policy', 'automatic') != 'automatic':
+        required_raw += (GC_RAW,)
     summary = dict(name=root.name, raw_sha256=before, missing_raw_files=[n for n in required_raw if n not in before],
                    malformed_gateway_lines=malformed_lines,
                    malformed_engine_lines=malformed_engine_lines,
                    original_report_reproduced=checked == original, saved_report=original,
                    qualified_for_comparison=bool(checked['valid'] and checked['load_fidelity']['valid'] and checked == original and
                                                  checked.get('runner_diagnostic_integrity', {'valid': True})['valid'] and
+                                                 checked.get('runner_gc_integrity', {'valid': True})['valid'] and
                                                  checked.get('control_fidelity', {'valid': True})['valid'] and
                                                  checked.get('diagnostic_integrity', {'valid': True})['valid']),
                    manifest_git_commit=manifest.get('git_commit'), recorded_git_dirty=manifest.get('git_dirty'),
@@ -863,6 +867,7 @@ def main():
     figures(output, data, args.stall_threshold)
     print(json.dumps({s['name']: dict(integrity=s['report']['valid'], fidelity=s['report']['load_fidelity']['valid'],
                        runner_diagnostics=s['report'].get('runner_diagnostic_integrity', {}).get('valid'),
+                       runner_gc=s['report'].get('runner_gc_integrity', {}).get('valid'),
                        control_fidelity=s['report'].get('control_fidelity', {}).get('valid'),
                        diagnostics=s['report'].get('diagnostic_integrity', {}).get('valid'),
                        tail_post_dispatch_fraction=s['slowest_one_percent']['post_dispatch_fraction'],
