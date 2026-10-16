@@ -71,8 +71,10 @@ small run directories expose browsing subsets, not complete audit inputs.
 [the Chinese report](results/gc-identification-20261015/gc-defer-ident-analysis-20261015.html)
 are included. [Offline causal features and forecast baselines](experiments/forecast-baselines.md)
 now score development-only persistence/mean/ridge forecasts on these captures
-(no committed results; model readiness not established). Next: a small
-predeclared repeat/counterbalanced experiment before model/MPC claims.
+(no committed results; model readiness not established). Next:
+[excitation v1](experiments/excitation-v1.md), a predeclared multi-level
+(48–96) counterbalanced pair plus one held-out window and schedule, with
+proposed forecast limits awaiting approval before any model/MPC claim.
 
 ---
 

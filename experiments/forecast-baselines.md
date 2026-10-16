@@ -6,8 +6,10 @@ turn audited captures into a time-causal feature table and score simple
 multi-step forecasts before any model or MPC work. It adds no telemetry,
 solver, actuation or GPU run, and commits no results. The three existing
 long captures are **development data**: they shaped this design, so their
-scores choose what to measure next and cannot validate a model. Every report
-states `evaluation_role=development` and `model_readiness=not_established`.
+scores choose what to measure next and cannot validate a model. Without
+designated test runs, every report states `evaluation_role=development` and
+`model_readiness=not_established`. A predeclared held-out test is scored with
+`--acceptance` (see [excitation v1](excitation-v1.md) and below).
 
 ## Run
 
@@ -101,8 +103,33 @@ Evaluation never shuffles neighboring rows:
   `cohort_resolved_s` for cohort labels); evaluate rows at or after the cut.
   One model is fitted on all runs' training rows and scored per run and pooled.
 - **Leave one run out**: train on the other runs, evaluate the whole held-out run.
-- Subsets: all rows, and `near_budget_change` (within 10 s after a cap change or
-  with a realized change inside the horizon).
+- **Designated test** (`--test-runs NAME...`, or the `test_runs` of `--acceptance`):
+  those runs never enter the two splits above; one model trained on every other
+  run scores them once (per run, and pooled when there are several).
+- Subsets: all rows; `near_budget_change` (within 10 s after a cap change or
+  with a realized change inside the horizon); and its split by direction,
+  `near_budget_increase` / `near_budget_decrease`.
+- `budget_effects` records, per split, the ridge forecast's summed response to
+  one unit of realized cap mean and end (a property of the fitted model).
+
+### Predeclared acceptance (`--acceptance PROTOCOL.json`)
+
+The protocol's `acceptance` section (schema 1) declares `status`
+(`proposed`/`frozen`), `model: ridge`, `training_runs`, `test_runs`,
+preconditions (`binding_headroom`, `min_binding_fraction`, `min_subset_n`) and
+criteria, each with an id, horizon, target, subset, metric
+(`skill_mae.ridge_vs_persistence`, `skill_mae.ridge_vs_mean`,
+`models.ridge.mae|p99_abs|optimistic_p99`, or `budget_effect_per_unit`) and
+exactly one of `min`, `max`, `greater_than`. The run is refused if the feature
+table's runs differ from the declared training plus test runs, if feature or
+forecast settings differ from the protocol's `analysis`, or with
+`--allow-unqualified`. The verdict is `inconclusive` when the binding fraction of
+test rows (headroom below the threshold) is too low or a criterion has too few
+rows, otherwise `fail` if any criterion fails, else `pass`. `model_readiness` is
+`offline_acceptance_passed` only for a pass against `frozen` limits. Like every
+report here, an acceptance run is `realized_control_conditioned`: it shows the
+fitted dynamics predict held-out load given the applied cap, not that a forecast
+from a plan known at `t` is deployable.
 
 Metrics are in physical units: n, MAE, RMSE, bias, p90/p99/max absolute error,
 and skill (1 − MAE ratio) against persistence and the training mean.
@@ -117,7 +144,8 @@ over-prediction of first content, completions and deadline successes.
   identified and the `near_budget_change` subset is tiny.
 - All captures replay one trace on one GPU; rows overlap in time, so `n`
   overstates independent evidence.
-- No numeric error or optimistic-tail limits are declared here. Before any
-  readiness claim, follow [What "ready for MPC" must mean](trace-identification.md#what-ready-for-mpc-must-mean):
-  declare limits and the horizon first, then score on new held-out captures
-  (repeats and counterbalanced step orders).
+- No numeric error or optimistic-tail limits are established by the development
+  data. [Excitation v1](excitation-v1.md) proposes limits at 5 s and a held-out
+  window plus unseen schedule, following
+  [What "ready for MPC" must mean](trace-identification.md#what-ready-for-mpc-must-mean);
+  they must be approved and frozen before that test is captured.

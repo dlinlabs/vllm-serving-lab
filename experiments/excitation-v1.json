@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "protocol": "excitation-v1",
+  "purpose": "Multi-level budget excitation on the development trace, then one held-out load window with an unseen control sequence scored once against predeclared forecast limits",
+  "generator": {
+    "script": "make_budget_schedule.py",
+    "budgets": [48, 64, 80, 96],
+    "anchor": 96,
+    "hold_seconds": 30,
+    "duration_seconds": 300
+  },
+  "schedules": {
+    "a": {
+      "path": "results/budget-schedules/ident-multilevel-30s-v1-a.json",
+      "seed": 1,
+      "exclude": [],
+      "budgets": [96, 64, 80, 64, 48, 80, 96, 48, 64, 96],
+      "sha256": "41cf5d6db8101657f28d123ecf62271e83bd7cd56acc88a29f3bcea01afce3ae"
+    },
+    "b": {
+      "path": "results/budget-schedules/ident-multilevel-30s-v1-b.json",
+      "reverse_of": "a",
+      "budgets": [96, 64, 48, 96, 80, 48, 64, 80, 64, 96],
+      "sha256": "282557c39c4e96d3116a90ff63eaad82185f8ca12cc76fdab597844619b6ce42"
+    },
+    "c": {
+      "path": "results/budget-schedules/ident-multilevel-30s-v1-c.json",
+      "seed": 2,
+      "exclude": ["a"],
+      "budgets": [96, 80, 64, 96, 48, 80, 48, 64, 80, 96],
+      "sha256": "9c85dcad57489af946119538893bab7066eb88f1f6d16bc549a8531879a81759"
+    }
+  },
+  "traces": {
+    "development": {
+      "path": "results/trace-experiment-96-r1/trace.json",
+      "sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "preset": "experiment",
+      "window": ["2024-05-12T00:01:00+00:00", "2024-05-12T00:06:00+00:00"]
+    },
+    "held_out": {
+      "source": "results/trace-source/azure-conversation-prefix.csv",
+      "source_sha256": "242489b81db35abe68b5d15d5ff3a7cc0e75a06184d104c7a0fe89a5fa66fb16",
+      "start": "2024-05-12T00:07:00+00:00",
+      "duration_seconds": 300,
+      "sample_probability": 1,
+      "seed": 1,
+      "output_cap": 128,
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "output_dir": "results/trace-heldout-0007-input"
+    }
+  },
+  "replay": {
+    "ttft_slo": 0.5,
+    "e2e_slo": null,
+    "max_scheduling_lag": 0.05,
+    "max_budget_lag": 0.05,
+    "cache_policy": "disabled",
+    "gateway_diagnostics": true,
+    "engine_observations": false,
+    "runner_diagnostics": true,
+    "runner_gc_policy": "defer",
+    "runner_max_rss_mib": 1536,
+    "sampler_mode": "process"
+  },
+  "runs": [
+    {"name": "multilevel-v1-a-r1", "trace": "development", "schedule": "a", "role": "development"},
+    {"name": "multilevel-v1-b-r1", "trace": "development", "schedule": "b", "role": "development"},
+    {"name": "multilevel-v1-c-heldout-r1", "trace": "held_out", "schedule": "c", "role": "test"}
+  ],
+  "analysis": {
+    "features": {"step": 0.5, "horizons": [1, 2, 5], "windows": [1, 5], "engine_max_age": 3},
+    "forecast": {"split_fraction": 0.6666666666666666, "alpha": 1}
+  },
+  "acceptance": {
+    "schema_version": 1,
+    "status": "proposed",
+    "model": "ridge",
+    "training_runs": [
+      "gc-defer-fixed-96-r1",
+      "gc-defer-fixed-64-r1",
+      "gc-defer-step-96-64-96-r1",
+      "multilevel-v1-a-r1",
+      "multilevel-v1-b-r1"
+    ],
+    "test_runs": ["multilevel-v1-c-heldout-r1"],
+    "preconditions": {"binding_headroom": 5, "min_binding_fraction": 0.25, "min_subset_n": 60},
+    "criteria": [
+      {"id": "awaiting-skill-vs-persistence", "horizon_s": 5, "target": "awaiting_first_content", "subset": "all", "metric": "skill_mae.ridge_vs_persistence", "min": 0.2},
+      {"id": "awaiting-skill-vs-mean", "horizon_s": 5, "target": "awaiting_first_content", "subset": "all", "metric": "skill_mae.ridge_vs_mean", "min": 0.1},
+      {"id": "awaiting-optimistic-p99", "horizon_s": 5, "target": "awaiting_first_content", "subset": "all", "metric": "models.ridge.optimistic_p99", "max": 18},
+      {"id": "missed-skill-vs-persistence", "horizon_s": 5, "target": "cohort_admitted_ttft_missed", "subset": "all", "metric": "skill_mae.ridge_vs_persistence", "min": 0.25},
+      {"id": "missed-skill-vs-mean", "horizon_s": 5, "target": "cohort_admitted_ttft_missed", "subset": "all", "metric": "skill_mae.ridge_vs_mean", "min": 0.15},
+      {"id": "missed-optimistic-p99", "horizon_s": 5, "target": "cohort_admitted_ttft_missed", "subset": "all", "metric": "models.ridge.optimistic_p99", "max": 17},
+      {"id": "met-skill-vs-persistence", "horizon_s": 5, "target": "cohort_ttft_met", "subset": "all", "metric": "skill_mae.ridge_vs_persistence", "min": 0.1},
+      {"id": "met-skill-vs-mean", "horizon_s": 5, "target": "cohort_ttft_met", "subset": "all", "metric": "skill_mae.ridge_vs_mean", "min": 0.05},
+      {"id": "met-optimistic-p99", "horizon_s": 5, "target": "cohort_ttft_met", "subset": "all", "metric": "models.ridge.optimistic_p99", "max": 10},
+      {"id": "awaiting-increase-skill-vs-persistence", "horizon_s": 5, "target": "awaiting_first_content", "subset": "near_budget_increase", "metric": "skill_mae.ridge_vs_persistence", "min": 0},
+      {"id": "awaiting-decrease-skill-vs-persistence", "horizon_s": 5, "target": "awaiting_first_content", "subset": "near_budget_decrease", "metric": "skill_mae.ridge_vs_persistence", "min": 0},
+      {"id": "missed-increase-skill-vs-persistence", "horizon_s": 5, "target": "cohort_admitted_ttft_missed", "subset": "near_budget_increase", "metric": "skill_mae.ridge_vs_persistence", "min": 0},
+      {"id": "missed-decrease-skill-vs-persistence", "horizon_s": 5, "target": "cohort_admitted_ttft_missed", "subset": "near_budget_decrease", "metric": "skill_mae.ridge_vs_persistence", "min": 0},
+      {"id": "awaiting-budget-effect-sign", "horizon_s": 5, "target": "awaiting_first_content", "metric": "budget_effect_per_unit", "greater_than": 0},
+      {"id": "missed-budget-effect-sign", "horizon_s": 5, "target": "cohort_admitted_ttft_missed", "metric": "budget_effect_per_unit", "greater_than": 0}
+    ]
+  }
+}

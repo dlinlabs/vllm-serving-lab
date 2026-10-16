@@ -5,7 +5,8 @@ import warnings
 import numpy as np
 import pytest
 
-from forecast_baselines import Ridge, evaluate, load, main, metrics, near_change, persistence, splits
+from forecast_baselines import (Ridge, analysis_mismatches, change_directions, evaluate, judge, load, load_acceptance,
+                                main, metrics, near_change, persistence, splits)
 from identification_features import PROTOCOL, SCHEMA_VERSION
 
 
@@ -13,7 +14,7 @@ def level(k, phase=0.):
     return 6. + 4. * math.sin((k + phase) / 5.)
 
 
-def synthetic_rows(count=200, step=.5, delay=20., budget=10., phase=0., change_at=None):
+def synthetic_rows(count=200, step=.5, delay=20., budget=10., phase=0., change_at=None, headroom=None):
     """awaiting(t+1) = 2 awaiting(t) + 1 exactly; cohort labels resolve `delay` seconds late."""
     rows = []
     for k in range(count):
@@ -31,6 +32,8 @@ def synthetic_rows(count=200, step=.5, delay=20., budget=10., phase=0., change_a
             labels={'1': dict(awaiting_first_content=2. * awaiting + 1., received=awaiting + 2.,
                               cohort_ttft_met=None if k == 7 else 1., cohort_resolved_s=t + 1. + delay)},
             label_window_complete={'1': t + 1. <= count * step}))
+        if headroom is not None:
+            rows[-1]['features']['budget_headroom'] = headroom(k)
     return rows
 
 
@@ -91,6 +94,97 @@ def test_near_change_uses_past_changes_and_in_horizon_changes_only():
     mask = near_change(rows, '1')
     times = [row['t_s'] for row in rows]
     assert [t for t, flag in zip(times, mask) if flag] == [t for t in times if 9. <= t <= 20.]
+
+
+def test_change_directions_partition_near_change_by_step_direction():
+    down = synthetic_rows(count=40, change_at=10.)
+    increase, decrease = change_directions(down, '1')
+    assert not increase.any() and decrease.tolist() == near_change(down, '1').tolist()
+    up = synthetic_rows(count=40, change_at=10.)
+    for row in up:
+        row['features']['budget'] = 15. - row['features']['budget']
+        row['control']['1'] = {name: 15. - value for name, value in row['control']['1'].items()}
+    increase, decrease = change_directions(up, '1')
+    assert not decrease.any() and increase.tolist() == near_change(up, '1').tolist()
+
+
+def test_designated_test_runs_never_enter_development_splits():
+    evaluation = evaluate(synthetic_runs(a={}, b=dict(phase=2.), c=dict(phase=4., change_at=60.)),
+                          horizons=[1.], windows=[1.], test_runs=['c'])
+    trained = {row['split']: row['train_runs'] for row in evaluation['training'] if row['target'] == 'received'}
+    assert trained == {'chronological': ['a', 'b'], 'leave_one_run_out:a': ['b'], 'leave_one_run_out:b': ['a'],
+                       'designated_test': ['a', 'b']}
+    scored = {(row['split'], row['scope']) for row in evaluation['results']}
+    assert ('designated_test', 'c') in scored and ('designated_test', 'pooled') not in scored
+    assert not any(scope == 'c' for split, scope in scored if split != 'designated_test')
+    row = find(evaluation, split='designated_test', target='awaiting_first_content', subset='near_budget_decrease')
+    assert row['models']['ridge']['n'] and not find(
+        evaluation, split='designated_test', target='awaiting_first_content',
+        subset='near_budget_increase')['models']['ridge']['n']
+    assert {e['split'] for e in evaluation['budget_effects']} == set(trained)
+
+
+def criterion(name, metric, subset='all', target='awaiting_first_content', **bound):
+    return dict(id=name, horizon_s=1, target=target, metric=metric,
+                **({} if metric == 'budget_effect_per_unit' else dict(subset=subset)), **bound)
+
+
+def acceptance(criteria, status='frozen', training_runs=('a', 'b'), test_runs=('c',), **preconditions):
+    return dict(schema_version=1, status=status, model='ridge', training_runs=list(training_runs),
+                test_runs=list(test_runs), criteria=criteria,
+                preconditions=dict(dict(binding_headroom=5., min_binding_fraction=.25, min_subset_n=10),
+                                   **preconditions))
+
+
+def test_judge_scores_the_designated_test_against_declared_limits():
+    runs = synthetic_runs(a={}, b=dict(phase=2.), c=dict(phase=4., headroom=lambda k: 0. if k % 2 else 9.))
+    for name in ('a', 'b'):
+        for row in runs[name]['rows']:
+            row['features']['budget_headroom'] = 9.
+    evaluation = evaluate(runs, horizons=[1.], windows=[1.], alpha=1e-6, test_runs=['c'])
+    passing = [criterion('skill', 'skill_mae.ridge_vs_persistence', min=.9),
+               criterion('tail', 'models.ridge.optimistic_p99', max=1e-3),
+               criterion('effect', 'budget_effect_per_unit', greater_than=-1e9)]
+    result = judge(acceptance(passing), evaluation, runs)
+    assert result['verdict'] == 'pass' and result['scope'] == 'c' and result['binding_fraction'] == .5
+    assert [item['outcome'] for item in result['criteria']] == ['pass'] * 3
+    assert result['criteria'][0]['n'] == find(evaluation, split='designated_test', target='awaiting_first_content',
+                                              subset='all')['models']['ridge']['n']
+    failing = passing + [criterion('impossible', 'skill_mae.ridge_vs_mean', min=1.5)]
+    assert judge(acceptance(failing), evaluation, runs)['verdict'] == 'fail'
+    sparse = passing + [criterion('rare', 'skill_mae.ridge_vs_persistence', subset='near_budget_increase', min=0.)]
+    result = judge(acceptance(sparse), evaluation, runs)
+    assert result['verdict'] == 'inconclusive' and result['criteria'][-1]['outcome'] == 'insufficient'
+    unbound = judge(acceptance(passing, min_binding_fraction=.6), evaluation, runs)
+    assert unbound['verdict'] == 'inconclusive' and not unbound['binding_met']
+    assert judge(acceptance(failing, min_binding_fraction=.6), evaluation, runs)['verdict'] == 'inconclusive'
+
+
+def test_load_acceptance_rejects_incomplete_or_ambiguous_protocols(tmp_path):
+    good = acceptance([criterion('skill', 'skill_mae.ridge_vs_persistence', min=.1)])
+    path = tmp_path / 'protocol.json'
+    path.write_text(json.dumps(dict(acceptance=good, analysis=dict(forecast=dict(alpha=1.)))))
+    spec, analysis, sha = load_acceptance(path, [1.])
+    assert spec['test_runs'] == ['c'] and analysis == dict(forecast=dict(alpha=1.)) and len(sha) == 64
+    text = json.dumps(dict(acceptance=good), indent=1)
+    path.write_bytes(text.encode())
+    lf = load_acceptance(path, [1.])[2]
+    path.write_bytes(text.replace('\n', '\r\n').encode())
+    assert load_acceptance(path, [1.])[2] == lf
+    bad = [dict(good, status='draft'), dict(good, model='persistence'), dict(good, training_runs=['a', 'c']),
+           dict(good, test_runs=[]), dict(good, preconditions=dict(binding_headroom=5.)),
+           dict(good, criteria=good['criteria'] * 2),
+           dict(good, criteria=[criterion('x', 'skill_mae.mean_vs_persistence', min=0.)]),
+           dict(good, criteria=[criterion('x', 'skill_mae.ridge_vs_mean', subset='other', min=0.)]),
+           dict(good, criteria=[criterion('x', 'skill_mae.ridge_vs_mean', min=0., max=1.)]),
+           dict(good, criteria=[dict(criterion('x', 'skill_mae.ridge_vs_mean', min=0.), horizon_s=5)])]
+    for spec in bad:
+        path.write_text(json.dumps(dict(acceptance=spec)))
+        with pytest.raises(ValueError):
+            load_acceptance(path, [1.])
+    assert analysis_mismatches(dict(features=dict(horizons=[1.], step=.5), forecast=dict(alpha=1.)),
+                               dict(horizons=[1., 2.], windows=[1.]), 2 / 3, 2.) == ['alpha', 'horizons', 'step']
+    assert analysis_mismatches(None, dict(horizons=[1.]), .5, 1.) == []
 
 
 def test_optimistic_errors_follow_the_controller_risk_direction():
@@ -189,3 +283,49 @@ def test_cli_override_report_keeps_unqualified_verdicts_and_warnings(tmp_path, m
     summary = (output / 'forecast_summary.md').read_text()
     assert summary.splitlines()[2].startswith('> **Warning: unqualified evidence.**')
     assert '--allow-unqualified set' in summary and ' NO' in summary
+
+
+def test_cli_scores_the_predeclared_test_once_and_refuses_drift(tmp_path, monkeypatch):
+    write_table(tmp_path / 'features', synthetic_runs(a={}, b=dict(phase=2., change_at=60.), c=dict(phase=4.)))
+    criteria = [criterion('skill', 'skill_mae.ridge_vs_persistence', min=-1e9),
+                criterion('effect', 'budget_effect_per_unit', greater_than=-1e9)]
+    protocol = tmp_path / 'protocol.json'
+    analysis = dict(features=dict(horizons=[1], windows=[1, 5]), forecast=dict(split_fraction=2 / 3, alpha=1))
+
+    def run(spec, *extra, output='forecast'):
+        protocol.write_text(json.dumps(dict(analysis=analysis, acceptance=spec)))
+        monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(tmp_path / 'features'), '--output-dir',
+                                         str(tmp_path / output), '--acceptance', str(protocol), *extra])
+        main()
+        return json.loads((tmp_path / output / 'forecast_report.json').read_text())
+
+    report = run(acceptance(criteria, min_binding_fraction=0.))
+    assert report['evaluation_role'] == 'designated_test' and report['parameters']['test_runs'] == ['c']
+    assert report['model_readiness'] == 'offline_acceptance_passed'
+    assert report['acceptance']['judgement']['verdict'] == 'pass' and len(report['acceptance']['protocol_sha256']) == 64
+    summary = (tmp_path / 'forecast' / 'forecast_summary.md').read_text()
+    assert '# Forecast baselines (designated test)' in summary and 'Acceptance (frozen limits): **pass**' in summary
+    assert 'Designated test (c, all)' in summary and 'Held-out run c' not in summary
+    proposed = run(acceptance(criteria, status='proposed', min_binding_fraction=0.), output='proposed')
+    assert proposed['acceptance']['judgement']['verdict'] == 'pass'
+    assert proposed['model_readiness'] == 'not_established'
+    unbound = run(acceptance(criteria), output='unbound')
+    assert unbound['acceptance']['judgement']['verdict'] == 'inconclusive'
+    assert unbound['model_readiness'] == 'not_established'
+    for spec, extra in ((acceptance(criteria, training_runs=['a']), ()),
+                        (acceptance(criteria), ('--alpha', '2')),
+                        (acceptance(criteria), ('--test-runs', 'b')),
+                        (acceptance(criteria), ('--allow-unqualified',))):
+        with pytest.raises(SystemExit):
+            run(spec, *extra, output='bad')
+        assert not (tmp_path / 'bad').exists()
+    monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(tmp_path / 'features'), '--output-dir',
+                                     str(tmp_path / 'bad'), '--test-runs', 'a', 'b', 'c'])
+    with pytest.raises(SystemExit):
+        main()
+    monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(tmp_path / 'features'), '--output-dir',
+                                     str(tmp_path / 'plain'), '--test-runs', 'c'])
+    main()
+    plain = json.loads((tmp_path / 'plain' / 'forecast_report.json').read_text())
+    assert plain['evaluation_role'] == 'designated_test' and plain['acceptance'] is None
+    assert plain['model_readiness'] == 'not_established'
