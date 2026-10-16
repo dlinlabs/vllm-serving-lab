@@ -69,8 +69,10 @@ small run directories expose browsing subsets, not complete audit inputs.
 [Computed facts](results/gc-identification-20261015/facts.json),
 [audit verification](results/gc-identification-20261015/verification.json), and
 [the Chinese report](results/gc-identification-20261015/gc-defer-ident-analysis-20261015.html)
-are included. Next: offline causal features and simple forecast baselines, followed
-by a small predeclared repeat/counterbalanced experiment before model/MPC claims.
+are included. [Offline causal features and forecast baselines](experiments/forecast-baselines.md)
+now score development-only persistence/mean/ridge forecasts on these captures
+(no committed results; model readiness not established). Next: a small
+predeclared repeat/counterbalanced experiment before model/MPC claims.
 
 ---
 
