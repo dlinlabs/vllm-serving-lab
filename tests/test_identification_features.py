@@ -208,6 +208,9 @@ def test_extract_refuses_unqualified_runs_and_records_analyst_e2e(tmp_path):
         extract(root, **options)
     run, rows, requests = extract(root, allow_unqualified=True, **options)
     assert not run['qualified_for_comparison'] and len(rows) == 16 and len(requests) == 8
+    assert run['capture']['trace']['sha256'] == before['trace.json'] and run['capture']['budget_mode'] is None
+    assert run['capture']['replay'] == dict(ttft_slo=.5, max_scheduling_lag=.05)
+    assert run['capture']['experiment_protocol'] is None
     assert run['e2e_slo'] is None and run['e2e_slo_source'] is None
     assert not run['state_reconstruction']['valid'] and run['state_reconstruction']['snapshots'] == 0
     assert 'joint_slo_met' not in requests[0] and requests[0]['scheduled_ttft'] == pytest.approx(.3)

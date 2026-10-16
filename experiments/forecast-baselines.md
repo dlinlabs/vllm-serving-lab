@@ -6,8 +6,10 @@ turn audited captures into a time-causal feature table and score simple
 multi-step forecasts before any model or MPC work. It adds no telemetry,
 solver, actuation or GPU run, and commits no results. The three existing
 long captures are **development data**: they shaped this design, so their
-scores choose what to measure next and cannot validate a model. Every report
-states `evaluation_role=development` and `model_readiness=not_established`.
+scores choose what to measure next and cannot validate a model. Without
+designated test runs, every report states `evaluation_role=development` and
+`model_readiness=not_established`. A predeclared held-out test is scored with
+`--acceptance` (see [excitation v1](excitation-v1.md) and below).
 
 ## Run
 
@@ -35,9 +37,11 @@ missing. The grid is a table resolution, not a validated control period.
 
 ## Feature table contract (`identification_features.py`)
 
-Outputs `features_summary.json` (parameters, input hashes, column glossary,
-reconstruction check, label coverage), `<run>-features.jsonl` (one row per
-decision time `t`) and `<run>-request-labels.jsonl`.
+Outputs `features_summary.json` (parameters, input hashes, capture identity —
+trace provenance, budget plan, replay settings and any collection-time protocol
+binding —, column glossary, reconstruction check, label coverage),
+`<run>-features.jsonl` (one row per decision time `t`) and
+`<run>-request-labels.jsonl`.
 
 - **Features at `t`** read only what a gateway-co-located controller had by `t`:
   gateway lifecycle events at their emission time, budget changes at their
@@ -81,7 +85,9 @@ decision time `t`) and `<run>-request-labels.jsonl`.
 
 No E2E SLO is declared by these captures, and the tools have no default.
 `--e2e-slo` adds joint labels recorded as `e2e_slo_source=analyst_offline`; it
-is refused if a run declares a different value.
+is refused if a run declares a different value. It also adds
+`resolved_joint_met` feature windows, so `--acceptance` refuses a table whose
+effective deadline differs from the protocol's declared one (below).
 
 ## Baselines (`forecast_baselines.py`)
 
@@ -101,8 +107,48 @@ Evaluation never shuffles neighboring rows:
   `cohort_resolved_s` for cohort labels); evaluate rows at or after the cut.
   One model is fitted on all runs' training rows and scored per run and pooled.
 - **Leave one run out**: train on the other runs, evaluate the whole held-out run.
-- Subsets: all rows, and `near_budget_change` (within 10 s after a cap change or
-  with a realized change inside the horizon).
+- **Designated test** (`--test-runs NAME...`, or the `test_runs` of `--acceptance`):
+  those runs never enter the two splits above; one model trained on every other
+  run scores them once (per run, and pooled when there are several).
+- Subsets: all rows; `near_budget_change` (within 10 s after a cap change or
+  with a realized change inside the horizon); and its split by direction,
+  `near_budget_increase` / `near_budget_decrease`.
+- `budget_effects` records, per split, the ridge forecast's summed response to
+  one unit of realized cap mean and end (a property of the fitted model).
+
+### Predeclared acceptance (`--acceptance PROTOCOL.json`)
+
+The protocol's `acceptance` section (schema 1) declares `status`
+(`proposed`/`frozen`), `model: ridge`, `training_runs`, `test_runs`,
+preconditions (`binding_headroom`, `min_binding_fraction`, `min_subset_n`) and
+criteria, each with an id, horizon, target, subset, metric
+(`skill_mae.ridge_vs_persistence`, `skill_mae.ridge_vs_mean`,
+`models.ridge.mae|p99_abs|optimistic_p99`, or `budget_effect_per_unit`) and
+exactly one of `min`, `max`, `greater_than`.
+The protocol file also declares `traces`, `schedules`, `replay` settings,
+`runs` (name, trace, schedule, role) and `analysis`: every feature-table
+parameter, `split_fraction`, `alpha`, and `features.e2e_slo` (the offline E2E
+deadline, or `null` for none; required); `training_runs` and `test_runs` must be
+exactly its development and test runs. The run is refused (exit status 2, no
+report) if the feature table's runs differ from the declared training plus test
+runs, if any feature or forecast setting differs from or is missing in the
+protocol's `analysis`, if a run's effective E2E deadline, its source or the
+presence of joint-outcome features does not match `analysis.features.e2e_slo`, if
+any capture's recorded trace identity, budget plan or replay settings differ
+from its run's declaration (`experiment_protocol.py`; feature tables record this
+as `capture` per run), or with `--allow-unqualified`. The verdict is
+`inconclusive` when the binding fraction of test rows (headroom below the
+threshold) is too low or a criterion has too few rows, otherwise `fail` if any
+criterion fails, else `pass`. Predeclaration is verified when every test
+capture's manifest records collection with `run_trace_pilot.py --protocol`
+under the same protocol bytes, run and role while `status` was `frozen`. The
+outcome is `passed` (exit status 0, `model_readiness`
+`offline_acceptance_passed`) only for a pass with verified predeclaration;
+otherwise a pass is `not_established` (5), and `fail` (3) and `inconclusive` (4)
+are reported as such. Like every
+report here, an acceptance run is `realized_control_conditioned`: it shows the
+fitted dynamics predict held-out load given the applied cap, not that a forecast
+from a plan known at `t` is deployable.
 
 Metrics are in physical units: n, MAE, RMSE, bias, p90/p99/max absolute error,
 and skill (1 − MAE ratio) against persistence and the training mean.
@@ -117,7 +163,8 @@ over-prediction of first content, completions and deadline successes.
   identified and the `near_budget_change` subset is tiny.
 - All captures replay one trace on one GPU; rows overlap in time, so `n`
   overstates independent evidence.
-- No numeric error or optimistic-tail limits are declared here. Before any
-  readiness claim, follow [What "ready for MPC" must mean](trace-identification.md#what-ready-for-mpc-must-mean):
-  declare limits and the horizon first, then score on new held-out captures
-  (repeats and counterbalanced step orders).
+- No numeric error or optimistic-tail limits are established by the development
+  data. [Excitation v1](excitation-v1.md) proposes limits at 5 s and a held-out
+  window plus unseen schedule, following
+  [What "ready for MPC" must mean](trace-identification.md#what-ready-for-mpc-must-mean);
+  they must be approved and frozen before that test is captured.

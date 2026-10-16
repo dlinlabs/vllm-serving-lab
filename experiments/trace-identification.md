@@ -181,7 +181,9 @@ sampler files do not implement an online feature-delivery channel.
 If numeric limits, a held-out set or operating-range coverage are missing, model
 readiness is **not established**. The [offline feature and forecast-baseline
 tooling](forecast-baselines.md) builds the causal table and persistence/static
-comparisons on development captures only; it does not declare these limits.
+comparisons; development captures alone cannot establish readiness.
+[Excitation v1](excitation-v1.md) declares the stage 3 schedules, a held-out
+window and schedule, and proposed limits that must be frozen before the test.
 Model fitting, an instrumented shadow-mode
 feed/solver and a later protected closed-loop comparison with a qualified fixed
 policy are separate work. Shadow mode must not actuate; closed-loop experiments
