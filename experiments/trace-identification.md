@@ -179,7 +179,10 @@ actually available, including collection/delivery delays. The current offline
 sampler files do not implement an online feature-delivery channel.
 
 If numeric limits, a held-out set or operating-range coverage are missing, model
-readiness is **not established**. Model fitting, an instrumented shadow-mode
+readiness is **not established**. The [offline feature and forecast-baseline
+tooling](forecast-baselines.md) builds the causal table and persistence/static
+comparisons on development captures only; it does not declare these limits.
+Model fitting, an instrumented shadow-mode
 feed/solver and a later protected closed-loop comparison with a qualified fixed
 policy are separate work. Shadow mode must not actuate; closed-loop experiments
 require their own approval and safeguards. This PR supplies neither controller
