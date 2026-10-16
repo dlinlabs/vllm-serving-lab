@@ -9,13 +9,15 @@ import numpy as np
 import pytest
 
 from experiment_protocol import binding, load_protocol
-from forecast_baselines import (Ridge, analysis_mismatches, change_directions, evaluate, judge, load, load_acceptance,
-                                main, metrics, near_change, persistence, splits)
+from forecast_baselines import (Ridge, analysis_mismatches, change_directions, e2e_mismatches, evaluate, judge, load,
+                                load_acceptance, main, metrics, near_change, persistence, splits)
 from identification_features import PROTOCOL, SCHEMA_VERSION
 
 ROOT = Path(__file__).resolve().parents[1]
 TRACE_SHA256 = 'f' * 64
 REPLAY = dict(ttft_slo=.5, e2e_slo=None, cache_policy='disabled', runner_diagnostics=True)
+# Matches the parameters written by write_table and the CLI defaults.
+ANALYSIS = dict(features=dict(horizons=[1], windows=[1, 5], e2e_slo=None), forecast=dict(split_fraction=2 / 3, alpha=1))
 
 
 def level(k, phase=0.):
@@ -153,15 +155,13 @@ def capture(recorded=None, trace=None, replay=None, schedule=None):
                 replay=dict(REPLAY, **(replay or {})), experiment_protocol=recorded)
 
 
-def protocol(spec, analysis=None, development=('a', 'b'), test=('c',)):
+def protocol(spec, analysis=ANALYSIS, development=('a', 'b'), test=('c',)):
     document = dict(protocol='synthetic', replay=REPLAY, schedules={'fixed-10': dict(fixed_budget=10)},
                     traces=dict(dev=dict(sha256=TRACE_SHA256,
                                          window=['2024-05-12T00:01:00+00:00', '2024-05-12T00:02:40+00:00'])),
                     runs=[dict(name=name, trace='dev', schedule='fixed-10', role=role)
                           for role, names in (('development', development), ('test', test)) for name in names],
-                    acceptance=spec)
-    if analysis is not None:
-        document['analysis'] = analysis
+                    acceptance=spec, analysis=analysis)
     return document
 
 
@@ -192,10 +192,12 @@ def test_judge_scores_the_designated_test_against_declared_limits():
 def test_load_acceptance_rejects_incomplete_or_ambiguous_protocols(tmp_path):
     good = acceptance([criterion('skill', 'skill_mae.ridge_vs_persistence', min=.1)])
     path = tmp_path / 'protocol.json'
-    path.write_text(json.dumps(protocol(good, dict(forecast=dict(alpha=1.)))))
+    path.write_text(json.dumps(protocol(good)))
     document, sha = load_acceptance(path, [1.])
-    assert document['acceptance']['test_runs'] == ['c'] and document['analysis'] == dict(forecast=dict(alpha=1.))
+    assert document['acceptance']['test_runs'] == ['c'] and document['analysis'] == ANALYSIS
     assert len(sha) == 64
+    path.write_text(json.dumps(protocol(good, dict(ANALYSIS, features=dict(ANALYSIS['features'], e2e_slo=1.5)))))
+    assert load_acceptance(path, [1.])[0]['analysis']['features']['e2e_slo'] == 1.5
     text = json.dumps(protocol(good), indent=1)
     path.write_bytes(text.encode())
     lf = load_acceptance(path, [1.])[1]
@@ -211,14 +213,37 @@ def test_load_acceptance_rejects_incomplete_or_ambiguous_protocols(tmp_path):
            dict(good, training_runs=['a']), dict(good, training_runs=['b', 'c'], test_runs=['a'])]
     documents = [protocol(spec) for spec in bad] + [
         {key: value for key, value in protocol(good).items() if key != omitted}
-        for omitted in ('acceptance', 'replay', 'traces', 'schedules', 'runs')]
+        for omitted in ('acceptance', 'replay', 'traces', 'schedules', 'runs', 'analysis')] + [
+        protocol(good, analysis) for analysis in (
+            dict(forecast=ANALYSIS['forecast']), dict(ANALYSIS, features=dict(horizons=[1], windows=[1, 5])),
+            *(dict(ANALYSIS, features=dict(ANALYSIS['features'], e2e_slo=value))
+              for value in (0, -1., 'none', True, float('inf'))))]
     for document in documents:
         path.write_text(json.dumps(document))
         with pytest.raises(ValueError):
             load_acceptance(path, [1.])
-    assert analysis_mismatches(dict(features=dict(horizons=[1.], step=.5), forecast=dict(alpha=1.)),
-                               dict(horizons=[1., 2.], windows=[1.]), 2 / 3, 2.) == ['alpha', 'horizons', 'step']
-    assert analysis_mismatches(None, dict(horizons=[1.]), .5, 1.) == []
+    assert analysis_mismatches(dict(features=dict(horizons=[1.], step=.5, e2e_slo=None), forecast=dict(alpha=1.)),
+                               dict(horizons=[1., 2.], windows=[1.]), 2 / 3, 2.) == [
+        'alpha', 'horizons', 'split_fraction', 'step', 'windows']
+    assert analysis_mismatches(ANALYSIS, dict(horizons=[1.], windows=[1., 5.]), 2 / 3, 1.) == []
+    assert analysis_mismatches(None, dict(horizons=[1.]), .5, 1.) == ['alpha', 'horizons', 'split_fraction']
+
+
+def test_e2e_mismatches_bind_the_effective_offline_deadline_and_joint_features():
+    def run(e2e, source, joint):
+        features = dict(awaiting_first_content=1., **({'resolved_joint_met_1s': 0} if joint else {}))
+        return dict(meta=dict(e2e_slo=e2e, e2e_slo_source=source), rows=[dict(features=features)])
+    assert e2e_mismatches(None, dict(a=run(None, None, False))) == []
+    assert e2e_mismatches(1.5, dict(a=run(1.5, 'analyst_offline', True), b=run(1.5, 'declared', True))) == []
+    rejected = [(None, run(1.5, 'analyst_offline', True)), (None, run(None, None, True)),
+                (None, run(None, 'declared', False)), (1.5, run(None, None, False)),
+                (1.5, run(2., 'analyst_offline', True)), (1.5, run(1.5, 'analyst_offline', False)),
+                (1.5, run(1.5, None, True))]
+    for declared, item in rejected:
+        assert len(e2e_mismatches(declared, dict(a=item))) == 1
+    legacy = run(None, None, False)
+    del legacy['meta']['e2e_slo']
+    assert 'a uses E2E SLO None' in e2e_mismatches(None, dict(a=legacy))[0]
 
 
 def test_optimistic_errors_follow_the_controller_risk_direction():
@@ -240,11 +265,12 @@ def test_ridge_imputes_missing_and_constant_columns_without_warnings():
     assert prediction[0] == pytest.approx(7.) and prediction[1] == 0.
 
 
-def write_table(directory, runs, qualified=True, protocol=PROTOCOL, reconstructed=True, captures=None):
+def write_table(directory, runs, qualified=True, protocol=PROTOCOL, reconstructed=True, captures=None,
+                e2e=(None, None)):
     directory.mkdir()
     captures = captures or {}
     meta = [dict(name=name, qualified_for_comparison=qualified, state_reconstruction=dict(valid=reconstructed),
-                 raw_sha256={}, duration_s=100., e2e_slo=None, e2e_slo_source=None, initial_budget=10.,
+                 raw_sha256={}, duration_s=100., e2e_slo=e2e[0], e2e_slo_source=e2e[1], initial_budget=10.,
                  table=dict(budget_applications=[]), capture=captures.get(name, capture())) for name in runs]
     (directory / 'features_summary.json').write_text(json.dumps(dict(
         schema_version=SCHEMA_VERSION, protocol=protocol, parameters=dict(horizons=[1.], windows=[1., 5.]),
@@ -325,18 +351,18 @@ def test_cli_scores_the_predeclared_test_once_and_refuses_drift(tmp_path, monkey
     criteria = [criterion('skill', 'skill_mae.ridge_vs_persistence', min=-1e9),
                 criterion('effect', 'budget_effect_per_unit', greater_than=-1e9)]
     path = tmp_path / 'protocol.json'
-    analysis = dict(features=dict(horizons=[1], windows=[1, 5]), forecast=dict(split_fraction=2 / 3, alpha=1))
+    analysis = ANALYSIS
     tables = iter(range(100))
 
-    def collect(spec):
+    def collect(spec, analysis=analysis):
         """What run_trace_pilot.py --protocol records when the test run is collected under spec."""
         path.write_text(json.dumps(protocol(spec, analysis)))
         return dict(path=str(path), **binding(*load_protocol(path), 'c'))
 
-    def score(spec, test_capture, *extra, output='forecast'):
+    def score(spec, test_capture, *extra, output='forecast', analysis=analysis, table=runs, e2e=(None, None)):
         path.write_text(json.dumps(protocol(spec, analysis)))
         features = tmp_path / f'features-{next(tables)}'
-        write_table(features, runs, captures=dict(c=test_capture))
+        write_table(features, table, captures=dict(c=test_capture), e2e=e2e)
         monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(features), '--output-dir',
                                          str(tmp_path / output), '--acceptance', str(path), *extra])
         status = main()
@@ -388,6 +414,26 @@ def test_cli_scores_the_predeclared_test_once_and_refuses_drift(tmp_path, monkey
         with pytest.raises(SystemExit) as raised:
             score(spec, test_capture, *extra, output='bad')
         assert raised.value.code == 2 and not (tmp_path / 'bad').exists()
+    # identification_features.py --e2e-slo after collection leaves captures and table parameters unchanged but
+    # adds joint outcomes the ridge uses as inputs; the declared analysis e2e_slo must reject it before fitting.
+    joint = {name: dict(run, rows=[dict(row, features=dict(row['features'], resolved_joint_met_1s=0))
+                                   for row in run['rows']]) for name, run in runs.items()}
+    offline = (1.5, 'analyst_offline')
+    declared = dict(ANALYSIS, features=dict(ANALYSIS['features'], e2e_slo=1.5))
+    declared_capture = capture(collect(frozen, declared))
+    overrides = [dict(table=joint, e2e=offline), dict(table=joint), dict(e2e=offline),
+                 dict(analysis=dict(ANALYSIS, features=dict(horizons=[1], e2e_slo=None))),
+                 dict(analysis=declared), dict(analysis=declared, e2e=offline),
+                 dict(analysis=declared, table=joint, e2e=(2., 'analyst_offline'))]
+    for options in overrides:
+        test_capture = declared_capture if options.get('analysis') is declared else capture(bound)
+        with pytest.raises(SystemExit) as raised:
+            score(frozen, test_capture, output='bad', **options)
+        assert raised.value.code == 2 and not (tmp_path / 'bad').exists()
+    status, report = score(frozen, declared_capture, output='declared-e2e', analysis=declared, table=joint, e2e=offline)
+    assert status == 0 and report['acceptance']['outcome'] == 'passed'
+    assert report['inputs']['c']['e2e_slo'] == 1.5 and report['inputs']['c']['e2e_slo_source'] == 'analyst_offline'
+    assert 'resolved_joint_met_1s' in report['evaluation']['feature_columns']
     features = tmp_path / 'features-plain'
     write_table(features, runs)
     monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(features), '--output-dir',

@@ -23,7 +23,7 @@ acceptance limits there are **`status: "proposed"`** until approved.
 | Development trace | `results/trace-experiment-96-r1/trace.json` (experiment preset, `[00:01, 00:06)`), SHA-256 `62f3f182…bc4e2e`, the same bytes as the existing captures |
 | Held-out trace | Custom window `[00:07:00, 00:12:00)` of the same 1 MiB Azure conversation prefix (SHA-256 `242489b8…fa66fb16`, which ends at 00:16:23.95); sample probability 1, seed 1, output cap 128, same model |
 | Replay settings | As the qualified gc-defer captures: TTFT SLO 0.5 s, no E2E SLO, 50 ms scheduling and budget lag, cache disabled, gateway + runner diagnostics, engine observations off, runner GC `defer` with 1536 MiB RSS cap, process sampler, and the runner defaults (3 warmup requests, 1000 pending, 120 s request/drain/startup timeouts) |
-| Analysis | `identification_features.py` defaults (0.5 s grid, horizons 1/2/5 s, windows 1/5 s, engine age 3 s); `forecast_baselines.py` split 2/3, ridge α 1 |
+| Analysis | `identification_features.py` defaults (0.5 s grid, horizons 1/2/5 s, windows 1/5 s, engine age 3 s) and no offline E2E deadline (`analysis.features.e2e_slo: null`, so no `--e2e-slo` and no joint-outcome features); `forecast_baselines.py` split 2/3, ridge α 1 |
 | Primary horizon | 5 s (about 1–3 s cap response plus margin; backlog bursts recur about every 5 s) |
 
 The schedule candidates are enumerated, not sampled: anchor at both ends, no
@@ -131,10 +131,12 @@ python forecast_baselines.py /tmp/excitation-v1-features \
 ```
 
 With `--acceptance`, the feature table must contain exactly the declared
-training and test runs, the feature and forecast settings must match the
-declared `analysis`, every capture's recorded trace, budget plan and replay
-settings must match its run's declaration, and unqualified captures are refused
-(exit status 2, no report). C is excluded from
+training and test runs, every feature and forecast setting must match the
+declared `analysis`, each run's effective E2E deadline must match
+`analysis.features.e2e_slo` (here none: a table built with `--e2e-slo` adds
+joint-outcome inputs and is refused), every capture's recorded trace, budget
+plan and replay settings must match its run's declaration, and unqualified
+captures are refused (exit status 2, no report). C is excluded from
 the chronological and leave-one-run-out splits; the `designated_test` split
 trains on the five other runs and scores C once. The report records the
 protocol file's SHA-256 (of its LF bytes, as committed) and a verdict:

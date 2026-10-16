@@ -85,7 +85,7 @@
     {"name": "multilevel-v1-c-heldout-r1", "trace": "held_out", "schedule": "c", "role": "test"}
   ],
   "analysis": {
-    "features": {"step": 0.5, "horizons": [1, 2, 5], "windows": [1, 5], "engine_max_age": 3},
+    "features": {"step": 0.5, "horizons": [1, 2, 5], "windows": [1, 5], "engine_max_age": 3, "e2e_slo": null},
     "forecast": {"split_fraction": 0.6666666666666666, "alpha": 1}
   },
   "acceptance": {

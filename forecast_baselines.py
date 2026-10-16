@@ -5,10 +5,12 @@ path) forecasts of labels written by identification_features.py on held-out time
 held-out runs. Conditioning on realized control makes this system identification, not a
 deployable planned-control forecast. Without designated test runs the captures are development
 data: the numbers choose what to measure next and do not establish a model for control. With
---acceptance, every capture must match its declared trace, budget plan and replay settings, the
-predeclared test runs are excluded from every development split and scored once against the
-declared limits, and the exit status reports the outcome (0 passed, 3 fail, 4 inconclusive,
-5 not established: limits not frozen or no collection-time binding to this exact protocol).
+--acceptance, every capture must match its declared trace, budget plan and replay settings, every
+feature and forecast setting (including the effective offline E2E deadline, or its absence) must
+match the declared analysis, the predeclared test runs are excluded from every development split
+and scored once against the declared limits, and the exit status reports the outcome (0 passed,
+3 fail, 4 inconclusive, 5 not established: limits not frozen or no collection-time binding to
+this exact protocol).
 """
 import argparse
 import hashlib
@@ -339,19 +341,52 @@ def load_acceptance(path, horizons):
                 or criterion.get('target') not in TARGETS or float(criterion.get('horizon_s', -1)) not in horizons
                 or (criterion['metric'] != 'budget_effect_per_unit' and criterion.get('subset') not in SUBSETS)):
             raise ValueError(f"Invalid acceptance criterion {criterion['id']}")
+    analysis = document.get('analysis')
+    features = analysis.get('features') if isinstance(analysis, dict) else None
+    e2e = features.get('e2e_slo', False) if isinstance(features, dict) else False
+    if not (e2e is None or (type(e2e) in (int, float) and math.isfinite(e2e) and e2e > 0)):
+        raise ValueError('The protocol analysis must declare features.e2e_slo: null (no offline E2E outcomes) '
+                         'or a positive deadline in seconds')
     return document, sha256
 
 
 def analysis_mismatches(analysis, parameters, split_fraction, alpha):
-    """Names of feature/forecast settings that differ from the protocol's declared analysis."""
+    """Names of feature/forecast settings that differ from, or are missing in, the protocol's declared analysis.
+
+    The per-run effective E2E deadline is checked separately by e2e_mismatches.
+    """
     analysis = analysis or {}
     declared = dict(analysis.get('features', {}), **analysis.get('forecast', {}))
+    declared.pop('e2e_slo', None)
     actual = dict(parameters, split_fraction=split_fraction, alpha=alpha)
 
     def same(a, b):
         a, b = np.atleast_1d(np.asarray(a, dtype=float)), np.atleast_1d(np.asarray(b, dtype=float))
         return a.shape == b.shape and np.allclose(a, b)
-    return sorted(name for name, value in declared.items() if name not in actual or not same(value, actual[name]))
+    return sorted(name for name in set(declared) | set(actual)
+                  if name not in declared or name not in actual or not same(declared[name], actual[name]))
+
+
+def e2e_mismatches(declared, runs):
+    """Runs whose effective offline E2E deadline, or joint-outcome feature columns, differ from the declared one.
+
+    identification_features.py --e2e-slo adds joint outcomes the ridge would use as inputs, so an undeclared
+    analyst deadline changes the model even though the capture and table parameters are unchanged.
+    """
+    problems = []
+    for name in sorted(runs):
+        meta = runs[name]['meta']
+        effective, source = meta.get('e2e_slo'), meta.get('e2e_slo_source')
+        joint = any(key.startswith('resolved_joint_met') for key in runs[name]['rows'][0]['features'])
+        if declared is None:
+            consistent = effective is None and source is None and not joint
+        else:
+            consistent = (type(effective) in (int, float) and math.isclose(effective, declared)
+                          and source in ('declared', 'analyst_offline') and joint)
+        if 'e2e_slo' not in meta or not consistent:
+            problems.append(f"{name} uses E2E SLO {effective} (source {source}, joint features "
+                            f"{'present' if joint else 'absent'}), declared {declared}")
+    return problems
 
 
 def judge(spec, evaluation, runs):
@@ -508,6 +543,10 @@ def main():
         mismatched = analysis_mismatches(document.get('analysis'), parameters, args.split_fraction, args.alpha)
         if mismatched:
             parser.error(f"Settings differ from the protocol's declared analysis: {', '.join(mismatched)}")
+        e2e_problems = e2e_mismatches(document['analysis']['features']['e2e_slo'], runs)
+        if e2e_problems:
+            parser.error("Effective E2E settings differ from the protocol's declared analysis e2e_slo: "
+                         + '; '.join(e2e_problems))
         problems = [problem for name in sorted(runs)
                     for problem in capture_mismatches(document, name, runs[name]['meta'].get('capture'))]
         if problems:

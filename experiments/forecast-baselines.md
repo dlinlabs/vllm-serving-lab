@@ -85,7 +85,9 @@ binding —, column glossary, reconstruction check, label coverage),
 
 No E2E SLO is declared by these captures, and the tools have no default.
 `--e2e-slo` adds joint labels recorded as `e2e_slo_source=analyst_offline`; it
-is refused if a run declares a different value.
+is refused if a run declares a different value. It also adds
+`resolved_joint_met` feature windows, so `--acceptance` refuses a table whose
+effective deadline differs from the protocol's declared one (below).
 
 ## Baselines (`forecast_baselines.py`)
 
@@ -123,11 +125,15 @@ criteria, each with an id, horizon, target, subset, metric
 (`skill_mae.ridge_vs_persistence`, `skill_mae.ridge_vs_mean`,
 `models.ridge.mae|p99_abs|optimistic_p99`, or `budget_effect_per_unit`) and
 exactly one of `min`, `max`, `greater_than`.
-The protocol file also declares `traces`, `schedules`, `replay` settings and
-`runs` (name, trace, schedule, role); `training_runs` and `test_runs` must be
+The protocol file also declares `traces`, `schedules`, `replay` settings,
+`runs` (name, trace, schedule, role) and `analysis`: every feature-table
+parameter, `split_fraction`, `alpha`, and `features.e2e_slo` (the offline E2E
+deadline, or `null` for none; required); `training_runs` and `test_runs` must be
 exactly its development and test runs. The run is refused (exit status 2, no
 report) if the feature table's runs differ from the declared training plus test
-runs, if feature or forecast settings differ from the protocol's `analysis`, if
+runs, if any feature or forecast setting differs from or is missing in the
+protocol's `analysis`, if a run's effective E2E deadline, its source or the
+presence of joint-outcome features does not match `analysis.features.e2e_slo`, if
 any capture's recorded trace identity, budget plan or replay settings differ
 from its run's declaration (`experiment_protocol.py`; feature tables record this
 as `capture` per run), or with `--allow-unqualified`. The verdict is
