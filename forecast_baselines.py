@@ -5,8 +5,10 @@ path) forecasts of labels written by identification_features.py on held-out time
 held-out runs. Conditioning on realized control makes this system identification, not a
 deployable planned-control forecast. Without designated test runs the captures are development
 data: the numbers choose what to measure next and do not establish a model for control. With
---acceptance, the predeclared test runs are excluded from every development split and scored
-once against the declared limits.
+--acceptance, every capture must match its declared trace, budget plan and replay settings, the
+predeclared test runs are excluded from every development split and scored once against the
+declared limits, and the exit status reports the outcome (0 passed, 3 fail, 4 inconclusive,
+5 not established: limits not frozen or no collection-time binding to this exact protocol).
 """
 import argparse
 import hashlib
@@ -17,9 +19,12 @@ from pathlib import Path
 import numpy as np
 
 from analyze_trace_dynamics import dump
+from experiment_protocol import capture_mismatches, load_protocol, predeclaration_problems
 from identification_features import CONTROL_CONDITIONING, CONTROL_LIMITS, PROTOCOL, SCHEMA_VERSION, label_key
 
 REPORT_VERSION = 1
+# Process exit status per acceptance outcome; argparse uses 2 for rejected inputs.
+EXIT_STATUS = dict(passed=0, fail=3, inconclusive=4, not_established=5)
 # Error direction that would make an admission controller too optimistic; None when ambiguous.
 TARGETS = {
     'awaiting_first_content': 'under', 'oldest_awaiting_age_s': 'under', 'reserved_cost': 'under',
@@ -301,12 +306,11 @@ def lookup(row, path):
 
 
 def load_acceptance(path, horizons):
-    """Validate the predeclared acceptance section; returns (spec, analysis settings or None, file sha256).
+    """Validate the protocol's declarations and acceptance section; returns (document, file sha256).
 
     The hash is of the LF-normalized bytes, matching the committed file on any checkout.
     """
-    raw = Path(path).read_bytes()
-    document = json.loads(raw)
+    document, sha256 = load_protocol(path)
     spec = document.get('acceptance')
     if not isinstance(spec, dict) or spec.get('schema_version') != 1:
         raise ValueError('The protocol file needs an acceptance section with schema_version 1')
@@ -319,6 +323,10 @@ def load_acceptance(path, horizons):
         raise ValueError('Acceptance needs distinct test_runs')
     if not training_runs or len(set(training_runs)) != len(training_runs) or set(training_runs) & set(test_runs):
         raise ValueError('Acceptance needs distinct training_runs disjoint from test_runs')
+    roles = {role: {run['name'] for run in document['runs'] if run['role'] == role}
+             for role in ('development', 'test')}
+    if set(training_runs) != roles['development'] or set(test_runs) != roles['test']:
+        raise ValueError('Acceptance training_runs and test_runs must be the declared development and test runs')
     pre = spec.get('preconditions', {})
     if set(pre) != {'binding_headroom', 'min_binding_fraction', 'min_subset_n'}:
         raise ValueError('Acceptance preconditions need binding_headroom, min_binding_fraction and min_subset_n')
@@ -331,7 +339,7 @@ def load_acceptance(path, horizons):
                 or criterion.get('target') not in TARGETS or float(criterion.get('horizon_s', -1)) not in horizons
                 or (criterion['metric'] != 'budget_effect_per_unit' and criterion.get('subset') not in SUBSETS)):
             raise ValueError(f"Invalid acceptance criterion {criterion['id']}")
-    return spec, document.get('analysis'), hashlib.sha256(raw.replace(b'\r\n', b'\n')).hexdigest()
+    return document, sha256
 
 
 def analysis_mismatches(analysis, parameters, split_fraction, alpha):
@@ -426,7 +434,12 @@ def markdown(report):
     acceptance = report.get('acceptance')
     if acceptance:
         judged = acceptance['judgement']
+        predeclaration = acceptance['predeclaration']
         lines.extend([f"## Acceptance ({acceptance['status']} limits): **{judged['verdict']}**", '',
+                      f"Outcome: **{acceptance['outcome']}** (exit status {acceptance['exit_status']}). "
+                      f"Predeclaration: {'verified' if predeclaration['verified'] else 'UNVERIFIED'}"
+                      + (f" ({'; '.join(predeclaration['problems'])})" if predeclaration['problems'] else '') + '.',
+                      '',
                       f"Test runs: {', '.join(judged['test_runs'])}; binding fraction "
                       f"{fmt(judged['binding_fraction'])} (needs >= "
                       f"{fmt(acceptance['preconditions']['min_binding_fraction'])}); protocol sha256 "
@@ -481,19 +494,24 @@ def main():
     horizons = sorted(set(args.horizons or available))
     if any(h not in available for h in horizons):
         parser.error(f'--horizons must be a subset of the table horizons {available}')
-    spec = analysis = protocol_sha256 = None
+    spec = document = protocol_sha256 = None
     if args.acceptance:
         try:
-            spec, analysis, protocol_sha256 = load_acceptance(args.acceptance, horizons)
+            document, protocol_sha256 = load_acceptance(args.acceptance, horizons)
         except (OSError, ValueError) as exc:
             parser.error(str(exc))
+        spec = document['acceptance']
         if args.test_runs and set(args.test_runs) != set(spec['test_runs']):
             parser.error('--test-runs differs from the test_runs declared in --acceptance')
         if set(runs) != set(spec['training_runs']) | set(spec['test_runs']):
             parser.error(f"The feature table runs {sorted(runs)} differ from the declared training and test runs")
-        mismatched = analysis_mismatches(analysis, parameters, args.split_fraction, args.alpha)
+        mismatched = analysis_mismatches(document.get('analysis'), parameters, args.split_fraction, args.alpha)
         if mismatched:
             parser.error(f"Settings differ from the protocol's declared analysis: {', '.join(mismatched)}")
+        problems = [problem for name in sorted(runs)
+                    for problem in capture_mismatches(document, name, runs[name]['meta'].get('capture'))]
+        if problems:
+            parser.error('Captures differ from the protocol declaration: ' + '; '.join(problems))
     test_runs = list(spec['test_runs'] if spec else args.test_runs or [])
     if len(set(test_runs)) != len(test_runs) or any(run not in runs for run in test_runs):
         parser.error(f'Test runs must be distinct runs of the feature table: {sorted(runs)}')
@@ -503,18 +521,24 @@ def main():
                           fraction=args.split_fraction, alpha=args.alpha, test_runs=test_runs)
     acceptance = None
     if spec:
+        judgement = judge(spec, evaluation, runs)
+        unverified = [problem for name in spec['test_runs'] for problem in
+                      predeclaration_problems(document, protocol_sha256, name, runs[name]['meta'].get('capture'))]
+        verdict = judgement['verdict']
+        outcome = verdict if verdict != 'pass' else 'not_established' if unverified else 'passed'
         acceptance = dict(protocol=str(args.acceptance), protocol_sha256=protocol_sha256, status=spec['status'],
                           training_runs=spec['training_runs'], preconditions=spec['preconditions'],
-                          judgement=judge(spec, evaluation, runs))
-    passed = (acceptance is not None and acceptance['status'] == 'frozen'
-              and acceptance['judgement']['verdict'] == 'pass')
+                          predeclaration=dict(verified=not unverified, problems=unverified),
+                          judgement=judgement, outcome=outcome, exit_status=EXIT_STATUS[outcome])
+    passed = acceptance is not None and acceptance['outcome'] == 'passed'
     inputs = {name: dict(features_sha256=run['sha256'], raw_sha256=run['meta']['raw_sha256'],
                          qualified_for_comparison=run['meta']['qualified_for_comparison'],
                          state_reconstruction_valid=run['meta']['state_reconstruction']['valid'],
                          duration_s=run['meta']['duration_s'], e2e_slo=run['meta']['e2e_slo'],
                          e2e_slo_source=run['meta']['e2e_slo_source'],
                          budgets=sorted({a['budget'] for a in run['meta']['table']['budget_applications']}
-                                        | {run['meta']['initial_budget']}))
+                                        | {run['meta']['initial_budget']}),
+                         capture=run['meta'].get('capture'))
               for name, run in runs.items()}
     changing = sum(len(item['budgets']) > 1 for item in inputs.values())
     development = len(runs) - len(test_runs)
@@ -531,6 +555,9 @@ def main():
                        'not a test-set measurement.')
         if acceptance['status'] != 'frozen':
             caveats.append('The acceptance limits are not frozen, so the verdict cannot establish readiness.')
+        if not acceptance['predeclaration']['verified']:
+            caveats.append('Predeclaration is unverified: a test run lacks a record of collection under this exact '
+                           'frozen protocol, so a pass does not establish readiness.')
     splits_doc = dict(chronological='Train on rows whose label is fully known by the cut in every development '
                                     'run; evaluate rows at or after the cut. Scored per run and pooled.',
                       leave_one_run_out='Train on all other development runs; evaluate the whole held-out run.')
@@ -552,7 +579,8 @@ def main():
                         since_cap_s=SINCE_CAP_S, near_change_s=NEAR_CHANGE_S, test_runs=test_runs),
         inputs=inputs, captures_with_cap_changes=changing,
         analysis_code_sha256={name: hashlib.sha256((here / name).read_bytes()).hexdigest()
-                              for name in ('forecast_baselines.py', 'identification_features.py')},
+                              for name in ('forecast_baselines.py', 'identification_features.py',
+                                           'experiment_protocol.py')},
         models=dict(persistence='Current state; flows and cohorts extend the trailing rate from the window '
                                 'nearest the horizon (cohort outcomes use receipt-anchored resolved proxies).',
                     mean='Training-set mean of the target.',
@@ -566,8 +594,11 @@ def main():
     (output / 'forecast_summary.md').write_text(markdown(report) + '\n', encoding='utf-8')
     print(output / 'forecast_summary.md')
     if acceptance:
-        print(f"acceptance ({acceptance['status']}): {acceptance['judgement']['verdict']}")
+        print(f"acceptance ({acceptance['status']}): {acceptance['judgement']['verdict']}; "
+              f"outcome {acceptance['outcome']} (exit status {acceptance['exit_status']})")
+        return acceptance['exit_status']
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

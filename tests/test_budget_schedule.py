@@ -57,13 +57,14 @@ def test_frozen_schedules_regenerate_and_match_the_protocol():
     spec = protocol()
     settings = spec['generator']
     args = (settings['budgets'], settings['anchor'], settings['hold_seconds'], settings['duration_seconds'])
-    files = {name: json.loads((ROOT / item['path']).read_text()) for name, item in spec['schedules'].items()}
+    generated = {name: item for name, item in spec['schedules'].items() if name in ('a', 'b', 'c')}
+    files = {name: json.loads((ROOT / item['path']).read_text()) for name, item in generated.items()}
     a, count = generate(*args, spec['schedules']['a']['seed'])
     assert count == 312 and files['a'] == a
     assert files['b'] == schedule(list(reversed(budgets(a))), settings['hold_seconds'])
     c, _ = generate(*args, spec['schedules']['c']['seed'], [budgets(a)])
     assert files['c'] == c
-    for name, item in spec['schedules'].items():
+    for name, item in generated.items():
         assert lf_sha256(ROOT / item['path']) == item['sha256']
         assert budgets(files[name]) == tuple(map(float, item['budgets']))
         assert validate_schedule(files[name], settings['duration_seconds'])

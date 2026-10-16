@@ -37,9 +37,11 @@ missing. The grid is a table resolution, not a validated control period.
 
 ## Feature table contract (`identification_features.py`)
 
-Outputs `features_summary.json` (parameters, input hashes, column glossary,
-reconstruction check, label coverage), `<run>-features.jsonl` (one row per
-decision time `t`) and `<run>-request-labels.jsonl`.
+Outputs `features_summary.json` (parameters, input hashes, capture identity —
+trace provenance, budget plan, replay settings and any collection-time protocol
+binding —, column glossary, reconstruction check, label coverage),
+`<run>-features.jsonl` (one row per decision time `t`) and
+`<run>-request-labels.jsonl`.
 
 - **Features at `t`** read only what a gateway-co-located controller had by `t`:
   gateway lifecycle events at their emission time, budget changes at their
@@ -120,13 +122,24 @@ preconditions (`binding_headroom`, `min_binding_fraction`, `min_subset_n`) and
 criteria, each with an id, horizon, target, subset, metric
 (`skill_mae.ridge_vs_persistence`, `skill_mae.ridge_vs_mean`,
 `models.ridge.mae|p99_abs|optimistic_p99`, or `budget_effect_per_unit`) and
-exactly one of `min`, `max`, `greater_than`. The run is refused if the feature
-table's runs differ from the declared training plus test runs, if feature or
-forecast settings differ from the protocol's `analysis`, or with
-`--allow-unqualified`. The verdict is `inconclusive` when the binding fraction of
-test rows (headroom below the threshold) is too low or a criterion has too few
-rows, otherwise `fail` if any criterion fails, else `pass`. `model_readiness` is
-`offline_acceptance_passed` only for a pass against `frozen` limits. Like every
+exactly one of `min`, `max`, `greater_than`.
+The protocol file also declares `traces`, `schedules`, `replay` settings and
+`runs` (name, trace, schedule, role); `training_runs` and `test_runs` must be
+exactly its development and test runs. The run is refused (exit status 2, no
+report) if the feature table's runs differ from the declared training plus test
+runs, if feature or forecast settings differ from the protocol's `analysis`, if
+any capture's recorded trace identity, budget plan or replay settings differ
+from its run's declaration (`experiment_protocol.py`; feature tables record this
+as `capture` per run), or with `--allow-unqualified`. The verdict is
+`inconclusive` when the binding fraction of test rows (headroom below the
+threshold) is too low or a criterion has too few rows, otherwise `fail` if any
+criterion fails, else `pass`. Predeclaration is verified when every test
+capture's manifest records collection with `run_trace_pilot.py --protocol`
+under the same protocol bytes, run and role while `status` was `frozen`. The
+outcome is `passed` (exit status 0, `model_readiness`
+`offline_acceptance_passed`) only for a pass with verified predeclaration;
+otherwise a pass is `not_established` (5), and `fail` (3) and `inconclusive` (4)
+are reported as such. Like every
 report here, an acceptance run is `realized_control_conditioned`: it shows the
 fitted dynamics predict held-out load given the applied cap, not that a forecast
 from a plan known at `t` is deployable.

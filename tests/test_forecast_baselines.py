@@ -1,13 +1,21 @@
 import json
 import math
+import subprocess
+import sys
 import warnings
+from pathlib import Path
 
 import numpy as np
 import pytest
 
+from experiment_protocol import binding, load_protocol
 from forecast_baselines import (Ridge, analysis_mismatches, change_directions, evaluate, judge, load, load_acceptance,
                                 main, metrics, near_change, persistence, splits)
 from identification_features import PROTOCOL, SCHEMA_VERSION
+
+ROOT = Path(__file__).resolve().parents[1]
+TRACE_SHA256 = 'f' * 64
+REPLAY = dict(ttft_slo=.5, e2e_slo=None, cache_policy='disabled', runner_diagnostics=True)
 
 
 def level(k, phase=0.):
@@ -136,6 +144,27 @@ def acceptance(criteria, status='frozen', training_runs=('a', 'b'), test_runs=('
                                    **preconditions))
 
 
+def capture(recorded=None, trace=None, replay=None, schedule=None):
+    """Capture identity as identification_features.py records it; 17:01-07:00 is the declared 00:01Z start."""
+    return dict(trace=dict(dict(sha256=TRACE_SHA256, source_sha256=None, window_start='2024-05-11T17:01:00-07:00',
+                                duration_seconds=100, model='m', output_cap=None, sampling_probability=None,
+                                seed=None, time_scale=None, preset=None), **(trace or {})),
+                budget_mode='fixed', budget_schedule=schedule or [dict(at_seconds=0., budget=10.)],
+                replay=dict(REPLAY, **(replay or {})), experiment_protocol=recorded)
+
+
+def protocol(spec, analysis=None, development=('a', 'b'), test=('c',)):
+    document = dict(protocol='synthetic', replay=REPLAY, schedules={'fixed-10': dict(fixed_budget=10)},
+                    traces=dict(dev=dict(sha256=TRACE_SHA256,
+                                         window=['2024-05-12T00:01:00+00:00', '2024-05-12T00:02:40+00:00'])),
+                    runs=[dict(name=name, trace='dev', schedule='fixed-10', role=role)
+                          for role, names in (('development', development), ('test', test)) for name in names],
+                    acceptance=spec)
+    if analysis is not None:
+        document['analysis'] = analysis
+    return document
+
+
 def test_judge_scores_the_designated_test_against_declared_limits():
     runs = synthetic_runs(a={}, b=dict(phase=2.), c=dict(phase=4., headroom=lambda k: 0. if k % 2 else 9.))
     for name in ('a', 'b'):
@@ -163,23 +192,28 @@ def test_judge_scores_the_designated_test_against_declared_limits():
 def test_load_acceptance_rejects_incomplete_or_ambiguous_protocols(tmp_path):
     good = acceptance([criterion('skill', 'skill_mae.ridge_vs_persistence', min=.1)])
     path = tmp_path / 'protocol.json'
-    path.write_text(json.dumps(dict(acceptance=good, analysis=dict(forecast=dict(alpha=1.)))))
-    spec, analysis, sha = load_acceptance(path, [1.])
-    assert spec['test_runs'] == ['c'] and analysis == dict(forecast=dict(alpha=1.)) and len(sha) == 64
-    text = json.dumps(dict(acceptance=good), indent=1)
+    path.write_text(json.dumps(protocol(good, dict(forecast=dict(alpha=1.)))))
+    document, sha = load_acceptance(path, [1.])
+    assert document['acceptance']['test_runs'] == ['c'] and document['analysis'] == dict(forecast=dict(alpha=1.))
+    assert len(sha) == 64
+    text = json.dumps(protocol(good), indent=1)
     path.write_bytes(text.encode())
-    lf = load_acceptance(path, [1.])[2]
+    lf = load_acceptance(path, [1.])[1]
     path.write_bytes(text.replace('\n', '\r\n').encode())
-    assert load_acceptance(path, [1.])[2] == lf
+    assert load_acceptance(path, [1.])[1] == lf
     bad = [dict(good, status='draft'), dict(good, model='persistence'), dict(good, training_runs=['a', 'c']),
            dict(good, test_runs=[]), dict(good, preconditions=dict(binding_headroom=5.)),
            dict(good, criteria=good['criteria'] * 2),
            dict(good, criteria=[criterion('x', 'skill_mae.mean_vs_persistence', min=0.)]),
            dict(good, criteria=[criterion('x', 'skill_mae.ridge_vs_mean', subset='other', min=0.)]),
            dict(good, criteria=[criterion('x', 'skill_mae.ridge_vs_mean', min=0., max=1.)]),
-           dict(good, criteria=[dict(criterion('x', 'skill_mae.ridge_vs_mean', min=0.), horizon_s=5)])]
-    for spec in bad:
-        path.write_text(json.dumps(dict(acceptance=spec)))
+           dict(good, criteria=[dict(criterion('x', 'skill_mae.ridge_vs_mean', min=0.), horizon_s=5)]),
+           dict(good, training_runs=['a']), dict(good, training_runs=['b', 'c'], test_runs=['a'])]
+    documents = [protocol(spec) for spec in bad] + [
+        {key: value for key, value in protocol(good).items() if key != omitted}
+        for omitted in ('acceptance', 'replay', 'traces', 'schedules', 'runs')]
+    for document in documents:
+        path.write_text(json.dumps(document))
         with pytest.raises(ValueError):
             load_acceptance(path, [1.])
     assert analysis_mismatches(dict(features=dict(horizons=[1.], step=.5), forecast=dict(alpha=1.)),
@@ -206,11 +240,12 @@ def test_ridge_imputes_missing_and_constant_columns_without_warnings():
     assert prediction[0] == pytest.approx(7.) and prediction[1] == 0.
 
 
-def write_table(directory, runs, qualified=True, protocol=PROTOCOL, reconstructed=True):
+def write_table(directory, runs, qualified=True, protocol=PROTOCOL, reconstructed=True, captures=None):
     directory.mkdir()
+    captures = captures or {}
     meta = [dict(name=name, qualified_for_comparison=qualified, state_reconstruction=dict(valid=reconstructed),
                  raw_sha256={}, duration_s=100., e2e_slo=None, e2e_slo_source=None, initial_budget=10.,
-                 table=dict(budget_applications=[])) for name in runs]
+                 table=dict(budget_applications=[]), capture=captures.get(name, capture())) for name in runs]
     (directory / 'features_summary.json').write_text(json.dumps(dict(
         schema_version=SCHEMA_VERSION, protocol=protocol, parameters=dict(horizons=[1.], windows=[1., 5.]),
         runs=meta)))
@@ -240,7 +275,7 @@ def test_cli_reports_development_only_baselines(tmp_path, monkeypatch):
     write_table(tmp_path / 'features', synthetic_runs(a={}, b=dict(phase=3., change_at=60.)))
     output = tmp_path / 'forecast'
     monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(tmp_path / 'features'), '--output-dir', str(output)])
-    main()
+    assert main() == 0
     report = json.loads((output / 'forecast_report.json').read_text())
     assert report['evaluation_role'] == 'development' and report['model_readiness'] == 'not_established'
     assert report['control_conditioning'] == 'realized_control_conditioned' and report['control_limits']
@@ -286,46 +321,89 @@ def test_cli_override_report_keeps_unqualified_verdicts_and_warnings(tmp_path, m
 
 
 def test_cli_scores_the_predeclared_test_once_and_refuses_drift(tmp_path, monkeypatch):
-    write_table(tmp_path / 'features', synthetic_runs(a={}, b=dict(phase=2., change_at=60.), c=dict(phase=4.)))
+    runs = synthetic_runs(a={}, b=dict(phase=2., change_at=60.), c=dict(phase=4.))
     criteria = [criterion('skill', 'skill_mae.ridge_vs_persistence', min=-1e9),
                 criterion('effect', 'budget_effect_per_unit', greater_than=-1e9)]
-    protocol = tmp_path / 'protocol.json'
+    path = tmp_path / 'protocol.json'
     analysis = dict(features=dict(horizons=[1], windows=[1, 5]), forecast=dict(split_fraction=2 / 3, alpha=1))
+    tables = iter(range(100))
 
-    def run(spec, *extra, output='forecast'):
-        protocol.write_text(json.dumps(dict(analysis=analysis, acceptance=spec)))
-        monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(tmp_path / 'features'), '--output-dir',
-                                         str(tmp_path / output), '--acceptance', str(protocol), *extra])
-        main()
-        return json.loads((tmp_path / output / 'forecast_report.json').read_text())
+    def collect(spec):
+        """What run_trace_pilot.py --protocol records when the test run is collected under spec."""
+        path.write_text(json.dumps(protocol(spec, analysis)))
+        return dict(path=str(path), **binding(*load_protocol(path), 'c'))
 
-    report = run(acceptance(criteria, min_binding_fraction=0.))
+    def score(spec, test_capture, *extra, output='forecast'):
+        path.write_text(json.dumps(protocol(spec, analysis)))
+        features = tmp_path / f'features-{next(tables)}'
+        write_table(features, runs, captures=dict(c=test_capture))
+        monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(features), '--output-dir',
+                                         str(tmp_path / output), '--acceptance', str(path), *extra])
+        status = main()
+        return status, json.loads((tmp_path / output / 'forecast_report.json').read_text())
+
+    frozen = acceptance(criteria, min_binding_fraction=0.)
+    bound = collect(frozen)
+    status, report = score(frozen, capture(bound))
+    assert status == 0 and report['acceptance']['outcome'] == 'passed'
+    assert report['acceptance']['predeclaration'] == dict(verified=True, problems=[])
     assert report['evaluation_role'] == 'designated_test' and report['parameters']['test_runs'] == ['c']
     assert report['model_readiness'] == 'offline_acceptance_passed'
     assert report['acceptance']['judgement']['verdict'] == 'pass' and len(report['acceptance']['protocol_sha256']) == 64
+    assert report['inputs']['a']['capture'] == capture() and report['inputs']['c']['capture'] == capture(bound)
     summary = (tmp_path / 'forecast' / 'forecast_summary.md').read_text()
     assert '# Forecast baselines (designated test)' in summary and 'Acceptance (frozen limits): **pass**' in summary
+    assert 'Outcome: **passed** (exit status 0). Predeclaration: verified.' in summary
     assert 'Designated test (c, all)' in summary and 'Held-out run c' not in summary
-    proposed = run(acceptance(criteria, status='proposed', min_binding_fraction=0.), output='proposed')
-    assert proposed['acceptance']['judgement']['verdict'] == 'pass'
-    assert proposed['model_readiness'] == 'not_established'
-    unbound = run(acceptance(criteria), output='unbound')
-    assert unbound['acceptance']['judgement']['verdict'] == 'inconclusive'
-    assert unbound['model_readiness'] == 'not_established'
-    for spec, extra in ((acceptance(criteria, training_runs=['a']), ()),
-                        (acceptance(criteria), ('--alpha', '2')),
-                        (acceptance(criteria), ('--test-runs', 'b')),
-                        (acceptance(criteria), ('--allow-unqualified',))):
-        with pytest.raises(SystemExit):
-            run(spec, *extra, output='bad')
-        assert not (tmp_path / 'bad').exists()
-    monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(tmp_path / 'features'), '--output-dir',
+    proposed = acceptance(criteria, status='proposed', min_binding_fraction=0.)
+    early = capture(collect(proposed))
+    for spec, test_capture, output in ((frozen, early, 'refrozen'), (proposed, early, 'proposed'),
+                                       (frozen, capture(), 'unrecorded')):
+        status, report = score(spec, test_capture, output=output)
+        assert status == 5 and report['acceptance']['judgement']['verdict'] == 'pass'
+        assert report['acceptance']['outcome'] == 'not_established' and report['model_readiness'] == 'not_established'
+        assert not report['acceptance']['predeclaration']['verified']
+        assert any(caveat.startswith('Predeclaration is unverified') for caveat in report['caveats'])
+        assert 'Predeclaration: UNVERIFIED' in (tmp_path / output / 'forecast_summary.md').read_text()
+    refrozen = json.loads((tmp_path / 'refrozen' / 'forecast_report.json').read_text())['acceptance']
+    assert any('recorded sha256' in problem for problem in refrozen['predeclaration']['problems'])
+    assert any('before the acceptance limits were frozen' in problem
+               for problem in refrozen['predeclaration']['problems'])
+    sparse = acceptance(criteria)
+    status, report = score(sparse, capture(collect(sparse)), output='inconclusive')
+    assert status == 4 and report['acceptance']['outcome'] == 'inconclusive'
+    assert report['model_readiness'] == 'not_established'
+    failing = acceptance(criteria + [criterion('impossible', 'skill_mae.ridge_vs_mean', min=1.5)],
+                         min_binding_fraction=0.)
+    failing_capture = capture(collect(failing))
+    status, report = score(failing, failing_capture, output='failing')
+    assert status == 3 and report['acceptance']['outcome'] == 'fail' and report['model_readiness'] == 'not_established'
+    drifted = [capture(bound, trace=dict(window_start='2024-05-12T00:01:01+00:00')),
+               capture(bound, trace=dict(sha256='e' * 64)), capture(bound, schedule=[dict(at_seconds=0., budget=96.)]),
+               capture(bound, replay=dict(ttft_slo=1.)), capture(bound, replay=dict(sampler_mode='process')), None]
+    rejected = [(frozen, test_capture, ()) for test_capture in drifted] + [
+        (acceptance(criteria, training_runs=['a']), capture(bound), ()), (frozen, capture(bound), ('--alpha', '2')),
+        (frozen, capture(bound), ('--test-runs', 'b')), (frozen, capture(bound), ('--allow-unqualified',))]
+    for spec, test_capture, extra in rejected:
+        with pytest.raises(SystemExit) as raised:
+            score(spec, test_capture, *extra, output='bad')
+        assert raised.value.code == 2 and not (tmp_path / 'bad').exists()
+    features = tmp_path / 'features-plain'
+    write_table(features, runs)
+    monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(features), '--output-dir',
                                      str(tmp_path / 'bad'), '--test-runs', 'a', 'b', 'c'])
     with pytest.raises(SystemExit):
         main()
-    monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(tmp_path / 'features'), '--output-dir',
+    monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(features), '--output-dir',
                                      str(tmp_path / 'plain'), '--test-runs', 'c'])
-    main()
+    assert main() == 0
     plain = json.loads((tmp_path / 'plain' / 'forecast_report.json').read_text())
     assert plain['evaluation_role'] == 'designated_test' and plain['acceptance'] is None
     assert plain['model_readiness'] == 'not_established'
+    path.write_text(json.dumps(protocol(failing, analysis)))
+    features = tmp_path / 'features-process'
+    write_table(features, runs, captures=dict(c=failing_capture))
+    completed = subprocess.run([sys.executable, 'forecast_baselines.py', str(features), '--output-dir',
+                                str(tmp_path / 'process'), '--acceptance', str(path)],
+                               cwd=ROOT, capture_output=True, text=True)
+    assert completed.returncode == 3 and 'outcome fail (exit status 3)' in completed.stdout

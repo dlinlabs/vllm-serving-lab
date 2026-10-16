@@ -29,6 +29,13 @@
       "exclude": ["a"],
       "budgets": [96, 80, 64, 96, 48, 80, 48, 64, 80, 96],
       "sha256": "9c85dcad57489af946119538893bab7066eb88f1f6d16bc549a8531879a81759"
+    },
+    "fixed-96": {"fixed_budget": 96},
+    "fixed-64": {"fixed_budget": 64},
+    "step-96-64-96": {
+      "path": "results/budget-schedules/ident-96-64-96-v1.json",
+      "budgets": [96, 64, 96],
+      "sha256": "d6df37c2be783930aa569b9d6711f8f64d2ac9530fe6cd882eff040c9abcd063"
     }
   },
   "traces": {
@@ -45,6 +52,7 @@
       "duration_seconds": 300,
       "sample_probability": 1,
       "seed": 1,
+      "time_scale": 1,
       "output_cap": 128,
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "output_dir": "results/trace-heldout-0007-input"
@@ -61,9 +69,17 @@
     "runner_diagnostics": true,
     "runner_gc_policy": "defer",
     "runner_max_rss_mib": 1536,
-    "sampler_mode": "process"
+    "sampler_mode": "process",
+    "warmup_requests": 3,
+    "max_pending": 1000,
+    "request_timeout": 120,
+    "drain_timeout": 120,
+    "startup_timeout": 120
   },
   "runs": [
+    {"name": "gc-defer-fixed-96-r1", "trace": "development", "schedule": "fixed-96", "role": "development"},
+    {"name": "gc-defer-fixed-64-r1", "trace": "development", "schedule": "fixed-64", "role": "development"},
+    {"name": "gc-defer-step-96-64-96-r1", "trace": "development", "schedule": "step-96-64-96", "role": "development"},
     {"name": "multilevel-v1-a-r1", "trace": "development", "schedule": "a", "role": "development"},
     {"name": "multilevel-v1-b-r1", "trace": "development", "schedule": "b", "role": "development"},
     {"name": "multilevel-v1-c-heldout-r1", "trace": "held_out", "schedule": "c", "role": "test"}

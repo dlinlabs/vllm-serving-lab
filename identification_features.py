@@ -18,6 +18,8 @@ from pathlib import Path
 
 from analyze_trace_dynamics import analyze_run, dump, finite, hashes, join_requests
 from analyze_trace_pilot import LIFECYCLE, TERMINAL
+from experiment_protocol import capture_identity
+from trace_control import read_plan
 
 SCHEMA_VERSION = 1
 PROTOCOL = 'causal-gateway-features-v1'
@@ -463,6 +465,15 @@ def extract(root, *, stall_threshold=.3, e2e_slo=None, allow_unqualified=False, 
                              ttft_slo=manifest['config']['ttft_slo'], e2e_slo=effective, **options)
     info['unplaced_ledger_rows'] = sum(not finite(row.get('scheduled_s')) for row in ledger)
     validation = validate_snapshots(records, start, budget, version)
+    trace = json.loads((root / 'trace.json').read_text())
+    try:
+        plan = read_plan(root, manifest, trace)
+    except ValueError:
+        plan = None
+    capture = capture_identity(manifest['config'], trace, summary['raw_sha256'].get('trace.json'), plan,
+                               manifest.get('experiment_protocol'))
+    if hashes(root) != summary['raw_sha256']:
+        raise ValueError('Raw files changed during analysis')
     keys = rows[0]['labels'].keys() if rows else ()
     coverage = {key: dict(rows=len(rows), labeled=sum(r['labels'][key] is not None for r in rows),
                           complete_window=sum(r['label_window_complete'][key] for r in rows)) for key in keys}
@@ -471,7 +482,7 @@ def extract(root, *, stall_threshold=.3, e2e_slo=None, allow_unqualified=False, 
                raw_sha256=summary['raw_sha256'], manifest_git_commit=summary['manifest_git_commit'],
                recorded_git_dirty=summary['recorded_git_dirty'], trace_sha256=summary['trace_sha256'],
                duration_s=duration, ttft_slo=manifest['config']['ttft_slo'], e2e_slo=effective,
-               e2e_slo_source=source, initial_budget=budget, accounting=summary['accounting'],
+               e2e_slo_source=source, initial_budget=budget, accounting=summary['accounting'], capture=capture,
                engine=dict(status='available' if engine is not None else 'unavailable',
                            usable_samples=info['engine_samples']),
                state_reconstruction=validation, table=info, label_coverage=coverage)

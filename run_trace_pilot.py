@@ -381,7 +381,13 @@ def main():
                         help='Required sampled RSS ceiling for deferred GC; no implicit memory allowance')
     parser.add_argument('--sampler-mode', choices=['thread', 'process'], default='thread',
                         help='External sampler execution; process uses spawn and retains the original runner PID')
+    parser.add_argument('--protocol',
+                        help='Experiment protocol JSON: refuse a capture that differs from the declared run and '
+                             'record the protocol hash and acceptance status in the manifest')
+    parser.add_argument('--protocol-run', help='Run name declared in --protocol; must equal the output directory name')
     args = parser.parse_args()
+    if (args.protocol is None) != (args.protocol_run is None):
+        parser.error('--protocol and --protocol-run go together')
     if args.sampler_mode == 'process' and not (args.gateway_diagnostics or args.engine_observations):
         parser.error('Process sampler requires --engine-observations or --gateway-diagnostics')
     for value in (args.request_timeout, args.drain_timeout, args.startup_timeout,
@@ -404,6 +410,14 @@ def main():
     else:
         args.budget = 96. if args.budget is None else args.budget
         schedule = validate_schedule([dict(at_seconds=0, budget=args.budget)], trace['duration_seconds'])
+    protocol_binding = None
+    if args.protocol is not None:
+        from experiment_protocol import collection_binding
+        try:
+            protocol_binding = collection_binding(args.protocol, args.protocol_run, args.output_dir, dict(vars(args)),
+                                                  trace, sha256_file(args.trace), schedule)
+        except (OSError, ValueError) as exc:
+            parser.error(str(exc))
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(trace['model'], local_files_only=True)
     expected_tokenizer = trace.get('provenance', {}).get('tokenizer_sha256')
@@ -422,11 +436,14 @@ def main():
                     packages={})
     save(output / PLAN_FILE, make_plan(config, trace, manifest['trace_sha256'], schedule))
     manifest.update(control_protocol=CONTROL_PROTOCOL, replay_plan_sha256=sha256_file(output / PLAN_FILE))
+    if protocol_binding is not None:
+        manifest['experiment_protocol'] = protocol_binding
     manifest['code_sha256'] = {name: sha256_file(ROOT / name) for name in
                               ('run_trace_pilot.py', 'trace_workload.py', 'trace_control.py', 'gateway.py',
                                'telemetry.py', 'sustained_load.py', 'run_budget_pilot.py',
                                'diagnostic_sampling.py', 'runner_diagnostics.py', 'runner_gc_control.py', 'analyze_budget_pilot.py',
-                               'analyze_trace_pilot.py', 'analyze_trace_dynamics.py', 'requirements-v1.txt')}
+                               'analyze_trace_pilot.py', 'analyze_trace_dynamics.py', 'experiment_protocol.py',
+                               'requirements-v1.txt')}
     manifest['git_dirty'] = bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT, text=True))
     for package in ('vllm', 'torch', 'transformers', 'fastapi', 'httpx', 'httpcore',
                     'uvicorn', 'psutil', 'prometheus-client', 'numpy', 'matplotlib'):

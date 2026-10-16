@@ -22,7 +22,7 @@ acceptance limits there are **`status: "proposed"`** until approved.
 | Coverage | A + B contain all 12 directed transitions; each level appears 2–3 times per run |
 | Development trace | `results/trace-experiment-96-r1/trace.json` (experiment preset, `[00:01, 00:06)`), SHA-256 `62f3f182…bc4e2e`, the same bytes as the existing captures |
 | Held-out trace | Custom window `[00:07:00, 00:12:00)` of the same 1 MiB Azure conversation prefix (SHA-256 `242489b8…fa66fb16`, which ends at 00:16:23.95); sample probability 1, seed 1, output cap 128, same model |
-| Replay settings | As the qualified gc-defer captures: TTFT SLO 0.5 s, no E2E SLO, 50 ms scheduling and budget lag, cache disabled, gateway + runner diagnostics, engine observations off, runner GC `defer` with 1536 MiB RSS cap, process sampler |
+| Replay settings | As the qualified gc-defer captures: TTFT SLO 0.5 s, no E2E SLO, 50 ms scheduling and budget lag, cache disabled, gateway + runner diagnostics, engine observations off, runner GC `defer` with 1536 MiB RSS cap, process sampler, and the runner defaults (3 warmup requests, 1000 pending, 120 s request/drain/startup timeouts) |
 | Analysis | `identification_features.py` defaults (0.5 s grid, horizons 1/2/5 s, windows 1/5 s, engine age 3 s); `forecast_baselines.py` split 2/3, ridge α 1 |
 | Primary horizon | 5 s (about 1–3 s cap response plus margin; backlog bursts recur about every 5 s) |
 
@@ -54,6 +54,11 @@ The script refuses to overwrite: the committed files are frozen.
 
 Run all three on the same backend launch, like the existing captures, after the
 stage 0 CPU gate on the exact commit. Each needs approval on the GPU host.
+
+The protocol also declares the three existing captures (`gc-defer-fixed-96-r1`,
+`gc-defer-fixed-64-r1`, `gc-defer-step-96-64-96-r1`) as development runs with
+their fixed-96, fixed-64 and 96→64→96 schedules, so every analysis input is
+checked against a declaration.
 
 **48 is not yet qualified on this trace.** Stage 2 only qualified 64 on the
 Azure trace; the earlier cost-48 result used a synthetic workload. If run A fails
@@ -89,8 +94,17 @@ nohup .venv/bin/python -u run_trace_pilot.py \
   --ttft-slo 0.5 --max-scheduling-lag 0.05 --max-budget-lag 0.05 \
   --cache-policy disabled --gateway-diagnostics --sampler-mode process \
   --runner-diagnostics --runner-gc-policy defer --runner-max-rss-mib 1536 \
+  --protocol experiments/excitation-v1.json --protocol-run "$RUN" \
   > "/workspace/$RUN.log" 2>&1 < /dev/null &
 ```
+
+With `--protocol`, the runner refuses to start unless the output directory name
+equals `--protocol-run` and the trace (hash, or source hash, start, duration,
+sampling, seed, output cap and model), the budget plan (schedule file hash and
+budgets) and every replay setting equal the run's declaration. A test run is
+refused until the acceptance `status` is `"frozen"`. The manifest then records
+`experiment_protocol`: the protocol's SHA-256 (of its LF bytes), run, role and
+acceptance status at collection time.
 
 Inspect every gate in `report.json` before starting the next run.
 
@@ -118,7 +132,9 @@ python forecast_baselines.py /tmp/excitation-v1-features \
 
 With `--acceptance`, the feature table must contain exactly the declared
 training and test runs, the feature and forecast settings must match the
-declared `analysis`, and unqualified captures are refused. C is excluded from
+declared `analysis`, every capture's recorded trace, budget plan and replay
+settings must match its run's declaration, and unqualified captures are refused
+(exit status 2, no report). C is excluded from
 the chronological and leave-one-run-out splits; the `designated_test` split
 trains on the five other runs and scores C once. The report records the
 protocol file's SHA-256 (of its LF bytes, as committed) and a verdict:
@@ -126,8 +142,16 @@ protocol file's SHA-256 (of its LF bytes, as committed) and a verdict:
 - **inconclusive** if fewer than 25% of C's rows are binding (headroom < 5) or
   a criterion has fewer than 60 evaluated rows;
 - **fail** if any criterion fails (and the binding precondition holds);
-- **pass** otherwise. `model_readiness` becomes `offline_acceptance_passed` only
-  for a pass against **frozen** limits; proposed limits never establish readiness.
+- **pass** otherwise.
+
+Predeclaration is **verified** only if C's manifest records collection under
+this exact protocol file (same SHA-256, run and role) with `frozen` limits. A
+pass becomes outcome `passed` and `model_readiness` `offline_acceptance_passed`
+only then; a pass against proposed limits, after the protocol was edited, or
+without the collection record is `not_established`. The exit status is 0
+passed, 3 fail, 4 inconclusive, 5 not established. The record is written by the
+runner: it rules out changing the limits after collection, not deliberately
+repeated captures, which this document forbids.
 
 ## Proposed limits (pending approval)
 
@@ -160,9 +184,11 @@ change was worse than persistence. Adding A and B to training is what the test
 is meant to measure.
 
 Before running C, the user approves or edits the limits, `status` is set to
-`"frozen"` in the same commit, and that commit is recorded. Do not change them
-after C is captured. A fail or inconclusive result is reported as such; it is
-not rerun with new limits under this protocol name.
+`"frozen"` in the same commit, and that commit is recorded. C is then collected
+with `--protocol` from that commit, so its manifest binds the frozen file.
+Do not change the protocol after C is captured: any edit changes its hash and
+the outcome becomes `not_established`. A fail or inconclusive result is
+reported as such; it is not rerun with new limits under this protocol name.
 
 ## Decision after the test
 
