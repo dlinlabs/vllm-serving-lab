@@ -86,7 +86,7 @@ def test_persistence_holds_state_and_extends_the_nearest_trailing_rate():
     assert persistence(rows, 'cohort_ttft_met', 3., [1., 5.]) == pytest.approx([3.] * 3)
 
 
-def test_near_change_uses_past_changes_and_planned_changes_only():
+def test_near_change_uses_past_changes_and_in_horizon_changes_only():
     rows = synthetic_rows(count=40, change_at=10.)
     mask = near_change(rows, '1')
     times = [row['t_s'] for row in rows]
@@ -112,9 +112,9 @@ def test_ridge_imputes_missing_and_constant_columns_without_warnings():
     assert prediction[0] == pytest.approx(7.) and prediction[1] == 0.
 
 
-def write_table(directory, runs, qualified=True, protocol=PROTOCOL):
+def write_table(directory, runs, qualified=True, protocol=PROTOCOL, reconstructed=True):
     directory.mkdir()
-    meta = [dict(name=name, qualified_for_comparison=qualified, state_reconstruction=dict(valid=True),
+    meta = [dict(name=name, qualified_for_comparison=qualified, state_reconstruction=dict(valid=reconstructed),
                  raw_sha256={}, duration_s=100., e2e_slo=None, e2e_slo_source=None, initial_budget=10.,
                  table=dict(budget_applications=[])) for name in runs]
     (directory / 'features_summary.json').write_text(json.dumps(dict(
@@ -149,14 +149,43 @@ def test_cli_reports_development_only_baselines(tmp_path, monkeypatch):
     main()
     report = json.loads((output / 'forecast_report.json').read_text())
     assert report['evaluation_role'] == 'development' and report['model_readiness'] == 'not_established'
+    assert report['control_conditioning'] == 'realized_control_conditioned' and report['control_limits']
+    assert report['input_qualification'] == dict(allow_unqualified=False, all_qualified=True, unqualified_runs=[])
+    assert not report['warnings'] and report['inputs']['a']['qualified_for_comparison']
+    assert report['inputs']['a']['state_reconstruction_valid']
     assert report['inputs']['b']['features_sha256'] and report['parameters']['horizons'] == [1.]
     assert any(row['subset'] == 'near_budget_change' and row['models']['ridge']['n']
                for row in report['evaluation']['results'])
     summary = (output / 'forecast_summary.md').read_text()
     assert 'Chronological hold-out (pooled, all)' in summary and 'Held-out run a' in summary
+    assert 'realized_control_conditioned' in summary and 'Warning' not in summary
+    assert 'a (qualified yes, state reconstructed yes)' in summary
     for argv in (['--horizons', '2'], ['--split-fraction', '1'], ['--alpha', '0']):
         monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(tmp_path / 'features'),
                                          '--output-dir', str(tmp_path / 'bad')] + argv)
         with pytest.raises(SystemExit):
             main()
         assert not (tmp_path / 'bad').exists()
+
+
+@pytest.mark.parametrize('qualified, reconstructed', [(False, True), (True, False)])
+def test_cli_override_report_keeps_unqualified_verdicts_and_warnings(tmp_path, monkeypatch, qualified,
+                                                                     reconstructed):
+    features, output = tmp_path / 'features', tmp_path / 'forecast'
+    write_table(features, synthetic_runs(a={}, b=dict(phase=3.)), qualified=qualified, reconstructed=reconstructed)
+    monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(features), '--output-dir', str(output)])
+    with pytest.raises(SystemExit):
+        main()
+    assert not output.exists()
+    monkeypatch.setattr('sys.argv', ['forecast_baselines.py', str(features), '--output-dir', str(output),
+                                     '--allow-unqualified'])
+    main()
+    report = json.loads((output / 'forecast_report.json').read_text())
+    assert report['input_qualification'] == dict(allow_unqualified=True, all_qualified=False,
+                                                 unqualified_runs=['a', 'b'])
+    assert len(report['warnings']) == 2 and 'invalid evidence' in report['warnings'][0]
+    assert report['inputs']['a']['qualified_for_comparison'] is qualified
+    assert report['inputs']['a']['state_reconstruction_valid'] is reconstructed
+    summary = (output / 'forecast_summary.md').read_text()
+    assert summary.splitlines()[2].startswith('> **Warning: unqualified evidence.**')
+    assert '--allow-unqualified set' in summary and ' NO' in summary

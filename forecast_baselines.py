@@ -1,9 +1,10 @@
 """Development-only multi-step forecast baselines on causal identification features.
 
-Scores persistence, training-mean and ridge (ARX-style, conditioned on the planned budget
+Scores persistence, training-mean and ridge (ARX-style, conditioned on the realized budget
 path) forecasts of labels written by identification_features.py on held-out time and
-held-out runs. The existing captures are development data: the numbers choose what to
-measure next and do not establish a model for control.
+held-out runs. Conditioning on realized control makes this system identification, not a
+deployable planned-control forecast. The existing captures are development data: the numbers
+choose what to measure next and do not establish a model for control.
 """
 import argparse
 import hashlib
@@ -14,7 +15,7 @@ from pathlib import Path
 import numpy as np
 
 from analyze_trace_dynamics import dump
-from identification_features import PROTOCOL, SCHEMA_VERSION, label_key
+from identification_features import CONTROL_CONDITIONING, CONTROL_LIMITS, PROTOCOL, SCHEMA_VERSION, label_key
 
 REPORT_VERSION = 1
 # Error direction that would make an admission controller too optimistic; None when ambiguous.
@@ -69,7 +70,7 @@ def feature_names(runs):
 
 
 def design(rows, names, key):
-    """Features at t plus the planned budget path over (t, t+h]; nulls stay NaN for imputation."""
+    """Features at t plus the realized budget path over (t, t+h]; nulls stay NaN for imputation."""
     matrix = np.full((len(rows), len(names) + 2), np.nan)
     for i, row in enumerate(rows):
         for j, name in enumerate(names):
@@ -102,7 +103,7 @@ def known_at(rows, key, horizon, name):
 
 
 def near_change(rows, key):
-    """Rows within NEAR_CHANGE_S after a cap change, or whose horizon contains a planned change."""
+    """Rows within NEAR_CHANGE_S after a cap change, or whose horizon contains a realized change."""
     mask = []
     for row in rows:
         since, budget, control = row['features']['since_budget_value_change_s'], row['features']['budget'], row['control'][key]
@@ -249,11 +250,21 @@ def fmt(value, digits=2):
 
 
 def markdown(report):
-    lines = ['# Forecast baselines (development data only)', '',
-             f"Model readiness: **{report['model_readiness']}**. Rows overlap in time and are not independent; "
-             'the planned-budget columns are decision inputs, and only one capture changes the cap. '
-             'Skill is 1 - MAE ratio against persistence (P) and the training mean (M); optimistic errors are '
-             'those that would make admission look safer than it was.', '']
+    lines = ['# Forecast baselines (development data only)', '']
+    qualification = report['input_qualification']
+    if report['warnings']:
+        lines.extend(['> **Warning: unqualified evidence.** ' + ' '.join(report['warnings']), ''])
+    lines.extend([
+        f"Model readiness: **{report['model_readiness']}**. Control conditioning: "
+        f"**{report['control_conditioning']}**. Rows overlap in time and are not independent; the control "
+        'columns are the realized budget path over (t, t+h], so ridge is system identification conditioned '
+        'on the applied cap, not a deployable planned-control forecast; only one capture changes the cap. '
+        'Skill is 1 - MAE ratio against persistence (P) and the training mean (M); optimistic errors are '
+        'those that would make admission look safer than it was.', '',
+        f"Inputs (--allow-unqualified {'set' if qualification['allow_unqualified'] else 'not set'}): " +
+        ', '.join(f"{name} (qualified {'yes' if run['qualified_for_comparison'] else 'NO'}, state reconstructed "
+                  f"{'yes' if run['state_reconstruction_valid'] else 'NO'})"
+                  for name, run in report['inputs'].items()) + '.', ''])
     results = report['evaluation']['results']
 
     def table(title, rows):
@@ -308,12 +319,21 @@ def main():
     evaluation = evaluate(runs, horizons=horizons, windows=[float(w) for w in parameters['windows']],
                           fraction=args.split_fraction, alpha=args.alpha)
     here = Path(__file__).parent
+    unqualified = [name for name, run in runs.items()
+                   if not (run['meta']['qualified_for_comparison'] and run['meta']['state_reconstruction']['valid'])]
     report = dict(
         report_version=REPORT_VERSION, evaluation_role='development', model_readiness='not_established',
+        control_conditioning=CONTROL_CONDITIONING, control_limits=CONTROL_LIMITS,
+        input_qualification=dict(allow_unqualified=args.allow_unqualified, all_qualified=not unqualified,
+                                 unqualified_runs=unqualified),
+        warnings=[f"--allow-unqualified admitted {name}, which failed capture qualification or gateway state "
+                  'reconstruction; its scores describe invalid evidence.' for name in unqualified],
         feature_protocol=PROTOCOL, feature_parameters=parameters,
         parameters=dict(horizons=horizons, split_fraction=args.split_fraction, alpha=args.alpha,
                         since_cap_s=SINCE_CAP_S, near_change_s=NEAR_CHANGE_S),
         inputs={name: dict(features_sha256=run['sha256'], raw_sha256=run['meta']['raw_sha256'],
+                           qualified_for_comparison=run['meta']['qualified_for_comparison'],
+                           state_reconstruction_valid=run['meta']['state_reconstruction']['valid'],
                            duration_s=run['meta']['duration_s'], e2e_slo=run['meta']['e2e_slo'],
                            e2e_slo_source=run['meta']['e2e_slo_source'],
                            budgets=sorted({a['budget'] for a in run['meta']['table']['budget_applications']}
@@ -324,8 +344,9 @@ def main():
         models=dict(persistence='Current state; flows and cohorts extend the trailing rate from the window '
                                 'nearest the horizon (cohort outcomes use receipt-anchored resolved proxies).',
                     mean='Training-set mean of the target.',
-                    ridge='Direct per-horizon ridge on standardized features plus the planned budget mean/end '
-                          'over (t, t+h]; nulls imputed with training means; clipped at zero.'),
+                    ridge='Direct per-horizon ridge on standardized features plus the realized budget mean/end '
+                          'over (t, t+h] from recorded application times; nulls imputed with training means; '
+                          'clipped at zero.'),
         splits=dict(chronological='Train on rows whose label is fully known by the cut in every run; '
                                   'evaluate rows at or after the cut. Scored per run and pooled.',
                     leave_one_run_out='Train on all other runs; evaluate the whole held-out run.'),
@@ -333,6 +354,7 @@ def main():
         caveats=['Three captures from one development set; they selected this design and are not a test set.',
                  'Neighboring rows overlap, so n overstates independent evidence.',
                  'Only one capture changes the cap, so budget effects are weakly identified.',
+                 'Ridge conditions on realized control (recorded application times), not on a plan known at t.',
                  'Persistence for cohort outcomes uses receipt-anchored proxies, not scheduled-arrival labels.'])
     output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)

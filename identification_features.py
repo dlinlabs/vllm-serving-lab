@@ -3,7 +3,10 @@
 Offline forecasting input only: not a model, controller or online feature channel.
 Features at decision time t use only gateway records emitted at or before t (budget
 applications use their recorded application time) and engine samples fully received
-by t. Labels use later events and eventual all-offered outcomes.
+by t. Labels use later events and eventual all-offered outcomes. Control columns are the
+realized cap path over (t, t+h] from recorded application times, so they include actuation
+timing that is unknown at t: models using them are conditioned on realized control
+(system identification), not deployable planned-control forecasts.
 """
 import argparse
 from bisect import bisect_left, bisect_right
@@ -18,6 +21,11 @@ from analyze_trace_pilot import LIFECYCLE, TERMINAL
 
 SCHEMA_VERSION = 1
 PROTOCOL = 'causal-gateway-features-v1'
+CONTROL_CONDITIONING = 'realized_control_conditioned'
+CONTROL_LIMITS = ('Control columns use recorded budget application times over (t, t+h], including actuation '
+                  'timing unknown at t. They support system identification conditioned on the applied control, '
+                  'not a deployable forecast; that needs control inputs built from decision-time information '
+                  'plus an explicit actuation-delay assumption, with applications kept as evidence.')
 FLOWS = ('received', 'accepted', 'rejected', 'first_content', 'completed', 'failed')
 RESOLVED = ('resolved_ttft_met', 'resolved_admitted_ttft_missed')
 STATE_LABELS = ('awaiting_first_content', 'oldest_awaiting_age_s', 'reserved_cost', 'streaming', 'in_flight')
@@ -54,8 +62,9 @@ COLUMNS = {
                                         'deadlines met, resolved at the E2E deadline in (t-w, t].',
     'features.engine_*': 'Latest engine sample fully received by t. Values are null and engine_missing is '
                          'true when none exists or its send time is older than the maximum age.',
-    'control.<h>.budget_mean': 'Time-weighted applied cap over (t, t+h]: a decision variable, not an observation.',
-    'control.<h>.budget_end': 'Applied cap at t+h: a decision variable, not an observation.',
+    'control.<h>.budget_mean': 'Time-weighted realized cap over (t, t+h] from recorded application times, '
+                               'including actuation timing unknown at t. Control input, not a feature.',
+    'control.<h>.budget_end': 'Realized cap at t+h from recorded application times. Control input, not a feature.',
     'labels.<h>.<state>': 'Reconstructed gateway state at t+h.',
     'labels.<h>.<flow>': 'Gateway events in (t, t+h].',
     'labels.<h>.cohort_*': 'Eventual outcomes of requests scheduled in [t, t+h), measured from scheduled arrival. '
@@ -187,17 +196,24 @@ class GatewayReplay:
 
 
 def validate_snapshots(records, start, initial_budget, initial_version=0):
-    """Compare the replay with every gateway snapshot taken under the gateway state lock."""
-    snapshots = sorted((r for r in records if r.get('event') == 'snapshot' and finite(r.get('state_sampled_at'))),
+    """Compare the replay with every gateway snapshot taken under the gateway state lock.
+
+    Every snapshot needs a finite sample time and a finite value for every compared field; missing,
+    null, boolean or nonfinite evidence invalidates the reconstruction instead of being skipped.
+    """
+    candidates = [r for r in records if r.get('event') == 'snapshot']
+    snapshots = sorted((r for r in candidates if finite(r.get('state_sampled_at'))),
                        key=lambda r: r['state_sampled_at'])
+    invalid_timestamps = len(candidates) - len(snapshots)
     replay = GatewayReplay(records, start, initial_budget, initial_version)
-    compared, mismatches, examples = Counter(), Counter(), []
+    compared, missing, mismatches, examples = Counter(), Counter(), Counter(), []
     for snapshot in snapshots:
         moment = snapshot['state_sampled_at'] - start
         state = replay.state(moment)
         for source, target, tolerance in SNAPSHOT_FIELDS:
             value = snapshot.get(source)
-            if isinstance(value, bool) or not finite(value):
+            if not finite(value):
+                missing[source] += 1
                 continue
             compared[source] += 1
             if abs(value - state[target]) > tolerance:
@@ -205,9 +221,15 @@ def validate_snapshots(records, start, initial_budget, initial_version=0):
                 if len(examples) < 10:
                     examples.append(dict(time_s=moment, field=source, snapshot=value, reconstructed=state[target]))
     replay.state(math.inf)  # surface inconsistent events after the last snapshot too
-    return dict(snapshots=len(snapshots), compared=dict(compared), mismatches=dict(mismatches),
-                examples=examples, replay_issues=replay.issues[:20], replay_issue_count=len(replay.issues),
-                valid=bool(snapshots) and not mismatches and not replay.issues)
+    times = [snapshot['state_sampled_at'] - start for snapshot in snapshots]
+    return dict(snapshots=len(snapshots), invalid_timestamps=invalid_timestamps,
+                required_fields=[source for source, _, _ in SNAPSHOT_FIELDS], compared=dict(compared),
+                missing=dict(missing), mismatches=dict(mismatches), examples=examples,
+                span_s=[times[0], times[-1]] if times else None,
+                max_gap_s=max((b - a for a, b in zip(times, times[1:])), default=None),
+                replay_issues=replay.issues[:20], replay_issue_count=len(replay.issues),
+                valid=bool(snapshots) and not invalid_timestamps and not missing and not mismatches
+                and not replay.issues)
 
 
 class Window:
@@ -493,6 +515,7 @@ def main():
         analysis_code_sha256={name: hashlib.sha256((here / name).read_bytes()).hexdigest() for name in
                               ('identification_features.py', 'analyze_trace_dynamics.py', 'analyze_trace_pilot.py')},
         runs=[run for run, _, _ in results], columns=COLUMNS,
+        control_conditioning=CONTROL_CONDITIONING, control_limits=CONTROL_LIMITS,
         note='Features are causal for a controller co-located with the gateway; an external poller would see '
              'staler state. Grid step is a table resolution, not a validated control period. Labels use '
              'eventual outcomes and must never be used as features. Neighboring rows overlap and are not '

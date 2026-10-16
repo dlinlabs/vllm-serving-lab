@@ -26,7 +26,9 @@ python forecast_baselines.py /tmp/forecast-features --output-dir /tmp/forecast-b
 
 Each run is first re-audited with `analyze_trace_dynamics.analyze_run`
 (about 1.5 minutes per five-minute capture on one CPU core); unqualified captures
-are refused unless `--allow-unqualified` is given, and stay marked. Raw
+are refused unless `--allow-unqualified` is given, and stay marked: the forecast
+report and summary then list each run's qualification and reconstruction verdicts,
+whether the override was set, and a warning for every unqualified input. Raw
 directories are never written. Defaults: 0.5 s grid (`--step`), horizons
 1/2/5 s, trailing windows 1/5 s, engine samples older than 3 s treated as
 missing. The grid is a table resolution, not a validated control period.
@@ -52,10 +54,21 @@ decision time `t`) and `<run>-request-labels.jsonl`.
   - Engine waiting/running/KV usage, nulled with `engine_missing=true` when absent or stale.
 - **Gateway state is reconstructed, then checked**: the event replay is compared
   with every gateway `snapshot` taken under the state lock (cost tolerance 1e-6,
-  age 1 ms, counts exact). Any mismatch or inconsistent history marks the run
-  `state_reconstruction.valid=false`, and the forecast step refuses it.
-- **Controls** (`control.<h>`): time-weighted mean and final applied cap over
-  `(t, t+h]`. They are decision inputs for conditional forecasts, not observations.
+  age 1 ms, counts exact). Every snapshot must have a finite sample time and a
+  finite value for all eight compared fields; a missing, null, boolean or
+  nonfinite value, an invalid timestamp, any mismatch or an inconsistent history
+  marks the run `state_reconstruction.valid=false`, and the forecast step refuses
+  it. The summary also records the snapshot span and largest gap.
+- **Controls** (`control.<h>`): time-weighted mean and final cap over `(t, t+h]`
+  from recorded application times. They are control inputs, not features, and
+  they are *realized*: they include actuation timing that was unknown at `t`
+  (a change planned for `t` but applied 10 ms or 0.8 s later gives different
+  values). Reports label this `control_conditioning=realized_control_conditioned`:
+  valid for system identification conditioned on the applied cap, not a
+  deployable planned-control forecast. A deployable variant would build control
+  inputs from decision-time information plus an explicit actuation-delay
+  assumption and keep applications as evidence; it is not implemented. In these
+  captures the step changes applied 22 ms and 1 ms after their planned times.
 - **Labels** (`labels.<h>`), never features: gateway state at `t+h`; event counts in
   `(t, t+h]`; and the all-offered cohort scheduled in `[t, t+h)` — offered,
   admitted, unknown, TTFT met and admitted-but-missed, measured from scheduled
@@ -79,7 +92,7 @@ horizon is forecast directly (no recursion):
 |---|---|
 | Persistence | Current state; flows and cohorts extend the trailing rate from the window nearest the horizon (cohorts via the receipt-anchored proxies). |
 | Training mean | Static mean of the training labels. |
-| Ridge (ARX-style) | Standardized features plus planned cap mean/end over the horizon; training-mean imputation; clipped at zero; `--alpha` 1. |
+| Ridge (ARX-style) | Standardized features plus realized cap mean/end over the horizon; training-mean imputation; clipped at zero; `--alpha` 1. |
 
 Evaluation never shuffles neighboring rows:
 
@@ -89,7 +102,7 @@ Evaluation never shuffles neighboring rows:
   One model is fitted on all runs' training rows and scored per run and pooled.
 - **Leave one run out**: train on the other runs, evaluate the whole held-out run.
 - Subsets: all rows, and `near_budget_change` (within 10 s after a cap change or
-  with a planned change inside the horizon).
+  with a realized change inside the horizon).
 
 Metrics are in physical units: n, MAE, RMSE, bias, p90/p99/max absolute error,
 and skill (1 − MAE ratio) against persistence and the training mean.

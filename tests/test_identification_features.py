@@ -61,6 +61,29 @@ def test_replay_matches_gateway_snapshot_and_detects_mismatch():
     assert result['examples'][0]['reconstructed'] == 9.
 
 
+@pytest.mark.parametrize('value', ['missing', None, True, float('nan'), float('inf')])
+def test_snapshot_fields_must_be_present_and_finite(value):
+    damaged = records()
+    if value == 'missing':
+        del damaged[8]['streaming_requests']
+    else:
+        damaged[8]['streaming_requests'] = value
+    result = validate_snapshots(damaged, START, 10.)
+    assert not result['valid'] and result['missing'] == dict(streaming_requests=1)
+    assert 'streaming_requests' not in result['compared'] and not result['mismatches']
+    assert result['compared']['current_admitted_cost'] == 1
+
+
+@pytest.mark.parametrize('moment', [None, True, float('nan'), 'soon'])
+def test_snapshots_with_invalid_timestamps_invalidate_reconstruction(moment):
+    damaged = records() + [dict(records()[8], state_sampled_at=moment)]
+    result = validate_snapshots(damaged, START, 10.)
+    assert not result['valid'] and result['invalid_timestamps'] == 1 and result['snapshots'] == 1
+    intact = validate_snapshots(records(), START, 10.)
+    assert intact['valid'] and intact['invalid_timestamps'] == 0 and not intact['missing']
+    assert intact['span_s'] == [pytest.approx(.6)] * 2 and intact['max_gap_s'] is None
+
+
 def test_replay_reports_inconsistent_histories_and_budget_versions():
     damaged = records() + [lifecycle('received', 'a', 3.), lifecycle('first_content', 'e', 3.)]
     damaged.append(dict(event='budget_updated', applied_at=START + 3., budget=8., budget_version=4))
@@ -112,6 +135,19 @@ def test_controls_and_labels_are_separate_from_features():
     assert last['label_window_complete'] == {'0.5': True, '1': False}
     late, _ = build_table(records(), [], ENGINE, duration=3., **dict(OPTIONS, coverage_end=3.))
     assert late[-1]['labels']['1'] is None and late[-1]['labels']['0.5'] is not None
+
+
+def test_controls_follow_realized_application_timing_not_the_plan():
+    """Same plan (cap 10 -> 6 at t=1) and history; only actuation latency differs."""
+    def applied(moment):
+        changed = [dict(r, applied_at=START + moment) if r.get('budget_version') == 2 else r for r in records()]
+        return {row['t_s']: row for row in build_table(changed, [], ENGINE, duration=3., **OPTIONS)[0]}[1.]
+    prompt, slow = applied(1.01), applied(1.8)
+    assert prompt['features'] == slow['features'] and prompt['features']['budget'] == 10.
+    assert prompt['control']['1']['budget_mean'] == pytest.approx(6. * .99 + 10. * .01)
+    assert slow['control']['1']['budget_mean'] == pytest.approx(10. * .8 + 6. * .2)
+    assert prompt['control']['0.5'] == dict(budget_mean=pytest.approx(6. * .98 + 10. * .02), budget_end=6.)
+    assert slow['control']['0.5'] == dict(budget_mean=10., budget_end=10.)
 
 
 def test_receipt_anchored_proxies_resolve_at_their_deadlines():
@@ -192,6 +228,7 @@ def test_cli_writes_separate_feature_and_label_files(tmp_path, monkeypatch):
     main()
     summary = json.loads((output / 'features_summary.json').read_text())
     assert summary['protocol'] == 'causal-gateway-features-v1' and summary['runs'][0]['name'] == 'raw'
+    assert summary['control_conditioning'] == 'realized_control_conditioned' and summary['control_limits']
     assert len((output / 'raw-features.jsonl').read_text().splitlines()) == 16
     assert len((output / 'raw-request-labels.jsonl').read_text().splitlines()) == 8
     for argv, target in ((['--step', '.3'], tmp_path / 'step'), (['--e2e-slo', '0'], tmp_path / 'slo'),
