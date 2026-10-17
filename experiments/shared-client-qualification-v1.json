@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "protocol": "shared-client-qualification-v1",
+  "status": "frozen",
+  "purpose": "One smoke and one development A replay to qualify the opt-in shared gateway HTTP client; no held-out collection or model acceptance",
+  "schedules": {
+    "fixed-96": {"fixed_budget": 96},
+    "a": {
+      "path": "results/budget-schedules/ident-multilevel-30s-v1-a.json",
+      "sha256": "41cf5d6db8101657f28d123ecf62271e83bd7cd56acc88a29f3bcea01afce3ae",
+      "budgets": [96, 64, 80, 64, 48, 80, 96, 48, 64, 96]
+    }
+  },
+  "traces": {
+    "smoke": {
+      "path": "results/trace-smoke-96/trace.json",
+      "sha256": "9998c82da5174ec41484985f7b5cf77a658992cee5011fc38bb7155caf065294"
+    },
+    "development": {
+      "path": "results/trace-experiment-96-r1/trace.json",
+      "sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e"
+    }
+  },
+  "replay": {
+    "ttft_slo": 0.5,
+    "e2e_slo": null,
+    "max_scheduling_lag": 0.05,
+    "max_budget_lag": 0.05,
+    "cache_policy": "disabled",
+    "gateway_diagnostics": true,
+    "engine_observations": false,
+    "runner_diagnostics": true,
+    "runner_gc_policy": "defer",
+    "runner_max_rss_mib": 1536,
+    "sampler_mode": "process",
+    "warmup_requests": 3,
+    "max_pending": 1000,
+    "request_timeout": 120,
+    "drain_timeout": 120,
+    "startup_timeout": 120,
+    "shared_upstream_client": true
+  },
+  "runs": [
+    {"name": "shared-client-smoke-96-r1", "trace": "smoke", "schedule": "fixed-96", "role": "development"},
+    {"name": "shared-client-a-r1", "trace": "development", "schedule": "a", "role": "development"}
+  ],
+  "qualification": {
+    "order": ["shared-client-smoke-96-r1", "shared-client-a-r1"],
+    "attempts_per_run": 1,
+    "required": ["valid", "load_fidelity", "control_fidelity", "diagnostic_integrity", "runner_diagnostic_integrity", "runner_gc_integrity"],
+    "on_failure": "Retain the failed capture and stop; no automatic retry, threshold change or held-out collection"
+  }
+}

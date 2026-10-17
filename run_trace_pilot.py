@@ -159,7 +159,16 @@ def gateway_environment(args, trace, output, key):
                TELEMETRY_JSONL=str(output / 'gateway.jsonl'),
                TELEMETRY_STATUS_JSON=str(output / 'telemetry_status.json'),
                BENCHMARK_REQUEST_IDS='1', LOOP_LAG_TELEMETRY='1',
-               GATEWAY_DIAGNOSTICS='1' if args.gateway_diagnostics else '0')
+               GATEWAY_DIAGNOSTICS='1' if args.gateway_diagnostics else '0',
+               SHARED_UPSTREAM_CLIENT='1' if getattr(args, 'shared_upstream_client', False) else '0')
+
+
+def replay_configuration(args):
+    config = dict(vars(args))
+    # Preserve the identity of existing captures/protocols when the new mode is not requested.
+    if not config.get('shared_upstream_client'):
+        config.pop('shared_upstream_client', None)
+    return config
 
 
 async def run(args, trace, output, manifest):
@@ -219,12 +228,15 @@ async def run(args, trace, output, manifest):
                 manifest['run_id'] = metrics['telemetry_run_id']
                 manifest['initial_metrics'] = metrics
                 manifest['gateway_diagnostics_observed'] = metrics.get('gateway_diagnostics')
+                if metrics.get('shared_upstream_client', False) is not getattr(args, 'shared_upstream_client', False):
+                    raise RuntimeError('Requested and observed upstream client modes differ')
+                manifest['shared_upstream_client_observed'] = metrics.get('shared_upstream_client', False)
                 if metrics.get('gateway_diagnostics') is not args.gateway_diagnostics:
                     raise RuntimeError('Requested and observed gateway diagnostic modes differ')
                 manifest['gateway_launch'] = dict(process_id=process.pid, executable=sys.executable,
                     entrypoint='gateway.py', settings={name: env[name] for name in
                         ('ADMISSION_MODE', 'MAX_ADMITTED_COST', 'MODEL_NAME', 'GATEWAY_DIAGNOSTICS',
-                         'BENCHMARK_REQUEST_IDS', 'LOOP_LAG_TELEMETRY')})
+                         'BENCHMARK_REQUEST_IDS', 'LOOP_LAG_TELEMETRY', 'SHARED_UPSTREAM_CLIENT')})
                 rows.extend(prepare_replay(trace, manifest['run_id']))
                 if getattr(args, 'runner_diagnostics', False):
                     from runner_diagnostics import RunnerDiagnostics, SCHEMA, LOOP_INTERVAL
@@ -385,6 +397,8 @@ def main():
                         help='Experiment protocol JSON: refuse a capture that differs from the declared run and '
                              'record the protocol hash and acceptance status in the manifest')
     parser.add_argument('--protocol-run', help='Run name declared in --protocol; must equal the output directory name')
+    parser.add_argument('--shared-upstream-client', action='store_true',
+                        help='Opt in to a lifespan-owned reusable gateway HTTP client; use a new protocol series')
     args = parser.parse_args()
     if (args.protocol is None) != (args.protocol_run is None):
         parser.error('--protocol and --protocol-run go together')
@@ -414,7 +428,7 @@ def main():
     if args.protocol is not None:
         from experiment_protocol import collection_binding
         try:
-            protocol_binding = collection_binding(args.protocol, args.protocol_run, args.output_dir, dict(vars(args)),
+            protocol_binding = collection_binding(args.protocol, args.protocol_run, args.output_dir, replay_configuration(args),
                                                   trace, sha256_file(args.trace), schedule)
         except (OSError, ValueError) as exc:
             parser.error(str(exc))
@@ -427,7 +441,7 @@ def main():
     output = Path(args.output_dir).resolve()
     output.mkdir(parents=True, exist_ok=False)
     save(output / 'trace.json', trace)
-    config = dict(vars(args))
+    config = replay_configuration(args)
     config['vllm_url'] = str(httpx.URL(args.vllm_url).copy_with(username='', password='', query=None, fragment=None))
     manifest = dict(schema_version=1, config=config, created_at=time.time(), status='running',
                     trace_sha256=sha256_file(output / 'trace.json'),
