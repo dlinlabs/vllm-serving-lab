@@ -74,7 +74,8 @@ now score development-only persistence/mean/ridge forecasts on these captures
 (no committed results; model readiness not established). Next:
 [excitation v1](experiments/excitation-v1.md), a predeclared multi-level
 (48–96) counterbalanced pair plus one held-out window and schedule, with
-proposed forecast limits awaiting approval before any model/MPC claim.
+forecast limits frozen on 2026-10-17 before collection. Native CPU acceptance
+and GPU collection remain pending; model/MPC readiness is not established.
 
 ---
 

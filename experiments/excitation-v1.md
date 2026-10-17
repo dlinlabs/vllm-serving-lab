@@ -10,7 +10,9 @@ control sequence for a single scored test. It adds no telemetry, solver,
 actuation or controller code, and this PR runs no GPU capture.
 
 Machine-readable declaration: [excitation-v1.json](excitation-v1.json). The
-acceptance limits there are **`status: "proposed"`** until approved.
+acceptance limits are **`status: "frozen"`**, approved on 2026-10-17 with
+the reviewed numeric limits and all other protocol settings unchanged.
+Native CPU acceptance on the collection commit and GPU collection remain pending.
 
 ## What is fixed
 
@@ -155,7 +157,7 @@ passed, 3 fail, 4 inconclusive, 5 not established. The record is written by the
 runner: it rules out changing the limits after collection, not deliberately
 repeated captures, which this document forbids.
 
-## Proposed limits (pending approval)
+## Frozen limits (approved 2026-10-17)
 
 All at h = 5 s, ridge, physical units (requests). Skill is 1 − MAE ratio
 against persistence (P) or the training mean (M); optimistic p99 is the 99th
@@ -185,9 +187,10 @@ would fail the backlog and missed-TTFT skill limits, and the only decrease near 
 change was worse than persistence. Adding A and B to training is what the test
 is meant to measure.
 
-Before running C, the user approves or edits the limits, `status` is set to
-`"frozen"` in the same commit, and that commit is recorded. C is then collected
-with `--protocol` from that commit, so its manifest binds the frozen file.
+The user approved freezing the reviewed limits on 2026-10-17. Collect A, B and C
+from a commit containing this frozen protocol, after native CPU acceptance on
+that exact commit. Record the commit and collect with `--protocol`, so each
+manifest binds the frozen file. No test capture was used to select these limits.
 Do not change the protocol after C is captured: any edit changes its hash and
 the outcome becomes `not_established`. A fail or inconclusive result is
 reported as such; it is not rerun with new limits under this protocol name.
