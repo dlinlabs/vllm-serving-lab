@@ -1,0 +1,135 @@
+{
+  "valid": true,
+  "issues": [],
+  "load_fidelity": {
+    "valid": true,
+    "issues": [],
+    "p99_scheduling_lag": 0.007436286212177947,
+    "max_scheduling_lag": 0.021309591131284833
+  },
+  "performance": {
+    "attempted": 787,
+    "success": 224,
+    "rejected": 563,
+    "failed": 0,
+    "client_p99_ttft": 2.872285139905871,
+    "scheduled_p99_ttft": 2.873282072369475,
+    "client_p99_e2e": 9.555941307251341,
+    "slo_successes": 62,
+    "slo_goodput_per_arrival_second": 2.066666666666667,
+    "slo_success_fraction_of_offered": 0.07878017789072427,
+    "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+  },
+  "gateway_terminal_counts": {
+    "completed": 227,
+    "rejected": 563
+  },
+  "failed_without_gateway_record": 0,
+  "state_poll_errors": 0,
+  "cache_policy_self_reported": "disabled",
+  "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+  "performance_by_input_size": {
+    "long_input": {
+      "attempted": 636,
+      "success": 168,
+      "rejected": 468,
+      "failed": 0,
+      "client_p99_ttft": 2.8674689879640938,
+      "scheduled_p99_ttft": 2.8689919374207964,
+      "client_p99_e2e": 9.547912808980326,
+      "slo_successes": 44,
+      "slo_goodput_per_arrival_second": 1.4666666666666666,
+      "slo_success_fraction_of_offered": 0.06918238993710692,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    },
+    "medium_input": {
+      "attempted": 136,
+      "success": 50,
+      "rejected": 86,
+      "failed": 0,
+      "client_p99_ttft": 2.9492439015128182,
+      "scheduled_p99_ttft": 2.949550113422447,
+      "client_p99_e2e": 9.632524267241243,
+      "slo_successes": 16,
+      "slo_goodput_per_arrival_second": 0.5333333333333333,
+      "slo_success_fraction_of_offered": 0.11764705882352941,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    },
+    "short_input": {
+      "attempted": 15,
+      "success": 6,
+      "rejected": 9,
+      "failed": 0,
+      "client_p99_ttft": 1.3749524848186412,
+      "scheduled_p99_ttft": 1.375322488983511,
+      "client_p99_e2e": 7.020581038776436,
+      "slo_successes": 2,
+      "slo_goodput_per_arrival_second": 0.06666666666666667,
+      "slo_success_fraction_of_offered": 0.13333333333333333,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    }
+  },
+  "control_fidelity": {
+    "valid": true,
+    "issues": [],
+    "budget_mode": "fixed",
+    "planned_commands": 1,
+    "recorded_commands": 1,
+    "gateway_applications": 1,
+    "max_budget_lag_limit": 0.05,
+    "p99_send_lag": null,
+    "max_send_lag": null,
+    "p99_application_lag": null,
+    "max_application_lag": null,
+    "p99_acknowledgement_roundtrip": 0.004051546973641962,
+    "note": "Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only."
+  },
+  "timing": {
+    "p99_state_age": 0.003505635654437356,
+    "max_state_age": 0.003540413046721369,
+    "p99_metrics_roundtrip": 0.013619070563581774,
+    "max_state_poll_gap": 1.014730587019585,
+    "p99_event_loop_lag": 0.020410391348414103,
+    "max_event_loop_lag": 0.03816399700008333
+  },
+  "diagnostic_integrity": {
+    "valid": true,
+    "issues": [],
+    "gateway_mode": "enabled",
+    "external_mode": "enabled",
+    "gc_coverage_complete": true,
+    "request_linked_prefill": "unavailable",
+    "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+    "coverage_start": 293558.971572761,
+    "coverage_end": 293595.093097939,
+    "gc_spans": 66,
+    "cpu_samples": 38,
+    "request_summaries": 790,
+    "engine_samples": 37,
+    "engine_counter_epochs": 1
+  },
+  "runner_diagnostic_integrity": {
+    "valid": true,
+    "issues": [],
+    "source": "runner",
+    "gc_coverage_complete": true,
+    "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+    "coverage_start": 293559.025765894,
+    "coverage_end": 293594.878167715,
+    "gc_spans": 3,
+    "loop_samples": 3261,
+    "max_loop_lag": 0.26484544901177287
+  },
+  "runner_gc_integrity": {
+    "valid": true,
+    "issues": [],
+    "policy": "defer",
+    "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+    "samples": 319,
+    "peak_rss_mib": 822.3671875,
+    "max_rss_mib": 1536.0,
+    "disabled_seconds": 33.02036786999088,
+    "measurement_max_runner_loop_lag": 0.022526284970808774,
+    "restored": true
+  }
+}

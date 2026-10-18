@@ -1,0 +1,62 @@
+{
+  "valid": false,
+  "issues": [
+    "Incomplete or malformed replay data: 'final_metrics'"
+  ],
+  "load_fidelity": {
+    "valid": false,
+    "issues": [
+      "Cannot audit load fidelity"
+    ]
+  },
+  "performance": null,
+  "runner_diagnostic_integrity": {
+    "valid": false,
+    "issues": [
+      "Incomplete runner GC coverage",
+      "Incomplete runner loop coverage",
+      "Incomplete runner CPU coverage",
+      "Core replay artifacts are incomplete"
+    ],
+    "source": "runner",
+    "gc_coverage_complete": false,
+    "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+    "coverage_start": 292028.70955479,
+    "coverage_end": 292242.204215333,
+    "gc_spans": 4,
+    "loop_samples": 19594,
+    "max_loop_lag": 0.282781655958388
+  },
+  "runner_gc_integrity": {
+    "valid": false,
+    "issues": [
+      "GC intervention did not complete normally",
+      "Incomplete or overlong deferred GC coverage",
+      "Runner diagnostics cannot verify deferred GC",
+      "RSS boundary samples do not cover measurement/drain",
+      "Core replay artifacts are incomplete"
+    ],
+    "policy": "defer",
+    "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+    "samples": 2021,
+    "peak_rss_mib": 869.546875,
+    "max_rss_mib": 1536.0,
+    "disabled_seconds": 210.29640122503042,
+    "measurement_max_runner_loop_lag": 0.27329586300766096,
+    "restored": true
+  },
+  "control_fidelity": {
+    "valid": false,
+    "issues": [
+      "Cannot audit declared budget control"
+    ]
+  },
+  "diagnostic_integrity": {
+    "valid": false,
+    "issues": [
+      "Core replay artifacts are incomplete; diagnostic coverage cannot be qualified"
+    ],
+    "gc_coverage_complete": false,
+    "request_linked_prefill": "unavailable"
+  }
+}

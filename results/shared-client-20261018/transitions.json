@@ -1,0 +1,618 @@
+{
+  "a": [
+    {
+      "at_s": 30.0,
+      "from_cap": 96.0,
+      "to_cap": 64.0,
+      "application_lag_ms": 6.412663962692022,
+      "initial_cost": 95.00605712000007,
+      "first_cost_at_or_below_cap_s": 0.9471940019866452,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 95.00605712000007,
+          "awaiting_first_content": 6,
+          "in_flight": 50
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 58.223407872000045,
+          "awaiting_first_content": 0,
+          "in_flight": 30
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 63.02805785920005,
+          "awaiting_first_content": 0,
+          "in_flight": 33
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 63.334141196800026,
+          "awaiting_first_content": 11,
+          "in_flight": 32
+        }
+      ]
+    },
+    {
+      "at_s": 60.0,
+      "from_cap": 64.0,
+      "to_cap": 80.0,
+      "application_lag_ms": 6.549927988089621,
+      "initial_cost": 61.462207897600024,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 61.462207897600024,
+          "awaiting_first_content": 0,
+          "in_flight": 24
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 78.73411518400006,
+          "awaiting_first_content": 10,
+          "in_flight": 35
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 79.11567182080007,
+          "awaiting_first_content": 13,
+          "in_flight": 42
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 79.93339047040008,
+          "awaiting_first_content": 0,
+          "in_flight": 46
+        }
+      ]
+    },
+    {
+      "at_s": 90.0,
+      "from_cap": 80.0,
+      "to_cap": 64.0,
+      "application_lag_ms": 8.59415897866711,
+      "initial_cost": 79.37688449599992,
+      "first_cost_at_or_below_cap_s": 0.5449798369663768,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 79.37688449599992,
+          "awaiting_first_content": 0,
+          "in_flight": 40
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 42.7646218975999,
+          "awaiting_first_content": 3,
+          "in_flight": 24
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 58.40714119679991,
+          "awaiting_first_content": 15,
+          "in_flight": 32
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 62.84173852159992,
+          "awaiting_first_content": 2,
+          "in_flight": 34
+        }
+      ]
+    },
+    {
+      "at_s": 120.0,
+      "from_cap": 64.0,
+      "to_cap": 48.0,
+      "application_lag_ms": 1.7331199487671256,
+      "initial_cost": 63.75150187199992,
+      "first_cost_at_or_below_cap_s": 3.021441886026878,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 63.75150187199992,
+          "awaiting_first_content": 5,
+          "in_flight": 30
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 63.75150187199992,
+          "awaiting_first_content": 0,
+          "in_flight": 30
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 60.39871920959992,
+          "awaiting_first_content": 0,
+          "in_flight": 29
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 46.96258924799991,
+          "awaiting_first_content": 6,
+          "in_flight": 20
+        }
+      ]
+    },
+    {
+      "at_s": 150.0,
+      "from_cap": 48.0,
+      "to_cap": 80.0,
+      "application_lag_ms": 26.862261991482228,
+      "initial_cost": 47.49727657279993,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 47.49727657279993,
+          "awaiting_first_content": 6,
+          "in_flight": 22
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 79.90067718399992,
+          "awaiting_first_content": 11,
+          "in_flight": 35
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 79.90067718399992,
+          "awaiting_first_content": 3,
+          "in_flight": 35
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 66.31581587199994,
+          "awaiting_first_content": 4,
+          "in_flight": 30
+        }
+      ]
+    },
+    {
+      "at_s": 180.0,
+      "from_cap": 80.0,
+      "to_cap": 96.0,
+      "application_lag_ms": 2.0016879425384104,
+      "initial_cost": 78.033693808,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 78.033693808,
+          "awaiting_first_content": 16,
+          "in_flight": 45
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 95.55015245759998,
+          "awaiting_first_content": 17,
+          "in_flight": 49
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 95.55015245759998,
+          "awaiting_first_content": 14,
+          "in_flight": 49
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 95.95204111999998,
+          "awaiting_first_content": 0,
+          "in_flight": 50
+        }
+      ]
+    },
+    {
+      "at_s": 210.0,
+      "from_cap": 96.0,
+      "to_cap": 48.0,
+      "application_lag_ms": 24.047501967288554,
+      "initial_cost": 94.5903611072,
+      "first_cost_at_or_below_cap_s": 2.9124022820033133,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 94.5903611072,
+          "awaiting_first_content": 11,
+          "in_flight": 53
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 75.5689898208,
+          "awaiting_first_content": 0,
+          "in_flight": 42
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 72.697388496,
+          "awaiting_first_content": 0,
+          "in_flight": 40
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 47.94055791039999,
+          "awaiting_first_content": 5,
+          "in_flight": 21
+        }
+      ]
+    },
+    {
+      "at_s": 240.0,
+      "from_cap": 48.0,
+      "to_cap": 64.0,
+      "application_lag_ms": 3.671509970445186,
+      "initial_cost": 46.985165897599984,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 46.985165897599984,
+          "awaiting_first_content": 7,
+          "in_flight": 24
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 63.383099184,
+          "awaiting_first_content": 3,
+          "in_flight": 35
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 63.383099184,
+          "awaiting_first_content": 0,
+          "in_flight": 35
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 63.933258521599996,
+          "awaiting_first_content": 18,
+          "in_flight": 34
+        }
+      ]
+    },
+    {
+      "at_s": 270.0,
+      "from_cap": 64.0,
+      "to_cap": 96.0,
+      "application_lag_ms": 2.374910982325673,
+      "initial_cost": 63.738898508799984,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 63.738898508799984,
+          "awaiting_first_content": 0,
+          "in_flight": 37
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 94.89764843199997,
+          "awaiting_first_content": 6,
+          "in_flight": 55
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 95.98022109439997,
+          "awaiting_first_content": 1,
+          "in_flight": 56
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 94.73558509440001,
+          "awaiting_first_content": 3,
+          "in_flight": 56
+        }
+      ]
+    }
+  ],
+  "b": [
+    {
+      "at_s": 30.0,
+      "from_cap": 96.0,
+      "to_cap": 64.0,
+      "application_lag_ms": 1.9324679742567241,
+      "initial_cost": 94.79516976960007,
+      "first_cost_at_or_below_cap_s": 2.744264034961816,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 94.79516976960007,
+          "awaiting_first_content": 8,
+          "in_flight": 54
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 87.43515312000005,
+          "awaiting_first_content": 0,
+          "in_flight": 50
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 87.43515312000005,
+          "awaiting_first_content": 0,
+          "in_flight": 50
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 63.95509185920004,
+          "awaiting_first_content": 10,
+          "in_flight": 33
+        }
+      ]
+    },
+    {
+      "at_s": 60.0,
+      "from_cap": 64.0,
+      "to_cap": 48.0,
+      "application_lag_ms": 2.191592939198017,
+      "initial_cost": 43.275662560000036,
+      "first_cost_at_or_below_cap_s": 0.0,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 43.275662560000036,
+          "awaiting_first_content": 10,
+          "in_flight": 25
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 47.673117884800035,
+          "awaiting_first_content": 0,
+          "in_flight": 27
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 47.673117884800035,
+          "awaiting_first_content": 0,
+          "in_flight": 27
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 47.89992323520004,
+          "awaiting_first_content": 6,
+          "in_flight": 23
+        }
+      ]
+    },
+    {
+      "at_s": 90.0,
+      "from_cap": 48.0,
+      "to_cap": 96.0,
+      "application_lag_ms": 2.3877789499238133,
+      "initial_cost": 47.700257222400026,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 47.700257222400026,
+          "awaiting_first_content": 11,
+          "in_flight": 26
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 95.68265379520003,
+          "awaiting_first_content": 19,
+          "in_flight": 48
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 95.68265379520003,
+          "awaiting_first_content": 13,
+          "in_flight": 48
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 95.17266845760003,
+          "awaiting_first_content": 3,
+          "in_flight": 49
+        }
+      ]
+    },
+    {
+      "at_s": 120.0,
+      "from_cap": 96.0,
+      "to_cap": 80.0,
+      "application_lag_ms": 2.552394988015294,
+      "initial_cost": 91.09190847039999,
+      "first_cost_at_or_below_cap_s": 2.14084229094442,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 91.09190847039999,
+          "awaiting_first_content": 9,
+          "in_flight": 46
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 85.62946314559998,
+          "awaiting_first_content": 0,
+          "in_flight": 44
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 85.62946314559998,
+          "awaiting_first_content": 0,
+          "in_flight": 44
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 79.6797871712,
+          "awaiting_first_content": 19,
+          "in_flight": 38
+        }
+      ]
+    },
+    {
+      "at_s": 150.0,
+      "from_cap": 80.0,
+      "to_cap": 48.0,
+      "application_lag_ms": 18.967161944601685,
+      "initial_cost": 79.75344714559999,
+      "first_cost_at_or_below_cap_s": 1.1333060190081596,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 79.75344714559999,
+          "awaiting_first_content": 0,
+          "in_flight": 44
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 69.66902983359998,
+          "awaiting_first_content": 0,
+          "in_flight": 39
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 46.104221235199994,
+          "awaiting_first_content": 16,
+          "in_flight": 23
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 47.41267789759999,
+          "awaiting_first_content": 0,
+          "in_flight": 24
+        }
+      ]
+    },
+    {
+      "at_s": 180.0,
+      "from_cap": 48.0,
+      "to_cap": 64.0,
+      "application_lag_ms": 2.424201986286789,
+      "initial_cost": 17.36848529919996,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 17.36848529919996,
+          "awaiting_first_content": 4,
+          "in_flight": 8
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 63.23001255999997,
+          "awaiting_first_content": 16,
+          "in_flight": 25
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 63.23001255999997,
+          "awaiting_first_content": 12,
+          "in_flight": 25
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 63.23001255999997,
+          "awaiting_first_content": 0,
+          "in_flight": 25
+        }
+      ]
+    },
+    {
+      "at_s": 210.0,
+      "from_cap": 64.0,
+      "to_cap": 80.0,
+      "application_lag_ms": 8.753647969570011,
+      "initial_cost": 63.18708919679996,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 63.18708919679996,
+          "awaiting_first_content": 0,
+          "in_flight": 32
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 79.81425049599994,
+          "awaiting_first_content": 2,
+          "in_flight": 40
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 79.69372849599995,
+          "awaiting_first_content": 0,
+          "in_flight": 40
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 79.51802115839988,
+          "awaiting_first_content": 7,
+          "in_flight": 41
+        }
+      ]
+    },
+    {
+      "at_s": 240.0,
+      "from_cap": 80.0,
+      "to_cap": 64.0,
+      "application_lag_ms": 6.9920989335514605,
+      "initial_cost": 74.26175183359996,
+      "first_cost_at_or_below_cap_s": 0.9643641160218976,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 74.26175183359996,
+          "awaiting_first_content": 1,
+          "in_flight": 39
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 63.41842785919995,
+          "awaiting_first_content": 0,
+          "in_flight": 33
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 61.56602452159995,
+          "awaiting_first_content": 1,
+          "in_flight": 34
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 63.87565052159995,
+          "awaiting_first_content": 0,
+          "in_flight": 34
+        }
+      ]
+    },
+    {
+      "at_s": 270.0,
+      "from_cap": 64.0,
+      "to_cap": 96.0,
+      "application_lag_ms": 5.165099981240928,
+      "initial_cost": 63.981607171199954,
+      "first_cost_at_or_below_cap_s": null,
+      "states": [
+        {
+          "seconds_after_application": 0,
+          "reserved_cost": 63.981607171199954,
+          "awaiting_first_content": 0,
+          "in_flight": 38
+        },
+        {
+          "seconds_after_application": 1,
+          "reserved_cost": 95.44886309439995,
+          "awaiting_first_content": 9,
+          "in_flight": 56
+        },
+        {
+          "seconds_after_application": 2,
+          "reserved_cost": 91.67281910719997,
+          "awaiting_first_content": 2,
+          "in_flight": 53
+        },
+        {
+          "seconds_after_application": 5,
+          "reserved_cost": 95.80665378239998,
+          "awaiting_first_content": 1,
+          "in_flight": 51
+        }
+      ]
+    }
+  ]
+}

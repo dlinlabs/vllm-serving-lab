@@ -1,5 +1,10 @@
 # Shared upstream client: bounded development qualification
 
+**Qualification completed.** The declared smoke/A captures pass all six enabled
+gates; exact runtime d0ccb2c has 476 native CPU cases passing on two hosts.
+[Complete archives, verification and model limitations](../results/shared-client-20261018/report.md)
+are published. The original frozen JSON is unchanged; these run names are consumed.
+
 The original excitation-v1 A capture on 2026-10-17 stopped at the 210 s
 96-to-48 step: send lag 0.961 ms, application lag 52.884 ms (limit 50 ms).
 Within the 51.923 ms send-to-application interval, recorded synchronous gateway
@@ -48,6 +53,7 @@ replay settings, and both:
 --protocol experiments/shared-client-qualification-v1.json --protocol-run RUN_NAME
 ```
 
-The output directory basename must equal RUN_NAME. No GPU pass has been
-established by this implementation. The unused held-out C window stays unused;
+The output directory basename must equal RUN_NAME. The implementation alone was
+not GPU evidence; the archived completed captures now qualify measurement.
+The unused held-out C window stays unused;
 any later model acceptance needs a separately declared protocol for the new mode.

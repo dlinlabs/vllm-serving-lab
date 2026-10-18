@@ -1,0 +1,73 @@
+{
+  "failed_original_A": {
+    "step_index": 7,
+    "requested_budget": 48.0,
+    "send_lag_ms": 0.9607080137357116,
+    "application_lag_ms": 52.88354400545359,
+    "error": "Budget application missed its predeclared window",
+    "whole_run_comparison_valid": false
+  },
+  "qualified_runs": [
+    {
+      "name": "shared-client-a-r1",
+      "attempted": 7643,
+      "success": 1976,
+      "rejected": 5667,
+      "failed": 0,
+      "client_p99_ttft": 2.4125834047736134,
+      "scheduled_p99_ttft": 2.413431863154983,
+      "client_p99_e2e": 8.418996846245136,
+      "slo_successes": 572,
+      "slo_goodput_per_arrival_second": 1.9066666666666667,
+      "slo_success_fraction_of_offered": 0.07483972262200707,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    },
+    {
+      "name": "shared-client-smoke-96-r1",
+      "attempted": 787,
+      "success": 224,
+      "rejected": 563,
+      "failed": 0,
+      "client_p99_ttft": 2.872285139905871,
+      "scheduled_p99_ttft": 2.873282072369475,
+      "client_p99_e2e": 9.555941307251341,
+      "slo_successes": 62,
+      "slo_goodput_per_arrival_second": 2.066666666666667,
+      "slo_success_fraction_of_offered": 0.07878017789072427,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    },
+    {
+      "name": "shared-client-b-r1",
+      "attempted": 7643,
+      "success": 2059,
+      "rejected": 5584,
+      "failed": 0,
+      "client_p99_ttft": 2.202635321232957,
+      "scheduled_p99_ttft": 2.203232305971907,
+      "client_p99_e2e": 8.175106733852306,
+      "slo_successes": 736,
+      "slo_goodput_per_arrival_second": 2.453333333333333,
+      "slo_success_fraction_of_offered": 0.09629726547167343,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    },
+    {
+      "name": "shared-client-b-smoke-96-r1",
+      "attempted": 787,
+      "success": 251,
+      "rejected": 536,
+      "failed": 0,
+      "client_p99_ttft": 2.751522295497125,
+      "scheduled_p99_ttft": 2.753133832360618,
+      "client_p99_e2e": 9.048584372998448,
+      "slo_successes": 120,
+      "slo_goodput_per_arrival_second": 4.0,
+      "slo_success_fraction_of_offered": 0.15247776365946633,
+      "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+    }
+  ],
+  "comparison_caveats": [
+    "A and B are development captures on different hosts with the same arrival trace",
+    "No causal goodput improvement or optimal cap established",
+    "No held-out C data or MPC actuation evaluated"
+  ]
+}
