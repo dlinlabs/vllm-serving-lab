@@ -1,0 +1,1101 @@
+{
+  "schema_version": 1,
+  "C_collected": false,
+  "C_scored": false,
+  "model_readiness": "not_established",
+  "MPC_evaluated": false,
+  "captures": [
+    {
+      "name": "excitation-v1-smoke-96-r1",
+      "archive": "failed-a",
+      "runtime_commit": "23017e5bcbf11a92bc6d90dbe17079a739b759f5",
+      "git_dirty": true,
+      "runtime_hashes": {
+        "run_trace_pilot.py": true,
+        "trace_workload.py": true,
+        "trace_control.py": true,
+        "gateway.py": true,
+        "telemetry.py": true,
+        "sustained_load.py": true,
+        "run_budget_pilot.py": true,
+        "diagnostic_sampling.py": true,
+        "runner_diagnostics.py": true,
+        "runner_gc_control.py": true,
+        "analyze_budget_pilot.py": true,
+        "analyze_trace_pilot.py": true,
+        "analyze_trace_dynamics.py": true,
+        "experiment_protocol.py": true,
+        "requirements-v1.txt": true
+      },
+      "trace_sha256": "9998c82da5174ec41484985f7b5cf77a658992cee5011fc38bb7155caf065294",
+      "report": {
+        "valid": true,
+        "issues": [],
+        "load_fidelity": {
+          "valid": true,
+          "issues": [],
+          "p99_scheduling_lag": 0.00812984681804664,
+          "max_scheduling_lag": 0.023425590246915817
+        },
+        "performance": {
+          "attempted": 787,
+          "success": 197,
+          "rejected": 590,
+          "failed": 0,
+          "client_p99_ttft": 4.123562405656557,
+          "scheduled_p99_ttft": 4.124140263739973,
+          "client_p99_e2e": 9.524933471726253,
+          "slo_successes": 54,
+          "slo_goodput_per_arrival_second": 1.8,
+          "slo_success_fraction_of_offered": 0.06861499364675985,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "gateway_terminal_counts": {
+          "completed": 200,
+          "rejected": 590
+        },
+        "failed_without_gateway_record": 0,
+        "state_poll_errors": 0,
+        "cache_policy_self_reported": "disabled",
+        "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+        "performance_by_input_size": {
+          "long_input": {
+            "attempted": 636,
+            "success": 152,
+            "rejected": 484,
+            "failed": 0,
+            "client_p99_ttft": 4.089362953815726,
+            "scheduled_p99_ttft": 4.090248392958893,
+            "client_p99_e2e": 9.494523416250596,
+            "slo_successes": 43,
+            "slo_goodput_per_arrival_second": 1.4333333333333333,
+            "slo_success_fraction_of_offered": 0.06761006289308176,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "medium_input": {
+            "attempted": 136,
+            "success": 39,
+            "rejected": 97,
+            "failed": 0,
+            "client_p99_ttft": 4.068059454163303,
+            "scheduled_p99_ttft": 4.068816083072451,
+            "client_p99_e2e": 9.459566558446967,
+            "slo_successes": 10,
+            "slo_goodput_per_arrival_second": 0.3333333333333333,
+            "slo_success_fraction_of_offered": 0.07352941176470588,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "short_input": {
+            "attempted": 15,
+            "success": 6,
+            "rejected": 9,
+            "failed": 0,
+            "client_p99_ttft": 2.3300406477967046,
+            "scheduled_p99_ttft": 2.3308128388423937,
+            "client_p99_e2e": 8.284004940729938,
+            "slo_successes": 1,
+            "slo_goodput_per_arrival_second": 0.03333333333333333,
+            "slo_success_fraction_of_offered": 0.06666666666666667,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          }
+        },
+        "control_fidelity": {
+          "valid": true,
+          "issues": [],
+          "budget_mode": "fixed",
+          "planned_commands": 1,
+          "recorded_commands": 1,
+          "gateway_applications": 1,
+          "max_budget_lag_limit": 0.05,
+          "p99_send_lag": null,
+          "max_send_lag": null,
+          "p99_application_lag": null,
+          "max_application_lag": null,
+          "p99_acknowledgement_roundtrip": 0.0034466219949536026,
+          "note": "Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only."
+        },
+        "timing": {
+          "p99_state_age": 0.007974007700104263,
+          "max_state_age": 0.009011742018628865,
+          "p99_metrics_roundtrip": 0.04135596345178783,
+          "max_state_poll_gap": 1.0428069949848577,
+          "p99_event_loop_lag": 0.1427173197129735,
+          "max_event_loop_lag": 0.2879801790113561
+        },
+        "diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "gateway_mode": "enabled",
+          "external_mode": "enabled",
+          "gc_coverage_complete": true,
+          "request_linked_prefill": "unavailable",
+          "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+          "coverage_start": 291873.10443874,
+          "coverage_end": 291909.450015112,
+          "gc_spans": 91,
+          "cpu_samples": 38,
+          "request_summaries": 790,
+          "engine_samples": 37,
+          "engine_counter_epochs": 1
+        },
+        "runner_diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "source": "runner",
+          "gc_coverage_complete": true,
+          "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+          "coverage_start": 291873.145438876,
+          "coverage_end": 291909.281836709,
+          "gc_spans": 3,
+          "loop_samples": 3293,
+          "max_loop_lag": 0.17528353998204693
+        },
+        "runner_gc_integrity": {
+          "valid": true,
+          "issues": [],
+          "policy": "defer",
+          "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+          "samples": 314,
+          "peak_rss_mib": 821.22265625,
+          "max_rss_mib": 1536.0,
+          "disabled_seconds": 32.30039923998993,
+          "measurement_max_runner_loop_lag": 0.027333021978847682,
+          "restored": true
+        }
+      },
+      "status": "collected",
+      "protocol": null
+    },
+    {
+      "name": "multilevel-v1-a-r1",
+      "archive": "failed-a",
+      "runtime_commit": "23017e5bcbf11a92bc6d90dbe17079a739b759f5",
+      "git_dirty": true,
+      "runtime_hashes": {
+        "run_trace_pilot.py": true,
+        "trace_workload.py": true,
+        "trace_control.py": true,
+        "gateway.py": true,
+        "telemetry.py": true,
+        "sustained_load.py": true,
+        "run_budget_pilot.py": true,
+        "diagnostic_sampling.py": true,
+        "runner_diagnostics.py": true,
+        "runner_gc_control.py": true,
+        "analyze_budget_pilot.py": true,
+        "analyze_trace_pilot.py": true,
+        "analyze_trace_dynamics.py": true,
+        "experiment_protocol.py": true,
+        "requirements-v1.txt": true
+      },
+      "trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "report": {
+        "valid": false,
+        "issues": [
+          "Incomplete or malformed replay data: 'final_metrics'"
+        ],
+        "load_fidelity": {
+          "valid": false,
+          "issues": [
+            "Cannot audit load fidelity"
+          ]
+        },
+        "performance": null,
+        "runner_diagnostic_integrity": {
+          "valid": false,
+          "issues": [
+            "Incomplete runner GC coverage",
+            "Incomplete runner loop coverage",
+            "Incomplete runner CPU coverage",
+            "Core replay artifacts are incomplete"
+          ],
+          "source": "runner",
+          "gc_coverage_complete": false,
+          "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+          "coverage_start": 292028.70955479,
+          "coverage_end": 292242.204215333,
+          "gc_spans": 4,
+          "loop_samples": 19594,
+          "max_loop_lag": 0.282781655958388
+        },
+        "runner_gc_integrity": {
+          "valid": false,
+          "issues": [
+            "GC intervention did not complete normally",
+            "Incomplete or overlong deferred GC coverage",
+            "Runner diagnostics cannot verify deferred GC",
+            "RSS boundary samples do not cover measurement/drain",
+            "Core replay artifacts are incomplete"
+          ],
+          "policy": "defer",
+          "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+          "samples": 2021,
+          "peak_rss_mib": 869.546875,
+          "max_rss_mib": 1536.0,
+          "disabled_seconds": 210.29640122503042,
+          "measurement_max_runner_loop_lag": 0.27329586300766096,
+          "restored": true
+        },
+        "control_fidelity": {
+          "valid": false,
+          "issues": [
+            "Cannot audit declared budget control"
+          ]
+        },
+        "diagnostic_integrity": {
+          "valid": false,
+          "issues": [
+            "Core replay artifacts are incomplete; diagnostic coverage cannot be qualified"
+          ],
+          "gc_coverage_complete": false,
+          "request_linked_prefill": "unavailable"
+        }
+      },
+      "status": "failed",
+      "protocol": {
+        "path": "experiments/excitation-v1.json",
+        "protocol": "excitation-v1",
+        "sha256": "83af37e98799a1850728359d79be06fc832c424da94efde7824867c8641c7993",
+        "run": "multilevel-v1-a-r1",
+        "role": "development",
+        "acceptance_status": "frozen"
+      }
+    },
+    {
+      "name": "shared-client-a-r1",
+      "archive": "shared-a",
+      "runtime_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+      "git_dirty": true,
+      "runtime_hashes": {
+        "run_trace_pilot.py": true,
+        "trace_workload.py": true,
+        "trace_control.py": true,
+        "gateway.py": true,
+        "telemetry.py": true,
+        "sustained_load.py": true,
+        "run_budget_pilot.py": true,
+        "diagnostic_sampling.py": true,
+        "runner_diagnostics.py": true,
+        "runner_gc_control.py": true,
+        "analyze_budget_pilot.py": true,
+        "analyze_trace_pilot.py": true,
+        "analyze_trace_dynamics.py": true,
+        "experiment_protocol.py": true,
+        "requirements-v1.txt": true
+      },
+      "trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "report": {
+        "valid": true,
+        "issues": [],
+        "load_fidelity": {
+          "valid": true,
+          "issues": [],
+          "p99_scheduling_lag": 0.008364396813558411,
+          "max_scheduling_lag": 0.01713181147351861
+        },
+        "performance": {
+          "attempted": 7643,
+          "success": 1976,
+          "rejected": 5667,
+          "failed": 0,
+          "client_p99_ttft": 2.4125834047736134,
+          "scheduled_p99_ttft": 2.413431863154983,
+          "client_p99_e2e": 8.418996846245136,
+          "slo_successes": 572,
+          "slo_goodput_per_arrival_second": 1.9066666666666667,
+          "slo_success_fraction_of_offered": 0.07483972262200707,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "gateway_terminal_counts": {
+          "completed": 1979,
+          "rejected": 5667
+        },
+        "failed_without_gateway_record": 0,
+        "state_poll_errors": 0,
+        "cache_policy_self_reported": "disabled",
+        "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+        "performance_by_input_size": {
+          "medium_input": {
+            "attempted": 1424,
+            "success": 437,
+            "rejected": 987,
+            "failed": 0,
+            "client_p99_ttft": 2.4098354320577346,
+            "scheduled_p99_ttft": 2.410583019540645,
+            "client_p99_e2e": 8.512966060673351,
+            "slo_successes": 146,
+            "slo_goodput_per_arrival_second": 0.4866666666666667,
+            "slo_success_fraction_of_offered": 0.10252808988764045,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "long_input": {
+            "attempted": 6035,
+            "success": 1476,
+            "rejected": 4559,
+            "failed": 0,
+            "client_p99_ttft": 2.4208894032344688,
+            "scheduled_p99_ttft": 2.4213105400267523,
+            "client_p99_e2e": 8.363001023273682,
+            "slo_successes": 405,
+            "slo_goodput_per_arrival_second": 1.35,
+            "slo_success_fraction_of_offered": 0.06710853355426678,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "short_input": {
+            "attempted": 184,
+            "success": 63,
+            "rejected": 121,
+            "failed": 0,
+            "client_p99_ttft": 1.812190537833378,
+            "scheduled_p99_ttft": 1.812930938228967,
+            "client_p99_e2e": 7.846215001459935,
+            "slo_successes": 21,
+            "slo_goodput_per_arrival_second": 0.07,
+            "slo_success_fraction_of_offered": 0.11413043478260869,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          }
+        },
+        "control_fidelity": {
+          "valid": true,
+          "issues": [],
+          "budget_mode": "scheduled",
+          "planned_commands": 10,
+          "recorded_commands": 10,
+          "gateway_applications": 10,
+          "max_budget_lag_limit": 0.05,
+          "p99_send_lag": 0.004999341806396842,
+          "max_send_lag": 0.005173451965674758,
+          "p99_application_lag": 0.026637081189546732,
+          "max_application_lag": 0.026862261991482228,
+          "p99_acknowledgement_roundtrip": 0.027273701326339505,
+          "note": "Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only."
+        },
+        "timing": {
+          "p99_state_age": 0.006476270112907488,
+          "max_state_age": 0.011731987004168332,
+          "p99_metrics_roundtrip": 0.026187284858315077,
+          "max_state_poll_gap": 1.0468881609849632,
+          "p99_event_loop_lag": 0.02848232185817319,
+          "max_event_loop_lag": 0.28150876704603434
+        },
+        "diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "gateway_mode": "enabled",
+          "external_mode": "enabled",
+          "gc_coverage_complete": true,
+          "request_linked_prefill": "unavailable",
+          "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+          "coverage_start": 293872.61001234,
+          "coverage_end": 294179.211890136,
+          "gc_spans": 447,
+          "cpu_samples": 307,
+          "request_summaries": 7646,
+          "engine_samples": 307,
+          "engine_counter_epochs": 1
+        },
+        "runner_diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "source": "runner",
+          "gc_coverage_complete": true,
+          "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+          "coverage_start": 293872.854406097,
+          "coverage_end": 294178.887162587,
+          "gc_spans": 3,
+          "loop_samples": 28003,
+          "max_loop_lag": 0.39855335402535275
+        },
+        "runner_gc_integrity": {
+          "valid": true,
+          "issues": [],
+          "policy": "defer",
+          "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+          "samples": 2909,
+          "peak_rss_mib": 899.2734375,
+          "max_rss_mib": 1536.0,
+          "disabled_seconds": 302.8810150260106,
+          "measurement_max_runner_loop_lag": 0.021721369004808366,
+          "restored": true
+        }
+      },
+      "status": "collected",
+      "protocol": {
+        "path": "experiments/shared-client-qualification-v1.json",
+        "protocol": "shared-client-qualification-v1",
+        "sha256": "1f649ebd712a88a2fa750cd8293964e9fa30a5d66f8a204a33b61b5245d1868c",
+        "run": "shared-client-a-r1",
+        "role": "development",
+        "acceptance_status": null
+      }
+    },
+    {
+      "name": "shared-client-smoke-96-r1",
+      "archive": "shared-a",
+      "runtime_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+      "git_dirty": true,
+      "runtime_hashes": {
+        "run_trace_pilot.py": true,
+        "trace_workload.py": true,
+        "trace_control.py": true,
+        "gateway.py": true,
+        "telemetry.py": true,
+        "sustained_load.py": true,
+        "run_budget_pilot.py": true,
+        "diagnostic_sampling.py": true,
+        "runner_diagnostics.py": true,
+        "runner_gc_control.py": true,
+        "analyze_budget_pilot.py": true,
+        "analyze_trace_pilot.py": true,
+        "analyze_trace_dynamics.py": true,
+        "experiment_protocol.py": true,
+        "requirements-v1.txt": true
+      },
+      "trace_sha256": "9998c82da5174ec41484985f7b5cf77a658992cee5011fc38bb7155caf065294",
+      "report": {
+        "valid": true,
+        "issues": [],
+        "load_fidelity": {
+          "valid": true,
+          "issues": [],
+          "p99_scheduling_lag": 0.007436286212177947,
+          "max_scheduling_lag": 0.021309591131284833
+        },
+        "performance": {
+          "attempted": 787,
+          "success": 224,
+          "rejected": 563,
+          "failed": 0,
+          "client_p99_ttft": 2.872285139905871,
+          "scheduled_p99_ttft": 2.873282072369475,
+          "client_p99_e2e": 9.555941307251341,
+          "slo_successes": 62,
+          "slo_goodput_per_arrival_second": 2.066666666666667,
+          "slo_success_fraction_of_offered": 0.07878017789072427,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "gateway_terminal_counts": {
+          "completed": 227,
+          "rejected": 563
+        },
+        "failed_without_gateway_record": 0,
+        "state_poll_errors": 0,
+        "cache_policy_self_reported": "disabled",
+        "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+        "performance_by_input_size": {
+          "long_input": {
+            "attempted": 636,
+            "success": 168,
+            "rejected": 468,
+            "failed": 0,
+            "client_p99_ttft": 2.8674689879640938,
+            "scheduled_p99_ttft": 2.8689919374207964,
+            "client_p99_e2e": 9.547912808980326,
+            "slo_successes": 44,
+            "slo_goodput_per_arrival_second": 1.4666666666666666,
+            "slo_success_fraction_of_offered": 0.06918238993710692,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "medium_input": {
+            "attempted": 136,
+            "success": 50,
+            "rejected": 86,
+            "failed": 0,
+            "client_p99_ttft": 2.9492439015128182,
+            "scheduled_p99_ttft": 2.949550113422447,
+            "client_p99_e2e": 9.632524267241243,
+            "slo_successes": 16,
+            "slo_goodput_per_arrival_second": 0.5333333333333333,
+            "slo_success_fraction_of_offered": 0.11764705882352941,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "short_input": {
+            "attempted": 15,
+            "success": 6,
+            "rejected": 9,
+            "failed": 0,
+            "client_p99_ttft": 1.3749524848186412,
+            "scheduled_p99_ttft": 1.375322488983511,
+            "client_p99_e2e": 7.020581038776436,
+            "slo_successes": 2,
+            "slo_goodput_per_arrival_second": 0.06666666666666667,
+            "slo_success_fraction_of_offered": 0.13333333333333333,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          }
+        },
+        "control_fidelity": {
+          "valid": true,
+          "issues": [],
+          "budget_mode": "fixed",
+          "planned_commands": 1,
+          "recorded_commands": 1,
+          "gateway_applications": 1,
+          "max_budget_lag_limit": 0.05,
+          "p99_send_lag": null,
+          "max_send_lag": null,
+          "p99_application_lag": null,
+          "max_application_lag": null,
+          "p99_acknowledgement_roundtrip": 0.004051546973641962,
+          "note": "Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only."
+        },
+        "timing": {
+          "p99_state_age": 0.003505635654437356,
+          "max_state_age": 0.003540413046721369,
+          "p99_metrics_roundtrip": 0.013619070563581774,
+          "max_state_poll_gap": 1.014730587019585,
+          "p99_event_loop_lag": 0.020410391348414103,
+          "max_event_loop_lag": 0.03816399700008333
+        },
+        "diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "gateway_mode": "enabled",
+          "external_mode": "enabled",
+          "gc_coverage_complete": true,
+          "request_linked_prefill": "unavailable",
+          "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+          "coverage_start": 293558.971572761,
+          "coverage_end": 293595.093097939,
+          "gc_spans": 66,
+          "cpu_samples": 38,
+          "request_summaries": 790,
+          "engine_samples": 37,
+          "engine_counter_epochs": 1
+        },
+        "runner_diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "source": "runner",
+          "gc_coverage_complete": true,
+          "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+          "coverage_start": 293559.025765894,
+          "coverage_end": 293594.878167715,
+          "gc_spans": 3,
+          "loop_samples": 3261,
+          "max_loop_lag": 0.26484544901177287
+        },
+        "runner_gc_integrity": {
+          "valid": true,
+          "issues": [],
+          "policy": "defer",
+          "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+          "samples": 319,
+          "peak_rss_mib": 822.3671875,
+          "max_rss_mib": 1536.0,
+          "disabled_seconds": 33.02036786999088,
+          "measurement_max_runner_loop_lag": 0.022526284970808774,
+          "restored": true
+        }
+      },
+      "status": "collected",
+      "protocol": {
+        "path": "experiments/shared-client-qualification-v1.json",
+        "protocol": "shared-client-qualification-v1",
+        "sha256": "1f649ebd712a88a2fa750cd8293964e9fa30a5d66f8a204a33b61b5245d1868c",
+        "run": "shared-client-smoke-96-r1",
+        "role": "development",
+        "acceptance_status": null
+      }
+    },
+    {
+      "name": "shared-client-b-r1",
+      "archive": "shared-b",
+      "runtime_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+      "git_dirty": true,
+      "runtime_hashes": {
+        "run_trace_pilot.py": true,
+        "trace_workload.py": true,
+        "trace_control.py": true,
+        "gateway.py": true,
+        "telemetry.py": true,
+        "sustained_load.py": true,
+        "run_budget_pilot.py": true,
+        "diagnostic_sampling.py": true,
+        "runner_diagnostics.py": true,
+        "runner_gc_control.py": true,
+        "analyze_budget_pilot.py": true,
+        "analyze_trace_pilot.py": true,
+        "analyze_trace_dynamics.py": true,
+        "experiment_protocol.py": true,
+        "requirements-v1.txt": true
+      },
+      "trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "report": {
+        "valid": true,
+        "issues": [],
+        "load_fidelity": {
+          "valid": true,
+          "issues": [],
+          "p99_scheduling_lag": 0.006371616800315675,
+          "max_scheduling_lag": 0.015395567810628563
+        },
+        "performance": {
+          "attempted": 7643,
+          "success": 2059,
+          "rejected": 5584,
+          "failed": 0,
+          "client_p99_ttft": 2.202635321232957,
+          "scheduled_p99_ttft": 2.203232305971907,
+          "client_p99_e2e": 8.175106733852306,
+          "slo_successes": 736,
+          "slo_goodput_per_arrival_second": 2.453333333333333,
+          "slo_success_fraction_of_offered": 0.09629726547167343,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "gateway_terminal_counts": {
+          "completed": 2062,
+          "rejected": 5584
+        },
+        "failed_without_gateway_record": 0,
+        "state_poll_errors": 0,
+        "cache_policy_self_reported": "disabled",
+        "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+        "performance_by_input_size": {
+          "medium_input": {
+            "attempted": 1424,
+            "success": 477,
+            "rejected": 947,
+            "failed": 0,
+            "client_p99_ttft": 2.190659657577053,
+            "scheduled_p99_ttft": 2.1911378636490557,
+            "client_p99_e2e": 8.294359764819966,
+            "slo_successes": 188,
+            "slo_goodput_per_arrival_second": 0.6266666666666667,
+            "slo_success_fraction_of_offered": 0.13202247191011235,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "long_input": {
+            "attempted": 6035,
+            "success": 1512,
+            "rejected": 4523,
+            "failed": 0,
+            "client_p99_ttft": 2.192559235573865,
+            "scheduled_p99_ttft": 2.1930707043595636,
+            "client_p99_e2e": 8.12741746998916,
+            "slo_successes": 513,
+            "slo_goodput_per_arrival_second": 1.71,
+            "slo_success_fraction_of_offered": 0.08500414250207125,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "short_input": {
+            "attempted": 184,
+            "success": 70,
+            "rejected": 114,
+            "failed": 0,
+            "client_p99_ttft": 1.8680599747312976,
+            "scheduled_p99_ttft": 1.8712755314819538,
+            "client_p99_e2e": 7.2318372368894055,
+            "slo_successes": 35,
+            "slo_goodput_per_arrival_second": 0.11666666666666667,
+            "slo_success_fraction_of_offered": 0.19021739130434784,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          }
+        },
+        "control_fidelity": {
+          "valid": true,
+          "issues": [],
+          "budget_mode": "scheduled",
+          "planned_commands": 10,
+          "recorded_commands": 10,
+          "gateway_applications": 10,
+          "max_budget_lag_limit": 0.05,
+          "p99_send_lag": 0.00356682900339365,
+          "max_send_lag": 0.0037806399632245302,
+          "p99_application_lag": 0.01815008082659915,
+          "max_application_lag": 0.018967161944601685,
+          "p99_acknowledgement_roundtrip": 0.018895948815043084,
+          "note": "Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only."
+        },
+        "timing": {
+          "p99_state_age": 0.005733044776134189,
+          "max_state_age": 0.006963471008930355,
+          "p99_metrics_roundtrip": 0.02473283309198449,
+          "max_state_poll_gap": 1.2040789820021018,
+          "p99_event_loop_lag": 0.02562126406701282,
+          "max_event_loop_lag": 0.3432052269927226
+        },
+        "diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "gateway_mode": "enabled",
+          "external_mode": "enabled",
+          "gc_coverage_complete": true,
+          "request_linked_prefill": "unavailable",
+          "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+          "coverage_start": 263922.102095216,
+          "coverage_end": 264229.346953675,
+          "gc_spans": 451,
+          "cpu_samples": 308,
+          "request_summaries": 7646,
+          "engine_samples": 307,
+          "engine_counter_epochs": 1
+        },
+        "runner_diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "source": "runner",
+          "gc_coverage_complete": true,
+          "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+          "coverage_start": 263922.298064083,
+          "coverage_end": 264228.981183335,
+          "gc_spans": 4,
+          "loop_samples": 28591,
+          "max_loop_lag": 0.31729210395133123
+        },
+        "runner_gc_integrity": {
+          "valid": true,
+          "issues": [],
+          "policy": "defer",
+          "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+          "samples": 2923,
+          "peak_rss_mib": 898.85546875,
+          "max_rss_mib": 1536.0,
+          "disabled_seconds": 303.72412223997526,
+          "measurement_max_runner_loop_lag": 0.019851737015414983,
+          "restored": true
+        }
+      },
+      "status": "collected",
+      "protocol": {
+        "path": "/workspace/shared-client-b-v1.json",
+        "protocol": "shared-client-b-v1",
+        "sha256": "6610d3839bb16db0c8b18e90dc11718d9adc2ae7f56ed1be82bbe024e6a4625f",
+        "run": "shared-client-b-r1",
+        "role": "development",
+        "acceptance_status": null
+      }
+    },
+    {
+      "name": "shared-client-b-smoke-96-r1",
+      "archive": "shared-b",
+      "runtime_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+      "git_dirty": true,
+      "runtime_hashes": {
+        "run_trace_pilot.py": true,
+        "trace_workload.py": true,
+        "trace_control.py": true,
+        "gateway.py": true,
+        "telemetry.py": true,
+        "sustained_load.py": true,
+        "run_budget_pilot.py": true,
+        "diagnostic_sampling.py": true,
+        "runner_diagnostics.py": true,
+        "runner_gc_control.py": true,
+        "analyze_budget_pilot.py": true,
+        "analyze_trace_pilot.py": true,
+        "analyze_trace_dynamics.py": true,
+        "experiment_protocol.py": true,
+        "requirements-v1.txt": true
+      },
+      "trace_sha256": "9998c82da5174ec41484985f7b5cf77a658992cee5011fc38bb7155caf065294",
+      "report": {
+        "valid": true,
+        "issues": [],
+        "load_fidelity": {
+          "valid": true,
+          "issues": [],
+          "p99_scheduling_lag": 0.006838515363633626,
+          "max_scheduling_lag": 0.01228014170192182
+        },
+        "performance": {
+          "attempted": 787,
+          "success": 251,
+          "rejected": 536,
+          "failed": 0,
+          "client_p99_ttft": 2.751522295497125,
+          "scheduled_p99_ttft": 2.753133832360618,
+          "client_p99_e2e": 9.048584372998448,
+          "slo_successes": 120,
+          "slo_goodput_per_arrival_second": 4.0,
+          "slo_success_fraction_of_offered": 0.15247776365946633,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "gateway_terminal_counts": {
+          "completed": 254,
+          "rejected": 536
+        },
+        "failed_without_gateway_record": 0,
+        "state_poll_errors": 0,
+        "cache_policy_self_reported": "disabled",
+        "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+        "performance_by_input_size": {
+          "long_input": {
+            "attempted": 636,
+            "success": 190,
+            "rejected": 446,
+            "failed": 0,
+            "client_p99_ttft": 2.743241117908619,
+            "scheduled_p99_ttft": 2.744869718766422,
+            "client_p99_e2e": 9.046944472144242,
+            "slo_successes": 83,
+            "slo_goodput_per_arrival_second": 2.7666666666666666,
+            "slo_success_fraction_of_offered": 0.13050314465408805,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "medium_input": {
+            "attempted": 136,
+            "success": 56,
+            "rejected": 80,
+            "failed": 0,
+            "client_p99_ttft": 2.8231557128165155,
+            "scheduled_p99_ttft": 2.825025510345586,
+            "client_p99_e2e": 9.054601504059974,
+            "slo_successes": 35,
+            "slo_goodput_per_arrival_second": 1.1666666666666667,
+            "slo_success_fraction_of_offered": 0.25735294117647056,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          },
+          "short_input": {
+            "attempted": 15,
+            "success": 5,
+            "rejected": 10,
+            "failed": 0,
+            "client_p99_ttft": 1.4086671684216707,
+            "scheduled_p99_ttft": 1.4094298894237727,
+            "client_p99_e2e": 7.069540775446221,
+            "slo_successes": 2,
+            "slo_goodput_per_arrival_second": 0.06666666666666667,
+            "slo_success_fraction_of_offered": 0.13333333333333333,
+            "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+          }
+        },
+        "control_fidelity": {
+          "valid": true,
+          "issues": [],
+          "budget_mode": "fixed",
+          "planned_commands": 1,
+          "recorded_commands": 1,
+          "gateway_applications": 1,
+          "max_budget_lag_limit": 0.05,
+          "p99_send_lag": null,
+          "max_send_lag": null,
+          "p99_application_lag": null,
+          "max_application_lag": null,
+          "p99_acknowledgement_roundtrip": 0.0041990039753727615,
+          "note": "Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only."
+        },
+        "timing": {
+          "p99_state_age": 0.0023110216745408254,
+          "max_state_age": 0.002404328028205782,
+          "p99_metrics_roundtrip": 0.013546218142146247,
+          "max_state_poll_gap": 1.0144778990070336,
+          "p99_event_loop_lag": 0.031654571967665045,
+          "max_event_loop_lag": 0.041489445022307336
+        },
+        "diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "gateway_mode": "enabled",
+          "external_mode": "enabled",
+          "gc_coverage_complete": true,
+          "request_linked_prefill": "unavailable",
+          "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+          "coverage_start": 263697.436392439,
+          "coverage_end": 263735.035068614,
+          "gc_spans": 73,
+          "cpu_samples": 40,
+          "request_summaries": 790,
+          "engine_samples": 38,
+          "engine_counter_epochs": 1
+        },
+        "runner_diagnostic_integrity": {
+          "valid": true,
+          "issues": [],
+          "source": "runner",
+          "gc_coverage_complete": true,
+          "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+          "coverage_start": 263697.581197909,
+          "coverage_end": 263734.877807009,
+          "gc_spans": 3,
+          "loop_samples": 3465,
+          "max_loop_lag": 0.20550272800028324
+        },
+        "runner_gc_integrity": {
+          "valid": true,
+          "issues": [],
+          "policy": "defer",
+          "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+          "samples": 337,
+          "peak_rss_mib": 822.2890625,
+          "max_rss_mib": 1536.0,
+          "disabled_seconds": 34.658772905007936,
+          "measurement_max_runner_loop_lag": 0.011538043967448175,
+          "restored": true
+        }
+      },
+      "status": "collected",
+      "protocol": {
+        "path": "/workspace/shared-client-b-v1.json",
+        "protocol": "shared-client-b-v1",
+        "sha256": "6610d3839bb16db0c8b18e90dc11718d9adc2ae7f56ed1be82bbe024e6a4625f",
+        "run": "shared-client-b-smoke-96-r1",
+        "role": "development",
+        "acceptance_status": null
+      }
+    }
+  ],
+  "native_cpu": [
+    {
+      "archive": "failed-a",
+      "commit": "23017e5bcbf11a92bc6d90dbe17079a739b759f5",
+      "test_cases": 467,
+      "passed": true
+    },
+    {
+      "archive": "shared-a",
+      "commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+      "test_cases": 476,
+      "passed": true
+    },
+    {
+      "archive": "shared-b",
+      "commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+      "test_cases": 476,
+      "passed": true
+    }
+  ],
+  "raw_archives": [
+    {
+      "id": "failed-a",
+      "original_name": "excitation-v1-a-failed.tar.gz",
+      "description": "Failed original per-request A plus its smoke/native/setup evidence; retained as an invalid capture",
+      "size_bytes": 16749860,
+      "sha256": "88e0a3cbc57f95984254d052a8c8bc53cf8cf14d202ddcf6dcc38f0c3f1cc826"
+    },
+    {
+      "id": "shared-a",
+      "original_name": "shared-client-qualification-r1.tar.gz",
+      "description": "Qualified shared-client smoke and A, native/setup/protocol evidence",
+      "size_bytes": 18123533,
+      "sha256": "10abf26c841f32476a3fd8b25d41752158cdffa3464596d879b495a6cdffa8e1"
+    },
+    {
+      "id": "shared-b",
+      "original_name": "shared-client-b-r1.tar.gz",
+      "description": "Qualified fresh-host shared-client smoke and B, native/setup/protocol evidence",
+      "size_bytes": 18866240,
+      "sha256": "c4d5a3df4bef58d316ee14c781a4fc919ddedd8c168e2d61876fda3d4865f64b"
+    }
+  ],
+  "AB_offline": [
+    {
+      "name": "shared-client-a-r1",
+      "qualified_for_comparison": true,
+      "original_report_reproduced": true,
+      "state_reconstruction": {
+        "snapshots": 306,
+        "invalid_timestamps": 0,
+        "required_fields": [
+          "current_admitted_cost",
+          "current_in_flight",
+          "awaiting_first_content",
+          "oldest_awaiting_first_seconds",
+          "streaming_requests",
+          "active_requests",
+          "admission_budget",
+          "budget_version"
+        ],
+        "compared": {
+          "current_admitted_cost": 306,
+          "current_in_flight": 306,
+          "awaiting_first_content": 306,
+          "oldest_awaiting_first_seconds": 306,
+          "streaming_requests": 306,
+          "active_requests": 306,
+          "admission_budget": 306,
+          "budget_version": 306
+        },
+        "missing": {},
+        "mismatches": {},
+        "examples": [],
+        "span_s": [
+          -2.0107209520065226,
+          303.59076416597236
+        ],
+        "max_gap_s": 1.0448543920065276,
+        "replay_issues": [],
+        "replay_issue_count": 0,
+        "valid": true
+      },
+      "manifest_git_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+      "raw_sha256": {
+        "manifest.json": "8e0fdd8fbf56efd5c7995d4aa01952b10dcb66187c6e5879f28aca7e50a9a3cf",
+        "client.json": "9ab8a1f65558103f792a0ed47467edd08d815876604d4bf9f48dc2a4399d0c93",
+        "warmup.json": "b5075a59bfb6c1f55b14f98fb70a0cd1f41da9b17fa76dba0344488b7a41f148",
+        "gateway.jsonl": "5247503cdd7a59aabb5116a5d30bff0f407d11837f211280b6782c901ad6abf7",
+        "trace.json": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+        "budget_changes.json": "44680539c66b7e2d46df211190c10b400c86c053fb4a55676b5591531c64af77",
+        "state_observations.json": "c09db676b41e0f38a17fc1c3f4a4bfa8fe151c00123c8014e087c13767b9971d",
+        "telemetry_status.json": "1a6e8637e8a5465ce2658c4eb26f78b43f633191a9cfe2b8422430b23056d1e0",
+        "report.json": "62cf7720e7bd8f3484bb25a7de582b308bc40c72c0f09fb3408aa2c676c170b3",
+        "timeseries.png": "02177d44681b520cfa4d66b90772fd8e5250dbd423b60f86bd0332235c600b10",
+        "engine_observations.jsonl": "fef118d24cca88dee19352537e8457ebb52b7c69d1029931bd85cf2a6c9b0b2f",
+        "engine_observations_status.json": "3f9c3020dc4ceb490140c845eac7bde86ca9fbcba1dc08d6e7ebda1e9ddf02d7",
+        "replay_plan.json": "8ab5faa456806961e45842b653574fd019567c0ebd1a42b8d78c3b2e4a96a04b",
+        "runner_observations.jsonl": "5a6157bb8f2fa4e860209eb9ccf70750819850bf98a4130ab86f283db6b2d0c2",
+        "runner_observations_status.json": "992dc8c305db1d0d68baabc5e86be51f3dff1cd5bae56ea515e7efe073b1f66b",
+        "runner_gc_control.json": "0a2268dd5032978e58d69069d93d0425c38c9afc5635627bd720fbfbb868fcc3"
+      }
+    },
+    {
+      "name": "shared-client-b-r1",
+      "qualified_for_comparison": true,
+      "original_report_reproduced": true,
+      "state_reconstruction": {
+        "snapshots": 307,
+        "invalid_timestamps": 0,
+        "required_fields": [
+          "current_admitted_cost",
+          "current_in_flight",
+          "awaiting_first_content",
+          "oldest_awaiting_first_seconds",
+          "streaming_requests",
+          "active_requests",
+          "admission_budget",
+          "budget_version"
+        ],
+        "compared": {
+          "current_admitted_cost": 307,
+          "current_in_flight": 307,
+          "awaiting_first_content": 307,
+          "oldest_awaiting_first_seconds": 307,
+          "streaming_requests": 307,
+          "active_requests": 307,
+          "admission_budget": 307,
+          "budget_version": 307
+        },
+        "missing": {},
+        "mismatches": {},
+        "examples": [],
+        "span_s": [
+          -1.8483336860663258,
+          304.39614635996986
+        ],
+        "max_gap_s": 1.0465329420403577,
+        "replay_issues": [],
+        "replay_issue_count": 0,
+        "valid": true
+      },
+      "manifest_git_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+      "raw_sha256": {
+        "manifest.json": "abcac0d25a124c6e2414cce57bac2b344a4eb28c724be2024e7ac2319f08f88e",
+        "client.json": "ec1c20adbab09cd6794bc299262e9558379b7ad44f48262628d42b7b97d15c88",
+        "warmup.json": "0bad7be65cf777f4e9e169243aa8178c14bdcce1891b87aface85e2e973df611",
+        "gateway.jsonl": "3bca100d31e905aaace2b08aa0af5594dcf0b8b054448e372a9bc9fa6004d19b",
+        "trace.json": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+        "budget_changes.json": "94e89e41e42653933dd5c37c97b8b8151897d2c7c5f2f67e09a6d50c29daf9ae",
+        "state_observations.json": "0d515ca836091763850b9742c87c2dea5e8a7afea2609f7b1befcf9cd355614c",
+        "telemetry_status.json": "74a044748937f640e516485c53c147ac7c8ce948a4a71816717ea2087217fdbf",
+        "report.json": "516a0fceec29e561ad888b1ab7434d4319c77df4eb20496be342788c3b0bfed4",
+        "timeseries.png": "3fce228f089c8579968b203b751cf28ac70ee7c98c45a37e6aff966bd32498e2",
+        "engine_observations.jsonl": "86ae3a7c5914b673ee86dae782860d6446d0eb719f5be153a4a30c25101949bc",
+        "engine_observations_status.json": "95687bf188d698ad5d08b1073c471cc9ac2e9001e5c328813677cf3aa14dcfd8",
+        "replay_plan.json": "52e5ae3fd59660f8ae013da50c8f6b8bf8d3400f08fdcd4b4695a70d787ba795",
+        "runner_observations.jsonl": "000cd7eb5db2e3282809b6552fd330190ace8d6396e714339f3f384870292f5e",
+        "runner_observations_status.json": "de1fac143e54d1091fe6b7eca86ccee053a120dfdcd013e10614899a0a272f31",
+        "runner_gc_control.json": "06972368326001d02fc1da0282e2da0aee022b924d6448f1ffeeb0fed3b80f42"
+      }
+    }
+  ],
+  "B_smoke_offline_report_reproduced": true
+}

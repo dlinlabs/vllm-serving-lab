@@ -1,0 +1,6 @@
+# Offline analysis only; no vLLM, Torch, CUDA or model download.
+-r ../../requirements-cpu-tests.txt
+numpy==2.3.5
+matplotlib==3.10.8
+scipy==1.17.0
+scikit-learn==1.8.0

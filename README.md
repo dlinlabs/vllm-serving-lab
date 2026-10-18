@@ -16,6 +16,54 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Latest results: shared-client A/B system identification (2026-10-18 UTC)
+
+**[Experiment index, complete raw data and reproduction](results/shared-client-20261018/report.md)** ·
+[中文分析](results/shared-client-20261018/analysis-zh.md) ·
+[Audit and runtime verification](results/shared-client-20261018/verification.json)
+
+The original per-request excitation A stopped at 210 s when a budget application
+missed the unchanged 50 ms deadline (52.884 ms). Its complete failed capture is
+preserved. Reusing one opt-in gateway HTTP transport then qualified a fresh
+smoke/A series and a fresh-host smoke/B series on runtime `d0ccb2c`.
+Each rental host passed **476 native CPU/mock cases** at that exact runtime;
+A/B reports independently reproduce, all recorded source hashes match, and
+all **306 / 307** gateway snapshots match lifecycle reconstruction.
+
+| Capture | Successful / rejected / failed | SLO successes | SLO goodput | Max arrival lag | Max budget application lag |
+|---|---|---:|---:|---:|---:|
+| [Shared A](results/shared-client-20261018/captures/shared-client-a-r1/report.json) | 1976 / 5667 / 0 | 572 | 1.907/s | 17.13 ms | 26.86 ms |
+| [Shared B](results/shared-client-20261018/captures/shared-client-b-r1/report.json) | 2059 / 5584 / 0 | 736 | 2.453/s | 15.40 ms | 18.97 ms |
+
+Both replay the same 7,643 arrivals over 300 s, with 30 s holds across caps
+48/64/80/96. All six enabled measurement gates pass. A/B were collected on
+**different rental hosts**; the totals do not establish a causal schedule
+improvement or an optimal cap. Model training uses these shared-client A/B only,
+keeping legacy captures separate.
+
+![Applied cap, reserved work, SLO goodput and first-token backlog](results/shared-client-20261018/figures/ab-overview.png)
+
+**Measurement is qualified; model and MPC readiness are not established.**
+One- and two-second ridge forecasts beat persistence in development splits,
+but five-second SLO-success/miss forecasts remain unstable. Phase/history
+features, planned-control inputs, administrative-version removal, a fixed
+nonlinear baseline and state×cap interactions were tested offline. These
+comparisons do not establish a reliable five-second goodput control model.
+
+![Five-second forecast development comparison](results/shared-client-20261018/figures/forecast-comparison.png)
+
+The [three byte-identical upload archives](results/shared-client-20261018/raw-bundle/)
+contain **139 original files** (failed A, shared A and shared B), including CPU,
+setup, launch, lifecycle and diagnostic evidence. Small capture folders are
+browsing subsets; use the SHA256-checking extraction helper for full inputs.
+The [reproduction entry point](results/shared-client-20261018/reproduce.py)
+rebuilds qualified features, baseline forecasts and optional extended diagnostics.
+**Held-out C was neither collected nor scored; no closed-loop MPC was run.**
+Next is an offline short-step service/state-transition prototype and causal
+engine-counter features, tested on A/B before freezing a new C acceptance plan.
+
+---
+
 ## Runner launch-delay diagnostics
 
 Opt-in `--runner-diagnostics` records the request runner's GC spans, event-loop
@@ -32,7 +80,7 @@ explicit RSS allowance, watchdog, restoration and separate audit gate.
 Automatic GC remains the default. The new capture below passes the load gate with
 deferral; a matched causal improvement/observer-overhead claim is not established.
 
-## Latest results: qualified budget identification (2026-10-15)
+## Earlier results: qualified budget identification (2026-10-15)
 
 **[Findings, raw data and reproduction](results/gc-identification-20261015/report.md).**
 Three five-minute RTX 4090 runs at revision `33a0608` pass all six enabled gates:
@@ -71,7 +119,7 @@ small run directories expose browsing subsets, not complete audit inputs.
 [the Chinese report](results/gc-identification-20261015/gc-defer-ident-analysis-20261015.html)
 are included. [Offline causal features and forecast baselines](experiments/forecast-baselines.md)
 now score development-only persistence/mean/ridge forecasts on these captures
-(no committed results; model readiness not established). Next:
+(development results are published above; model readiness not established). Historical next step:
 [excitation v1](experiments/excitation-v1.md), a predeclared multi-level
 (48–96) counterbalanced pair plus one held-out window and schedule, with
 forecast limits frozen on 2026-10-17 before collection. The original collection

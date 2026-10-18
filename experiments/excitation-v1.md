@@ -1,5 +1,10 @@
 # Excitation v1: multi-level budget steps and a held-out acceptance test
 
+**Historical series:** original per-request A aborted at its 210 s control
+deadline. It is retained as invalid; B/C were not collected under this protocol.
+The [later shared-client series and raw evidence](../results/shared-client-20261018/report.md)
+use separate declarations. The frozen JSON below is unchanged.
+
 Stage 3/4 of the [staged identification protocol](trace-identification.md#staged-gpu-protocol-do-not-start-with-a-matrix),
 declared before collection. The [qualified captures](../results/gc-identification-20261015/report.md)
 contain only two budget switches (96→64→96) in one run, so the
@@ -12,7 +17,8 @@ actuation or controller code, and this PR runs no GPU capture.
 Machine-readable declaration: [excitation-v1.json](excitation-v1.json). The
 acceptance limits are **`status: "frozen"`**, approved on 2026-10-17 with
 the reviewed numeric limits and all other protocol settings unchanged.
-Native CPU acceptance on the collection commit and GPU collection remain pending.
+The original collection revision passed 467 native CPU cases; A then aborted
+at the control deadline. No B/C capture was collected under this protocol.
 
 ## What is fixed
 

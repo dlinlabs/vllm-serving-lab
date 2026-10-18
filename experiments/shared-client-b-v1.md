@@ -1,5 +1,9 @@
 # Shared-client B on a fresh rental host
 
+**Historical completed collection.** Fresh-host smoke and B passed all six enabled gates.
+See [the archived evidence and analysis](../results/shared-client-20261018/report.md).
+These run names are consumed; new collection requires a new declaration.
+
 This is a development collection declaration, not model or MPC acceptance.
 Keep the existing qualification A capture and its declaration unchanged. Run one
 new fixed-96 smoke, then one B capture if every enabled smoke gate passes. Stop
@@ -42,7 +46,7 @@ and B; archive the corresponding `results/setup-*` directory.
 Fetch this declaration without switching the runtime checkout:
 
 ```bash
-git fetch origin experiments/shared-client-b-v1
+git fetch origin ad2a3a826d75340773fc26fe3f492330b5fae8ba
 git rev-parse FETCH_HEAD > /workspace/shared-client-b-protocol-source.txt
 git show FETCH_HEAD:experiments/shared-client-b-v1.json > /workspace/shared-client-b-v1.json
 sha256sum /workspace/shared-client-b-v1.json
