@@ -8,6 +8,7 @@ import re
 from contextlib import asynccontextmanager, nullcontext
 from pathlib import Path
 from dataclasses import dataclass
+from http.cookiejar import CookieJar
 from typing import Any, Dict, Optional
 
 import httpx
@@ -70,8 +71,21 @@ BENCHMARK_REQUEST_IDS = os.getenv("BENCHMARK_REQUEST_IDS", "0") == "1"
 LOOP_LAG_TELEMETRY = os.getenv("LOOP_LAG_TELEMETRY", "0") == "1"
 TELEMETRY_STATUS_JSON = os.getenv('TELEMETRY_STATUS_JSON', '')
 GATEWAY_DIAGNOSTICS = os.getenv('GATEWAY_DIAGNOSTICS', '0') == '1'
+SHARED_UPSTREAM_CLIENT = os.getenv('SHARED_UPSTREAM_CLIENT', '0') == '1'
 NO_PHASE = nullcontext()
 benchmark_ids = set()
+
+
+class NoUpstreamCookies(CookieJar):
+    """A shared proxy transport must not carry response cookies between users."""
+    def set_cookie(self, cookie):
+        pass
+
+
+def create_upstream_client():
+    # Admission remains the concurrency bound; do not add a hidden connection-pool queue.
+    return httpx.AsyncClient(limits=httpx.Limits(max_connections=None, max_keepalive_connections=100),
+                             cookies=NoUpstreamCookies(), trust_env=False)
 
 
 @asynccontextmanager
@@ -80,9 +94,13 @@ async def lifespan(app):
     task = None
     lag_task = None
     started = False
+    shared_client = None
     if GATEWAY_DIAGNOSTICS and not (TELEMETRY_JSONL and TELEMETRY_STATUS_JSON):
         raise RuntimeError('Gateway diagnostics require telemetry log and shutdown status paths')
     try:
+        if SHARED_UPSTREAM_CLIENT:
+            shared_client = create_upstream_client()
+            app.state.upstream_client = shared_client
         if TELEMETRY_JSONL:
             path = Path(TELEMETRY_JSONL)
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -101,7 +119,10 @@ async def lifespan(app):
     finally:
         stop.set()
         results = await asyncio.gather(*(t for t in (lag_task, task) if t is not None),
+                                       *([shared_client.aclose()] if shared_client is not None else []),
                                        return_exceptions=True)
+        if shared_client is not None:
+            app.state.upstream_client = None
         if telemetry.diagnostics is not None:
             async def final_drain():
                 await telemetry.diagnostics.stop()
@@ -260,6 +281,8 @@ async def snapshot_metrics() -> Dict[str, Any]:
     if telemetry.diagnostics is not None:
         metrics['diagnostics'] = dict(gc=telemetry.diagnostics.gc_state(),
                                      health=telemetry.diagnostics.health(), sampled_at=time.monotonic())
+    if SHARED_UPSTREAM_CLIENT:
+        metrics['shared_upstream_client'] = True
     return metrics
 
 
@@ -390,7 +413,7 @@ async def proxy_chat_completions(request: Request):
                         await upstream.aclose()
             finally:
                 try:
-                    if client is not None:
+                    if client is not None and not SHARED_UPSTREAM_CLIENT:
                         with phases.phase('client_close') if phases else NO_PHASE:
                             await client.aclose()
                 finally:
@@ -470,8 +493,13 @@ async def proxy_chat_completions(request: Request):
                            estimated_input_tokens=estimated_input_tokens,
                            max_output_tokens=estimated_output_tokens,
                            budget=decision.budget, budget_version=decision.budget_version)
-        with phases.phase('client_construction') if phases else NO_PHASE:
-            client = httpx.AsyncClient()
+        if SHARED_UPSTREAM_CLIENT:
+            client = getattr(app.state, 'upstream_client', None)
+            if client is None or client.is_closed:
+                raise RuntimeError('Shared upstream client requires an active application lifespan')
+        else:
+            with phases.phase('client_construction') if phases else NO_PHASE:
+                client = httpx.AsyncClient()
         upstream_request = client.build_request(
             method=request.method, url=f"{VLLM_URL}/v1/chat/completions",
             content=body, headers=headers, timeout=60.0,

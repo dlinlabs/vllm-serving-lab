@@ -74,8 +74,14 @@ now score development-only persistence/mean/ridge forecasts on these captures
 (no committed results; model readiness not established). Next:
 [excitation v1](experiments/excitation-v1.md), a predeclared multi-level
 (48–96) counterbalanced pair plus one held-out window and schedule, with
-forecast limits frozen on 2026-10-17 before collection. Native CPU acceptance
-and GPU collection remain pending; model/MPC readiness is not established.
+forecast limits frozen on 2026-10-17 before collection. The original collection
+revision passed 467 native CPU tests; model/MPC readiness is not established.
+
+The first excitation-v1 A attempt stopped on a 52.884 ms budget application
+(50 ms limit). The opt-in [shared-client qualification](experiments/shared-client-qualification-v1.md)
+removes per-request HTTP transport construction and declares a fresh smoke/A
+series with the same limits. Original excitation-v1 and its failed capture are
+preserved; the held-out window remains unused.
 
 ---
 
