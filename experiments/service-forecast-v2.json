@@ -1,0 +1,17 @@
+{
+  "protocol": "service-context-development-v2",
+  "status": "Retrospective development, not acceptance",
+  "horizons_s": [1, 2, 5],
+  "ridge_alpha": 1,
+  "models": ["direct_ridge", "context_ridge", "gauge_ridge", "counter_ridge", "service_quadratic", "service_no_plan"],
+  "hyperparameter_search": false,
+  "counter_max_age_and_gap_s": 3,
+  "counter_availability": "finished_at <= decision time; two consecutive valid observations; per-series reset checks",
+  "control_assumption": "Premeasurement plan, zero delay, integer-second left endpoints",
+  "cap_response_candidates": [16, 32, 64, 96],
+  "response_scoring": "Diagnostic predicted ranking and training support only, no policy value or causal verification",
+  "splits": ["chronological_two_thirds_purged_by_cohort_availability", "leave_one_run_out", "fixed_to_scheduled", "scheduled_to_fixed"],
+  "data": "The same eight qualified full captures as transition-prototype-v1; no smoke, failed cap16-r2 or C",
+  "acceptance": null,
+  "c_used": false
+}
