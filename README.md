@@ -16,6 +16,31 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Flow-model error diagnosis (2026-10-20 UTC)
+
+[Frozen-model diagnosis and reproduction](results/flow-diagnosis-20261020/report.md)
+
+The original flow rollout advances Q/D/reserved cost but freezes the rolling
+activity/outcome histories its own heads depend on. With original coefficients
+unchanged, resetting future Q/D/R to truth does not repair basic-model goodput
+prediction (five-second rate MAE **1.3962 → 1.4128**). Refreshing activity plus
+outcome histories gives **1.1451**, while arrival-history or engine-only refresh
+provides little benefit. **These use future measured information and are diagnostic
+oracles, not deployable improvements.**
+
+Waiting-count error reflects both state drift and stale auxiliary histories.
+Cost-in/out residuals are strongly correlated (~0.912), so small net reservation
+error can hide large component-flow errors. The limitation also appears away
+from cap changes; absent 16↔32 data is not an established explanation for it.
+
+All **1,536** original five-step forecasts/projection results reproduce, and
+**262** related offline tests pass. The next model question is an origin-only
+augmented state with evolving histories, delayed cohort outcomes and coherent
+flows. Additional GPU collection depends on what remains unidentified after
+that test; native acceptance and live MPC validation remain outstanding.
+
+![Flow error diagnosis](results/flow-diagnosis-20261020/oracle-diagnosis.png)
+
 ## Combined offline model review (2026-10-20 UTC)
 
 [Review findings and reproduced results](results/service-review-20261020/report.md) ·
@@ -35,9 +60,9 @@ planned-sequence pattern. These are diagnostic predictions, not measured gains.
 
 The offline model/audit regression suite passes **255 tests**; native CPU
 acceptance is still outstanding because this environment fails the PID/procfs
-preflight. C remains unused. A live MPC comparison needs measured low-cap
-switching response and a frozen validation plan, rather than further tuning on
-these same captures.
+preflight. C remains unused. Low-cap switching readiness still needs validation;
+the newer flow diagnosis above investigates the existing model's structural
+limitations before deciding on targeted additional measurements.
 
 ![Combined review errors and action support](results/service-review-20261020/review-errors-and-support.png)
 

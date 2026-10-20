@@ -118,6 +118,13 @@ complete compressed [report](full-report.json.gz); audited tables are in
 
 ## Decision and stopping point
 
+Subsequent [frozen-model diagnosis](../flow-diagnosis-20261020/report.md) identifies
+unevolved endogenous histories and correlated component-flow errors in the v1
+rollout. It prioritizes an origin-only augmented-state model test before
+additional measurement. Missing 16↔32 observations are a validation gap, not an
+established explanation of the existing model error. The review findings below
+remain historical development results.
+
 This PR is an offline modeling and evidence package. It is ready to review as
 that scope, with native acceptance still outstanding. It is **not ready for a
 validated live MPC comparison**. More iterations on the same captures cannot
