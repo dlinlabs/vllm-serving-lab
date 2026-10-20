@@ -1,0 +1,813 @@
+{
+  "protocol": "service-transition-development-v1",
+  "acceptance": null,
+  "c_used": false,
+  "dataset_sha256": "5f50b03abc004828f3442c1adec44242080b9269650a4025d2b0d31a3c2eaed6",
+  "source_runs": [
+    {
+      "name": "shared-client-a-r1",
+      "qualified": true,
+      "state_valid": true,
+      "conservation_rows": 300,
+      "table_sha256": "9d8aed3672204bdc9492162f494f54b2c3f0c2db4748fc65b987961e05998869"
+    },
+    {
+      "name": "shared-client-b-r1",
+      "qualified": true,
+      "state_valid": true,
+      "conservation_rows": 300,
+      "table_sha256": "8f170eff5bbf6cafaab8dfbe0abdd5e30d7aad5c7dab6423fc2ec9a18e052093"
+    },
+    {
+      "name": "cap-range-v1-fixed-16-r1",
+      "qualified": true,
+      "state_valid": true,
+      "conservation_rows": 300,
+      "table_sha256": "6021ef7c79327bf01ff901a457b04c7e8144df851b9501e0e12496a0952ace6c"
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r1",
+      "qualified": true,
+      "state_valid": true,
+      "conservation_rows": 300,
+      "table_sha256": "3b4c51d8dfe74d0e826f00b1e5f3f23429e1dc6bb4321df3f7253ec02adb3911"
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r2",
+      "qualified": true,
+      "state_valid": true,
+      "conservation_rows": 300,
+      "table_sha256": "4fa60ba76dbd24b91fb66edcc0dd5859b26c3286dbc8de3fb9b2bf78d53e0a59"
+    },
+    {
+      "name": "cap-range-v1-fixed-64-r1",
+      "qualified": true,
+      "state_valid": true,
+      "conservation_rows": 300,
+      "table_sha256": "478b3b56ab34e19bd38c7597b8f6913331f0e2191a134b0ae8e090fd2ee730e7"
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r1",
+      "qualified": true,
+      "state_valid": true,
+      "conservation_rows": 300,
+      "table_sha256": "f1523d2af09645a8b37ee7198aa395b26d1b2bd8a90e7050f476ba7b3838da5e"
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r2",
+      "qualified": true,
+      "state_valid": true,
+      "conservation_rows": 300,
+      "table_sha256": "5139162ead7c614e83fb088234f901d97295c6f8f011048825f460357c6a37ec"
+    }
+  ],
+  "chronological_aggregate": [
+    {
+      "target": "awaiting_first_content",
+      "horizon_s": 1,
+      "models": {
+        "persistence": {
+          "n": 800,
+          "mae": 3.465,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 800,
+          "mae": 3.4843985623003197,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 800,
+          "mae": 2.5687875670035742,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 800,
+          "mae": 2.5710370959565187,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 800,
+          "mae": 2.610353438091566,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -0.0055984306783030124,
+        "direct_ridge": 0.25864716680993527,
+        "flow_ridge": 0.25799795210490073,
+        "flow_ridge_engine": 0.24665124441801844
+      }
+    },
+    {
+      "target": "awaiting_first_content",
+      "horizon_s": 2,
+      "models": {
+        "persistence": {
+          "n": 792,
+          "mae": 4.547979797979798,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 792,
+          "mae": 3.4783809783809785,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 792,
+          "mae": 2.6411230659217075,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 792,
+          "mae": 2.863892483922045,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 792,
+          "mae": 2.8984626128331175,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": 0.23518108415387695,
+        "direct_ridge": 0.41927555019156226,
+        "flow_ridge": 0.37029349048687954,
+        "flow_ridge_engine": 0.3626922850183706
+      }
+    },
+    {
+      "target": "awaiting_first_content",
+      "horizon_s": 5,
+      "models": {
+        "persistence": {
+          "n": 768,
+          "mae": 3.31640625,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 768,
+          "mae": 3.3982741013071895,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 768,
+          "mae": 2.7832533542737994,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 768,
+          "mae": 3.587491239148578,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 768,
+          "mae": 4.6196873138424746,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -0.02468571252607843,
+        "direct_ridge": 0.16076223946514412,
+        "flow_ridge": -0.0817405856561082,
+        "flow_ridge_engine": -0.3929799203105695
+      }
+    },
+    {
+      "target": "streaming",
+      "horizon_s": 1,
+      "models": {
+        "persistence": {
+          "n": 800,
+          "mae": 4.305,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 800,
+          "mae": 13.292856230031948,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 800,
+          "mae": 3.3654128254798956,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 800,
+          "mae": 3.355348477109195,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 800,
+          "mae": 3.3777710986501677,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -2.0877714820050985,
+        "direct_ridge": 0.21825486051570364,
+        "flow_ridge": 0.2205926882440894,
+        "flow_ridge_engine": 0.2153841814982188
+      }
+    },
+    {
+      "target": "streaming",
+      "horizon_s": 2,
+      "models": {
+        "persistence": {
+          "n": 792,
+          "mae": 5.858585858585859,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 792,
+          "mae": 13.291374166374165,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 792,
+          "mae": 3.6740682608002624,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 792,
+          "mae": 3.900763948511094,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 792,
+          "mae": 3.943225837185693,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -1.268700073225935,
+        "direct_ridge": 0.3728745554840932,
+        "flow_ridge": 0.3341799467196581,
+        "flow_ridge_engine": 0.32693214158382133
+      }
+    },
+    {
+      "target": "streaming",
+      "horizon_s": 5,
+      "models": {
+        "persistence": {
+          "n": 768,
+          "mae": 5.223958333333333,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 768,
+          "mae": 13.334957107843136,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 768,
+          "mae": 3.8517628114524354,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 768,
+          "mae": 4.546692184630749,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 768,
+          "mae": 5.268159393170831,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -1.5526538032959945,
+        "direct_ridge": 0.26267351964220575,
+        "flow_ridge": 0.12964616206470203,
+        "flow_ridge_engine": -0.008461219829311695
+      }
+    },
+    {
+      "target": "reserved_cost",
+      "horizon_s": 1,
+      "models": {
+        "persistence": {
+          "n": 800,
+          "mae": 3.046506797007999,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 800,
+          "mae": 26.65194149899793,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 800,
+          "mae": 2.3407912577874277,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 800,
+          "mae": 2.3283632114254376,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 800,
+          "mae": 2.3785528927355397,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -7.748361082001535,
+        "direct_ridge": 0.23164745271983667,
+        "flow_ridge": 0.23572689425405402,
+        "flow_ridge_engine": 0.21925239258565343
+      }
+    },
+    {
+      "target": "reserved_cost",
+      "horizon_s": 2,
+      "models": {
+        "persistence": {
+          "n": 792,
+          "mae": 3.3853408074020193,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 792,
+          "mae": 26.63449323331627,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 792,
+          "mae": 2.3427071088797202,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 792,
+          "mae": 2.4023807449369605,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 792,
+          "mae": 2.4881630772911523,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -6.867595834097464,
+        "direct_ridge": 0.30798485524488084,
+        "flow_ridge": 0.29035778622814723,
+        "flow_ridge_engine": 0.26501843718339835
+      }
+    },
+    {
+      "target": "reserved_cost",
+      "horizon_s": 5,
+      "models": {
+        "persistence": {
+          "n": 768,
+          "mae": 3.547024522987499,
+          "rate_mae": null
+        },
+        "mean": {
+          "n": 768,
+          "mae": 26.59037287366228,
+          "rate_mae": null
+        },
+        "direct_ridge": {
+          "n": 768,
+          "mae": 2.323862237402382,
+          "rate_mae": null
+        },
+        "flow_ridge": {
+          "n": 768,
+          "mae": 2.407527670786159,
+          "rate_mae": null
+        },
+        "flow_ridge_engine": {
+          "n": 768,
+          "mae": 2.274850641851981,
+          "rate_mae": null
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -6.496529189842309,
+        "direct_ridge": 0.34484178997299475,
+        "flow_ridge": 0.32125429210215695,
+        "flow_ridge_engine": 0.35865945467555527
+      }
+    },
+    {
+      "target": "cohort_ttft_met",
+      "horizon_s": 1,
+      "models": {
+        "persistence": {
+          "n": 800,
+          "mae": 2.7757500000000004,
+          "rate_mae": 2.7757500000000004
+        },
+        "mean": {
+          "n": 800,
+          "mae": 2.7702316293929714,
+          "rate_mae": 2.7702316293929714
+        },
+        "direct_ridge": {
+          "n": 800,
+          "mae": 2.1736332850678397,
+          "rate_mae": 2.1736332850678397
+        },
+        "flow_ridge": {
+          "n": 800,
+          "mae": 2.173677537980652,
+          "rate_mae": 2.173677537980652
+        },
+        "flow_ridge_engine": {
+          "n": 800,
+          "mae": 2.1361345366532545,
+          "rate_mae": 2.1361345366532545
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": 0.0019880647057656242,
+        "direct_ridge": 0.2169203692451268,
+        "flow_ridge": 0.21690442655835296,
+        "flow_ridge_engine": 0.23042978054462604
+      }
+    },
+    {
+      "target": "cohort_ttft_met",
+      "horizon_s": 2,
+      "models": {
+        "persistence": {
+          "n": 792,
+          "mae": 3.852272727272727,
+          "rate_mae": 1.9261363636363635
+        },
+        "mean": {
+          "n": 792,
+          "mae": 4.227644852644853,
+          "rate_mae": 2.1138224263224266
+        },
+        "direct_ridge": {
+          "n": 792,
+          "mae": 3.1361894112704323,
+          "rate_mae": 1.5680947056352161
+        },
+        "flow_ridge": {
+          "n": 792,
+          "mae": 3.441649639367918,
+          "rate_mae": 1.720824819683959
+        },
+        "flow_ridge_engine": {
+          "n": 792,
+          "mae": 3.3782536534288448,
+          "rate_mae": 1.6891268267144224
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -0.0974417316600209,
+        "direct_ridge": 0.18588593453746882,
+        "flow_ridge": 0.10659242399888846,
+        "flow_ridge_engine": 0.12304919910991641
+      }
+    },
+    {
+      "target": "cohort_ttft_met",
+      "horizon_s": 5,
+      "models": {
+        "persistence": {
+          "n": 768,
+          "mae": 6.829427083333333,
+          "rate_mae": 1.3658854166666665
+        },
+        "mean": {
+          "n": 768,
+          "mae": 7.516881127450979,
+          "rate_mae": 1.503376225490196
+        },
+        "direct_ridge": {
+          "n": 768,
+          "mae": 5.841751543327938,
+          "rate_mae": 1.1683503086655875
+        },
+        "flow_ridge": {
+          "n": 768,
+          "mae": 6.981044975908624,
+          "rate_mae": 1.3962089951817247
+        },
+        "flow_ridge_engine": {
+          "n": 768,
+          "mae": 7.137285627135852,
+          "rate_mae": 1.4274571254271704
+        }
+      },
+      "skill_vs_persistence": {
+        "persistence": 0.0,
+        "mean": -0.10066057309482401,
+        "direct_ridge": 0.14462055571480337,
+        "flow_ridge": -0.022200675214075094,
+        "flow_ridge_engine": -0.04507823863495419
+      }
+    }
+  ],
+  "goodput_rate_mae_by_run": [
+    {
+      "run": "shared-client-a-r1",
+      "horizon_s": 1,
+      "models": {
+        "persistence": 2.54,
+        "mean": 3.064843450479233,
+        "direct_ridge": 2.2975402823868705,
+        "flow_ridge": 2.2977053522730144,
+        "flow_ridge_engine": 2.059261166427206
+      }
+    },
+    {
+      "run": "shared-client-b-r1",
+      "horizon_s": 1,
+      "models": {
+        "persistence": 3.25,
+        "mean": 2.807009584664537,
+        "direct_ridge": 2.281215976251266,
+        "flow_ridge": 2.2811967807182345,
+        "flow_ridge_engine": 2.2457268434531894
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-16-r1",
+      "horizon_s": 1,
+      "models": {
+        "persistence": 1.742,
+        "mean": 1.8114440894568695,
+        "direct_ridge": 1.6439447109337282,
+        "flow_ridge": 1.6439766183037523,
+        "flow_ridge_engine": 1.5771000186402548
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-32-r1",
+      "horizon_s": 1,
+      "models": {
+        "persistence": 2.348,
+        "mean": 2.9013418530351442,
+        "direct_ridge": 2.0039026413517007,
+        "flow_ridge": 2.003948487152047,
+        "flow_ridge_engine": 1.988785449432817
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-32-r2",
+      "horizon_s": 1,
+      "models": {
+        "persistence": 2.8820000000000006,
+        "mean": 3.166083067092652,
+        "direct_ridge": 2.4403101046676334,
+        "flow_ridge": 2.4404519371554247,
+        "flow_ridge_engine": 2.430032926807207
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-64-r1",
+      "horizon_s": 1,
+      "models": {
+        "persistence": 3.442000000000001,
+        "mean": 3.355565495207668,
+        "direct_ridge": 2.7736181688764447,
+        "flow_ridge": 2.7735626940305758,
+        "flow_ridge_engine": 2.670265578887231
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-96-r1",
+      "horizon_s": 1,
+      "models": {
+        "persistence": 3.1100000000000008,
+        "mean": 2.61082428115016,
+        "direct_ridge": 2.1374324757992835,
+        "flow_ridge": 2.137432504993275,
+        "flow_ridge_engine": 2.2569483949136573
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-96-r2",
+      "horizon_s": 1,
+      "models": {
+        "persistence": 2.8920000000000003,
+        "mean": 2.4447412140575078,
+        "direct_ridge": 1.8111019202757908,
+        "flow_ridge": 1.811145929218894,
+        "flow_ridge_engine": 1.8609559146644734
+      }
+    },
+    {
+      "run": "shared-client-a-r1",
+      "horizon_s": 2,
+      "models": {
+        "persistence": 1.7898989898989899,
+        "mean": 2.2356252356252355,
+        "direct_ridge": 1.6492731800884533,
+        "flow_ridge": 1.7667822690182369,
+        "flow_ridge_engine": 1.6497696774790211
+      }
+    },
+    {
+      "run": "shared-client-b-r1",
+      "horizon_s": 2,
+      "models": {
+        "persistence": 2.265656565656566,
+        "mean": 1.8975143975143978,
+        "direct_ridge": 1.6133181972998936,
+        "flow_ridge": 1.6934813567871583,
+        "flow_ridge_engine": 1.6694900946838467
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-16-r1",
+      "horizon_s": 2,
+      "models": {
+        "persistence": 0.8040404040404041,
+        "mean": 1.477438477438478,
+        "direct_ridge": 0.7898353838207827,
+        "flow_ridge": 1.0810862758635855,
+        "flow_ridge_engine": 0.9990691730974757
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-32-r1",
+      "horizon_s": 2,
+      "models": {
+        "persistence": 1.408080808080808,
+        "mean": 2.3374543374543375,
+        "direct_ridge": 1.3699919523031798,
+        "flow_ridge": 1.4917169065938536,
+        "flow_ridge_engine": 1.475136893978262
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-32-r2",
+      "horizon_s": 2,
+      "models": {
+        "persistence": 1.619191919191919,
+        "mean": 2.4851669851669853,
+        "direct_ridge": 1.6851288852549802,
+        "flow_ridge": 1.84566148867027,
+        "flow_ridge_engine": 1.8579394834561402
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-64-r1",
+      "horizon_s": 2,
+      "models": {
+        "persistence": 2.7050505050505054,
+        "mean": 2.6600496600496597,
+        "direct_ridge": 2.095743125055165,
+        "flow_ridge": 2.1655013676735333,
+        "flow_ridge_engine": 2.097285056189453
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-96-r1",
+      "horizon_s": 2,
+      "models": {
+        "persistence": 2.3030303030303028,
+        "mean": 1.7322777322777323,
+        "direct_ridge": 1.627223567837765,
+        "flow_ridge": 1.7940690354638003,
+        "flow_ridge_engine": 1.817529593586184
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-96-r2",
+      "horizon_s": 2,
+      "models": {
+        "persistence": 2.514141414141414,
+        "mean": 2.085052585052585,
+        "direct_ridge": 1.7142433534215098,
+        "flow_ridge": 1.9282998574012333,
+        "flow_ridge_engine": 1.946794641244998
+      }
+    },
+    {
+      "run": "shared-client-a-r1",
+      "horizon_s": 5,
+      "models": {
+        "persistence": 1.2729166666666667,
+        "mean": 1.7101715686274512,
+        "direct_ridge": 1.2366070491121255,
+        "flow_ridge": 1.4682626339255607,
+        "flow_ridge_engine": 1.4222762227499979
+      }
+    },
+    {
+      "run": "shared-client-b-r1",
+      "horizon_s": 5,
+      "models": {
+        "persistence": 1.6041666666666667,
+        "mean": 1.0696405228758168,
+        "direct_ridge": 1.2458972736073979,
+        "flow_ridge": 1.4098999621959323,
+        "flow_ridge_engine": 1.4935744323732465
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-16-r1",
+      "horizon_s": 5,
+      "models": {
+        "persistence": 0.7,
+        "mean": 1.318267973856209,
+        "direct_ridge": 0.5753684949708803,
+        "flow_ridge": 0.8713639096964029,
+        "flow_ridge_engine": 0.8138748859266277
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-32-r1",
+      "horizon_s": 5,
+      "models": {
+        "persistence": 1.1520833333333333,
+        "mean": 2.144117647058823,
+        "direct_ridge": 1.0906484357336872,
+        "flow_ridge": 1.3234315734354387,
+        "flow_ridge_engine": 1.2864383282293028
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-32-r2",
+      "horizon_s": 5,
+      "models": {
+        "persistence": 1.0145833333333334,
+        "mean": 2.1332352941176462,
+        "direct_ridge": 1.2171147117985555,
+        "flow_ridge": 1.465083642338739,
+        "flow_ridge_engine": 1.4907430464005984
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-64-r1",
+      "horizon_s": 5,
+      "models": {
+        "persistence": 1.8354166666666667,
+        "mean": 1.3836764705882352,
+        "direct_ridge": 1.3781235161962222,
+        "flow_ridge": 1.446284282878185,
+        "flow_ridge_engine": 1.4856181238168813
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-96-r1",
+      "horizon_s": 5,
+      "models": {
+        "persistence": 1.575,
+        "mean": 0.9496160130718954,
+        "direct_ridge": 1.1824399943923305,
+        "flow_ridge": 1.3829158014480951,
+        "flow_ridge_engine": 1.5049861149235428
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-96-r2",
+      "horizon_s": 5,
+      "models": {
+        "persistence": 1.7729166666666667,
+        "mean": 1.31828431372549,
+        "direct_ridge": 1.420602993513501,
+        "flow_ridge": 1.802430155535444,
+        "flow_ridge_engine": 1.9221458489971657
+      }
+    }
+  ],
+  "projection_five_seconds": {
+    "flow_ridge": {
+      "n": 768,
+      "fraction_nonzero": 0.07161458333333333,
+      "mean": 0.06276681240348676,
+      "max": 2.9799394052073347
+    },
+    "flow_ridge_engine": {
+      "n": 768,
+      "fraction_nonzero": 0.17057291666666666,
+      "mean": 0.4412420101161986,
+      "max": 15.134881217648752
+    }
+  },
+  "limitations": [
+    "Retrospective development; overlapping windows are not independent repeats.",
+    "Frozen history/engine covariates approximate endogenous feedback, not a complete simulator.",
+    "Flow conservation does not enforce request-level cost composition or exact admission ordering.",
+    "Projection L1 sums corrections across request and cost units; descriptive only, not a physical norm.",
+    "Cap range is not proof of action support; low-cap switch dynamics were not collected.",
+    "Cross-host A/B transfer is confounded; model error is not causal policy value.",
+    "Explicit diagnostic extrapolation is scored and counted, never silently accepted."
+  ],
+  "full_report_sha256": "a2a6625998810bf1db4b36d3aebafc1e7f292d8f0961484d8ecc87f178aad3be",
+  "compressed_report_sha256": "2c8258df347a8d23f7c2c81852ce6fec77ce4220fce6e9bfec6a923e95850dd1"
+}

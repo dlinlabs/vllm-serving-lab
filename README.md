@@ -16,7 +16,25 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
-## Latest results: same-host fixed-cap range (2026-10-20 UTC)
+## Offline planned-cap prediction prototype (2026-10-20 UTC)
+
+[Results and reproducible scores](results/transition-prototype-20261020/report.md) ·
+[Method and commands](experiments/transition-prototype-v1.md)
+
+Eight qualified captures pass fresh raw-data audits and **2,400** one-second
+state/flow conservation checks. Prediction inputs use the premeasurement cap
+plan, exclude future actual application timing, and purge labels unavailable at
+the training cutoff. C remains untouched; this is an offline model, not MPC.
+
+At five seconds, chronological pooled SLO-goodput rate MAE is **1.168 req/s** for
+direct ridge, versus **1.366** for persistence and **1.396** for the flow rollout.
+One/two-second rollouts improve on persistence, but their longer rollouts and
+engine-gauge additions are not reliably better. The rollout is **not ready as a
+validated MPC simulator**; full per-run, transfer and tail results are retained.
+
+![Planned-cap forecast development errors](results/transition-prototype-20261020/forecast-errors.png)
+
+## Latest GPU results: same-host fixed-cap range (2026-10-20 UTC)
 
 **[Full findings, original data and reproduction](results/cap-range-20261020/report.md)** ·
 [中文分析](results/cap-range-20261020/analysis-zh.md) ·
@@ -73,8 +91,9 @@ all **306 / 307** gateway snapshots match lifecycle reconstruction.
 Both replay the same 7,643 arrivals over 300 s, with 30 s holds across caps
 48/64/80/96. All six enabled measurement gates pass. A/B were collected on
 **different rental hosts**; the totals do not establish a causal schedule
-improvement or an optimal cap. Model training uses these shared-client A/B only,
-keeping legacy captures separate.
+improvement or an optimal cap. The forecasting analysis archived in this section
+used shared-client A/B only, keeping legacy captures separate; the newer
+transition prototype above also includes qualified cap-range captures.
 
 ![Applied cap, reserved work, SLO goodput and first-token backlog](results/shared-client-20261018/figures/ab-overview.png)
 
@@ -94,8 +113,8 @@ browsing subsets; use the SHA256-checking extraction helper for full inputs.
 The [reproduction entry point](results/shared-client-20261018/reproduce.py)
 rebuilds qualified features, baseline forecasts and optional extended diagnostics.
 **Held-out C was neither collected nor scored; no closed-loop MPC was run.**
-Next is an offline short-step service/state-transition prototype and causal
-engine-counter features, tested on A/B before freezing a new C acceptance plan.
+The short-step transition prototype is now evaluated above. Causal engine-counter
+rates remain future work; a final model and new C acceptance plan are not frozen.
 
 ---
 
