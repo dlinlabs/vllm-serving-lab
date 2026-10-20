@@ -1,0 +1,49 @@
+{
+  "offline_regressions": {
+    "passed": 262,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 21.482,
+    "modules": [
+      "tests/test_flow_diagnosis.py",
+      "tests/test_transition_model.py",
+      "tests/test_service_forecasts.py",
+      "tests/test_identification_features.py",
+      "tests/test_forecast_baselines.py",
+      "tests/test_trace_dynamics.py",
+      "tests/test_trace_control.py",
+      "tests/test_experiment_protocol.py"
+    ],
+    "source_sha256": {
+      "tests/test_flow_diagnosis.py": "092bd539770e2580b362655560bff422833d894b81a7a59bdaee44d4cf75c661",
+      "tests/test_transition_model.py": "fa4dfc955fdaaa3fb6e147649fa35848e33153c0796892eb9632bc88ef8934da",
+      "tests/test_service_forecasts.py": "0004bc98f5777744c2ea85a4588b209b02531b2bffe3cd393e73bc4035522097",
+      "tests/test_identification_features.py": "222e7173cfca7578c149abc49c8afc0dd72dd5870c41dde5cb02d4eeff8b2ca4",
+      "tests/test_forecast_baselines.py": "204c1a7621abc2a9f00549b52cd6cc367f2d45f8ae9cc68e4d4bdc3c0cf71469",
+      "tests/test_trace_dynamics.py": "eee30fe7e73eba02476cd623da3bef1ad07e5ce76fae0976625cd935fd6e4919",
+      "tests/test_trace_control.py": "77bc0acdec41ff012a9f5994cc80c71075c5346d1ffeee608d9233443760af10",
+      "tests/test_experiment_protocol.py": "e7a2127c069332118d3b42b59601c0801b3cc47df23eafc44c7c9f2ec60e420c"
+    }
+  },
+  "reproducibility": {
+    "diagnostic_scores_match": true,
+    "predictions_match": true,
+    "archived_coefficients_match": true,
+    "original_rollouts_match": true,
+    "raw_reaudited_this_invocation": false,
+    "deployable_improvement_claim": false,
+    "c_used": false,
+    "acceptance": null
+  },
+  "source_revision_before_diagnostic": "789f2dbfc69e20c8dc18fe9887ca3c6cdfda6aec",
+  "raw_reaudited_this_invocation": false,
+  "new_capture_collected": false,
+  "model_parameters_changed": false,
+  "native_acceptance": {
+    "status": "outstanding",
+    "new_native_pass": false,
+    "reason": "Parent review PID/procfs preflight failure retained; no bypass"
+  },
+  "acceptance": null,
+  "c_used": false
+}

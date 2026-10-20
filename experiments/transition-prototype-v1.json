@@ -1,0 +1,16 @@
+{
+  "protocol": "service-transition-development-v1",
+  "purpose": "Retrospective offline development only; no acceptance or closed-loop claim",
+  "step_s": 1,
+  "horizons_s": [1, 2, 5],
+  "history_windows_s": [1, 5],
+  "ridge_alpha": 1.0,
+  "hyperparameter_search": false,
+  "control_assumption": "Premeasurement cap schedule; instantaneous application at integer-second left endpoints",
+  "rollout_assumption": "Only Q/D/R are advanced; historical flows and latest causal engine gauges freeze at origin",
+  "models": ["persistence", "mean", "direct_ridge", "flow_ridge", "flow_ridge_engine"],
+  "splits": ["chronological_two_thirds_purged_by_label_availability", "leave_one_run_out", "fixed_to_scheduled", "scheduled_to_fixed"],
+  "data": "Qualified fixed 16-r1/32-r1/32-r2/64-r1/96-r1/96-r2 and shared-client A/B; excludes smoke and failed 16-r2",
+  "acceptance": null,
+  "c_used": false
+}

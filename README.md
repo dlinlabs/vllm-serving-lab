@@ -16,7 +16,95 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
-## Latest results: same-host fixed-cap range (2026-10-20 UTC)
+## Flow-model error diagnosis (2026-10-20 UTC)
+
+[Frozen-model diagnosis and reproduction](results/flow-diagnosis-20261020/report.md)
+
+The original flow rollout advances Q/D/reserved cost but freezes the rolling
+activity/outcome histories its own heads depend on. With original coefficients
+unchanged, resetting future Q/D/R to truth does not repair basic-model goodput
+prediction (five-second rate MAE **1.3962 → 1.4128**). Refreshing activity plus
+outcome histories gives **1.1451**, while arrival-history or engine-only refresh
+provides little benefit. **These use future measured information and are diagnostic
+oracles, not deployable improvements.**
+
+Waiting-count error reflects both state drift and stale auxiliary histories.
+Cost-in/out residuals are strongly correlated (~0.912), so small net reservation
+error can hide large component-flow errors. The limitation also appears away
+from cap changes; absent 16↔32 data is not an established explanation for it.
+
+All **1,536** original five-step forecasts/projection results reproduce, and
+**262** related offline tests pass. The next model question is an origin-only
+augmented state with evolving histories, delayed cohort outcomes and coherent
+flows. Additional GPU collection depends on what remains unidentified after
+that test; native acceptance and live MPC validation remain outstanding.
+
+![Flow error diagnosis](results/flow-diagnosis-20261020/oracle-diagnosis.png)
+
+## Combined offline model review (2026-10-20 UTC)
+
+[Review findings and reproduced results](results/service-review-20261020/report.md) ·
+[Method and commands](experiments/service-forecast-reviewed-v3.md)
+
+The transition and service-context PRs are consolidated into #26. Review adds
+strict core-state/counter-scrape checks, default rejection of unseen applied-cap /
+planned-sequence patterns, an ordered cap-sequence comparator, and holdouts that
+exclude a cap's repeated captures plus its current/planned occurrences elsewhere.
+Historical results and hash-verified reproduction are preserved.
+
+Fresh audits reproduce all **2,400** derived rows exactly. Five-second
+chronological goodput rate MAE is **1.1399 req/s** for the ordered sequence model,
+versus **1.1304** without planned-cap inputs. Grouped transfer remains mixed.
+For candidate cap32, **576 / 768** origin queries propose an unseen applied-cap /
+planned-sequence pattern. These are diagnostic predictions, not measured gains.
+
+The offline model/audit regression suite passes **255 tests**; native CPU
+acceptance is still outstanding because this environment fails the PID/procfs
+preflight. C remains unused. Low-cap switching readiness still needs validation;
+the newer flow diagnosis above investigates the existing model's structural
+limitations before deciding on targeted additional measurements.
+
+![Combined review errors and action support](results/service-review-20261020/review-errors-and-support.png)
+
+## Previous service-context follow-up (2026-10-20 UTC)
+
+[Results and cap-coverage analysis](results/service-forecast-20261020/report.md) ·
+[Method and fast reproduction](experiments/service-forecast-v2.md)
+
+The same eight qualified captures now include verified waiting/streaming
+cost-token composition, ages and causal engine-counter rates. At five seconds,
+chronological SLO-goodput rate MAE moves from **1.1684** to **1.1392 req/s** with
+context/gauges/counters. The matched model **without planned-cap inputs scores
+1.1304**, so reliable action ranking is still not established. Counter rates add
+little over gauges alone. This does not show that real cap changes are ineffective.
+
+There are **no 16↔32 switches** in these captures. Predicted cap rankings and
+training support are diagnostics, not measured policy gains. The report identifies
+targeted low-cap switching as the next measurement question. Verified derived
+tables allow quick CPU reproduction; C remains untouched and no controller or
+new GPU collection is included.
+
+![Service forecast errors and action support](results/service-forecast-20261020/forecast-and-support.png)
+
+## Previous offline planned-cap prediction prototype (2026-10-20 UTC)
+
+[Results and reproducible scores](results/transition-prototype-20261020/report.md) ·
+[Method and commands](experiments/transition-prototype-v1.md)
+
+Eight qualified captures pass fresh raw-data audits and **2,400** one-second
+state/flow conservation checks. Prediction inputs use the premeasurement cap
+plan, exclude future actual application timing, and purge labels unavailable at
+the training cutoff. C remains untouched; this is an offline model, not MPC.
+
+At five seconds, chronological pooled SLO-goodput rate MAE is **1.168 req/s** for
+direct ridge, versus **1.366** for persistence and **1.396** for the flow rollout.
+One/two-second rollouts improve on persistence, but their longer rollouts and
+engine-gauge additions are not reliably better. The rollout is **not ready as a
+validated MPC simulator**; full per-run, transfer and tail results are retained.
+
+![Planned-cap forecast development errors](results/transition-prototype-20261020/forecast-errors.png)
+
+## Latest GPU results: same-host fixed-cap range (2026-10-20 UTC)
 
 **[Full findings, original data and reproduction](results/cap-range-20261020/report.md)** ·
 [中文分析](results/cap-range-20261020/analysis-zh.md) ·
@@ -73,8 +161,9 @@ all **306 / 307** gateway snapshots match lifecycle reconstruction.
 Both replay the same 7,643 arrivals over 300 s, with 30 s holds across caps
 48/64/80/96. All six enabled measurement gates pass. A/B were collected on
 **different rental hosts**; the totals do not establish a causal schedule
-improvement or an optimal cap. Model training uses these shared-client A/B only,
-keeping legacy captures separate.
+improvement or an optimal cap. The forecasting analysis archived in this section
+used shared-client A/B only, keeping legacy captures separate; the newer
+transition prototype above also includes qualified cap-range captures.
 
 ![Applied cap, reserved work, SLO goodput and first-token backlog](results/shared-client-20261018/figures/ab-overview.png)
 
@@ -94,8 +183,8 @@ browsing subsets; use the SHA256-checking extraction helper for full inputs.
 The [reproduction entry point](results/shared-client-20261018/reproduce.py)
 rebuilds qualified features, baseline forecasts and optional extended diagnostics.
 **Held-out C was neither collected nor scored; no closed-loop MPC was run.**
-Next is an offline short-step service/state-transition prototype and causal
-engine-counter features, tested on A/B before freezing a new C acceptance plan.
+The short-step transition prototype is now evaluated above. Causal engine-counter
+rates remain future work; a final model and new C acceptance plan are not frozen.
 
 ---
 

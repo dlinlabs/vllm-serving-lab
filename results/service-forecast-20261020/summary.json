@@ -1,0 +1,455 @@
+{
+  "protocol": "service-context-development-v2",
+  "acceptance": null,
+  "c_used": false,
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.3.5"
+  },
+  "aggregates": [
+    {
+      "split": "chronological",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 800,
+      "rate_mae": {
+        "direct_ridge": 2.1736332850678397,
+        "context_ridge": 2.0980098667405245,
+        "gauge_ridge": 2.088085399704625,
+        "counter_ridge": 2.0936583027050357,
+        "service_quadratic": 2.092003759740809,
+        "service_no_plan": 2.09233020063845
+      }
+    },
+    {
+      "split": "chronological",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 792,
+      "rate_mae": {
+        "direct_ridge": 1.5680947056352164,
+        "context_ridge": 1.5110439211599853,
+        "gauge_ridge": 1.5095168505174439,
+        "counter_ridge": 1.5147470024838425,
+        "service_quadratic": 1.5133653073645843,
+        "service_no_plan": 1.51237400946842
+      }
+    },
+    {
+      "split": "chronological",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 768,
+      "rate_mae": {
+        "direct_ridge": 1.1683503086655875,
+        "context_ridge": 1.1483915969557799,
+        "gauge_ridge": 1.1395104651776655,
+        "counter_ridge": 1.1391811667191292,
+        "service_quadratic": 1.1353856047082216,
+        "service_no_plan": 1.1303786473797541
+      }
+    },
+    {
+      "split": "fixed_to_scheduled",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 600,
+      "rate_mae": {
+        "direct_ridge": 2.0736615271010947,
+        "context_ridge": 1.935558790012611,
+        "gauge_ridge": 1.8571034846419956,
+        "counter_ridge": 1.8681235685794741,
+        "service_quadratic": 2.0226061647553637,
+        "service_no_plan": 1.8681753790921252
+      }
+    },
+    {
+      "split": "fixed_to_scheduled",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 598,
+      "rate_mae": {
+        "direct_ridge": 1.529516608137832,
+        "context_ridge": 1.4356900739927136,
+        "gauge_ridge": 1.3995450449520044,
+        "counter_ridge": 1.4189361815496262,
+        "service_quadratic": 1.4632890943566648,
+        "service_no_plan": 1.418009554378322
+      }
+    },
+    {
+      "split": "fixed_to_scheduled",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 592,
+      "rate_mae": {
+        "direct_ridge": 1.2412973008106445,
+        "context_ridge": 1.1911345697220252,
+        "gauge_ridge": 1.15757331706565,
+        "counter_ridge": 1.1596970508941131,
+        "service_quadratic": 1.1149978682843922,
+        "service_no_plan": 1.1589088088310717
+      }
+    },
+    {
+      "split": "scheduled_to_fixed",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 1800,
+      "rate_mae": {
+        "direct_ridge": 2.1339004880153403,
+        "context_ridge": 2.0797608204680067,
+        "gauge_ridge": 2.11929095124897,
+        "counter_ridge": 2.110063360906693,
+        "service_quadratic": 2.1747812052902393,
+        "service_no_plan": 2.102309534631759
+      }
+    },
+    {
+      "split": "scheduled_to_fixed",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 1794,
+      "rate_mae": {
+        "direct_ridge": 1.7195437789126524,
+        "context_ridge": 1.6359790019835845,
+        "gauge_ridge": 1.6369486795848298,
+        "counter_ridge": 1.6828312879277958,
+        "service_quadratic": 1.884449791606984,
+        "service_no_plan": 1.6557683443554783
+      }
+    },
+    {
+      "split": "scheduled_to_fixed",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 1776,
+      "rate_mae": {
+        "direct_ridge": 1.5288239280946443,
+        "context_ridge": 1.484904388293335,
+        "gauge_ridge": 1.4986477247497447,
+        "counter_ridge": 1.4959810930361654,
+        "service_quadratic": 1.86513951040806,
+        "service_no_plan": 1.4156053442731475
+      }
+    }
+  ],
+  "near_changes": [
+    {
+      "split": "chronological",
+      "horizon_s": 1,
+      "subset": "near_cap_change",
+      "n": 66,
+      "rate_mae": {
+        "direct_ridge": 2.496586646481872,
+        "context_ridge": 2.4014386829371164,
+        "gauge_ridge": 2.329652147113886,
+        "counter_ridge": 2.2442814103277993,
+        "service_quadratic": 2.291199174726481,
+        "service_no_plan": 2.227984772972476
+      }
+    },
+    {
+      "split": "chronological",
+      "horizon_s": 2,
+      "subset": "near_cap_change",
+      "n": 72,
+      "rate_mae": {
+        "direct_ridge": 1.7740654153994464,
+        "context_ridge": 1.7722572890276687,
+        "gauge_ridge": 1.7726850315461702,
+        "counter_ridge": 1.7736455859354519,
+        "service_quadratic": 1.8133861851521056,
+        "service_no_plan": 1.7475818580646303
+      }
+    },
+    {
+      "split": "chronological",
+      "horizon_s": 5,
+      "subset": "near_cap_change",
+      "n": 90,
+      "rate_mae": {
+        "direct_ridge": 1.4002822356806766,
+        "context_ridge": 1.367040000578454,
+        "gauge_ridge": 1.33078335151697,
+        "counter_ridge": 1.3321166619528564,
+        "service_quadratic": 1.3122780021031157,
+        "service_no_plan": 1.2574287604584637
+      }
+    }
+  ],
+  "per_run_five_seconds": [
+    {
+      "run": "shared-client-a-r1",
+      "rate_mae": {
+        "direct_ridge": 1.2366070491121255,
+        "context_ridge": 1.169111946451919,
+        "gauge_ridge": 1.1352374233022389,
+        "counter_ridge": 1.1348816812368399,
+        "service_quadratic": 1.0618846844045557,
+        "service_no_plan": 1.0942282637567706
+      }
+    },
+    {
+      "run": "shared-client-b-r1",
+      "rate_mae": {
+        "direct_ridge": 1.2458972736073979,
+        "context_ridge": 1.2457345782588911,
+        "gauge_ridge": 1.2291932795150193,
+        "counter_ridge": 1.2254640501292988,
+        "service_quadratic": 1.2492518925386797,
+        "service_no_plan": 1.1951704212636245
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-16-r1",
+      "rate_mae": {
+        "direct_ridge": 0.5753684949708805,
+        "context_ridge": 0.5758101692281119,
+        "gauge_ridge": 0.5706553838193457,
+        "counter_ridge": 0.5789789700592913,
+        "service_quadratic": 0.6139294118977443,
+        "service_no_plan": 0.5793534632712471
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-32-r1",
+      "rate_mae": {
+        "direct_ridge": 1.0906484357336874,
+        "context_ridge": 1.0928487648808392,
+        "gauge_ridge": 1.0794025408822336,
+        "counter_ridge": 1.0828617304717127,
+        "service_quadratic": 1.1369271472625455,
+        "service_no_plan": 1.0848322771096355
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-32-r2",
+      "rate_mae": {
+        "direct_ridge": 1.2171147117985555,
+        "context_ridge": 1.189645427147804,
+        "gauge_ridge": 1.1761143811191297,
+        "counter_ridge": 1.1745277399087073,
+        "service_quadratic": 1.2409267901719638,
+        "service_no_plan": 1.1764417909741387
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-64-r1",
+      "rate_mae": {
+        "direct_ridge": 1.378123516196222,
+        "context_ridge": 1.3496258307231257,
+        "gauge_ridge": 1.3407378850686134,
+        "counter_ridge": 1.3448374917331374,
+        "service_quadratic": 1.3249713172946167,
+        "service_no_plan": 1.345200515338741
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-96-r1",
+      "rate_mae": {
+        "direct_ridge": 1.182439994392331,
+        "context_ridge": 1.1837394151235734,
+        "gauge_ridge": 1.190177782560157,
+        "counter_ridge": 1.1781140045302658,
+        "service_quadratic": 1.129250450345139,
+        "service_no_plan": 1.1752488600806061
+      }
+    },
+    {
+      "run": "cap-range-v1-fixed-96-r2",
+      "rate_mae": {
+        "direct_ridge": 1.420602993513501,
+        "context_ridge": 1.3806166438319756,
+        "gauge_ridge": 1.3945650451545863,
+        "counter_ridge": 1.3937836656837794,
+        "service_quadratic": 1.325943143750527,
+        "service_no_plan": 1.3925535872432704
+      }
+    }
+  ],
+  "predicted_best_candidates": {
+    "direct_ridge": {
+      "16.0": 768
+    },
+    "context_ridge": {
+      "16.0": 768
+    },
+    "gauge_ridge": {
+      "16.0": 768
+    },
+    "counter_ridge": {
+      "16.0": 768
+    },
+    "service_quadratic": {
+      "96.0": 203,
+      "64.0": 191,
+      "16.0": 293,
+      "32.0": 81
+    },
+    "service_no_plan": {
+      "16.0,32.0,64.0,96.0": 768
+    }
+  },
+  "source_runs": [
+    {
+      "name": "shared-client-a-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "d5523d8d63503646a47c39367d2c204951191c2e407a5762e4228d0af373f32c"
+    },
+    {
+      "name": "shared-client-b-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "f4952cdcfadcd6de5011309b503724328286a14d94ec0e2ae333dcb8515b8dc7"
+    },
+    {
+      "name": "cap-range-v1-fixed-16-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "d2b71046dd1f340129b84a8d2a150d0907990ea8ee4ae077a7bd06f94c97e9e4"
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "204afbefdac33d574edeaf54fc0b58509c926d4d57624452a48bfcf73552e7bd"
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r2",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "2995b60db1416cb0e21acf437ce2c1b5748e4fe07f64d36938103eaa8576f687"
+    },
+    {
+      "name": "cap-range-v1-fixed-64-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "5ef06f27a215654a63939ba0193684203fdb7a338e8c07258618f4c50c15fcda"
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "ab03ad7faef4e04db2c27b5a736c2ecdb2106bfea63db113825276c1fa55924b"
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r2",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "691a5d4d725392e6e97d136ce44ad1cdd109abff00f336eb2afa4daf60541098"
+    }
+  ],
+  "note": "Direct multi-horizon forecasts, not a recursive transition simulator or MPC. Cap-response rankings are unvalidated predictions; no counterfactual outcomes exist for a common origin state.",
+  "training_applied_to_planned_hold": [
+    {
+      "applied": 16.0,
+      "planned": 16.0,
+      "rows": 194
+    },
+    {
+      "applied": 32.0,
+      "planned": 32.0,
+      "rows": 386
+    },
+    {
+      "applied": 48.0,
+      "planned": 48.0,
+      "rows": 75
+    },
+    {
+      "applied": 48.0,
+      "planned": 64.0,
+      "rows": 1
+    },
+    {
+      "applied": 48.0,
+      "planned": 80.0,
+      "rows": 1
+    },
+    {
+      "applied": 48.0,
+      "planned": 96.0,
+      "rows": 1
+    },
+    {
+      "applied": 64.0,
+      "planned": 48.0,
+      "rows": 2
+    },
+    {
+      "applied": 64.0,
+      "planned": 64.0,
+      "rows": 277
+    },
+    {
+      "applied": 64.0,
+      "planned": 80.0,
+      "rows": 1
+    },
+    {
+      "applied": 80.0,
+      "planned": 48.0,
+      "rows": 1
+    },
+    {
+      "applied": 80.0,
+      "planned": 64.0,
+      "rows": 1
+    },
+    {
+      "applied": 80.0,
+      "planned": 80.0,
+      "rows": 75
+    },
+    {
+      "applied": 80.0,
+      "planned": 96.0,
+      "rows": 1
+    },
+    {
+      "applied": 96.0,
+      "planned": 64.0,
+      "rows": 2
+    },
+    {
+      "applied": 96.0,
+      "planned": 80.0,
+      "rows": 1
+    },
+    {
+      "applied": 96.0,
+      "planned": 96.0,
+      "rows": 463
+    }
+  ],
+  "full_report_sha256": "5fe3fd2ea0d673243cf65000f174ce3d2d751601ed91cda129541eb63eafd120",
+  "compressed_report_sha256": "37d9ecfa5ccac77a44c559d6265cfce9034f019743aa985f45cadbe0dfa5cb9b",
+  "dataset_pack_sha256": "d6bc6ab1e3f98c7682a7cb6bdf11ebde0ecbcb0c16b6c9560a5b9dd60ca56663",
+  "dataset_sha256": "75973c77b005594757f65ad0320171a2b3e86e98035f2702585c454876680b80"
+}

@@ -1,0 +1,1990 @@
+{
+  "protocol": "flow-error-diagnosis-v1",
+  "acceptance": null,
+  "c_used": false,
+  "models_unchanged": true,
+  "archived_coefficients_match": true,
+  "verified_free_rollouts": 1536,
+  "one_step_flow_errors_with_observed_inputs": {
+    "flow_ridge": {
+      "admitted": {
+        "n": 800,
+        "mae": 3.241702019833921,
+        "rmse": 4.1177012192044815,
+        "bias": -0.036586288952526386,
+        "p90_abs": 6.490355371097527,
+        "p99_abs": 12.361609116796018,
+        "max_abs": 16.988207563066876
+      },
+      "first": {
+        "n": 800,
+        "mae": 1.939970988537752,
+        "rmse": 2.5179451509897306,
+        "bias": -0.03161897742184027,
+        "p90_abs": 3.9855405142901508,
+        "p99_abs": 6.921818060294672,
+        "max_abs": 12.141542257409144
+      },
+      "exit_awaiting": {
+        "n": 800,
+        "mae": 0.0008660054934518653,
+        "rmse": 0.0015601471330286205,
+        "bias": 0.0008660054934518653,
+        "p90_abs": 0.0025993540690086385,
+        "p99_abs": 0.005453481760553072,
+        "max_abs": 0.010920068058409877
+      },
+      "exit_streaming": {
+        "n": 800,
+        "mae": 3.6760865920280796,
+        "rmse": 4.788158589528069,
+        "bias": 0.21084437420581917,
+        "p90_abs": 7.187076031234837,
+        "p99_abs": 14.827907473566187,
+        "max_abs": 22.74320686028645
+      },
+      "cost_in": {
+        "n": 800,
+        "mae": 6.372567097712931,
+        "rmse": 7.994691621736564,
+        "bias": 0.16296180167891644,
+        "p90_abs": 12.436450891162336,
+        "p99_abs": 24.070189154081724,
+        "max_abs": 33.464446295324805
+      },
+      "cost_out": {
+        "n": 800,
+        "mae": 7.148788462753934,
+        "rmse": 9.12426513577392,
+        "bias": 0.42552084840964727,
+        "p90_abs": 13.932036430116417,
+        "p99_abs": 27.242035417424397,
+        "max_abs": 36.93082403456869
+      }
+    },
+    "flow_ridge_engine": {
+      "admitted": {
+        "n": 800,
+        "mae": 3.284089719730092,
+        "rmse": 4.246947961420983,
+        "bias": -0.14826650891719337,
+        "p90_abs": 7.037901516375523,
+        "p99_abs": 12.451679988838077,
+        "max_abs": 16.600547249395643
+      },
+      "first": {
+        "n": 800,
+        "mae": 1.8902804089235459,
+        "rmse": 2.508632341536683,
+        "bias": -0.1614042376798276,
+        "p90_abs": 4.0232917721455435,
+        "p99_abs": 7.351637634730867,
+        "max_abs": 12.25892491286791
+      },
+      "exit_awaiting": {
+        "n": 800,
+        "mae": 0.0009288603912066591,
+        "rmse": 0.0017677971411288018,
+        "bias": 0.0009288603912066591,
+        "p90_abs": 0.002769629314123787,
+        "p99_abs": 0.005926293956906485,
+        "max_abs": 0.014604521735929576
+      },
+      "exit_streaming": {
+        "n": 800,
+        "mae": 3.687480400746724,
+        "rmse": 4.859017221002422,
+        "bias": 0.10981985559775605,
+        "p90_abs": 7.682448944285189,
+        "p99_abs": 15.079015505439322,
+        "max_abs": 23.248918060661293
+      },
+      "cost_in": {
+        "n": 800,
+        "mae": 6.429219981777271,
+        "rmse": 8.197481021929358,
+        "bias": -0.054852199197304795,
+        "p90_abs": 13.431091018769532,
+        "p99_abs": 23.613029558831254,
+        "max_abs": 31.41204723534825
+      },
+      "cost_out": {
+        "n": 800,
+        "mae": 7.123505862608025,
+        "rmse": 9.229576318053237,
+        "bias": 0.2121880280572534,
+        "p90_abs": 14.24201710739291,
+        "p99_abs": 27.65495972655278,
+        "max_abs": 37.999485797598595
+      }
+    }
+  },
+  "observed_input_flow_residual_correlations": {
+    "flow_ridge": {
+      "admitted": {
+        "admitted": 1.0,
+        "first": 0.5528427211450838,
+        "exit_awaiting": -0.05501704256160211,
+        "exit_streaming": 0.863930574726445,
+        "cost_in": 0.9614348356824448,
+        "cost_out": 0.8881773109271127
+      },
+      "first": {
+        "admitted": 0.5528427211450838,
+        "first": 1.0,
+        "exit_awaiting": -0.08826462134850585,
+        "exit_streaming": 0.3949430714926069,
+        "cost_in": 0.4710240723432198,
+        "cost_out": 0.43100308923669234
+      },
+      "exit_awaiting": {
+        "admitted": -0.05501704256160211,
+        "first": -0.08826462134850585,
+        "exit_awaiting": 1.0,
+        "exit_streaming": 0.018119157115088224,
+        "cost_in": -0.05014865363100392,
+        "cost_out": 0.018715066509585966
+      },
+      "exit_streaming": {
+        "admitted": 0.8639305747264449,
+        "first": 0.39494307149260693,
+        "exit_awaiting": 0.018119157115088224,
+        "exit_streaming": 1.0,
+        "cost_in": 0.8812138837818317,
+        "cost_out": 0.9758523652464983
+      },
+      "cost_in": {
+        "admitted": 0.9614348356824447,
+        "first": 0.4710240723432198,
+        "exit_awaiting": -0.05014865363100392,
+        "exit_streaming": 0.8812138837818317,
+        "cost_in": 0.9999999999999999,
+        "cost_out": 0.9117473689620983
+      },
+      "cost_out": {
+        "admitted": 0.8881773109271127,
+        "first": 0.4310030892366924,
+        "exit_awaiting": 0.018715066509585966,
+        "exit_streaming": 0.9758523652464983,
+        "cost_in": 0.9117473689620983,
+        "cost_out": 1.0
+      }
+    },
+    "flow_ridge_engine": {
+      "admitted": {
+        "admitted": 1.0,
+        "first": 0.5566134641712224,
+        "exit_awaiting": 0.05906712369280146,
+        "exit_streaming": 0.8654948090070668,
+        "cost_in": 0.9636545670237754,
+        "cost_out": 0.8878662946270631
+      },
+      "first": {
+        "admitted": 0.5566134641712224,
+        "first": 1.0,
+        "exit_awaiting": 0.006856838125418582,
+        "exit_streaming": 0.39152282245185693,
+        "cost_in": 0.4723334234760678,
+        "cost_out": 0.42354874209631455
+      },
+      "exit_awaiting": {
+        "admitted": 0.05906712369280146,
+        "first": 0.006856838125418582,
+        "exit_awaiting": 1.0,
+        "exit_streaming": 0.09308900084119608,
+        "cost_in": 0.05472979169962518,
+        "cost_out": 0.08448165033158163
+      },
+      "exit_streaming": {
+        "admitted": 0.8654948090070669,
+        "first": 0.39152282245185693,
+        "exit_awaiting": 0.09308900084119608,
+        "exit_streaming": 1.0,
+        "cost_in": 0.8825730119447006,
+        "cost_out": 0.9766478584258103
+      },
+      "cost_in": {
+        "admitted": 0.9636545670237754,
+        "first": 0.4723334234760678,
+        "exit_awaiting": 0.05472979169962518,
+        "exit_streaming": 0.8825730119447006,
+        "cost_in": 0.9999999999999998,
+        "cost_out": 0.9113191908497115
+      },
+      "cost_out": {
+        "admitted": 0.8878662946270631,
+        "first": 0.4235487420963145,
+        "exit_awaiting": 0.08448165033158164,
+        "exit_streaming": 0.9766478584258103,
+        "cost_in": 0.9113191908497115,
+        "cost_out": 1.0
+      }
+    }
+  },
+  "origin_only_repeat_goodput": {
+    "flow_ridge": {
+      "scores": {
+        "n": 768,
+        "mae": 1.551484272468529,
+        "rmse": 1.901814891030609,
+        "bias": -0.2981460620682382,
+        "p90_abs": 3.076591433819763,
+        "p99_abs": 4.802344685065113,
+        "max_abs": 6.6044139741497485,
+        "optimistic_direction": "over",
+        "optimistic_fraction": 0.44140625,
+        "optimistic_p90": 2.074812058284396,
+        "optimistic_p99": 3.7650120252623047,
+        "optimistic_max": 5.27006432513395
+      },
+      "mean_absolute_difference_from_free_rate": 0.4371414138308291
+    },
+    "flow_ridge_engine": {
+      "scores": {
+        "n": 768,
+        "mae": 1.5009318524807,
+        "rmse": 1.8641549063472433,
+        "bias": -0.3440562491912438,
+        "p90_abs": 3.0088510306816643,
+        "p99_abs": 4.851500793649217,
+        "max_abs": 6.44541306412393,
+        "optimistic_direction": "over",
+        "optimistic_fraction": 0.4375,
+        "optimistic_p90": 1.921439592680983,
+        "optimistic_p99": 3.799050529429602,
+        "optimistic_max": 4.871883288800516
+      },
+      "mean_absolute_difference_from_free_rate": 0.2925396286428978
+    }
+  },
+  "limitations": [
+    "Development diagnosis on already examined captures; no independent acceptance.",
+    "Every mode except free uses future measured observations or flows and is not deployable.",
+    "Oracle groups overlap and are not additive, exclusive, or physical causal attribution.",
+    "Flow replacement still passes through the original projection; constraints can couple heads.",
+    "Step errors use the same five-second eligible origins; shorter-step counts differ from the original full horizon tests.",
+    "No new cap interventions, workload windows, GPU measurements or future-data training."
+  ],
+  "code_sha256": {
+    "diagnose_flow_rollout.py": "cf19d0aae53d0536fac792d3e4f6cad274c6a773011492c25375663c0ba39e00",
+    "transition_baselines.py": "01634ccb45f97ca9cda0d6760b8352245586c5a711b3ad625dd10f43aebc6bec",
+    "transition_features.py": "6664363beafd5cc779a360c77397b717d29e1ff71c7f8a992e19ff0bda123232",
+    "forecast_baselines.py": "e7abca44a0592e921cf127d077e078600dd08bc97bc75836a13ed2c32c849c18"
+  },
+  "dataset_sha256": "fe8f65542131de388801e660aa4c42530ceec6683c6c05931503a1697e784d44",
+  "archived_report_sha256": "2c8258df347a8d23f7c2c81852ce6fec77ce4220fce6e9bfec6a923e95850dd1",
+  "prediction_records": 1536,
+  "score_groups": 2100,
+  "five_second_all": [
+    {
+      "model": "flow_ridge",
+      "mode": "activity_history_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 2.7245708566007125,
+          "rmse": 3.551422384442362,
+          "bias": 0.18400528415899944,
+          "p90_abs": 5.613317329698686,
+          "p99_abs": 11.1151077224203,
+          "max_abs": 15.870224381848725,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3424479166666667,
+          "optimistic_p90": 5.0018147327013445,
+          "optimistic_p99": 11.1151077224203,
+          "optimistic_max": 15.870224381848725
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 3.8049642855467396,
+          "rmse": 4.959024357774038,
+          "bias": -0.7735359171644817,
+          "p90_abs": 8.333145119694056,
+          "p99_abs": 13.652195387641399,
+          "max_abs": 21.64785351057465
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.4043282873140495,
+          "rmse": 3.5685142448938563,
+          "bias": -0.35507990885191204,
+          "p90_abs": 4.723287565671154,
+          "p99_abs": 14.086716365351654,
+          "max_abs": 23.796098956650994,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6640625,
+          "optimistic_p90": 3.343395975197593,
+          "optimistic_p99": 6.587357698682563,
+          "optimistic_max": 10.485749580399784
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 6.45961673820825,
+          "rmse": 8.208936035129895,
+          "bias": -1.5379869335830758,
+          "p90_abs": 12.947073521186596,
+          "p99_abs": 22.729675253109644,
+          "max_abs": 27.43737871252998,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4479166666666667,
+          "optimistic_p90": 8.42774253090308,
+          "optimistic_p99": 13.430500499007321,
+          "optimistic_max": 17.954925711813726
+        }
+      },
+      "goodput_rate_mae": 1.2919233476416498,
+      "projected_steps": 5
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "activity_outcome_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 2.7272718047177613,
+          "rmse": 3.5443364411607616,
+          "bias": 0.18502625000267184,
+          "p90_abs": 5.595224088147818,
+          "p99_abs": 10.850492672789507,
+          "max_abs": 15.671352513360084,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3424479166666667,
+          "optimistic_p90": 4.966908550269037,
+          "optimistic_p99": 10.850492672789507,
+          "optimistic_max": 15.671352513360084
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 3.852739467172475,
+          "rmse": 4.978929426138387,
+          "bias": -0.7705235570977095,
+          "p90_abs": 8.384898297056072,
+          "p99_abs": 13.734582200086317,
+          "max_abs": 18.749940252896998
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.214039241161959,
+          "rmse": 3.330112013377754,
+          "bias": -0.35307308878661997,
+          "p90_abs": 3.948223209710319,
+          "p99_abs": 13.518811614697029,
+          "max_abs": 23.99202437925716,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.7213541666666666,
+          "optimistic_p90": 2.7762341068931455,
+          "optimistic_p99": 4.560723872120634,
+          "optimistic_max": 11.945630251253874
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 5.7254006112569655,
+          "rmse": 7.152040793037529,
+          "bias": -1.6814229958651417,
+          "p90_abs": 11.009155121576459,
+          "p99_abs": 18.86255350296254,
+          "max_abs": 24.406778159154527,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4440104166666667,
+          "optimistic_p90": 6.967356688861785,
+          "optimistic_p99": 10.664549399776407,
+          "optimistic_max": 13.51045405793436
+        }
+      },
+      "goodput_rate_mae": 1.145080122251393,
+      "projected_steps": 4
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "admission_flow_oracle",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 2.2536545609750833,
+          "rmse": 3.3331699813317033,
+          "bias": 1.3882729097524658,
+          "p90_abs": 5.519469506076105,
+          "p99_abs": 9.913589525204952,
+          "max_abs": 15.21370383312926,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.2526041666666667,
+          "optimistic_p90": 1.8178852724971344,
+          "optimistic_p99": 4.449999618315389,
+          "optimistic_max": 8.743447081310629
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 6.30346732087362,
+          "rmse": 8.190128325269875,
+          "bias": -1.8137992934913842,
+          "p90_abs": 13.494953824009444,
+          "p99_abs": 22.91987201928819,
+          "max_abs": 29.472918883452465
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 15.039403255103865,
+          "rmse": 18.809601326218083,
+          "bias": -0.588744496240574,
+          "p90_abs": 32.26322683967812,
+          "p99_abs": 48.708138439331606,
+          "max_abs": 57.3302610127462,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.5091145833333334,
+          "optimistic_p90": 22.2455570795693,
+          "optimistic_p99": 48.708138439331606,
+          "optimistic_max": 57.3302610127462
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.409620931820015,
+          "rmse": 9.254784833178118,
+          "bias": -2.1617028584713522,
+          "p90_abs": 14.746810632517757,
+          "p99_abs": 23.78652830444025,
+          "max_abs": 37.69940551205326,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4309895833333333,
+          "optimistic_p90": 8.810859975870596,
+          "optimistic_p99": 16.725901709592332,
+          "optimistic_max": 20.801317422463878
+        }
+      },
+      "goodput_rate_mae": 1.4819241863640031,
+      "projected_steps": 268
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "all_flows_oracle",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 0.0,
+          "rmse": 0.0,
+          "bias": 0.0,
+          "p90_abs": 0.0,
+          "p99_abs": 0.0,
+          "max_abs": 0.0,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.0,
+          "optimistic_p90": 0.0,
+          "optimistic_p99": 0.0,
+          "optimistic_max": -0.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 0.0,
+          "rmse": 0.0,
+          "bias": 0.0,
+          "p90_abs": 0.0,
+          "p99_abs": 0.0,
+          "max_abs": 0.0
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 6.988044402393238e-13,
+          "rmse": 9.098639309308724e-13,
+          "bias": 4.568105153405592e-15,
+          "p90_abs": 1.4495071809506044e-12,
+          "p99_abs": 2.6761881599668437e-12,
+          "max_abs": 3.666400516522117e-12,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.4973958333333333,
+          "optimistic_p90": 1.0906830993917538e-12,
+          "optimistic_p99": 2.1316282072803006e-12,
+          "optimistic_max": 3.367972567502875e-12
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.064014356936255,
+          "rmse": 8.72552211269842,
+          "bias": -1.4908568315169015,
+          "p90_abs": 13.927556093466421,
+          "p99_abs": 22.608427065068735,
+          "max_abs": 35.078599069324625,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4557291666666667,
+          "optimistic_p90": 9.320862907967475,
+          "optimistic_p99": 16.935479326148368,
+          "optimistic_max": 21.101083707715766
+        }
+      },
+      "goodput_rate_mae": 1.412802871387251,
+      "projected_steps": 0
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "all_observations_reset",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 2.5608539946574553,
+          "rmse": 3.411801834219481,
+          "bias": 0.04493051995787873,
+          "p90_abs": 5.7414399358391055,
+          "p99_abs": 9.872818211807509,
+          "max_abs": 12.635481617645304,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3697916666666667,
+          "optimistic_p90": 4.7264745935704,
+          "optimistic_p99": 9.872818211807509,
+          "optimistic_max": 12.635481617645304
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 3.3167861684236066,
+          "rmse": 4.355580368427582,
+          "bias": -0.3685475341074806,
+          "p90_abs": 7.133097664955646,
+          "p99_abs": 12.31651059739345,
+          "max_abs": 17.864840537703166
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.248143442300883,
+          "rmse": 3.4192791586157965,
+          "bias": -0.33132926161921905,
+          "p90_abs": 4.100597853123737,
+          "p99_abs": 13.000076268374928,
+          "max_abs": 26.355173470512007,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6940104166666666,
+          "optimistic_p90": 3.1600007221743462,
+          "optimistic_p99": 5.249121642394171,
+          "optimistic_max": 10.630902463921245
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 5.58523039703977,
+          "rmse": 6.91617151935618,
+          "bias": -1.5377106004787746,
+          "p90_abs": 10.9113985364548,
+          "p99_abs": 17.715159947394707,
+          "max_abs": 22.302458676251558,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4427083333333333,
+          "optimistic_p90": 6.961238189841584,
+          "optimistic_p99": 10.397892025837155,
+          "optimistic_max": 11.81171667138601
+        }
+      },
+      "goodput_rate_mae": 1.117046079407954,
+      "projected_steps": 14
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "arrival_history_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.5904099996565138,
+          "rmse": 4.619241900058106,
+          "bias": 0.19608994679653144,
+          "p90_abs": 7.694165943351298,
+          "p99_abs": 13.132078217877606,
+          "max_abs": 17.20072968140179,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.36328125,
+          "optimistic_p90": 6.4700436714254295,
+          "optimistic_p99": 13.132078217877606,
+          "optimistic_max": 17.20072968140179
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 4.543335247709025,
+          "rmse": 5.824614831547095,
+          "bias": -0.7846148258990947,
+          "p90_abs": 9.826499374460102,
+          "p99_abs": 15.570500547230225,
+          "max_abs": 21.425966314585143
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.4044110429069225,
+          "rmse": 3.565595669025026,
+          "bias": -0.36363794786029285,
+          "p90_abs": 4.289298024006065,
+          "p99_abs": 14.901135039529887,
+          "max_abs": 24.128989752467405,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.7239583333333334,
+          "optimistic_p90": 2.9643186029475244,
+          "optimistic_p99": 4.610960935025032,
+          "optimistic_max": 23.63704729128728
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 6.97595924596547,
+          "rmse": 8.72551364817357,
+          "bias": -1.6854028837766897,
+          "p90_abs": 14.213672238433611,
+          "p99_abs": 22.4874191688644,
+          "max_abs": 35.00504843142262,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4388020833333333,
+          "optimistic_p90": 8.758195713783481,
+          "optimistic_p99": 16.02212877205056,
+          "optimistic_max": 19.875810929459174
+        }
+      },
+      "goodput_rate_mae": 1.395191849193094,
+      "projected_steps": 44
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "engine_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.587491239148578,
+          "rmse": 4.619398251712615,
+          "bias": 0.19784477900252484,
+          "p90_abs": 7.700179243349226,
+          "p99_abs": 13.183741464714117,
+          "max_abs": 17.280438337432955,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.36328125,
+          "optimistic_p90": 6.4016595181417,
+          "optimistic_p99": 13.183741464714117,
+          "optimistic_max": 17.280438337432955
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 4.546692184630749,
+          "rmse": 5.827386256897359,
+          "bias": -0.7900168494649961,
+          "p90_abs": 9.865346250236799,
+          "p99_abs": 15.592391690505227,
+          "max_abs": 21.41467018334857
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.407527670786159,
+          "rmse": 3.575113904788408,
+          "bias": -0.36917184096164646,
+          "p90_abs": 4.3241375898724925,
+          "p99_abs": 14.916752803680078,
+          "max_abs": 24.23425799466979,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.7265625,
+          "optimistic_p90": 2.9553752129986037,
+          "optimistic_p99": 4.653943404544305,
+          "optimistic_max": 23.73077108404462
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 6.981044975908624,
+          "rmse": 8.696957072650367,
+          "bias": -1.6572364747845487,
+          "p90_abs": 14.05986297230238,
+          "p99_abs": 22.067534592204428,
+          "max_abs": 34.77055553212719,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4427083333333333,
+          "optimistic_p90": 8.673682192679566,
+          "optimistic_p99": 15.890956031027054,
+          "optimistic_max": 19.857301640833434
+        }
+      },
+      "goodput_rate_mae": 1.3962089951817247,
+      "projected_steps": 44
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "exit_flow_oracle",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.335856437989211,
+          "rmse": 4.305587081965715,
+          "bias": 0.09372873401818975,
+          "p90_abs": 7.11656707856804,
+          "p99_abs": 11.35436205982723,
+          "max_abs": 15.32332217692175,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.4036458333333333,
+          "optimistic_p90": 5.989095998254351,
+          "optimistic_p99": 11.35436205982723,
+          "optimistic_max": 15.32332217692175
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 6.360389875212076,
+          "rmse": 7.931613273002905,
+          "bias": -0.498033326670914,
+          "p90_abs": 12.810209896070145,
+          "p99_abs": 20.658320944440664,
+          "max_abs": 24.59870795445005
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 11.430770681526583,
+          "rmse": 14.2364570028367,
+          "bias": 0.18538848919343498,
+          "p90_abs": 24.56608663453656,
+          "p99_abs": 34.69977824251844,
+          "max_abs": 39.43315503712341,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.4700520833333333,
+          "optimistic_p90": 19.2883480558848,
+          "optimistic_p99": 32.757140230631364,
+          "optimistic_max": 36.472686493496894
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.4472897882633875,
+          "rmse": 9.164053974311049,
+          "bias": -1.5503392851250186,
+          "p90_abs": 14.729224450288621,
+          "p99_abs": 23.321548877306807,
+          "max_abs": 36.40271822852742,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.44921875,
+          "optimistic_p90": 9.585966314602292,
+          "optimistic_p99": 16.353776763830346,
+          "optimistic_max": 20.454750067451055
+        }
+      },
+      "goodput_rate_mae": 1.4894579576526774,
+      "projected_steps": 65
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "first_flow_oracle",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 8.094224899794169,
+          "rmse": 11.12262292700852,
+          "bias": 4.706809921604385,
+          "p90_abs": 18.301091155300586,
+          "p99_abs": 34.07182676856251,
+          "max_abs": 41.39710759710547,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.296875,
+          "optimistic_p90": 7.0,
+          "optimistic_p99": 14.330000000000041,
+          "optimistic_max": 19.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 7.304719700079162,
+          "rmse": 9.595903462514112,
+          "bias": -3.9666625237982163,
+          "p90_abs": 14.94723206999941,
+          "p99_abs": 29.561563544620835,
+          "max_abs": 36.62055207656846
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.463119883586405,
+          "rmse": 3.8949561075263777,
+          "bias": 0.3067338261345169,
+          "p90_abs": 5.10812410710762,
+          "p99_abs": 16.419219482555256,
+          "max_abs": 27.21760877367963,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6080729166666666,
+          "optimistic_p90": 2.826855898843982,
+          "optimistic_p99": 5.11336246558108,
+          "optimistic_max": 24.486238482496837
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 6.407293901481556,
+          "rmse": 8.2532065001066,
+          "bias": -2.674482401023728,
+          "p90_abs": 13.24858215785142,
+          "p99_abs": 21.46576299586669,
+          "max_abs": 32.952980057733974,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.3619791666666667,
+          "optimistic_p90": 7.1297672401683725,
+          "optimistic_p99": 15.059129232950575,
+          "optimistic_max": 16.93224291545174
+        }
+      },
+      "goodput_rate_mae": 1.2814587802963113,
+      "projected_steps": 329
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "free",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.587491239148578,
+          "rmse": 4.619398251712615,
+          "bias": 0.19784477900252484,
+          "p90_abs": 7.700179243349226,
+          "p99_abs": 13.183741464714117,
+          "max_abs": 17.280438337432955,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.36328125,
+          "optimistic_p90": 6.4016595181417,
+          "optimistic_p99": 13.183741464714117,
+          "optimistic_max": 17.280438337432955
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 4.546692184630749,
+          "rmse": 5.827386256897359,
+          "bias": -0.7900168494649961,
+          "p90_abs": 9.865346250236799,
+          "p99_abs": 15.592391690505227,
+          "max_abs": 21.41467018334857
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.407527670786159,
+          "rmse": 3.575113904788408,
+          "bias": -0.36917184096164646,
+          "p90_abs": 4.3241375898724925,
+          "p99_abs": 14.916752803680078,
+          "max_abs": 24.23425799466979,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.7265625,
+          "optimistic_p90": 2.9553752129986037,
+          "optimistic_p99": 4.653943404544305,
+          "optimistic_max": 23.73077108404462
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 6.981044975908624,
+          "rmse": 8.696957072650367,
+          "bias": -1.6572364747845487,
+          "p90_abs": 14.05986297230238,
+          "p99_abs": 22.067534592204428,
+          "max_abs": 34.77055553212719,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4427083333333333,
+          "optimistic_p90": 8.673682192679566,
+          "optimistic_p99": 15.890956031027054,
+          "optimistic_max": 19.857301640833434
+        }
+      },
+      "goodput_rate_mae": 1.3962089951817247,
+      "projected_steps": 44
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "history_engine_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 2.7289787696951415,
+          "rmse": 3.542997394848311,
+          "bias": 0.1827582820822469,
+          "p90_abs": 5.5958865257143895,
+          "p99_abs": 10.7679501037171,
+          "max_abs": 15.59158792580698,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3385416666666667,
+          "optimistic_p90": 4.954252219033537,
+          "optimistic_p99": 10.7679501037171,
+          "optimistic_max": 15.59158792580698
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 3.8498999617743768,
+          "rmse": 4.973767583073841,
+          "bias": -0.7661551492049963,
+          "p90_abs": 8.308721694142099,
+          "p99_abs": 13.757970510529711,
+          "max_abs": 18.321584875774008
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.20486164066519,
+          "rmse": 3.3138480938896455,
+          "bias": -0.3498230998580388,
+          "p90_abs": 3.9008045976878325,
+          "p99_abs": 13.472700611448767,
+          "max_abs": 23.886754112269358,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.7161458333333334,
+          "optimistic_p90": 2.754301044600707,
+          "optimistic_p99": 4.559443874087695,
+          "optimistic_max": 11.670699759716065
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 5.7380069678095715,
+          "rmse": 7.1916986010988815,
+          "bias": -1.7076699346603395,
+          "p90_abs": 11.41686737122905,
+          "p99_abs": 19.079790734383597,
+          "max_abs": 24.64126431801005,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4401041666666667,
+          "optimistic_p90": 6.833660949881319,
+          "optimistic_p99": 10.7615733977407,
+          "optimistic_max": 13.528967012818416
+        }
+      },
+      "goodput_rate_mae": 1.1476013935619143,
+      "projected_steps": 3
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "history_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 2.7289787696951415,
+          "rmse": 3.542997394848311,
+          "bias": 0.1827582820822469,
+          "p90_abs": 5.5958865257143895,
+          "p99_abs": 10.7679501037171,
+          "max_abs": 15.59158792580698,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3385416666666667,
+          "optimistic_p90": 4.954252219033537,
+          "optimistic_p99": 10.7679501037171,
+          "optimistic_max": 15.59158792580698
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 3.8498999617743768,
+          "rmse": 4.973767583073841,
+          "bias": -0.7661551492049963,
+          "p90_abs": 8.308721694142099,
+          "p99_abs": 13.757970510529711,
+          "max_abs": 18.321584875774008
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.20486164066519,
+          "rmse": 3.3138480938896455,
+          "bias": -0.3498230998580388,
+          "p90_abs": 3.9008045976878325,
+          "p99_abs": 13.472700611448767,
+          "max_abs": 23.886754112269358,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.7161458333333334,
+          "optimistic_p90": 2.754301044600707,
+          "optimistic_p99": 4.559443874087695,
+          "optimistic_max": 11.670699759716065
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 5.7380069678095715,
+          "rmse": 7.1916986010988815,
+          "bias": -1.7076699346603395,
+          "p90_abs": 11.41686737122905,
+          "p99_abs": 19.079790734383597,
+          "max_abs": 24.64126431801005,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4401041666666667,
+          "optimistic_p90": 6.833660949881319,
+          "optimistic_p99": 10.7615733977407,
+          "optimistic_max": 13.528967012818416
+        }
+      },
+      "goodput_rate_mae": 1.1476013935619143,
+      "projected_steps": 3
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "outcome_history_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.6058321191440847,
+          "rmse": 4.64676584907212,
+          "bias": 0.2006733540433321,
+          "p90_abs": 7.634247671458795,
+          "p99_abs": 13.247715084850864,
+          "max_abs": 17.285563669862928,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3645833333333333,
+          "optimistic_p90": 6.434788460161686,
+          "optimistic_p99": 13.247715084850864,
+          "optimistic_max": 17.285563669862928
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 5.0706811084664585,
+          "rmse": 6.544427815545891,
+          "bias": -0.7907738483613308,
+          "p90_abs": 11.349365710089057,
+          "p99_abs": 17.370601292825647,
+          "max_abs": 22.523091093947215
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.5766006617248105,
+          "rmse": 3.8058765720061944,
+          "bias": -0.366704915757468,
+          "p90_abs": 5.517848662997745,
+          "p99_abs": 14.50831643332542,
+          "max_abs": 25.31340043202143,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6861979166666666,
+          "optimistic_p90": 3.594360730250016,
+          "optimistic_p99": 6.67176335030175,
+          "optimistic_max": 25.31340043202143
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.214031504008399,
+          "rmse": 9.052353406210985,
+          "bias": -1.6091722793320828,
+          "p90_abs": 14.26209156345083,
+          "p99_abs": 22.563846301456042,
+          "max_abs": 37.52968954466408,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.453125,
+          "optimistic_p90": 9.802195377038206,
+          "optimistic_p99": 18.67068929998499,
+          "optimistic_max": 22.799287635596528
+        }
+      },
+      "goodput_rate_mae": 1.4428063008016798,
+      "projected_steps": 44
+    },
+    {
+      "model": "flow_ridge",
+      "mode": "state_reset",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.075249525058425,
+          "rmse": 4.030182674021756,
+          "bias": 0.04312428583426844,
+          "p90_abs": 6.678156342861233,
+          "p99_abs": 11.164184696217914,
+          "max_abs": 13.236901859988372,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.37890625,
+          "optimistic_p90": 5.754033576443859,
+          "optimistic_p99": 11.164184696217914,
+          "optimistic_max": 13.236901859988372
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 3.88446638181931,
+          "rmse": 4.982761533906578,
+          "bias": -0.385634873226871,
+          "p90_abs": 8.223049231149362,
+          "p99_abs": 13.637552522606052,
+          "max_abs": 19.010241791721626
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.4167003031014707,
+          "rmse": 3.614673872458708,
+          "bias": -0.36235767930741813,
+          "p90_abs": 4.981916115619966,
+          "p99_abs": 15.37577613935171,
+          "max_abs": 23.43182408014114,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6888020833333334,
+          "optimistic_p90": 3.4808292621659565,
+          "optimistic_p99": 5.590112493364528,
+          "optimistic_max": 20.06076857241449
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.064014356936256,
+          "rmse": 8.725522112698423,
+          "bias": -1.4908568315169017,
+          "p90_abs": 13.927556093466432,
+          "p99_abs": 22.608427065068746,
+          "max_abs": 35.07859906932464,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4557291666666667,
+          "optimistic_p90": 9.320862907967488,
+          "optimistic_p99": 16.935479326148364,
+          "optimistic_max": 21.101083707715766
+        }
+      },
+      "goodput_rate_mae": 1.4128028713872511,
+      "projected_steps": 31
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "activity_history_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.8792581248206326,
+          "rmse": 5.102784827022166,
+          "bias": 1.1886853359317398,
+          "p90_abs": 8.568491803925587,
+          "p99_abs": 13.717332839503408,
+          "max_abs": 20.0,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3046875,
+          "optimistic_p90": 5.337630698234556,
+          "optimistic_p99": 11.963006271660609,
+          "optimistic_max": 20.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 4.856064624275022,
+          "rmse": 6.2092203971317685,
+          "bias": -1.6876324773266476,
+          "p90_abs": 10.126962764785498,
+          "p99_abs": 17.217780173594264,
+          "max_abs": 23.772979089827665
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.492268866307938,
+          "rmse": 3.798807077667365,
+          "bias": -0.08505793432651516,
+          "p90_abs": 5.370064349156796,
+          "p99_abs": 15.30634131528448,
+          "max_abs": 22.036326372259524,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6041666666666666,
+          "optimistic_p90": 3.339706108498796,
+          "optimistic_p99": 9.045408973380589,
+          "optimistic_max": 17.299721409871808
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 6.256159943543082,
+          "rmse": 8.03486844123658,
+          "bias": -1.9703946800621992,
+          "p90_abs": 12.744491439837596,
+          "p99_abs": 22.342348440490486,
+          "max_abs": 24.259617813652696,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4309895833333333,
+          "optimistic_p90": 7.649844500324014,
+          "optimistic_p99": 13.668752785899219,
+          "optimistic_max": 16.710943390599766
+        }
+      },
+      "goodput_rate_mae": 1.2512319887086165,
+      "projected_steps": 109
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "activity_outcome_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.7412118303986035,
+          "rmse": 4.829857076195505,
+          "bias": 0.9659091836564002,
+          "p90_abs": 8.0,
+          "p99_abs": 12.527856823105337,
+          "max_abs": 20.0,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3098958333333333,
+          "optimistic_p90": 5.668521723570472,
+          "optimistic_p99": 12.13453468079611,
+          "optimistic_max": 20.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 4.543783144809708,
+          "rmse": 5.778819374622014,
+          "bias": -1.3979129788226412,
+          "p90_abs": 9.685945661683991,
+          "p99_abs": 14.883783528854948,
+          "max_abs": 20.588074061888946
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.336526038311408,
+          "rmse": 3.6144929104589623,
+          "bias": -0.08708028567495212,
+          "p90_abs": 4.930575447681486,
+          "p99_abs": 15.233781514769781,
+          "max_abs": 22.860822944579795,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6328125,
+          "optimistic_p90": 3.0688163832183295,
+          "optimistic_p99": 7.308110554546515,
+          "optimistic_max": 19.517422803145955
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 5.8066468118497205,
+          "rmse": 7.274988853899452,
+          "bias": -2.132355210658787,
+          "p90_abs": 11.61009343886094,
+          "p99_abs": 19.253254588872817,
+          "max_abs": 22.7927857825825,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4192708333333333,
+          "optimistic_p90": 6.456643229793428,
+          "optimistic_p99": 11.488226640511478,
+          "optimistic_max": 14.933071680146327
+        }
+      },
+      "goodput_rate_mae": 1.161329362369944,
+      "projected_steps": 82
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "admission_flow_oracle",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 2.7248004446985887,
+          "rmse": 4.216976332340719,
+          "bias": 1.593077967267665,
+          "p90_abs": 7.76270625567128,
+          "p99_abs": 12.512670300106379,
+          "max_abs": 18.33006419876713,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.2734375,
+          "optimistic_p90": 2.0,
+          "optimistic_p99": 6.273666000385297,
+          "optimistic_max": 11.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 8.50668930247067,
+          "rmse": 10.986381207138457,
+          "bias": -3.4154037026680455,
+          "p90_abs": 17.478615609235852,
+          "p99_abs": 31.48578172191939,
+          "max_abs": 42.287021674770344
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 19.45291002042581,
+          "rmse": 24.740987646783363,
+          "bias": -2.9690791742998695,
+          "p90_abs": 42.509897807526706,
+          "p99_abs": 64.18312558465122,
+          "max_abs": 78.7697396542348,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.5833333333333334,
+          "optimistic_p90": 31.671691568567198,
+          "optimistic_p99": 63.74940514960001,
+          "optimistic_max": 78.7697396542348
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.0313196794770505,
+          "rmse": 8.814818947341012,
+          "bias": -2.166736539313259,
+          "p90_abs": 13.864815806570572,
+          "p99_abs": 22.91985517194136,
+          "max_abs": 32.725554367371714,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.421875,
+          "optimistic_p90": 8.286304304455266,
+          "optimistic_p99": 17.30352382071994,
+          "optimistic_max": 23.969622820685103
+        }
+      },
+      "goodput_rate_mae": 1.40626393589541,
+      "projected_steps": 320
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "all_flows_oracle",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 0.0,
+          "rmse": 0.0,
+          "bias": 0.0,
+          "p90_abs": 0.0,
+          "p99_abs": 0.0,
+          "max_abs": 0.0,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.0,
+          "optimistic_p90": 0.0,
+          "optimistic_p99": 0.0,
+          "optimistic_max": -0.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 0.0,
+          "rmse": 0.0,
+          "bias": 0.0,
+          "p90_abs": 0.0,
+          "p99_abs": 0.0,
+          "max_abs": 0.0
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 6.988044402393238e-13,
+          "rmse": 9.098639309308724e-13,
+          "bias": 4.568105153405592e-15,
+          "p90_abs": 1.4495071809506044e-12,
+          "p99_abs": 2.6761881599668437e-12,
+          "max_abs": 3.666400516522117e-12,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.4973958333333333,
+          "optimistic_p90": 1.0906830993917538e-12,
+          "optimistic_p99": 2.1316282072803006e-12,
+          "optimistic_max": 3.367972567502875e-12
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 6.888095040664301,
+          "rmse": 8.586721659273737,
+          "bias": -1.7497232615353429,
+          "p90_abs": 13.384263369256164,
+          "p99_abs": 22.3054004835727,
+          "max_abs": 31.889406295308007,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.44140625,
+          "optimistic_p90": 8.670101218302165,
+          "optimistic_p99": 16.990665384596415,
+          "optimistic_max": 23.946120143036246
+        }
+      },
+      "goodput_rate_mae": 1.3776190081328603,
+      "projected_steps": 0
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "all_observations_reset",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 2.6097860420509478,
+          "rmse": 3.499138837246996,
+          "bias": 0.1042243393000702,
+          "p90_abs": 6.159408227313887,
+          "p99_abs": 9.719330979126088,
+          "max_abs": 12.189283025769903,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3697916666666667,
+          "optimistic_p90": 4.828256389324799,
+          "optimistic_p99": 9.719330979126088,
+          "optimistic_max": 12.189283025769903
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 3.338905817050074,
+          "rmse": 4.420065522070054,
+          "bias": -0.43673123635449124,
+          "p90_abs": 7.353408014744909,
+          "p99_abs": 12.340880944524379,
+          "max_abs": 18.38165596792826
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.303918117164097,
+          "rmse": 3.4808110271028703,
+          "bias": -0.33611014558147173,
+          "p90_abs": 4.386785701950607,
+          "p99_abs": 13.193804845752886,
+          "max_abs": 25.74162149879001,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6705729166666666,
+          "optimistic_p90": 3.2263583833998126,
+          "optimistic_p99": 6.173522148180799,
+          "optimistic_max": 11.200512908733558
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 5.306485231252489,
+          "rmse": 6.694844106990691,
+          "bias": -1.7496487168158705,
+          "p90_abs": 10.515373295893268,
+          "p99_abs": 17.87563688852681,
+          "max_abs": 21.3501547910341,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4401041666666667,
+          "optimistic_p90": 6.29836375513691,
+          "optimistic_p99": 9.478927287105009,
+          "optimistic_max": 10.791897703409003
+        }
+      },
+      "goodput_rate_mae": 1.0612970462504978,
+      "projected_steps": 50
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "arrival_history_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 4.627005163859843,
+          "rmse": 5.956543152645495,
+          "bias": 1.2662035551020587,
+          "p90_abs": 9.956878197041643,
+          "p99_abs": 15.752728694362144,
+          "max_abs": 20.0,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3268229166666667,
+          "optimistic_p90": 6.784024446368568,
+          "optimistic_p99": 12.62230986352079,
+          "optimistic_max": 20.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 5.267796271151974,
+          "rmse": 6.749086942123693,
+          "bias": -1.513730027860526,
+          "p90_abs": 11.358420197712853,
+          "p99_abs": 17.641499332126525,
+          "max_abs": 23.2789160239957
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.2690730985747063,
+          "rmse": 3.6625717387909593,
+          "bias": 0.1299624845237504,
+          "p90_abs": 4.892303778222318,
+          "p99_abs": 16.377099721829175,
+          "max_abs": 22.239214751358304,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6458333333333334,
+          "optimistic_p90": 2.598687559509502,
+          "optimistic_p99": 6.188650009091952,
+          "optimistic_max": 20.613079816065174
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.168911471612773,
+          "rmse": 9.005328298855597,
+          "bias": -2.147721424912103,
+          "p90_abs": 14.919994541728208,
+          "p99_abs": 23.017788616096453,
+          "max_abs": 33.70529345871576,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4309895833333333,
+          "optimistic_p90": 8.397969640967466,
+          "optimistic_p99": 16.665371052604804,
+          "optimistic_max": 23.811597522715672
+        }
+      },
+      "goodput_rate_mae": 1.4337822943225547,
+      "projected_steps": 107
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "engine_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 4.116535655323484,
+          "rmse": 5.4637924449031665,
+          "bias": 1.0712235748062862,
+          "p90_abs": 9.416714665456988,
+          "p99_abs": 14.431399852465402,
+          "max_abs": 18.953826693292207,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3372395833333333,
+          "optimistic_p90": 5.710951197292957,
+          "optimistic_p99": 13.0,
+          "optimistic_max": 18.544966142219106
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 5.345817344784699,
+          "rmse": 6.989237004899624,
+          "bias": -1.526158935992638,
+          "p90_abs": 11.299527206320224,
+          "p99_abs": 17.79436625986927,
+          "max_abs": 30.933905545976874
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.489355454192053,
+          "rmse": 3.8285655586479557,
+          "bias": -0.016910694875368986,
+          "p90_abs": 5.1014042818776595,
+          "p99_abs": 16.088931023684676,
+          "max_abs": 24.10785178217516,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.671875,
+          "optimistic_p90": 3.0063975106160346,
+          "optimistic_p99": 5.976611905538275,
+          "optimistic_max": 21.610060154674912
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.1797749358824206,
+          "rmse": 9.103491251392551,
+          "bias": -2.078936094510015,
+          "p90_abs": 15.00147086785399,
+          "p99_abs": 24.283781669715633,
+          "max_abs": 32.83552935290253,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4401041666666667,
+          "optimistic_p90": 8.513750643007642,
+          "optimistic_p99": 16.73118603629187,
+          "optimistic_max": 21.908151027532597
+        }
+      },
+      "goodput_rate_mae": 1.435954987176484,
+      "projected_steps": 116
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "exit_flow_oracle",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.654772443287785,
+          "rmse": 4.876664904954458,
+          "bias": 0.6619556437406354,
+          "p90_abs": 8.602621045028842,
+          "p99_abs": 12.040810277256725,
+          "max_abs": 15.157209234293152,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3854166666666667,
+          "optimistic_p90": 5.393818173360354,
+          "optimistic_p99": 11.685056392865654,
+          "optimistic_max": 15.157209234293152
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 6.642800801513466,
+          "rmse": 8.527337069043673,
+          "bias": -0.4630392064566049,
+          "p90_abs": 15.077620730223797,
+          "p99_abs": 22.074884429885,
+          "max_abs": 24.772415381743087
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 12.993221034743437,
+          "rmse": 16.639315061581915,
+          "bias": 1.276467792322752,
+          "p90_abs": 28.228399382171084,
+          "p99_abs": 43.822277720974164,
+          "max_abs": 58.082299887760136,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.44140625,
+          "optimistic_p90": 20.1050820779349,
+          "optimistic_p99": 43.822277720974164,
+          "optimistic_max": 58.082299887760136
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.527957833681604,
+          "rmse": 9.437800364271249,
+          "bias": -2.067628229105979,
+          "p90_abs": 15.262285643882725,
+          "p99_abs": 24.632516358698577,
+          "max_abs": 34.212186265515456,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4270833333333333,
+          "optimistic_p90": 9.01192355552794,
+          "optimistic_p99": 18.44597550571888,
+          "optimistic_max": 27.112772631466598
+        }
+      },
+      "goodput_rate_mae": 1.5055915667363209,
+      "projected_steps": 125
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "first_flow_oracle",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 18.372334591391436,
+          "rmse": 28.415825855227975,
+          "bias": 15.130766150082339,
+          "p90_abs": 50.34925331789716,
+          "p99_abs": 89.55411939995085,
+          "max_abs": 159.24901723418924,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.2708333333333333,
+          "optimistic_p90": 7.0,
+          "optimistic_p99": 14.0,
+          "optimistic_max": 20.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 11.839191056470819,
+          "rmse": 16.9767000755657,
+          "bias": -8.653014231726827,
+          "p90_abs": 31.806632177018184,
+          "p99_abs": 50.0,
+          "max_abs": 54.0
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 3.6660334478015066,
+          "rmse": 5.365713461858322,
+          "bias": 2.0137651735826356,
+          "p90_abs": 8.481011602155547,
+          "p99_abs": 18.66939418510512,
+          "max_abs": 24.07485694096247,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3802083333333333,
+          "optimistic_p90": 2.6952217224829518,
+          "optimistic_p99": 7.735996908877366,
+          "optimistic_max": 21.858874507812693
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.009779557521445,
+          "rmse": 8.797057053085595,
+          "bias": -2.513557205680016,
+          "p90_abs": 13.749840930005403,
+          "p99_abs": 22.514549763189706,
+          "max_abs": 32.361258628498135,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.39453125,
+          "optimistic_p90": 8.115982908043941,
+          "optimistic_p99": 15.3124305652722,
+          "optimistic_max": 20.527589261197967
+        }
+      },
+      "goodput_rate_mae": 1.401955911504289,
+      "projected_steps": 444
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "free",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 4.6196873138424746,
+          "rmse": 5.947588894041346,
+          "bias": 1.2756086258444437,
+          "p90_abs": 9.938288327944033,
+          "p99_abs": 15.932909807430507,
+          "max_abs": 20.0,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3268229166666667,
+          "optimistic_p90": 6.78837142642597,
+          "optimistic_p99": 12.629168238494639,
+          "optimistic_max": 20.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 5.268159393170831,
+          "rmse": 6.752913580180077,
+          "bias": -1.5256359620509994,
+          "p90_abs": 11.316684381519895,
+          "p99_abs": 17.598311822471526,
+          "max_abs": 23.30340282236761
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.2748506418519816,
+          "rmse": 3.679119665677279,
+          "bias": 0.12918597652385647,
+          "p90_abs": 4.97213945195948,
+          "p99_abs": 16.423013682044008,
+          "max_abs": 22.340068618454936,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6510416666666666,
+          "optimistic_p90": 2.6392519261210112,
+          "optimistic_p99": 6.34179991722354,
+          "optimistic_max": 20.729388851159108
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.137285627135852,
+          "rmse": 8.980606558883641,
+          "bias": -2.1289245920258137,
+          "p90_abs": 14.623303599457758,
+          "p99_abs": 22.697481299662904,
+          "max_abs": 33.43883130590403,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4309895833333333,
+          "optimistic_p90": 8.434171711173752,
+          "optimistic_p99": 16.761987701267465,
+          "optimistic_max": 24.27278193244051
+        }
+      },
+      "goodput_rate_mae": 1.4274571254271704,
+      "projected_steps": 106
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "history_engine_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.2678620292040734,
+          "rmse": 4.3021661707690635,
+          "bias": 1.000314622346712,
+          "p90_abs": 7.239943442747986,
+          "p99_abs": 12.156793247682849,
+          "max_abs": 18.16955951485854,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3151041666666667,
+          "optimistic_p90": 4.417102145948565,
+          "optimistic_p99": 11.204513978512184,
+          "optimistic_max": 18.16955951485854
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 4.486106082716739,
+          "rmse": 5.829794730463485,
+          "bias": -1.4153480788523307,
+          "p90_abs": 9.630704014865943,
+          "p99_abs": 16.46027109043522,
+          "max_abs": 23.05943910419295
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.3762177446809236,
+          "rmse": 3.635476355487627,
+          "bias": -0.0683445319895475,
+          "p90_abs": 4.643410481033984,
+          "p99_abs": 15.089092378489397,
+          "max_abs": 23.86657815522217,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6354166666666666,
+          "optimistic_p90": 3.1320530082865354,
+          "optimistic_p99": 5.564552316718448,
+          "optimistic_max": 18.70991441701318
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 5.830289760362876,
+          "rmse": 7.501858848631234,
+          "bias": -2.1134420700118413,
+          "p90_abs": 12.155385245758376,
+          "p99_abs": 20.788741302887065,
+          "max_abs": 25.528146613017395,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4270833333333333,
+          "optimistic_p90": 6.5028585706099085,
+          "optimistic_p99": 11.415472149208108,
+          "optimistic_max": 13.742361096296408
+        }
+      },
+      "goodput_rate_mae": 1.1660579520725753,
+      "projected_steps": 84
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "history_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.7404341056637116,
+          "rmse": 4.830827114611071,
+          "bias": 0.9619410326276688,
+          "p90_abs": 8.0,
+          "p99_abs": 12.517103121002608,
+          "max_abs": 20.0,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3111979166666667,
+          "optimistic_p90": 5.654981843038547,
+          "optimistic_p99": 12.212384164799872,
+          "optimistic_max": 20.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 4.533210279155412,
+          "rmse": 5.770002775866553,
+          "bias": -1.3887833954194793,
+          "p90_abs": 9.648000296226547,
+          "p99_abs": 14.816216741504523,
+          "max_abs": 21.131600954325577
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.3357373576194784,
+          "rmse": 3.6038070329068432,
+          "bias": -0.08001735918036493,
+          "p90_abs": 4.975871718491003,
+          "p99_abs": 15.153164110208577,
+          "max_abs": 22.73512266090684,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.6223958333333334,
+          "optimistic_p90": 3.1079922616330733,
+          "optimistic_p99": 7.261642285446196,
+          "optimistic_max": 19.401142836456614
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 5.845224758514082,
+          "rmse": 7.303385611575574,
+          "bias": -2.148792558252058,
+          "p90_abs": 11.764814923531796,
+          "p99_abs": 19.347861728991738,
+          "max_abs": 23.059247935394236,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.41796875,
+          "optimistic_p90": 6.474783336515527,
+          "optimistic_p99": 11.742678445817273,
+          "optimistic_max": 14.763194214678087
+        }
+      },
+      "goodput_rate_mae": 1.1690449517028163,
+      "projected_steps": 86
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "outcome_history_refresh",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 4.980880266779503,
+          "rmse": 6.505290981870763,
+          "bias": 1.4658459810952333,
+          "p90_abs": 11.357431885339935,
+          "p99_abs": 16.957928747357855,
+          "max_abs": 21.267928964633988,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3372395833333333,
+          "optimistic_p90": 7.0,
+          "optimistic_p99": 13.347404527928639,
+          "optimistic_max": 20.0
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 6.075661675318348,
+          "rmse": 7.821232112948903,
+          "bias": -1.8503033308700474,
+          "p90_abs": 12.99316673971605,
+          "p99_abs": 20.19561487682063,
+          "max_abs": 25.84826618790806
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.4776846150063117,
+          "rmse": 3.855116827054126,
+          "bias": 0.04242898070795347,
+          "p90_abs": 5.606319649102198,
+          "p99_abs": 14.727307883579211,
+          "max_abs": 23.864250171338185,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.640625,
+          "optimistic_p90": 3.41842695560444,
+          "optimistic_p99": 7.789805081274517,
+          "optimistic_max": 22.947090244433248
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 7.588630211243988,
+          "rmse": 9.538263550004555,
+          "bias": -1.9015493853796894,
+          "p90_abs": 15.520354764687022,
+          "p99_abs": 24.38763722267997,
+          "max_abs": 36.773537780229184,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.4375,
+          "optimistic_p90": 9.132841815708124,
+          "optimistic_p99": 21.56213238544901,
+          "optimistic_max": 26.495285965536468
+        }
+      },
+      "goodput_rate_mae": 1.5177260422487975,
+      "projected_steps": 121
+    },
+    {
+      "model": "flow_ridge_engine",
+      "mode": "state_reset",
+      "subset": "all",
+      "step": 5,
+      "scores": {
+        "awaiting_first_content": {
+          "n": 768,
+          "mae": 3.4845841599986236,
+          "rmse": 4.7762642830408355,
+          "bias": 0.24918997583406363,
+          "p90_abs": 8.135066801376029,
+          "p99_abs": 13.245002946943565,
+          "max_abs": 15.038751552357382,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.3919270833333333,
+          "optimistic_p90": 6.0,
+          "optimistic_p99": 12.034207678092391,
+          "optimistic_max": 14.458633755525105
+        },
+        "streaming": {
+          "n": 768,
+          "mae": 4.205423495826773,
+          "rmse": 5.466961594741118,
+          "bias": -0.5777855655755646,
+          "p90_abs": 9.062297779330706,
+          "p99_abs": 14.265086770613628,
+          "max_abs": 21.107928477274328
+        },
+        "reserved_cost": {
+          "n": 768,
+          "mae": 2.6001430181885774,
+          "rmse": 3.851956493059992,
+          "bias": -0.3556255047805999,
+          "p90_abs": 5.421522251886603,
+          "p99_abs": 15.643560527329758,
+          "max_abs": 23.101142221138133,
+          "optimistic_direction": "under",
+          "optimistic_fraction": 0.65234375,
+          "optimistic_p90": 3.729221076431856,
+          "optimistic_p99": 7.778082184133086,
+          "optimistic_max": 20.40103754268752
+        },
+        "cohort_ttft_met": {
+          "n": 768,
+          "mae": 6.888095040664287,
+          "rmse": 8.586721659273719,
+          "bias": -1.7497232615353437,
+          "p90_abs": 13.384263369256276,
+          "p99_abs": 22.305400483572498,
+          "max_abs": 31.889406295307776,
+          "optimistic_direction": "over",
+          "optimistic_fraction": 0.44140625,
+          "optimistic_p90": 8.670101218302072,
+          "optimistic_p99": 16.990665384596227,
+          "optimistic_max": 23.946120143036197
+        }
+      },
+      "goodput_rate_mae": 1.3776190081328574,
+      "projected_steps": 129
+    }
+  ],
+  "full_report_sha256": "bd806aa7b1143301ea5ec6a453fb8a31be51ae41b59596604be8c0802c5bfdf9",
+  "compressed_report_sha256": "5df7b862e5ed43bf0b009aadf7addace64db2a4978032dbec85221fe01349404"
+}
