@@ -16,6 +16,16 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Next collection: same-host fixed-cap range and repeats
+
+The [cap-range-v1 runbook](experiments/cap-range-v1.md) freezes a new development
+sweep at fixed caps **16/32/64/96**, two full-trace repeats per cap on one unchanged
+backend. A smoke-gated supervisor checks native CPU evidence, backend idleness,
+runtime/protocol identity and all six capture gates, stopping at the first failure.
+The offline analyzer re-audits raw captures and compares whole-run goodput and
+matched arrival cohorts. This is an exploratory range/repeatability study;
+**not collected yet**, no inferred noise floor/optimal cap, and C remains unused.
+
 ## Latest results: shared-client A/B system identification (2026-10-18 UTC)
 
 **[Experiment index, complete raw data and reproduction](results/shared-client-20261018/report.md)** ·
