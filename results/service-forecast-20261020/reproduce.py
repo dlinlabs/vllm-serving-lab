@@ -8,12 +8,15 @@ import gzip
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 
 HERE=Path(__file__).resolve().parent
 REPO=HERE.parents[1]
+AUDIT_SOURCES=('transition_features.py','identification_features.py','analyze_trace_dynamics.py','analyze_trace_pilot.py','trace_control.py')
 
 
 def digest(data):return hashlib.sha256(data).hexdigest()
@@ -53,6 +56,26 @@ def restore(destination):
     for name,text in pack['tables'].items():(destination/name).write_text(text)
 
 
+def historical_sources(destination, checksums, audit_checksums=None):
+    """Use hash-verified archived code when the current implementation has advanced."""
+    if set(checksums) != {'service_features.py', 'service_forecasts.py', 'transition_baselines.py', 'forecast_baselines.py'}:
+        raise ValueError('Unexpected historical source inventory')
+    sources=json.loads(gzip.decompress((HERE/'source-code.json.gz').read_bytes()))
+    if set(sources)!=set(checksums):raise ValueError('Historical source inventory mismatch')
+    for name,text in sources.items():
+        if not isinstance(text,str) or digest(text.encode())!=checksums[name]:
+            raise ValueError('Historical source fingerprint mismatch: '+name)
+    if audit_checksums is not None:
+        if set(audit_checksums)!=set(AUDIT_SOURCES):raise ValueError('Historical audit source inventory mismatch')
+        for name,checksum in audit_checksums.items():
+            text=(REPO/name).read_text()
+            if digest(text.encode())!=checksum:raise ValueError('Historical audit dependency changed: '+name)
+            sources[name]=text
+    destination.mkdir()
+    for name,text in sources.items():(destination/name).write_text(text)
+    return destination
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output-dir',required=True,type=Path)
@@ -67,8 +90,11 @@ def main():
     if digest(compressed)!=summary['compressed_report_sha256'] or digest(raw)!=summary['full_report_sha256']:
         raise ValueError('Archived forecast report fingerprint mismatch')
     expected=json.loads(raw)
-    for name,checksum in expected['code_sha256'].items():
-        if digest((REPO/name).read_bytes())!=checksum:raise ValueError('Use the exact scoring revision: '+name)
+    packed=(HERE/'dataset.json.gz').read_bytes()
+    if digest(packed)!=summary['dataset_pack_sha256']:raise ValueError('Derived-table archive fingerprint mismatch')
+    manifest_text=json.loads(gzip.decompress(packed))['manifest_text']
+    if digest(manifest_text.encode())!=summary['dataset_sha256']:raise ValueError('Dataset manifest fingerprint mismatch')
+    extraction=json.loads(manifest_text)['code_sha256']
     roots=[]
     if args.cap_root:
         roots=[args.shared_root.resolve()/archive/'results'/name for archive,name in
@@ -76,11 +102,19 @@ def main():
         roots += [args.cap_root.resolve()/'results/cap-range-v1'/('cap-range-v1-fixed-'+suffix)
                   for suffix in ('16-r1','32-r1','32-r2','64-r1','96-r1','96-r2')]
         if any(root==output or root in output.parents for root in roots):parser.error('Output must be outside raw captures')
-    output.mkdir(parents=True)
-    if roots:
-        subprocess.run([sys.executable,str(REPO/'service_features.py'),*map(str,roots),'--output-dir',str(output/'dataset')],check=True,cwd=REPO)
-    else:restore(output/'dataset')
-    subprocess.run([sys.executable,str(REPO/'service_forecasts.py'),str(output/'dataset'),'--output-dir',str(output/'scores')],check=True,cwd=REPO)
+    # Materialize all four original modules even for raw re-audits. Additional
+    # audit dependencies are imported from the repository, not the snapshot.
+    with tempfile.TemporaryDirectory(prefix='service-v2-sources-') as temporary:
+        scoring=historical_sources(Path(temporary)/'sources',expected['code_sha256'],
+                                   {name:extraction[name] for name in AUDIT_SOURCES})
+        env=dict(os.environ, PYTHONPATH=os.pathsep.join(filter(None,(str(REPO),os.environ.get('PYTHONPATH')))))
+        output.mkdir(parents=True)
+        if roots:
+            subprocess.run([sys.executable,str(scoring/'service_features.py'),*map(str,roots),'--output-dir',str(output/'dataset')],
+                           check=True,cwd=REPO,env=env)
+        else:restore(output/'dataset')
+        subprocess.run([sys.executable,str(scoring/'service_forecasts.py'),str(output/'dataset'),'--output-dir',str(output/'scores')],
+                       check=True,cwd=REPO,env=env)
     actual=json.loads((output/'scores/service_report.json').read_text())
     close(expected['source_runs'],actual['source_runs'])
     close(expected['scores'],actual['scores'])

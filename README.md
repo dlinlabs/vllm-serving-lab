@@ -16,7 +16,32 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
-## Service-context follow-up: forecasting versus cap decisions (2026-10-20 UTC)
+## Combined offline model review (2026-10-20 UTC)
+
+[Review findings and reproduced results](results/service-review-20261020/report.md) ·
+[Method and commands](experiments/service-forecast-reviewed-v3.md)
+
+The transition and service-context PRs are consolidated into #26. Review adds
+strict core-state/counter-scrape checks, default rejection of unseen applied-cap /
+planned-sequence patterns, an ordered cap-sequence comparator, and holdouts that
+exclude a cap's repeated captures plus its current/planned occurrences elsewhere.
+Historical results and hash-verified reproduction are preserved.
+
+Fresh audits reproduce all **2,400** derived rows exactly. Five-second
+chronological goodput rate MAE is **1.1399 req/s** for the ordered sequence model,
+versus **1.1304** without planned-cap inputs. Grouped transfer remains mixed.
+For candidate cap32, **576 / 768** origin queries propose an unseen applied-cap /
+planned-sequence pattern. These are diagnostic predictions, not measured gains.
+
+The offline model/audit regression suite passes **255 tests**; native CPU
+acceptance is still outstanding because this environment fails the PID/procfs
+preflight. C remains unused. A live MPC comparison needs measured low-cap
+switching response and a frozen validation plan, rather than further tuning on
+these same captures.
+
+![Combined review errors and action support](results/service-review-20261020/review-errors-and-support.png)
+
+## Previous service-context follow-up (2026-10-20 UTC)
 
 [Results and cap-coverage analysis](results/service-forecast-20261020/report.md) ·
 [Method and fast reproduction](experiments/service-forecast-v2.md)

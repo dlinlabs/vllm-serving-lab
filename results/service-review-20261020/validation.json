@@ -1,0 +1,106 @@
+{
+  "protocol": "service-forecast-reviewed-v3",
+  "acceptance": null,
+  "c_used": false,
+  "offline_regressions": {
+    "passed": 255,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 14.589,
+    "modules": [
+      "tests/test_service_forecasts.py",
+      "tests/test_transition_model.py",
+      "tests/test_identification_features.py",
+      "tests/test_forecast_baselines.py",
+      "tests/test_trace_dynamics.py",
+      "tests/test_trace_control.py",
+      "tests/test_experiment_protocol.py"
+    ],
+    "command": "python -m pytest -q tests/test_service_forecasts.py tests/test_transition_model.py tests/test_identification_features.py tests/test_forecast_baselines.py tests/test_trace_dynamics.py tests/test_trace_control.py tests/test_experiment_protocol.py",
+    "code_sha256": {
+      "tests/test_service_forecasts.py": "0004bc98f5777744c2ea85a4588b209b02531b2bffe3cd393e73bc4035522097",
+      "tests/test_transition_model.py": "fa4dfc955fdaaa3fb6e147649fa35848e33153c0796892eb9632bc88ef8934da",
+      "tests/test_identification_features.py": "222e7173cfca7578c149abc49c8afc0dd72dd5870c41dde5cb02d4eeff8b2ca4",
+      "tests/test_forecast_baselines.py": "204c1a7621abc2a9f00549b52cd6cc367f2d45f8ae9cc68e4d4bdc3c0cf71469",
+      "tests/test_trace_dynamics.py": "eee30fe7e73eba02476cd623da3bef1ad07e5ce76fae0976625cd935fd6e4919",
+      "tests/test_trace_control.py": "77bc0acdec41ff012a9f5994cc80c71075c5346d1ffeee608d9233443760af10",
+      "tests/test_experiment_protocol.py": "e7a2127c069332118d3b42b59601c0801b3cc47df23eafc44c7c9f2ec60e420c",
+      "service_features.py": "5b8088fddeb78402676781219aefdf173e93279973bd1f7d42e5971de4aa317e",
+      "service_forecasts.py": "255b998a0acd381b51f30408aca9f7a75bd49088dc6dc783dddf9f7679537534",
+      "transition_baselines.py": "01634ccb45f97ca9cda0d6760b8352245586c5a711b3ad625dd10f43aebc6bec",
+      "forecast_baselines.py": "e7abca44a0592e921cf127d077e078600dd08bc97bc75836a13ed2c32c849c18"
+    }
+  },
+  "native_acceptance": {
+    "status": "not_run_preflight_blocked",
+    "evidence": "native-preflight-blocked.json",
+    "revision_attempted": "1f9d214c19fc4c629bbf3df981b9edcb47339dad",
+    "final_review_native_pass": false,
+    "reason": "procfs_pid_namespace_unverified; guard retained"
+  },
+  "raw_reaudit": {
+    "qualified_captures": 8,
+    "derived_rows": 2400,
+    "source_run_and_table_entries_identical_to_v2": true,
+    "code_sha256": {
+      "service_features.py": "5b8088fddeb78402676781219aefdf173e93279973bd1f7d42e5971de4aa317e",
+      "transition_features.py": "6664363beafd5cc779a360c77397b717d29e1ff71c7f8a992e19ff0bda123232",
+      "identification_features.py": "582af57b917d06b2eecfcdf3789a9e61b24fa75588d7ad2476a25892c860a38f",
+      "analyze_trace_dynamics.py": "cde99f55dcd93c07be20e1b8989b4ccd3443a887f97820f3f313ccacf30407be",
+      "analyze_trace_pilot.py": "4c9a093e78db98a603ad9ffd361e072e1e627f4c109d0140616b3a7f75512820",
+      "trace_control.py": "8d0d2ad169847e3e5ff02dfe53d8fba459403df741cf7c30d0b4da96ee962687"
+    },
+    "source_runs": [
+      {
+        "name": "shared-client-a-r1",
+        "sha256": "d5523d8d63503646a47c39367d2c204951191c2e407a5762e4228d0af373f32c"
+      },
+      {
+        "name": "shared-client-b-r1",
+        "sha256": "f4952cdcfadcd6de5011309b503724328286a14d94ec0e2ae333dcb8515b8dc7"
+      },
+      {
+        "name": "cap-range-v1-fixed-16-r1",
+        "sha256": "d2b71046dd1f340129b84a8d2a150d0907990ea8ee4ae077a7bd06f94c97e9e4"
+      },
+      {
+        "name": "cap-range-v1-fixed-32-r1",
+        "sha256": "204afbefdac33d574edeaf54fc0b58509c926d4d57624452a48bfcf73552e7bd"
+      },
+      {
+        "name": "cap-range-v1-fixed-32-r2",
+        "sha256": "2995b60db1416cb0e21acf437ce2c1b5748e4fe07f64d36938103eaa8576f687"
+      },
+      {
+        "name": "cap-range-v1-fixed-64-r1",
+        "sha256": "5ef06f27a215654a63939ba0193684203fdb7a338e8c07258618f4c50c15fcda"
+      },
+      {
+        "name": "cap-range-v1-fixed-96-r1",
+        "sha256": "ab03ad7faef4e04db2c27b5a736c2ecdb2106bfea63db113825276c1fa55924b"
+      },
+      {
+        "name": "cap-range-v1-fixed-96-r2",
+        "sha256": "691a5d4d725392e6e97d136ce44ad1cdd109abff00f336eb2afa4daf60541098"
+      }
+    ]
+  },
+  "legacy_scores": {
+    "exactly_unchanged_groups": 576,
+    "verification": {
+      "scores_match": true,
+      "cap_diagnostics_match": true,
+      "raw_reaudited_this_invocation": false,
+      "c_used": false,
+      "acceptance": null
+    }
+  },
+  "reviewed_reproduction": {
+    "scores_match": true,
+    "cap_diagnostics_match": true,
+    "fitted_coefficients_match": true,
+    "raw_reaudited_this_invocation": false,
+    "c_used": false,
+    "acceptance": null
+  }
+}

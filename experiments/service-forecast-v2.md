@@ -6,6 +6,11 @@ acceptance test. C stays uncollected/unscored. No serving code, fixed cost formu
 capture gates or original files are changed. Settings are recorded in
 [service-forecast-v2.json](service-forecast-v2.json).
 
+This document records the historical six-model analysis. Its reproducer now
+verifies and uses the archived original sources. The current root CLI implements
+the [combined reviewed revision](service-forecast-reviewed-v3.md), with a separate
+report and settings; it does not overwrite these historical results.
+
 ## Why direct horizons
 
 The previous independently learned one-second flow heads accumulated error when

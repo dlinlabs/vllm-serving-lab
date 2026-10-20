@@ -21,7 +21,8 @@ RATE_FIELDS = tuple(field for key in COUNTERS for field in (key + '_rate', key +
 
 
 def counter_values(point, key):
-    metric = (point.get('metrics') or {}).get(key)
+    metrics = point.get('metrics')
+    metric = metrics.get(key) if isinstance(metrics, dict) else None
     if not isinstance(metric, dict) or metric.get('available') is not True or metric.get('type') != 'counter':
         return None
     samples = metric.get('samples')
@@ -29,6 +30,8 @@ def counter_values(point, key):
         return None
     values = {}
     for sample in samples:
+        if not isinstance(sample, dict):
+            return None
         name, labels, value = sample.get('name'), sample.get('labels'), sample.get('value')
         if (not isinstance(name, str) or not name.endswith('_total') or not isinstance(labels, dict) or
                 not finite(value) or value < 0 or any(not isinstance(k, str) or not isinstance(v, str) for k, v in labels.items())):
@@ -41,6 +44,8 @@ def counter_values(point, key):
 
 
 def counter_series(points, start):
+    if not finite(start):
+        raise ValueError('Counter origin must be finite')
     series = []
     for point in points:
         finished, received, sent = (point.get(k) for k in ('finished_at', 'received_at', 'sent_at'))
@@ -61,6 +66,8 @@ def counter_series(points, start):
 
 
 def rate_features(series, available_times, moment):
+    if not finite(moment):
+        raise ValueError('Counter decision time must be finite')
     result = {field: (True if field.endswith('_missing') else None) for field in RATE_FIELDS}
     index = bisect_right(available_times, moment) - 1
     if index < 1:
@@ -70,7 +77,11 @@ def rate_features(series, available_times, moment):
             current['exporter'] != previous['exporter'] or moment - current['sent_s'] > MAX_COUNTER_AGE_S):
         return result
     gap = current['received_s'] - previous['received_s']
-    if not 0 < gap <= MAX_COUNTER_AGE_S:
+    send_gap = current['sent_s'] - previous['sent_s']
+    rtts = [sample['received_s'] - sample['sent_s'] for sample in (previous, current)]
+    if (not 0 < gap <= MAX_COUNTER_AGE_S or not 0 < send_gap <= MAX_COUNTER_AGE_S or
+            any(not 0 <= rtt <= MAX_COUNTER_AGE_S for rtt in rtts) or
+            previous['received_s'] > current['sent_s']):
         return result
     for key in COUNTERS:
         a, b = previous['values'][key], current['values'][key]
@@ -156,6 +167,9 @@ def main():
     parser.add_argument('--output-dir', required=True, type=Path)
     parser.add_argument('--workers', type=int, default=2, choices=(1, 2, 4))
     args = parser.parse_args()
+    sources = ('service_features.py', 'transition_features.py', 'identification_features.py',
+               'analyze_trace_dynamics.py', 'analyze_trace_pilot.py', 'trace_control.py')
+    code = {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in sources}
     roots, output = [r.resolve() for r in args.runs], args.output_dir.resolve()
     if len({r.name for r in roots}) != len(roots) or output.exists() or any(r == output or r in output.parents for r in roots):
         parser.error('Use unique run names and a fresh output outside raw captures')
@@ -170,6 +184,8 @@ def main():
     except (ValueError, OSError, KeyError) as exc:
         parser.error(str(exc))
     entries = []
+    if code != {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in sources}:
+        parser.error('Extraction source changed while processing captures')
     if len({meta['raw_sha256']['manifest.json'] for meta, _ in results.values()}) != len(results):
         parser.error('Duplicate raw capture under different names')
     output.mkdir(parents=True)
@@ -179,11 +195,9 @@ def main():
         filename = meta['name'] + '.jsonl'
         (output / filename).write_bytes(data)
         entries.append(dict(meta=meta, file=filename, rows=len(rows), sha256=hashlib.sha256(data).hexdigest()))
-    sources = ('service_features.py', 'transition_features.py', 'identification_features.py',
-               'analyze_trace_dynamics.py', 'analyze_trace_pilot.py', 'trace_control.py')
     dump(output / 'dataset.json', dict(protocol=PROTOCOL, service_protocol=SERVICE_PROTOCOL,
          horizons=list(HORIZONS), step_s=1., runs=entries, acceptance=None, c_used=False,
-         code_sha256={name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in sources}))
+         code_sha256=code))
 
 
 if __name__ == '__main__':

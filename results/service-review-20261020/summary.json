@@ -1,0 +1,522 @@
+{
+  "protocol": "service-forecast-reviewed-v3",
+  "acceptance": null,
+  "c_used": false,
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.3.5"
+  },
+  "aggregates": [
+    {
+      "split": "chronological",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 800,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 3,
+      "rate_mae": {
+        "direct_ridge": 2.1736332850678397,
+        "context_ridge": 2.0980098667405245,
+        "gauge_ridge": 2.088085399704625,
+        "counter_ridge": 2.0936583027050357,
+        "service_quadratic": 2.092003759740809,
+        "service_no_plan": 2.09233020063845,
+        "service_sequence": 2.093570853574104
+      }
+    },
+    {
+      "split": "chronological",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 792,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 6,
+      "rate_mae": {
+        "direct_ridge": 1.5680947056352164,
+        "context_ridge": 1.5110439211599853,
+        "gauge_ridge": 1.5095168505174439,
+        "counter_ridge": 1.5147470024838425,
+        "service_quadratic": 1.5133653073645843,
+        "service_no_plan": 1.51237400946842,
+        "service_sequence": 1.5147227127580514
+      }
+    },
+    {
+      "split": "chronological",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 768,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 15,
+      "rate_mae": {
+        "direct_ridge": 1.1683503086655875,
+        "context_ridge": 1.1483915969557799,
+        "gauge_ridge": 1.1395104651776655,
+        "counter_ridge": 1.1391811667191292,
+        "service_quadratic": 1.1353856047082216,
+        "service_no_plan": 1.1303786473797541,
+        "service_sequence": 1.1399348243143577
+      }
+    },
+    {
+      "split": "fixed_to_scheduled",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 600,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 250,
+      "rate_mae": {
+        "direct_ridge": 2.0736615271010947,
+        "context_ridge": 1.935558790012611,
+        "gauge_ridge": 1.8571034846419956,
+        "counter_ridge": 1.8681235685794741,
+        "service_quadratic": 2.0226061647553637,
+        "service_no_plan": 1.8681753790921252,
+        "service_sequence": 1.8681525475802039
+      }
+    },
+    {
+      "split": "fixed_to_scheduled",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 598,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 260,
+      "rate_mae": {
+        "direct_ridge": 1.529516608137832,
+        "context_ridge": 1.4356900739927136,
+        "gauge_ridge": 1.3995450449520044,
+        "counter_ridge": 1.4189361815496262,
+        "service_quadratic": 1.4632890943566648,
+        "service_no_plan": 1.418009554378322,
+        "service_sequence": 1.4187130301471962
+      }
+    },
+    {
+      "split": "fixed_to_scheduled",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 592,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 290,
+      "rate_mae": {
+        "direct_ridge": 1.2412973008106445,
+        "context_ridge": 1.1911345697220252,
+        "gauge_ridge": 1.15757331706565,
+        "counter_ridge": 1.1596970508941131,
+        "service_quadratic": 1.1149978682843922,
+        "service_no_plan": 1.1589088088310717,
+        "service_sequence": 1.160005435958129
+      }
+    },
+    {
+      "split": "scheduled_to_fixed",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 1800,
+      "extrapolated_rows": 900,
+      "unseen_action_rows": 900,
+      "rate_mae": {
+        "direct_ridge": 2.1339004880153403,
+        "context_ridge": 2.0797608204680067,
+        "gauge_ridge": 2.11929095124897,
+        "counter_ridge": 2.110063360906693,
+        "service_quadratic": 2.1747812052902393,
+        "service_no_plan": 2.102309534631759,
+        "service_sequence": 2.109919086036113
+      }
+    },
+    {
+      "split": "scheduled_to_fixed",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 1794,
+      "extrapolated_rows": 897,
+      "unseen_action_rows": 897,
+      "rate_mae": {
+        "direct_ridge": 1.7195437789126524,
+        "context_ridge": 1.6359790019835845,
+        "gauge_ridge": 1.6369486795848298,
+        "counter_ridge": 1.6828312879277958,
+        "service_quadratic": 1.884449791606984,
+        "service_no_plan": 1.6557683443554783,
+        "service_sequence": 1.6827758817348155
+      }
+    },
+    {
+      "split": "scheduled_to_fixed",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 1776,
+      "extrapolated_rows": 888,
+      "unseen_action_rows": 888,
+      "rate_mae": {
+        "direct_ridge": 1.5288239280946443,
+        "context_ridge": 1.484904388293335,
+        "gauge_ridge": 1.4986477247497447,
+        "counter_ridge": 1.4959810930361654,
+        "service_quadratic": 1.86513951040806,
+        "service_no_plan": 1.4156053442731475,
+        "service_sequence": 1.4969664771301998
+      }
+    },
+    {
+      "split": "exclude_cap:16.0",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 300,
+      "extrapolated_rows": 300,
+      "unseen_action_rows": 300,
+      "rate_mae": {
+        "direct_ridge": 2.5041130586641014,
+        "context_ridge": 2.588360818443031,
+        "gauge_ridge": 2.5413309625301803,
+        "counter_ridge": 2.5378811288811636,
+        "service_quadratic": 3.237349505399032,
+        "service_no_plan": 2.5431066125908863,
+        "service_sequence": 2.5380533514450825
+      }
+    },
+    {
+      "split": "exclude_cap:16.0",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 299,
+      "extrapolated_rows": 299,
+      "unseen_action_rows": 299,
+      "rate_mae": {
+        "direct_ridge": 1.4038390480747722,
+        "context_ridge": 1.3872139101206316,
+        "gauge_ridge": 1.3637001359608534,
+        "counter_ridge": 1.4041333556701516,
+        "service_quadratic": 2.329200711182427,
+        "service_no_plan": 1.4058281106582127,
+        "service_sequence": 1.4041400669415511
+      }
+    },
+    {
+      "split": "exclude_cap:16.0",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 296,
+      "extrapolated_rows": 296,
+      "unseen_action_rows": 296,
+      "rate_mae": {
+        "direct_ridge": 0.8083070873893028,
+        "context_ridge": 0.7703178397047143,
+        "gauge_ridge": 0.753762284408322,
+        "counter_ridge": 0.8046167489437852,
+        "service_quadratic": 2.1487142049234143,
+        "service_no_plan": 0.8090095537647143,
+        "service_sequence": 0.8043055098498666
+      }
+    },
+    {
+      "split": "exclude_cap:32.0",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 600,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 600,
+      "rate_mae": {
+        "direct_ridge": 2.5770295053152297,
+        "context_ridge": 2.577286768517596,
+        "gauge_ridge": 2.5514053595454644,
+        "counter_ridge": 2.5268018663429146,
+        "service_quadratic": 2.476828880629624,
+        "service_no_plan": 2.5205398363637594,
+        "service_sequence": 2.5265555709244967
+      }
+    },
+    {
+      "split": "exclude_cap:32.0",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 598,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 598,
+      "rate_mae": {
+        "direct_ridge": 1.9815798547143724,
+        "context_ridge": 1.9032605108996299,
+        "gauge_ridge": 1.8859039180147694,
+        "counter_ridge": 1.9193774944993343,
+        "service_quadratic": 1.8836136488749322,
+        "service_no_plan": 1.911071899239807,
+        "service_sequence": 1.919350112947299
+      }
+    },
+    {
+      "split": "exclude_cap:32.0",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 592,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 592,
+      "rate_mae": {
+        "direct_ridge": 1.460587690401617,
+        "context_ridge": 1.4040215600921175,
+        "gauge_ridge": 1.3819260249311638,
+        "counter_ridge": 1.4230186530515008,
+        "service_quadratic": 1.6102494811442192,
+        "service_no_plan": 1.4140442518899345,
+        "service_sequence": 1.4228774635904464
+      }
+    },
+    {
+      "split": "exclude_cap:64.0",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 300,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 300,
+      "rate_mae": {
+        "direct_ridge": 2.3628420732765725,
+        "context_ridge": 2.331090689196836,
+        "gauge_ridge": 2.3418329162282445,
+        "counter_ridge": 2.4409305769338765,
+        "service_quadratic": 2.813877382929258,
+        "service_no_plan": 2.440936195315285,
+        "service_sequence": 2.4409310714246817
+      }
+    },
+    {
+      "split": "exclude_cap:64.0",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 299,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 299,
+      "rate_mae": {
+        "direct_ridge": 1.8132769427099757,
+        "context_ridge": 1.7195322929393027,
+        "gauge_ridge": 1.7439294601492903,
+        "counter_ridge": 1.8026908688030907,
+        "service_quadratic": 1.8669273009007918,
+        "service_no_plan": 1.8016297094533262,
+        "service_sequence": 1.8026747502404
+      }
+    },
+    {
+      "split": "exclude_cap:64.0",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 296,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 296,
+      "rate_mae": {
+        "direct_ridge": 1.2831429437030066,
+        "context_ridge": 1.264130553566363,
+        "gauge_ridge": 1.291420983979037,
+        "counter_ridge": 1.3016673740926317,
+        "service_quadratic": 1.3029915463756854,
+        "service_no_plan": 1.3004847799033865,
+        "service_sequence": 1.3019334659220574
+      }
+    },
+    {
+      "split": "exclude_cap:96.0",
+      "horizon_s": 1,
+      "subset": "all",
+      "n": 600,
+      "extrapolated_rows": 600,
+      "unseen_action_rows": 600,
+      "rate_mae": {
+        "direct_ridge": 2.2980085715506195,
+        "context_ridge": 2.889842653177442,
+        "gauge_ridge": 2.9344937975177032,
+        "counter_ridge": 2.4400006470483824,
+        "service_quadratic": 2.337533655339945,
+        "service_no_plan": 2.4316623726654285,
+        "service_sequence": 2.4394946505550217
+      }
+    },
+    {
+      "split": "exclude_cap:96.0",
+      "horizon_s": 2,
+      "subset": "all",
+      "n": 598,
+      "extrapolated_rows": 598,
+      "unseen_action_rows": 598,
+      "rate_mae": {
+        "direct_ridge": 1.7573355283506649,
+        "context_ridge": 1.8247768296152866,
+        "gauge_ridge": 1.8375720485770186,
+        "counter_ridge": 1.818921296140119,
+        "service_quadratic": 1.7680445257761368,
+        "service_no_plan": 1.8183727085206525,
+        "service_sequence": 1.8189241759515862
+      }
+    },
+    {
+      "split": "exclude_cap:96.0",
+      "horizon_s": 5,
+      "subset": "all",
+      "n": 592,
+      "extrapolated_rows": 592,
+      "unseen_action_rows": 592,
+      "rate_mae": {
+        "direct_ridge": 1.4077921304244136,
+        "context_ridge": 1.4049604016977777,
+        "gauge_ridge": 1.4201641811822432,
+        "counter_ridge": 1.4599747995365675,
+        "service_quadratic": 1.6192455621027122,
+        "service_no_plan": 1.4488939971855408,
+        "service_sequence": 1.4596338521115315
+      }
+    }
+  ],
+  "chronological_support": [
+    {
+      "split": "chronological",
+      "horizon_s": 5,
+      "subset": "seen_action_pattern",
+      "n": 753,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 0,
+      "rate_mae": {
+        "direct_ridge": 1.1416758022641487,
+        "context_ridge": 1.1213130152222275,
+        "gauge_ridge": 1.1138222136990925,
+        "counter_ridge": 1.1132235815994003,
+        "service_quadratic": 1.1089594681919532,
+        "service_no_plan": 1.1122404318709016,
+        "service_sequence": 1.1137092683705672
+      }
+    },
+    {
+      "split": "chronological",
+      "horizon_s": 5,
+      "subset": "unseen_action_pattern",
+      "n": 15,
+      "extrapolated_rows": 0,
+      "unseen_action_rows": 15,
+      "rate_mae": {
+        "direct_ridge": 2.507410530017823,
+        "context_ridge": 2.5077363999801046,
+        "gauge_ridge": 2.4290606894020295,
+        "counter_ridge": 2.442251939729512,
+        "service_quadratic": 2.4619776578248787,
+        "service_no_plan": 2.0409170659241562,
+        "service_sequence": 2.45645773269264
+      }
+    }
+  ],
+  "note": "Retrospective development, not MPC acceptance. Direct forecasts are clipped at zero but do not enforce flow conservation. Seen action patterns do not certify causal/state coverage. Cap rankings explicitly override unsupported-action guards; no counterfactual outcomes exist for a common origin state. Exclude-cap splits remove current/planned observations at that cap, but do not erase earlier workload history or host/runtime confounds.",
+  "code_sha256": {
+    "service_features.py": "5b8088fddeb78402676781219aefdf173e93279973bd1f7d42e5971de4aa317e",
+    "service_forecasts.py": "255b998a0acd381b51f30408aca9f7a75bd49088dc6dc783dddf9f7679537534",
+    "transition_baselines.py": "01634ccb45f97ca9cda0d6760b8352245586c5a711b3ad625dd10f43aebc6bec",
+    "forecast_baselines.py": "e7abca44a0592e921cf127d077e078600dd08bc97bc75836a13ed2c32c849c18"
+  },
+  "dataset_sha256": "fe8f65542131de388801e660aa4c42530ceec6683c6c05931503a1697e784d44",
+  "source_runs": [
+    {
+      "name": "shared-client-a-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "d5523d8d63503646a47c39367d2c204951191c2e407a5762e4228d0af373f32c"
+    },
+    {
+      "name": "shared-client-b-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "f4952cdcfadcd6de5011309b503724328286a14d94ec0e2ae333dcb8515b8dc7"
+    },
+    {
+      "name": "cap-range-v1-fixed-16-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "d2b71046dd1f340129b84a8d2a150d0907990ea8ee4ae077a7bd06f94c97e9e4"
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "204afbefdac33d574edeaf54fc0b58509c926d4d57624452a48bfcf73552e7bd"
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r2",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "2995b60db1416cb0e21acf437ce2c1b5748e4fe07f64d36938103eaa8576f687"
+    },
+    {
+      "name": "cap-range-v1-fixed-64-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "5ef06f27a215654a63939ba0193684203fdb7a338e8c07258618f4c50c15fcda"
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r1",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "ab03ad7faef4e04db2c27b5a736c2ecdb2106bfea63db113825276c1fa55924b"
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r2",
+      "context": {
+        "verified_rows": 300,
+        "missing_rate_rows": {},
+        "counter_max_age_s": 3.0
+      },
+      "table_sha256": "691a5d4d725392e6e97d136ce44ad1cdd109abff00f336eb2afa4daf60541098"
+    }
+  ],
+  "unsupported_candidate_counts": {
+    "16.0": 672,
+    "32.0": 576,
+    "96.0": 455,
+    "64.0": 288
+  },
+  "candidate_origins": 768,
+  "predicted_best_candidates": {
+    "direct_ridge": {
+      "16.0": 768
+    },
+    "context_ridge": {
+      "16.0": 768
+    },
+    "gauge_ridge": {
+      "16.0": 768
+    },
+    "counter_ridge": {
+      "16.0": 768
+    },
+    "service_quadratic": {
+      "96.0": 203,
+      "64.0": 191,
+      "16.0": 293,
+      "32.0": 81
+    },
+    "service_no_plan": {
+      "16.0,32.0,64.0,96.0": 768
+    },
+    "service_sequence": {
+      "16.0": 768
+    }
+  },
+  "full_report_sha256": "881eeafac19663d69e4ad8124371568509429bfbbcfc57fbb68dfb8731f4c64d",
+  "compressed_report_sha256": "16166b0e5bbcfe93b5a43ec91d81814f6f49625c79a39ce1090b44704ae74a27",
+  "dataset_pack_sha256": "6056950cdabe764efcd94f9e70cf083960298472fe81414a8219717144b10ac8"
+}
