@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "protocol": "cap-range-v1",
+  "status": "frozen",
+  "purpose": "Same-host exploratory fixed-cap range and repeatability study; no held-out C, model acceptance or MPC actuation",
+  "traces": {
+    "smoke": {
+      "path": "results/trace-smoke-96/trace.json",
+      "sha256": "9998c82da5174ec41484985f7b5cf77a658992cee5011fc38bb7155caf065294"
+    },
+    "development": {
+      "path": "results/trace-experiment-96-r1/trace.json",
+      "sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e"
+    }
+  },
+  "schedules": {
+    "fixed-16": {
+      "fixed_budget": 16
+    },
+    "fixed-32": {
+      "fixed_budget": 32
+    },
+    "fixed-64": {
+      "fixed_budget": 64
+    },
+    "fixed-96": {
+      "fixed_budget": 96
+    }
+  },
+  "replay": {
+    "ttft_slo": 0.5,
+    "e2e_slo": null,
+    "max_scheduling_lag": 0.05,
+    "max_budget_lag": 0.05,
+    "cache_policy": "disabled",
+    "gateway_diagnostics": true,
+    "engine_observations": false,
+    "runner_diagnostics": true,
+    "runner_gc_policy": "defer",
+    "runner_max_rss_mib": 1536,
+    "sampler_mode": "process",
+    "warmup_requests": 3,
+    "max_pending": 1000,
+    "request_timeout": 120,
+    "drain_timeout": 120,
+    "startup_timeout": 120,
+    "shared_upstream_client": true
+  },
+  "runs": [
+    {
+      "name": "cap-range-v1-smoke-96",
+      "trace": "smoke",
+      "schedule": "fixed-96",
+      "role": "development"
+    },
+    {
+      "name": "cap-range-v1-fixed-64-r1",
+      "trace": "development",
+      "schedule": "fixed-64",
+      "role": "development",
+      "replicate": 1
+    },
+    {
+      "name": "cap-range-v1-fixed-16-r1",
+      "trace": "development",
+      "schedule": "fixed-16",
+      "role": "development",
+      "replicate": 1
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r1",
+      "trace": "development",
+      "schedule": "fixed-96",
+      "role": "development",
+      "replicate": 1
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r1",
+      "trace": "development",
+      "schedule": "fixed-32",
+      "role": "development",
+      "replicate": 1
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r2",
+      "trace": "development",
+      "schedule": "fixed-32",
+      "role": "development",
+      "replicate": 2
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r2",
+      "trace": "development",
+      "schedule": "fixed-96",
+      "role": "development",
+      "replicate": 2
+    },
+    {
+      "name": "cap-range-v1-fixed-16-r2",
+      "trace": "development",
+      "schedule": "fixed-16",
+      "role": "development",
+      "replicate": 2
+    },
+    {
+      "name": "cap-range-v1-fixed-64-r2",
+      "trace": "development",
+      "schedule": "fixed-64",
+      "role": "development",
+      "replicate": 2
+    }
+  ],
+  "qualification": {
+    "order": [
+      "cap-range-v1-smoke-96",
+      "cap-range-v1-fixed-64-r1",
+      "cap-range-v1-fixed-16-r1",
+      "cap-range-v1-fixed-96-r1",
+      "cap-range-v1-fixed-32-r1",
+      "cap-range-v1-fixed-32-r2",
+      "cap-range-v1-fixed-96-r2",
+      "cap-range-v1-fixed-16-r2",
+      "cap-range-v1-fixed-64-r2"
+    ],
+    "attempts_per_run": 1,
+    "required": [
+      "valid",
+      "load_fidelity",
+      "control_fidelity",
+      "diagnostic_integrity",
+      "runner_diagnostic_integrity",
+      "runner_gc_integrity"
+    ],
+    "on_failure": "Retain all evidence and stop; no automatic retry, resume, threshold relaxation or selective replacement"
+  },
+  "design": {
+    "repeats_per_cap": 2,
+    "blocks": [
+      [
+        64,
+        16,
+        96,
+        32
+      ],
+      [
+        32,
+        96,
+        16,
+        64
+      ]
+    ],
+    "allocation": "Prespecified mirrored order balances ordinal position against linear drift; not randomized and not full carryover balance",
+    "fixed_cap_seconds": 300,
+    "initial_condition": "One unchanged local backend and GPU; backend idle before and after each fresh gateway; three sequential warmups then gateway drained",
+    "ttft_slo_seconds": 0.5,
+    "cost_coefficients": {
+      "cost_intercept": 0.259,
+      "input_token_cost": 0.000758,
+      "output_token_cost": 0.0052083333
+    },
+    "primary_endpoint": "Successful complete streams with scheduled-arrival TTFT <=0.5 seconds, divided by all 300 arrival seconds",
+    "secondary_endpoints": [
+      "rejection fraction of offered",
+      "scheduled TTFT percentiles among successful requests",
+      "SLO attainment among accepted",
+      "input-size strata",
+      "matched 30-second offered-arrival cohorts",
+      "repeat differences per cap"
+    ],
+    "analysis": "Whole-run endpoint includes startup; matched 30-second bins are descriptive correlated cohorts, not independent experiments; two repeats do not identify a statistical noise floor or optimal cap",
+    "held_out": "C stays uncollected and unscored; this replaces no historical frozen declaration"
+  }
+}

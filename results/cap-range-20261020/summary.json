@@ -1,0 +1,1421 @@
+{
+  "schema_version": 1,
+  "attempt_status": "failed_incomplete",
+  "original_suite_valid": false,
+  "capture_commit": "31f1079d47a30b390e5df02095a694688b90f8a9",
+  "native_cpu_test_cases": 504,
+  "original_files_verified": 161,
+  "supervisor_artifact_hashes_verified": 119,
+  "source_archive_sha256": "1cfa90db960135ef6ea2d8635c36f0d45bfbb1417313eafa99278e31e85891cb",
+  "raw_reports_reproduced": 8,
+  "qualified_fixed_runs": 6,
+  "missing_runs": [
+    "cap-range-v1-fixed-64-r2"
+  ],
+  "runs": [
+    {
+      "name": "cap-range-v1-smoke-96",
+      "cap": 96.0,
+      "qualified": true,
+      "supervisor_status": "passed",
+      "raw_report_reproduced": true,
+      "gate_verdicts": {
+        "integrity": true,
+        "load_fidelity": true,
+        "control_fidelity": true,
+        "diagnostic_integrity": true,
+        "runner_diagnostic_integrity": true,
+        "runner_gc_integrity": true
+      },
+      "gate_issues": {},
+      "performance": {
+        "attempted": 787,
+        "success": 255,
+        "rejected": 532,
+        "failed": 0,
+        "client_p99_ttft": 2.6999779937801214,
+        "scheduled_p99_ttft": 2.701261780129935,
+        "client_p99_e2e": 8.887169244180113,
+        "slo_successes": 145,
+        "slo_goodput_per_arrival_second": 4.833333333333333,
+        "slo_success_fraction_of_offered": 0.18424396442185514,
+        "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+      },
+      "performance_by_input_size": {
+        "long_input": {
+          "attempted": 636,
+          "success": 196,
+          "rejected": 440,
+          "failed": 0,
+          "client_p99_ttft": 2.6935720160010534,
+          "scheduled_p99_ttft": 2.6944118696570514,
+          "client_p99_e2e": 8.886454867150315,
+          "slo_successes": 108,
+          "slo_goodput_per_arrival_second": 3.6,
+          "slo_success_fraction_of_offered": 0.16981132075471697,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "medium_input": {
+          "attempted": 136,
+          "success": 54,
+          "rejected": 82,
+          "failed": 0,
+          "client_p99_ttft": 2.7684786341803918,
+          "scheduled_p99_ttft": 2.7697431909864463,
+          "client_p99_e2e": 8.913156897991284,
+          "slo_successes": 33,
+          "slo_goodput_per_arrival_second": 1.1,
+          "slo_success_fraction_of_offered": 0.2426470588235294,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "short_input": {
+          "attempted": 15,
+          "success": 5,
+          "rejected": 10,
+          "failed": 0,
+          "client_p99_ttft": 0.5177171707212983,
+          "scheduled_p99_ttft": 0.5190380523563363,
+          "client_p99_e2e": 6.47214132755922,
+          "slo_successes": 4,
+          "slo_goodput_per_arrival_second": 0.13333333333333333,
+          "slo_success_fraction_of_offered": 0.26666666666666666,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        }
+      },
+      "load_fidelity": {
+        "valid": true,
+        "issues": [],
+        "p99_scheduling_lag": 0.0045629729313805,
+        "max_scheduling_lag": 0.006354612793074921
+      },
+      "timing": {
+        "p99_state_age": 0.00182565088976844,
+        "max_state_age": 0.0018484909996914212,
+        "p99_metrics_roundtrip": 0.008492910148888772,
+        "max_state_poll_gap": 1.0136075939990405,
+        "p99_event_loop_lag": 0.01418722790294853,
+        "max_event_loop_lag": 0.018351263999647927
+      },
+      "duration_seconds": 30,
+      "cohorts_30s": [
+        {
+          "offered": 787,
+          "success": 255,
+          "rejected": 532,
+          "good": 145
+        }
+      ],
+      "git_dirty_self_reported": true
+    },
+    {
+      "name": "cap-range-v1-fixed-64-r1",
+      "cap": 64.0,
+      "qualified": true,
+      "supervisor_status": "passed",
+      "raw_report_reproduced": true,
+      "gate_verdicts": {
+        "integrity": true,
+        "load_fidelity": true,
+        "control_fidelity": true,
+        "diagnostic_integrity": true,
+        "runner_diagnostic_integrity": true,
+        "runner_gc_integrity": true
+      },
+      "gate_issues": {},
+      "performance": {
+        "attempted": 7643,
+        "success": 1954,
+        "rejected": 5688,
+        "failed": 1,
+        "client_p99_ttft": 1.9520319088698312,
+        "scheduled_p99_ttft": 1.953600024860462,
+        "client_p99_e2e": 6.886970572969877,
+        "slo_successes": 680,
+        "slo_goodput_per_arrival_second": 2.2666666666666666,
+        "slo_success_fraction_of_offered": 0.08897029962056784,
+        "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+      },
+      "performance_by_input_size": {
+        "medium_input": {
+          "attempted": 1424,
+          "success": 438,
+          "rejected": 985,
+          "failed": 1,
+          "client_p99_ttft": 1.6716072386607264,
+          "scheduled_p99_ttft": 1.6729460112263403,
+          "client_p99_e2e": 6.5900724877618995,
+          "slo_successes": 184,
+          "slo_goodput_per_arrival_second": 0.6133333333333333,
+          "slo_success_fraction_of_offered": 0.12921348314606743,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "long_input": {
+          "attempted": 6035,
+          "success": 1445,
+          "rejected": 4590,
+          "failed": 0,
+          "client_p99_ttft": 2.0312281776389853,
+          "scheduled_p99_ttft": 2.0317657527764084,
+          "client_p99_e2e": 6.906422682200791,
+          "slo_successes": 462,
+          "slo_goodput_per_arrival_second": 1.54,
+          "slo_success_fraction_of_offered": 0.07655343827671914,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "short_input": {
+          "attempted": 184,
+          "success": 71,
+          "rejected": 113,
+          "failed": 0,
+          "client_p99_ttft": 1.842915779300164,
+          "scheduled_p99_ttft": 1.8440382376556943,
+          "client_p99_e2e": 6.941152915498604,
+          "slo_successes": 34,
+          "slo_goodput_per_arrival_second": 0.11333333333333333,
+          "slo_success_fraction_of_offered": 0.18478260869565216,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        }
+      },
+      "load_fidelity": {
+        "valid": true,
+        "issues": [],
+        "p99_scheduling_lag": 0.004505977402222925,
+        "max_scheduling_lag": 0.010561433715338353
+      },
+      "timing": {
+        "p99_state_age": 0.004477553571086891,
+        "max_state_age": 0.006620375999773387,
+        "p99_metrics_roundtrip": 0.019826369301226752,
+        "max_state_poll_gap": 1.3016162659987458,
+        "p99_event_loop_lag": 0.016632752060904726,
+        "max_event_loop_lag": 0.2621713379994617
+      },
+      "duration_seconds": 300,
+      "cohorts_30s": [
+        {
+          "offered": 760,
+          "success": 204,
+          "rejected": 556,
+          "good": 52
+        },
+        {
+          "offered": 711,
+          "success": 194,
+          "rejected": 517,
+          "good": 55
+        },
+        {
+          "offered": 735,
+          "success": 198,
+          "rejected": 537,
+          "good": 79
+        },
+        {
+          "offered": 777,
+          "success": 194,
+          "rejected": 583,
+          "good": 48
+        },
+        {
+          "offered": 774,
+          "success": 201,
+          "rejected": 572,
+          "good": 43
+        },
+        {
+          "offered": 750,
+          "success": 175,
+          "rejected": 575,
+          "good": 56
+        },
+        {
+          "offered": 775,
+          "success": 191,
+          "rejected": 584,
+          "good": 70
+        },
+        {
+          "offered": 815,
+          "success": 196,
+          "rejected": 619,
+          "good": 78
+        },
+        {
+          "offered": 776,
+          "success": 195,
+          "rejected": 581,
+          "good": 71
+        },
+        {
+          "offered": 770,
+          "success": 206,
+          "rejected": 564,
+          "good": 128
+        }
+      ],
+      "git_dirty_self_reported": true
+    },
+    {
+      "name": "cap-range-v1-fixed-16-r1",
+      "cap": 16.0,
+      "qualified": true,
+      "supervisor_status": "passed",
+      "raw_report_reproduced": true,
+      "gate_verdicts": {
+        "integrity": true,
+        "load_fidelity": true,
+        "control_fidelity": true,
+        "diagnostic_integrity": true,
+        "runner_diagnostic_integrity": true,
+        "runner_gc_integrity": true
+      },
+      "gate_issues": {},
+      "performance": {
+        "attempted": 7643,
+        "success": 1268,
+        "rejected": 6375,
+        "failed": 0,
+        "client_p99_ttft": 0.5912989197083877,
+        "scheduled_p99_ttft": 0.5917945231206246,
+        "client_p99_e2e": 2.327616219197443,
+        "slo_successes": 1239,
+        "slo_goodput_per_arrival_second": 4.13,
+        "slo_success_fraction_of_offered": 0.1621091194557111,
+        "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+      },
+      "performance_by_input_size": {
+        "medium_input": {
+          "attempted": 1424,
+          "success": 366,
+          "rejected": 1058,
+          "failed": 0,
+          "client_p99_ttft": 0.5041514602990007,
+          "scheduled_p99_ttft": 0.5053062007731584,
+          "client_p99_e2e": 2.2991281125516254,
+          "slo_successes": 362,
+          "slo_goodput_per_arrival_second": 1.2066666666666668,
+          "slo_success_fraction_of_offered": 0.2542134831460674,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "long_input": {
+          "attempted": 6035,
+          "success": 840,
+          "rejected": 5195,
+          "failed": 0,
+          "client_p99_ttft": 0.592463548068663,
+          "scheduled_p99_ttft": 0.592940450287424,
+          "client_p99_e2e": 2.3383895505411054,
+          "slo_successes": 816,
+          "slo_goodput_per_arrival_second": 2.72,
+          "slo_success_fraction_of_offered": 0.1352112676056338,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "short_input": {
+          "attempted": 184,
+          "success": 62,
+          "rejected": 122,
+          "failed": 0,
+          "client_p99_ttft": 0.46653812153028423,
+          "scheduled_p99_ttft": 0.46728253842327844,
+          "client_p99_e2e": 2.262327509809402,
+          "slo_successes": 61,
+          "slo_goodput_per_arrival_second": 0.20333333333333334,
+          "slo_success_fraction_of_offered": 0.33152173913043476,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        }
+      },
+      "load_fidelity": {
+        "valid": true,
+        "issues": [],
+        "p99_scheduling_lag": 0.002635546457240707,
+        "max_scheduling_lag": 0.007790995332470629
+      },
+      "timing": {
+        "p99_state_age": 0.002696570522530233,
+        "max_state_age": 0.005009025000617839,
+        "p99_metrics_roundtrip": 0.011827275538526007,
+        "max_state_poll_gap": 1.0172652900000685,
+        "p99_event_loop_lag": 0.012837518681189982,
+        "max_event_loop_lag": 0.031523780002316926
+      },
+      "duration_seconds": 300,
+      "cohorts_30s": [
+        {
+          "offered": 760,
+          "success": 124,
+          "rejected": 636,
+          "good": 118
+        },
+        {
+          "offered": 711,
+          "success": 120,
+          "rejected": 591,
+          "good": 113
+        },
+        {
+          "offered": 735,
+          "success": 116,
+          "rejected": 619,
+          "good": 110
+        },
+        {
+          "offered": 777,
+          "success": 105,
+          "rejected": 672,
+          "good": 101
+        },
+        {
+          "offered": 774,
+          "success": 129,
+          "rejected": 645,
+          "good": 129
+        },
+        {
+          "offered": 750,
+          "success": 144,
+          "rejected": 606,
+          "good": 144
+        },
+        {
+          "offered": 775,
+          "success": 132,
+          "rejected": 643,
+          "good": 132
+        },
+        {
+          "offered": 815,
+          "success": 131,
+          "rejected": 684,
+          "good": 131
+        },
+        {
+          "offered": 776,
+          "success": 130,
+          "rejected": 646,
+          "good": 127
+        },
+        {
+          "offered": 770,
+          "success": 137,
+          "rejected": 633,
+          "good": 134
+        }
+      ],
+      "git_dirty_self_reported": true
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r1",
+      "cap": 96.0,
+      "qualified": true,
+      "supervisor_status": "passed",
+      "raw_report_reproduced": true,
+      "gate_verdicts": {
+        "integrity": true,
+        "load_fidelity": true,
+        "control_fidelity": true,
+        "diagnostic_integrity": true,
+        "runner_diagnostic_integrity": true,
+        "runner_gc_integrity": true
+      },
+      "gate_issues": {},
+      "performance": {
+        "attempted": 7643,
+        "success": 2183,
+        "rejected": 5460,
+        "failed": 0,
+        "client_p99_ttft": 2.142963243858013,
+        "scheduled_p99_ttft": 2.144047556306087,
+        "client_p99_e2e": 8.05919892921869,
+        "slo_successes": 999,
+        "slo_goodput_per_arrival_second": 3.33,
+        "slo_success_fraction_of_offered": 0.13070783723668716,
+        "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+      },
+      "performance_by_input_size": {
+        "medium_input": {
+          "attempted": 1424,
+          "success": 475,
+          "rejected": 949,
+          "failed": 0,
+          "client_p99_ttft": 2.2501843098604875,
+          "scheduled_p99_ttft": 2.250857953691884,
+          "client_p99_e2e": 8.012030113519431,
+          "slo_successes": 259,
+          "slo_goodput_per_arrival_second": 0.8633333333333333,
+          "slo_success_fraction_of_offered": 0.1818820224719101,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "long_input": {
+          "attempted": 6035,
+          "success": 1634,
+          "rejected": 4401,
+          "failed": 0,
+          "client_p99_ttft": 2.1035481435484735,
+          "scheduled_p99_ttft": 2.1045705802091152,
+          "client_p99_e2e": 8.114896655868803,
+          "slo_successes": 702,
+          "slo_goodput_per_arrival_second": 2.34,
+          "slo_success_fraction_of_offered": 0.11632145816072909,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "short_input": {
+          "attempted": 184,
+          "success": 74,
+          "rejected": 110,
+          "failed": 0,
+          "client_p99_ttft": 1.4654197936580737,
+          "scheduled_p99_ttft": 1.466366262373448,
+          "client_p99_e2e": 7.446349086931695,
+          "slo_successes": 38,
+          "slo_goodput_per_arrival_second": 0.12666666666666668,
+          "slo_success_fraction_of_offered": 0.20652173913043478,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        }
+      },
+      "load_fidelity": {
+        "valid": true,
+        "issues": [],
+        "p99_scheduling_lag": 0.005212418902883654,
+        "max_scheduling_lag": 0.012981025072804186
+      },
+      "timing": {
+        "p99_state_age": 0.004856481240240095,
+        "max_state_age": 0.006365354998706607,
+        "p99_metrics_roundtrip": 0.017647924077355118,
+        "max_state_poll_gap": 1.0367373279987078,
+        "p99_event_loop_lag": 0.01979221543966559,
+        "max_event_loop_lag": 0.2195276320017001
+      },
+      "duration_seconds": 300,
+      "cohorts_30s": [
+        {
+          "offered": 760,
+          "success": 252,
+          "rejected": 508,
+          "good": 116
+        },
+        {
+          "offered": 711,
+          "success": 191,
+          "rejected": 520,
+          "good": 73
+        },
+        {
+          "offered": 735,
+          "success": 200,
+          "rejected": 535,
+          "good": 99
+        },
+        {
+          "offered": 777,
+          "success": 223,
+          "rejected": 554,
+          "good": 119
+        },
+        {
+          "offered": 774,
+          "success": 209,
+          "rejected": 565,
+          "good": 110
+        },
+        {
+          "offered": 750,
+          "success": 206,
+          "rejected": 544,
+          "good": 80
+        },
+        {
+          "offered": 775,
+          "success": 223,
+          "rejected": 552,
+          "good": 99
+        },
+        {
+          "offered": 815,
+          "success": 236,
+          "rejected": 579,
+          "good": 118
+        },
+        {
+          "offered": 776,
+          "success": 213,
+          "rejected": 563,
+          "good": 87
+        },
+        {
+          "offered": 770,
+          "success": 230,
+          "rejected": 540,
+          "good": 98
+        }
+      ],
+      "git_dirty_self_reported": true
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r1",
+      "cap": 32.0,
+      "qualified": true,
+      "supervisor_status": "passed",
+      "raw_report_reproduced": true,
+      "gate_verdicts": {
+        "integrity": true,
+        "load_fidelity": true,
+        "control_fidelity": true,
+        "diagnostic_integrity": true,
+        "runner_diagnostic_integrity": true,
+        "runner_gc_integrity": true
+      },
+      "gate_issues": {},
+      "performance": {
+        "attempted": 7643,
+        "success": 1752,
+        "rejected": 5891,
+        "failed": 0,
+        "client_p99_ttft": 0.8364768497306796,
+        "scheduled_p99_ttft": 0.8374231030657393,
+        "client_p99_e2e": 3.3206864860714997,
+        "slo_successes": 1524,
+        "slo_goodput_per_arrival_second": 5.08,
+        "slo_success_fraction_of_offered": 0.19939814209080203,
+        "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+      },
+      "performance_by_input_size": {
+        "medium_input": {
+          "attempted": 1424,
+          "success": 447,
+          "rejected": 977,
+          "failed": 0,
+          "client_p99_ttft": 0.8008302664596707,
+          "scheduled_p99_ttft": 0.8015560445503073,
+          "client_p99_e2e": 3.3122633488420985,
+          "slo_successes": 403,
+          "slo_goodput_per_arrival_second": 1.3433333333333333,
+          "slo_success_fraction_of_offered": 0.2830056179775281,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "long_input": {
+          "attempted": 6035,
+          "success": 1241,
+          "rejected": 4794,
+          "failed": 0,
+          "client_p99_ttft": 0.8342978826003673,
+          "scheduled_p99_ttft": 0.8351524306708596,
+          "client_p99_e2e": 3.3208851288014554,
+          "slo_successes": 1063,
+          "slo_goodput_per_arrival_second": 3.5433333333333334,
+          "slo_success_fraction_of_offered": 0.17613918806959403,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "short_input": {
+          "attempted": 184,
+          "success": 64,
+          "rejected": 120,
+          "failed": 0,
+          "client_p99_ttft": 0.8652039991802302,
+          "scheduled_p99_ttft": 0.8656435666317701,
+          "client_p99_e2e": 3.1180598683003335,
+          "slo_successes": 58,
+          "slo_goodput_per_arrival_second": 0.19333333333333333,
+          "slo_success_fraction_of_offered": 0.31521739130434784,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        }
+      },
+      "load_fidelity": {
+        "valid": true,
+        "issues": [],
+        "p99_scheduling_lag": 0.0032419373782613544,
+        "max_scheduling_lag": 0.013063930771750165
+      },
+      "timing": {
+        "p99_state_age": 0.0028282544203830184,
+        "max_state_age": 0.004032220000226516,
+        "p99_metrics_roundtrip": 0.018952547519074853,
+        "max_state_poll_gap": 1.1529114069999196,
+        "p99_event_loop_lag": 0.014245926363364537,
+        "max_event_loop_lag": 0.25016677400344633
+      },
+      "duration_seconds": 300,
+      "cohorts_30s": [
+        {
+          "offered": 760,
+          "success": 174,
+          "rejected": 586,
+          "good": 120
+        },
+        {
+          "offered": 711,
+          "success": 162,
+          "rejected": 549,
+          "good": 133
+        },
+        {
+          "offered": 735,
+          "success": 172,
+          "rejected": 563,
+          "good": 155
+        },
+        {
+          "offered": 777,
+          "success": 168,
+          "rejected": 609,
+          "good": 129
+        },
+        {
+          "offered": 774,
+          "success": 165,
+          "rejected": 609,
+          "good": 131
+        },
+        {
+          "offered": 750,
+          "success": 199,
+          "rejected": 551,
+          "good": 198
+        },
+        {
+          "offered": 775,
+          "success": 189,
+          "rejected": 586,
+          "good": 187
+        },
+        {
+          "offered": 815,
+          "success": 164,
+          "rejected": 651,
+          "good": 131
+        },
+        {
+          "offered": 776,
+          "success": 174,
+          "rejected": 602,
+          "good": 164
+        },
+        {
+          "offered": 770,
+          "success": 185,
+          "rejected": 585,
+          "good": 176
+        }
+      ],
+      "git_dirty_self_reported": true
+    },
+    {
+      "name": "cap-range-v1-fixed-32-r2",
+      "cap": 32.0,
+      "qualified": true,
+      "supervisor_status": "passed",
+      "raw_report_reproduced": true,
+      "gate_verdicts": {
+        "integrity": true,
+        "load_fidelity": true,
+        "control_fidelity": true,
+        "diagnostic_integrity": true,
+        "runner_diagnostic_integrity": true,
+        "runner_gc_integrity": true
+      },
+      "gate_issues": {},
+      "performance": {
+        "attempted": 7643,
+        "success": 1706,
+        "rejected": 5937,
+        "failed": 0,
+        "client_p99_ttft": 0.9774415601015793,
+        "scheduled_p99_ttft": 0.9783270523812465,
+        "client_p99_e2e": 3.3332079588486523,
+        "slo_successes": 1377,
+        "slo_goodput_per_arrival_second": 4.59,
+        "slo_success_fraction_of_offered": 0.18016485673164986,
+        "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+      },
+      "performance_by_input_size": {
+        "medium_input": {
+          "attempted": 1424,
+          "success": 423,
+          "rejected": 1001,
+          "failed": 0,
+          "client_p99_ttft": 0.8780496089212095,
+          "scheduled_p99_ttft": 0.8784695342370099,
+          "client_p99_e2e": 3.2297204908011907,
+          "slo_successes": 364,
+          "slo_goodput_per_arrival_second": 1.2133333333333334,
+          "slo_success_fraction_of_offered": 0.2556179775280899,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "long_input": {
+          "attempted": 6035,
+          "success": 1222,
+          "rejected": 4813,
+          "failed": 0,
+          "client_p99_ttft": 1.0076366469395723,
+          "scheduled_p99_ttft": 1.0091607326256777,
+          "client_p99_e2e": 3.3818529285406473,
+          "slo_successes": 955,
+          "slo_goodput_per_arrival_second": 3.183333333333333,
+          "slo_success_fraction_of_offered": 0.15824357912178957,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "short_input": {
+          "attempted": 184,
+          "success": 61,
+          "rejected": 123,
+          "failed": 0,
+          "client_p99_ttft": 0.581692195600044,
+          "scheduled_p99_ttft": 0.5824316651684056,
+          "client_p99_e2e": 3.220156335800857,
+          "slo_successes": 58,
+          "slo_goodput_per_arrival_second": 0.19333333333333333,
+          "slo_success_fraction_of_offered": 0.31521739130434784,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        }
+      },
+      "load_fidelity": {
+        "valid": true,
+        "issues": [],
+        "p99_scheduling_lag": 0.003022615231529926,
+        "max_scheduling_lag": 0.006617761886445805
+      },
+      "timing": {
+        "p99_state_age": 0.0028768619216862088,
+        "max_state_age": 0.0041094289990724064,
+        "p99_metrics_roundtrip": 0.010582073619661958,
+        "max_state_poll_gap": 1.0153736379979819,
+        "p99_event_loop_lag": 0.007557928732167061,
+        "max_event_loop_lag": 0.20676304399967194
+      },
+      "duration_seconds": 300,
+      "cohorts_30s": [
+        {
+          "offered": 760,
+          "success": 170,
+          "rejected": 590,
+          "good": 118
+        },
+        {
+          "offered": 711,
+          "success": 156,
+          "rejected": 555,
+          "good": 96
+        },
+        {
+          "offered": 735,
+          "success": 156,
+          "rejected": 579,
+          "good": 111
+        },
+        {
+          "offered": 777,
+          "success": 180,
+          "rejected": 597,
+          "good": 132
+        },
+        {
+          "offered": 774,
+          "success": 180,
+          "rejected": 594,
+          "good": 162
+        },
+        {
+          "offered": 750,
+          "success": 175,
+          "rejected": 575,
+          "good": 155
+        },
+        {
+          "offered": 775,
+          "success": 155,
+          "rejected": 620,
+          "good": 122
+        },
+        {
+          "offered": 815,
+          "success": 165,
+          "rejected": 650,
+          "good": 131
+        },
+        {
+          "offered": 776,
+          "success": 182,
+          "rejected": 594,
+          "good": 167
+        },
+        {
+          "offered": 770,
+          "success": 187,
+          "rejected": 583,
+          "good": 183
+        }
+      ],
+      "git_dirty_self_reported": true
+    },
+    {
+      "name": "cap-range-v1-fixed-96-r2",
+      "cap": 96.0,
+      "qualified": true,
+      "supervisor_status": "passed",
+      "raw_report_reproduced": true,
+      "gate_verdicts": {
+        "integrity": true,
+        "load_fidelity": true,
+        "control_fidelity": true,
+        "diagnostic_integrity": true,
+        "runner_diagnostic_integrity": true,
+        "runner_gc_integrity": true
+      },
+      "gate_issues": {},
+      "performance": {
+        "attempted": 7643,
+        "success": 2225,
+        "rejected": 5418,
+        "failed": 0,
+        "client_p99_ttft": 2.4588270774803744,
+        "scheduled_p99_ttft": 2.460130701369336,
+        "client_p99_e2e": 8.563946217040783,
+        "slo_successes": 800,
+        "slo_goodput_per_arrival_second": 2.6666666666666665,
+        "slo_success_fraction_of_offered": 0.1046709407300798,
+        "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+      },
+      "performance_by_input_size": {
+        "medium_input": {
+          "attempted": 1424,
+          "success": 524,
+          "rejected": 900,
+          "failed": 0,
+          "client_p99_ttft": 2.2535780507912566,
+          "scheduled_p99_ttft": 2.2542864194469074,
+          "client_p99_e2e": 8.457789936038605,
+          "slo_successes": 211,
+          "slo_goodput_per_arrival_second": 0.7033333333333334,
+          "slo_success_fraction_of_offered": 0.14817415730337077,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "long_input": {
+          "attempted": 6035,
+          "success": 1631,
+          "rejected": 4404,
+          "failed": 0,
+          "client_p99_ttft": 2.4838279832005354,
+          "scheduled_p99_ttft": 2.4849875188716397,
+          "client_p99_e2e": 8.624403799300126,
+          "slo_successes": 557,
+          "slo_goodput_per_arrival_second": 1.8566666666666667,
+          "slo_success_fraction_of_offered": 0.09229494614747308,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "short_input": {
+          "attempted": 184,
+          "success": 70,
+          "rejected": 114,
+          "failed": 0,
+          "client_p99_ttft": 2.035346835669589,
+          "scheduled_p99_ttft": 2.036103778096149,
+          "client_p99_e2e": 8.362845675608297,
+          "slo_successes": 32,
+          "slo_goodput_per_arrival_second": 0.10666666666666667,
+          "slo_success_fraction_of_offered": 0.17391304347826086,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        }
+      },
+      "load_fidelity": {
+        "valid": true,
+        "issues": [],
+        "p99_scheduling_lag": 0.004691948456675163,
+        "max_scheduling_lag": 0.011174223767739022
+      },
+      "timing": {
+        "p99_state_age": 0.002445011421732488,
+        "max_state_age": 0.0035075380001217127,
+        "p99_metrics_roundtrip": 0.008716234440944355,
+        "max_state_poll_gap": 1.022300323998934,
+        "p99_event_loop_lag": 0.01057094480238464,
+        "max_event_loop_lag": 0.3221582060032233
+      },
+      "duration_seconds": 300,
+      "cohorts_30s": [
+        {
+          "offered": 760,
+          "success": 234,
+          "rejected": 526,
+          "good": 89
+        },
+        {
+          "offered": 711,
+          "success": 199,
+          "rejected": 512,
+          "good": 31
+        },
+        {
+          "offered": 735,
+          "success": 206,
+          "rejected": 529,
+          "good": 39
+        },
+        {
+          "offered": 777,
+          "success": 195,
+          "rejected": 582,
+          "good": 76
+        },
+        {
+          "offered": 774,
+          "success": 255,
+          "rejected": 519,
+          "good": 98
+        },
+        {
+          "offered": 750,
+          "success": 224,
+          "rejected": 526,
+          "good": 106
+        },
+        {
+          "offered": 775,
+          "success": 202,
+          "rejected": 573,
+          "good": 55
+        },
+        {
+          "offered": 815,
+          "success": 240,
+          "rejected": 575,
+          "good": 82
+        },
+        {
+          "offered": 776,
+          "success": 218,
+          "rejected": 558,
+          "good": 113
+        },
+        {
+          "offered": 770,
+          "success": 252,
+          "rejected": 518,
+          "good": 111
+        }
+      ],
+      "git_dirty_self_reported": true
+    },
+    {
+      "name": "cap-range-v1-fixed-16-r2",
+      "cap": 16.0,
+      "qualified": false,
+      "supervisor_status": "failed",
+      "raw_report_reproduced": true,
+      "gate_verdicts": {
+        "integrity": true,
+        "load_fidelity": false,
+        "control_fidelity": true,
+        "diagnostic_integrity": false,
+        "runner_diagnostic_integrity": true,
+        "runner_gc_integrity": true
+      },
+      "gate_issues": {
+        "load_fidelity": [
+          "Load generator exceeded predeclared maximum scheduling lag"
+        ],
+        "diagnostic_integrity": [
+          "External collector persistence/health is incomplete",
+          "Required engine observations are unavailable",
+          "Raw engine metrics are missing"
+        ]
+      },
+      "performance": {
+        "attempted": 7643,
+        "success": 1220,
+        "rejected": 6423,
+        "failed": 0,
+        "client_p99_ttft": 0.6904941308001427,
+        "scheduled_p99_ttft": 0.6921342820810961,
+        "client_p99_e2e": 7.399276111247305,
+        "slo_successes": 1160,
+        "slo_goodput_per_arrival_second": 3.8666666666666667,
+        "slo_success_fraction_of_offered": 0.15177286405861573,
+        "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+      },
+      "performance_by_input_size": {
+        "medium_input": {
+          "attempted": 1424,
+          "success": 354,
+          "rejected": 1070,
+          "failed": 0,
+          "client_p99_ttft": 0.5725328334711219,
+          "scheduled_p99_ttft": 0.5733819520138412,
+          "client_p99_e2e": 2.3764161034283457,
+          "slo_successes": 344,
+          "slo_goodput_per_arrival_second": 1.1466666666666667,
+          "slo_success_fraction_of_offered": 0.24157303370786518,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "long_input": {
+          "attempted": 6035,
+          "success": 814,
+          "rejected": 5221,
+          "failed": 0,
+          "client_p99_ttft": 0.6946459802379468,
+          "scheduled_p99_ttft": 0.6958574991028581,
+          "client_p99_e2e": 7.4103764178804346,
+          "slo_successes": 765,
+          "slo_goodput_per_arrival_second": 2.55,
+          "slo_success_fraction_of_offered": 0.1267605633802817,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        },
+        "short_input": {
+          "attempted": 184,
+          "success": 52,
+          "rejected": 132,
+          "failed": 0,
+          "client_p99_ttft": 2.9747059591497704,
+          "scheduled_p99_ttft": 2.9763925314755504,
+          "client_p99_e2e": 4.872884563969757,
+          "slo_successes": 51,
+          "slo_goodput_per_arrival_second": 0.17,
+          "slo_success_fraction_of_offered": 0.27717391304347827,
+          "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+        }
+      },
+      "load_fidelity": {
+        "valid": false,
+        "issues": [
+          "Load generator exceeded predeclared maximum scheduling lag"
+        ],
+        "p99_scheduling_lag": 0.006059328644187183,
+        "max_scheduling_lag": 0.43171295175125124
+      },
+      "timing": {
+        "p99_state_age": 0.0047258862396483865,
+        "max_state_age": 0.06134613100221031,
+        "p99_metrics_roundtrip": 0.020809914050369017,
+        "max_state_poll_gap": 6.094681408001634,
+        "p99_event_loop_lag": 0.008504604492336514,
+        "max_event_loop_lag": 5.854558988001372
+      },
+      "duration_seconds": 300,
+      "cohorts_30s": [
+        {
+          "offered": 760,
+          "success": 119,
+          "rejected": 641,
+          "good": 109
+        },
+        {
+          "offered": 711,
+          "success": 133,
+          "rejected": 578,
+          "good": 133
+        },
+        {
+          "offered": 735,
+          "success": 122,
+          "rejected": 613,
+          "good": 120
+        },
+        {
+          "offered": 777,
+          "success": 94,
+          "rejected": 683,
+          "good": 80
+        },
+        {
+          "offered": 774,
+          "success": 106,
+          "rejected": 668,
+          "good": 94
+        },
+        {
+          "offered": 750,
+          "success": 123,
+          "rejected": 627,
+          "good": 114
+        },
+        {
+          "offered": 775,
+          "success": 126,
+          "rejected": 649,
+          "good": 122
+        },
+        {
+          "offered": 815,
+          "success": 142,
+          "rejected": 673,
+          "good": 142
+        },
+        {
+          "offered": 776,
+          "success": 138,
+          "rejected": 638,
+          "good": 136
+        },
+        {
+          "offered": 770,
+          "success": 117,
+          "rejected": 653,
+          "good": 110
+        }
+      ],
+      "git_dirty_self_reported": true
+    }
+  ],
+  "qualified_goodput_by_cap": {
+    "64": [
+      2.2666666666666666
+    ],
+    "16": [
+      4.13
+    ],
+    "96": [
+      3.33,
+      2.6666666666666665
+    ],
+    "32": [
+      5.08,
+      4.59
+    ]
+  },
+  "paired_qualified_runs": [
+    {
+      "left": "cap-range-v1-fixed-32-r1",
+      "right": "cap-range-v1-fixed-16-r1",
+      "both_good": 388,
+      "only_left_good": 1136,
+      "only_right_good": 851,
+      "cohort_good_count_deltas": [
+        2,
+        20,
+        45,
+        28,
+        2,
+        54,
+        55,
+        0,
+        37,
+        42
+      ],
+      "winning_cohorts": 9
+    },
+    {
+      "left": "cap-range-v1-fixed-32-r1",
+      "right": "cap-range-v1-fixed-64-r1",
+      "both_good": 191,
+      "only_left_good": 1333,
+      "only_right_good": 489,
+      "cohort_good_count_deltas": [
+        68,
+        78,
+        76,
+        81,
+        88,
+        142,
+        117,
+        53,
+        93,
+        48
+      ],
+      "winning_cohorts": 10
+    },
+    {
+      "left": "cap-range-v1-fixed-32-r1",
+      "right": "cap-range-v1-fixed-96-r1",
+      "both_good": 286,
+      "only_left_good": 1238,
+      "only_right_good": 713,
+      "cohort_good_count_deltas": [
+        4,
+        60,
+        56,
+        10,
+        21,
+        118,
+        88,
+        13,
+        77,
+        78
+      ],
+      "winning_cohorts": 10
+    },
+    {
+      "left": "cap-range-v1-fixed-32-r2",
+      "right": "cap-range-v1-fixed-96-r2",
+      "both_good": 221,
+      "only_left_good": 1156,
+      "only_right_good": 579,
+      "cohort_good_count_deltas": [
+        29,
+        65,
+        72,
+        56,
+        64,
+        49,
+        67,
+        49,
+        54,
+        72
+      ],
+      "winning_cohorts": 10
+    }
+  ],
+  "cap32_vs96_mean_goodput_increase_pct": 61.25625347415231,
+  "diagnostic_incident": {
+    "run": "cap-range-v1-fixed-16-r2",
+    "gateway_due_second": 96.33821722599532,
+    "gateway_resumed_second": 102.1927784139989,
+    "gateway_monitor_delay_seconds": 5.854558988001372,
+    "overlapping_gateway_gc_spans": 0,
+    "gateway_cpu_sample_elapsed": 6.601655733000371,
+    "gateway_process_cpu_delta": 0.12298013000000196,
+    "gateway_loop_cpu_delta": 0.12098026000000317,
+    "metrics_errors": [
+      {
+        "sent_second": 96.74687752599857,
+        "received_second": 98.74954875099866,
+        "error_type": "ReadTimeout",
+        "http_status": null
+      }
+    ],
+    "late_launch_count": 37,
+    "late_scheduled_first_second": 102.24604797363281,
+    "late_scheduled_last_second": 104.05011010169983,
+    "late_launch_outcomes": {
+      "rejected": 37
+    },
+    "max_runner_measurement_loop_lag": 0.31887520200325525,
+    "note": "Temporal overlap is not causal/exclusive CPU attribution; no syscall/scheduler trace was collected."
+  },
+  "cap64_failed_request": {
+    "clients": [
+      {
+        "scheduled_at": 24392.246409518993,
+        "workload": "trace",
+        "request_id": "d237f7ad38565688acae5cf1d0bccb5c",
+        "client_request_id": "d237f7ad38565688acae5cf1d0bccb5c",
+        "stream_complete": false,
+        "started_at": 24392.246708184,
+        "first_content_at": null,
+        "finished_at": 24392.257462582,
+        "status": 502,
+        "ttft": null,
+        "end_to_end": 0.010754398001154186,
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "max_output_tokens": 128,
+        "error_type": "HTTPStatusError",
+        "error_message": "HTTP 502",
+        "error_phase": "response_body",
+        "success": false,
+        "rejected": false,
+        "trace_id": "242489b81db35abe:4925",
+        "expected_input_tokens": 334
+      }
+    ],
+    "lifecycle": [
+      {
+        "event": "received",
+        "run_id": "6d1df8ee1ca04f90892edd5b1b3c4976",
+        "timestamp": 1792455204.4862137,
+        "monotonic": 24392.247902027,
+        "request_id": "d237f7ad38565688acae5cf1d0bccb5c"
+      },
+      {
+        "event": "accepted",
+        "run_id": "6d1df8ee1ca04f90892edd5b1b3c4976",
+        "timestamp": 1792455204.4875844,
+        "monotonic": 24392.249272605,
+        "request_cost": 1.1788386624,
+        "estimated_input_tokens": 334,
+        "max_output_tokens": 128,
+        "budget": 64.0,
+        "budget_version": 1,
+        "request_id": "d237f7ad38565688acae5cf1d0bccb5c"
+      },
+      {
+        "event": "backend_sent",
+        "run_id": "6d1df8ee1ca04f90892edd5b1b3c4976",
+        "timestamp": 1792455204.487842,
+        "monotonic": 24392.249530457,
+        "request_id": "d237f7ad38565688acae5cf1d0bccb5c"
+      },
+      {
+        "event": "failed",
+        "run_id": "6d1df8ee1ca04f90892edd5b1b3c4976",
+        "timestamp": 1792455204.494264,
+        "monotonic": 24392.255952159,
+        "end_to_end": 0.008052281998971011,
+        "request_id": "d237f7ad38565688acae5cf1d0bccb5c"
+      },
+      {
+        "event": "request_diagnostics",
+        "run_id": "6d1df8ee1ca04f90892edd5b1b3c4976",
+        "timestamp": 1792455204.4942946,
+        "monotonic": 24392.255982698,
+        "diagnostics_schema_version": 1,
+        "span_start": 24392.247906837,
+        "span_end": 24392.255968708,
+        "outcome": "failed",
+        "cleanup_complete": true,
+        "phases": {
+          "body_read": {
+            "start": 24392.247915417,
+            "end": 24392.248054162,
+            "status": "completed"
+          },
+          "json_parse": {
+            "start": 24392.248081102,
+            "end": 24392.248112181,
+            "status": "completed"
+          },
+          "cost_estimation": {
+            "start": 24392.24811933,
+            "end": 24392.249243196,
+            "status": "completed"
+          },
+          "admission_lock_wait": {
+            "start": 24392.249249496,
+            "end": 24392.249253926,
+            "status": "completed"
+          },
+          "client_construction": {
+            "start": null,
+            "end": null,
+            "status": "not_reached"
+          },
+          "http_send_headers": {
+            "start": 24392.249527567,
+            "end": 24392.255640059,
+            "status": "failed",
+            "error_type": "ReadError"
+          },
+          "upstream_close": {
+            "start": null,
+            "end": null,
+            "status": "not_reached"
+          },
+          "client_close": {
+            "start": null,
+            "end": null,
+            "status": "not_reached"
+          },
+          "reservation_release": {
+            "start": 24392.25592847,
+            "end": 24392.255940099,
+            "status": "completed"
+          }
+        },
+        "first_body_at": null,
+        "first_content_at": null,
+        "request_id": "d237f7ad38565688acae5cf1d0bccb5c"
+      }
+    ]
+  },
+  "model_readiness": "not_established",
+  "MPC_run": false,
+  "C_used": false,
+  "limitations": [
+    "Development data; one host, two repeats at most, fixed mirrored order.",
+    "Cap32 repeats are adjacent; arbitrary order/thermal drift is not controlled.",
+    "Matched arrivals do not match internal states; cohorts are not independent replicates.",
+    "Cap16-r2 excluded from qualified comparisons by unchanged gates; raw outcomes retained.",
+    "All full-run results include the first 30 seconds and all offered requests.",
+    "Synthetic prompts, original arrival/input lengths, output cap128 with natural EOS.",
+    "Fixed-cap evidence does not identify low-cap switch dynamics or a global optimum."
+  ]
+}

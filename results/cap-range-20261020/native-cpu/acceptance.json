@@ -1,0 +1,37 @@
+{
+  "valid": true,
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "commit": "31f1079d47a30b390e5df02095a694688b90f8a9",
+  "process_resources": {
+    "available": true,
+    "pid": 2394,
+    "process_created_unix": 1792454246.35,
+    "sample_start": 23434.517343208,
+    "sample_end": 23434.518194535,
+    "rss_bytes": 30769152,
+    "user_cpu_seconds": 0.1,
+    "system_cpu_seconds": 0.03
+  },
+  "command": [
+    "/workspace/vllm-serving-lab/.venv-cpu-tests/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-ra",
+    "tests",
+    "-o",
+    "addopts=",
+    "--junitxml",
+    "/workspace/vllm-serving-lab/cpu-ci-artifacts/20261019T235726-632980Z/junit.xml"
+  ],
+  "pytest_exitcode": 0,
+  "test_cases": 504,
+  "trace_configurations": [
+    "test_full_trace_runner_and_adversarial_analysis[False-False-thread]",
+    "test_full_trace_runner_and_adversarial_analysis[False-True-process]",
+    "test_full_trace_runner_and_adversarial_analysis[False-True-thread]",
+    "test_full_trace_runner_and_adversarial_analysis[True-True-process]",
+    "test_full_trace_runner_and_adversarial_analysis[True-True-thread]"
+  ]
+}
