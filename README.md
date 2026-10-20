@@ -16,17 +16,42 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
-## Next collection: same-host fixed-cap range and repeats
+## Latest results: same-host fixed-cap range (2026-10-20 UTC)
 
-The [cap-range-v1 runbook](experiments/cap-range-v1.md) freezes a new development
-sweep at fixed caps **16/32/64/96**, two full-trace repeats per cap on one unchanged
-backend. A smoke-gated supervisor checks native CPU evidence, backend idleness,
-runtime/protocol identity and all six capture gates, stopping at the first failure.
-The offline analyzer re-audits raw captures and compares whole-run goodput and
-matched arrival cohorts. This is an exploratory range/repeatability study;
-**not collected yet**, no inferred noise floor/optimal cap, and C remains unused.
+**[Full findings, original data and reproduction](results/cap-range-20261020/report.md)** ·
+[中文分析](results/cap-range-20261020/analysis-zh.md) ·
+[Recomputed audit/results](results/cap-range-20261020/summary.json) ·
+[Original partial suite](results/cap-range-20261020/suite.json)
 
-## Latest results: shared-client A/B system identification (2026-10-18 UTC)
+One RTX 4090 backend replayed the same 7,643 arrivals over 300 s at fixed reservation
+caps 16/32/64/96 on runtime `31f1079`. Exact-revision native CPU acceptance passed
+**504 cases**. Smoke and six full captures pass all six enabled gates; cap16-r2
+fails load/external-diagnostic gates and cap64-r2 was not started. **The original
+suite remains failed/incomplete**, with all 161 original files archived.
+
+| Fixed cap | Qualified r1 goodput | Qualified r2 goodput |
+|---|---:|---:|
+| 16 | 4.130/s | Failed gates; retained for diagnosis |
+| 32 | **5.080/s** | **4.590/s** |
+| 64 | 2.267/s (one 502 failure counted) | Not started |
+| 96 | 3.330/s | 2.667/s |
+
+![Qualified fixed-cap SLO goodput](results/cap-range-20261020/figures/goodput.png)
+
+Cap 32's observed mean goodput exceeds cap 96 by 61.26%; it also has more SLO
+successes in every matched 30 s arrival cohort in both repeats. These are
+development observations, not a causal estimate, independent-bin significance
+test, global optimum or MPC result. Cap 32 is a candidate fixed baseline and
+**does not achieve P99 TTFT≤0.5 s**. The failed cap16-r2 has a 5.855 s gateway monitor
+delay overlapping a vLLM metrics timeout, with no overlapping gateway GC span;
+its 37 late launches occur during recovery. Root cause remains unproven.
+
+The [frozen collection runbook](experiments/cap-range-v1.md) is historical for this
+attempt. The new read-only reproducer preserves failure and re-audits all 8 reports;
+it does not bypass the strict full-suite analyzer. C remains unused, and predictive
+model/low-cap switching readiness is not established.
+
+## Previous results: shared-client A/B system identification (2026-10-18 UTC)
 
 **[Experiment index, complete raw data and reproduction](results/shared-client-20261018/report.md)** ·
 [中文分析](results/shared-client-20261018/analysis-zh.md) ·
