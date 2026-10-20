@@ -16,7 +16,27 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
-## Offline planned-cap prediction prototype (2026-10-20 UTC)
+## Service-context follow-up: forecasting versus cap decisions (2026-10-20 UTC)
+
+[Results and cap-coverage analysis](results/service-forecast-20261020/report.md) ·
+[Method and fast reproduction](experiments/service-forecast-v2.md)
+
+The same eight qualified captures now include verified waiting/streaming
+cost-token composition, ages and causal engine-counter rates. At five seconds,
+chronological SLO-goodput rate MAE moves from **1.1684** to **1.1392 req/s** with
+context/gauges/counters. The matched model **without planned-cap inputs scores
+1.1304**, so reliable action ranking is still not established. Counter rates add
+little over gauges alone. This does not show that real cap changes are ineffective.
+
+There are **no 16↔32 switches** in these captures. Predicted cap rankings and
+training support are diagnostics, not measured policy gains. The report identifies
+targeted low-cap switching as the next measurement question. Verified derived
+tables allow quick CPU reproduction; C remains untouched and no controller or
+new GPU collection is included.
+
+![Service forecast errors and action support](results/service-forecast-20261020/forecast-and-support.png)
+
+## Previous offline planned-cap prediction prototype (2026-10-20 UTC)
 
 [Results and reproducible scores](results/transition-prototype-20261020/report.md) ·
 [Method and commands](experiments/transition-prototype-v1.md)
