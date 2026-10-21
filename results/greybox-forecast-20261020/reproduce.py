@@ -44,10 +44,14 @@ def close(expected, actual, path='report', tol=1e-9):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output-dir', required=True, type=Path)
+    parser.add_argument('--cap-range-dir', type=Path, help='Reuse extracted captures; every consumed file is hash-checked')
+    parser.add_argument('--shared-client-dir', type=Path, help='Must be supplied with --cap-range-dir')
     args = parser.parse_args()
     output = args.output_dir.resolve()
     if output.exists():
         parser.error('Choose a fresh output directory')
+    if (args.cap_range_dir is None) != (args.shared_client_dir is None):
+        parser.error('Supply both extracted capture roots or neither')
     summary = json.loads((HERE / 'summary.json').read_text())
     compressed = (HERE / 'full-report.json.gz').read_bytes()
     if digest(compressed) != summary['compressed_report_sha256']:
@@ -63,15 +67,19 @@ def main():
     def run(*command):
         subprocess.run([sys.executable, *map(str, command)], check=True, cwd=REPO)
 
-    run(REPO / 'results/cap-range-20261020/extract_bundle.py', '--output-dir', output / 'cap-range')
-    run(REPO / 'results/shared-client-20261018/extract_bundle.py', '--output-dir', output / 'shared-client',
-        '--archives', 'shared-a', 'shared-b')
+    cap_root, shared_root = args.cap_range_dir, args.shared_client_dir
+    if cap_root is None:
+        cap_root, shared_root = output / 'cap-range', output / 'shared-client'
+        run(REPO / 'results/cap-range-20261020/extract_bundle.py', '--output-dir', cap_root)
+        run(REPO / 'results/shared-client-20261018/extract_bundle.py', '--output-dir', shared_root,
+            '--archives', 'shared-a', 'shared-b')
     p = expected['protocol']
-    run(REPO / 'evaluate_greybox.py', '--cap-range-dir', output / 'cap-range',
-        '--shared-client-dir', output / 'shared-client', '--output-dir', output / 'scores',
+    run(REPO / 'evaluate_greybox.py', '--cap-range-dir', cap_root,
+        '--shared-client-dir', shared_root, '--output-dir', output / 'scores',
         '--boot-k', p['boot_k'], '--seed', p['seed'], '--reps', p['bootstrap_reps'], '--block', p['block_s'])
     actual = json.loads(gzip.decompress((output / 'scores/full-report.json.gz').read_bytes()))
     close(expected, actual)
+    output.mkdir(parents=True, exist_ok=True)
     (output / 'verification.json').write_text(json.dumps(dict(
         raw_files_match_archive_hashes=True, report_matches=True, tolerance=1e-9,
         archived_full_report_sha256=summary['full_report_sha256']), indent=2) + '\n')

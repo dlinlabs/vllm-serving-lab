@@ -2,7 +2,7 @@
 
 Reads the extracted cap-range and shared-client captures, checks every raw file used against the
 SHA-256 recorded in the archived service review, and compares the simulator with that review's best
-5 s model, a trailing-60 s nowcast and the replicate noise floor. Also reports the open-loop cap
+5 s model, a trailing-60 s first-token nowcast and observed replicate variability. Also reports the open-loop cap
 curve and vLLM histogram means that limit the simulator as a cap-choice model.
 """
 import argparse
@@ -75,7 +75,7 @@ def find_run(roots, name, hashes):
 
 
 def nowcast(req, t, lookback=LOOKBACK):
-    """Met-SLO rate over the trailing window, counting only outcomes observable at t."""
+    """Causal first-token SLO-hit rate, not an already-successfully-completed goodput count."""
     sel = ((req['sched'] >= t - lookback) & (req['sched'] < t - gb.SLO) & (req['ttft'] <= gb.SLO)
            & (req['c_first'] <= t))
     return sel.sum() / (lookback - gb.SLO)
@@ -136,6 +136,15 @@ def engine_summary(meta, req, scrapes, start=5., end=300.):
     return out
 
 
+def simulation_rates(sim, overhead, duration):
+    """Admission does not require a first token; unreached decisions remain explicitly unknown."""
+    return dict(goodput=gb.expected_met(sim, overhead) / duration,
+                goodput_step_only=sum(o.admitted and math.isfinite(o.first) and o.first - o.sched <= gb.SLO
+                                      for o in sim if o.admitted is not None) / duration,
+                admitted=sum(bool(o.admitted) for o in sim) / duration,
+                unreached_requests=sum(o.admitted is None for o in sim))
+
+
 def cap_curve(data, runs, held, reference=REFERENCE, caps=CAPS):
     """Whole-run counterfactuals from an idle start, with the held cap removed from every fit."""
     intervals = []
@@ -144,21 +153,20 @@ def cap_curve(data, runs, held, reference=REFERENCE, caps=CAPS):
         keep = np.array([run.cap(t - 1) != held and run.cap(t) != held for t in i['t']], bool)
         intervals.append({k: v[keep] for k, v in i.items()})
     coef = gb.fit_step_time(intervals)
-    res = np.concatenate([gb.residuals(run, coef, np.arange(5, 296, 5.))[0] for run in runs.values()])
+    res = np.concatenate([gb.residuals(run, coef, np.arange(5, 296, 5.), available_by=300.)[0]
+                          for run in runs.values()])
     if held is not None:
         res = res[res[:, 6] != held]
     overhead = gb.Overhead(res[:, 4], res[:, 3] - res[:, 2])
     ref = runs[reference]
     q = ref.req
-    arrivals = sorted((s + ref.pre, s, c, e) for s, c, e in zip(q['sched'], q['cost'], q['est_in']))
+    arrivals = gb.ordered_arrivals(gb.Arrival(s + ref.pre, s, c, e, rid)
+                                  for s, c, e, rid in zip(q['sched'], q['cost'], q['est_in'], q['request_id']))
     duration = 300.
     rows = []
     for cap in caps:
         sim = gb.simulate(gb.EmptyStart(cap), 0., arrivals, coef, horizon=duration)
-        first = [(s, f) for s, a, f, _ in sim if a and math.isfinite(f)]
-        rows.append(dict(held=held, cap=cap, goodput=gb.expected_met(sim, overhead) / duration,
-                         goodput_step_only=sum(f - s <= gb.SLO for s, f in first) / duration,
-                         admitted=len(first) / duration))
+        rows.append(dict(held=held, cap=cap, **simulation_rates(sim, overhead, duration)))
     return dict(held=held, step_coefficients=coef, overhead_at=dict(zip((10, 25, 45), overhead.mean([10, 25, 45]))),
                 rows=rows)
 
@@ -175,15 +183,23 @@ def load(cap_range_dir, shared_client_dir, archive):
     return data, rows, inputs
 
 
-def evaluate(data, rows, boot_k=16, seed=1, reps=4000, block=10., pre_cut=CUT, curve=True):
-    coef = gb.fit_step_time([gb.step_intervals(s, end=CUT) for _, _, s in data.values()])
-    runs = {n: gb.Run(n, m, r, s, cut=pre_cut) for n, (m, r, s) in data.items()}
+def calibrate(data, cut=CUT):
+    """Fit using only completed scrapes and fully observed historical windows by cut."""
+    coef = gb.fit_step_time([gb.step_intervals(s, end=cut) for _, _, s in data.values()])
+    runs = {n: gb.Run(n, m, r, s, cut=cut) for n, (m, r, s) in data.items()}
+    train = np.concatenate([gb.residuals(run, coef, np.arange(5., cut, 1.), available_by=cut)[0]
+                            for run in runs.values()])
+    overhead = gb.Overhead(train[:, 4], train[:, 3] - train[:, 2])
+    return coef, runs, overhead, train
+
+
+def evaluate(data, rows, boot_k=16, seed=1, reps=4000, block=10., curve=True):
+    if boot_k < 1 or reps < 1 or block <= 0 or not rows:
+        raise ValueError('Positive bootstrap settings and nonempty evaluation origins are required')
+    coef, runs, overhead, train = calibrate(data)
     res, sims = {}, {}
     for name, run in runs.items():
         res[name], sims[name] = gb.residuals(run, coef, np.arange(5, 296, 1.))
-    pooled = np.concatenate(list(res.values()))
-    train = pooled[pooled[:, 5] <= CUT]
-    overhead = gb.Overhead(train[:, 4], train[:, 3] - train[:, 2])
 
     rng = np.random.default_rng(seed)
     table = {k: [] for k in ('run', 't', 'actual', 'online_bias') + MODELS if k != 'run_mean_oracle'}
@@ -234,15 +250,19 @@ def evaluate(data, rows, boot_k=16, seed=1, reps=4000, block=10., pre_cut=CUT, c
     engine = {n: engine_summary(*data[n]) for n in sorted(runs, key=lambda n: data[n][0]['created'])}
 
     report = dict(
-        protocol=dict(horizon_s=gb.HORIZON, slo_s=gb.SLO, cut_s=CUT, batch_tokens=gb.B, output_tokens=gb.OUT,
+        protocol=dict(revision=2, horizon_s=gb.HORIZON, slo_s=gb.SLO, cut_s=CUT, batch_tokens=gb.B, output_tokens=gb.OUT,
                       boot_k=boot_k, seed=seed, block_s=block, bootstrap_reps=reps, nowcast_lookback_s=LOOKBACK,
-                      near_change_s=NEAR, causal_pre=pre_cut is not None, reference_run=REFERENCE,
-                      test_origins=len(rows), training='step fit t<200 s; overhead fit on first tokens <=200 s'),
+                      near_change_s=NEAR, causal_pre=True, reference_run=REFERENCE,
+                      test_origins=len(rows), sigma_floor_s=gb.SIGMA_MIN,
+                      training='scrapes fully available by 200 s; calibration windows + drain fully observed by 200 s',
+                      calibration_rows=len(train), calibration_max_available_s=float(train[:, 7].max()),
+                      nowcast_target='first-token SLO hits, without future completion knowledge',
+                      uncertainty='10 s block intervals conditional on these development captures; not independent acceptance'),
         step_coefficients=dict(zip(('step_s', 'per_decode_token_s', 'per_prompt_token_s'), coef)),
         overhead=dict(knots=overhead.knots, mean=overhead.values, sigma_knots=overhead.sigma_knots,
                       sigma=overhead.sigma_values),
         actual_counts_match_archive=True,
-        scores=scores, paired=paired, noise_floor=noise, cap_change_subsets=subsets,
+        scores=scores, paired=paired, replicate_variability=noise, cap_change_subsets=subsets,
         measured_fixed_caps=measured, engine=engine,
         cap_curves=[cap_curve(data, runs, h) for h in HELD] if curve else [],
         predictions=dict(run=names, **p))
@@ -262,10 +282,13 @@ def main():
     args = parser.parse_args()
     if args.output_dir.exists():
         parser.error('Choose a fresh output directory')
+    code_before = {f: code_sha256(HERE / f) for f in ('greybox_simulator.py', 'evaluate_greybox.py')}
     data, rows, inputs = load(args.cap_range_dir, args.shared_client_dir, args.archived_report)
     report = evaluate(data, rows, args.boot_k, args.seed, args.reps, args.block)
     report['inputs'] = inputs
-    report['code_sha256'] = {f: code_sha256(HERE / f) for f in ('greybox_simulator.py', 'evaluate_greybox.py')}
+    report['code_sha256'] = {f: code_sha256(HERE / f) for f in code_before}
+    if report['code_sha256'] != code_before:
+        raise ValueError('Scoring source changed during evaluation')
     raw = json.dumps(report, sort_keys=True).encode()
     compressed = gzip.compress(raw, mtime=0)
     args.output_dir.mkdir(parents=True)
@@ -276,7 +299,7 @@ def main():
         archive_sha256=inputs['archive_sha256'], code_sha256=report['code_sha256'],
         test_origins=report['protocol']['test_origins'], step_coefficients=report['step_coefficients'],
         mae={m: s[m]['mae'] for m in MODELS}, within_run_corr={m: s[m]['within_run_corr'] for m in MODELS},
-        paired=report['paired'], noise_floor=report['noise_floor'], cap_change_subsets=report['cap_change_subsets'],
+        paired=report['paired'], replicate_variability=report['replicate_variability'], cap_change_subsets=report['cap_change_subsets'],
         cap_curve_all_caps=report['cap_curves'][0]['rows'] if report['cap_curves'] else [],
         measured_fixed_caps=report['measured_fixed_caps'])
     (args.output_dir / 'summary.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n')

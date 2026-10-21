@@ -10,7 +10,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
-MODELS = (('ridge', 'PR #26 ridge (service_no_plan)'), ('nowcast', 'Trailing-60 s nowcast'),
+MODELS = (('ridge', 'PR #26 ridge (service_no_plan)'), ('nowcast', 'Trailing-60 s first-token nowcast'),
           ('simulator', 'Grey-box simulator'))
 
 
@@ -37,7 +37,7 @@ def main():
 
     curves = {c['held']: c['rows'] for c in report['cap_curves']}
     caps = [r['cap'] for r in curves[None]]
-    right.plot(caps, [r['goodput'] for r in curves[None]], 'o-', color='C2', label='Predicted goodput')
+    right.plot(caps, [r['goodput'] for r in curves[None]], 'o-', color='C2', label='Predicted first-token SLO hits')
     right.plot(caps, [r['admitted'] for r in curves[None]], 's--', color='C0', label='Predicted admitted')
     measured = report['measured_fixed_caps']
     right.scatter([m['cap'] for m in measured], [m['goodput'] for m in measured], marker='x', s=60, color='C2',
@@ -46,11 +46,11 @@ def main():
                   label='Measured admitted')
     held = [(h, next(r for r in rows if r['cap'] == h)) for h, rows in curves.items() if h is not None]
     right.scatter([h for h, _ in held], [r['goodput'] for _, r in held], facecolors='none', edgecolors='C3', s=80,
-                  label='Goodput with that cap held out of the fit')
+                  label='Predicted hits, matching-cap rows excluded')
     right.set_xticks(caps)
     right.set_xlabel('Fixed cost cap')
     right.set_ylabel('Rate over a 300 s run (req/s)')
-    right.set_title('Open-loop cap curve from an idle start (reference arrivals: fixed-32-r1)')
+    right.set_title('Retrospective cap curve: full-capture fit, fixed-32-r1 arrivals')
     right.legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(args.output, dpi=120)

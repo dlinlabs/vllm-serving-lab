@@ -1,0 +1,59 @@
+{
+  "parent_revision": "18a5c06fad6e658b0ab68b6f6a8b573ddf1355ce",
+  "offline_regressions": {
+    "passed": 295,
+    "greybox_cases": 33,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 52.523,
+    "modules": 9,
+    "evidence": "offline-regressions.xml"
+  },
+  "reproduction": {
+    "raw_files_match_archive_hashes": true,
+    "report_matches": true,
+    "tolerance": 1e-9,
+    "archived_full_report_sha256": "f7ae43ea6368a49939676d2e984e2cdf102b181b78bce04bdca96373bae58f8e"
+  },
+  "inputs": {
+    "qualified_captures": 8,
+    "actual_origins_match_archive": 768,
+    "raw_files_hash_verified": 40,
+    "original_archive_files_reextracted_and_verified": 256,
+    "archived_review_sha256": "16166b0e5bbcfe93b5a43ec91d81814f6f49625c79a39ce1090b44704ae74a27",
+    "fresh_full_capture_gate_audit": false
+  },
+  "code_sha256": {
+    "evaluate_greybox.py": "a5fdcf76bb16b9c5415576ed1ed9255b6c77f95ead2f953fbc151e9bc6ee5b3f",
+    "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e"
+  },
+  "reviewed_git_blobs": {
+    "README.md": "6b6cceffea8c6c90339f2e26ae5f78400f76d509",
+    "evaluate_greybox.py": "e4bfaae55c5c7887213634b7f852f2bf7ad1c319",
+    "greybox_simulator.py": "937ee7d940947bfb74ddcfdd72e0e81a3ec15ba5",
+    "results/greybox-forecast-20261020/full-report.json.gz": "d219f7f5b1f1424c8f9eb420aefd9ced2b7f1a20",
+    "results/greybox-forecast-20261020/greybox-forecast.png": "093b94a2a3be660b21845d26cf50e05fa2c54404",
+    "results/greybox-forecast-20261020/plot.py": "c207be7f105af7256f1dcf536f302eb678c7262f",
+    "results/greybox-forecast-20261020/report.md": "81fbc7a2831db062dab96e0b32f991ad33c6f029",
+    "results/greybox-forecast-20261020/reproduce.py": "abfaa04c25d6c38e6b23b033441ab70e2cd16739",
+    "results/greybox-forecast-20261020/summary.json": "ad6f345787cd518f8c0823bf916c6af18baf33b6",
+    "tests/test_greybox_simulator.py": "feb5e8ef3efcea3dc5e4e68eb7cfd9eb2bdbde16",
+    "results/greybox-forecast-20261020/offline-regressions.xml": "ced831a0369c1878783da95c56ff79485b726573"
+  },
+  "calibration": {
+    "max_window_available_s": 199.8,
+    "rows": 23366
+  },
+  "scope": {
+    "new_gpu_data": false,
+    "c_used": false,
+    "controller_enabled": false,
+    "new_full_native_cpu_acceptance": false
+  },
+  "checks": {
+    "source_change_guard": true,
+    "syntax_checked": true,
+    "whitespace_checked": true
+  }
+}

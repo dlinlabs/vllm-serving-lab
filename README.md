@@ -16,26 +16,27 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
-## Grey-box simulator forecast (2026-10-20 UTC)
+## Grey-box simulator forecast (review-corrected revision 2)
 
 [Report and reproduction](results/greybox-forecast-20261020/report.md) ·
-[summary](results/greybox-forecast-20261020/summary.json)
+[summary](results/greybox-forecast-20261020/summary.json) ·
+[validation](results/greybox-forecast-20261020/validation.json)
 
-A step-level simulator models the gateway's exact admission rule, vLLM continuous batching and a
-calibrated concurrency → TTFT overhead. On the combined review's 768 chronological origins its
-5 s goodput MAE is **1.0196**. The best ridge scores **1.1304** (ΔMAE −0.111, 95% CI
-[−0.193, −0.030]) and a trailing-60 s nowcast scores **1.0865**. Replicates at the same cap are
-almost uncorrelated at 5 s (corr 0.04–0.10).
+A simplified step simulator uses the gateway admission rule, FIFO prefill/decode and an
+empirical TTFT correction. Review fixes use request IDs, actual rejection decision times,
+fully available scrapes and closed calibration windows. On the same 768 chronological origins,
+5 s goodput MAE is **1.0286** versus ridge **1.1304** (conditional delta interval
+**[-0.183, -0.023]**) and the first-token nowcast **1.0865**. The simulator-vs-nowcast interval
+**[-0.120, +0.005]** includes zero. Same-cap replicate variability is not an irreducible noise floor.
 
-The simulator predicts admitted throughput across caps to within about 4%. **It cannot yet
-choose a cap**, for three reasons:
+**Cap selection is not validated:** near cap changes MAE is **1.414** versus ridge **1.240**;
+whole-run cap predictions are sensitive to empirical calibration. Engine histogram differences
+are consistent with queueing contributions but cannot exclusively attribute per-request delay.
 
-- Goodput depends on the overhead curve, and holding out a cap moves its prediction a lot.
-- Near cap changes, the simulator is worse than ridge.
-- The high-concurrency TTFT jump is engine queueing, and it is confounded with run order.
-
-The next data needed are within-run switches and fixed caps in the 16–48 region, per-request
-vLLM timestamps, and randomized order with more replicates. No controller is enabled.
+**33 grey-box / 295 related offline tests pass.** Raw hashes and all 768 actual cohort counts
+match the prior archive. This uses existing data only; no controller is enabled. Further GPU
+collection is conditional: repeated 16↔32 switching is a possible targeted validation, not a
+proven explanation of current errors or a requirement to measure every cap pair.
 
 ![Grey-box forecast](results/greybox-forecast-20261020/greybox-forecast.png)
 
