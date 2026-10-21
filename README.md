@@ -16,6 +16,20 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Cap-32 miss diagnosis: reproduction and new-host replication
+
+[Report and reproduction](results/cap-miss-causes-20261021/report.md) ·
+[Numerical summary](results/cap-miss-causes-20261021/summary.json)
+
+The PR #30 follow-up comment's numbers are now reproducible from the #30 frozen
+evaluation and the public old-host bundle.
+On the new host, short prompts at fixed cap 32 miss **0.8% / 3.8% / 15% / 63%** of
+the time by quartile of other prompt tokens accepted in the preceding second.
+The comment's Σ L² step-time gain is matched by a **linear** prompt-timing term,
+because vLLM's prompt counter advances when prefill completes. A super-linear term
+adds only 2–9% out of capture and is not identified per step. These are
+development associations, not causes.
+
 ## State-aware model iteration on the 16/32 captures
 
 [Development report and public reproduction](results/state-model-20261021/report.md) ·
