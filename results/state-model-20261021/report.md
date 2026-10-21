@@ -23,7 +23,7 @@ Rejections and failed offered requests contribute zero. Units are requests/s.
 | Quadratic prefill stress, q=0.50 | 0.7248 | −0.0351 | 0.6884 | 2/6 |
 | State logistic correction | 0.6995 | +0.0556 | 0.6076 | 3/6 |
 | Small monotone tree correction | 0.6898 | +0.0649 | 0.6148 | 4/6 |
-| Nested family choice, entire schedule group left out | 0.7135 | +0.0626 | 0.6855 | 3/6 |
+| Nested family choice, entire schedule group left out | 0.7135 | +0.1313 | 0.6855 | 3/6 |
 
 The trailing-60 s first-token baseline has MAE 0.9676 on these same windows. The
 old PR #28 value 1.0286 uses different captures/cuts and is not a like-for-like
