@@ -109,3 +109,18 @@ def test_grouped_outer_labels_cannot_choose_model_or_penalty(monkeypatch):
     a = next(f for f in folds if 'x-a-r1' in f['held_runs'])
     b = next(f for f in changed_folds if 'x-a-r1' in f['held_runs'])
     assert a == b and not any('-a-' in n for n in a['training_runs'])
+
+
+def test_family_choice_uses_inner_errors_not_outer_performance():
+    rows = {'capture': [dict(run='capture', t=t, cap=c, actual=1., near_change=True)
+                        for t in (60., 120., 180., 240.) for c in (16., 32.)]}
+    scores = {k: dict(predictions=[dict(run='capture', predicted=v) for _ in range(8)])
+              for k, v in [('calibration_state', 1.), ('calibration_tree', 9.)]}
+    folds = {k: [dict(held_runs=['capture'], inner_mae={'10.0': e})]
+             for k, e in [('state', .9), ('tree', .1)]}
+    a, selected = it.select_family(rows, scores, folds)
+    assert selected[0]['selected_family'] == 'tree' and a['overall']['mae'] == 8.
+    for row in rows['capture']:
+        row['actual'] = 9.
+    b, changed = it.select_family(rows, scores, folds)
+    assert selected == changed and b['overall']['mae'] == 0.
