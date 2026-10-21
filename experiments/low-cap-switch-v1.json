@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "protocol": "low-cap-switch-v1",
+  "status": "frozen",
+  "purpose": "Same-host low-cap range/phase and transition identification; development/calibration only, not independent model acceptance or MPC benefit",
+  "traces": {
+    "smoke": {
+      "path": "results/trace-smoke-96/trace.json",
+      "sha256": "9998c82da5174ec41484985f7b5cf77a658992cee5011fc38bb7155caf065294"
+    },
+    "development": {
+      "path": "results/trace-experiment-96-r1/trace.json",
+      "sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e"
+    }
+  },
+  "schedules": {
+    "a": {
+      "path": "experiments/low-cap-switch-v1-a.json",
+      "sha256": "fa69421fbeca2a5a8e9f4aa5df9ef90d70f82e155d929619887f881cd9dca7b9",
+      "budgets": [
+        16,
+        32,
+        16,
+        32,
+        16
+      ]
+    },
+    "b": {
+      "path": "experiments/low-cap-switch-v1-b.json",
+      "sha256": "761f56c0f91c012320113729db64a862e4e6eb9c2ad2695559270bffd465c09f",
+      "budgets": [
+        32,
+        16,
+        32,
+        16,
+        32
+      ]
+    },
+    "fixed-16": {
+      "fixed_budget": 16
+    },
+    "fixed-32": {
+      "fixed_budget": 32
+    }
+  },
+  "replay": {
+    "ttft_slo": 0.5,
+    "e2e_slo": null,
+    "max_scheduling_lag": 0.05,
+    "max_budget_lag": 0.05,
+    "cache_policy": "disabled",
+    "gateway_diagnostics": true,
+    "engine_observations": false,
+    "runner_diagnostics": true,
+    "runner_gc_policy": "defer",
+    "runner_max_rss_mib": 1536,
+    "sampler_mode": "process",
+    "warmup_requests": 3,
+    "max_pending": 1000,
+    "request_timeout": 120,
+    "drain_timeout": 120,
+    "startup_timeout": 120,
+    "shared_upstream_client": true
+  },
+  "runs": [
+    {
+      "name": "low-cap-switch-v1-smoke-32",
+      "trace": "smoke",
+      "schedule": "fixed-32",
+      "role": "development"
+    },
+    {
+      "name": "low-cap-switch-v1-fixed-32-r1",
+      "trace": "development",
+      "schedule": "fixed-32",
+      "role": "development",
+      "replicate": 1
+    },
+    {
+      "name": "low-cap-switch-v1-a-r1",
+      "trace": "development",
+      "schedule": "a",
+      "role": "development",
+      "replicate": 1
+    },
+    {
+      "name": "low-cap-switch-v1-b-r1",
+      "trace": "development",
+      "schedule": "b",
+      "role": "development",
+      "replicate": 1
+    },
+    {
+      "name": "low-cap-switch-v1-fixed-16-r1",
+      "trace": "development",
+      "schedule": "fixed-16",
+      "role": "development",
+      "replicate": 1
+    },
+    {
+      "name": "low-cap-switch-v1-b-r2",
+      "trace": "development",
+      "schedule": "b",
+      "role": "development",
+      "replicate": 2
+    },
+    {
+      "name": "low-cap-switch-v1-a-r2",
+      "trace": "development",
+      "schedule": "a",
+      "role": "development",
+      "replicate": 2
+    }
+  ],
+  "qualification": {
+    "order": [
+      "low-cap-switch-v1-smoke-32",
+      "low-cap-switch-v1-fixed-32-r1",
+      "low-cap-switch-v1-a-r1",
+      "low-cap-switch-v1-b-r1",
+      "low-cap-switch-v1-fixed-16-r1",
+      "low-cap-switch-v1-b-r2",
+      "low-cap-switch-v1-a-r2"
+    ],
+    "attempts_per_run": 1,
+    "required": [
+      "valid",
+      "load_fidelity",
+      "control_fidelity",
+      "diagnostic_integrity",
+      "runner_diagnostic_integrity",
+      "runner_gc_integrity"
+    ],
+    "on_failure": "Retain all evidence and stop; no automatic retry, resume, threshold relaxation or selective replacement"
+  },
+  "design": {
+    "hold_seconds": 60,
+    "arrival_seconds": 300,
+    "caps": [
+      16,
+      32
+    ],
+    "initial_condition": "One unchanged local backend and GPU; backend idle before and after each fresh gateway; three sequential warmups then gateway drained",
+    "cost_coefficients": {
+      "cost_intercept": 0.259,
+      "input_token_cost": 0.000758,
+      "output_token_cost": 0.0052083333
+    },
+    "primary_endpoint": "Successful complete streams with scheduled-arrival TTFT <=0.5 seconds, divided by all 300 arrival seconds",
+    "allocation": "F32,A1,B1,F16,B2,A2: A/B replicate order reversed, mean ordinal position matched; fixed runs are single reference observations, not causal matched controls",
+    "analysis": {
+      "hold_seconds": 60,
+      "transient_seconds": 15,
+      "sub_bin_seconds": 5,
+      "primary": "All offered scheduled-arrival cohorts, including rejected/failed and first 15 seconds",
+      "secondary": "First 15 s versus remaining 45 s are descriptive early/late windows, not a proven settling time",
+      "pairing": "Within replicate, same scheduled-arrival hold: cap32 minus cap16 across A/B; state/history differ, not causal counterfactuals",
+      "repeat": "A2-A1 and B2-B1 at identical phase/cap, descriptive variation, not a noise floor"
+    },
+    "scope": "No cost re-fit, no cap24/40 optimum search, no #28 re-fit/acceptance, no C; all new data designated development; future validation must remain separate"
+  }
+}
