@@ -1,6 +1,5 @@
 """Offline reproduction from the repository's original-file evidence bundle."""
 import argparse
-import gzip
 import importlib.util
 import json
 from pathlib import Path

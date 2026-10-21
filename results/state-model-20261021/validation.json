@@ -1,0 +1,72 @@
+{
+  "scope": "offline development-model analysis; no runtime or independent policy acceptance",
+  "tests": {
+    "passed": 244,
+    "new_tests": 31,
+    "log_sha256": "1028d8b65a0895935d1bc384440195bcaad248a16a09427315bd8cadc5fe282d",
+    "selection": [
+      "test_state_model",
+      "test_state_evidence",
+      "test_low_cap_frozen",
+      "test_greybox_simulator",
+      "test_transition_model",
+      "test_forecast_baselines",
+      "test_service_forecasts",
+      "test_flow_diagnosis",
+      "test_trace_dynamics",
+      "test_cap_sweep"
+    ]
+  },
+  "evidence": {
+    "files": 138,
+    "unique_blobs": 123,
+    "all_file_bytes_verified": true,
+    "original_archive_sha256": "cae6d6934a293980bc688b7397c683c46366efd73bcc50a5245783b5ed0e3205",
+    "transport_is_original_archive": false,
+    "numerical_artifacts_byte_identical": true
+  },
+  "independent_audit": {
+    "raw_capture_files": 119,
+    "captures": 7,
+    "gates_per_capture": 6,
+    "collection_cpu_cases": 516
+  },
+  "python": "3.12.14",
+  "packages": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "matplotlib": "3.10.8",
+    "pytest": "9.1.1"
+  },
+  "numerical_artifacts": {
+    "summary.json": "b27ba4bf18f46db573375426dd1c9414bbdaad82189cf85fbfbcdfd81a42e026",
+    "diagnosis.json": "08fe717fcc88d8e88f0ebaec671cfed46e17bca3bd86ca8b1e1a98d4bb96333c",
+    "full-report.json.gz": "6b12d2b6f674cfebd752cc94107c320844ee7c70ef2c5a7c1c8b3e15bca9c566",
+    "error-decomposition.json": "44242b9114fde3afa14e9bef85d4caeca50a1a354131bf7bf605afd2f33b7d23"
+  },
+  "source_sha256": {
+    "state_model.py": "ce5d6c181735e599c10eb1568745085730f29de54a34a0d2118144aeb1b192c2",
+    "iterate_state_model.py": "997fc41ccc9a9b05a62e56f0726f9405e80fb799a6c809ec868485bf81de1729",
+    "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e",
+    "evaluate_low_cap_frozen.py": "0bf919d910f23480db3cc7b3069ac9f12e42f5d67e99c62ce70ceb490842ead7",
+    "scripts/reproduce_state_model.py": "adf251c6898fbce95c173c59c275ff001840f3737e67bc530d74fff3d9b0ba89",
+    "scripts/render_state_report.py": "737f6d65a19b06e9cd4fd392f42c1a3c934ff3f085eb6704abc06b015bdd08b0",
+    "tests/test_state_model.py": "47ca44a6fba087c2f951740dff8288946ca0d530eb7dfc2a1bd883541a7f57d8",
+    "tests/test_state_evidence.py": "2f447e2c5a491e967187296efbf5ba9e5ed9b1eb6b5bc5f51aebfd6d8a022d6f",
+    "results/state-model-20261021/extract_evidence.py": "798bdd58d05e9b5b10d58a1000743b23f9d745a503794dad5cc268787a993b16"
+  },
+  "frozen_instrumentation_prediction_parity": {
+    "windows": 288,
+    "max_absolute_tolerance": 1e-10,
+    "passed": true
+  },
+  "model_readiness": {
+    "independent_acceptance": false,
+    "segment_cap32_bias_gate": false,
+    "same_state_action_choice_validated": false,
+    "policy_gain_demonstrated": false,
+    "controller_enabled": false
+  },
+  "reproduction_note": "Fresh /tmp extraction passes exact inventory audit; workspace sync temporary files interrupted an earlier attempt; audit was not relaxed."
+}

@@ -36,7 +36,7 @@ def test_restoration_keeps_duplicate_content_independent(tmp_path):
 
 @pytest.mark.parametrize('kwargs,match', [({'duplicate': True}, 'Duplicate'),
     ({'member': '../escape'}, 'Unexpected'), ({'output_path': '../escape'}, 'Unsafe'),
-    ({'output_path': '/escape'}, 'Unsafe')])
+    ({'output_path': '/escape'}, 'Unsafe'), ({'output_path': 'one/./data'}, 'Unsafe')])
 def test_malformed_bundle_never_publishes(tmp_path, kwargs, match):
     b = bundle(tmp_path, **kwargs); out = tmp_path / 'out'
     with pytest.raises(ValueError, match=match):

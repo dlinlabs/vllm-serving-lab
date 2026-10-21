@@ -16,6 +16,20 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## State-aware model iteration on the 16/32 captures
+
+[Development report and public reproduction](results/state-model-20261021/report.md) ·
+[All ablations](results/state-model-20261021/summary.json)
+
+On the same 288 windows, goodput MAE changes from **0.7290** (frozen) to
+**0.6995** (state logistic) or **0.6898** (small tree). Holding out entire schedule
+groups and choosing the family only inside training folds gives **0.7135**,
+with worse near-change error than frozen. Cap-32 segment biases remain too large;
+shadow probes still predominantly favor 32. **Cap selection and MPC gain remain
+unvalidated.** The original-file evidence bundle and CPU reproduction are included.
+
+![State-aware development comparison](results/state-model-20261021/development-comparison.png)
+
 ## Frozen-model check on new 16/32 captures
 
 [Results and reproduction](results/low-cap-frozen-20261021/report.md) ·

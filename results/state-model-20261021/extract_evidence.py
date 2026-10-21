@@ -18,7 +18,7 @@ def digest(path):
 
 def safe_relative(name):
     p = PurePosixPath(name)
-    if not name or p.is_absolute() or '..' in p.parts or '\\' in name or str(p) == '.':
+    if not name or p.is_absolute() or '..' in p.parts or '\\' in name or str(p) == '.' or str(p) != name:
         raise ValueError('Unsafe evidence path')
     return p
 
