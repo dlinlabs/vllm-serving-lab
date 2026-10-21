@@ -74,20 +74,31 @@ def service_run(capture, variant, frozen, overhead, reference):
     quadratic = .25 if variant == 'quadratic_025' else .5 if variant == 'quadratic_050' else 0.
     run = gb.Run(capture['name'], capture['meta'], capture['req'], capture['scrapes'], pre=reference['pre_s'])
     res, points = instrumented_residuals(run, coef, quadratic, overhead)
-    rows, draws = [], []
+    rows, draws, cap_draws = [], [], {'16': [], '32': []}
     for t in ORIGINS:
         state, obs, bias = sm.observed_state(run, t), lf.actual(run, t), gb.online_bias(res, overhead, t)
         rng = np.random.default_rng(lf.SEED + int(t)); packs, predictions, admissions = [], [], []
+        candidate_packs = {'16': [], '32': []}
         for _ in range(lf.BOOTS):
-            out, info = sm.simulate(run, t, run.bootstrap_arrivals(t, rng), coef, quadratic=quadratic)
+            arrivals = run.bootstrap_arrivals(t, rng)
+            out, info = sm.simulate(run, t, arrivals, coef, quadratic=quadratic)
             _, x = sm.point_features(out, info, state, overhead, bias)
             packs.append(x); predictions.append(gb.expected_met(out, overhead, bias) / gb.HORIZON)
             admissions.append(sum(bool(o.admitted) for o in out) / gb.HORIZON)
+            if variant == 'frozen':
+                for cap in (16, 32):
+                    hypothetical, details = sm.simulate(run, t, arrivals, coef, cap_fn=lambda at, c=cap: c)
+                    _, features = sm.point_features(hypothetical, details, state, overhead, bias)
+                    candidate_packs[str(cap)].append(features)
         rows.append(dict(run=run.name, t=t, cap=run.cap(t), actual=obs['goodput'], actual_admission=obs['admission'],
             admission=float(np.mean(admissions)), predicted=float(np.mean(predictions)), nowcast=ev.nowcast(run.req, t),
             near_change=ev.near_change(run, t), state=state))
         draws.append(np.concatenate(packs))
-    return dict(name=run.name, variant=variant, rows=rows, draws=draws, points=points, prefix=prefix, coefficients=coef)
+        if variant == 'frozen':
+            for cap in ('16', '32'):
+                cap_draws[cap].append(np.concatenate(candidate_packs[cap]))
+    return dict(name=run.name, variant=variant, rows=rows, draws=draws, points=points,
+                prefix=prefix, coefficients=coef, cap_draws=cap_draws)
 
 
 def rate(calibrator, matrices):
@@ -124,10 +135,16 @@ def nested_calibration(data, kind, grouped=False):
             scores[penalty] = float(np.mean(errors))
         chosen = min(PENALTIES, key=lambda p: (scores[p], -p))
         model = fit_calibration(data, train, kind, chosen)
+        probes = []
         for n in held_names:
             predictions[n] = rate(model, data[n]['draws'])
+            if data[n].get('cap_draws'):
+                low, high = (rate(model, data[n]['cap_draws'][str(c)]) for c in (16, 32))
+                probes.extend(dict(run=n, t=r['t'], cap16=float(a), cap32=float(b), delta=float(b - a))
+                              for r, a, b in zip(data[n]['rows'], low, high))
         folds.append(dict(held_runs=held_names, training_runs=train, chosen_penalty=chosen,
-                          inner_mae={str(k): v for k, v in scores.items()}, parameters=model.parameters()))
+                          inner_mae={str(k): v for k, v in scores.items()}, parameters=model.parameters(),
+                          hypothetical_same_state_probes=probes))
     return predictions, folds
 
 
@@ -141,6 +158,24 @@ def summarize(rows, predictions):
         per_run={n: metric([r for r in merged if r['run'] == n]) for n in rows},
         by_segment=[dict(start=s, cap=c, **metric([r for r in merged if s <= r['t'] < s + 60 and r['cap'] == c]))
                     for s in (60, 120, 180, 240) for c in (16, 32)], predictions=merged)
+
+
+def select_family(rows, scores, folds, grouped=False):
+    """Select family AND penalty using inner folds, never held-unit outcomes."""
+    prefix = 'schedule_holdout_' if grouped else 'calibration_'
+    kinds = [k for k in CALIBRATION if (prefix + k) in scores]
+    predictions, selections = {}, []
+    units = {tuple(f['held_runs']) for f in folds[('schedule_holdout_state' if grouped else 'state')]}
+    for held in sorted(units):
+        candidates = {}
+        for kind in kinds:
+            f = next(f for f in folds[('schedule_holdout_' + kind if grouped else kind)] if tuple(f['held_runs']) == held)
+            candidates[kind] = (min(f['inner_mae'].values()), f)
+        chosen = min(kinds, key=lambda k: (candidates[k][0], list(CALIBRATION).index(k)))
+        for n in held:
+            predictions[n] = [r['predicted'] for r in scores[prefix + chosen]['predictions'] if r['run'] == n]
+        selections.append(dict(held_runs=held, selected_family=chosen, inner_mae={k: v[0] for k, v in candidates.items()}))
+    return summarize(rows, predictions), selections
 
 
 def diagnosis(captures):
@@ -212,6 +247,8 @@ def main():
         pred, fit = nested_calibration(variants['frozen'], kind, grouped=True)
         scores['schedule_holdout_' + kind], folds['schedule_holdout_' + kind] = summarize(rows, pred), fit
         print('Schedule-held-out', kind, scores['schedule_holdout_' + kind]['overall'], flush=True)
+    scores['nested_family'], folds['nested_family_selection'] = select_family(rows, scores, folds)
+    scores['schedule_nested_family'], folds['schedule_nested_family_selection'] = select_family(rows, scores, folds, grouped=True)
     if before != {f: ev.code_sha256(ROOT / f) for f in guarded}:
         raise ValueError('Sources changed during evaluation')
     report = dict(protocol=dict(role='development_ablation', independent_acceptance=False,
