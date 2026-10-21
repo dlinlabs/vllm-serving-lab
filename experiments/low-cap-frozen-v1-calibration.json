@@ -1,0 +1,26 @@
+{
+  "source_model_commit": "ca919b0526bda1f32218b5f202b4a4dc7a7f2b2d",
+  "source_report_sha256": "47269e25db3fa85b30c5baf803ffb54337c03cec85995f8b189abf21fd9ff4d0",
+  "source_reference_run": "cap-range-v1-fixed-32-r1",
+  "reference_cut_s": 200.0,
+  "reference_raw_sha256": {
+    "manifest.json": "e0251807cec8b1fc0653181cb23474ffe6ac47f02e0f4481f6dbe712db6c6be7",
+    "client.json": "37bd8a0845587a836bc941528befd0f6723fef23f67cb9356f05adb352a1cc1b",
+    "warmup.json": "583ab172fc0a95510252ff2d43ecbc5c8e7ade91c817cad708440e6a86b4dc09",
+    "gateway.jsonl": "ab17697c59a6f95049cdf5066cfaec63988a5a2898ee0e8fb64af227dacc9717",
+    "trace.json": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+    "budget_changes.json": "52b30cf0bd17f62be643d5c605c3e2191ba3160d79af411e08a6b1883415d6ec",
+    "state_observations.json": "3b357c0cb4158a661ab83172f85f49623121f33f820ad2c852db983236f72a5b",
+    "telemetry_status.json": "789e480b34c8cc170c3e9659b29003e7f3d8ae0148c787bdb9c73abb4348cc84",
+    "report.json": "d78363bf7cc1df5088d4f7458d3eca382d5a5707766818c58346ce8b4c18585b",
+    "timeseries.png": "0d31640d1388e73882095611e6cd967dad7b649dddd5174106b0845357b864ab",
+    "engine_observations.jsonl": "99786499f92058e2fddbd200ef55d0a6be18bacd3bc9b7f9c0bb3129ff697a0d",
+    "engine_observations_status.json": "97eec1b17f0a9929653c46d3c56bb8986489db277b6913fb95b0bdacc6de733d",
+    "replay_plan.json": "6abffca4ce95ec43d233240facd47ae9815a650f7ab458d1303a7cb0971a3645",
+    "runner_observations.jsonl": "8dc37ddf80db9b1375a347cd59bb88e9cddc1b66683b74189f27ade9031ec018",
+    "runner_observations_status.json": "439ef0950715e385d2be0b9edf7f48f58c9604cbd6e5341bca829181d33c7bf7",
+    "runner_gc_control.json": "841bc63270e5af3a62d483cb29c37c58bd21ec871283ed42c383041fb0f99c49"
+  },
+  "pre_s": 0.00545710029109614,
+  "pre_rule": "Median schedule-to-accept delay among acceptances observed by 200 s in the original reference capture; fixed for every new run"
+}

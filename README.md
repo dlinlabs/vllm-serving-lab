@@ -16,6 +16,24 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Frozen-model check on new 16/32 captures
+
+[Results and reproduction](results/low-cap-frozen-20261021/report.md) ·
+[Numerical summary](results/low-cap-frozen-20261021/summary.json)
+
+With PR #28's service/TTFT parameters unchanged, 288 five-second forecasts on six new
+same-host captures have goodput MAE **0.7290**, versus **0.9676** for the trailing-60 s
+first-token baseline. All seven captures independently pass their six audit gates;
+119 raw-file hashes match. Cap-32 forecasts still overpredict by **0.3163 req/s** on average.
+
+This is development transfer diagnosis. A/B factual-gap sign agreement is **not**
+same-state action-choice accuracy. No controller or gain over a fixed-cap policy has
+been demonstrated; new measurements are not used to refit the archived coefficients.
+
+![Frozen model on low caps](results/low-cap-frozen-20261021/frozen-forecasts.png)
+
+---
+
 ## Grey-box simulator forecast (review-corrected revision 2)
 
 [Report and reproduction](results/greybox-forecast-20261020/report.md) ·
