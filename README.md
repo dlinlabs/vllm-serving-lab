@@ -16,6 +16,32 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Grey-box simulator forecast (review-corrected revision 2)
+
+[Report and reproduction](results/greybox-forecast-20261020/report.md) ·
+[summary](results/greybox-forecast-20261020/summary.json) ·
+[validation](results/greybox-forecast-20261020/validation.json)
+
+A simplified step simulator uses the gateway admission rule, FIFO prefill/decode and an
+empirical TTFT correction. Review fixes use request IDs, actual rejection decision times,
+fully available scrapes and closed calibration windows. On the same 768 chronological origins,
+5 s goodput MAE is **1.0286** versus ridge **1.1304** (conditional delta interval
+**[-0.183, -0.023]**) and the first-token nowcast **1.0865**. The simulator-vs-nowcast interval
+**[-0.120, +0.005]** includes zero. Same-cap replicate variability is not an irreducible noise floor.
+
+**Cap selection is not validated:** near cap changes MAE is **1.414** versus ridge **1.240**;
+whole-run cap predictions are sensitive to empirical calibration. Engine histogram differences
+are consistent with queueing contributions but cannot exclusively attribute per-request delay.
+
+**33 grey-box / 295 related offline tests pass.** Raw hashes and all 768 actual cohort counts
+match the prior archive. This uses existing data only; no controller is enabled. Further GPU
+collection is conditional: repeated 16↔32 switching is a possible targeted validation, not a
+proven explanation of current errors or a requirement to measure every cap pair.
+
+![Grey-box forecast](results/greybox-forecast-20261020/greybox-forecast.png)
+
+---
+
 ## Flow-model error diagnosis (2026-10-20 UTC)
 
 [Frozen-model diagnosis and reproduction](results/flow-diagnosis-20261020/report.md)

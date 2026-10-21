@@ -1,0 +1,201 @@
+{
+  "archive_sha256": "16166b0e5bbcfe93b5a43ec91d81814f6f49625c79a39ce1090b44704ae74a27",
+  "cap_change_subsets": {
+    "near_change": {
+      "mae": {
+        "nowcast": 1.358683473389356,
+        "ridge": 1.2401150500702027,
+        "simulator": 1.4139511501574358
+      },
+      "n": 96
+    },
+    "steady": {
+      "mae": {
+        "nowcast": 0.8376050420168067,
+        "ridge": 1.0492836349501922,
+        "simulator": 0.9235098356705778
+      },
+      "n": 96
+    }
+  },
+  "cap_curve_all_caps": [
+    {
+      "admitted": 4.28,
+      "cap": 16,
+      "goodput": 4.21788629754567,
+      "goodput_step_only": 4.2,
+      "held": null,
+      "unreached_requests": 0
+    },
+    {
+      "admitted": 5.14,
+      "cap": 24,
+      "goodput": 4.504251607728946,
+      "goodput_step_only": 4.62,
+      "held": null,
+      "unreached_requests": 0
+    },
+    {
+      "admitted": 5.633333333333334,
+      "cap": 32,
+      "goodput": 4.252676386623491,
+      "goodput_step_only": 4.45,
+      "held": null,
+      "unreached_requests": 0
+    },
+    {
+      "admitted": 5.816666666666666,
+      "cap": 40,
+      "goodput": 2.889584599443183,
+      "goodput_step_only": 3.0566666666666666,
+      "held": null,
+      "unreached_requests": 0
+    },
+    {
+      "admitted": 5.973333333333334,
+      "cap": 48,
+      "goodput": 2.2937973374999205,
+      "goodput_step_only": 2.6733333333333333,
+      "held": null,
+      "unreached_requests": 0
+    },
+    {
+      "admitted": 6.5633333333333335,
+      "cap": 64,
+      "goodput": 1.8506605813723846,
+      "goodput_step_only": 2.44,
+      "held": null,
+      "unreached_requests": 0
+    },
+    {
+      "admitted": 6.963333333333333,
+      "cap": 80,
+      "goodput": 1.8446123968693715,
+      "goodput_step_only": 2.69,
+      "held": null,
+      "unreached_requests": 0
+    },
+    {
+      "admitted": 7.126666666666667,
+      "cap": 96,
+      "goodput": 1.3454241804181861,
+      "goodput_step_only": 2.1933333333333334,
+      "held": null,
+      "unreached_requests": 0
+    }
+  ],
+  "code_sha256": {
+    "evaluate_greybox.py": "a5fdcf76bb16b9c5415576ed1ed9255b6c77f95ead2f953fbc151e9bc6ee5b3f",
+    "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e"
+  },
+  "compressed_report_sha256": "47269e25db3fa85b30c5baf803ffb54337c03cec85995f8b189abf21fd9ff4d0",
+  "full_report_sha256": "f7ae43ea6368a49939676d2e984e2cdf102b181b78bce04bdca96373bae58f8e",
+  "mae": {
+    "nowcast": 1.0865217962184874,
+    "oracle_arrivals_overhead": 1.0233018463952004,
+    "oracle_arrivals_overhead_bias": 1.0037300078361853,
+    "oracle_arrivals_raw": 1.857465017409319,
+    "ridge": 1.1303786473797544,
+    "run_mean_oracle": 1.0769097222222221,
+    "simulator": 1.0285943461006573,
+    "simulator_no_bias": 1.051029457972965
+  },
+  "measured_fixed_caps": [
+    {
+      "admitted": 4.226666666666667,
+      "cap": 16,
+      "goodput": 4.13,
+      "run": "cap-range-v1-fixed-16-r1"
+    },
+    {
+      "admitted": 5.84,
+      "cap": 32,
+      "goodput": 5.08,
+      "run": "cap-range-v1-fixed-32-r1"
+    },
+    {
+      "admitted": 5.6866666666666665,
+      "cap": 32,
+      "goodput": 4.59,
+      "run": "cap-range-v1-fixed-32-r2"
+    },
+    {
+      "admitted": 6.516666666666667,
+      "cap": 64,
+      "goodput": 2.2666666666666666,
+      "run": "cap-range-v1-fixed-64-r1"
+    },
+    {
+      "admitted": 7.276666666666666,
+      "cap": 96,
+      "goodput": 3.33,
+      "run": "cap-range-v1-fixed-96-r1"
+    },
+    {
+      "admitted": 7.416666666666667,
+      "cap": 96,
+      "goodput": 2.6666666666666665,
+      "run": "cap-range-v1-fixed-96-r2"
+    }
+  ],
+  "paired": {
+    "nowcast_vs_ridge": {
+      "ci95": [
+        -0.12771293555962077,
+        0.04229424825050295
+      ],
+      "delta_mae": -0.04385685116126678,
+      "share_below_zero": 0.85225
+    },
+    "simulator_vs_nowcast": {
+      "ci95": [
+        -0.12028406194890563,
+        0.005152782632863595
+      ],
+      "delta_mae": -0.05792745011783037,
+      "share_below_zero": 0.965
+    },
+    "simulator_vs_ridge": {
+      "ci95": [
+        -0.1828481826892461,
+        -0.023459854289982783
+      ],
+      "delta_mae": -0.10178430127909716,
+      "share_below_zero": 0.99575
+    }
+  },
+  "replicate_variability": {
+    "32": {
+      "corr": 0.09550831062269954,
+      "mae": 1.3958333333333333,
+      "runs": [
+        "cap-range-v1-fixed-32-r1",
+        "cap-range-v1-fixed-32-r2"
+      ]
+    },
+    "96": {
+      "corr": 0.03976647057408471,
+      "mae": 1.6187500000000001,
+      "runs": [
+        "cap-range-v1-fixed-96-r1",
+        "cap-range-v1-fixed-96-r2"
+      ]
+    }
+  },
+  "step_coefficients": {
+    "per_decode_token_s": 0.0003168517008371403,
+    "per_prompt_token_s": 5.341461305169013e-05,
+    "step_s": 0.00918083968026616
+  },
+  "test_origins": 768,
+  "within_run_corr": {
+    "nowcast": 0.051833560655036776,
+    "oracle_arrivals_overhead": 0.4055745368905358,
+    "oracle_arrivals_overhead_bias": 0.3944454242709775,
+    "oracle_arrivals_raw": 0.4195143812887966,
+    "ridge": 0.2321383870290903,
+    "run_mean_oracle": 9.103829857004045e-17,
+    "simulator": 0.3142227673654392,
+    "simulator_no_bias": 0.32403858225802107
+  }
+}
