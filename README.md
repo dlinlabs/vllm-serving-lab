@@ -16,6 +16,38 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## State-aware model iteration on the 16/32 captures
+
+[Development report and public reproduction](results/state-model-20261021/report.md) ·
+[All ablations](results/state-model-20261021/summary.json)
+
+On the same 288 windows, goodput MAE changes from **0.7290** (frozen) to
+**0.6995** (state logistic) or **0.6898** (small tree). Holding out entire schedule
+groups and choosing the family only inside training folds gives **0.7135**,
+with worse near-change error than frozen. Cap-32 segment biases remain too large;
+shadow probes still predominantly favor 32. **Cap selection and MPC gain remain
+unvalidated.** The original-file evidence bundle and CPU reproduction are included.
+
+![State-aware development comparison](results/state-model-20261021/development-comparison.png)
+
+## Frozen-model check on new 16/32 captures
+
+[Results and reproduction](results/low-cap-frozen-20261021/report.md) ·
+[Numerical summary](results/low-cap-frozen-20261021/summary.json)
+
+With PR #28's service/TTFT parameters unchanged, 288 five-second forecasts on six new
+same-host captures have goodput MAE **0.7290**, versus **0.9676** for the trailing-60 s
+first-token baseline. All seven captures independently pass their six audit gates;
+119 raw-file hashes match. Cap-32 forecasts still overpredict by **0.3163 req/s** on average.
+
+This is development transfer diagnosis. A/B factual-gap sign agreement is **not**
+same-state action-choice accuracy. No controller or gain over a fixed-cap policy has
+been demonstrated; new measurements are not used to refit the archived coefficients.
+
+![Frozen model on low caps](results/low-cap-frozen-20261021/frozen-forecasts.png)
+
+---
+
 ## Grey-box simulator forecast (review-corrected revision 2)
 
 [Report and reproduction](results/greybox-forecast-20261020/report.md) ·

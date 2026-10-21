@@ -1,0 +1,202 @@
+{
+  "decomposition": [
+    {
+      "cap": 16,
+      "start": null,
+      "n": 144,
+      "goodput_bias": 0.06360895571607889,
+      "admission_term": 0.06392895158327427,
+      "hit_rate_term": -0.0003199958671954285,
+      "simulated_pass_ratio": 0.983339106443972,
+      "actual_pass_ratio": 0.9858293075684381
+    },
+    {
+      "cap": 16,
+      "start": 60,
+      "n": 36,
+      "goodput_bias": 0.04622521561560334,
+      "admission_term": 0.08308037551440314,
+      "hit_rate_term": -0.036855159898799804,
+      "simulated_pass_ratio": 0.9860718174166747,
+      "actual_pass_ratio": 0.9949748743718594
+    },
+    {
+      "cap": 16,
+      "start": 120,
+      "n": 36,
+      "goodput_bias": -0.0830122510891835,
+      "admission_term": -0.07790353641456581,
+      "hit_rate_term": -0.005108714674617685,
+      "simulated_pass_ratio": 0.9735237593144772,
+      "actual_pass_ratio": 0.9806949806949807
+    },
+    {
+      "cap": 16,
+      "start": 180,
+      "n": 36,
+      "goodput_bias": 0.11990722519539546,
+      "admission_term": 0.11971391908212557,
+      "hit_rate_term": 0.000193306113269862,
+      "simulated_pass_ratio": 0.997404425916486,
+      "actual_pass_ratio": 0.9974651457541192
+    },
+    {
+      "cap": 16,
+      "start": 240,
+      "n": 36,
+      "goodput_bias": 0.17131563314250023,
+      "admission_term": 0.13082504815113433,
+      "hit_rate_term": 0.040490584991365895,
+      "simulated_pass_ratio": 0.9754294432811302,
+      "actual_pass_ratio": 0.9690444145356663
+    },
+    {
+      "cap": 32,
+      "start": null,
+      "n": 144,
+      "goodput_bias": 0.3162806258054457,
+      "admission_term": -0.08122225716653782,
+      "hit_rate_term": 0.39750288297198355,
+      "simulated_pass_ratio": 0.8327754634201466,
+      "actual_pass_ratio": 0.7699004975124378
+    },
+    {
+      "cap": 32,
+      "start": 60,
+      "n": 36,
+      "goodput_bias": 0.714744094749645,
+      "admission_term": 0.13333531001911988,
+      "hit_rate_term": 0.5814087847305252,
+      "simulated_pass_ratio": 0.8151704993087381,
+      "actual_pass_ratio": 0.710174717368962
+    },
+    {
+      "cap": 32,
+      "start": 120,
+      "n": 36,
+      "goodput_bias": -0.012793535764037396,
+      "admission_term": -0.19073733047875419,
+      "hit_rate_term": 0.17794379471471686,
+      "simulated_pass_ratio": 0.845952386764771,
+      "actual_pass_ratio": 0.8260447035957239
+    },
+    {
+      "cap": 32,
+      "start": 180,
+      "n": 36,
+      "goodput_bias": 0.5177643354096078,
+      "admission_term": 0.026376783967292386,
+      "hit_rate_term": 0.4913875514423153,
+      "simulated_pass_ratio": 0.810743334142233,
+      "actual_pass_ratio": 0.7288842544316997
+    },
+    {
+      "cap": 32,
+      "start": 240,
+      "n": 36,
+      "goodput_bias": 0.04540760882656762,
+      "admission_term": -0.29386379217380937,
+      "hit_rate_term": 0.339271401000377,
+      "simulated_pass_ratio": 0.858665376362877,
+      "actual_pass_ratio": 0.8073654390934843
+    }
+  ],
+  "shadow_probes": {
+    "state": {
+      "origins": 288,
+      "prefer32": 219,
+      "mean_delta": 0.544776112074393,
+      "by_segment": [
+        {
+          "start": 60,
+          "mean_delta": 0.402633993073212
+        },
+        {
+          "start": 120,
+          "mean_delta": 0.5873405049338412
+        },
+        {
+          "start": 180,
+          "mean_delta": 0.5102245516032612
+        },
+        {
+          "start": 240,
+          "mean_delta": 0.6789053986872574
+        }
+      ],
+      "counterfactual_ground_truth_available": false
+    },
+    "tree": {
+      "origins": 288,
+      "prefer32": 208,
+      "mean_delta": 0.5141118772715212,
+      "by_segment": [
+        {
+          "start": 60,
+          "mean_delta": 0.3566453940856465
+        },
+        {
+          "start": 120,
+          "mean_delta": 0.5589159342768145
+        },
+        {
+          "start": 180,
+          "mean_delta": 0.4635958147520898
+        },
+        {
+          "start": 240,
+          "mean_delta": 0.677290365971534
+        }
+      ],
+      "counterfactual_ground_truth_available": false
+    },
+    "schedule_holdout_state": {
+      "origins": 288,
+      "prefer32": 217,
+      "mean_delta": 0.5511846637014526,
+      "by_segment": [
+        {
+          "start": 60,
+          "mean_delta": 0.4155329128140479
+        },
+        {
+          "start": 120,
+          "mean_delta": 0.5898781575118446
+        },
+        {
+          "start": 180,
+          "mean_delta": 0.5211544631063645
+        },
+        {
+          "start": 240,
+          "mean_delta": 0.6781731213735532
+        }
+      ],
+      "counterfactual_ground_truth_available": false
+    },
+    "schedule_holdout_tree": {
+      "origins": 288,
+      "prefer32": 205,
+      "mean_delta": 0.526251083907875,
+      "by_segment": [
+        {
+          "start": 60,
+          "mean_delta": 0.37082911723116463
+        },
+        {
+          "start": 120,
+          "mean_delta": 0.557933190387204
+        },
+        {
+          "start": 180,
+          "mean_delta": 0.4846347024799624
+        },
+        {
+          "start": 240,
+          "mean_delta": 0.6916073255331688
+        }
+      ],
+      "counterfactual_ground_truth_available": false
+    }
+  }
+}
