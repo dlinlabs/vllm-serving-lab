@@ -1,4 +1,4 @@
-"""Run the frozen, same-host fixed-cap development sweep; stop on the first failure."""
+"""Run frozen same-host fixed-cap or low-cap switching collections; stop on first failure."""
 import argparse
 from datetime import datetime, timezone
 import json
@@ -13,7 +13,7 @@ import subprocess
 import sys
 import time
 
-from experiment_protocol import (capture_identity, capture_mismatches, collection_binding,
+from experiment_protocol import (capture_identity, capture_mismatches, collection_binding, expected_schedule,
                                  load_protocol, normalized_sha256)
 from trace_control import make_plan, validate_schedule
 from trace_workload import load_trace, sha256_file
@@ -40,15 +40,20 @@ def git(*args):
     return subprocess.check_output(['git', *args], cwd=ROOT, text=True).strip()
 
 
-def configuration(document, run, output):
+def configuration(document, run, output, protocol=None):
+    declared = document['schedules'][run['schedule']]
+    fixed = 'fixed_budget' in declared
     return dict(document['replay'], trace=str(ROOT / document['traces'][run['trace']]['path']),
-                output_dir=str(output), budget=float(document['schedules'][run['schedule']]['fixed_budget']),
-                budget_schedule=None, vllm_url=BACKEND, protocol=str(PROTOCOL), protocol_run=run['name'])
+                output_dir=str(output), budget=float(declared['fixed_budget'] if fixed else read(ROOT / declared['path'])[0]['budget']),
+                budget_schedule=None if fixed else str(ROOT / declared['path']),
+                vllm_url=BACKEND, protocol=str(protocol or PROTOCOL), protocol_run=run['name'])
 
 
 def command(config):
     argv = [sys.executable, '-u', str(ROOT / 'run_trace_pilot.py')]
     for key, value in config.items():
+        if key == 'budget' and config.get('budget_schedule') is not None:
+            continue  # The child derives this normalized initial value from the schedule.
         if value is True:
             argv.append('--' + key.replace('_', '-'))
         elif value is not None and value is not False:
@@ -56,9 +61,10 @@ def command(config):
     return argv
 
 
-def plan(document, output, stage):
-    if document.get('status') != 'frozen' or document.get('protocol') != 'cap-range-v1':
-        raise ValueError('Use the frozen cap-range-v1 collection declaration')
+def plan(document, output, stage, protocol=None):
+    protocol = Path(protocol or PROTOCOL)
+    if document.get('status') != 'frozen' or document.get('protocol') not in ('cap-range-v1', 'low-cap-switch-v1'):
+        raise ValueError('Use a supported frozen collection declaration')
     by_name = {run['name']: run for run in document['runs']}
     order = document['qualification']['order']
     if set(order) != set(by_name) or len(order) != len(by_name):
@@ -67,14 +73,17 @@ def plan(document, output, stage):
     jobs = []
     for name in selected:
         run = by_name[name]
-        if run['role'] != 'development' or 'fixed_budget' not in document['schedules'][run['schedule']]:
-            raise ValueError('Only fixed-cap development runs belong to this suite')
-        config = configuration(document, run, output / name)
+        if run['role'] != 'development':
+            raise ValueError('Only development runs belong to this suite')
+        if document['protocol'] == 'cap-range-v1' and 'fixed_budget' not in document['schedules'][run['schedule']]:
+            raise ValueError('Only fixed-cap development runs belong to cap-range-v1')
+        config = configuration(document, run, output / name, protocol)
         trace = load_trace(config['trace'])
-        schedule = validate_schedule([dict(at_seconds=0, budget=config['budget'])], trace['duration_seconds'])
+        _, schedule = expected_schedule(document['schedules'][run['schedule']], trace['duration_seconds'])
         # Validate the exact same identity contract as the child, before collecting anything.
-        collection_binding(PROTOCOL, name, output / name, config, trace, sha256_file(config['trace']), schedule)
-        jobs.append(dict(name=name, trace=run['trace'], cap=config['budget'],
+        collection_binding(protocol, name, output / name, config, trace, sha256_file(config['trace']), schedule)
+        cap_label = config['budget'] if config['budget_schedule'] is None else [s['budget'] for s in schedule]
+        jobs.append(dict(name=name, trace=run['trace'], cap=cap_label,
                          duration_s=trace['duration_seconds'], config=config, command=command(config)))
     return jobs
 
@@ -188,9 +197,10 @@ def qualify_capture(path, document, protocol_sha, name, commit, expected_code=No
     return manifest, report
 
 
-def run_suite(output, stage):
-    document, protocol_sha = load_protocol(PROTOCOL)
-    jobs = plan(document, output, stage)
+def run_suite(output, stage, protocol=None):
+    protocol = Path(protocol or PROTOCOL)
+    document, protocol_sha = load_protocol(protocol)
+    jobs = plan(document, output, stage, protocol)
     if output.exists():
         raise FileExistsError(f'Refusing existing output directory: {output}; no automatic resume/retry')
     commit = git('rev-parse', 'HEAD')
@@ -203,14 +213,14 @@ def run_suite(output, stage):
                     stage=stage, commit=commit, status='running', valid=False, backend=reference,
                     cpu_acceptance=acceptance, planned=[job['name'] for job in jobs], runs=[],
                     started_at=datetime.now(timezone.utc).isoformat(),
-                    note='Two development repeats per cap; not model acceptance, a noise bound or MPC benefit.')
+                    note=document.get('purpose', 'Development collection, not model acceptance or MPC benefit.'))
     save(output / 'suite.json', evidence)
     save(output / 'protocol.json', document)
     child, expected_code, expected_packages = None, None, None
     try:
         for index, job in enumerate(jobs):
             if (git('rev-parse', 'HEAD') != commit or git('status', '--porcelain', '--untracked-files=no') or
-                    normalized_sha256(PROTOCOL) != protocol_sha or backend_identity() != reference):
+                    normalized_sha256(protocol) != protocol_sha or backend_identity() != reference):
                 raise RuntimeError('Checkout, protocol, host or backend changed; stop this series')
             idle = wait_idle()
             record = dict(name=job['name'], cap=job['cap'], status='running', preflight_idle=idle,
@@ -218,7 +228,7 @@ def run_suite(output, stage):
                           command=job['command'], started_at=datetime.now(timezone.utc).isoformat())
             evidence['runs'].append(record)
             save(output / 'suite.json', evidence)
-            print(f'[{index + 1}/{len(jobs)}] {job["name"]}: cap={job["cap"]:g}, {job["duration_s"]:g}s', flush=True)
+            print(f'[{index + 1}/{len(jobs)}] {job["name"]}: cap={job["cap"]}, {job["duration_s"]:g}s', flush=True)
             with (output / (job['name'] + '.log')).open('w') as log:
                 # The child owns its gateway cleanup. The supervisor never kills a shared backend.
                 env = dict(os.environ, COST_INTERCEPT=str(COST['cost_intercept']),
@@ -239,7 +249,7 @@ def run_suite(output, stage):
             expected_packages = packages
             evidence['packages'] = packages
             if (backend_identity() != reference or git('rev-parse', 'HEAD') != commit or
-                    git('status', '--porcelain', '--untracked-files=no') or normalized_sha256(PROTOCOL) != protocol_sha):
+                    git('status', '--porcelain', '--untracked-files=no') or normalized_sha256(protocol) != protocol_sha):
                 raise RuntimeError('Backend, checkout or protocol changed during capture')
             record.update(status='passed', performance=report['performance'], postflight_idle=wait_idle(),
                           artifact_sha256={p.name: sha256_file(p) for p in (output / job['name']).iterdir() if p.is_file()})
@@ -269,16 +279,17 @@ def main():
     parser.add_argument('--output-dir', required=True)
     parser.add_argument('--stage', choices=('smoke', 'full'), default='smoke')
     parser.add_argument('--plan-only', action='store_true', help='Validate/print commands without a server or output writes')
+    parser.add_argument('--protocol', type=Path, default=PROTOCOL, help='Frozen cap-range or low-cap-switch declaration')
     args = parser.parse_args()
     output = Path(args.output_dir).resolve()
     if args.plan_only:
-        document, _ = load_protocol(PROTOCOL)
-        print(json.dumps(plan(document, output, args.stage), indent=2))
+        document, _ = load_protocol(args.protocol)
+        print(json.dumps(plan(document, output, args.stage, args.protocol), indent=2))
     else:
         def interrupted(signum, frame):
             raise KeyboardInterrupt(f'Received signal {signum}')
         signal.signal(signal.SIGTERM, interrupted)
-        run_suite(output, args.stage)
+        run_suite(output, args.stage, args.protocol)
 
 
 if __name__ == '__main__':

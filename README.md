@@ -16,6 +16,18 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Low-cap phase and transition collection
+
+[Frozen protocol and rental-host commands](experiments/low-cap-switch-v1.md).
+The next collection uses fixed 16/32 references and opposite 60 s switching schedules,
+repeated in ABBA order on one host. Six full 300 s runs plus smoke distinguish low-cap
+operating-region evidence, arrival-phase effects and same-schedule repeat variation.
+The V1 cost formula stays fixed. This is development/calibration, not a new optimum,
+independent #28 acceptance or MPC. Native CPU acceptance must cover the exact collection
+commit before vLLM starts. Existing fixed-cap sweep defaults remain unchanged.
+
+---
+
 ## Latest results: same-host fixed-cap range (2026-10-20 UTC)
 
 **[Full findings, original data and reproduction](results/cap-range-20261020/report.md)** ·
