@@ -1,0 +1,348 @@
+{
+  "schema": "prefill-service-design-cases-v1",
+  "status": "draft_not_executable",
+  "cases": [
+    {
+      "id": "single-L1024-D0",
+      "family": "single_length",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L2048-D0",
+      "family": "single_length",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        2048
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L4096-D0",
+      "family": "single_length",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L7168-D0",
+      "family": "single_length",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "composition-uniform-D0",
+      "family": "equal_total",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration",
+      "paired_content_pool": "composition-16384-per-block"
+    },
+    {
+      "id": "composition-mixed-D0",
+      "family": "equal_total",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case",
+      "paired_content_pool": "composition-16384-per-block"
+    },
+    {
+      "id": "composition-reverse-D0",
+      "family": "equal_total",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case",
+      "paired_content_pool": "composition-16384-per-block"
+    },
+    {
+      "id": "sentinel-none-D0",
+      "family": "sentinel",
+      "background_decoders": 0,
+      "foreground_tokens": [],
+      "foreground_offsets_ms": [],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      },
+      "split": "calibration",
+      "paired_content_pool": "sentinel-load-16384-per-block"
+    },
+    {
+      "id": "sentinel-burst-D0",
+      "family": "sentinel",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      },
+      "split": "held_case",
+      "paired_content_pool": "sentinel-load-16384-per-block"
+    },
+    {
+      "id": "sentinel-staggered-D0",
+      "family": "sentinel",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        50,
+        100,
+        150
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      },
+      "split": "held_case",
+      "paired_content_pool": "sentinel-load-16384-per-block"
+    },
+    {
+      "id": "single-L1024-D8",
+      "family": "single_length",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L2048-D8",
+      "family": "single_length",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        2048
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L4096-D8",
+      "family": "single_length",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L7168-D8",
+      "family": "single_length",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "composition-uniform-D8",
+      "family": "equal_total",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration",
+      "paired_content_pool": "composition-16384-per-block"
+    },
+    {
+      "id": "composition-mixed-D8",
+      "family": "equal_total",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case",
+      "paired_content_pool": "composition-16384-per-block"
+    },
+    {
+      "id": "composition-reverse-D8",
+      "family": "equal_total",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case",
+      "paired_content_pool": "composition-16384-per-block"
+    },
+    {
+      "id": "sentinel-none-D8",
+      "family": "sentinel",
+      "background_decoders": 8,
+      "foreground_tokens": [],
+      "foreground_offsets_ms": [],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      },
+      "split": "calibration",
+      "paired_content_pool": "sentinel-load-16384-per-block"
+    },
+    {
+      "id": "sentinel-burst-D8",
+      "family": "sentinel",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      },
+      "split": "held_case",
+      "paired_content_pool": "sentinel-load-16384-per-block"
+    },
+    {
+      "id": "sentinel-staggered-D8",
+      "family": "sentinel",
+      "background_decoders": 8,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        50,
+        100,
+        150
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      },
+      "split": "held_case",
+      "paired_content_pool": "sentinel-load-16384-per-block"
+    }
+  ]
+}

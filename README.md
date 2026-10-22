@@ -30,6 +30,20 @@ because vLLM's prompt counter advances when prefill completes. A super-linear te
 adds only 2–9% out of capture and is not identified per step. These are
 development associations, not causes.
 
+## Proposed next experiment: executed prefill work and timing
+
+[Draft design](experiments/prefill-service-v1.md) ·
+[Machine-readable scope](experiments/prefill-service-v1.design.json) ·
+[20 cases](experiments/prefill-service-v1.cases.json) ·
+[Fixed trial order](experiments/prefill-service-v1.order.json)
+
+The proposal separates counter timing, actual scheduled chunks and nonlinear
+service cost using controlled single prompts, equal-total mixtures and short
+sentinel requests, with D0/D8 background decoding. Five randomized blocks give
+100 main trials, plus warmup and observer checks. **This is a design draft:**
+the version-specific collector, prompt manifests and acceptance must be completed
+before an executable protocol is frozen. No collection or MPC result is claimed.
+
 ## State-aware model iteration on the 16/32 captures
 
 [Development report and public reproduction](results/state-model-20261021/report.md) ·

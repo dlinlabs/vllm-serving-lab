@@ -1,0 +1,100 @@
+{
+  "schema": "service-microbenchmark-design-v1",
+  "protocol": "prefill-service-v1",
+  "status": "draft_not_executable",
+  "collector_implemented": false,
+  "independent_policy_acceptance": false,
+  "source_parent_commit": "6a3db67f6d57e67d6eafe02527b22937f2a2a56a",
+  "purpose": "Identify executed prefill work/timing and scheduler composition before revising the cap-control simulator",
+  "runtime": {
+    "gpu": "RTX4090",
+    "same_host": true,
+    "same_engine_identity": true,
+    "python": "3.12",
+    "vllm": "0.30.0",
+    "torch": "2.13.0+cu130",
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "max_model_len": 8192,
+    "prefix_cache": false,
+    "speculative_decoding": false,
+    "tensor_parallel_size": 1,
+    "preserve_resolved_graph_and_async_behavior": true,
+    "record_actual_scheduler_token_budget": true
+  },
+  "workload": {
+    "foreground_output_tokens": 128,
+    "background_input_tokens": 256,
+    "background_output_tokens": 512,
+    "temperature": 0,
+    "ignore_eos": true,
+    "content_seed": 20261024,
+    "prompt_manifest_status": "must_be_materialized_and_hashed_before_freeze",
+    "gateway_admission": "bypassed_engine_identification_only"
+  },
+  "measurement": {
+    "cpu_and_gpu_targets_separate": true,
+    "no_per_step_global_synchronize": true,
+    "bounded_buffer": true,
+    "drain_before_next_trial": true,
+    "max_injection_lag_ms": 5,
+    "short_trace_steps": 5,
+    "observer_slowdown_upper95_limit": 0.05,
+    "bootstrap_pairs": 10000,
+    "bootstrap_seed": 20261023
+  },
+  "collection": {
+    "warmup": 40,
+    "observer_check": 40,
+    "main": 100,
+    "deep_diagnostic": 4,
+    "total": 184,
+    "main_blocks": 5,
+    "per_trial_timeout_seconds": 45,
+    "active_collection_budget_seconds": 1800,
+    "attempts_per_trial": 1,
+    "stop_on_failed_qualification": true,
+    "partial_attempt_is_not_complete": true
+  },
+  "analysis": {
+    "calibration_cells": 8,
+    "train_trials": 24,
+    "repeat_check_trials": 16,
+    "held_case_trials": 60,
+    "candidates": [
+      "M0_linear_executed_work",
+      "M1_add_decode_context",
+      "M2_add_chunk_attention_pairs"
+    ],
+    "nonnegative_coefficients": true,
+    "selection": "leave-one-calibration-cell-out on training trials; simpler wins ties",
+    "source_and_candidate_hash_before_opening_held_cases": true,
+    "service_screen": {
+      "overall_relative_mae_improvement": 0.1,
+      "max_case_regression_fraction": 0.1,
+      "case_regression_absolute_floor_ms": 1
+    },
+    "requires_separate_causal_rollout_and_azure_checks": true
+  },
+  "files": {
+    "prefill-service-v1.md": {
+      "path": "experiments/prefill-service-v1.md",
+      "sha256": "6fe91129a517e5e6ea7e0c9a96a2bd76a79300319ec7fc7d83278b0f4992b4b0"
+    },
+    "prefill-service-v1.cases.json": {
+      "path": "experiments/prefill-service-v1.cases.json",
+      "sha256": "a5ca0c9e7cd5eed4bd0ce86adbf12b32c88269fc3c7226978d043676b412c231"
+    },
+    "prefill-service-v1.order.json": {
+      "path": "experiments/prefill-service-v1.order.json",
+      "sha256": "434d6fa48ab38ed479fac91c0048d678a61ab36a515858f11262f48e0539f1ae"
+    }
+  },
+  "readiness": {
+    "executable_protocol_frozen": false,
+    "source_hooks_verified_on_installed_wheel": false,
+    "native_cpu_acceptance": false,
+    "gpu_observer_overhead_validated": false,
+    "C_used": false,
+    "mpc_evaluated": false
+  }
+}

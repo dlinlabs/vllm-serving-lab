@@ -1,0 +1,1624 @@
+{
+  "schema": "prefill-service-design-order-v1",
+  "status": "draft_not_executable",
+  "generator": "Python3.12 random.Random(20261022), sequential shuffle calls",
+  "seed": 20261022,
+  "order": [
+    {
+      "trial_id": "trial-001",
+      "stage": "warmup",
+      "case": "composition-reverse-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-002",
+      "stage": "warmup",
+      "case": "sentinel-staggered-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-003",
+      "stage": "warmup",
+      "case": "composition-uniform-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-004",
+      "stage": "warmup",
+      "case": "sentinel-none-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-005",
+      "stage": "warmup",
+      "case": "sentinel-none-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-006",
+      "stage": "warmup",
+      "case": "composition-reverse-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-007",
+      "stage": "warmup",
+      "case": "composition-mixed-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-008",
+      "stage": "warmup",
+      "case": "single-L1024-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-009",
+      "stage": "warmup",
+      "case": "single-L4096-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-010",
+      "stage": "warmup",
+      "case": "sentinel-burst-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-011",
+      "stage": "warmup",
+      "case": "single-L1024-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-012",
+      "stage": "warmup",
+      "case": "single-L4096-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-013",
+      "stage": "warmup",
+      "case": "composition-uniform-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-014",
+      "stage": "warmup",
+      "case": "single-L7168-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-015",
+      "stage": "warmup",
+      "case": "single-L7168-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-016",
+      "stage": "warmup",
+      "case": "single-L2048-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-017",
+      "stage": "warmup",
+      "case": "composition-mixed-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-018",
+      "stage": "warmup",
+      "case": "sentinel-staggered-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-019",
+      "stage": "warmup",
+      "case": "sentinel-burst-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-020",
+      "stage": "warmup",
+      "case": "single-L2048-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-021",
+      "stage": "warmup",
+      "case": "single-L1024-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-022",
+      "stage": "warmup",
+      "case": "sentinel-burst-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-023",
+      "stage": "warmup",
+      "case": "sentinel-none-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-024",
+      "stage": "warmup",
+      "case": "sentinel-staggered-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-025",
+      "stage": "warmup",
+      "case": "single-L4096-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-026",
+      "stage": "warmup",
+      "case": "sentinel-burst-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-027",
+      "stage": "warmup",
+      "case": "composition-mixed-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-028",
+      "stage": "warmup",
+      "case": "sentinel-none-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-029",
+      "stage": "warmup",
+      "case": "single-L2048-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-030",
+      "stage": "warmup",
+      "case": "single-L7168-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-031",
+      "stage": "warmup",
+      "case": "single-L4096-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-032",
+      "stage": "warmup",
+      "case": "composition-mixed-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-033",
+      "stage": "warmup",
+      "case": "single-L2048-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-034",
+      "stage": "warmup",
+      "case": "sentinel-staggered-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-035",
+      "stage": "warmup",
+      "case": "single-L1024-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-036",
+      "stage": "warmup",
+      "case": "composition-uniform-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-037",
+      "stage": "warmup",
+      "case": "composition-reverse-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-038",
+      "stage": "warmup",
+      "case": "single-L7168-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-039",
+      "stage": "warmup",
+      "case": "composition-reverse-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-040",
+      "stage": "warmup",
+      "case": "composition-uniform-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": false
+    },
+    {
+      "trial_id": "trial-041",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 1,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-1"
+    },
+    {
+      "trial_id": "trial-042",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 1,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-1"
+    },
+    {
+      "trial_id": "trial-043",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 2,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-2"
+    },
+    {
+      "trial_id": "trial-044",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 2,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-2"
+    },
+    {
+      "trial_id": "trial-045",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 3,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-3"
+    },
+    {
+      "trial_id": "trial-046",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 3,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-3"
+    },
+    {
+      "trial_id": "trial-047",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 4,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-4"
+    },
+    {
+      "trial_id": "trial-048",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 4,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-4"
+    },
+    {
+      "trial_id": "trial-049",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 5,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-5"
+    },
+    {
+      "trial_id": "trial-050",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 5,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-5"
+    },
+    {
+      "trial_id": "trial-051",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 6,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-6"
+    },
+    {
+      "trial_id": "trial-052",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 6,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-6"
+    },
+    {
+      "trial_id": "trial-053",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 7,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-7"
+    },
+    {
+      "trial_id": "trial-054",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 7,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-7"
+    },
+    {
+      "trial_id": "trial-055",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 8,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-8"
+    },
+    {
+      "trial_id": "trial-056",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 8,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-8"
+    },
+    {
+      "trial_id": "trial-057",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 9,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-9"
+    },
+    {
+      "trial_id": "trial-058",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 9,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-9"
+    },
+    {
+      "trial_id": "trial-059",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 10,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-10"
+    },
+    {
+      "trial_id": "trial-060",
+      "stage": "observer_check",
+      "case": "single-L7168-D8",
+      "pair": 10,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "single-L7168-D8-pair-10"
+    },
+    {
+      "trial_id": "trial-061",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 1,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-1"
+    },
+    {
+      "trial_id": "trial-062",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 1,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-1"
+    },
+    {
+      "trial_id": "trial-063",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 2,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-2"
+    },
+    {
+      "trial_id": "trial-064",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 2,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-2"
+    },
+    {
+      "trial_id": "trial-065",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 3,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-3"
+    },
+    {
+      "trial_id": "trial-066",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 3,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-3"
+    },
+    {
+      "trial_id": "trial-067",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 4,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-4"
+    },
+    {
+      "trial_id": "trial-068",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 4,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-4"
+    },
+    {
+      "trial_id": "trial-069",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 5,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-5"
+    },
+    {
+      "trial_id": "trial-070",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 5,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-5"
+    },
+    {
+      "trial_id": "trial-071",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 6,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-6"
+    },
+    {
+      "trial_id": "trial-072",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 6,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-6"
+    },
+    {
+      "trial_id": "trial-073",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 7,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-7"
+    },
+    {
+      "trial_id": "trial-074",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 7,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-7"
+    },
+    {
+      "trial_id": "trial-075",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 8,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-8"
+    },
+    {
+      "trial_id": "trial-076",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 8,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-8"
+    },
+    {
+      "trial_id": "trial-077",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 9,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-9"
+    },
+    {
+      "trial_id": "trial-078",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 9,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-9"
+    },
+    {
+      "trial_id": "trial-079",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 10,
+      "observer": "light",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-10"
+    },
+    {
+      "trial_id": "trial-080",
+      "stage": "observer_check",
+      "case": "composition-mixed-D8",
+      "pair": 10,
+      "observer": "off",
+      "scored": false,
+      "paired_content_key": "composition-mixed-D8-pair-10"
+    },
+    {
+      "trial_id": "trial-081",
+      "stage": "main",
+      "case": "single-L4096-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-082",
+      "stage": "main",
+      "case": "single-L1024-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-083",
+      "stage": "main",
+      "case": "single-L4096-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-084",
+      "stage": "main",
+      "case": "sentinel-staggered-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-085",
+      "stage": "main",
+      "case": "composition-uniform-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-086",
+      "stage": "main",
+      "case": "composition-uniform-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-087",
+      "stage": "main",
+      "case": "composition-mixed-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-088",
+      "stage": "main",
+      "case": "sentinel-burst-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-089",
+      "stage": "main",
+      "case": "sentinel-none-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-090",
+      "stage": "main",
+      "case": "sentinel-none-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-091",
+      "stage": "main",
+      "case": "sentinel-burst-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-092",
+      "stage": "main",
+      "case": "composition-mixed-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-093",
+      "stage": "main",
+      "case": "single-L7168-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-094",
+      "stage": "main",
+      "case": "single-L2048-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-095",
+      "stage": "main",
+      "case": "single-L1024-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-096",
+      "stage": "main",
+      "case": "composition-reverse-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-097",
+      "stage": "main",
+      "case": "composition-reverse-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-098",
+      "stage": "main",
+      "case": "sentinel-staggered-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-099",
+      "stage": "main",
+      "case": "single-L7168-D0",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-100",
+      "stage": "main",
+      "case": "single-L2048-D8",
+      "block": 1,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-101",
+      "stage": "main",
+      "case": "composition-reverse-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-102",
+      "stage": "main",
+      "case": "sentinel-staggered-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-103",
+      "stage": "main",
+      "case": "composition-reverse-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-104",
+      "stage": "main",
+      "case": "composition-uniform-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-105",
+      "stage": "main",
+      "case": "single-L1024-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-106",
+      "stage": "main",
+      "case": "single-L7168-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-107",
+      "stage": "main",
+      "case": "sentinel-none-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-108",
+      "stage": "main",
+      "case": "composition-mixed-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-109",
+      "stage": "main",
+      "case": "sentinel-burst-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-110",
+      "stage": "main",
+      "case": "composition-uniform-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-111",
+      "stage": "main",
+      "case": "single-L4096-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-112",
+      "stage": "main",
+      "case": "single-L2048-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-113",
+      "stage": "main",
+      "case": "sentinel-staggered-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-114",
+      "stage": "main",
+      "case": "sentinel-none-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-115",
+      "stage": "main",
+      "case": "single-L7168-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-116",
+      "stage": "main",
+      "case": "single-L2048-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-117",
+      "stage": "main",
+      "case": "composition-mixed-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-118",
+      "stage": "main",
+      "case": "single-L1024-D0",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-119",
+      "stage": "main",
+      "case": "single-L4096-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-120",
+      "stage": "main",
+      "case": "sentinel-burst-D8",
+      "block": 2,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-121",
+      "stage": "main",
+      "case": "single-L1024-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-122",
+      "stage": "main",
+      "case": "single-L2048-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-123",
+      "stage": "main",
+      "case": "composition-reverse-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-124",
+      "stage": "main",
+      "case": "sentinel-burst-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-125",
+      "stage": "main",
+      "case": "single-L4096-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-126",
+      "stage": "main",
+      "case": "single-L4096-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-127",
+      "stage": "main",
+      "case": "single-L7168-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-128",
+      "stage": "main",
+      "case": "single-L7168-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-129",
+      "stage": "main",
+      "case": "composition-mixed-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-130",
+      "stage": "main",
+      "case": "sentinel-none-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-131",
+      "stage": "main",
+      "case": "composition-mixed-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-132",
+      "stage": "main",
+      "case": "composition-uniform-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-133",
+      "stage": "main",
+      "case": "composition-uniform-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-134",
+      "stage": "main",
+      "case": "sentinel-burst-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-135",
+      "stage": "main",
+      "case": "composition-reverse-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-136",
+      "stage": "main",
+      "case": "sentinel-staggered-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-137",
+      "stage": "main",
+      "case": "sentinel-none-D8",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-138",
+      "stage": "main",
+      "case": "single-L2048-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-139",
+      "stage": "main",
+      "case": "sentinel-staggered-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-140",
+      "stage": "main",
+      "case": "single-L1024-D0",
+      "block": 3,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "train"
+    },
+    {
+      "trial_id": "trial-141",
+      "stage": "main",
+      "case": "single-L7168-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-142",
+      "stage": "main",
+      "case": "composition-reverse-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-143",
+      "stage": "main",
+      "case": "composition-mixed-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-144",
+      "stage": "main",
+      "case": "sentinel-staggered-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-145",
+      "stage": "main",
+      "case": "single-L1024-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-146",
+      "stage": "main",
+      "case": "composition-mixed-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-147",
+      "stage": "main",
+      "case": "single-L2048-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-148",
+      "stage": "main",
+      "case": "sentinel-staggered-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-149",
+      "stage": "main",
+      "case": "composition-uniform-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-150",
+      "stage": "main",
+      "case": "sentinel-none-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-151",
+      "stage": "main",
+      "case": "sentinel-none-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-152",
+      "stage": "main",
+      "case": "single-L7168-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-153",
+      "stage": "main",
+      "case": "sentinel-burst-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-154",
+      "stage": "main",
+      "case": "composition-uniform-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-155",
+      "stage": "main",
+      "case": "single-L4096-D0",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-156",
+      "stage": "main",
+      "case": "sentinel-burst-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-157",
+      "stage": "main",
+      "case": "single-L2048-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-158",
+      "stage": "main",
+      "case": "single-L4096-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-159",
+      "stage": "main",
+      "case": "composition-reverse-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-160",
+      "stage": "main",
+      "case": "single-L1024-D8",
+      "block": 4,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-161",
+      "stage": "main",
+      "case": "composition-mixed-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-162",
+      "stage": "main",
+      "case": "composition-uniform-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-163",
+      "stage": "main",
+      "case": "single-L1024-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-164",
+      "stage": "main",
+      "case": "single-L1024-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-165",
+      "stage": "main",
+      "case": "sentinel-staggered-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-166",
+      "stage": "main",
+      "case": "single-L7168-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-167",
+      "stage": "main",
+      "case": "single-L4096-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-168",
+      "stage": "main",
+      "case": "single-L4096-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-169",
+      "stage": "main",
+      "case": "sentinel-staggered-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-170",
+      "stage": "main",
+      "case": "composition-reverse-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-171",
+      "stage": "main",
+      "case": "composition-mixed-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-172",
+      "stage": "main",
+      "case": "composition-uniform-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-173",
+      "stage": "main",
+      "case": "single-L2048-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-174",
+      "stage": "main",
+      "case": "single-L2048-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-175",
+      "stage": "main",
+      "case": "single-L7168-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-176",
+      "stage": "main",
+      "case": "sentinel-none-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-177",
+      "stage": "main",
+      "case": "composition-reverse-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-178",
+      "stage": "main",
+      "case": "sentinel-none-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "repeat_check"
+    },
+    {
+      "trial_id": "trial-179",
+      "stage": "main",
+      "case": "sentinel-burst-D0",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-180",
+      "stage": "main",
+      "case": "sentinel-burst-D8",
+      "block": 5,
+      "observer": "light",
+      "scored": true,
+      "analysis_role": "held_case"
+    },
+    {
+      "trial_id": "trial-181",
+      "stage": "deep_diagnostic",
+      "case": "single-L7168-D8",
+      "replicate": 1,
+      "observer": "deep",
+      "scored": false,
+      "profile_steps": 5
+    },
+    {
+      "trial_id": "trial-182",
+      "stage": "deep_diagnostic",
+      "case": "composition-mixed-D8",
+      "replicate": 1,
+      "observer": "deep",
+      "scored": false,
+      "profile_steps": 5
+    },
+    {
+      "trial_id": "trial-183",
+      "stage": "deep_diagnostic",
+      "case": "single-L7168-D8",
+      "replicate": 2,
+      "observer": "deep",
+      "scored": false,
+      "profile_steps": 5
+    },
+    {
+      "trial_id": "trial-184",
+      "stage": "deep_diagnostic",
+      "case": "composition-mixed-D8",
+      "replicate": 2,
+      "observer": "deep",
+      "scored": false,
+      "profile_steps": 5
+    }
+  ]
+}
