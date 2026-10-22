@@ -14,7 +14,7 @@ import evaluate_low_cap_frozen as lf
 from prefill_design import simulate
 from scripts.build_prefill_design import digest,write
 from scripts.check_prefill_budget import itl_tail
-from prefill_histogram import exporter_histogram,simulated_histogram,discrepancy
+from prefill_histogram import exporter_histogram,simulated_histogram,discrepancy,shared_step_reference,support_and_magnitude
 from scripts.reproduce_cap_miss_causes import verify,old_files,new_files
 
 GUARD=('prefill_design.py','scripts/check_prefill_itl.py','greybox_simulator.py',
@@ -52,7 +52,14 @@ def histogram_predictions(requests,observed,rebase=0.):
     for b,k in SCENARIOS:
         steps=[];simulate(requests,b,quadratic=k,steps_out=steps)
         histogram=simulated_histogram(steps,window,observed['upper_bounds_s'])
-        rows[f'B{b}-fifo-k{k}']=dict(histogram=histogram,joint_discrepancy=discrepancy(observed,histogram))
+        rows[f'B{b}-fifo-k{k}']=dict(histogram=histogram)
+    reference=shared_step_reference(rows['B2048-fifo-k0.0']['histogram'])
+    # Freeze the same common-positive mask for EVERY scenario; do not select
+    # flattering bins independently for each candidate. Primary still keeps zeros.
+    common=[i for i,a in enumerate(observed['counts']) if a>0 and all(rows[k]['histogram']['counts'][i]>0
+            for k in ('B2048-fifo-k0.0','B2048-fifo-k1.5e-09'))]
+    for row in rows.values():
+        row['joint_discrepancy']=support_and_magnitude(observed,row['histogram'],reference,common)
     return rows
 
 
@@ -87,16 +94,31 @@ def main(argv=None):
             lead_in_seconds=20,score_window_local=[20,80],
             realized_output_oracle=predict(requests,(20.,80.)),
             forced128_output_sensitivity=predict(forced,(20.,80.))))
+    references=[]
+    for i,j,label in ((0,1,'same_host_old32_replicates'),(0,3,'cross_host_32'),(2,4,'cross_host_16')):
+        left=historical[i];right=historical[j]
+        reference=left['full_histogram']['scenarios']['B2048-fifo-k0.0']['joint_discrepancy']['shared_reference']
+        references.append(dict(id=label,left=left['capture'],right=right['capture'],
+            requested_window_s=[60,300],same_host=i==0 and j==1,
+            shared_step_floor_factor=discrepancy(left['full_histogram']['observed'],right['full_histogram']['observed'],count_floor=reference['count_floor'])['worst_bin_rate_factor'],
+            legacy_floor5_factor=discrepancy(left['full_histogram']['observed'],right['full_histogram']['observed'])['worst_bin_rate_factor'],
+            shared_reference=reference,
+            role='One descriptive pair, not a calibrated envelope; cross-host differences are not within-host repeat noise. Endpoints differ slightly.'))
+    for row in historical+transfers:
+        row['replicate_reference_ids']=[r['id'] for r in references]
+        row['replicate_reference_caveat']='240s reference pairs, not window-matched transfer replicates. One same-host pair cannot calibrate factor2 or accept a model.'
     result=dict(role='development mechanism diagnostic and conditional transfer preregistration; no GPU collection',
         historical_working_budget=2048,historical_config_verified=False,verified_source_files=verified,
         code_sha256=before,
-        capture_sha256=sources,historical=historical,transfer_slices=transfers,
+        capture_sha256=sources,historical=historical,transfer_slices=transfers,replicate_references=references,
         limitations=[
             'Running-first FIFO assumes every live decoder emits one token in each executed step; counter/async semantics must be checked.',
             'A gap is counted by its right token timestamp: start < timestamp <= end. Exporter scrapes cover slightly different endpoints.',
             'All five historical admitted paths have output128; forced128 is duplicate evidence, not independent sensitivity. Admission timing remains retrospective; future natural EOS may differ.',
             'Transfer simulation starts empty at the lead-in, not with reconstructed historical state. Boundary state must be measured.',
             'Neither k nor a k bound is supported by a selected tail bin; the full neighboring-bin discrepancies are reported.',
+            'Support flags and shared toy-equivalent-step magnitude replace legacy floor5 headlines. Floor1/5 and common-positive bins are sensitivities, not acceptance.',
+            'Gaps share executed steps. Future uncertainty must resample step/time blocks, not independent gaps; no effective sample size is inferred from toy steps.',
             'A new transfer run also needs a frozen conditional replay on its actual accepted arrivals/outputs; this cannot pass a causal forecasting gate.',
             'Tail mismatches can falsify the joint scenario; matching tails do not uniquely establish scheduler budget or nonlinear cost.'
         ])

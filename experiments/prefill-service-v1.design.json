@@ -1,11 +1,11 @@
 {
-  "schema": "service-microbenchmark-design-v5",
+  "schema": "service-microbenchmark-design-v6",
   "protocol": "prefill-service-v1",
-  "revision": 5,
+  "revision": 6,
   "status": "draft_not_executable",
   "collector_implemented": false,
-  "source_parent_commit": "1c05760f0bf43d4ca2102ce52e6385ddcd33ca3c",
-  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6331161574",
+  "source_parent_commit": "8a8c86942ac350c71ba266caaedf1e0ef1bdfa2f",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6331855173",
   "runtime": {
     "gpu": "RTX4090",
     "same_host": true,
@@ -102,9 +102,9 @@
     "frozen_linear_serial_trial_seconds": 729.4647739376677,
     "planning_service_multiplier": 1.35,
     "idle_gap_seconds": 0.25,
-    "transfer_seconds": 160,
+    "transfer_seconds": 320,
     "flush_and_frontend_reserve_seconds": 120,
-    "estimated_active_seconds": 1317.7774448158516,
+    "estimated_active_seconds": 1517.7774448158516,
     "hard_collection_limit_seconds": 1800,
     "fits_planning_budget": true,
     "caveat": "Planning estimate only. Stage statuses are independent; suite complete requires every stage. Preserve all failures/timeouts and never turn a selected subset into a complete suite.",
@@ -112,18 +112,52 @@
     "attempts_per_trial": 1,
     "transfer_slices": [
       {
+        "attempt_id": "transfer-a-r1",
+        "window": "a",
+        "replicate": 1,
         "replay_start": 40,
         "score_start": 60,
         "score_end": 120,
         "lead_in_seconds": 20,
-        "cap": 32
+        "cap": 32,
+        "attempts_allowed": 1,
+        "drain_before_next": true
       },
       {
+        "attempt_id": "transfer-b-r1",
+        "window": "b",
+        "replicate": 1,
         "replay_start": 160,
         "score_start": 180,
         "score_end": 240,
         "lead_in_seconds": 20,
-        "cap": 32
+        "cap": 32,
+        "attempts_allowed": 1,
+        "drain_before_next": true
+      },
+      {
+        "attempt_id": "transfer-b-r2",
+        "window": "b",
+        "replicate": 2,
+        "replay_start": 160,
+        "score_start": 180,
+        "score_end": 240,
+        "lead_in_seconds": 20,
+        "cap": 32,
+        "attempts_allowed": 1,
+        "drain_before_next": true
+      },
+      {
+        "attempt_id": "transfer-a-r2",
+        "window": "a",
+        "replicate": 2,
+        "replay_start": 40,
+        "score_start": 60,
+        "score_end": 120,
+        "lead_in_seconds": 20,
+        "cap": 32,
+        "attempts_allowed": 1,
+        "drain_before_next": true
       }
     ],
     "transfer_is_development": true,
@@ -145,7 +179,10 @@
         "incomplete"
       ],
       "shared_failure_invalidates_affected_stages": true
-    }
+    },
+    "transfer_attempts": 4,
+    "transfer_terminal_reserve_seconds": 40,
+    "transfer_terminal_reserve_per_attempt_seconds": 10
   },
   "analysis": {
     "calibration_cells": 6,
@@ -194,14 +231,17 @@
       ],
       "raw_B2048_role": "staleness/recalibration baseline only",
       "selected_M0_structural_status": "not_applicable",
-      "same_comparator_training_and_accounting_required": true
+      "same_comparator_training_and_accounting_required": true,
+      "win_improvement_threshold": "comparator MAE minus candidate MAE >max(3*jitter[cell],25ms); numerical equality is non-win",
+      "insufficient_resolved_wins": "inconclusive",
+      "any_material_regression": "failed"
     },
     "nonlinear_planning_k": [
       1.5e-09,
       3.15e-09
     ],
     "nonlinear_k_is_fitted_bound": false,
-    "transfer_ITL_counts": "results/prefill-design-round3/itl-scenarios.json; full matched-window bucket vectors and legacy nominal tails; conditional historical admission/output paths",
+    "transfer_ITL_counts": "results/prefill-design-round4/itl-scenarios.json; full matched-window vectors, support flags, common shared step-floor and repeat references; conditional historical paths",
     "service_step_window": "foreground release through last foreground/sentinel completion; exclude background prep/drain",
     "fitting_weights": "equal total squared row weight per calibration cell; training partition only",
     "identifiability": {
@@ -232,48 +272,65 @@
       "all_exporter_buckets_archived": true,
       "scored_bin_lower_bound_s": 0.025,
       "intervals": "disjoint, including+Inf",
-      "count_floor": 5,
       "max_abs_log_rate_ratio_primary": true,
       "engineering_factor_limit": 2,
       "automatic_acceptance": false,
       "matched_scrape_endpoints": true,
       "failed_samples_resets_and_identity_changes_rejected": true,
-      "k_not_supported_by_selected_tail": true
+      "k_not_supported_by_selected_tail": true,
+      "shared_reference": "Per window frozen linear B2048; five times total gaps/decode-bearing steps, SAME floor for all scenarios",
+      "primary_evidence": [
+        "categorical zero-bin support including sub-floor flags",
+        "all-bin shared toy-equivalent-step magnitude"
+      ],
+      "common_positive_bins": "Shared observed/linear/k1.5 mask, sensitivity only",
+      "count_floor_sensitivity": [
+        1,
+        5
+      ],
+      "step_units_are_measured": false,
+      "independent_gap_uncertainty_forbidden": true,
+      "replicate_envelope_calibrated": false,
+      "replicate_references": "One same-host old32 pair; cross-host32/16 context; not matched to60s transfer windows"
     },
     "historical_output_lengths": "All five admitted paths have128 outputs; forced128 variant is duplicate evidence, not independent sensitivity. Future natural EOS remains measured."
   },
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "d6bbc5dc6f94a6c89576c9e52d2e4b3545b94daa112c576ec61a0ca902cb51d1"
+      "sha256": "14d4da3aa92fd4aab30f6e8a9307344639f5d646f32b4b6c10b6bc6bc7ab1d27"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
-      "sha256": "e900e65b02d23650dcaea2b8d7494e19fc7d84d6b0721b69934774bd667df483"
+      "sha256": "25238b662fef35b14e5b4e04b99a741f645dc3fcb4d04cc4f94885d2264fba5a"
     },
     "prefill-service-v1.order.json": {
       "path": "experiments/prefill-service-v1.order.json",
-      "sha256": "5e9583e3425a3cd0a2c9eeb0e8df49911847ab165df78aaa0e1b90c9e6bfecf6"
+      "sha256": "8e3de212375724e02c934f2069c32adafa372f042329e86fe51a0fdfad0f254b"
     },
     "prefill-service-v1.predictions.json": {
       "path": "experiments/prefill-service-v1.predictions.json",
-      "sha256": "fa91546e4c6f626edd881bf502ab4073ff5048c3cb47f9d2eeec66287699dcc9"
+      "sha256": "3bfc02158986a0e40edada41aacaf72ac3f1458d2cfc61127be5a4aed5bfda7a"
     },
     "prefill-service-v1.discrimination.json": {
       "path": "experiments/prefill-service-v1.discrimination.json",
-      "sha256": "adabc844e48343f839b58f8423960404816fd82d55bb9329ad2e4ae97240b583"
+      "sha256": "50cb16fc9b023d2b7bf02c593d17e93f10bcf99c04043af2dc3e2fca9bac31e1"
     },
     "prefill-service-v1.budget.json": {
       "path": "experiments/prefill-service-v1.budget.json",
-      "sha256": "8a98904cd9c01420d01ca97d6a0bff36e478f64d53a1d57d5e90b77d4affa1c0"
+      "sha256": "c704a210bd3a6e8d3f50d6c09f1185bf156bda86cdfb9fc0baf488cae471264e"
     },
     "ITL-preregistration": {
-      "path": "results/prefill-design-round3/itl-scenarios.json",
-      "sha256": "9b8b36b20adf1faeaf7af6714b237d96402d2e5df4f76ab19c14395733c5b6d9"
+      "path": "results/prefill-design-round4/itl-scenarios.json",
+      "sha256": "7ee7d2f1c4f9d2f9c75763bcfdf9414667eda21227e076ccfca3f8251d5d38cc"
     },
     "calibration-counterexample": {
-      "path": "results/prefill-design-round3/comparator-counterexample.json",
-      "sha256": "122df52c7442fd532387be2fe203ef26acd503de7602c0a854fbe4314f424cec"
+      "path": "results/prefill-design-round4/comparator-counterexample.json",
+      "sha256": "29b905900b6304d764d92df7611f23c1808f851b494841249211d1f6b7e1fb9f"
+    },
+    "win-margin-counterexample": {
+      "path": "results/prefill-design-round4/win-margin-counterexample.json",
+      "sha256": "07c817ec03f5d20de7ce21e8cd76632876c9fd95c09f9ace6a4245c9687936f7"
     }
   },
   "readiness": {

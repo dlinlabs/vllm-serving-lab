@@ -72,6 +72,12 @@ def test_revised_plan_structure_splits_and_budget(tmp_path):
     for p in (tmp_path/'first').iterdir():assert p.read_bytes()==(tmp_path/'second'/p.name).read_bytes()
     budget=json.loads((tmp_path/'first/budget.json').read_text())
     assert budget['fits_planning_budget'] and budget['estimated_active_seconds']<=1800
+    transfers=json.loads((tmp_path/'first/order.json').read_text())['transfer_slices']
+    assert [(t['window'],t['replicate']) for t in transfers]==[('a',1),('b',1),('b',2),('a',2)]
+    assert len({t['attempt_id'] for t in transfers})==4
+    assert all(t['drain_before_next'] and t['attempts_allowed']==1 for t in transfers)
+    assert budget['transfer_seconds']==320 and budget['transfer_terminal_reserve_seconds']==40
+    assert budget['estimated_active_seconds']==pytest.approx(1517.7774448158516)
     coverage=json.loads((tmp_path/'first/discrimination.json').read_text())['calibration_chunk_coverage']
     assert coverage['l_max']>=6144 and coverage['q_Z_rank']==2
 
@@ -211,6 +217,6 @@ def test_committed_design_metadata_and_generator_outputs_are_current(tmp_path):
     for name in ('cases','order','predictions','discrimination','budget'):
         assert (tmp_path/f'fresh/{name}.json').read_bytes()==(ROOT/f'experiments/prefill-service-v1.{name}.json').read_bytes()
     design=json.loads((ROOT/'experiments/prefill-service-v1.design.json').read_text())
-    assert design['revision']==5 and design['workload']['background_output_tokens']==256
-    assert design['collection']['transfer_seconds']==160
+    assert design['revision']==6 and design['workload']['background_output_tokens']==256
+    assert design['collection']['transfer_seconds']==320
     for row in design['files'].values():assert hashlib.sha256((ROOT/row['path']).read_bytes()).hexdigest()==row['sha256']

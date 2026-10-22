@@ -1,9 +1,29 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Draft design, revision5. Collector/hooks are not implemented; this is not an executable
+**Draft design, revision6. Collector/hooks are not implemented; this is not an executable
 GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
+
+## Round4 changes: support, resolution and repeat references
+
+Revision6 addresses [round4](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6331855173).
+[Current CPU report](../results/prefill-design-round4/report.md) supersedes round3's
+floor5 headline table. Old reports remain historical snapshots.
+
+| Review point | Change |
+|---|---|
+| Floor-driven ranking | Report zero-bin support separately; headline magnitude uses5 equivalent toy steps, with a window-specific frozen linear-B2048 gaps/step reference shared by every scenario. Common-positive bins and floors1/5 are sensitivity only. |
+| Clustered gaps | Archive toy decode-bearing steps, per-bin step counts and gaps/step. These are not observed real steps or independent sample sizes. Future uncertainty uses step/time-block resampling, never independent gaps. |
+| Repeat noise | Show one same-host pair and two cross-host descriptive references beside every model window. One pair cannot calibrate a statistical envelope or factor2. Plan two attempts for each transfer window, frozen ABBA order, full drain/boundary logs and no retries. |
+| Meaningful wins | Require comparator MAE minus candidate MAE strictly greater than the SAME per-cell calibration-only eligibility threshold. Equality/near-ties are non-wins; insufficient resolved gains are inconclusive; any material regression on all8 fails. |
+
+Adding repeat replays changes the budget:320s replay plus40s explicit terminal
+reserve, rather than160s replay. Total estimated1517.78s (25.3min), including the
+existing120s frontend/flush reserve, under the unchanged1800s hard limit.
+The review's30.9% simulation concerns only the old win-count component, not the
+full experiment false-positive rate. D0-to-D16 latency-reference mapping is a proxy:
+a longer median alone does not prove conservative variance or statistical power.
 
 ## Round3 changes: full ITL distribution and fair structural comparators
 
@@ -96,7 +116,7 @@ at8192 (0.4/6.3/17.5/52.5%);2048 gives0/0/12.5/59.2%, versus actual0.8/3.8/15.4/
 Thus the association is not unique evidence for2048. ITL tails test a more direct
 consequence of the joint running-first/step-time hypothesis than pooled goodput MAE.
 With every live decoder producing one token each step, a long prefill step should
-leave long token gaps. [Reproducible ITL scenarios](../results/prefill-design-round3/itl-scenarios.json)
+leave long token gaps. [Reproducible ITL scenarios](../results/prefill-design-round4/itl-scenarios.json)
 use actual admitted paths/output lengths and compare them with observed exporter tails.
 They support2048 as a working assumption, not a verified old config. Async/counter
 semantics and output observation still need source/step reconciliation. No preferred
@@ -169,15 +189,16 @@ These controlled-case checks are not unseen-production or MPC acceptance.
 | Drift references |10|Single1024-D16 before/after each main block |
 | HTTP sentinel bridge |8|One randomized block; diagnostic |
 | Deep traces |2|Single7168-D16 and mixed-D16; five steps from foreground release |
-| **Total trials** |**212**|Plus the two60s transfer slices |
+| **Total trials** |**212**|Plus four80s transfer attempts (two windows, two replicates each) |
 
 Order: warmup, observer check, main+references, HTTP bridge, transfer slices, deep
 traces. Main blocks are not reordered based on outcomes. Deep traces are last so
 profiler flush/clock effects cannot contaminate later performance stages.
 
 [Budget calculation](prefill-service-v1.budget.json) sums the frozen linear scenario
-wall times, multiplies by1.35, then adds idle gaps,160s of replay including lead-ins,
-and120s frontend/profiler reserve. It estimates about1318s; this is a planning estimate, not a
+wall times, multiplies by1.35, then adds idle gaps,320s of replay including lead-ins,
+40s transfer drain/gateway/flush reserve (10s per attempt), and120s general
+frontend/profiler reserve. It estimates1517.78s; this is a planning estimate, not a
 measured completion-time promise. Hard active budget1800s excludes installation
 and initial model load, includes every stage/flush. Per-trial timeout45s. No automatic
 retry, shape removal, opportunistic extra level or resizing a partial suite into a
@@ -313,8 +334,11 @@ a3ms context effect can reduce a4ms baseline MAE by much more than10%.
    comparison; beating it cannot establish improved model structure.
 4. For EACH required comparator, a cell is eligible only if its predicted sentinel
    TTFT gap exceeds max(3*jitter[cell],25ms). Freeze/hash those lists before held
-   timing. Require>=4 eligible and>=ceil(.75*n) strict paired-MAE wins. Fewer than4
-   is inconclusive; no ties are wins. Every cell retains the no-regression limit
+   timing. Require>=4 eligible and>=ceil(.75*n) resolved paired-MAE wins. A win
+   requires comparator MAE minus candidate MAE >max(3*jitter[cell],25ms), the SAME
+   frozen per-cell threshold. Equality (within1e-12s numerical tolerance) and
+   near-ties are non-wins. Fewer than4 eligible or insufficient resolved wins is
+   inconclusive; any material regression is failed. Every cell retains the no-regression limit
    max(10% comparator MAE,25ms), eligible or not. All8 cells x5 paired block errors
    are required. `comparison_plan`, `paired_error_check` and
    `structural_error_check` implement these CPU component contracts. Raw-only
@@ -383,13 +407,19 @@ engine enqueue; retain actual arrivals and state. Do not subtract unrelated perc
 or assume a matched barrier/HTTP state. No held bridge delay becomes a fitted predictor.
 
 Restart only the gateway between transport baseline and cost-aware transfer; keep
-EngineCore/config unchanged and bind each gateway identity separately. Then run two
-fixed32,80s replays [40,120),[160,240), scoring only[60,120),[180,240), from the historical development trace
+EngineCore/config unchanged and bind each gateway identity separately. Run four
+fixed32,80s replay attempts in frozen ABBA order: A-r1, B-r1, B-r2, A-r2.
+A replays[40,120), scoring[60,120); B replays[160,240), scoring[180,240).
+Use the historical development trace
 SHA25662f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e,
 rebased locally with original trace IDs/provenance. Natural EOS, output cap128,
 original shared-client/process sampler/runner-GC settings and all enabled replay
 integrity/load/control/diagnostic gates, including50ms limits, remain required.
-Freeze derived trace hashes before collection. Preserve original trace IDs,
+Freeze derived trace hashes before collection. Each transfer attempt has a unique
+ID and one allowed attempt. Drain all requests between attempts and record boundary
+state/engine/gateway identities. Preserve failures, no replacement or outcome-based
+reordering. Two repeats per window provide a descriptive repeat reference, not a
+well-calibrated statistical envelope; missing replicates cannot qualify transfer. Preserve original trace IDs,
 original scheduled seconds and rebased local times. Lead-in requests participate
 in full lifecycle/drain audits but not scored offered counts or arrival-window
 denominators. Boundary running/waiting/KV/context and actual surviving lead-in
@@ -418,14 +448,31 @@ boundaries (subtract the transfer lead-in origin where applicable). Sent timesta
 are not exact token observation times; no interpolation or false exact alignment.
 Legacy nominal-window tail counts remain separately labelled.
 
-Joint scoring uses every disjoint interval with lower bound>=25ms. For bin b,
-L_b=log[(max(pred_b,5)/pred_total)/(max(obs_b,5)/obs_total)]. Archive the vector,
-max|L_b| (primary), mean|L_b| and exp(max|L_b|). Factor2 is a predeclared engineering
-large-discrepancy flag, not independent-bin statistical significance. Counts below5
-are floor-limited. No unflagged score automatically accepts a model; no selected
-bin can confirm k. Report the full fast-bin vector as well. >200ms remains the
-robust discriminator for the SPECIFIC frozen8192 versus2048 scenarios under this
-toy's all-running-decode assumption, not unique configuration identification.
+Primary evidence has TWO parts, both retained for every disjoint interval starting
+at25ms, including+Inf. First record every observed-only or predicted-only support
+bin, with counts/direction and a material flag when its nonzero count is at least
+5 equivalent steps. Second compute magnitude using the SHARED window reference:
+f=5*(total toy gaps / toy decode-bearing steps), from frozen linear-B2048 only.
+For every candidate use L_b=log[(max(pred_b,f)/pred_total)/(max(obs_b,f)/obs_total)],
+archive all values, max|L_b|, mean|L_b| and exp(max|L_b|). This is a toy-equivalent
+step normalization, not real step counting, effective sample size, or a calibrated
+noise threshold. Its floor remains an engineering choice. Candidate-specific floors
+are forbidden. Report common-positive bins (shared observed/linear/k1.5 mask) and
+legacy count floors1/5 as sensitivity; neither replaces primary support evidence.
+Common-positive bins cannot excuse missing support. Factor2 remains archived as
+an UNCALIBRATED engineering flag, never an acceptance threshold.
+
+Archive toy decode-bearing steps, gap weights and per-bin step counts. Many gaps
+come from one step, so uncertainty must use measured step clusters or declared time
+blocks, not independent token gaps. No confidence claim is based on gap totals.
+Report same-host old32r1/r2 and cross-host32/16 reference factors beside each model
+window, explicitly labelling the240s reference windows as not matched to the60s
+transfer windows. One same-host pair is not a calibrated noise envelope. Future
+paired transfer repeats must be reported before qualifying its discrepancy flag;
+if a usable measured envelope is unavailable the conclusion remains descriptive.
+No below-factor2 result accepts a model or identifies k. Full fast bins are also
+archived. >200ms can distinguish the SPECIFIC frozen8192/2048 scenarios under the
+toy all-running-decode assumption, not uniquely identify the historical config.
 
 The same historical-window comparison is already run. It is development diagnosis,
 not an independent acceptance test or a fit of k. Transfer must log step duration,
@@ -441,6 +488,7 @@ old output vector forecasts them. Admission timing and release state remain cond
 python scripts/build_prefill_design.py --output-dir /tmp/fresh-prefill-design
 python scripts/check_prefill_itl.py --old-evidence OLD --new-evidence NEW --output /tmp/fresh-itl.json
 python scripts/check_prefill_comparators.py --output /tmp/fresh-comparators.json
+python scripts/check_prefill_win_margin.py --output /tmp/fresh-win-margin.json
 python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py tests/test_prefill_review_gates.py
 python scripts/check_prefill_budget.py --suite-dir NEW/results/low-cap-switch-v1 --old-suite-dir OLD/results/cap-range-v1 --output-dir /tmp/fresh-budget-check
 ```

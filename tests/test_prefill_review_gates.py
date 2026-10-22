@@ -117,12 +117,12 @@ def test_M2_must_compare_both_calibrated_M0_and_retained_M1():
 def test_noneligible_cells_still_have_regression_guards_and_ties_are_not_wins():
     base,cand=predictions();j={k:(0 if int(k)<4 else .1) for k in base}
     e=contrast_eligibility(cand,base,j)
-    a={k:[0.]*5 for k in base};b={k:[.01]*5 for k in base}
+    a={k:[0.]*5 for k in base};b={k:[.06]*5 for k in base}
     assert paired_error_check(e,a,b)['component_status']=='passed'
-    a['7']=[.1]*5
+    a['7']=[.2]*5
     r=paired_error_check(e,a,b)
     assert r['component_status']=='failed' and r['regressions']==['7']
-    assert paired_error_check(e,b,b)['component_status']=='failed'
+    assert paired_error_check(e,b,b)['component_status']=='inconclusive'
 
 
 def test_unresolved_and_incomplete_errors_do_not_pass():
@@ -147,3 +147,74 @@ def test_missing_retained_comparator_cannot_pass_structural_check():
 def test_empty_structural_plan_cannot_pass_vacuously():
     from prefill_validation import structural_error_check
     with pytest.raises(ValueError):structural_error_check(dict(structure_status='not_evaluated',required_structural_comparators={}),{}, {})
+
+
+@pytest.mark.parametrize('improvement,expected',[(.000001,'inconclusive'),(.025,'inconclusive'),(.026,'passed')])
+def test_win_requires_strict_resolved_mae_improvement(improvement,expected):
+    base={str(i):.2 for i in range(8)}
+    cand={k:v+(.06 if int(k)<4 else 0.) for k,v in base.items()}
+    e=contrast_eligibility(cand,base,{k:.005 for k in base})
+    b={k:[.05]*5 for k in base};a=copy.deepcopy(b)
+    for k in ('0','1','2'):a[k]=[.05-improvement]*5
+    result=paired_error_check(e,a,b)
+    assert result['component_status']==expected
+    assert result['wins']==(['0','1','2'] if expected=='passed' else [])
+    assert not result['complete_experiment_passed']
+
+
+def test_win_uses_cell_specific_noise_instead_of_global_floor():
+    base,cand=predictions();cand={k:v+.2 for k,v in base.items()}
+    e=contrast_eligibility(cand,base,{k:.03 for k in base})
+    a={k:[0.]*5 for k in base};b={k:[.05]*5 for k in base}
+    assert paired_error_check(e,a,b)['wins']==[]
+
+
+def test_shared_step_floor_retains_zero_support_and_clustering():
+    from prefill_histogram import shared_step_reference,support_and_magnitude
+    h=simulated_histogram([dict(start=0.,end=.05,decode=10),dict(start=.05,end=.1,decode=20)],(0,.2),[.025,.1,.2,None])
+    assert h['decode_bearing_steps']==2 and h['decode_bearing_steps_by_bin']==[0,2,0,0]
+    ref=shared_step_reference(h)
+    assert ref['count_floor']==75 and ref['mean_toy_gaps_per_step']==15
+    obs=dict(upper_bounds_s=h['upper_bounds_s'],counts=[1000,100,80,0])
+    candidates=[dict(upper_bounds_s=h['upper_bounds_s'],counts=[1000,100,0,0]),
+                dict(upper_bounds_s=h['upper_bounds_s'],counts=[1000,200,20,0])]
+    scores=[support_and_magnitude(obs,p,ref,[0,1]) for p in candidates]
+    assert all(s['magnitude']['count_floor']==75 for s in scores)
+    assert scores[0]['material_support_mismatch'] and not scores[1]['material_support_mismatch']
+    assert scores[0]['support_mismatches'][0]['observed_equivalent_steps']==80/15
+    assert scores[0]['common_positive_sensitivity']['scored_bin_indices']==[1]
+    assert scores[0]['legacy_floor_sensitivity']['1']['worst_bin_rate_factor']>scores[0]['magnitude']['worst_bin_rate_factor']
+    assert not scores[0]['automatic_model_acceptance']
+
+
+def test_empty_or_invalid_step_reference_cannot_supply_floor():
+    from prefill_histogram import shared_step_reference
+    with pytest.raises(ValueError):shared_step_reference(dict(total=10,decode_bearing_steps=0))
+    with pytest.raises(ValueError):discrepancy(dict(),dict(),count_floor=float('nan'))
+
+
+def test_published_histograms_share_linear_reference_and_match_sources():
+    from scripts.build_prefill_design import ROOT,digest
+    d=json.loads((ROOT/'results/prefill-design-round4/itl-scenarios.json').read_text())
+    assert d['verified_source_files']=={'old':161,'new':138}
+    for name,sha in d['code_sha256'].items():assert digest(ROOT/name)==sha
+    assert len(d['replicate_references'])==3
+    assert sum(r['same_host'] for r in d['replicate_references'])==1
+    for row in d['historical']+d['transfer_slices']:
+        scenarios=row['full_histogram']['scenarios']
+        linear=scenarios['B2048-fifo-k0.0']['histogram']
+        expected=5*linear['total']/linear['decode_bearing_steps']
+        for scenario in scenarios.values():
+            score=scenario['joint_discrepancy']
+            assert score['magnitude']['count_floor']==pytest.approx(expected)
+            assert score['shared_reference']['reference_id']=='B2048-fifo-k0.0'
+            assert not score['automatic_model_acceptance']
+        assert len(row['replicate_reference_ids'])==3
+
+
+def test_published_win_counterexample_is_reproducible():
+    from scripts.check_prefill_win_margin import checks,ROOT,digest
+    saved=json.loads((ROOT/'results/prefill-design-round4/win-margin-counterexample.json').read_text())
+    for name,sha in saved.pop('source_sha256').items():assert digest(ROOT/name)==sha
+    assert saved==checks()
+    assert [r['revised']['component_status'] for r in saved['cases']]==['inconclusive','inconclusive','passed','failed']

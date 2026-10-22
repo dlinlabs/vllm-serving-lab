@@ -26,11 +26,11 @@ def main(argv=None):
         old_check=paired_error_check(old,errors,baseline_errors)
         revised=comparison_plan('M0','M0',calibrated,calibrated,raw,jitter)
         rows.append(dict(scale=scale,delta_s={k:calibrated[k]-raw[k] for k in raw},
-            old_raw_baseline_eligibility=old,old_gate3_component=old_check,revised_comparison_plan=revised))
+            raw_baseline_eligibility=old,raw_baseline_component_with_current_margin=old_check,revised_comparison_plan=revised))
     write(a.output,dict(role='synthetic counterexample: calibration gain is not structural gain',
         measured_data_used=False,models_fitted=False,jitter_is_synthetic=True,jitter_s=.005,
         frozen_coefficients=COEF,source_sha256={n:digest(ROOT/n) for n in ['prefill_design.py','prefill_validation.py','scripts/build_prefill_design.py','scripts/check_prefill_comparators.py']},cases=rows))
-    print(json.dumps([dict(scale=r['scale'],eligible=len(r['old_raw_baseline_eligibility']['eligible_cells']),old_component=r['old_gate3_component']['component_status'],structure=r['revised_comparison_plan']['structure_status']) for r in rows],indent=2))
+    print(json.dumps([dict(scale=r['scale'],eligible=len(r['raw_baseline_eligibility']['eligible_cells']),raw_component=r['raw_baseline_component_with_current_margin']['component_status'],structure=r['revised_comparison_plan']['structure_status']) for r in rows],indent=2))
 
 
 if __name__=='__main__':main()

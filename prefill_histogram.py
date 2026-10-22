@@ -71,15 +71,24 @@ def simulated_histogram(steps,window,bounds):
     """
     edges=np.array([math.inf if b is None else b for b in bounds],float)
     if not len(edges) or edges[-1]!=math.inf or np.any(np.diff(edges)<=0):raise ValueError('Invalid histogram bounds')
-    counts=np.zeros(len(edges),dtype=int)
+    counts=np.zeros(len(edges),dtype=int);step_counts=np.zeros(len(edges),dtype=int);decoders=[]
     for s in steps:
         if window[0]<s['end']<=window[1]:
             gap=s['end']-s['start']
-            counts[np.searchsorted(edges,gap,side='left')]+=s['decode']
-    return dict(upper_bounds_s=bounds,counts=counts.tolist(),total=int(counts.sum()),window_s=list(window))
+            index=np.searchsorted(edges,gap,side='left')
+            counts[index]+=s['decode']
+            if s['decode']>0:
+                step_counts[index]+=1;decoders.append(s['decode'])
+    return dict(upper_bounds_s=bounds,counts=counts.tolist(),total=int(counts.sum()),window_s=list(window),
+        decode_bearing_steps=len(decoders),decode_bearing_steps_by_bin=step_counts.tolist(),
+        mean_gaps_per_decode_bearing_step=float(np.mean(decoders)) if decoders else None,
+        gaps_per_step_range=[min(decoders),max(decoders)] if decoders else None,
+        clustering_note='Toy step counts only. Exporter gaps are clustered; these are not measured real steps or effective sample size.')
 
 
-def discrepancy(observed,predicted):
+def discrepancy(observed,predicted,*,count_floor=COUNT_FLOOR,scored_bin_indices=None):
+    """Descriptive sensitivity only; caller must label the shared floor/reference."""
+    if not math.isfinite(count_floor) or count_floor<=0:raise ValueError('Invalid count floor')
     if observed['upper_bounds_s']!=predicted['upper_bounds_s']:raise ValueError('Histogram bucket mismatch')
     a=np.array(observed['counts'],float);b=np.array(predicted['counts'],float)
     if a.shape!=b.shape or not np.isfinite(a).all() or not np.isfinite(b).all() or min(a.min(),b.min())<0 or a.sum()<=0 or b.sum()<=0:
@@ -87,11 +96,45 @@ def discrepancy(observed,predicted):
     # Every disjoint interval starting at25ms is scored, including +Inf; all bins are archived.
     lower=np.r_[0.,[x for x in observed['upper_bounds_s'][:-1]]]
     mask=lower>=.025
-    logs=np.log((np.maximum(b,COUNT_FLOOR)/b.sum())/(np.maximum(a,COUNT_FLOOR)/a.sum()))
+    if scored_bin_indices is not None:
+        allowed=np.zeros(len(a),dtype=bool);allowed[scored_bin_indices]=True;mask &= allowed
+    if not mask.any():raise ValueError('No scored histogram bins')
+    logs=np.log((np.maximum(b,count_floor)/b.sum())/(np.maximum(a,count_floor)/a.sum()))
     score=float(np.max(np.abs(logs[mask])))
-    return dict(count_floor=COUNT_FLOOR,scored_lower_bound_s=.025,per_bin_log_rate_ratio=logs.tolist(),
+    return dict(count_floor=count_floor,scored_lower_bound_s=.025,per_bin_log_rate_ratio=logs.tolist(),
         scored_bin_indices=np.flatnonzero(mask).tolist(),max_abs_log_rate_ratio=score,
         mean_abs_log_rate_ratio=float(np.mean(np.abs(logs[mask]))),worst_bin_rate_factor=math.exp(score),
         joint_factor_limit=JOINT_FACTOR_LIMIT,large_joint_discrepancy=score>math.log(JOINT_FACTOR_LIMIT),
         automatic_model_acceptance=False,
-        note='Normalized by total gaps; count-floor5; factor2 engineering flag, not independent-bin significance or model identification')
+        note='Normalized by total gaps. Factor2 is an uncalibrated engineering flag, not acceptance or independent-bin significance.')
+
+
+def shared_step_reference(histogram,reference_id='B2048-fifo-k0.0',equivalent_steps=5.):
+    n=histogram.get('decode_bearing_steps',0)
+    if n<=0 or not math.isfinite(equivalent_steps) or equivalent_steps<=0:raise ValueError('Missing/invalid toy step reference')
+    mean=histogram['total']/n
+    if not math.isfinite(mean) or mean<=0:raise ValueError('Empty toy gap reference')
+    return dict(reference_id=reference_id,equivalent_steps=equivalent_steps,
+        mean_toy_gaps_per_step=mean,count_floor=equivalent_steps*mean,
+        note='Fixed linear-B2048 reference for this window, shared by ALL scenarios. Equivalent-step normalization only; not observed steps, independent samples, or a statistical noise threshold.')
+
+
+def support_and_magnitude(observed,predicted,reference,common_positive_bins):
+    floor=reference['count_floor']
+    magnitude=discrepancy(observed,predicted,count_floor=floor)
+    flags=[]
+    for i in magnitude['scored_bin_indices']:
+        a=observed['counts'][i];b=predicted['counts'][i]
+        if (a==0)!=(b==0):
+            flags.append(dict(bin_index=i,observed_count=a,predicted_count=b,
+                direction='missing_predicted_support' if b==0 else 'extra_predicted_support',
+                material_at_shared_floor=max(a,b)>=floor,
+                observed_equivalent_steps=a/reference['mean_toy_gaps_per_step'],
+                predicted_equivalent_steps=b/reference['mean_toy_gaps_per_step']))
+    return dict(shared_reference=reference,support_mismatches=flags,
+        material_support_mismatch=any(r['material_at_shared_floor'] for r in flags),
+        magnitude=magnitude,
+        common_positive_sensitivity=discrepancy(observed,predicted,count_floor=1.,scored_bin_indices=common_positive_bins) if common_positive_bins else None,
+        legacy_floor_sensitivity={str(n):discrepancy(observed,predicted,count_floor=float(n)) for n in (1,5)},
+        automatic_model_acceptance=False,
+        note='Primary evidence retains zero-bin support flags and all-bin magnitude. Common-positive bins exclude support mismatches and are sensitivity ONLY. Neither score nor factor2 accepts a model.')

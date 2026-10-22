@@ -1,5 +1,5 @@
 {
-  "schema": "prefill-service-design-order-v5",
+  "schema": "prefill-service-design-order-v6",
   "seed": 20261022,
   "order": [
     {
@@ -1861,18 +1861,52 @@
   ],
   "transfer_slices": [
     {
+      "attempt_id": "transfer-a-r1",
+      "window": "a",
+      "replicate": 1,
       "replay_start": 40,
       "score_start": 60,
       "score_end": 120,
       "lead_in_seconds": 20,
-      "cap": 32
+      "cap": 32,
+      "attempts_allowed": 1,
+      "drain_before_next": true
     },
     {
+      "attempt_id": "transfer-b-r1",
+      "window": "b",
+      "replicate": 1,
       "replay_start": 160,
       "score_start": 180,
       "score_end": 240,
       "lead_in_seconds": 20,
-      "cap": 32
+      "cap": 32,
+      "attempts_allowed": 1,
+      "drain_before_next": true
+    },
+    {
+      "attempt_id": "transfer-b-r2",
+      "window": "b",
+      "replicate": 2,
+      "replay_start": 160,
+      "score_start": 180,
+      "score_end": 240,
+      "lead_in_seconds": 20,
+      "cap": 32,
+      "attempts_allowed": 1,
+      "drain_before_next": true
+    },
+    {
+      "attempt_id": "transfer-a-r2",
+      "window": "a",
+      "replicate": 2,
+      "replay_start": 40,
+      "score_start": 60,
+      "score_end": 120,
+      "lead_in_seconds": 20,
+      "cap": 32,
+      "attempts_allowed": 1,
+      "drain_before_next": true
     }
   ]
 }

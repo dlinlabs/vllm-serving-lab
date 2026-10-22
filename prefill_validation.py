@@ -57,17 +57,24 @@ def paired_error_check(eligibility,candidate_errors,baseline_errors):
     separate prerequisites; a passing component cannot pass the complete experiment.
     """
     keys=eligibility['no_regression_cells']
+    thresholds=eligibility['threshold_s_by_cell']
+    if len(keys)!=8 or len(set(keys))!=8 or set(thresholds)!=set(keys) or any(not math.isfinite(v) or v<=0 for v in thresholds.values()):
+        raise ValueError('Eight unique cells with finite positive win margins required')
     if set(keys)!=set(candidate_errors) or set(keys)!=set(baseline_errors):raise ValueError('All8 paired error cells required')
     a=np.asarray([candidate_errors[k] for k in keys],float);b=np.asarray([baseline_errors[k] for k in keys],float)
     if a.shape!=(8,5) or b.shape!=(8,5) or not np.isfinite(a).all() or not np.isfinite(b).all():
         raise ValueError('Expected8x5 finite paired errors')
     ma=np.abs(a).mean(axis=1);mb=np.abs(b).mean(axis=1)
     rows={k:dict(candidate_mae_s=float(ma[i]),baseline_mae_s=float(mb[i]),
+        improvement_s=float(mb[i]-ma[i]),win_margin_s=thresholds[k],
         paired_absolute_error_deltas_s=(np.abs(a[i])-np.abs(b[i])).tolist()) for i,k in enumerate(keys)}
     regressions=[k for i,k in enumerate(keys) if ma[i]-mb[i]>max(.1*mb[i],.025)]
-    wins=[k for i,k in enumerate(keys) if k in eligibility['eligible_cells'] and ma[i]<mb[i]]
-    status='failed' if regressions else 'inconclusive' if not eligibility['comparison_evaluable'] else 'passed' if len(wins)>=eligibility['strict_wins_required'] else 'failed'
+    wins=[k for i,k in enumerate(keys) if k in eligibility['eligible_cells'] and mb[i]-ma[i]>thresholds[k]
+          and not math.isclose(mb[i]-ma[i],thresholds[k],rel_tol=1e-12,abs_tol=1e-12)]
+    status='failed' if regressions else 'passed' if eligibility['comparison_evaluable'] and len(wins)>=eligibility['strict_wins_required'] else 'inconclusive'
     return dict(component_status=status,wins=wins,regressions=regressions,per_cell=rows,
+        win_rule='baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win',
+        unresolved_cells=[k for k in eligibility['eligible_cells'] if k not in wins and k not in regressions],
         complete_experiment_passed=False,statistical_significance_claimed=False)
 
 

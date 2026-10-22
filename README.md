@@ -41,10 +41,14 @@ input lengths, backlog-offset sentinels and prefill-specific prediction targets.
 Frozen-parameter2048 sensitivity does not fix the cap32 bias (MAE0.742 versus0.729).
 Round2 adds sentinel-only contrasts, a stronger7168-token sentinel backlog,
 separate decode/prefill model screens, and256-output backgrounds. The212-trial
-proposal includes an HTTP bridge, drift references and two80s real-trace replays
-(each with20s unscored lead-in), estimated at1318s under a hard1800s active limit.
-[Round3 checks](results/prefill-design-round3/report.md) add full ITL vectors, calibrated
-structural comparators and position-specific jitter.
+proposal includes an HTTP bridge, drift references and four80s real-trace attempts
+(two windows, two replicates each, ABBA order;20s unscored lead-in per attempt),
+estimated at1518s including explicit terminal reserves under a hard1800s active limit.
+[Round4 checks](results/prefill-design-round4/report.md) separate missing ITL support
+from shared step-floor magnitude, expose step clustering and repeat references,
+and require meaningful per-cell MAE gains. One same-host repeat pair is descriptive;
+factor2 does not accept a model. [Round3](results/prefill-design-round3/report.md)
+added full ITL vectors, calibrated comparators and position-specific jitter.
 [Self-review checks](results/prefill-design-self-review/report.md) define the service
 scoring window and full-feature identifiability per training fold.
 [ITL scenarios and checks](results/prefill-design-round2/report.md) distinguish

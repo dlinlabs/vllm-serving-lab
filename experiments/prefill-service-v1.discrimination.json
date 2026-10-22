@@ -2710,7 +2710,7 @@
       }
     }
   ],
-  "eligibility_rule": "Freeze candidate/comparator and per-cell position-derived jitter before held timing; abs delta >max(3*jitter[cell],25ms); >=4 eligible, >=ceil(.75*n) strict wins. Structural comparators are calibrated M0 and retained calibrated M1; raw B2048 is staleness-only. Selected M0 => structural N/A",
+  "eligibility_rule": "Freeze candidate/comparator and per-cell position-derived jitter before held timing; abs delta >max(3*jitter[cell],25ms); >=4 eligible, >=ceil(.75*n) wins with baseline MAE minus candidate MAE strictly above that SAME per-cell threshold. Near-ties are non-wins; insufficient wins inconclusive; any material regression on all8 fails. Structural comparators are calibrated M0 and retained calibrated M1; raw B2048 is staleness-only. Selected M0 => structural N/A",
   "primary_contrasts": [
     {
       "id": "single-L7168-D0|B2048-fifo-q1.5e-09|foreground-0",
