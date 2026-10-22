@@ -1,15 +1,22 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Draft design, revision8. Collector/hooks are not implemented; this is not an executable
+**Draft design, revision9. Collector/hooks are not implemented; this is not an executable
 GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
 
-## Noise-aware structural correction (revision8)
+## Noise-aware structural correction (revision9)
 
-[Noise report](../results/prefill-design-round6/report.md) and
-[seed-level results](../results/prefill-design-round6/noise-screen.json) address
+[Noise report](../results/prefill-design-round7/report.md) and
+[seed-level results](../results/prefill-design-round7/noise-screen.json) address
 [Round5](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6351586487).
+The [follow-up review](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6352203816)
+identified that pure paired-t admits deterministic1us gains when SD=0. Revision9
+adds a frozen5ms minimum mean improvement, preserving both structural groups and
+all dependence/regression checks. Revision8 workloads, counts and budget remain
+unchanged; old frozen plans without the floor are rejected. The floor is an
+engineering choice, not a statistically calibrated minimum benefit.
+
 Revision7's four eligible cells represented only one composition effect, and its
 noise-free feasibility check was not a power analysis. Reusing the eligibility
 margin as the required MAE gain also discarded useful paired evidence.
@@ -22,8 +29,8 @@ extrapolation. Actual mode/feature support and exact token manifests remain gate
 
 Keep per-cell eligibility >max(3*jitter,25ms), but require BOTH fixed structural
 groups: mixed_burst and single_long. Average paired error gains across group members
-within each block FIRST, then use five block means for the one-sided t95 lower
-bound. Both groups must exceed zero against every required calibrated comparator;
+within each block FIRST, then use five block means. For BOTH groups require
+mean gain >max(t(.95,4)*sample_SD/sqrt(5),5ms) against every required comparator;
 all eight cells retain regression guards. Offsets and D levels are not independent
 structural contrasts. See the exact component rule below.
 
@@ -83,7 +90,9 @@ lengths. D16 is a decoder population, not admission cap16.
 
 Earlier round reports below are historical. Revision6 and revision7 generator/case snapshots are archived
 beside round4/round5 so historical source hashes remain verifiable. Their old
-cell-count/margin gates are superseded by revision8; they are not current rules.
+cell-count/margin gates are superseded; revision8's pure-t gate is also historical.
+Round6 source snapshots preserve the pre-floor noise screen. Reproduce it at
+commit4a33e830816cd98ea4c571263f442cb92a1cb554. Current scoring is revision9.
 
 ## Round4 changes: support, resolution and repeat references
 
@@ -419,8 +428,10 @@ a3ms context effect can reduce a4ms baseline MAE by much more than10%.
    single_long (200ms x D0/D16), with EVERY member eligible. Uniform800ms cells
    are controls, not a third group. Within each group/block, average comparator
    absolute error minus candidate absolute error across its member cells. Across
-   the FIVE paired block means, require mean - t(.95,4)*sample_SD/sqrt(5)>1e-12s
-   for BOTH groups. Never count20 cell observations as20 independent blocks.
+   the FIVE paired block means, require mean >max(t(.95,4)*sample_SD/sqrt(5),5ms)
+   for BOTH groups, with1e-12s numerical tolerance. The5ms absolute mean-gain floor
+   is fixed before held outcomes; equality and epsilon gains are non-wins. The
+   requirement is a maximum, not the sum of the uncertainty margin and5ms. Never count20 cell observations as20 independent blocks.
    Fewer than two eligible groups or insufficient gains is inconclusive. Any cell
    regression >max(10% comparator MAE,25ms) is failed, including controls.
    All8 cells x5 paired block errors and canonical block IDs are required.

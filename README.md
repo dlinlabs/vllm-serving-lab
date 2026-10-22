@@ -36,10 +36,11 @@ development associations, not causes.
 [Cases/order/predictions](experiments/prefill-service-v1.design.json) ·
 [Completed2048 sensitivity](results/prefill-budget-sensitivity/summary.json)
 
-PR32 revision8 keeps22 cells and212 trials, with a1518.29s planning budget.
-[Noise-aware checks](results/prefill-design-round6/report.md) require two distinct
+PR32 revision9 keeps22 cells and212 trials, with a1518.29s planning budget.
+[Noise-aware checks](results/prefill-design-round7/report.md) require two distinct
 structural contrasts: mixed512/512/7680/7680 bursts and a single7680 prompt.
-The grouped paired-t screen uses five block means and calibrated comparators;
+The grouped paired-t screen uses five block means and calibrated comparators,
+plus a frozen5ms minimum mean improvement to reject deterministic epsilon gains;
 all-cell regression guards remain. Explicit held Gaussian noise and1/2/5%
 calibration-label noise are tested, including480 refitted training experiments.
 The10ms single-long eligibility margin is fragile;12–15ms remains inconclusive.

@@ -1,11 +1,11 @@
 {
-  "schema": "service-microbenchmark-design-v8",
+  "schema": "service-microbenchmark-design-v9",
   "protocol": "prefill-service-v1",
-  "revision": 8,
+  "revision": 9,
   "status": "draft_not_executable",
   "collector_implemented": false,
-  "source_parent_commit": "c726a423426aaa3ece2334ac0d1f0d9de245153a",
-  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6351586487",
+  "source_parent_commit": "4a33e830816cd98ea4c571263f442cb92a1cb554",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6352203816",
   "runtime": {
     "gpu": "RTX4090",
     "same_host": true,
@@ -273,11 +273,12 @@
         ]
       },
       "all_group_members_must_be_eligible": true,
-      "win_rule": "Average paired absolute-error gains within each group/block; across FIVE block means require mean-t(.95,4)*sample_SD/sqrt(5)>1e-12s for BOTH groups",
+      "win_rule": "Average paired absolute-error gains within each group/block; across FIVE block means require mean>max(t(.95,4)*sample_SD/sqrt(5),0.005s) with1e-12s tolerance for BOTH groups",
       "block_dependence_default": "unresolved",
       "block_dependence_required": "qualified by a preregistered calibration-only assessment; not implemented yet; unresolved/violated cannot pass",
       "implementation": "prefill_grouped_validation.py",
-      "block_count": 5
+      "block_count": 5,
+      "minimum_mean_gain_s": 0.005
     },
     "nonlinear_planning_k": [
       1.5e-09,
@@ -355,8 +356,16 @@
       "actual_eligibility_required_before_held_scoring": true
     },
     "azure_replay_scope": "Retained arrivals/input lengths from Azure; synthetic prompt content, fixed128 output cap with natural EOS; source GeneratedTokens audit-only",
-    "noise_screen_v8": {
-      "artifact": "results/prefill-design-round6/noise-screen.json",
+    "calibration_noise_readiness": {
+      "expected_strata": "Freeze executed-work/position/mode/padding identity before opening labels",
+      "repeats": 3,
+      "warning_cv": 0.02,
+      "stop_cv": 0.05,
+      "missing": "inconclusive",
+      "within_range_accepts_model": false
+    },
+    "noise_screen_v9": {
+      "artifact": "results/prefill-design-round7/noise-screen.json",
       "role": "conditional synthetic sensitivity, not GPU power",
       "held_sigma_ms": [
         8,
@@ -374,21 +383,14 @@
       "exact_fit_held_draws": 20000,
       "single_long_gap_ms": 30.2,
       "at_12_and_15ms": "inconclusive",
-      "cross_block_ar_null": "about14% nominal false passes; dependence qualification blocks passing"
-    },
-    "calibration_noise_readiness": {
-      "expected_strata": "Freeze executed-work/position/mode/padding identity before opening labels",
-      "repeats": 3,
-      "warning_cv": 0.02,
-      "stop_cv": 0.05,
-      "missing": "inconclusive",
-      "within_range_accepts_model": false
+      "cross_block_ar_null": "about14% nominal false passes; dependence qualification blocks passing",
+      "minimum_mean_gain_s": 0.005
     }
   },
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "a3cbaccbb5111b57d611a57bad7e70cb9e41542399cb0e886639bf117e14144f"
+      "sha256": "20de82834858fd106fcbc074f278d64b37705433bf63949e1ca4cf92ca259fda"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
@@ -400,11 +402,11 @@
     },
     "prefill-service-v1.predictions.json": {
       "path": "experiments/prefill-service-v1.predictions.json",
-      "sha256": "7a64a7ce17a99291e8f98e4c2e6e0ea9d28509cffbe90a602be6353878e872f1"
+      "sha256": "c06527da28ed4c18221b6927453c30c7947156b86b97f821c246da45023f04ec"
     },
     "prefill-service-v1.discrimination.json": {
       "path": "experiments/prefill-service-v1.discrimination.json",
-      "sha256": "ce0c306e56ac62b6932c5fc7188d9114df8937bbf9fe432b987a8be2ed0d89cc"
+      "sha256": "0b018a40436286c1763541d077700ec8063868d52391446f09dcbaa8829ba75c"
     },
     "prefill-service-v1.budget.json": {
       "path": "experiments/prefill-service-v1.budget.json",
@@ -443,16 +445,16 @@
       "sha256": "f3bd58f59ebf91728284b88b12a676060ddd1903d9eb631c29fb62be2c31bfaf"
     },
     "noise-screen": {
-      "path": "results/prefill-design-round6/noise-screen.json",
-      "sha256": "d151b6900d0452117ee08be3b44f7d27ff2719bbcd5146766316cfd69aa334e2"
+      "path": "results/prefill-design-round7/noise-screen.json",
+      "sha256": "baa8b6a5ca3d1eb8b8cf14e52603cc1583956a72398ae28d522686b5347c805b"
     },
     "noise-report": {
-      "path": "results/prefill-design-round6/report.md",
-      "sha256": "1e907c6698e5485cd688ec5d70bb902b7ab877a05c25a8341155ca679a3b6f6a"
+      "path": "results/prefill-design-round7/report.md",
+      "sha256": "6cb8a630ad1b216414e2dc417c1cc924fdcacc378abf1d5ab33fdbe51baaa098"
     },
     "grouped-validation": {
       "path": "prefill_grouped_validation.py",
-      "sha256": "74ce259442c36fd2c8f67cd694d18150240fb98809d715ca15bf41954e8aedc7"
+      "sha256": "8e9f6ed223e1c8c12ec1db112432b2095729024cca733fb8f28eb82f147ce8c9"
     },
     "noise-simulation": {
       "path": "prefill_noise.py",
@@ -460,11 +462,15 @@
     },
     "noise-script": {
       "path": "scripts/check_prefill_noise.py",
-      "sha256": "82c70906cc6eaf7166769b8dff2d9b3e0bced92b94d787dbe63acf3b5166e7e6"
+      "sha256": "deedea244370058b5448cb3daa05cf63dfc33c1b6b261edd4616ecf19262bc15"
     },
     "revision7-source-snapshots": {
       "path": "results/prefill-design-round5/source-snapshots.json",
       "sha256": "bef8303b06e1aec4c7b933a801d921286fbe08607c3319f5d113fb32b7c31b29"
+    },
+    "revision8-source-snapshots": {
+      "path": "results/prefill-design-round6/source-snapshots.json",
+      "sha256": "7e1be5e3fb83a3e974577e0c8793254935839a5af2c10359034267d03c67610d"
     }
   },
   "readiness": {
@@ -479,5 +485,5 @@
     "installed_scheduler_parity_verified": false,
     "block_dependence_assessment_implemented": false
   },
-  "revision_reason": "Round5: grouped paired blocks, two structural contrasts, explicit held and calibration-label noise"
+  "revision_reason": "Round5 follow-up: frozen5ms mean-gain floor prevents epsilon wins; preserve two groups and dependence guards"
 }

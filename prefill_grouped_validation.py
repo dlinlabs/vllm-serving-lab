@@ -1,4 +1,4 @@
-"""Revision8 structural components: two fixed contrasts, five paired blocks.
+"""Revision9 structural components: two fixed contrasts, five paired blocks.
 
 The t bound assumes independent, approximately normal block-level differences.
 It is an engineering screen, not a calibrated full-experiment error guarantee.
@@ -16,13 +16,15 @@ CONTRAST_GROUPS = {
 CONTROL_CELLS = tuple(f'sentinel-four-at800-D{d}' for d in (0, 16))
 ALL_CELLS = tuple(sorted(sum(CONTRAST_GROUPS.values(), ()) + CONTROL_CELLS))
 BLOCK_IDS = (1, 2, 3, 4, 5)
+MIN_MEAN_GAIN_S = .005  # Frozen engineering minimum; never selected from held outcomes.
 T95_DF4 = float(t.ppf(.95, 4))
 
 
 def grouped_comparison_plan(*args, **kwargs):
     """Freeze prediction-only eligibility; never choose groups using held errors."""
     plan = comparison_plan(*args, **kwargs)
-    plan['protocol'] = 'prefill-grouped-paired-v8'
+    plan['protocol'] = 'prefill-grouped-paired-v9'
+    plan['minimum_mean_gain_s'] = MIN_MEAN_GAIN_S
     plan['contrast_groups'] = {k: list(v) for k, v in CONTRAST_GROUPS.items()}
     for eligibility in plan['required_structural_comparators'].values():
         if set(eligibility['no_regression_cells']) != set(ALL_CELLS):
@@ -32,7 +34,7 @@ def grouped_comparison_plan(*args, **kwargs):
         groups = [g for g, members in CONTRAST_GROUPS.items() if set(members) <= eligible]
         for obsolete in ('minimum_eligible', 'comparison_evaluable', 'strict_wins_required'):
             eligibility.pop(obsolete)
-        eligibility.update(eligible_groups=groups, minimum_distinct_groups=2,
+        eligibility.update(minimum_mean_gain_s=MIN_MEAN_GAIN_S, eligible_groups=groups, minimum_distinct_groups=2,
                            comparison_evaluable=len(groups) == 2,
                            note='Two fixed structural groups required; offsets/D levels are not independent contrasts.')
     return plan
@@ -46,6 +48,8 @@ def paired_components(eligibility, candidate_errors, baseline_errors):
     """
     if set(eligibility['no_regression_cells']) != set(ALL_CELLS):
         raise ValueError('All eight cells required')
+    if eligibility.get('minimum_mean_gain_s') != MIN_MEAN_GAIN_S:
+        raise ValueError('Missing or changed frozen 5ms improvement floor')
     thresholds = eligibility['threshold_s_by_cell']
     if set(thresholds) != set(ALL_CELLS) or any(not math.isfinite(v) or v < .025 for v in thresholds.values()):
         raise ValueError('Invalid frozen eligibility thresholds')
@@ -68,11 +72,14 @@ def paired_components(eligibility, candidate_errors, baseline_errors):
         gains = (b-a)[..., indices, :].mean(axis=-2)
         mean = gains.mean(axis=-1)
         sd = gains.std(axis=-1, ddof=1)
-        lower = mean - T95_DF4*sd/math.sqrt(5)
-        win = (lower > 1e-12) & (name in groups)
+        uncertainty = T95_DF4*sd/math.sqrt(5)
+        lower = mean - uncertainty
+        threshold = np.maximum(uncertainty, MIN_MEAN_GAIN_S)
+        win = (mean - threshold > 1e-12) & (name in groups)
         wins.append(win)
         group_results[name] = dict(block_gains_s=gains, mean_gain_s=mean,
-                                   sd_gain_s=sd, one_sided_95_lower_s=lower, win=win)
+                                   sd_gain_s=sd, one_sided_95_lower_s=lower,
+                                   uncertainty_margin_s=uncertainty, required_mean_gain_s=threshold, win=win)
     failed = regressions.any(axis=-1)
     passed = np.logical_and.reduce(wins) & ~failed & (len(groups) == 2)
     return dict(passed=passed, failed=failed, per_cell_gain_s=per_cell_gain,
@@ -104,8 +111,10 @@ def grouped_error_check(eligibility, candidate_errors, baseline_errors, *, block
 
 
 def grouped_structural_check(plan, candidate_errors, comparator_errors, *, block_ids, block_dependence_status="unresolved"):
-    if plan.get('protocol') != 'prefill-grouped-paired-v8' or plan.get('contrast_groups') != {k: list(v) for k, v in CONTRAST_GROUPS.items()}:
-        raise ValueError('Missing revision8 frozen plan')
+    if plan.get('minimum_mean_gain_s') != MIN_MEAN_GAIN_S:
+        raise ValueError('Missing or changed frozen 5ms improvement floor')
+    if plan.get('protocol') != 'prefill-grouped-paired-v9' or plan.get('contrast_groups') != {k: list(v) for k, v in CONTRAST_GROUPS.items()}:
+        raise ValueError('Missing revision9 frozen plan')
     required = plan['required_structural_comparators']
     if plan['structure_status'] == 'not_applicable':
         if required or comparator_errors:

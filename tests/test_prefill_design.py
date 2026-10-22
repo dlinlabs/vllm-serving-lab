@@ -217,6 +217,6 @@ def test_committed_design_metadata_and_generator_outputs_are_current(tmp_path):
     for name in ('cases','order','predictions','discrimination','budget'):
         assert (tmp_path/f'fresh/{name}.json').read_bytes()==(ROOT/f'experiments/prefill-service-v1.{name}.json').read_bytes()
     design=json.loads((ROOT/'experiments/prefill-service-v1.design.json').read_text())
-    assert design['revision']==8 and design['workload']['background_output_tokens']==256
+    assert design['revision']==9 and design['workload']['background_output_tokens']==256
     assert design['collection']['transfer_seconds']==320
     for row in design['files'].values():assert hashlib.sha256((ROOT/row['path']).read_bytes()).hexdigest()==row['sha256']

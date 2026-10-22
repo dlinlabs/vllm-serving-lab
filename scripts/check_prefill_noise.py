@@ -1,4 +1,4 @@
-"""Revision8 synthetic noise screen. Uses no GPU captures or held measurements."""
+"""Revision9 synthetic noise screen. Uses no GPU captures or held measurements."""
 import argparse
 from collections import Counter
 import hashlib
@@ -16,7 +16,7 @@ from prefill_design import COEF
 from prefill_planning import collect_training
 from prefill_noise import (fit_scenario, cases_at_revision, evaluate_draws, held_noise,
                            freeze_plan, NOISE_PROFILES)
-from prefill_grouped_validation import ALL_CELLS, T95_DF4
+from prefill_grouped_validation import ALL_CELLS, T95_DF4, MIN_MEAN_GAIN_S
 
 SEED = 20261022
 
@@ -112,7 +112,7 @@ def run(draws=20000, training_seeds=40, held_draws_per_fit=200):
                'prefill_design.py', 'prefill_identifiability.py', 'prefill_validation.py',
                'scripts/build_prefill_design.py', 'scripts/check_prefill_noise.py',
                'experiments/prefill-service-v1.cases.json']
-    return dict(schema='prefill-noise-screen-v8', seed=SEED, draws=draws,
+    return dict(schema='prefill-noise-screen-v9', minimum_mean_gain_s=MIN_MEAN_GAIN_S, seed=SEED, draws=draws,
                 training_seeds=training_seeds, held_draws_per_fit=held_draws_per_fit,
                 numpy_version=np.__version__, scipy_version=scipy.__version__,
                 source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},
@@ -128,7 +128,7 @@ def run(draws=20000, training_seeds=40, held_draws_per_fit=200):
 
 
 def report(data):
-    lines = ['# Revision8: paired structural groups and explicit noise', '',
+    lines = ['# Revision9: paired structural groups and explicit noise', '',
              'CPU-only synthetic results. No GPU collection, C use or MPC validation.', '',
              '## Protocol change', '',
              'Mixed bursts at50/400ms now use [512,512,7680,7680]; single-at200 uses7680.',
@@ -142,7 +142,11 @@ def report(data):
              'be eligible; the uniform control is never another structural contrast.',
              'Within each group/block average paired absolute-error improvement across member',
              'cells, then compute the mean and sample SD over FIVE blocks. Both groups need',
-             'mean gain - t(.95,4)*SD/sqrt(5) >0. All-eight-cell regression guards remain.',
+             'mean gain >max(t(.95,4)*SD/sqrt(5),5ms), with1e-12s numerical tolerance.',
+             'The5ms engineering floor is frozen before this rerun, not fitted to its outcomes.',
+             'Equality and deterministic1us gains are non-wins. This is NOT lower-bound>5ms.',
+             'All-eight-cell regression guards remain. Workload revision8 is unchanged;',
+             'table revision numbers identify workloads, all scored with the revision9 gate.',
              'Calibrated M0 and retained M1 must each satisfy this rule. M0 is structural N/A.',
              'The .75 cell-win tally and reuse of3*jitter as a required MAE gain are superseded.', '',
              'This is a one-sided paired-t engineering screen. Independent approximately normal',

@@ -1,5 +1,5 @@
 {
-  "role": "raw-coefficient sensitivity only; revision8 noise-aware discrimination is in results/prefill-design-round6/noise-screen.json; not statistical power",
+  "role": "raw-coefficient sensitivity only; revision9 noise-aware discrimination is in results/prefill-design-round7/noise-screen.json; not statistical power",
   "cases": [
     {
       "case": "single-L1024-D0",
@@ -2512,7 +2512,7 @@
       }
     }
   ],
-  "eligibility_rule": "Freeze per-cell abs prediction gap >max(3*jitter[cell],25ms). Require BOTH mixed_burst and single_long groups with all constituent cells eligible. Average paired MAE gains within each block/group; both one-sided t95 lower bounds across five blocks must exceed0. All8 cell regression guards retained. Unresolved or violated cross-block dependence prevents passing. Calibrated M0 and retained M1 required; M0 structural N/A.",
+  "eligibility_rule": "Freeze per-cell abs prediction gap >max(3*jitter[cell],25ms). Require BOTH mixed_burst and single_long groups with all constituent cells eligible. Average paired MAE gains within each block/group; both groups require mean gain >max(t(.95,4)*SD/sqrt(5),5ms) across five blocks. All8 cell regression guards retained. Unresolved or violated cross-block dependence prevents passing. Calibrated M0 and retained M1 required; M0 structural N/A.",
   "primary_contrasts": [
     {
       "id": "single-L7168-D0|B2048-fifo-q1.5e-09|foreground-0",

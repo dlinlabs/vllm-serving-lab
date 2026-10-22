@@ -128,8 +128,9 @@ def test_repeat_cv_missing_or_noisy_strata_cannot_approve_model():
 
 
 def test_archived_noise_screen_matches_sources_and_enforces_structure_limits():
-    d = json.loads((ROOT/'results/prefill-design-round6/noise-screen.json').read_text())
+    d = json.loads((ROOT/'results/prefill-design-round7/noise-screen.json').read_text())
     for name,sha in d['source_sha256'].items():assert digest(ROOT/name) == sha
+    assert d['schema'] == 'prefill-noise-screen-v9' and d['minimum_mean_gain_s'] == .005
     assert not d['measured_power'] and not d['complete_experiment_passed']
     assert d['draws'] == 20000 and d['training_seeds'] == 40
     assert all(r['passed'] == 0 for r in d['held_noise'] if r['revision'] == 7 or r['sigma'] >= .012)
@@ -167,3 +168,64 @@ def test_vectorized_monte_carlo_matches_public_block_gate():
             counts['passed' if status == 'components_passed' else status] += 1
         simulated = evaluate_draws(fitted,.010,draws=draws,seed=seed,profile=profile)
         assert {k:simulated[k] for k in counts} == counts
+
+
+@pytest.mark.parametrize('gain,expected', [(1e-6,'inconclusive'),(.004999,'inconclusive'),(.005,'inconclusive'),(.005001,'passed')])
+def test_frozen_floor_rejects_epsilon_and_equality_but_allows_meaningful_gain(gain,expected):
+    e = plan_for_gaps()['required_structural_comparators']['calibrated_M0']
+    a = {k:[.03]*5 for k in ALL_CELLS}
+    b = {k:[.03+gain]*5 for k in ALL_CELLS}
+    r = grouped_error_check(e,a,b,block_ids=BLOCK_IDS,block_dependence_status='qualified')
+    assert r['component_status'] == expected
+    assert all(v['required_mean_gain_s'] == .005 for v in r['groups'].values())
+
+
+def test_floor_combines_with_uncertainty_by_max_not_addition():
+    e = plan_for_gaps()['required_structural_comparators']['calibrated_M0']
+    a = np.zeros((2,8,5))
+    # First mean clears each threshold but not their sum; second clears5ms only.
+    b = np.broadcast_to(np.array([[0,.004,.008,.012,.016],[0,0,0,0,.04]])[:,None,:],a.shape)
+    r = paired_components(e,a,b)
+    assert r['passed'].tolist() == [True,False]
+    assert r['groups']['mixed_burst']['one_sided_95_lower_s'][0] < .005
+
+
+def test_floor_is_required_in_frozen_plan_and_every_comparator():
+    plan = plan_for_gaps()
+    errors = {k:[.01]*5 for k in ALL_CELLS}
+    for floor in (None,0.,.010):
+        broken = copy.deepcopy(plan)
+        broken['minimum_mean_gain_s'] = floor
+        with pytest.raises(ValueError,match='floor'):
+            grouped_structural_check(broken,errors,{'calibrated_M0':errors},block_ids=BLOCK_IDS)
+        e = copy.deepcopy(plan['required_structural_comparators']['calibrated_M0'])
+        e['minimum_mean_gain_s'] = floor
+        with pytest.raises(ValueError,match='floor'):
+            grouped_error_check(e,errors,errors,block_ids=BLOCK_IDS)
+
+
+def test_revision8_noise_sources_remain_verifiable():
+    root = ROOT/'results/prefill-design-round6'
+    data = json.loads((root/'noise-screen.json').read_text())
+    snapshots = json.loads((root/'source-snapshots.json').read_text())
+    for name,sha in data['source_sha256'].items():assert digest(ROOT/snapshots.get(name,name)) == sha
+
+
+@pytest.mark.parametrize('group', ['mixed_burst','single_long'])
+def test_both_structural_groups_must_clear_frozen_floor(group):
+    plan = plan_for_gaps()
+    a = {k:[0.]*5 for k in ALL_CELLS}; b = {k:[.04]*5 for k in ALL_CELLS}
+    for k in CONTRAST_GROUPS[group]:b[k] = [.004]*5
+    r = grouped_structural_check(plan,a,{'calibrated_M0':b},block_ids=BLOCK_IDS,block_dependence_status='qualified')
+    assert r['structural_status'] == 'inconclusive'
+
+
+def test_retained_m1_must_also_clear_frozen_floor():
+    raw = {k:.4 for k in ALL_CELLS}; m1 = {k:.5 for k in ALL_CELLS}; m2 = {k:.6 for k in ALL_CELLS}
+    plan = grouped_comparison_plan('M2','M1',m2,raw,raw,{k:.01 for k in ALL_CELLS},calibrated_m1=m1)
+    errors = {k:[0.]*5 for k in ALL_CELLS}
+    comparators = {'calibrated_M0':{k:[.04]*5 for k in ALL_CELLS},'calibrated_M1':{k:[1e-6]*5 for k in ALL_CELLS}}
+    r = grouped_structural_check(plan,errors,comparators,block_ids=BLOCK_IDS,block_dependence_status='qualified')
+    assert r['comparators']['calibrated_M0']['component_status'] == 'passed'
+    assert r['comparators']['calibrated_M1']['component_status'] == 'inconclusive'
+    assert r['structural_status'] == 'inconclusive'
