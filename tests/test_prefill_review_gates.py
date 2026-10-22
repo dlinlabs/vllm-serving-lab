@@ -197,7 +197,8 @@ def test_published_histograms_share_linear_reference_and_match_sources():
     from scripts.build_prefill_design import ROOT,digest
     d=json.loads((ROOT/'results/prefill-design-round4/itl-scenarios.json').read_text())
     assert d['verified_source_files']=={'old':161,'new':138}
-    for name,sha in d['code_sha256'].items():assert digest(ROOT/name)==sha
+    snapshots=json.loads((ROOT/'results/prefill-design-round4/source-snapshots.json').read_text())
+    for name,sha in d['code_sha256'].items():assert digest(ROOT/snapshots.get(name,name))==sha
     assert len(d['replicate_references'])==3
     assert sum(r['same_host'] for r in d['replicate_references'])==1
     for row in d['historical']+d['transfer_slices']:

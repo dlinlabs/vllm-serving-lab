@@ -26,7 +26,7 @@ def cases():
         for name,lengths in [('uniform',[4096]*4),('mixed',[1024,1024,7168,7168]),('reverse',[7168,7168,1024,1024])]:
             result.append(dict(id=f'composition-{name}-D{d}',family='composition',background_decoders=d,foreground_tokens=lengths,foreground_offsets_ms=[0]*4,sentinel=None,split='calibration' if name=='uniform' else 'held_case'))
         for offset in (50,400,800):
-            result.append(dict(id=f'sentinel-four-at{offset}-D{d}',family='sentinel',background_decoders=d,foreground_tokens=[4096]*4,foreground_offsets_ms=[0]*4,sentinel=dict(input_tokens=512,arrival_ms=offset),split='held_case'))
+            result.append(dict(id=f'sentinel-four-at{offset}-D{d}',family='sentinel',background_decoders=d,foreground_tokens=([1024,1024,7168,7168] if offset in (50,400) else [4096]*4),foreground_offsets_ms=[0]*4,sentinel=dict(input_tokens=512,arrival_ms=offset),split='held_case'))
         result.append(dict(id=f'sentinel-one-at200-D{d}',family='sentinel',background_decoders=d,foreground_tokens=[7168],foreground_offsets_ms=[0],sentinel=dict(input_tokens=512,arrival_ms=200),split='held_case'))
     return result
 
@@ -76,7 +76,8 @@ def frozen_prediction(case,budget,coef,overhead):
 def offset_contrasts(predictions):
     rows=[];lookup={p['case']:p['scenarios'] for p in predictions}
     for d in (0,16):
-        for a,b in ((50,400),(50,800),(400,800)):
+        # Only compare offsets with the SAME foreground composition.
+        for a,b in ((50,400),):
             x=lookup[f'sentinel-four-at{a}-D{d}'];y=lookup[f'sentinel-four-at{b}-D{d}']
             for key in x:
                 rows.append(dict(backgrounds=d,offsets_ms=[a,b],scenario=key,
@@ -135,7 +136,7 @@ def build(output):
                         else 'H3' if key=='B2048-round_robin_512-q0.0' and c['sentinel'] and c['sentinel']['arrival_ms']!=800 else None),
                     exceeds_planning_noise_bands={str(ms):abs(delta)>3*ms/1000 for ms in (10,25,50)}))
         gaps.append(dict(case=c['id'],split=c['split'],contrasts=contrasts,
-            policy_role='negative_control_expected_fifo_rr_tie' if c['sentinel'] and c['sentinel']['arrival_ms']==800 else 'identification',
+            foreground_tokens=c['foreground_tokens'],policy_role='negative_control_expected_fifo_rr_tie' if c['sentinel'] and c['sentinel']['arrival_ms']==800 else 'identification',
             nonlinear_role='low_signal_validation_only' if c['family']=='single' and c['foreground_tokens']==[2048] else 'sensitivity'))
         predictions.append(dict(case=c['id'],scenarios=scenarios,frozen_barrier_predictions=exact))
     counts=Counter(t['stage'] for t in trials);roles=Counter(t['analysis_role'] for t in trials if t['stage']=='main')
@@ -150,14 +151,14 @@ def build(output):
     estimated=linear_time*1.35+len(trials)*.25+transfer_seconds+terminal_reserve+120
     fit_rows=np.array([[r['q'],r['q']*r['l']+r['q']*(r['q']+1)/2] for r in coverage])
     scaled=fit_rows/np.maximum(np.linalg.norm(fit_rows,axis=0),1e-12)
-    write(output/'cases.json',dict(schema='prefill-service-design-cases-v6',status='draft_not_executable',cases=cells))
-    write(output/'order.json',dict(schema='prefill-service-design-order-v6',seed=20261022,order=trials,
+    write(output/'cases.json',dict(schema='prefill-service-design-cases-v7',status='draft_not_executable',cases=cells))
+    write(output/'order.json',dict(schema='prefill-service-design-order-v7',seed=20261022,order=trials,
         transfer_slices=transfer_attempts))
     source={f:digest(ROOT/f) for f in ['prefill_design.py','prefill_identifiability.py','prefill_validation.py','scripts/build_prefill_design.py','greybox_simulator.py','evaluate_low_cap_frozen.py']}
     write(output/'predictions.json',dict(role='preregistered hypothetical CPU predictions; not measured GPU results',source_sha256=source,
         frozen_coefficients=coef,legacy_adapter='All D16 backgrounds already decoding with255 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.',
         quadratic_coefficient_role='1.5e-9 and3.15e-9 are unvalidated sensitivities per full L^2, not fitted bounds; applied incrementally as2*k*attention_pairs',predictions=predictions))
-    write(output/'discrimination.json',dict(role='planning sensitivity, not estimated statistical power',cases=gaps,offset_contrasts=offset_contrasts(predictions),
+    write(output/'discrimination.json',dict(role='raw-coefficient sensitivity only; calibrated discrimination is in calibrated-planning.json; not statistical power',cases=gaps,offset_contrasts=offset_contrasts(predictions),
         eligibility_rule='Freeze candidate/comparator and per-cell position-derived jitter before held timing; abs delta >max(3*jitter[cell],25ms); >=4 eligible, >=ceil(.75*n) wins with baseline MAE minus candidate MAE strictly above that SAME per-cell threshold. Near-ties are non-wins; insufficient wins inconclusive; any material regression on all8 fails. Structural comparators are calibrated M0 and retained calibrated M1; raw B2048 is staleness-only. Selected M0 => structural N/A',
         primary_contrasts=[dict(id=f"{c['case']}|{x['scenario']}|{x['request_id']}",hypothesis=x['identification_hypothesis'],delta_s=x['delta_s'])
             for c in gaps for x in c['contrasts'] if x['identification_hypothesis']],

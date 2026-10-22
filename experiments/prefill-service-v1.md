@@ -1,9 +1,67 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Draft design, revision6. Collector/hooks are not implemented; this is not an executable
+**Draft design, revision7. Collector/hooks are not implemented; this is not an executable
 GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
+
+## Calibrated discrimination correction (revision7)
+
+[CPU report](../results/prefill-design-round5/report.md) and
+[reproducible scenarios](../results/prefill-design-round5/calibrated-planning.json)
+now refit calibrated comparators before checking design feasibility. A perfect
+synthetic M2 with k=1.5e-9 has ZERO eligible sentinel cells in revision6 after M0
+recalibration, even without measurement noise. Raw-coefficient contrast size was
+not a valid estimate of calibrated structural discrimination.
+
+Replace the four-request foreground at50/400ms with1024/1024/7168/7168. Preserve
+four requests and16384 total input tokens. Keep uniform4x4096 at800ms as a policy
+tie control, and keep one7168@200. Cell IDs remain stable within this versioned
+draft; full content hashes identify the new cases. Only50-vs400 is a matched
+composition offset comparison. The800ms uniform control is not the third point
+of that curve. Six calibration cells,22 total cells,212 trials and estimated
+1517.78s remain unchanged. No observed outcomes were used to choose this revision.
+
+The corrected synthetic scenario yields four eligible gaps around36.7–36.8ms;
+components resolve at hypothetical0/10ms jitter but not15ms. k=1e-9 remains
+unresolved. Four cells share a composition and are not independent effects.
+These are deterministic feasibility checks, NOT statistical power or GPU results.
+The25ms floor, minimum eligibility and meaningful-win gates remain unchanged.
+
+`prefill_planning.py` performs training-only nonnegative fitting, LOCO family
+selection and causal serial FIFO rollout for these synthetic checks. All models
+use the same training rows and weighting. M0Z (M0 plus Z, without decode context)
+is a mandatory reporting ablation; it is not a new selectable family. If M2 wins
+against M0 while M1 was rejected, report joint-feature predictive benefit, not
+unique Z attribution. Actual mode-aware feature support/rollout is still pending.
+
+The raw contrast table remains a policy/sensitivity diagnostic. It cannot certify
+structural feasibility. Before executable freeze, review calibrated-comparator
+sensitivity as well; after calibration fitting, insufficient actual eligibility
+means structural INCONCLUSIVE, never a threshold adjustment or held-cell swap.
+
+Azure development transfer remains mandatory for transfer claims. The current
+`prepare_trace.py` preserves retained arrivals/input lengths but synthesizes
+prompts and uses output cap128 with natural EOS; source GeneratedTokens are
+audit-only. Synthetic text is normal for this dataset, which does not release
+prompt content. Its documented benchmark approach forces recorded output sizes;
+our fixed128 policy instead changes the decode workload.
+[Azure source](https://github.com/Azure/AzurePublicDataset/blob/master/AzureLLMInferenceDataset2024.md).
+Realistic arrivals do not guarantee independent feature variation or faithful output work. Assess actual training support before asserting that a trace
+identifies or cannot identify a mechanism. Controlled cells separate explanations;
+Azure checks usefulness under mixed load. C remains untouched.
+
+Before executable freeze, add an exact-installed-revision scheduler parity gate:
+compare request IDs, chunk sizes, computed positions and completion/admission
+events under matched state/config, including partial chunks and async behavior.
+CPU toy-to-toy parity does not satisfy it. Collector, native adapter, mode-aware
+causal rollout, exact token manifests and GPU acceptance are still pending.
+Later action validation must compare caps/transitions on matched offered traces,
+measure action ranking/regret and draining transients, and avoid oracle output
+lengths. D16 is a decoder population, not admission cap16.
+
+Earlier round reports below are historical. Revision6 generator source is archived
+beside round4 so its historical source hashes remain verifiable.
 
 ## Round4 changes: support, resolution and repeat references
 
@@ -165,7 +223,7 @@ work before each trial;250ms idle gap; external traffic prohibited.
 |---|---|---:|---|
 | Single |1024/2048/4096/7168 input |8|1024/7168 calibration;2048/4096 held |
 | Composition |4x4096;1024/1024/7168/7168; reverse order |6|Uniform calibration; mixed/reverse held |
-| Sentinel |4x4096 burst,512 sentinel at50/400/800ms;1x7168 with sentinel200ms |8|All held |
+| Sentinel |Mixed1024/1024/7168/7168 at50/400ms; uniform4x4096 at800ms;1x7168 at200ms;512-token sentinel |8|All held |
 
 Composition cases have four requests and16384 total prompt tokens. This controls
 offered work/count, not actual step composition. Preserve common content pools
@@ -311,7 +369,7 @@ Held screens mirror the frozen decision: an M1 decode-benefit claim requires>=10
 decode-only case-weighted MAE improvement versus M0 and the declared prefill
 no-regression limits. An M2 prefill-benefit claim requires>=10% improvement on BOTH
 prefill targets versus the retained base and no-regression on all targets/cases.
-Report M0/M1/M2 ablations regardless; do not replace the selected candidate from
+Report M0/M1/M0Z/M2 ablations regardless; do not replace the selected candidate from
 held results. Failed/inconclusive is not passed. M0 can remain appropriate.
 All margins refer to relative prediction ERROR, not percentage of total runtime;
 a3ms context effect can reduce a4ms baseline MAE by much more than10%.
@@ -319,7 +377,8 @@ a3ms context effect can reduce a4ms baseline MAE by much more than10%.
 **Separate causal sentinel rollout gate, eight cells, five blocks each:**
 
 1. Per cell, abs(median(predicted-measured engine TTFT)) <=max(10% measured median,25ms).
-2. Compare50/400/800ms offsets within each D level. Measured pairs with a block-bootstrap
+2. Compare50/400ms offsets within each D level using the same mixed foreground.
+   The uniform800ms cell is a separate tie control; do not include it in that ordering. Measured pairs with a block-bootstrap
    95% interval excluding0 and median difference>25ms are distinguishable; predicted
    ordering must agree for all such pairs. Others are unresolved/ties, not automatic
    ranking successes. No discernible ordering means policy identification is unresolved.
@@ -486,10 +545,11 @@ old output vector forecasts them. Admission timing and release state remain cond
 
 ```
 python scripts/build_prefill_design.py --output-dir /tmp/fresh-prefill-design
+python scripts/check_prefill_calibrated_design.py --output-dir /tmp/fresh-calibrated-design
 python scripts/check_prefill_itl.py --old-evidence OLD --new-evidence NEW --output /tmp/fresh-itl.json
 python scripts/check_prefill_comparators.py --output /tmp/fresh-comparators.json
 python scripts/check_prefill_win_margin.py --output /tmp/fresh-win-margin.json
-python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py tests/test_prefill_review_gates.py
+python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py tests/test_prefill_review_gates.py tests/test_prefill_planning.py
 python scripts/check_prefill_budget.py --suite-dir NEW/results/low-cap-switch-v1 --old-suite-dir OLD/results/cap-range-v1 --output-dir /tmp/fresh-budget-check
 ```
 

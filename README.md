@@ -36,23 +36,20 @@ development associations, not causes.
 [Cases/order/predictions](experiments/prefill-service-v1.design.json) ·
 [Completed2048 sensitivity](results/prefill-budget-sensitivity/summary.json)
 
-PR32 review changes the proposal to22 cells at D0/D16, calibration across1024–7168
-input lengths, backlog-offset sentinels and prefill-specific prediction targets.
-Frozen-parameter2048 sensitivity does not fix the cap32 bias (MAE0.742 versus0.729).
-Round2 adds sentinel-only contrasts, a stronger7168-token sentinel backlog,
-separate decode/prefill model screens, and256-output backgrounds. The212-trial
-proposal includes an HTTP bridge, drift references and four80s real-trace attempts
-(two windows, two replicates each, ABBA order;20s unscored lead-in per attempt),
-estimated at1518s including explicit terminal reserves under a hard1800s active limit.
-[Round4 checks](results/prefill-design-round4/report.md) separate missing ITL support
-from shared step-floor magnitude, expose step clustering and repeat references,
-and require meaningful per-cell MAE gains. One same-host repeat pair is descriptive;
-factor2 does not accept a model. [Round3](results/prefill-design-round3/report.md)
-added full ITL vectors, calibrated comparators and position-specific jitter.
-[Self-review checks](results/prefill-design-self-review/report.md) define the service
-scoring window and full-feature identifiability per training fold.
-[ITL scenarios and checks](results/prefill-design-round2/report.md) distinguish
-conditional historical-path diagnostics from new-host causal forecasts.
+PR32 revision7 keeps22 cells at D0/D16 and the212-trial,1517.78s planning
+budget. [Calibrated design checks](results/prefill-design-round5/report.md) expose
+a blind spot: at synthetic k=1.5e-9, recalibrated M0 leaves ZERO eligible cells in
+the old uniform-sentinel design. Mixed1024/1024/7168/7168 foregrounds at50/400ms
+produce four resolved contrasts at hypothetical0/10ms jitter, but not15ms.
+The uniform800ms tie control remains separate from the mixed offset comparison.
+Same-training-data NNLS/LOCO, M0Z attribution ablation and calibrated causal toy
+comparators are reproduced in the report. These are synthetic feasibility checks,
+not power, measured physical fits or actual-vLLM rollout validation.
+Azure development replay remains unchanged; its arrivals/input lengths are trace
+based, prompt content synthetic, and outputs capped128 rather than replaying source
+GeneratedTokens. Controlled identification and real-composition transfer answer
+different questions. [Round4](results/prefill-design-round4/report.md) ITL support,
+shared-floor magnitude and repeat diagnostics remain historical evidence.
 **Collector/hooks are not implemented; the executable GPU protocol is not frozen.**
 
 ## State-aware model iteration on the 16/32 captures

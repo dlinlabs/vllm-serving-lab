@@ -1,5 +1,5 @@
 {
-  "role": "planning sensitivity, not estimated statistical power",
+  "role": "raw-coefficient sensitivity only; calibrated discrimination is in calibrated-planning.json; not statistical power",
   "cases": [
     {
       "case": "single-L1024-D0",
@@ -57,6 +57,9 @@
             "50": false
           }
         }
+      ],
+      "foreground_tokens": [
+        1024
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -118,6 +121,9 @@
           }
         }
       ],
+      "foreground_tokens": [
+        2048
+      ],
       "policy_role": "identification",
       "nonlinear_role": "low_signal_validation_only"
     },
@@ -178,6 +184,9 @@
           }
         }
       ],
+      "foreground_tokens": [
+        4096
+      ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
     },
@@ -237,6 +246,9 @@
             "50": false
           }
         }
+      ],
+      "foreground_tokens": [
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -454,6 +466,12 @@
           }
         }
       ],
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
     },
@@ -669,6 +687,12 @@
             "50": false
           }
         }
+      ],
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -886,6 +910,12 @@
           }
         }
       ],
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
     },
@@ -898,7 +928,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.05761985168829409,
+          "delta_s": -0.05983781359415408,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -911,12 +941,12 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.1010818560000003,
+          "delta_s": 0.15770496000000034,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
             "25": true,
-            "50": false
+            "50": true
           }
         },
         {
@@ -924,7 +954,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.21227189760000054,
+          "delta_s": 0.33118041600000037,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -937,7 +967,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.633518029724252,
+          "delta_s": -0.6624505701109029,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -945,6 +975,12 @@
             "50": true
           }
         }
+      ],
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -958,7 +994,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.05761985168829409,
+          "delta_s": -0.05983781359415408,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -971,12 +1007,12 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.1010818560000003,
+          "delta_s": 0.15770496000000034,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
             "25": true,
-            "50": false
+            "50": true
           }
         },
         {
@@ -984,7 +1020,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.21227189760000054,
+          "delta_s": 0.33118041600000037,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -997,7 +1033,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.2777961280938692,
+          "delta_s": -0.4689172495702896,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -1005,6 +1041,12 @@
             "50": true
           }
         }
+      ],
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -1066,6 +1108,12 @@
           }
         }
       ],
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
       "policy_role": "negative_control_expected_fifo_rr_tie",
       "nonlinear_role": "sensitivity"
     },
@@ -1125,6 +1173,9 @@
             "50": true
           }
         }
+      ],
+      "foreground_tokens": [
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -1186,6 +1237,9 @@
           }
         }
       ],
+      "foreground_tokens": [
+        1024
+      ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
     },
@@ -1245,6 +1299,9 @@
             "50": false
           }
         }
+      ],
+      "foreground_tokens": [
+        2048
       ],
       "policy_role": "identification",
       "nonlinear_role": "low_signal_validation_only"
@@ -1306,6 +1363,9 @@
           }
         }
       ],
+      "foreground_tokens": [
+        4096
+      ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
     },
@@ -1365,6 +1425,9 @@
             "50": false
           }
         }
+      ],
+      "foreground_tokens": [
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -1582,6 +1645,12 @@
           }
         }
       ],
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
     },
@@ -1797,6 +1866,12 @@
             "50": false
           }
         }
+      ],
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -2014,6 +2089,12 @@
           }
         }
       ],
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
     },
@@ -2026,7 +2107,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.0880376149686597,
+          "delta_s": -0.08993872517368251,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2039,12 +2120,12 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.10108185599999953,
+          "delta_s": 0.15770496000000067,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
             "25": true,
-            "50": false
+            "50": true
           }
         },
         {
@@ -2052,7 +2133,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.21227189759999998,
+          "delta_s": 0.33118041600000003,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2065,7 +2146,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.6661828427302614,
+          "delta_s": -0.6942607493080852,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2073,6 +2154,12 @@
             "50": true
           }
         }
+      ],
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -2086,7 +2173,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.0880376149686597,
+          "delta_s": -0.08993872517368251,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2099,12 +2186,12 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.10108185599999953,
+          "delta_s": 0.15770496000000067,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
             "25": true,
-            "50": false
+            "50": true
           }
         },
         {
@@ -2112,7 +2199,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.21227189759999998,
+          "delta_s": 0.33118041600000003,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2125,7 +2212,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.297815960886177,
+          "delta_s": -0.4855185471272896,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2133,6 +2220,12 @@
             "50": true
           }
         }
+      ],
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -2194,6 +2287,12 @@
           }
         }
       ],
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
       "policy_role": "negative_control_expected_fifo_rr_tie",
       "nonlinear_role": "sensitivity"
     },
@@ -2253,6 +2352,9 @@
             "50": true
           }
         }
+      ],
+      "foreground_tokens": [
+        7168
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -2327,161 +2429,11 @@
       ],
       "scenario": "B2048-round_robin_512-q0.0",
       "target": "sentinel_ttft_offset_difference",
-      "delta_s": -0.00572190163038272,
-      "exceeds_planning_noise_bands": {
-        "10": false,
-        "25": false,
-        "50": false
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B8192-fifo-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.75,
+      "delta_s": 0.15646667945938658,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
         "50": true
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B2048-fifo-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.75,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B2048-fifo-q1.5e-09",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.75,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B2048-fifo-q3.15e-09",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.75,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B2048-round_robin_512-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.11933363558328208,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": false
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B8192-fifo-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.4,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B2048-fifo-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.4,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B2048-fifo-q1.5e-09",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.4,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B2048-fifo-q3.15e-09",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.4,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 0,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B2048-round_robin_512-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.1250555372136648,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": false
       }
     },
     {
@@ -2552,157 +2504,7 @@
       ],
       "scenario": "B2048-round_robin_512-q0.0",
       "target": "sentinel_ttft_offset_difference",
-      "delta_s": -0.018366881844084304,
-      "exceeds_planning_noise_bands": {
-        "10": false,
-        "25": false,
-        "50": false
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B8192-fifo-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.75,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B2048-fifo-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.75,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B2048-fifo-q1.5e-09",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.75,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B2048-fifo-q3.15e-09",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.75,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        50,
-        800
-      ],
-      "scenario": "B2048-round_robin_512-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.08666882257727271,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": false
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B8192-fifo-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.3999999999999999,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B2048-fifo-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.3999999999999999,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B2048-fifo-q1.5e-09",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.3999999999999999,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B2048-fifo-q3.15e-09",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.3999999999999999,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
-    },
-    {
-      "backgrounds": 16,
-      "offsets_ms": [
-        400,
-        800
-      ],
-      "scenario": "B2048-round_robin_512-q0.0",
-      "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.10503570442135701,
+      "delta_s": 0.14125779781920444,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -2805,12 +2607,12 @@
     {
       "id": "sentinel-four-at50-D0|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.633518029724252
+      "delta_s": -0.6624505701109029
     },
     {
       "id": "sentinel-four-at400-D0|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.2777961280938692
+      "delta_s": -0.4689172495702896
     },
     {
       "id": "sentinel-one-at200-D0|B2048-round_robin_512-q0.0|sentinel",
@@ -2910,12 +2712,12 @@
     {
       "id": "sentinel-four-at50-D16|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.6661828427302614
+      "delta_s": -0.6942607493080852
     },
     {
       "id": "sentinel-four-at400-D16|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.297815960886177
+      "delta_s": -0.4855185471272896
     },
     {
       "id": "sentinel-one-at200-D16|B2048-round_robin_512-q0.0|sentinel",
@@ -3066,32 +2868,32 @@
       {
         "case": "sentinel-four-at50-D0",
         "request_id": "foreground-0",
-        "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.23714793442025509,
-        "reference_predicted_ttft_s": 0.3683668818440844,
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at50-D0",
         "request_id": "foreground-1",
-        "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.5936601473139941,
-        "reference_predicted_ttft_s": 0.6144716772490448,
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at50-D0",
         "request_id": "foreground-2",
-        "reference": "composition-uniform-D16/foreground-2",
-        "predicted_ttft_s": 0.8318618300853909,
-        "reference_predicted_ttft_s": 0.8611033468295761,
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5949773327529214,
+        "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at50-D0",
         "request_id": "foreground-3",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 0.9892399313546346,
+        "predicted_ttft_s": 0.9914578932604946,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": false
       },
@@ -3099,39 +2901,39 @@
         "case": "sentinel-four-at50-D0",
         "request_id": "sentinel",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 0.9392399313546346,
+        "predicted_ttft_s": 0.9414578932604946,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D0",
         "request_id": "foreground-0",
-        "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.23714793442025509,
-        "reference_predicted_ttft_s": 0.3683668818440844,
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D0",
         "request_id": "foreground-1",
-        "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.5936601473139941,
-        "reference_predicted_ttft_s": 0.6144716772490448,
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D0",
         "request_id": "foreground-2",
-        "reference": "composition-uniform-D16/foreground-2",
-        "predicted_ttft_s": 0.8318618300853909,
-        "reference_predicted_ttft_s": 0.8611033468295761,
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5949773327529214,
+        "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D0",
         "request_id": "foreground-3",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 0.9892399313546346,
+        "predicted_ttft_s": 0.9914578932604946,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": false
       },
@@ -3139,7 +2941,7 @@
         "case": "sentinel-four-at400-D0",
         "request_id": "sentinel",
         "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.5892399313546346,
+        "predicted_ttft_s": 0.5914578932604946,
         "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
@@ -3330,32 +3132,32 @@
       {
         "case": "sentinel-four-at50-D16",
         "request_id": "foreground-0",
-        "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.3683668818440844,
-        "reference_predicted_ttft_s": 0.3683668818440844,
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at50-D16",
         "request_id": "foreground-1",
-        "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.6144716772490448,
-        "reference_predicted_ttft_s": 0.6144716772490448,
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.24584135831717502,
+        "reference_predicted_ttft_s": 0.3683668818440844,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at50-D16",
         "request_id": "foreground-2",
-        "reference": "composition-uniform-D16/foreground-2",
-        "predicted_ttft_s": 0.8611033468295761,
-        "reference_predicted_ttft_s": 0.8611033468295761,
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.615788862687972,
+        "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at50-D16",
         "request_id": "foreground-3",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 1.0345497245743458,
+        "predicted_ttft_s": 1.0367676864802056,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": true
       },
@@ -3363,39 +3165,39 @@
         "case": "sentinel-four-at50-D16",
         "request_id": "sentinel",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 0.9845497245743458,
+        "predicted_ttft_s": 0.9867676864802055,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D16",
         "request_id": "foreground-0",
-        "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.3683668818440844,
-        "reference_predicted_ttft_s": 0.3683668818440844,
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D16",
         "request_id": "foreground-1",
-        "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.6144716772490448,
-        "reference_predicted_ttft_s": 0.6144716772490448,
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.24584135831717502,
+        "reference_predicted_ttft_s": 0.3683668818440844,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D16",
         "request_id": "foreground-2",
-        "reference": "composition-uniform-D16/foreground-2",
-        "predicted_ttft_s": 0.8611033468295761,
-        "reference_predicted_ttft_s": 0.8611033468295761,
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.615788862687972,
+        "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D16",
         "request_id": "foreground-3",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 1.0345497245743458,
+        "predicted_ttft_s": 1.0367676864802056,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": true
       },
@@ -3403,7 +3205,7 @@
         "case": "sentinel-four-at400-D16",
         "request_id": "sentinel",
         "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.6345497245743457,
+        "predicted_ttft_s": 0.6367676864802054,
         "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },

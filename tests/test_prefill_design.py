@@ -156,7 +156,7 @@ def test_sentinel_discrimination_uses_actual_target_and_flags_policy_tie(tmp_pat
     assert all(x['request_id']=='sentinel' for x in cells['sentinel-four-at50-D0']['contrasts'])
     assert any(x['scenario']=='B2048-fifo-q1.5e-09' for x in cells['single-L2048-D0']['contrasts'])
     assert cells['single-L2048-D0']['nonlinear_role']=='low_signal_validation_only'
-    assert len(d['offset_contrasts'])==30
+    assert len(d['offset_contrasts'])==10
     assert len({x['id'] for x in d['primary_contrasts']})==42
     assert sum(x['hypothesis']=='H3' for x in d['primary_contrasts'])==6
 
@@ -217,6 +217,6 @@ def test_committed_design_metadata_and_generator_outputs_are_current(tmp_path):
     for name in ('cases','order','predictions','discrimination','budget'):
         assert (tmp_path/f'fresh/{name}.json').read_bytes()==(ROOT/f'experiments/prefill-service-v1.{name}.json').read_bytes()
     design=json.loads((ROOT/'experiments/prefill-service-v1.design.json').read_text())
-    assert design['revision']==6 and design['workload']['background_output_tokens']==256
+    assert design['revision']==7 and design['workload']['background_output_tokens']==256
     assert design['collection']['transfer_seconds']==320
     for row in design['files'].values():assert hashlib.sha256((ROOT/row['path']).read_bytes()).hexdigest()==row['sha256']

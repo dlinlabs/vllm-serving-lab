@@ -1,10 +1,10 @@
 {
-  "schema": "service-microbenchmark-design-v6",
+  "schema": "service-microbenchmark-design-v7",
   "protocol": "prefill-service-v1",
-  "revision": 6,
+  "revision": 7,
   "status": "draft_not_executable",
   "collector_implemented": false,
-  "source_parent_commit": "8a8c86942ac350c71ba266caaedf1e0ef1bdfa2f",
+  "source_parent_commit": "73279c4cb7186ca6a410c0811a55f05a14031485",
   "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6331855173",
   "runtime": {
     "gpu": "RTX4090",
@@ -48,7 +48,27 @@
     "content_seed": 20261024,
     "prompt_manifest_status": "pending implementation",
     "backgrounds_must_outlive_foreground": true,
-    "sentinel_one_foreground_tokens": 7168
+    "sentinel_one_foreground_tokens": 7168,
+    "sentinel_foreground_by_offset_ms": {
+      "50": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "400": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "800": [
+        4096,
+        4096,
+        4096,
+        4096
+      ]
+    }
   },
   "measurement": {
     "separate_cpu_gpu_targets": true,
@@ -234,7 +254,14 @@
       "same_comparator_training_and_accounting_required": true,
       "win_improvement_threshold": "comparator MAE minus candidate MAE >max(3*jitter[cell],25ms); numerical equality is non-win",
       "insufficient_resolved_wins": "inconclusive",
-      "any_material_regression": "failed"
+      "any_material_regression": "failed",
+      "matched_offset_pairs_ms": [
+        [
+          50,
+          400
+        ]
+      ],
+      "uniform_800_is_separate_control": true
     },
     "nonlinear_planning_k": [
       1.5e-09,
@@ -293,28 +320,46 @@
       "replicate_envelope_calibrated": false,
       "replicate_references": "One same-host old32 pair; cross-host32/16 context; not matched to60s transfer windows"
     },
-    "historical_output_lengths": "All five admitted paths have128 outputs; forced128 variant is duplicate evidence, not independent sensitivity. Future natural EOS remains measured."
+    "historical_output_lengths": "All five admitted paths have128 outputs; forced128 variant is duplicate evidence, not independent sensitivity. Future natural EOS remains measured.",
+    "reporting_ablations": [
+      "M0",
+      "M1",
+      "M0Z",
+      "M2"
+    ],
+    "M0Z": "M0 plus attention_pairs; same calibration folds/weights/masks; reporting only, not selectable",
+    "calibrated_design_screen": {
+      "artifact": "results/prefill-design-round5/calibrated-planning.json",
+      "role": "synthetic feasibility, not statistical power",
+      "refit_all_comparators": true,
+      "loco_selection_training_only": true,
+      "k_1p5e9_eligible_cells_zero_jitter": 4,
+      "k_1e9_resolved": false,
+      "jitter_15ms_resolved": false,
+      "actual_eligibility_required_before_held_scoring": true
+    },
+    "azure_replay_scope": "Retained arrivals/input lengths from Azure; synthetic prompt content, fixed128 output cap with natural EOS; source GeneratedTokens audit-only"
   },
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "14d4da3aa92fd4aab30f6e8a9307344639f5d646f32b4b6c10b6bc6bc7ab1d27"
+      "sha256": "bf8f6b1a43effc993f5f3c49c1471c0e9b6e70c1efaa4e967255f1455dc13033"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
-      "sha256": "25238b662fef35b14e5b4e04b99a741f645dc3fcb4d04cc4f94885d2264fba5a"
+      "sha256": "5c665ff4c070dcc9e3432f76adf63ce8e91be59790734fe3f6fb4a35f7935caa"
     },
     "prefill-service-v1.order.json": {
       "path": "experiments/prefill-service-v1.order.json",
-      "sha256": "8e3de212375724e02c934f2069c32adafa372f042329e86fe51a0fdfad0f254b"
+      "sha256": "f18bd304fe95d6af4c1ceabaee63a42463cadf5b184306ce7880571de3d8b87f"
     },
     "prefill-service-v1.predictions.json": {
       "path": "experiments/prefill-service-v1.predictions.json",
-      "sha256": "3bfc02158986a0e40edada41aacaf72ac3f1458d2cfc61127be5a4aed5bfda7a"
+      "sha256": "37203f81e2d3b3a5bef4599327dc558a75bb742c242f829099292f174ce8a3ee"
     },
     "prefill-service-v1.discrimination.json": {
       "path": "experiments/prefill-service-v1.discrimination.json",
-      "sha256": "50cb16fc9b023d2b7bf02c593d17e93f10bcf99c04043af2dc3e2fca9bac31e1"
+      "sha256": "d23eac4d53650bd688b9f6e4b19ca7399579551275249b247bb7abd2a648ecf7"
     },
     "prefill-service-v1.budget.json": {
       "path": "experiments/prefill-service-v1.budget.json",
@@ -331,6 +376,26 @@
     "win-margin-counterexample": {
       "path": "results/prefill-design-round4/win-margin-counterexample.json",
       "sha256": "07c817ec03f5d20de7ce21e8cd76632876c9fd95c09f9ace6a4245c9687936f7"
+    },
+    "calibrated-planning": {
+      "path": "results/prefill-design-round5/calibrated-planning.json",
+      "sha256": "416036623fe7064c449c67f561952ab3cef22f69484f233ed3db0bc408873dd3"
+    },
+    "calibrated-report": {
+      "path": "results/prefill-design-round5/report.md",
+      "sha256": "9a6834ac71205e2418cf14df245c09a5f11eb46195cb88bc51f8c73a6217c6a6"
+    },
+    "calibrated-planning-code": {
+      "path": "prefill_planning.py",
+      "sha256": "92bce4a8b7c5ed765ee31e834481944589668d0eb06c601bffd58356da726569"
+    },
+    "calibrated-planning-script": {
+      "path": "scripts/check_prefill_calibrated_design.py",
+      "sha256": "e616a61cedc7c0bed94fa3636db1e9de78cf30c34c7716cd06510c1a14273771"
+    },
+    "historical-source-snapshots": {
+      "path": "results/prefill-design-round4/source-snapshots.json",
+      "sha256": "f3bd58f59ebf91728284b88b12a676060ddd1903d9eb631c29fb62be2c31bfaf"
     }
   },
   "readiness": {
@@ -341,6 +406,8 @@
     "C_used": false,
     "mpc_evaluated": false,
     "mode_aware_accounting_implemented": false,
-    "calibrated_physical_models_fitted": false
-  }
+    "calibrated_physical_models_fitted": false,
+    "installed_scheduler_parity_verified": false
+  },
+  "revision_reason": "Calibrated-comparator discrimination and composition correction; user-requested review follow-up"
 }
