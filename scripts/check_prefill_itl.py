@@ -14,11 +14,12 @@ import evaluate_low_cap_frozen as lf
 from prefill_design import simulate
 from scripts.build_prefill_design import digest,write
 from scripts.check_prefill_budget import itl_tail
+from prefill_histogram import exporter_histogram,simulated_histogram,discrepancy
 from scripts.reproduce_cap_miss_causes import verify,old_files,new_files
 
 GUARD=('prefill_design.py','scripts/check_prefill_itl.py','greybox_simulator.py',
        'evaluate_low_cap_frozen.py','scripts/check_prefill_budget.py','scripts/reproduce_cap_miss_causes.py',
-       'scripts/build_prefill_design.py','prefill_identifiability.py')
+       'scripts/build_prefill_design.py','prefill_identifiability.py','prefill_histogram.py','prefill_validation.py')
 SCENARIOS=[(8192,0.),(2048,0.),(2048,1e-9),(2048,1.5e-9),(2048,3.15e-9)]
 
 
@@ -45,6 +46,16 @@ def predict(requests,window):
     return {f'B{b}-fifo-k{k}':simulate(requests,b,quadratic=k,itl_window=window)['itl'] for b,k in SCENARIOS}
 
 
+def histogram_predictions(requests,observed,rebase=0.):
+    window=[t-rebase for t in observed['actual_window_s']]
+    rows={}
+    for b,k in SCENARIOS:
+        steps=[];simulate(requests,b,quadratic=k,steps_out=steps)
+        histogram=simulated_histogram(steps,window,observed['upper_bounds_s'])
+        rows[f'B{b}-fifo-k{k}']=dict(histogram=histogram,joint_discrepancy=discrepancy(observed,histogram))
+    return rows
+
+
 def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--old-evidence',type=Path,required=True)
     p.add_argument('--new-evidence',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
@@ -58,16 +69,24 @@ def main(argv=None):
     for root,name in pairs:
         path=root/name
         sources[name]={n:digest(path/n) for n in ('trace.json','client.json','gateway.jsonl','manifest.json','engine_observations.jsonl')}
+        requests=accepted_requests(path);observed=exporter_histogram(path,60,300)
         historical.append(dict(capture=name,observed_exporter=itl_tail(path),
-            simulated=predict(accepted_requests(path),(60.,300.))))
+            output_lengths=sorted({r['output'] for r in requests}),accepted_requests=len(requests),
+            simulated=predict(requests,(60.,300.)),full_histogram=dict(observed=observed,
+                scenarios=histogram_predictions(requests,observed))))
     path=a.new_evidence/'results/low-cap-switch-v1/low-cap-switch-v1-fixed-32-r1'
     transfers=[]
     for score_start,score_end in ((60,120),(180,240)):
         replay_start=score_start-20
-        transfers.append(dict(replay_start=replay_start,score_start=score_start,score_end=score_end,cap=32,
+        requests=accepted_requests(path,replay_start=replay_start,replay_end=score_end)
+        observed=exporter_histogram(path,score_start,score_end)
+        forced=accepted_requests(path,replay_start=replay_start,replay_end=score_end,forced_output=128)
+        transfers.append(dict(full_histogram=dict(observed=observed,scenarios=histogram_predictions(requests,observed,replay_start)),
+            forced128_equals_realized=all(r['output']==128 for r in requests),
+            replay_start=replay_start,score_start=score_start,score_end=score_end,cap=32,
             lead_in_seconds=20,score_window_local=[20,80],
-            realized_output_oracle=predict(accepted_requests(path,replay_start=replay_start,replay_end=score_end),(20.,80.)),
-            forced128_output_sensitivity=predict(accepted_requests(path,replay_start=replay_start,replay_end=score_end,forced_output=128),(20.,80.))))
+            realized_output_oracle=predict(requests,(20.,80.)),
+            forced128_output_sensitivity=predict(forced,(20.,80.))))
     result=dict(role='development mechanism diagnostic and conditional transfer preregistration; no GPU collection',
         historical_working_budget=2048,historical_config_verified=False,verified_source_files=verified,
         code_sha256=before,
@@ -75,9 +94,9 @@ def main(argv=None):
         limitations=[
             'Running-first FIFO assumes every live decoder emits one token in each executed step; counter/async semantics must be checked.',
             'A gap is counted by its right token timestamp: start < timestamp <= end. Exporter scrapes cover slightly different endpoints.',
-            'Historical realized output lengths and admissions are retrospective oracle inputs; transfer counts do not predict fresh admission/EOS.',
+            'All five historical admitted paths have output128; forced128 is duplicate evidence, not independent sensitivity. Admission timing remains retrospective; future natural EOS may differ.',
             'Transfer simulation starts empty at the lead-in, not with reconstructed historical state. Boundary state must be measured.',
-            'k values are sensitivities with unchanged linear coefficients, not fitted parameters or physical upper bounds.',
+            'Neither k nor a k bound is supported by a selected tail bin; the full neighboring-bin discrepancies are reported.',
             'A new transfer run also needs a frozen conditional replay on its actual accepted arrivals/outputs; this cannot pass a causal forecasting gate.',
             'Tail mismatches can falsify the joint scenario; matching tails do not uniquely establish scheduler budget or nonlinear cost.'
         ])

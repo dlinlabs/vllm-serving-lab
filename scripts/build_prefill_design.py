@@ -85,6 +85,22 @@ def offset_contrasts(predictions):
     return rows
 
 
+def noise_references(baseline):
+    refs={f'{case}/{rid}':r['ttft_s'] for case in ('single-L1024-D0','composition-uniform-D16')
+          for rid,r in baseline[case]['foreground'].items()}
+    import math
+    rows=[]
+    for case,result in baseline.items():
+        for rid,r in result['foreground'].items():
+            ref=min(refs,key=lambda k:(abs(math.log(r['ttft_s']/refs[k])),k))
+            rows.append(dict(case=case,request_id=rid,reference=ref,predicted_ttft_s=r['ttft_s'],
+                reference_predicted_ttft_s=refs[ref],outside_reference_range=not min(refs.values())<=r['ttft_s']<=max(refs.values())))
+    return dict(rule='Nearest absolute log-latency distance using raw-B2048 toy only; freeze before collection. Compute MAD across off trials per position, never pool request positions.',
+        references=refs,targets=rows,
+        sentinel_mapping={r['case']:r['reference'] for r in rows if r['request_id']=='sentinel'},
+        caveat='Noise-range proxies, not cell-specific measured variance or power. Out-of-range targets and mode differences must be reported; do not tune mapping from held data.')
+
+
 def build(output):
     output=Path(output)
     if output.exists():raise ValueError('Choose fresh output directory')
@@ -128,19 +144,19 @@ def build(output):
     estimated=linear_time*1.35+len(trials)*.25+160+120
     fit_rows=np.array([[r['q'],r['q']*r['l']+r['q']*(r['q']+1)/2] for r in coverage])
     scaled=fit_rows/np.maximum(np.linalg.norm(fit_rows,axis=0),1e-12)
-    write(output/'cases.json',dict(schema='prefill-service-design-cases-v4',status='draft_not_executable',cases=cells))
-    write(output/'order.json',dict(schema='prefill-service-design-order-v4',seed=20261022,order=trials,
+    write(output/'cases.json',dict(schema='prefill-service-design-cases-v5',status='draft_not_executable',cases=cells))
+    write(output/'order.json',dict(schema='prefill-service-design-order-v5',seed=20261022,order=trials,
         transfer_slices=[dict(replay_start=40,score_start=60,score_end=120,lead_in_seconds=20,cap=32),dict(replay_start=160,score_start=180,score_end=240,lead_in_seconds=20,cap=32)]))
-    source={f:digest(ROOT/f) for f in ['prefill_design.py','prefill_identifiability.py','scripts/build_prefill_design.py','greybox_simulator.py','evaluate_low_cap_frozen.py']}
+    source={f:digest(ROOT/f) for f in ['prefill_design.py','prefill_identifiability.py','prefill_validation.py','scripts/build_prefill_design.py','greybox_simulator.py','evaluate_low_cap_frozen.py']}
     write(output/'predictions.json',dict(role='preregistered hypothetical CPU predictions; not measured GPU results',source_sha256=source,
         frozen_coefficients=coef,legacy_adapter='All D16 backgrounds already decoding with255 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.',
         quadratic_coefficient_role='1.5e-9 and3.15e-9 are unvalidated sensitivities per full L^2, not fitted bounds; applied incrementally as2*k*attention_pairs',predictions=predictions))
     write(output/'discrimination.json',dict(role='planning sensitivity, not estimated statistical power',cases=gaps,offset_contrasts=offset_contrasts(predictions),
-        eligibility_rule='Freeze calibrated candidate and calibration-only jitter before held scoring; expected candidate-baseline abs delta >max(3*jitter,25ms); at least4/8 eligible; >=ceil(.75*n) strict wins; zero eligible is inconclusive',
+        eligibility_rule='Freeze candidate/comparator and per-cell position-derived jitter before held timing; abs delta >max(3*jitter[cell],25ms); >=4 eligible, >=ceil(.75*n) strict wins. Structural comparators are calibrated M0 and retained calibrated M1; raw B2048 is staleness-only. Selected M0 => structural N/A',
         primary_contrasts=[dict(id=f"{c['case']}|{x['scenario']}|{x['request_id']}",hypothesis=x['identification_hypothesis'],delta_s=x['delta_s'])
             for c in gaps for x in c['contrasts'] if x['identification_hypothesis']],
         resolution_rule='Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.',
-        observed_microbenchmark_noise_available=False,full_model_calibration_support=calibration_support(calibration_rows),calibration_chunk_coverage=dict(q_min=float(fit_rows[:,0].min()),q_max=float(fit_rows[:,0].max()),
+        observed_microbenchmark_noise_available=False,jitter_references=noise_references(baseline),full_model_calibration_support=calibration_support(calibration_rows),calibration_chunk_coverage=dict(q_min=float(fit_rows[:,0].min()),q_max=float(fit_rows[:,0].max()),
             l_min=min(r['l'] for r in coverage),l_max=max(r['l'] for r in coverage),q_Z_rank=int(np.linalg.matrix_rank(scaled)),q_Z_scaled_condition=float(np.linalg.cond(scaled))),
         gate='Before main trials, compare declared contrasts with calibration-only observer noise; no held-case swaps. Stop unsupported precision claims rather than retune the matrix.'))
     write(output/'budget.json',dict(trial_counts=dict(counts),total_trials=len(trials),main_roles=dict(roles),

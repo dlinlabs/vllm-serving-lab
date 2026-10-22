@@ -1,11 +1,11 @@
 {
-  "schema": "service-microbenchmark-design-v4",
+  "schema": "service-microbenchmark-design-v5",
   "protocol": "prefill-service-v1",
-  "revision": 4,
+  "revision": 5,
   "status": "draft_not_executable",
   "collector_implemented": false,
-  "source_parent_commit": "3409711b1c139dbf1d7227f1810d04dae4613a30",
-  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6330431494",
+  "source_parent_commit": "1c05760f0bf43d4ca2102ce52e6385ddcd33ca3c",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6331161574",
   "runtime": {
     "gpu": "RTX4090",
     "same_host": true,
@@ -64,7 +64,25 @@
     "drift_reference": "single-L1024-D16 at block start/end",
     "drift_flag_fraction": 0.1,
     "bootstrap_seed": 20261023,
-    "gate_bootstrap_resamples": 10000
+    "gate_bootstrap_resamples": 10000,
+    "per_step_graph_fields": [
+      "runtime_graph_mode",
+      "capture_or_replay",
+      "actual_tokens",
+      "padded_tokens",
+      "actual_requests",
+      "padded_requests_if_available",
+      "query_uniformity",
+      "capture_key",
+      "attention_backend",
+      "step_wall_time",
+      "valid_cuda_span",
+      "decode_count",
+      "decode_context"
+    ],
+    "graph_fields_implemented": false,
+    "jitter": "MAD across off trials per request position; complete20x1/10x4 matrices; preregistered latency-range reference mapping; per-cell thresholds",
+    "missing_graph_fields": "unavailable, never inferred from D level; mode/context attribution unavailable without required labels"
   },
   "collection": {
     "trial_counts": {
@@ -160,8 +178,8 @@
       "causal_rollout_required": true,
       "future_observed_chunks_allowed": false,
       "unevaluated_is_not_passed": true,
-      "eligibility_source": "Frozen calibrated causal candidate predictions and calibration-only jitter; hash before held timing",
-      "eligibility_threshold": "abs predicted sentinel TTFT difference >max(3*jitter,25ms)",
+      "eligibility_source": "Frozen candidate and EACH calibrated comparator, calibration-only per-position jitter, preregistered per-cell reference mapping",
+      "eligibility_threshold": "abs predicted TTFT difference >max(3*jitter[cell],25ms)",
       "minimum_eligible_cells": 4,
       "minimum_strict_win_fraction": 0.75,
       "unresolved_is_not_passed": true,
@@ -169,14 +187,21 @@
       "policy_tie_controls": [
         "sentinel-four-at800-D0",
         "sentinel-four-at800-D16"
-      ]
+      ],
+      "structural_comparators": [
+        "calibrated_M0",
+        "calibrated_M1_when_retained_for_M2"
+      ],
+      "raw_B2048_role": "staleness/recalibration baseline only",
+      "selected_M0_structural_status": "not_applicable",
+      "same_comparator_training_and_accounting_required": true
     },
     "nonlinear_planning_k": [
       1.5e-09,
       3.15e-09
     ],
     "nonlinear_k_is_fitted_bound": false,
-    "transfer_ITL_counts": "results/prefill-design-self-review/itl-scenarios.json; conditional historical accepted/output paths, not fresh admission or causal predictions",
+    "transfer_ITL_counts": "results/prefill-design-round3/itl-scenarios.json; full matched-window bucket vectors and legacy nominal tails; conditional historical admission/output paths",
     "service_step_window": "foreground release through last foreground/sentinel completion; exclude background prep/drain",
     "fitting_weights": "equal total squared row weight per calibration cell; training partition only",
     "identifiability": {
@@ -194,36 +219,61 @@
       "unsupported_family_excluded_before_held": true,
       "toy_is_not_measured_support": true
     },
-    "service_window_membership": "same executed step IDs for wall/GPU labels; never cross-compare host and GPU timestamps"
+    "service_window_membership": "same executed step IDs for wall/GPU labels; never cross-compare host and GPU timestamps",
+    "graph_accounting": {
+      "status": "pre-freeze implementation/source-mapping blocker",
+      "baseline": "M0-level mode-specific intercepts and training-supported padding-excess covariate",
+      "same_basis_all_families": true,
+      "plain_five_column_toy_does_not_validate_mode_aware_basis": true,
+      "context_claim_requires_same_mode_padding_D16_strata": true,
+      "future_measured_mode_oracle_forbidden": true
+    },
+    "histogram_contract": {
+      "all_exporter_buckets_archived": true,
+      "scored_bin_lower_bound_s": 0.025,
+      "intervals": "disjoint, including+Inf",
+      "count_floor": 5,
+      "max_abs_log_rate_ratio_primary": true,
+      "engineering_factor_limit": 2,
+      "automatic_acceptance": false,
+      "matched_scrape_endpoints": true,
+      "failed_samples_resets_and_identity_changes_rejected": true,
+      "k_not_supported_by_selected_tail": true
+    },
+    "historical_output_lengths": "All five admitted paths have128 outputs; forced128 variant is duplicate evidence, not independent sensitivity. Future natural EOS remains measured."
   },
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "0b603472a1f26f3cab480dc7f9fb340d42df0c6fff7f0a7eb38bd181eaaa3f93"
+      "sha256": "d6bbc5dc6f94a6c89576c9e52d2e4b3545b94daa112c576ec61a0ca902cb51d1"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
-      "sha256": "a479c5265949c096145e67eb99ed03267e7c928b0ac4c214d9b019431a083fb9"
+      "sha256": "e900e65b02d23650dcaea2b8d7494e19fc7d84d6b0721b69934774bd667df483"
     },
     "prefill-service-v1.order.json": {
       "path": "experiments/prefill-service-v1.order.json",
-      "sha256": "606716a70ca269c7649461d02654b785e285ea7e278b8fc6c06e7b53f8a60007"
+      "sha256": "5e9583e3425a3cd0a2c9eeb0e8df49911847ab165df78aaa0e1b90c9e6bfecf6"
     },
     "prefill-service-v1.predictions.json": {
       "path": "experiments/prefill-service-v1.predictions.json",
-      "sha256": "85f21da5b0b6b50746733356718e0bf3e84e336ffd1aec89bcbe6000d0fef9a8"
+      "sha256": "fa91546e4c6f626edd881bf502ab4073ff5048c3cb47f9d2eeec66287699dcc9"
     },
     "prefill-service-v1.discrimination.json": {
       "path": "experiments/prefill-service-v1.discrimination.json",
-      "sha256": "d0883f66934325cd3f5b3cd454e154a10866beca98d91a55aea16bd091badfc1"
+      "sha256": "adabc844e48343f839b58f8423960404816fd82d55bb9329ad2e4ae97240b583"
     },
     "prefill-service-v1.budget.json": {
       "path": "experiments/prefill-service-v1.budget.json",
       "sha256": "8a98904cd9c01420d01ca97d6a0bff36e478f64d53a1d57d5e90b77d4affa1c0"
     },
     "ITL-preregistration": {
-      "path": "results/prefill-design-self-review/itl-scenarios.json",
-      "sha256": "22b074a5195f71267ef7d5afd1d6670a2e6a9372da2b0fa93877f31ba717a051"
+      "path": "results/prefill-design-round3/itl-scenarios.json",
+      "sha256": "9b8b36b20adf1faeaf7af6714b237d96402d2e5df4f76ab19c14395733c5b6d9"
+    },
+    "calibration-counterexample": {
+      "path": "results/prefill-design-round3/comparator-counterexample.json",
+      "sha256": "122df52c7442fd532387be2fe203ef26acd503de7602c0a854fbe4314f424cec"
     }
   },
   "readiness": {
@@ -232,6 +282,8 @@
     "native_cpu_acceptance": false,
     "observer_overhead_validated": false,
     "C_used": false,
-    "mpc_evaluated": false
+    "mpc_evaluated": false,
+    "mode_aware_accounting_implemented": false,
+    "calibrated_physical_models_fitted": false
   }
 }

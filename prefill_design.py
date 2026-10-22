@@ -5,13 +5,16 @@ import math
 COEF = (.00918083968026616, .0003168517008371403, .00005341461305169013)
 
 
-def simulate(requests, budget, *, backgrounds=0, policy='fifo', quadratic=0., steps_out=None, background_output=256, itl_window=None):
+def simulate(requests, budget, *, backgrounds=0, policy='fifo', quadratic=0., steps_out=None, background_output=256, itl_window=None, coefficients=None):
     """Executed FIFO/round-robin toy service, variable request output lengths.
 
     Foreground offsets are relative to the barrier after all backgrounds first decode.
     Quadratic adds 2*k*attention_pairs; over chunks this is k*(L^2+L), not k*L^2 per chunk.
     All predictions are raw engine elapsed time; frontend/calibration is not fabricated.
     """
+    coef=tuple(COEF if coefficients is None else coefficients)
+    if len(coef)!=3 or not all(math.isfinite(x) and x>=0 for x in coef) or coef[0]<=0:
+        raise ValueError('Invalid step coefficients')
     if budget not in (2048, 8192) or policy not in ('fifo', 'round_robin_512'):
         raise ValueError('Unsupported scenario')
     if (not isinstance(backgrounds,int) or backgrounds < 0 or backgrounds >= budget
@@ -60,7 +63,7 @@ def simulate(requests, budget, *, backgrounds=0, policy='fifo', quadratic=0., st
             elif policy=='fifo':
                 queue.appendleft(item);break
             else:queue.append(item)
-        end=tau+COEF[0]+COEF[1]*len(running)+COEF[2]*prompt+2*quadratic*z
+        end=tau+coef[0]+coef[1]*len(running)+coef[2]*prompt+2*quadratic*z
         if steps_out is not None:
             steps_out.append(dict(start=tau,end=end,prefill=prompt,decode=len(running),
                                   decode_context=sum(r['context'] for r in running),chunks=chunks))
@@ -106,23 +109,20 @@ def requests_for(case):
     return req
 
 
-def contrast_eligibility(candidate, baseline, jitter_s):
-    """Calibration-only gate inputs; call and hash before opening held timings.
-
-    An engineering resolution rule, not a significance test. Predictive equality
-    creates no win opportunity; it must not turn an unresolved gate into a pass.
-    """
-    if not math.isfinite(jitter_s) or jitter_s < 0 or set(candidate) != set(baseline) or len(candidate) != 8:
-        raise ValueError('Expected eight matching sentinel predictions and finite nonnegative jitter')
-    if not all(math.isfinite(v) and v >= 0 for v in [*candidate.values(),*baseline.values()]):
-        raise ValueError('Invalid predicted latency')
-    threshold=max(3*jitter_s,.025)
-    eligible=sorted(k for k in candidate if abs(candidate[k]-baseline[k]) > threshold)
-    return dict(threshold_s=threshold,eligible_cells=eligible,minimum_eligible=4,
+def contrast_eligibility(candidate, baseline, jitter_by_cell):
+    """Freeze calibration-only, per-cell resolution before opening held timing."""
+    if (not isinstance(jitter_by_cell,dict) or set(candidate)!=set(baseline)
+            or set(candidate)!=set(jitter_by_cell) or len(candidate)!=8):
+        raise ValueError('Expected eight matching sentinel predictions and per-cell jitter')
+    if not all(math.isfinite(v) and v>=0 for v in [*candidate.values(),*baseline.values(),*jitter_by_cell.values()]):
+        raise ValueError('Invalid predicted latency/jitter')
+    thresholds={k:max(3*jitter_by_cell[k],.025) for k in candidate}
+    eligible=sorted(k for k in candidate if abs(candidate[k]-baseline[k])>thresholds[k])
+    return dict(threshold_s_by_cell=thresholds,eligible_cells=eligible,minimum_eligible=4,
         comparison_evaluable=len(eligible)>=4,
         strict_wins_required=math.ceil(.75*len(eligible)) if len(eligible)>=4 else None,
         no_regression_cells=sorted(candidate),
-        note='Eligibility is frozen before held scoring. Fewer than4 eligible cells is inconclusive, not passed.')
+        note='Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed.')
 
 
 def scored_steps(steps, result):

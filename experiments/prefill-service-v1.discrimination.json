@@ -2710,7 +2710,7 @@
       }
     }
   ],
-  "eligibility_rule": "Freeze calibrated candidate and calibration-only jitter before held scoring; expected candidate-baseline abs delta >max(3*jitter,25ms); at least4/8 eligible; >=ceil(.75*n) strict wins; zero eligible is inconclusive",
+  "eligibility_rule": "Freeze candidate/comparator and per-cell position-derived jitter before held timing; abs delta >max(3*jitter[cell],25ms); >=4 eligible, >=ceil(.75*n) strict wins. Structural comparators are calibrated M0 and retained calibrated M1; raw B2048 is staleness-only. Selected M0 => structural N/A",
   "primary_contrasts": [
     {
       "id": "single-L7168-D0|B2048-fifo-q1.5e-09|foreground-0",
@@ -2925,6 +2925,557 @@
   ],
   "resolution_rule": "Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.",
   "observed_microbenchmark_noise_available": false,
+  "jitter_references": {
+    "rule": "Nearest absolute log-latency distance using raw-B2048 toy only; freeze before collection. Compute MAD across off trials per position, never pool request positions.",
+    "references": {
+      "single-L1024-D0/foreground-0": 0.06387740344519685,
+      "composition-uniform-D16/foreground-0": 0.3683668818440844,
+      "composition-uniform-D16/foreground-1": 0.6144716772490448,
+      "composition-uniform-D16/foreground-2": 0.8611033468295761,
+      "composition-uniform-D16/foreground-3": 1.0072014426918805
+    },
+    "targets": [
+      {
+        "case": "single-L1024-D0",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.06387740344519685,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L2048-D0",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L4096-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23714793442025509,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L7168-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4195993050755795,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23714793442025509,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D0",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5936601473139941,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8318618300853909,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9618916494721693,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D0",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D0",
+        "request_id": "foreground-1",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5949773327529214,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9641096113780293,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4742958688405102,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D0",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9496454860321623,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9496454860321623,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9599905392671466,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23714793442025509,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5936601473139941,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8318618300853909,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9892399313546346,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9392399313546346,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23714793442025509,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5936601473139941,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8318618300853909,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9892399313546346,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5892399313546346,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23714793442025509,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5936601473139941,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8318618300853909,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9892399313546346,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.18923993135463457,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-one-at200-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4469475869580448,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-one-at200-D0",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.2469475869580448,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L1024-D16",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.06894703065859109,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L2048-D16",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1378940613171824,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L4096-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.2615376557407041,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L7168-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4398778139291568,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.3683668818440844,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6144716772490448,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8611033468295761,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0072014426918805,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D16",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.24584135831717502,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.615788862687972,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0094194045977403,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": true
+      },
+      {
+        "case": "composition-reverse-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.4911558424587792,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9833654332687001,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9833654332687001,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0056171841876949,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.3683668818440844,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6144716772490448,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8611033468295761,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0345497245743458,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": true
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9845497245743458,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.3683668818440844,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6144716772490448,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8611033468295761,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0345497245743458,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": true
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6345497245743457,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.3683668818440844,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6144716772490448,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8611033468295761,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0345497245743458,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": true
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23454972457434575,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-one-at200-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4672260958116221,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-one-at200-D16",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.26722609581162216,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      }
+    ],
+    "sentinel_mapping": {
+      "sentinel-four-at50-D0": "composition-uniform-D16/foreground-3",
+      "sentinel-four-at400-D0": "composition-uniform-D16/foreground-1",
+      "sentinel-four-at800-D0": "composition-uniform-D16/foreground-0",
+      "sentinel-one-at200-D0": "composition-uniform-D16/foreground-0",
+      "sentinel-four-at50-D16": "composition-uniform-D16/foreground-3",
+      "sentinel-four-at400-D16": "composition-uniform-D16/foreground-1",
+      "sentinel-four-at800-D16": "composition-uniform-D16/foreground-0",
+      "sentinel-one-at200-D16": "composition-uniform-D16/foreground-0"
+    },
+    "caveat": "Noise-range proxies, not cell-specific measured variance or power. Out-of-range targets and mode differences must be reported; do not tune mapping from held data."
+  },
   "full_model_calibration_support": {
     "role": "toy structural support, not fitted parameter certainty or measured validation",
     "row_scope": "foreground release through last foreground completion; background prep/drain excluded",

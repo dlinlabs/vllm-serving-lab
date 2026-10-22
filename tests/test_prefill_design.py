@@ -164,13 +164,13 @@ def test_invalid_itl_window_rejected(window):
 def test_eligibility_cannot_count_ties_or_pass_empty_opportunities():
     from prefill_design import contrast_eligibility
     baseline={str(i):.2 for i in range(8)}
-    equal=contrast_eligibility(baseline,baseline,.01)
+    equal=contrast_eligibility(baseline,baseline,{k:.01 for k in baseline})
     assert equal['eligible_cells']==[] and not equal['comparison_evaluable'] and equal['strict_wins_required'] is None
     candidate={k:v+(.05 if int(k)<4 else .02) for k,v in baseline.items()}
-    result=contrast_eligibility(candidate,baseline,.01)
+    result=contrast_eligibility(candidate,baseline,{k:.01 for k in baseline})
     assert result['eligible_cells']==['0','1','2','3'] and result['strict_wins_required']==3
     assert result['no_regression_cells']==sorted(baseline)
-    assert not contrast_eligibility(candidate,baseline,.1)['comparison_evaluable']
+    assert not contrast_eligibility(candidate,baseline,{k:.1 for k in baseline})['comparison_evaluable']
 
 
 @pytest.mark.parametrize('jitter',[-1,float('nan'),float('inf')])
@@ -211,6 +211,6 @@ def test_committed_design_metadata_and_generator_outputs_are_current(tmp_path):
     for name in ('cases','order','predictions','discrimination','budget'):
         assert (tmp_path/f'fresh/{name}.json').read_bytes()==(ROOT/f'experiments/prefill-service-v1.{name}.json').read_bytes()
     design=json.loads((ROOT/'experiments/prefill-service-v1.design.json').read_text())
-    assert design['revision']==4 and design['workload']['background_output_tokens']==256
+    assert design['revision']==5 and design['workload']['background_output_tokens']==256
     assert design['collection']['transfer_seconds']==160
     for row in design['files'].values():assert hashlib.sha256((ROOT/row['path']).read_bytes()).hexdigest()==row['sha256']

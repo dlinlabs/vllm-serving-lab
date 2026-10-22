@@ -1,9 +1,28 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Draft design, revision4. Collector/hooks are not implemented; this is not an executable
+**Draft design, revision5. Collector/hooks are not implemented; this is not an executable
 GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
+
+## Round3 changes: full ITL distribution and fair structural comparators
+
+Revision5 addresses [round3](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6331161574).
+Historical development checks are committed before GPU collection; no new GPU run
+or new fitted physical model is represented here.
+
+| Review point | Change |
+|---|---|
+| Full ITL distribution | Archive EVERY exporter bucket, including the fast bins and+Inf, and score every disjoint interval starting at25ms. Use matched first/last scrape sent-time endpoints; retain nominal-window legacy counts separately. Compare both60–300s historical and the two transfer windows now. |
+| No k support from one bin | Withdraw selected-tail support for1.5e-9 or any bound. The positive-k cases remain sensitivity/possible counterexamples; neighboring bins and joint scores may contradict them. |
+| Recalibration versus structure | Freeze same-training-data calibrated M0, retained M1 and candidate rollouts. Structural eligibility/wins compare against calibrated M0 AND retained M1. Raw-B2048 is a transfer/staleness baseline only. Selected M0 => structural N/A. |
+| Position-specific jitter | MAD across off trials at EACH request position, not across positions. Preregister cell/request-to-reference mapping from raw-B2048 latency ranges before collection; use each cell's assigned jitter in its threshold. |
+| Graph/padding confounding | Per step log runtime mode, actual/padded tokens and requests, capture/replay state and execution IDs. Match mode/padding within D16 before attributing a context coefficient to KV cost; identical D level does not prove identical padding. |
+| Output lengths | All five checked historical admitted paths emit128 tokens. The forced128 variant is explicitly duplicate evidence here, not an independent sensitivity. Preserve the planned natural-EOS transfer; record fresh realized lengths instead of silently changing ignore-EOS. |
+
+[Round3 CPU report](../results/prefill-design-round3/report.md) and the complete
+vectors quantify the mismatches. A joint discrepancy challenges a joint scheduler/
+service/observation scenario; it does not by itself attribute the error to GPU kernels.
 
 ## Review decisions and CPU evidence
 
@@ -77,7 +96,7 @@ at8192 (0.4/6.3/17.5/52.5%);2048 gives0/0/12.5/59.2%, versus actual0.8/3.8/15.4/
 Thus the association is not unique evidence for2048. ITL tails test a more direct
 consequence of the joint running-first/step-time hypothesis than pooled goodput MAE.
 With every live decoder producing one token each step, a long prefill step should
-leave long token gaps. [Reproducible ITL scenarios](../results/prefill-design-self-review/itl-scenarios.json)
+leave long token gaps. [Reproducible ITL scenarios](../results/prefill-design-round3/itl-scenarios.json)
 use actual admitted paths/output lengths and compare them with observed exporter tails.
 They support2048 as a working assumption, not a verified old config. Async/counter
 semantics and output observation still need source/step reconciliation. No preferred
@@ -203,6 +222,35 @@ substitute Python return duration for GPU time. Exact-revision CPU/mock acceptan
 and adapter tests must cover partial chunks, async IDs, cancellations, duplicates,
 missing events, bounded buffers and future-observation isolation before collection.
 
+## Graph/padding accounting and context attribution
+
+The v0.30.0 [dispatcher](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/cudagraph_dispatcher.py)
+selects NONE/PIECEWISE/FULL and a padded BatchDescriptor. This supports recording
+these fields; it does not establish the historical mode or its performance effect.
+For every observed step, collect actual runtime mode, capture/replay/ordinary
+execution, actual and padded token counts, actual/padded request counts where
+available, query uniformity, capture key/size and attention backend. Pair step wall
+and valid CUDA spans with decode count/context and exporter ITL using stable step
+IDs. Missing fields remain unavailable, never fabricated from batch count.
+
+Predeclare a mode-aware M0-level accounting variant with runtime-mode-specific
+intercepts (one-hot modes, replacing the global intercept) and padding-excess work
+as a covariate when training-supported. The encoding/capture grid, training-only
+constant-column rule and comparator accounting basis must be frozen before held
+scoring. Every M0/M1/M2 structural comparison uses that SAME accounting basis;
+its full rank/condition checks must be repeated on the actual encoded rows. The
+current five-column toy support check does not validate this mode-aware variant.
+Implementation/source mapping is a pre-freeze blocker, not permission to add
+features after a held failure. Plain-M0 remains an archived ablation.
+
+A mechanistic M1 context claim additionally needs improvement within D16 and the
+SAME observed runtime mode/padded-size strata, with varying context and adequate
+training support. Merely grouping D16 is insufficient. No within-stratum support
+means context attribution is unresolved. Do not force eager execution to simplify
+measurement. A causal rollout must predict future mode/padding from its own work
+state and frozen dispatcher/config rules; reading measured future mode tags is
+oracle-only. Without that implementation, the mode-aware causal gate is unevaluated.
+
 ## Predictive models, primary targets and gates
 
 Fit fixed nonnegative models, with training-only scaling and equal total squared
@@ -230,8 +278,8 @@ Use training-only scaling and leave-one-calibration-cell-out (LOCO) errors on th
    max(10% base MAE,1ms), including decode-only timing. M2 is still fit as M1+Z;
    the comparison base can be M0 if M1 alone did not justify its complexity.
 
-Freeze the selected family, coefficients, scaling, LOCO report, jitter, causal
-rollout and eligibility hashes before opening held timing. The12 repeat-check
+Freeze the selected family AND calibrated comparators, coefficients, scaling,
+LOCO reports, per-position jitter/mapping, causal rollouts and eligibility hashes before opening held timing. The12 repeat-check
 trials diagnose calibration repeatability; they cannot select another family.
 Actual q/l coverage, full-family scaled rank/condition on all fitting rows AND
 every LOCO training partition, and held feature ranges must be reported. Exclude
@@ -254,16 +302,26 @@ a3ms context effect can reduce a4ms baseline MAE by much more than10%.
    95% interval excluding0 and median difference>25ms are distinguishable; predicted
    ordering must agree for all such pairs. Others are unresolved/ties, not automatic
    ranking successes. No discernible ordering means policy identification is unresolved.
-3. Before held scoring, roll out the calibrated frozen candidate and raw-B2048
-   baseline on the predeclared eight cells. A cell is eligible only if the predicted
-   sentinel-TTFT difference exceeds max(3*calibration-only jitter,25ms).
-   Hash the eligibility list before reading held timing (`contrast_eligibility`).
-   Require at least4 eligible cells; otherwise improvement is inconclusive. On
-   eligible cells require strictly lower paired absolute-error MAE in at least
-   ceil(0.75*n) cells. Report paired block errors and bootstrap intervals; this is
-   an engineering screen, not a binomial significance test of independent cells.
-   Every one of the eight cells, eligible or not, retains the no-regression limit
-   max(10% baseline MAE,25ms). Report B8192 sensitivity too. No ties count as wins.
+3. Before held scoring, freeze candidate, same-host calibrated M0, retained
+   calibrated M1 (when applicable), their causal rollout implementations and
+   per-cell jitter assignments. Use the SAME fitting trials, weights, label masks,
+   work/config assumptions and accounting basis for all calibrated comparators.
+   Structural comparisons are candidate-versus-calibrated-M0 and, for M2 after
+   retaining M1, candidate-versus-calibrated-M1. Both must satisfy the component
+   rule. Selected M0 has structural status **not applicable**, never "passed".
+   Raw historical B2048 remains a separately reported staleness/recalibration
+   comparison; beating it cannot establish improved model structure.
+4. For EACH required comparator, a cell is eligible only if its predicted sentinel
+   TTFT gap exceeds max(3*jitter[cell],25ms). Freeze/hash those lists before held
+   timing. Require>=4 eligible and>=ceil(.75*n) strict paired-MAE wins. Fewer than4
+   is inconclusive; no ties are wins. Every cell retains the no-regression limit
+   max(10% comparator MAE,25ms), eligible or not. All8 cells x5 paired block errors
+   are required. `comparison_plan`, `paired_error_check` and
+   `structural_error_check` implement these CPU component contracts. Raw-only
+   comparator input is rejected. Components passing does NOT pass capture
+   integrity, bias/order, future-isolation or complete experiment gates.
+   Report paired block errors/intervals; do not treat cells as independent trials.
+
 
 The causal rollout must use only release-time state, injected arrivals and its own
 predicted scheduler progress. Measured future chunks/first tokens are oracle-only.
@@ -285,17 +343,30 @@ charged incrementally as2*k*Z) and a round-robin512 alternative, **not a claim a
 vLLM's actual interleaving policy**. [Discrimination](prefill-service-v1.discrimination.json)
 records each sentinel-only or individual-request contrast versus raw-B2048 and
 each within-D offset-pair difference, for every scenario. Planning jitter bands
-are10/25/50ms and resolution means a gap>3*band, not just>band. These are not measured
-noise or power estimates. Before main, compute1.4826*MAD of off-mode foreground
-TTFT in each calibration observer cell; use the larger value as a provisional jitter
-scale, not a universal bound. Mark a contrast unresolved if its expected absolute gap is<=three times that scale. The declared identification contrasts are (H2) M2-versus-M0 request TTFT for
+are10/25/50ms and resolution means a gap>3*band, not just>band. These are not measured noise or power estimates. Before main, use off-mode
+trials from observer qualification:20 single1024-D0 trials x1 position and10
+uniform-D16 trials x4 positions. For each position separately compute
+j=1.4826*median(abs(TTFT-median(TTFT))) across trials. Never pool positions.
+`position_jitter` requires complete declared trial matrices; missing/nonfinite
+observations do not yield zero jitter. `jitter_references` in the discrimination
+artifact freezes the mapping: choose the reference position with smallest absolute
+log-latency distance to the raw-B2048 predicted target (stable reference-ID tie
+break), before collection. `assign_jitter` applies that mapping to calibration-only
+measurements. Four@50 maps to uniform-D16's last position; four@400 to its second
+position. Other cells retain their explicitly listed range match.
+These are noise proxies, not cell-specific measured variance. Report out-of-range
+latencies and different execution modes; the25ms floor remains an engineering
+resolution margin, not a power guarantee. Mark a planned contrast unresolved when
+abs(expected gap)<=3*its mapped jitter; candidate/comparator eligibility additionally
+retains the25ms floor.
+The declared identification contrasts are (H2) M2-versus-M0 request TTFT for
 single7168 and mixed/reverse composition at each D, and (H3) FIFO-versus-RR
 sentinel TTFT for four@50/four@400/one7168@200 at each D. Single2048 remains
 validation-only; four@800 is a policy tie control (not necessarily an M2 tie).
 Within-D offset ordering tests policy, not the nonlinear coefficient. Publish
 resolvability for every contrast/scenario. If all identification contrasts for an
 H2 or H3 claim are unresolved, that claim is inconclusive; stop main only if BOTH
-families are unresolved. Do not replace cells. Candidate-versus-baseline eligibility
+families are unresolved. Do not replace cells. Candidate-versus-EACH-calibrated-comparator eligibility
 is a separate frozen rule after calibration fitting and before opening held timing.
 This calibration-only check does not inspect held timing or justify precision on
 other states. Do not swap held cells after inspecting them.
@@ -329,19 +400,48 @@ same-host policy equivalence tests. These slices are development observation;
 no new model is fitted to their outcomes before reporting its frozen predictions.
 The committed ITL scenario counts use historical fixed32 accepted-arrival/output
 paths, selected over each80s replay, starting empty at lead-in. They are conditional
-preregistration sensitivities, not predictions of fresh admission/EOS. A second
-forced128-output variant shows that dependence. After capture, also run the same
+preregistration sensitivities, not predictions of fresh admission/EOS. The forced128-output copy is identical on these historical paths and is marked
+duplicate, not independent evidence. After capture, also run the same
 frozen algorithm on its actual accepted/output path, labelled retrospective.
 Score gaps by right token timestamp within(20,80] local seconds; compare exporter
 scrape endpoints explicitly. A tail mismatch challenges the joint scheduling/service
 scenario; matching does not establish uniqueness or pass causal prediction gates.
+
+## Full ITL vector contract
+
+Commit all cumulative-derived disjoint exporter buckets, including under25ms and
++Inf. Source snapshots require stable series/bucket schemas, monotone counters,
+identity/epoch continuity and valid samples; a failed internal sample or reset is
+not silently bridged. Preserve requested AND actual first/last scrape sent-time
+endpoints. Compare toy gaps using right-token endpoints at those same approximate
+boundaries (subtract the transfer lead-in origin where applicable). Sent timestamps
+are not exact token observation times; no interpolation or false exact alignment.
+Legacy nominal-window tail counts remain separately labelled.
+
+Joint scoring uses every disjoint interval with lower bound>=25ms. For bin b,
+L_b=log[(max(pred_b,5)/pred_total)/(max(obs_b,5)/obs_total)]. Archive the vector,
+max|L_b| (primary), mean|L_b| and exp(max|L_b|). Factor2 is a predeclared engineering
+large-discrepancy flag, not independent-bin statistical significance. Counts below5
+are floor-limited. No unflagged score automatically accepts a model; no selected
+bin can confirm k. Report the full fast-bin vector as well. >200ms remains the
+robust discriminator for the SPECIFIC frozen8192 versus2048 scenarios under this
+toy's all-running-decode assumption, not unique configuration identification.
+
+The same historical-window comparison is already run. It is development diagnosis,
+not an independent acceptance test or a fit of k. Transfer must log step duration,
+decode population, graph/padding and exporter timestamps so discrepancies can be
+separated from work-count and output-observation effects. All five historical paths
+have exactly128 outputs, so the forced128 copy is explicitly marked duplicate;
+future natural-EOS outcomes are still measured and reported without pretending the
+old output vector forecasts them. Admission timing and release state remain conditional.
 
 ## Reproduce and freeze checklist
 
 ```
 python scripts/build_prefill_design.py --output-dir /tmp/fresh-prefill-design
 python scripts/check_prefill_itl.py --old-evidence OLD --new-evidence NEW --output /tmp/fresh-itl.json
-python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py
+python scripts/check_prefill_comparators.py --output /tmp/fresh-comparators.json
+python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py tests/test_prefill_review_gates.py
 python scripts/check_prefill_budget.py --suite-dir NEW/results/low-cap-switch-v1 --old-suite-dir OLD/results/cap-range-v1 --output-dir /tmp/fresh-budget-check
 ```
 
