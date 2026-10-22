@@ -14,7 +14,9 @@ def simulate(requests, budget, *, backgrounds=0, policy='fifo', quadratic=0., st
     """
     if budget not in (2048, 8192) or policy not in ('fifo', 'round_robin_512'):
         raise ValueError('Unsupported scenario')
-    if backgrounds < 0 or backgrounds >= budget or quadratic < 0 or background_output < 1:
+    if (not isinstance(backgrounds,int) or backgrounds < 0 or backgrounds >= budget
+            or not math.isfinite(quadratic) or quadratic < 0
+            or not isinstance(background_output,int) or background_output < 1):
         raise ValueError('Invalid service parameters')
     if itl_window is not None and (len(itl_window) != 2 or not all(math.isfinite(t) for t in itl_window) or itl_window[0] >= itl_window[1]):
         raise ValueError('Invalid ITL window')
@@ -23,7 +25,9 @@ def simulate(requests, budget, *, backgrounds=0, policy='fifo', quadratic=0., st
     if len({r['id'] for r in records}) != len(records):
         raise ValueError('Duplicate request IDs')
     for r in records:
-        if r['tokens'] <= 0 or r.get('output',128) < 1 or r['at'] < 0 or not math.isfinite(r['at']):
+        if (not math.isfinite(r['tokens']) or r['tokens'] <= 0
+                or not isinstance(r.get('output',128),int) or r.get('output',128) < 1
+                or r['at'] < 0 or not math.isfinite(r['at'])):
             raise ValueError('Invalid request')
     bgs = [dict(id=f'background-{i}',tokens=1024,output=background_output,at=0.,role='background') for i in range(backgrounds)]
     all_records = bgs + records
@@ -86,10 +90,11 @@ def simulate(requests, budget, *, backgrounds=0, policy='fifo', quadratic=0., st
     barrier=barrier or 0.
     primary={r['id']:dict(first_s=outcomes[r['id']]['first']-barrier,
                          ttft_s=outcomes[r['id']]['first']-outcomes[r['id']]['arrival'],
-                         prefill_complete_s=outcomes[r['id']]['first']-barrier)
+                         prefill_complete_s=outcomes[r['id']]['first']-barrier,
+                         completed_s=outcomes[r['id']]['completed']-barrier)
              for r in records}
     return dict(budget=budget,policy=policy,quadratic=quadratic,backgrounds=backgrounds,
-                foreground=primary,itl=itl if itl_window is not None else None,background_output=background_output,wall_s=tau,release_s=barrier,steps=steps,
+                foreground=primary,scored_step_window=dict(start_s=barrier,end_s=max((outcomes[r['id']]['completed'] for r in records),default=barrier)),itl=itl if itl_window is not None else None,background_output=background_output,wall_s=tau,release_s=barrier,steps=steps,
                 assumptions='serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction')
 
 
@@ -118,3 +123,13 @@ def contrast_eligibility(candidate, baseline, jitter_s):
         strict_wins_required=math.ceil(.75*len(eligible)) if len(eligible)>=4 else None,
         no_regression_cells=sorted(candidate),
         note='Eligibility is frozen before held scoring. Fewer than4 eligible cells is inconclusive, not passed.')
+
+
+def scored_steps(steps, result):
+    """Release through last foreground completion; exclude preparation/background drain.
+
+    Simulation endpoints are copied exactly. Measured collector endpoints need an
+    explicit clock/step-ID contract; this helper is not that GPU collector.
+    """
+    window=result['scored_step_window']
+    return [s for s in steps if s['start'] >= window['start_s'] and s['end'] <= window['end_s']]

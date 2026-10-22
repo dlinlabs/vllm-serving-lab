@@ -17,7 +17,8 @@ from scripts.check_prefill_budget import itl_tail
 from scripts.reproduce_cap_miss_causes import verify,old_files,new_files
 
 GUARD=('prefill_design.py','scripts/check_prefill_itl.py','greybox_simulator.py',
-       'evaluate_low_cap_frozen.py','scripts/check_prefill_budget.py','scripts/reproduce_cap_miss_causes.py')
+       'evaluate_low_cap_frozen.py','scripts/check_prefill_budget.py','scripts/reproduce_cap_miss_causes.py',
+       'scripts/build_prefill_design.py','prefill_identifiability.py')
 SCENARIOS=[(8192,0.),(2048,0.),(2048,1e-9),(2048,1.5e-9),(2048,3.15e-9)]
 
 

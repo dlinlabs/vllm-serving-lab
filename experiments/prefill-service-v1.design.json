@@ -1,10 +1,10 @@
 {
-  "schema": "service-microbenchmark-design-v3",
+  "schema": "service-microbenchmark-design-v4",
   "protocol": "prefill-service-v1",
-  "revision": 3,
+  "revision": 4,
   "status": "draft_not_executable",
   "collector_implemented": false,
-  "source_parent_commit": "d97251aeed60c5a55e735d69d289281ca767a39e",
+  "source_parent_commit": "3409711b1c139dbf1d7227f1810d04dae4613a30",
   "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6330431494",
   "runtime": {
     "gpu": "RTX4090",
@@ -176,36 +176,54 @@
       3.15e-09
     ],
     "nonlinear_k_is_fitted_bound": false,
-    "transfer_ITL_counts": "results/prefill-design-round2/itl-scenarios.json; conditional historical accepted/output paths, not fresh admission or causal predictions"
+    "transfer_ITL_counts": "results/prefill-design-self-review/itl-scenarios.json; conditional historical accepted/output paths, not fresh admission or causal predictions",
+    "service_step_window": "foreground release through last foreground/sentinel completion; exclude background prep/drain",
+    "fitting_weights": "equal total squared row weight per calibration cell; training partition only",
+    "identifiability": {
+      "features": [
+        "intercept",
+        "decode_tokens",
+        "prefill_tokens",
+        "decode_context",
+        "attention_pairs"
+      ],
+      "training_partitions": "all fitting rows and each LOCO training partition, each valid timing-label mask",
+      "scaling": "column norms from that training partition only",
+      "condition_limit": 10000.0,
+      "require_full_column_rank": true,
+      "unsupported_family_excluded_before_held": true,
+      "toy_is_not_measured_support": true
+    },
+    "service_window_membership": "same executed step IDs for wall/GPU labels; never cross-compare host and GPU timestamps"
   },
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "e5ad34bb65c4e6389208838f6e681ae218bc9a64866aa2f4b7bca5a79342539a"
+      "sha256": "0b603472a1f26f3cab480dc7f9fb340d42df0c6fff7f0a7eb38bd181eaaa3f93"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
-      "sha256": "f014afa829a230f7a068babd78df384c76357b9292a9619e1a126c2c50c95ebb"
+      "sha256": "a479c5265949c096145e67eb99ed03267e7c928b0ac4c214d9b019431a083fb9"
     },
     "prefill-service-v1.order.json": {
       "path": "experiments/prefill-service-v1.order.json",
-      "sha256": "e42caa0bc736ec871997ea59db8fa1241478cad0f877f75d08f284a67c983227"
+      "sha256": "606716a70ca269c7649461d02654b785e285ea7e278b8fc6c06e7b53f8a60007"
     },
     "prefill-service-v1.predictions.json": {
       "path": "experiments/prefill-service-v1.predictions.json",
-      "sha256": "cbc840da849bf5cbec24e2b1f77e4bf00dab170ba2dd8307a2d89c61c173f76c"
+      "sha256": "85f21da5b0b6b50746733356718e0bf3e84e336ffd1aec89bcbe6000d0fef9a8"
     },
     "prefill-service-v1.discrimination.json": {
       "path": "experiments/prefill-service-v1.discrimination.json",
-      "sha256": "17f1adad268fa80295436475de4299674c9bedbf4ac237c65f18d2be51e5b5b6"
+      "sha256": "d0883f66934325cd3f5b3cd454e154a10866beca98d91a55aea16bd091badfc1"
     },
     "prefill-service-v1.budget.json": {
       "path": "experiments/prefill-service-v1.budget.json",
       "sha256": "8a98904cd9c01420d01ca97d6a0bff36e478f64d53a1d57d5e90b77d4affa1c0"
     },
-    "round2-ITL-preregistration": {
-      "path": "results/prefill-design-round2/itl-scenarios.json",
-      "sha256": "fb57349ce99a03d090a8e5a2b5daeb9ea6bd3355331319b98a98cd523b77445a"
+    "ITL-preregistration": {
+      "path": "results/prefill-design-self-review/itl-scenarios.json",
+      "sha256": "22b074a5195f71267ef7d5afd1d6670a2e6a9372da2b0fa93877f31ba717a051"
     }
   },
   "readiness": {

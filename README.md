@@ -43,6 +43,8 @@ Round2 adds sentinel-only contrasts, a stronger7168-token sentinel backlog,
 separate decode/prefill model screens, and256-output backgrounds. The212-trial
 proposal includes an HTTP bridge, drift references and two80s real-trace replays
 (each with20s unscored lead-in), estimated at1318s under a hard1800s active limit.
+[Self-review checks](results/prefill-design-self-review/report.md) define the service
+scoring window and full-feature identifiability per training fold.
 [ITL scenarios and checks](results/prefill-design-round2/report.md) distinguish
 conditional historical-path diagnostics from new-host causal forecasts.
 **Collector/hooks are not implemented; the executable GPU protocol is not frozen.**

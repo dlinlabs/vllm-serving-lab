@@ -8,7 +8,8 @@ import random
 import sys
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from prefill_design import simulate,requests_for,COEF
+from prefill_design import simulate,requests_for,scored_steps,COEF
+from prefill_identifiability import features,calibration_support
 import greybox_simulator as gb
 import evaluate_low_cap_frozen as lf
 
@@ -89,7 +90,7 @@ def build(output):
     if output.exists():raise ValueError('Choose fresh output directory')
     output.mkdir(parents=True);cells=cases();trials=order(cells);coef,overhead,reference,_=lf.frozen_parameters()
     assert tuple(COEF)==tuple(coef)
-    predictions=[];baseline={};coverage=[];gaps=[]
+    predictions=[];baseline={};coverage=[];gaps=[];calibration_rows={}
     for c in cells:
         scenarios={}
         for budget,policy,q in [(8192,'fifo',0.),(2048,'fifo',0.),(2048,'fifo',1.5e-9),(2048,'fifo',3.15e-9),(2048,'round_robin_512',0.)]:
@@ -99,7 +100,9 @@ def build(output):
                 baseline[c['id']]=v
                 if c['split']=='calibration':
                     # Only chunks after the foreground release enter calibration-coverage summaries.
-                    coverage.extend(dict(case=c['id'],q=chunk[1],l=chunk[2]) for s in steps if s['start']>=v['release_s']-1e-12 for chunk in s['chunks'])
+                    window=scored_steps(steps,v)
+                    coverage.extend(dict(case=c['id'],q=chunk[1],l=chunk[2]) for s in window for chunk in s['chunks'])
+                    calibration_rows[c['id']]=[features(s) for s in window]
         exact={str(b):frozen_prediction(c,b,coef,overhead) for b in (8192,2048)}
         # Explicit estimands; never average long requests into the sentinel target.
         base=scenarios['B2048-fifo-q0.0']['foreground']
@@ -125,10 +128,10 @@ def build(output):
     estimated=linear_time*1.35+len(trials)*.25+160+120
     fit_rows=np.array([[r['q'],r['q']*r['l']+r['q']*(r['q']+1)/2] for r in coverage])
     scaled=fit_rows/np.maximum(np.linalg.norm(fit_rows,axis=0),1e-12)
-    write(output/'cases.json',dict(schema='prefill-service-design-cases-v3',status='draft_not_executable',cases=cells))
-    write(output/'order.json',dict(schema='prefill-service-design-order-v3',seed=20261022,order=trials,
+    write(output/'cases.json',dict(schema='prefill-service-design-cases-v4',status='draft_not_executable',cases=cells))
+    write(output/'order.json',dict(schema='prefill-service-design-order-v4',seed=20261022,order=trials,
         transfer_slices=[dict(replay_start=40,score_start=60,score_end=120,lead_in_seconds=20,cap=32),dict(replay_start=160,score_start=180,score_end=240,lead_in_seconds=20,cap=32)]))
-    source={f:digest(ROOT/f) for f in ['prefill_design.py','scripts/build_prefill_design.py','greybox_simulator.py','evaluate_low_cap_frozen.py']}
+    source={f:digest(ROOT/f) for f in ['prefill_design.py','prefill_identifiability.py','scripts/build_prefill_design.py','greybox_simulator.py','evaluate_low_cap_frozen.py']}
     write(output/'predictions.json',dict(role='preregistered hypothetical CPU predictions; not measured GPU results',source_sha256=source,
         frozen_coefficients=coef,legacy_adapter='All D16 backgrounds already decoding with255 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.',
         quadratic_coefficient_role='1.5e-9 and3.15e-9 are unvalidated sensitivities per full L^2, not fitted bounds; applied incrementally as2*k*attention_pairs',predictions=predictions))
@@ -137,7 +140,7 @@ def build(output):
         primary_contrasts=[dict(id=f"{c['case']}|{x['scenario']}|{x['request_id']}",hypothesis=x['identification_hypothesis'],delta_s=x['delta_s'])
             for c in gaps for x in c['contrasts'] if x['identification_hypothesis']],
         resolution_rule='Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.',
-        observed_microbenchmark_noise_available=False,calibration_chunk_coverage=dict(q_min=float(fit_rows[:,0].min()),q_max=float(fit_rows[:,0].max()),
+        observed_microbenchmark_noise_available=False,full_model_calibration_support=calibration_support(calibration_rows),calibration_chunk_coverage=dict(q_min=float(fit_rows[:,0].min()),q_max=float(fit_rows[:,0].max()),
             l_min=min(r['l'] for r in coverage),l_max=max(r['l'] for r in coverage),q_Z_rank=int(np.linalg.matrix_rank(scaled)),q_Z_scaled_condition=float(np.linalg.cond(scaled))),
         gate='Before main trials, compare declared contrasts with calibration-only observer noise; no held-case swaps. Stop unsupported precision claims rather than retune the matrix.'))
     write(output/'budget.json',dict(trial_counts=dict(counts),total_trials=len(trials),main_roles=dict(roles),

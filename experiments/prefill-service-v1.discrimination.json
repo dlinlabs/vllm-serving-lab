@@ -2925,6 +2925,520 @@
   ],
   "resolution_rule": "Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.",
   "observed_microbenchmark_noise_available": false,
+  "full_model_calibration_support": {
+    "role": "toy structural support, not fitted parameter certainty or measured validation",
+    "row_scope": "foreground release through last foreground completion; background prep/drain excluded",
+    "weighting": "each calibration cell has equal total squared row weight",
+    "condition_limit": 10000.0,
+    "folds": [
+      {
+        "held_cell": null,
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 790,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.4494897427831956,
+              31.360414838228508,
+              844.3623629432428
+            ],
+            "scaled_condition_number": 2.8513251558022903,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 790,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.4494897427831956,
+              31.360414838228508,
+              844.3623629432428,
+              48588.628261773345
+            ],
+            "scaled_condition_number": 8.728843512920163,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 790,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.4494897427831956,
+              31.360414838228508,
+              844.3623629432428,
+              48588.628261773345,
+              2362087.9895444764
+            ],
+            "scaled_condition_number": 8.833828896950427,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "single-L1024-D0",
+        "training_cells": [
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499799,
+              31.34459173965714,
+              839.4973495819368
+            ],
+            "scaled_condition_number": 3.395219097836157,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499799,
+              31.34459173965714,
+              839.4973495819368,
+              48576.52691229375
+            ],
+            "scaled_condition_number": 10.202732739702506,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499799,
+              31.34459173965714,
+              839.4973495819368,
+              48576.52691229375,
+              2361632.484183402
+            ],
+            "scaled_condition_number": 10.320937346346847,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "single-L7168-D0",
+        "training_cells": [
+          "single-L1024-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              31.344954190059486,
+              780.3144492124652
+            ],
+            "scaled_condition_number": 3.381882291898988,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              31.344954190059486,
+              780.3144492124652,
+              48064.00598845782
+            ],
+            "scaled_condition_number": 8.89693172875085,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              31.344954190059486,
+              780.3144492124652,
+              48064.00598845782,
+              2012323.834626773
+            ],
+            "scaled_condition_number": 9.012207861389662,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "composition-uniform-D0",
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "single-L1024-D16",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997965,
+              31.126719673767614,
+              683.0258628828497
+            ],
+            "scaled_condition_number": 3.0437779508815725,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997965,
+              31.126719673767614,
+              683.0258628828497,
+              45914.305167429666
+            ],
+            "scaled_condition_number": 11.181057259923628,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997965,
+              31.126719673767614,
+              683.0258628828497,
+              45914.305167429666,
+              2071124.6913020262
+            ],
+            "scaled_condition_number": 11.314218192265177,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "single-L1024-D16",
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              26.35779640496863,
+              839.4973495819368
+            ],
+            "scaled_condition_number": 2.533673678544983,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              26.35779640496863,
+              839.4973495819368,
+              44899.250315131096
+            ],
+            "scaled_condition_number": 10.707909980055828,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              26.35779640496863,
+              839.4973495819368,
+              44899.250315131096,
+              2361632.484183402
+            ],
+            "scaled_condition_number": 10.87428271855105,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "single-L7168-D16",
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              26.37201646468399,
+              780.7801236467371
+            ],
+            "scaled_condition_number": 2.528652732730832,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              26.37201646468399,
+              780.7801236467371,
+              41921.42530794186
+            ],
+            "scaled_condition_number": 7.451802362938558,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              26.37201646468399,
+              780.7801236467371,
+              41921.42530794186,
+              2013582.5923933373
+            ],
+            "scaled_condition_number": 7.547025118896159,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "composition-uniform-D16",
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "single-L7168-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              24.357732822197164,
+              685.7075392372913
+            ],
+            "scaled_condition_number": 2.5741035459673784,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              24.357732822197164,
+              685.7075392372913,
+              35397.37766511357
+            ],
+            "scaled_condition_number": 7.451412457135507,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              24.357732822197164,
+              685.7075392372913,
+              35397.37766511357,
+              2085464.6514226543
+            ],
+            "scaled_condition_number": 7.5113125444841335,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      }
+    ],
+    "all_families_supported": true
+  },
   "calibration_chunk_coverage": {
     "q_min": 2.0,
     "q_max": 2048.0,

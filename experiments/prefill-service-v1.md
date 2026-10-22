@@ -1,6 +1,6 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Draft design, revision3. Collector/hooks are not implemented; this is not an executable
+**Draft design, revision4. Collector/hooks are not implemented; this is not an executable
 GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
@@ -21,6 +21,36 @@ qualification and separation of conditional fits from causal forecasts.
 | 6: M1 selection | Evaluate decode-only improvement for M1 separately; M2 targets prefill-bearing and cumulative timing. A small share of total runtime does NOT imply a small relative MAE improvement. |
 | 7: empty transfer boundary | Replay[40,120) and[160,240), score[60,120) and[180,240). Log boundary running/queue/KV state;20s is a declared lead-in, not demonstrated historical-state reconstruction. |
 | 8: stage completion | Separate main/bridge/transfer/deep completion and gates; full suite still requires all stages. Later failures invalidate prior results only if shared integrity/observer assumptions are compromised. |
+
+### Additional self-review (revision4)
+
+No new reviewer comment was present after the round2 response. Two remaining
+specification gaps are corrected here, without expanding the GPU trial matrix:
+
+* Score service steps only from the foreground release barrier through the last
+  foreground/sentinel completion, inclusive of its final executed step. Exclude
+  background preparation and background-only drain from fitting and every service
+  MAE. Those phases remain in observer whole-trial timing, full lifecycle/ITL audits
+  and the collection budget. Real CPU/GPU labels use the same executed step IDs
+  for membership; never compare a GPU-clock timestamp with a host-clock barrier.
+  This makes the claim that background256 preserves
+  the scored workload precise. Cumulative prefill targets still stop at each
+  request's last prefill; request TTFT/rollout targets retain their own definitions.
+* The earlier q/Z rank2 check is only a partial diagnostic. Check the full M0/M1/M2
+  design matrices, including intercept, decode count, prompt count, decode context
+  and Z, on each training partition. A q/Z matrix can be rank2 while the full
+  model is rank-deficient. Use equal total squared row weight per calibration
+  cell (weight the response too), normalize columns from that fold's training rows
+  only, and report rank,
+  zero columns and normalized condition number. Predeclared condition limit1e4
+  is an engineering guard. Unsupported families cannot earn a fitted-parameter
+  or held-benefit claim; do not drop columns or choose a new threshold from held
+  outcomes. Repeat checks on valid real training observations for each wall/GPU
+  label mask; toy support is not measured support or parameter certainty.
+
+[Self-review evidence](../results/prefill-design-self-review/report.md) records
+score-window invariance and full-feature LOCO checks. Earlier round2 results and
+source hashes remain archived at their original revision.
 
 The verified vLLM v0.30.0 `EngineArgs.get_batch_defaults` source sets API-server2048
 versus LLM-class8192 in its smaller-GPU branch. This is an upstream default, not
@@ -47,7 +77,7 @@ at8192 (0.4/6.3/17.5/52.5%);2048 gives0/0/12.5/59.2%, versus actual0.8/3.8/15.4/
 Thus the association is not unique evidence for2048. ITL tails test a more direct
 consequence of the joint running-first/step-time hypothesis than pooled goodput MAE.
 With every live decoder producing one token each step, a long prefill step should
-leave long token gaps. [Reproducible ITL scenarios](../results/prefill-design-round2/itl-scenarios.json)
+leave long token gaps. [Reproducible ITL scenarios](../results/prefill-design-self-review/itl-scenarios.json)
 use actual admitted paths/output lengths and compare them with observed exporter tails.
 They support2048 as a working assumption, not a verified old config. Async/counter
 semantics and output observation still need source/step reconciliation. No preferred
@@ -175,7 +205,9 @@ missing events, bounded buffers and future-observation isolation before collecti
 
 ## Predictive models, primary targets and gates
 
-Fit fixed nonnegative models, with training-only scaling:
+Fit fixed nonnegative models, with training-only scaling and equal total squared
+row weight per calibration cell, within the release-to-last-foreground-completion
+step window defined above:
 
 * M0: intercept + executed decode-token count + executed prefill-token count.
 * M1: M0 + summed decode context lengths.
@@ -201,7 +233,9 @@ Use training-only scaling and leave-one-calibration-cell-out (LOCO) errors on th
 Freeze the selected family, coefficients, scaling, LOCO report, jitter, causal
 rollout and eligibility hashes before opening held timing. The12 repeat-check
 trials diagnose calibration repeatability; they cannot select another family.
-Actual q/l coverage, scaled rank/condition and held feature ranges must be reported.
+Actual q/l coverage, full-family scaled rank/condition on all fitting rows AND
+every LOCO training partition, and held feature ranges must be reported. Exclude
+unsupported families before held scoring; stop if even M0 lacks support.
 Numerical interpolation is not proof of causal support. Do not retune after held failure.
 
 Held screens mirror the frozen decision: an M1 decode-benefit claim requires>=10%
@@ -307,10 +341,12 @@ scenario; matching does not establish uniqueness or pass causal prediction gates
 ```
 python scripts/build_prefill_design.py --output-dir /tmp/fresh-prefill-design
 python scripts/check_prefill_itl.py --old-evidence OLD --new-evidence NEW --output /tmp/fresh-itl.json
+python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py
 python scripts/check_prefill_budget.py --suite-dir NEW/results/low-cap-switch-v1 --old-suite-dir OLD/results/cap-range-v1 --output-dir /tmp/fresh-budget-check
 ```
 
-The plan generator reproduces cases/order/predictions/discrimination/budget. The
+The plan generator reproduces cases/order/predictions/discrimination/budget,
+including complete-feature training-fold support diagnostics. The
 budget sensitivity re-audits the archived suite and checks8192 parity. Raw bundles
 are the public PR30/31 evidence; see their extraction instructions. Published
 CPU results are development sensitivity, not a native collector/GPU acceptance.
