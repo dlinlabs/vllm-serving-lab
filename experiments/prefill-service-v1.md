@@ -1,25 +1,26 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Draft design, revision2. Collector/hooks are not implemented; this is not an executable
+**Draft design, revision3. Collector/hooks are not implemented; this is not an executable
 GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
 
 ## Review decisions and CPU evidence
 
-| Review item | Revision |
+Revision3 responds to the [round-2 review](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6330431494).
+It keeps round1's source mapping, matched D16, extreme-length calibration, observer
+qualification and separation of conditional fits from causal forecasts.
+
+| Round2 item | Revision / qualification |
 |---|---|
-| 1: test2048 before GPU | Completed the six-capture,288-window frozen-parameter sensitivity. Capture gates re-audit;8192 predictions reproduce the archive.2048 does not repair the pooled error. Keep both as preregistered scenarios. |
-| 1: establish compatibility | Preserve OpenAI-server usage context. Pin2048 for the new experiment, archive resolved config/source/launch. Compare short replay ITL tails descriptively; zero gaps above0.2s is not a validity gate or proof of old config. |
-| 2: calibration support | Train on single1024/7168 and uniform4x4096, at both background levels. Hold2048/4096, mixtures/orders and all sentinels out of fitting. Check actual chunk-position coverage/rank. |
-| 3: realistic decode pressure | Replace D8 with D16:16 backgrounds,input1024/output512. Record actual counts/context; target about16–24k background context. D9 is deferred to keep the budget fixed. |
-| 4: sentinel discrimination | Replace staggered arrival cell with a four4096 burst and sentinel offsets50/400/800ms; add one4096 plus sentinel200ms. |
-| 5: prefill-sensitive targets | Primary: prefill-bearing step timing AND per-request cumulative release-to-last-prefill time. Decode-only steps are a separate no-regression check. |
-| 6: measurable rollout gate | Declare latency-error, tie-aware ordering and6-of8 improvement checks below. No required preferred cap or named segment. |
-| 7: preregister predictions/power | Commit8192/2048 frozen-barrier predictions, nonlinear sensitivity and round-robin alternative. Compare contrast sizes with10/25/50ms planning bands; actual noise is unknown until GPU calibration. |
-| 8: normal endpoint bridge | One block of all eight sentinel cases through the shared-client gateway and normal OpenAI server, with per-request cross-process joins. |
-| 9: transfer slices | Two fixed32,60s development slices are scheduled, not adaptively added. One warmup pass and two deep traces keep the recomputed proposal within1800s. |
-| Minor: overhead/drift | Mean-log-ratio t interval;20 cheap and10 demanding pairs. Fixed reference before/after each main block. Actual step work comes from scheduler/execution records, not iteration-token histograms. |
+| 1: ITL mechanism check | Use2048 as the historical working assumption,8192 as sensitivity. Add reproducible accepted-path ITL counts and conditional transfer predictions. Pooled goodput MAE is a different test. Tail agreement does not establish old config. |
+| 2: nonlinear sensitivity | Include k=1e-9/1.5e-9 in historical ITL checks and1.5e-9 alongside3.15e-9 in cell planning. Neither is a fitted physical bound. Single2048 is low-signal validation, not an M2 identification cell. |
+| 3: wasted background drain | Reduce background output512 to256. All five declared toy scenarios preserve foreground execution through completion; record real release state and require backgrounds to outlive foreground in measured trials. Bank savings. |
+| 4: weak sentinel cell | Replace one4096@200 with one7168@200. Four4096@800 is a FIFO/RR tie control, not a required policy-discrimination win. |
+| 5: wrong contrast / lucky wins | Publish sentinel-only, per-request and within-D offset contrasts. Freeze contrast eligibility using calibration-only jitter and the frozen candidate; do not count unresolved comparisons in a6/8 tally. |
+| 6: M1 selection | Evaluate decode-only improvement for M1 separately; M2 targets prefill-bearing and cumulative timing. A small share of total runtime does NOT imply a small relative MAE improvement. |
+| 7: empty transfer boundary | Replay[40,120) and[160,240), score[60,120) and[180,240). Log boundary running/queue/KV state;20s is a declared lead-in, not demonstrated historical-state reconstruction. |
+| 8: stage completion | Separate main/bridge/transfer/deep completion and gates; full suite still requires all stages. Later failures invalidate prior results only if shared integrity/observer assumptions are compromised. |
 
 The verified vLLM v0.30.0 `EngineArgs.get_batch_defaults` source sets API-server2048
 versus LLM-class8192 in its smaller-GPU branch. This is an upstream default, not
@@ -43,8 +44,14 @@ new-host fixed32 capture and uses raw service only; it is not an online predicti
 or an isolated causal test of the scheduler. Its scope/limitations are in the JSON.
 The forced-admission quartile diagnostic already shows increasing short-miss rates
 at8192 (0.4/6.3/17.5/52.5%);2048 gives0/0/12.5/59.2%, versus actual0.8/3.8/15.4/63.3%.
-Thus the association is not unique evidence for2048. An ITL histogram is not a per-step work trace, and frontend/async effects can alter
-which gaps are observed. We do not infer a unique scheduler budget from a0.2s bound.
+Thus the association is not unique evidence for2048. ITL tails test a more direct
+consequence of the joint running-first/step-time hypothesis than pooled goodput MAE.
+With every live decoder producing one token each step, a long prefill step should
+leave long token gaps. [Reproducible ITL scenarios](../results/prefill-design-round2/itl-scenarios.json)
+use actual admitted paths/output lengths and compare them with observed exporter tails.
+They support2048 as a working assumption, not a verified old config. Async/counter
+semantics and output observation still need source/step reconciliation. No preferred
+tail is forced as a capture-validity gate; matching it does not identify a unique model.
 
 ## Questions and environment
 
@@ -66,28 +73,30 @@ clock/power/temperature, config and installed-source hashes to the manifest.
 Fail unexpected runtime/config rather than choosing settings from observed latency.
 Calculate peak block-rounded KV demand from inputs plus full output caps and
 require at least10% capacity headroom. The old86k KV capacity is not assumed on a
-new rental. Backgrounds plus foreground/sentinel can approach42k tokens before
+new rental. Backgrounds plus foreground/sentinel can approach38k tokens before
 block rounding. A failed capacity check stops collection; do not call it safe by assumption.
 
 ## Workload and splits
 
 Actual engine input token IDs define length, including templates/special tokens.
 Materialize/hash all trial content before freeze, content seed20261024. Foreground
-and sentinel outputs are forced128 tokens, background outputs512, temperature0,
+and sentinel outputs are forced128 tokens, background outputs256, temperature0,
 ignore EOS. This is a mechanistic workload; the later Azure slices retain natural
 EOS and the historical128 output cap. All requests must fit context8192.
 
 D0 means no background. D16 means16 requests with1024 input tokens, released first;
 wait until all are decoding before the foreground barrier. Record their actual
 context and remaining output at release and every subsequent step. D16 is an
-initial target, not an assertion that the decode population remains16. Drain all
+initial target. In microbenchmarks, require all16 backgrounds to remain decoding
+until all foreground/sentinel requests complete; otherwise mark that cell's intended
+matched-load test invalid, preserve it and do not silently extend the output length. Drain all
 work before each trial;250ms idle gap; external traffic prohibited.
 
 | Family | Conditions at each of D0/D16 | Cells | Split |
 |---|---|---:|---|
 | Single |1024/2048/4096/7168 input |8|1024/7168 calibration;2048/4096 held |
 | Composition |4x4096;1024/1024/7168/7168; reverse order |6|Uniform calibration; mixed/reverse held |
-| Sentinel |4x4096 burst,512 sentinel at50/400/800ms;1x4096 with sentinel200ms |8|All held |
+| Sentinel |4x4096 burst,512 sentinel at50/400/800ms;1x7168 with sentinel200ms |8|All held |
 
 Composition cases have four requests and16384 total prompt tokens. This controls
 offered work/count, not actual step composition. Preserve common content pools
@@ -118,13 +127,17 @@ traces. Main blocks are not reordered based on outcomes. Deep traces are last so
 profiler flush/clock effects cannot contaminate later performance stages.
 
 [Budget calculation](prefill-service-v1.budget.json) sums the frozen linear scenario
-wall times, multiplies by1.35, then adds idle gaps,120s of replay and120s frontend/
-profiler reserve. It estimates about1777s; this is a planning estimate, not a
+wall times, multiplies by1.35, then adds idle gaps,160s of replay including lead-ins,
+and120s frontend/profiler reserve. It estimates about1318s; this is a planning estimate, not a
 measured completion-time promise. Hard active budget1800s excludes installation
 and initial model load, includes every stage/flush. Per-trial timeout45s. No automatic
 retry, shape removal, opportunistic extra level or resizing a partial suite into a
 successful one. If on-host preparation predicts insufficient margin, stop and
-version a smaller plan before scoring. An overrun preserves an incomplete attempt.
+version a smaller plan before scoring. An overrun preserves an incomplete attempt. Each stage records planned/attempted/
+completed trial IDs, integrity status, deadline and reason for any skipped/failed work.
+An independently complete main stage can retain its scoped findings if transfer/deep
+runs out of time. It cannot be called a complete suite; shared observer/config/data
+failures invalidate every affected stage. No failed main cell is dropped from a pass.
 
 ## Observer, drift and timing contracts
 
@@ -168,27 +181,37 @@ Fit fixed nonnegative models, with training-only scaling:
 * M1: M0 + summed decode context lengths.
 * M2: M1 + Z=sum(q*l+q*(q+1)/2), actual prompt chunk q and pre-chunk position l.
 
-Fit GPU-span and valid iteration-wall targets separately. Primary service scores
-are (a) prefill-bearing steps and (b) cumulative per-request release-to-last-prefill
-wall time. Neither is diluted by hundreds of decode-only steps. Report decode-only
-error separately, with a no-regression allowance of max(10% M0 MAE,1ms).
-These service scores condition on observed executed work, including held-case chunks;
-they are not causal workload forecasts. Cumulative targets include all intervening
-work from release until that request's final prefill chunk, not just its own chunks.
+Fit GPU-span and valid iteration-wall targets separately. Report three target classes:
+(a) decode-only step MAE, (b) prefill-bearing step MAE, and (c) per-request cumulative
+release-to-last-prefill wall MAE. The last includes all intervening steps, not just
+that request's chunks. Case-weighted MAE prevents hundreds of decode-only steps
+from diluting prefill evidence. Conditional scores use observed executed chunks;
+they are not causal workload forecasts.
 
-Select the family using leave-one-calibration-cell-out errors on fitting trials,
-with equal case weighting and equal weight to normalized primary targets (each
-scaled by that target's M0 calibration MAE, floor1ms); simpler wins ties. Freeze
-candidate/source/coefficient hashes before opening held cases. Do not select a
-winner from the held report. Actual q/l coverage, scaled design rank/condition and
-held feature ranges must be reported; numerical interpolation is not proof of
-causal support. Report unsupported regions rather than retune after the fact.
+Use training-only scaling and leave-one-calibration-cell-out (LOCO) errors on the
+18 fitting trials. Two nested decisions, with simpler family winning ties:
 
-Service screen: selected context/nonlinear model must improve each primary
-held-case target's case-weighted MAE by>=10% versus refitted M0, without per-case
-regression above max(10% case M0 MAE,1ms). M0 may remain the appropriate model if
-accounting/state changes suffice; do not force M2 to pass. These are engineering
-screening margins, not physical laws or MPC guarantees.
+1. M0 versus M1: retain M1 only if decode-only LOCO case-weighted MAE improves>=10%,
+   with neither prefill target regressing by more than max(10% M0 MAE,1ms) per case.
+2. Compare M2 with that retained base on both prefill targets. Retain M2 only if
+   each LOCO case-weighted MAE improves>=10%, with no target/case regression beyond
+   max(10% base MAE,1ms), including decode-only timing. M2 is still fit as M1+Z;
+   the comparison base can be M0 if M1 alone did not justify its complexity.
+
+Freeze the selected family, coefficients, scaling, LOCO report, jitter, causal
+rollout and eligibility hashes before opening held timing. The12 repeat-check
+trials diagnose calibration repeatability; they cannot select another family.
+Actual q/l coverage, scaled rank/condition and held feature ranges must be reported.
+Numerical interpolation is not proof of causal support. Do not retune after held failure.
+
+Held screens mirror the frozen decision: an M1 decode-benefit claim requires>=10%
+decode-only case-weighted MAE improvement versus M0 and the declared prefill
+no-regression limits. An M2 prefill-benefit claim requires>=10% improvement on BOTH
+prefill targets versus the retained base and no-regression on all targets/cases.
+Report M0/M1/M2 ablations regardless; do not replace the selected candidate from
+held results. Failed/inconclusive is not passed. M0 can remain appropriate.
+All margins refer to relative prediction ERROR, not percentage of total runtime;
+a3ms context effect can reduce a4ms baseline MAE by much more than10%.
 
 **Separate causal sentinel rollout gate, eight cells, five blocks each:**
 
@@ -197,9 +220,16 @@ screening margins, not physical laws or MPC guarantees.
    95% interval excluding0 and median difference>25ms are distinguishable; predicted
    ordering must agree for all such pairs. Others are unresolved/ties, not automatic
    ranking successes. No discernible ordering means policy identification is unresolved.
-3. Paired absolute-error MAE must beat the preregistered frozen-B2048 **raw engine**
-   baseline in at least6/8 cells; report B8192 too. No cell may regress by more than
-   max(10% baseline MAE,25ms).
+3. Before held scoring, roll out the calibrated frozen candidate and raw-B2048
+   baseline on the predeclared eight cells. A cell is eligible only if the predicted
+   sentinel-TTFT difference exceeds max(3*calibration-only jitter,25ms).
+   Hash the eligibility list before reading held timing (`contrast_eligibility`).
+   Require at least4 eligible cells; otherwise improvement is inconclusive. On
+   eligible cells require strictly lower paired absolute-error MAE in at least
+   ceil(0.75*n) cells. Report paired block errors and bootstrap intervals; this is
+   an engineering screen, not a binomial significance test of independent cells.
+   Every one of the eight cells, eligible or not, retains the no-regression limit
+   max(10% baseline MAE,25ms). Report B8192 sensitivity too. No ties count as wins.
 
 The causal rollout must use only release-time state, injected arrivals and its own
 predicted scheduler progress. Measured future chunks/first tokens are oracle-only.
@@ -211,22 +241,30 @@ cost. Passing microbenchmark gates nominates a simulator candidate, not an MPC p
 
 [Predictions](prefill-service-v1.predictions.json) include the unchanged PR28 simulator
 with an explicit barrier-state adapter at B8192 and B2048: D16 backgrounds start
-already decoding with511 remaining outputs; raw engine and old empirical correction
+already decoding with255 remaining outputs; raw engine and old empirical correction
 are separate. The model cannot infer their actual release state before measurement.
 A variable-output CPU scenario additionally models background preparation for budgeting.
 Neither adapter is represented as a new fitted physical model.
 
-Further scenarios use an unvalidated nonlinear sensitivity (3.15e-9 per full L²,
+Further scenarios use unvalidated nonlinear sensitivities (1.5e-9 and3.15e-9 per full L²,
 charged incrementally as2*k*Z) and a round-robin512 alternative, **not a claim about
 vLLM's actual interleaving policy**. [Discrimination](prefill-service-v1.discrimination.json)
-records expected contrasts and planning noise bands10/25/50ms. These are not measured
+records each sentinel-only or individual-request contrast versus raw-B2048 and
+each within-D offset-pair difference, for every scenario. Planning jitter bands
+are10/25/50ms and resolution means a gap>3*band, not just>band. These are not measured
 noise or power estimates. Before main, compute1.4826*MAD of off-mode foreground
 TTFT in each calibration observer cell; use the larger value as a provisional jitter
-scale, not a universal bound. Mark a contrast unresolved if its expected gap is less
-than three times that scale. If all intended primary contrasts are unresolved, stop.
+scale, not a universal bound. Mark a contrast unresolved if its expected absolute gap is<=three times that scale. The declared identification contrasts are (H2) M2-versus-M0 request TTFT for
+single7168 and mixed/reverse composition at each D, and (H3) FIFO-versus-RR
+sentinel TTFT for four@50/four@400/one7168@200 at each D. Single2048 remains
+validation-only; four@800 is a policy tie control (not necessarily an M2 tie).
+Within-D offset ordering tests policy, not the nonlinear coefficient. Publish
+resolvability for every contrast/scenario. If all identification contrasts for an
+H2 or H3 claim are unresolved, that claim is inconclusive; stop main only if BOTH
+families are unresolved. Do not replace cells. Candidate-versus-baseline eligibility
+is a separate frozen rule after calibration fitting and before opening held timing.
 This calibration-only check does not inspect held timing or justify precision on
-other states. Stop if the
-intended distinction cannot be measured; do not swap held cells after inspecting them.
+other states. Do not swap held cells after inspecting them.
 
 ## Endpoint bridge and real-composition transfer
 
@@ -241,20 +279,34 @@ or assume a matched barrier/HTTP state. No held bridge delay becomes a fitted pr
 
 Restart only the gateway between transport baseline and cost-aware transfer; keep
 EngineCore/config unchanged and bind each gateway identity separately. Then run two
-fixed32,60s slices [60,120),[180,240) from the historical development trace
+fixed32,80s replays [40,120),[160,240), scoring only[60,120),[180,240), from the historical development trace
 SHA25662f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e,
 rebased locally with original trace IDs/provenance. Natural EOS, output cap128,
 original shared-client/process sampler/runner-GC settings and all enabled replay
 integrity/load/control/diagnostic gates, including50ms limits, remain required.
-Freeze derived trace hashes before collection. No C. ITL-tail/CDF comparisons and
+Freeze derived trace hashes before collection. Preserve original trace IDs,
+original scheduled seconds and rebased local times. Lead-in requests participate
+in full lifecycle/drain audits but not scored offered counts or arrival-window
+denominators. Boundary running/waiting/KV/context and actual surviving lead-in
+requests are reported beside historical state; do not assume20s guarantees settling.
+No C. ITL-tail/CDF comparisons and
 actual chunk distributions connect to old captures, but are not old-default or
 same-host policy equivalence tests. These slices are development observation;
 no new model is fitted to their outcomes before reporting its frozen predictions.
+The committed ITL scenario counts use historical fixed32 accepted-arrival/output
+paths, selected over each80s replay, starting empty at lead-in. They are conditional
+preregistration sensitivities, not predictions of fresh admission/EOS. A second
+forced128-output variant shows that dependence. After capture, also run the same
+frozen algorithm on its actual accepted/output path, labelled retrospective.
+Score gaps by right token timestamp within(20,80] local seconds; compare exporter
+scrape endpoints explicitly. A tail mismatch challenges the joint scheduling/service
+scenario; matching does not establish uniqueness or pass causal prediction gates.
 
 ## Reproduce and freeze checklist
 
 ```
 python scripts/build_prefill_design.py --output-dir /tmp/fresh-prefill-design
+python scripts/check_prefill_itl.py --old-evidence OLD --new-evidence NEW --output /tmp/fresh-itl.json
 python scripts/check_prefill_budget.py --suite-dir NEW/results/low-cap-switch-v1 --old-suite-dir OLD/results/cap-range-v1 --output-dir /tmp/fresh-budget-check
 ```
 

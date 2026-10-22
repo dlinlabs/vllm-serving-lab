@@ -26,7 +26,7 @@ def cases():
             result.append(dict(id=f'composition-{name}-D{d}',family='composition',background_decoders=d,foreground_tokens=lengths,foreground_offsets_ms=[0]*4,sentinel=None,split='calibration' if name=='uniform' else 'held_case'))
         for offset in (50,400,800):
             result.append(dict(id=f'sentinel-four-at{offset}-D{d}',family='sentinel',background_decoders=d,foreground_tokens=[4096]*4,foreground_offsets_ms=[0]*4,sentinel=dict(input_tokens=512,arrival_ms=offset),split='held_case'))
-        result.append(dict(id=f'sentinel-one-at200-D{d}',family='sentinel',background_decoders=d,foreground_tokens=[4096],foreground_offsets_ms=[0],sentinel=dict(input_tokens=512,arrival_ms=200),split='held_case'))
+        result.append(dict(id=f'sentinel-one-at200-D{d}',family='sentinel',background_decoders=d,foreground_tokens=[7168],foreground_offsets_ms=[0],sentinel=dict(input_tokens=512,arrival_ms=200),split='held_case'))
     return result
 
 
@@ -62,7 +62,7 @@ def frozen_prediction(case,budget,coef,overhead):
     class Barrier:
         def cap(self,t):return 1e9
         def origin(self,t):
-            return [(511.,0.)]*d,deque([float(r['tokens']),1.,0.,d,r['id']] for r in at_zero),float(len(at_zero))
+            return [(255.,0.)]*d,deque([float(r['tokens']),1.,0.,d,r['id']] for r in at_zero),float(len(at_zero))
     old=gb.B
     try:
         gb.B=budget
@@ -70,6 +70,18 @@ def frozen_prediction(case,budget,coef,overhead):
     finally:gb.B=old
     return {r.request_id:dict(raw_engine_first_s=r.first,raw_ttft_s=r.first-r.sched,
         old_empirical_corrected_ttft_s=r.first-r.sched+float(overhead.mean(r.running))) for r in result}
+
+
+def offset_contrasts(predictions):
+    rows=[];lookup={p['case']:p['scenarios'] for p in predictions}
+    for d in (0,16):
+        for a,b in ((50,400),(50,800),(400,800)):
+            x=lookup[f'sentinel-four-at{a}-D{d}'];y=lookup[f'sentinel-four-at{b}-D{d}']
+            for key in x:
+                rows.append(dict(backgrounds=d,offsets_ms=[a,b],scenario=key,
+                    target='sentinel_ttft_offset_difference',delta_s=x[key]['foreground']['sentinel']['ttft_s']-y[key]['foreground']['sentinel']['ttft_s'],
+                    exceeds_planning_noise_bands={str(ms):abs(x[key]['foreground']['sentinel']['ttft_s']-y[key]['foreground']['sentinel']['ttft_s'])>3*ms/1000 for ms in (10,25,50)}))
+    return rows
 
 
 def build(output):
@@ -80,7 +92,7 @@ def build(output):
     predictions=[];baseline={};coverage=[];gaps=[]
     for c in cells:
         scenarios={}
-        for budget,policy,q in [(8192,'fifo',0.),(2048,'fifo',0.),(2048,'fifo',3.15e-9),(2048,'round_robin_512',0.)]:
+        for budget,policy,q in [(8192,'fifo',0.),(2048,'fifo',0.),(2048,'fifo',1.5e-9),(2048,'fifo',3.15e-9),(2048,'round_robin_512',0.)]:
             steps=[];v=simulate(requests_for(c),budget,backgrounds=c['background_decoders'],policy=policy,quadratic=q,steps_out=steps)
             key=f'B{budget}-{policy}-q{q}';scenarios[key]=v
             if budget==2048 and policy=='fifo' and q==0.:
@@ -89,32 +101,49 @@ def build(output):
                     # Only chunks after the foreground release enter calibration-coverage summaries.
                     coverage.extend(dict(case=c['id'],q=chunk[1],l=chunk[2]) for s in steps if s['start']>=v['release_s']-1e-12 for chunk in s['chunks'])
         exact={str(b):frozen_prediction(c,b,coef,overhead) for b in (8192,2048)}
-        a=scenarios['B2048-fifo-q0.0']['foreground'];b=scenarios['B2048-fifo-q3.15e-09']['foreground']
-        gap=float(np.median([b[k]['ttft_s']-a[k]['ttft_s'] for k in a]))
-        gaps.append(dict(case=c['id'],split=c['split'],median_M2_minus_M0_ttft_s=gap,
-            exceeds_planning_noise_bands={str(ms):abs(gap)>ms/1000 for ms in (10,25,50)}))
+        # Explicit estimands; never average long requests into the sentinel target.
+        base=scenarios['B2048-fifo-q0.0']['foreground']
+        contrasts=[]
+        for key,v in scenarios.items():
+            if key=='B2048-fifo-q0.0':continue
+            ids=['sentinel'] if c['sentinel'] else list(base)
+            for rid in ids:
+                delta=v['foreground'][rid]['ttft_s']-base[rid]['ttft_s']
+                contrasts.append(dict(scenario=key,request_id=rid,baseline='B2048-fifo-q0.0',
+                    target='sentinel_ttft' if c['sentinel'] else 'request_ttft',delta_s=delta,
+                    identification_hypothesis=('H2' if key in ('B2048-fifo-q1.5e-09','B2048-fifo-q3.15e-09') and
+                        (c['id'].startswith('single-L7168-') or c['id'].startswith(('composition-mixed-','composition-reverse-')))
+                        else 'H3' if key=='B2048-round_robin_512-q0.0' and c['sentinel'] and c['sentinel']['arrival_ms']!=800 else None),
+                    exceeds_planning_noise_bands={str(ms):abs(delta)>3*ms/1000 for ms in (10,25,50)}))
+        gaps.append(dict(case=c['id'],split=c['split'],contrasts=contrasts,
+            policy_role='negative_control_expected_fifo_rr_tie' if c['sentinel'] and c['sentinel']['arrival_ms']==800 else 'identification',
+            nonlinear_role='low_signal_validation_only' if c['family']=='single' and c['foreground_tokens']==[2048] else 'sensitivity'))
         predictions.append(dict(case=c['id'],scenarios=scenarios,frozen_barrier_predictions=exact))
     counts=Counter(t['stage'] for t in trials);roles=Counter(t['analysis_role'] for t in trials if t['stage']=='main')
     linear_time=sum(baseline[t['case']]['wall_s'] for t in trials)
     # Fixed conservative allowance; no runtime observations tune this budget.
-    estimated=linear_time*1.35+len(trials)*.25+120+120
+    estimated=linear_time*1.35+len(trials)*.25+160+120
     fit_rows=np.array([[r['q'],r['q']*r['l']+r['q']*(r['q']+1)/2] for r in coverage])
     scaled=fit_rows/np.maximum(np.linalg.norm(fit_rows,axis=0),1e-12)
-    write(output/'cases.json',dict(schema='prefill-service-design-cases-v2',status='draft_not_executable',cases=cells))
-    write(output/'order.json',dict(schema='prefill-service-design-order-v2',seed=20261022,order=trials,
-        transfer_slices=[dict(start=60,duration=60,cap=32),dict(start=180,duration=60,cap=32)]))
+    write(output/'cases.json',dict(schema='prefill-service-design-cases-v3',status='draft_not_executable',cases=cells))
+    write(output/'order.json',dict(schema='prefill-service-design-order-v3',seed=20261022,order=trials,
+        transfer_slices=[dict(replay_start=40,score_start=60,score_end=120,lead_in_seconds=20,cap=32),dict(replay_start=160,score_start=180,score_end=240,lead_in_seconds=20,cap=32)]))
     source={f:digest(ROOT/f) for f in ['prefill_design.py','scripts/build_prefill_design.py','greybox_simulator.py','evaluate_low_cap_frozen.py']}
     write(output/'predictions.json',dict(role='preregistered hypothetical CPU predictions; not measured GPU results',source_sha256=source,
-        frozen_coefficients=coef,legacy_adapter='All D16 backgrounds already decoding with511 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.',
-        quadratic_coefficient_role='3.15e-9 is an unvalidated sensitivity per full L^2, applied incrementally as2*k*attention_pairs',predictions=predictions))
-    write(output/'discrimination.json',dict(role='planning sensitivity, not estimated statistical power',cases=gaps,
+        frozen_coefficients=coef,legacy_adapter='All D16 backgrounds already decoding with255 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.',
+        quadratic_coefficient_role='1.5e-9 and3.15e-9 are unvalidated sensitivities per full L^2, not fitted bounds; applied incrementally as2*k*attention_pairs',predictions=predictions))
+    write(output/'discrimination.json',dict(role='planning sensitivity, not estimated statistical power',cases=gaps,offset_contrasts=offset_contrasts(predictions),
+        eligibility_rule='Freeze calibrated candidate and calibration-only jitter before held scoring; expected candidate-baseline abs delta >max(3*jitter,25ms); at least4/8 eligible; >=ceil(.75*n) strict wins; zero eligible is inconclusive',
+        primary_contrasts=[dict(id=f"{c['case']}|{x['scenario']}|{x['request_id']}",hypothesis=x['identification_hypothesis'],delta_s=x['delta_s'])
+            for c in gaps for x in c['contrasts'] if x['identification_hypothesis']],
+        resolution_rule='Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.',
         observed_microbenchmark_noise_available=False,calibration_chunk_coverage=dict(q_min=float(fit_rows[:,0].min()),q_max=float(fit_rows[:,0].max()),
             l_min=min(r['l'] for r in coverage),l_max=max(r['l'] for r in coverage),q_Z_rank=int(np.linalg.matrix_rank(scaled)),q_Z_scaled_condition=float(np.linalg.cond(scaled))),
         gate='Before main trials, compare declared contrasts with calibration-only observer noise; no held-case swaps. Stop unsupported precision claims rather than retune the matrix.'))
     write(output/'budget.json',dict(trial_counts=dict(counts),total_trials=len(trials),main_roles=dict(roles),
-        frozen_linear_serial_trial_seconds=linear_time,planning_service_multiplier=1.35,idle_gap_seconds=.25,transfer_seconds=120,flush_and_frontend_reserve_seconds=120,
+        frozen_linear_serial_trial_seconds=linear_time,planning_service_multiplier=1.35,idle_gap_seconds=.25,transfer_seconds=160,flush_and_frontend_reserve_seconds=120,
         estimated_active_seconds=estimated,hard_collection_limit_seconds=1800,fits_planning_budget=estimated<=1800,
-        caveat='A planning estimate, not runtime evidence. Timeout/failure preserves an incomplete suite; optional work is not enabled adaptively.'))
+        caveat='Planning estimate only. Stage statuses are independent; suite complete requires every stage. Preserve all failures/timeouts and never turn a selected subset into a complete suite.'))
     assert len(cells)==22 and len(trials)==212 and roles=={'train':18,'repeat_check':12,'held_case':80}
     assert estimated<=1800,'Proposed collection does not fit declared budget'
     return dict(cells=22,trials=len(trials),main_roles=dict(roles),estimated_active_seconds=estimated)

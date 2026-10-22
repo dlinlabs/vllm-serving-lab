@@ -1,11 +1,11 @@
 {
-  "schema": "service-microbenchmark-design-v2",
+  "schema": "service-microbenchmark-design-v3",
   "protocol": "prefill-service-v1",
-  "revision": 2,
+  "revision": 3,
   "status": "draft_not_executable",
   "collector_implemented": false,
-  "source_parent_commit": "78344d8dec59e835086fb64215cb4675e5b745fb",
-  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6329953794",
+  "source_parent_commit": "d97251aeed60c5a55e735d69d289281ca767a39e",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6330431494",
   "runtime": {
     "gpu": "RTX4090",
     "same_host": true,
@@ -23,7 +23,11 @@
     "tensor_parallel_size": 1,
     "preserve_graph_and_async": true,
     "old_config_identity_established": false,
-    "kv_headroom_fraction": 0.1
+    "kv_headroom_fraction": 0.1,
+    "historical_working_batch_budget": 2048,
+    "historical_sensitivity_batch_budgets": [
+      8192
+    ]
   },
   "workload": {
     "background_counts": [
@@ -31,7 +35,7 @@
       16
     ],
     "background_input_tokens": 1024,
-    "background_output_tokens": 512,
+    "background_output_tokens": 256,
     "foreground_output_tokens": 128,
     "sentinel_input_tokens": 512,
     "sentinel_offsets_ms": [
@@ -42,7 +46,9 @@
     "forced_microbenchmark_outputs": true,
     "trace_replay_natural_eos": true,
     "content_seed": 20261024,
-    "prompt_manifest_status": "pending implementation"
+    "prompt_manifest_status": "pending implementation",
+    "backgrounds_must_outlive_foreground": true,
+    "sentinel_one_foreground_tokens": 7168
   },
   "measurement": {
     "separate_cpu_gpu_targets": true,
@@ -75,30 +81,53 @@
       "train": 18,
       "repeat_check": 12
     },
-    "frozen_linear_serial_trial_seconds": 1099.2114439090356,
+    "frozen_linear_serial_trial_seconds": 729.4647739376677,
     "planning_service_multiplier": 1.35,
     "idle_gap_seconds": 0.25,
-    "transfer_seconds": 120,
+    "transfer_seconds": 160,
     "flush_and_frontend_reserve_seconds": 120,
-    "estimated_active_seconds": 1776.9354492771981,
+    "estimated_active_seconds": 1317.7774448158516,
     "hard_collection_limit_seconds": 1800,
     "fits_planning_budget": true,
-    "caveat": "A planning estimate, not runtime evidence. Timeout/failure preserves an incomplete suite; optional work is not enabled adaptively.",
+    "caveat": "Planning estimate only. Stage statuses are independent; suite complete requires every stage. Preserve all failures/timeouts and never turn a selected subset into a complete suite.",
     "per_trial_timeout_seconds": 45,
     "attempts_per_trial": 1,
     "transfer_slices": [
       {
-        "start": 60,
-        "duration": 60,
+        "replay_start": 40,
+        "score_start": 60,
+        "score_end": 120,
+        "lead_in_seconds": 20,
         "cap": 32
       },
       {
-        "start": 180,
-        "duration": 60,
+        "replay_start": 160,
+        "score_start": 180,
+        "score_end": 240,
+        "lead_in_seconds": 20,
         "cap": 32
       }
     ],
-    "transfer_is_development": true
+    "transfer_is_development": true,
+    "stage_completion_independent": true,
+    "full_suite_requires_all_stages": true,
+    "stage_status_contract": {
+      "fields": [
+        "planned_trial_ids",
+        "attempted_trial_ids",
+        "completed_trial_ids",
+        "integrity",
+        "deadline",
+        "failure_reason"
+      ],
+      "states": [
+        "not_started",
+        "complete_valid",
+        "complete_invalid",
+        "incomplete"
+      ],
+      "shared_failure_invalidates_affected_stages": true
+    }
   },
   "analysis": {
     "calibration_cells": 6,
@@ -111,12 +140,13 @@
       "M2_add_chunk_attention_pairs"
     ],
     "primary_targets": [
-      "prefill-bearing-step time",
-      "cumulative release-to-last-prefill wall time"
+      "decode-only step MAE (M1)",
+      "prefill-bearing step MAE (M2)",
+      "cumulative release-to-last-prefill wall MAE (M2)"
     ],
-    "decode_only_target": "separate no-regression check",
+    "decode_only_target": "M1 benefit target; M2 no-regression check",
     "candidate_freeze_before_held_scoring": true,
-    "selection": "leave-one-calibration-cell-out; equal case/normalized-target weights; simpler tie break",
+    "selection": "Two-stage training-only LOCO: M1 decode >=10% with prefill guard, then M2 both prefill targets >=10% versus retained base with all-target guard. No held selection.",
     "service_improvement_fraction": 0.1,
     "case_regression_fraction": 0.1,
     "case_regression_floor_ms": 1,
@@ -124,39 +154,58 @@
       "cells": 8,
       "bias_limit_fraction": 0.1,
       "bias_floor_ms": 25,
-      "min_cells_beating_frozen_B2048": 6,
       "rank_resolution_ms": 25,
       "bootstrap_seed": 20261023,
       "bootstrap_replicates": 10000,
       "causal_rollout_required": true,
       "future_observed_chunks_allowed": false,
-      "unevaluated_is_not_passed": true
-    }
+      "unevaluated_is_not_passed": true,
+      "eligibility_source": "Frozen calibrated causal candidate predictions and calibration-only jitter; hash before held timing",
+      "eligibility_threshold": "abs predicted sentinel TTFT difference >max(3*jitter,25ms)",
+      "minimum_eligible_cells": 4,
+      "minimum_strict_win_fraction": 0.75,
+      "unresolved_is_not_passed": true,
+      "all_cells_no_regression": true,
+      "policy_tie_controls": [
+        "sentinel-four-at800-D0",
+        "sentinel-four-at800-D16"
+      ]
+    },
+    "nonlinear_planning_k": [
+      1.5e-09,
+      3.15e-09
+    ],
+    "nonlinear_k_is_fitted_bound": false,
+    "transfer_ITL_counts": "results/prefill-design-round2/itl-scenarios.json; conditional historical accepted/output paths, not fresh admission or causal predictions"
   },
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "662ccbaa1872a53637fc51362b9fff34a059c3f94f511a63aadf92b4fc97bf38"
+      "sha256": "e5ad34bb65c4e6389208838f6e681ae218bc9a64866aa2f4b7bca5a79342539a"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
-      "sha256": "358ede107de33cf80481c35c34225fd9c0bb05896baa971f3459d750b764a14a"
+      "sha256": "f014afa829a230f7a068babd78df384c76357b9292a9619e1a126c2c50c95ebb"
     },
     "prefill-service-v1.order.json": {
       "path": "experiments/prefill-service-v1.order.json",
-      "sha256": "a90b7afc9382b51d3d686a3d9f4d8181c0f20c53ffb9ae36d27610e8547b01b4"
+      "sha256": "e42caa0bc736ec871997ea59db8fa1241478cad0f877f75d08f284a67c983227"
     },
     "prefill-service-v1.predictions.json": {
       "path": "experiments/prefill-service-v1.predictions.json",
-      "sha256": "038b580fb37db3056bbda901f634362ac86b8fe39eb18465bc38975914c637b9"
+      "sha256": "cbc840da849bf5cbec24e2b1f77e4bf00dab170ba2dd8307a2d89c61c173f76c"
     },
     "prefill-service-v1.discrimination.json": {
       "path": "experiments/prefill-service-v1.discrimination.json",
-      "sha256": "d7e10d082db442ba38e0d7091271ae4a7908d7dc9f6e2c017ec46227fcc3fdde"
+      "sha256": "17f1adad268fa80295436475de4299674c9bedbf4ac237c65f18d2be51e5b5b6"
     },
     "prefill-service-v1.budget.json": {
       "path": "experiments/prefill-service-v1.budget.json",
-      "sha256": "f2204221d13dc9530ea29daf212e02f418030d5319bcb2646101d1ac3de7b230"
+      "sha256": "8a98904cd9c01420d01ca97d6a0bff36e478f64d53a1d57d5e90b77d4affa1c0"
+    },
+    "round2-ITL-preregistration": {
+      "path": "results/prefill-design-round2/itl-scenarios.json",
+      "sha256": "fb57349ce99a03d090a8e5a2b5daeb9ea6bd3355331319b98a98cd523b77445a"
     }
   },
   "readiness": {

@@ -1,5 +1,5 @@
 {
-  "schema": "prefill-service-design-order-v2",
+  "schema": "prefill-service-design-order-v3",
   "seed": 20261022,
   "order": [
     {
@@ -1861,13 +1861,17 @@
   ],
   "transfer_slices": [
     {
-      "start": 60,
-      "duration": 60,
+      "replay_start": 40,
+      "score_start": 60,
+      "score_end": 120,
+      "lead_in_seconds": 20,
       "cap": 32
     },
     {
-      "start": 180,
-      "duration": 60,
+      "replay_start": 160,
+      "score_start": 180,
+      "score_end": 240,
+      "lead_in_seconds": 20,
       "cap": 32
     }
   ]

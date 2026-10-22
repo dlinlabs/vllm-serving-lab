@@ -39,8 +39,12 @@ development associations, not causes.
 PR32 review changes the proposal to22 cells at D0/D16, calibration across1024–7168
 input lengths, backlog-offset sentinels and prefill-specific prediction targets.
 Frozen-parameter2048 sensitivity does not fix the cap32 bias (MAE0.742 versus0.729).
-The212-trial proposal includes an HTTP bridge, drift references and two60s real-trace
-slices, with a model-based budget of about1777s under a hard1800s active limit.
+Round2 adds sentinel-only contrasts, a stronger7168-token sentinel backlog,
+separate decode/prefill model screens, and256-output backgrounds. The212-trial
+proposal includes an HTTP bridge, drift references and two80s real-trace replays
+(each with20s unscored lead-in), estimated at1318s under a hard1800s active limit.
+[ITL scenarios and checks](results/prefill-design-round2/report.md) distinguish
+conditional historical-path diagnostics from new-host causal forecasts.
 **Collector/hooks are not implemented; the executable GPU protocol is not frozen.**
 
 ## State-aware model iteration on the 16/32 captures

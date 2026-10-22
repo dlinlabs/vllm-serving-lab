@@ -4,107 +4,2270 @@
     {
       "case": "single-L1024-D0",
       "split": "calibration",
-      "median_M2_minus_M0_ttft_s": 0.003306240000000002,
-      "exceeds_planning_noise_bands": {
-        "10": false,
-        "25": false,
-        "50": false
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0015744000000000036,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.003306240000000002,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.009180839680266159,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "single-L2048-D0",
       "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.013218508800000014,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": false,
-        "50": false
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.006294527999999994,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.013218508800000014,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.027542519040798477,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "low_signal_validation_only"
     },
     {
       "case": "single-L4096-D0",
       "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.05286113280000007,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.009180839680266145,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.025171968000000017,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.05286113280000007,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.05508503808159701,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "single-L7168-D0",
       "split": "calibration",
-      "median_M2_minus_M0_ttft_s": 0.16187028479999999,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.02754251904079852,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.07708108799999996,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.16187028479999999,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.09180839680266173,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "composition-uniform-D0",
       "split": "calibration",
-      "median_M2_minus_M0_ttft_s": 0.1453069044000001,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.20960541537945662,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.14690679751428237,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.06217174368960332,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.05761985168829409,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.025171968000000017,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.056620040999999954,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08176748699999992,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.10068787200000007,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.05286113280000007,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.11890208610000008,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.17171172270000012,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.21144453120000029,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.7114438032607655,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3549315903670265,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.11672990759562962,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.013299911791148755,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "composition-mixed-D0",
       "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.0891750258,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3281793825895842,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3281793825895842,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.29905624102207284,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.05983781359415408,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0031487999999999933,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0031487999999999933,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08177979599999996,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1573109760000001,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.00661247999999999,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.00661247999999999,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.17173757160000003,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303530496000001,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.11857396721012754,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.11857396721012754,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.4163038838297871,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.04717160520467922,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "composition-reverse-D0",
       "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.3303272826,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.02754251904079852,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.05587534934495342,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.05587534934495342,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.056035593184108556,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.078655488,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15729870600000007,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15729870600000007,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1573109760000002,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1651765248,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303272826,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303272826,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303530496,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.5369853477421983,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.061635730550546275,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.7124975516119072,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.7228426048468916,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "sentinel-four-at50-D0",
       "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.17171172270000012,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.05761985168829409,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1010818560000003,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.21227189760000054,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.633518029724252,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "sentinel-four-at400-D0",
       "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.17171172270000012,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.05761985168829409,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1010818560000003,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.21227189760000054,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.2777961280938692,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "sentinel-four-at800-D0",
       "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.17171172270000012,
-      "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
-      }
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.05761985168829409,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1010818560000003,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.21227189760000054,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.0028516653075340015,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "negative_control_expected_fifo_rr_tie",
+      "nonlinear_role": "sensitivity"
     },
     {
       "case": "sentinel-one-at200-D0",
       "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.053274816000000044,
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.018044827659695173,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.07747507199999992,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.16269765120000013,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.1638954541364589,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "single-L1024-D16",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0015743999999999758,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.003306239999999905,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.014250466893660385,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "single-L2048-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.014250466893660718,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.006294527999999966,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.013218508800000084,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.02850093378732066,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "low_signal_validation_only"
+    },
+    {
+      "case": "single-L4096-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.028500933787320992,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.02517196799999999,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.05286113279999993,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.07125233446830215,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "single-L7168-D16",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.04275140068098171,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.07708108799999991,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.16187028479999999,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.14250466893660418,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-uniform-D16",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08260146136019442,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.28772844624729843,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.04109677666676714,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.0880376149686597,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.03117496799999997,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.056144618999999674,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08110614899999957,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.10068787199999951,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0654674328,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1179036998999996,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.17032291289999946,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.21144453119999973,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.6139448030734739,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.36784000766851344,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.12120833808798215,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.0028516653075338905,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-mixed-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.328179382589584,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.2051269848871038,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.2866746978961565,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.08993872517368251,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0031000080000000985,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.00924216000000011,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08154824700000018,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15731097600000066,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0065100168000000735,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.019408536000000032,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1712513187,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303530496000002,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.12278896061469469,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.0002634370877855341,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.4647578672646002,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08803761496865792,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-reverse-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.04018749925450038,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.08116530977235681,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.08116530977235681,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.08645335646447405,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.07846492799999982,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15693140999999966,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15693140999999966,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15731097599999955,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.16477634880000003,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3295559609999994,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3295559609999994,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.33035304959999956,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.59078330341061,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.09857371260068915,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.7377875120393106,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.6890661129812229,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at50-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.0880376149686597,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.10108185599999953,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.21227189759999998,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.6661828427302614,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at400-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.0880376149686597,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.10108185599999953,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.21227189759999998,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.297815960886177,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at800-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.0880376149686597,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.10108185599999953,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.21227189759999998,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.0028516653075341125,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "policy_role": "negative_control_expected_fifo_rr_tie",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-one-at200-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.028184082086484263,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.07747507199999992,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.16269765120000002,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.19028532127240227,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    }
+  ],
+  "offset_contrasts": [
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B8192-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.35,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -112,9 +2275,59 @@
       }
     },
     {
-      "case": "single-L1024-D16",
-      "split": "calibration",
-      "median_M2_minus_M0_ttft_s": 0.003306239999999905,
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.35,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q1.5e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.35,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q3.15e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.35,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-round_robin_512-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": -0.00572190163038272,
       "exceeds_planning_noise_bands": {
         "10": false,
         "25": false,
@@ -122,19 +2335,239 @@
       }
     },
     {
-      "case": "single-L2048-D16",
-      "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.013218508800000084,
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B8192-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.75,
       "exceeds_planning_noise_bands": {
         "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B2048-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.75,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B2048-fifo-q1.5e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.75,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B2048-fifo-q3.15e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.75,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B2048-round_robin_512-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.11933363558328208,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": false
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B8192-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.4,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B2048-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.4,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B2048-fifo-q1.5e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.4,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B2048-fifo-q3.15e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.4,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B2048-round_robin_512-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.1250555372136648,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": false
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B8192-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3500000000000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3500000000000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q1.5e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3500000000000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q3.15e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3500000000000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-round_robin_512-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": -0.018366881844084304,
+      "exceeds_planning_noise_bands": {
+        "10": false,
         "25": false,
         "50": false
       }
     },
     {
-      "case": "single-L4096-D16",
-      "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.05286113279999993,
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B8192-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.75,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -142,9 +2575,14 @@
       }
     },
     {
-      "case": "single-L7168-D16",
-      "split": "calibration",
-      "median_M2_minus_M0_ttft_s": 0.16187028479999999,
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B2048-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.75,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -152,9 +2590,14 @@
       }
     },
     {
-      "case": "composition-uniform-D16",
-      "split": "calibration",
-      "median_M2_minus_M0_ttft_s": 0.14411330639999953,
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B2048-fifo-q1.5e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.75,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -162,9 +2605,14 @@
       }
     },
     {
-      "case": "composition-mixed-D16",
-      "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.09532992735000001,
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B2048-fifo-q3.15e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.75,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -172,9 +2620,29 @@
       }
     },
     {
-      "case": "composition-reverse-D16",
-      "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.3295559609999994,
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        800
+      ],
+      "scenario": "B2048-round_robin_512-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.08666882257727271,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": false
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B8192-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3999999999999999,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -182,9 +2650,14 @@
       }
     },
     {
-      "case": "sentinel-four-at50-D16",
-      "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.17032291289999946,
+      "backgrounds": 16,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B2048-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3999999999999999,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -192,9 +2665,14 @@
       }
     },
     {
-      "case": "sentinel-four-at400-D16",
-      "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.17032291289999946,
+      "backgrounds": 16,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B2048-fifo-q1.5e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3999999999999999,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -202,9 +2680,14 @@
       }
     },
     {
-      "case": "sentinel-four-at800-D16",
-      "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.17032291289999946,
+      "backgrounds": 16,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B2048-fifo-q3.15e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3999999999999999,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
@@ -212,16 +2695,235 @@
       }
     },
     {
-      "case": "sentinel-one-at200-D16",
-      "split": "held_case",
-      "median_M2_minus_M0_ttft_s": 0.05368849919999996,
+      "backgrounds": 16,
+      "offsets_ms": [
+        400,
+        800
+      ],
+      "scenario": "B2048-round_robin_512-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.10503570442135701,
       "exceeds_planning_noise_bands": {
         "10": true,
         "25": true,
-        "50": true
+        "50": false
       }
     }
   ],
+  "eligibility_rule": "Freeze calibrated candidate and calibration-only jitter before held scoring; expected candidate-baseline abs delta >max(3*jitter,25ms); at least4/8 eligible; >=ceil(.75*n) strict wins; zero eligible is inconclusive",
+  "primary_contrasts": [
+    {
+      "id": "single-L7168-D0|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.07708108799999996
+    },
+    {
+      "id": "single-L7168-D0|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.16187028479999999
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.0031487999999999933
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q1.5e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.0031487999999999933
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q1.5e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.08177979599999996
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q1.5e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.1573109760000001
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.00661247999999999
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q3.15e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.00661247999999999
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q3.15e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.17173757160000003
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q3.15e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.3303530496000001
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.078655488
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q1.5e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.15729870600000007
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q1.5e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.15729870600000007
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q1.5e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.1573109760000002
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.1651765248
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q3.15e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.3303272826
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q3.15e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.3303272826
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q3.15e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.3303530496
+    },
+    {
+      "id": "sentinel-four-at50-D0|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.633518029724252
+    },
+    {
+      "id": "sentinel-four-at400-D0|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.2777961280938692
+    },
+    {
+      "id": "sentinel-one-at200-D0|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.1638954541364589
+    },
+    {
+      "id": "single-L7168-D16|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.07708108799999991
+    },
+    {
+      "id": "single-L7168-D16|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.16187028479999999
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.0031000080000000985
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q1.5e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.00924216000000011
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q1.5e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.08154824700000018
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q1.5e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.15731097600000066
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.0065100168000000735
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q3.15e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.019408536000000032
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q3.15e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.1712513187
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q3.15e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.3303530496000002
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.07846492799999982
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q1.5e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.15693140999999966
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q1.5e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.15693140999999966
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q1.5e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.15731097599999955
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.16477634880000003
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q3.15e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.3295559609999994
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q3.15e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.3295559609999994
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q3.15e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.33035304959999956
+    },
+    {
+      "id": "sentinel-four-at50-D16|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.6661828427302614
+    },
+    {
+      "id": "sentinel-four-at400-D16|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.297815960886177
+    },
+    {
+      "id": "sentinel-one-at200-D16|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.19028532127240227
+    }
+  ],
+  "resolution_rule": "Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.",
   "observed_microbenchmark_noise_available": false,
   "calibration_chunk_coverage": {
     "q_min": 2.0,

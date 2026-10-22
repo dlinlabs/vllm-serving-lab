@@ -19,7 +19,7 @@ def test_quadratic_is_not_recharged_for_entire_prompt_each_step():
     assert b['foreground']['r']['first_s']-a['foreground']['r']['first_s']==pytest.approx(3.15e-9*(7168**2+7168))
 
 
-def test_backgrounds_have_512_outputs_and_drain_after_barrier():
+def test_backgrounds_have_256_outputs_and_drain_after_barrier():
     r=simulate([req(1024,128)],2048,backgrounds=16)
     assert r['release_s']>0 and r['wall_s']>r['release_s']+1
     assert r['foreground']['r']['first_s']<r['wall_s']-r['release_s']
@@ -50,7 +50,7 @@ def test_decode_priority_respects_token_budget_and_background_output_length():
     assert all(s['decode']+s['prefill']<=2048 for s in steps)
     assert any(s['decode']>=16 and s['prefill']>0 for s in steps)
     assert any(s['decode_context']>=16*1024 for s in steps)
-    assert len(steps)>=512
+    assert len(steps)>=256
 
 
 def test_revised_plan_structure_splits_and_budget(tmp_path):
@@ -110,3 +110,107 @@ def test_itl_tail_counts_only_declared_bucket_increments(tmp_path):
     (tmp_path/'engine_observations.jsonl').write_text('\n'.join(map(json.dumps,rows)))
     r=itl_tail(tmp_path)
     assert (r['count'],r['gap_100_150ms'],r['gap_150_200ms'],r['gap_above200ms'])==(125,20,5,0)
+
+
+@pytest.mark.parametrize('budget,policy,k',[(8192,'fifo',0.),(2048,'fifo',0.),(2048,'fifo',1.5e-9),(2048,'fifo',3.15e-9),(2048,'round_robin_512',0.)])
+def test_shortened_background_preserves_all_foreground_service(budget,policy,k):
+    from scripts.build_prefill_design import cases
+    for c in cases():
+        a=[];b=[]
+        before=simulate(requests_for(c),budget,backgrounds=c['background_decoders'],background_output=512,policy=policy,quadratic=k,steps_out=a)
+        after=simulate(requests_for(c),budget,backgrounds=c['background_decoders'],background_output=256,policy=policy,quadratic=k,steps_out=b)
+        assert before['foreground']==after['foreground']
+        end=max(r['first_s'] for r in before['foreground'].values())+before['release_s']
+        final_prefill=next(i for i,s in enumerate(a) if abs(s['end']-end)<1e-8)
+        assert a[:final_prefill+128]==b[:final_prefill+128]
+        assert after['wall_s']<=before['wall_s']
+
+
+def test_itl_counts_token_gaps_not_first_token_and_filters_right_endpoint():
+    total=simulate([req(1024,4)],2048,itl_window=(0,100))
+    step=COEF[0]+COEF[1]
+    assert total['itl']['count']==3
+    assert total['itl']['max_gap_s']==pytest.approx(step)
+    first=total['foreground']['r']['first_s']
+    part=simulate([req(1024,4)],2048,itl_window=(first+step+.0001,first+2*step+.0001))
+    assert part['itl']['count']==1
+    assert simulate([req(1024)],2048,itl_window=(0,100))['itl']['count']==0
+
+
+def test_sentinel_discrimination_uses_actual_target_and_flags_policy_tie(tmp_path):
+    import json
+    from scripts.build_prefill_design import build
+    build(tmp_path/'plan')
+    d=json.loads((tmp_path/'plan/discrimination.json').read_text())
+    cells={c['case']:c for c in d['cases']}
+    def rr(offset):
+        return next(x['delta_s'] for x in cells[f'sentinel-four-at{offset}-D0']['contrasts'] if x['scenario']=='B2048-round_robin_512-q0.0')
+    assert abs(rr(50))>.6 and abs(rr(800))<.005
+    assert cells['sentinel-four-at800-D0']['policy_role'].startswith('negative_control')
+    assert all(x['request_id']=='sentinel' for x in cells['sentinel-four-at50-D0']['contrasts'])
+    assert any(x['scenario']=='B2048-fifo-q1.5e-09' for x in cells['single-L2048-D0']['contrasts'])
+    assert cells['single-L2048-D0']['nonlinear_role']=='low_signal_validation_only'
+    assert len(d['offset_contrasts'])==30
+    assert len({x['id'] for x in d['primary_contrasts']})==42
+    assert sum(x['hypothesis']=='H3' for x in d['primary_contrasts'])==6
+
+
+@pytest.mark.parametrize('window',[(1,0),(0,float('inf'))])
+def test_invalid_itl_window_rejected(window):
+    with pytest.raises(ValueError):simulate([req(1)],2048,itl_window=window)
+
+
+
+def test_eligibility_cannot_count_ties_or_pass_empty_opportunities():
+    from prefill_design import contrast_eligibility
+    baseline={str(i):.2 for i in range(8)}
+    equal=contrast_eligibility(baseline,baseline,.01)
+    assert equal['eligible_cells']==[] and not equal['comparison_evaluable'] and equal['strict_wins_required'] is None
+    candidate={k:v+(.05 if int(k)<4 else .02) for k,v in baseline.items()}
+    result=contrast_eligibility(candidate,baseline,.01)
+    assert result['eligible_cells']==['0','1','2','3'] and result['strict_wins_required']==3
+    assert result['no_regression_cells']==sorted(baseline)
+    assert not contrast_eligibility(candidate,baseline,.1)['comparison_evaluable']
+
+
+@pytest.mark.parametrize('jitter',[-1,float('nan'),float('inf')])
+def test_eligibility_rejects_bad_noise(jitter):
+    from prefill_design import contrast_eligibility
+    with pytest.raises(ValueError):contrast_eligibility({str(i):.2 for i in range(8)},{str(i):.2 for i in range(8)},jitter)
+
+
+def test_long_prefill_produces_decode_tail_only_in_large_budget_scenario():
+    requests=[req(1024,128,rid='decode'),req(7168,128,.1,'long')]
+    large=simulate(requests,8192,itl_window=(0,10))['itl']
+    small=simulate(requests,2048,itl_window=(0,10))['itl']
+    assert large['gap_above200ms']>0 and small['gap_above200ms']==0
+    assert large['count']==small['count']==254
+
+
+def test_transfer_selects_scheduled_cohort_preserves_acceptance_delay_and_outputs(tmp_path,monkeypatch):
+    import json
+    from scripts import check_prefill_itl as itl
+    table=dict(request_id=['lead','score','outside','reject'],trace_id=['a','b','c','d'],
+        admitted=[True,True,True,False],sched=[40.,60.,120.,70.],acc=[40.02,60.03,120.01,float('nan')])
+    monkeypatch.setattr(itl.lf,'load_capture_compatible',lambda _: ({},table,0))
+    (tmp_path/'trace.json').write_text(json.dumps(dict(requests=[dict(trace_id=k,input_tokens=100+i) for i,k in enumerate('abcd')])))
+    (tmp_path/'client.json').write_text(json.dumps(dict(requests=[dict(workload='trace',request_id=k,success=True,output_tokens=10+i) for i,k in enumerate(table['request_id'])])))
+    actual=itl.accepted_requests(tmp_path,replay_start=40,replay_end=120)
+    assert [r['id'] for r in actual]==['lead','score']
+    assert [r['at'] for r in actual]==pytest.approx([.02,20.03])
+    assert [r['output'] for r in actual]==[10,11]
+    assert all(r['output']==128 for r in itl.accepted_requests(tmp_path,replay_start=40,replay_end=120,forced_output=128))
+
+
+
+def test_committed_design_metadata_and_generator_outputs_are_current(tmp_path):
+    import json,hashlib
+    from pathlib import Path
+    from scripts.build_prefill_design import build,ROOT
+    build(tmp_path/'fresh')
+    for name in ('cases','order','predictions','discrimination','budget'):
+        assert (tmp_path/f'fresh/{name}.json').read_bytes()==(ROOT/f'experiments/prefill-service-v1.{name}.json').read_bytes()
+    design=json.loads((ROOT/'experiments/prefill-service-v1.design.json').read_text())
+    assert design['revision']==3 and design['workload']['background_output_tokens']==256
+    assert design['collection']['transfer_seconds']==160
+    for row in design['files'].values():assert hashlib.sha256((ROOT/row['path']).read_bytes()).hexdigest()==row['sha256']

@@ -1,8 +1,8 @@
 {
   "role": "preregistered hypothetical CPU predictions; not measured GPU results",
   "source_sha256": {
-    "prefill_design.py": "25f9138116a8fdfed48c3358a15acec48dd235391fed468dd810d60f3e99024b",
-    "scripts/build_prefill_design.py": "a4259cf0bbcc9ab24a5132655fcc616263e68fbfbff20f0e58141848f0c29ef5",
+    "prefill_design.py": "50dea063f646d88ad6fa246b0384a5635dbee6f7b67765a11f17207dde9f3462",
+    "scripts/build_prefill_design.py": "044a07ecdba54b5628450e0cc09f2a04f12870a20cb15185df606754088568eb",
     "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e",
     "evaluate_low_cap_frozen.py": "0bf919d910f23480db3cc7b3069ac9f12e42f5d67e99c62ce70ceb490842ead7"
   },
@@ -11,8 +11,8 @@
     0.0003168517008371403,
     5.341461305169013e-05
   ],
-  "legacy_adapter": "All D16 backgrounds already decoding with511 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.",
-  "quadratic_coefficient_role": "3.15e-9 is an unvalidated sensitivity per full L^2, applied incrementally as2*k*attention_pairs",
+  "legacy_adapter": "All D16 backgrounds already decoding with255 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.",
+  "quadratic_coefficient_role": "1.5e-9 and3.15e-9 are unvalidated sensitivities per full L^2, not fitted bounds; applied incrementally as2*k*attention_pairs",
   "predictions": [
     {
       "case": "single-L1024-D0",
@@ -29,6 +29,8 @@
               "prefill_complete_s": 0.06387740344519685
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.2700842088453197,
           "release_s": 0.0,
           "steps": 128,
@@ -46,7 +48,28 @@
               "prefill_complete_s": 0.06387740344519685
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.2700842088453197,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06545180344519685,
+              "ttft_s": 0.06545180344519685,
+              "prefill_complete_s": 0.06545180344519685
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.2716586088453197,
           "release_s": 0.0,
           "steps": 128,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -63,6 +86,8 @@
               "prefill_complete_s": 0.06718364344519685
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.2733904488453196,
           "release_s": 0.0,
           "steps": 128,
@@ -80,6 +105,8 @@
               "prefill_complete_s": 0.07305824312546301
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.2792650485255859,
           "release_s": 0.0,
           "steps": 129,
@@ -118,6 +145,8 @@
               "prefill_complete_s": 0.11857396721012754
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.3247807726102505,
           "release_s": 0.0,
           "steps": 128,
@@ -135,7 +164,28 @@
               "prefill_complete_s": 0.11857396721012754
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.3247807726102505,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12486849521012754,
+              "ttft_s": 0.12486849521012754,
+              "prefill_complete_s": 0.12486849521012754
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.3310753006102505,
           "release_s": 0.0,
           "steps": 128,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -152,6 +202,8 @@
               "prefill_complete_s": 0.13179247601012756
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.3379992814102506,
           "release_s": 0.0,
           "steps": 128,
@@ -169,6 +221,8 @@
               "prefill_complete_s": 0.14611648625092602
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.352323291651049,
           "release_s": 0.0,
           "steps": 131,
@@ -207,6 +261,8 @@
               "prefill_complete_s": 0.22796709473998894
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.4341739001401124,
           "release_s": 0.0,
           "steps": 128,
@@ -224,7 +280,28 @@
               "prefill_complete_s": 0.23714793442025509
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.4433547398203785,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2623199024202551,
+              "ttft_s": 0.2623199024202551,
+              "prefill_complete_s": 0.2623199024202551
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.4685267078203785,
           "release_s": 0.0,
           "steps": 129,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -241,6 +318,8 @@
               "prefill_complete_s": 0.29000906722025516
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.4962158726203787,
           "release_s": 0.0,
           "steps": 129,
@@ -258,6 +337,8 @@
               "prefill_complete_s": 0.2922329725018521
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.4984397779019758,
           "release_s": 0.0,
           "steps": 135,
@@ -296,6 +377,8 @@
               "prefill_complete_s": 0.392056786034781
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.5982635914349053,
           "release_s": 0.0,
           "steps": 128,
@@ -313,7 +396,28 @@
               "prefill_complete_s": 0.4195993050755795
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.625806110475704,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4966803930755795,
+              "ttft_s": 0.4966803930755795,
+              "prefill_complete_s": 0.4966803930755795
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.7028871984757044,
           "release_s": 0.0,
           "steps": 131,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -330,6 +434,8 @@
               "prefill_complete_s": 0.5814695898755795
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.7876763952757044,
           "release_s": 0.0,
           "steps": 131,
@@ -347,6 +453,8 @@
               "prefill_complete_s": 0.5114077018782412
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 1.7176145072783662,
           "release_s": 0.0,
           "steps": 141,
@@ -400,6 +508,8 @@
               "prefill_complete_s": 0.9042717977838752
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.22961484269875,
           "release_s": 0.0,
           "steps": 130,
@@ -432,7 +542,43 @@
               "prefill_complete_s": 0.9618916494721693
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.2846998807803462,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2623199024202551,
+              "ttft_s": 0.2623199024202551,
+              "prefill_complete_s": 0.2623199024202551
+            },
+            "foreground-1": {
+              "first_s": 0.650280188313994,
+              "ttft_s": 0.650280188313994,
+              "prefill_complete_s": 0.650280188313994
+            },
+            "foreground-2": {
+              "first_s": 0.9136293170853909,
+              "ttft_s": 0.9136293170853909,
+              "prefill_complete_s": 0.9136293170853909
+            },
+            "foreground-3": {
+              "first_s": 1.0625795214721694,
+              "ttft_s": 1.0625795214721694,
+              "prefill_complete_s": 1.0625795214721694
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.3853877527803458,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -464,6 +610,8 @@
               "prefill_complete_s": 1.1733361806721696
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.496144411980346,
           "release_s": 0.0,
           "steps": 136,
@@ -496,6 +644,8 @@
               "prefill_complete_s": 0.9485917376810206
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.2755190411000807,
           "release_s": 0.0,
           "steps": 135,
@@ -579,6 +729,8 @@
               "prefill_complete_s": 0.9042717977838752
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.22961484269875,
           "release_s": 0.0,
           "steps": 130,
@@ -611,7 +763,43 @@
               "prefill_complete_s": 0.9641096113780293
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.284699880780346,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12172276721012754,
+              "ttft_s": 0.12172276721012754,
+              "prefill_complete_s": 0.12172276721012754
+            },
+            "foreground-1": {
+              "first_s": 0.12172276721012754,
+              "ttft_s": 0.12172276721012754,
+              "prefill_complete_s": 0.12172276721012754
+            },
+            "foreground-2": {
+              "first_s": 0.6767571287529214,
+              "ttft_s": 0.6767571287529214,
+              "prefill_complete_s": 0.6767571287529214
+            },
+            "foreground-3": {
+              "first_s": 1.1214205873780294,
+              "ttft_s": 1.1214205873780294,
+              "prefill_complete_s": 1.1214205873780294
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4420108567803456,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -643,6 +831,8 @@
               "prefill_complete_s": 1.2944626609780294
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.6150529303803456,
           "release_s": 0.0,
           "steps": 136,
@@ -675,6 +865,8 @@
               "prefill_complete_s": 1.0112812165827085
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.330604079181676,
           "release_s": 0.0,
           "steps": 141,
@@ -758,6 +950,8 @@
               "prefill_complete_s": 0.9039549460830381
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.22961484269875,
           "release_s": 0.0,
           "steps": 130,
@@ -790,7 +984,43 @@
               "prefill_complete_s": 0.9599905392671466
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.2846998807803462,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5529513568405102,
+              "ttft_s": 0.5529513568405102,
+              "prefill_complete_s": 0.5529513568405102
+            },
+            "foreground-1": {
+              "first_s": 1.1069441920321623,
+              "ttft_s": 1.1069441920321623,
+              "prefill_complete_s": 1.1069441920321623
+            },
+            "foreground-2": {
+              "first_s": 1.1069441920321623,
+              "ttft_s": 1.1069441920321623,
+              "prefill_complete_s": 1.1069441920321623
+            },
+            "foreground-3": {
+              "first_s": 1.1173015152671468,
+              "ttft_s": 1.1173015152671468,
+              "prefill_complete_s": 1.1173015152671468
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4420108567803465,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -822,6 +1052,8 @@
               "prefill_complete_s": 1.2903435888671466
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.615052930380346,
           "release_s": 0.0,
           "steps": 136,
@@ -854,6 +1086,8 @@
               "prefill_complete_s": 0.23714793442025509
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.330604079181676,
           "release_s": 0.0,
           "steps": 141,
@@ -942,6 +1176,8 @@
               "prefill_complete_s": 0.9316200796663405
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.297203290587536,
           "release_s": 0.0,
           "steps": 130,
@@ -979,7 +1215,48 @@
               "prefill_complete_s": 0.9892399313546346
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.352288328669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2623199024202551,
+              "ttft_s": 0.2623199024202551,
+              "prefill_complete_s": 0.2623199024202551
+            },
+            "foreground-1": {
+              "first_s": 0.650280188313994,
+              "ttft_s": 0.650280188313994,
+              "prefill_complete_s": 0.650280188313994
+            },
+            "foreground-2": {
+              "first_s": 0.9136293170853909,
+              "ttft_s": 0.9136293170853909,
+              "prefill_complete_s": 0.9136293170853909
+            },
+            "foreground-3": {
+              "first_s": 1.090321787354635,
+              "ttft_s": 1.090321787354635,
+              "prefill_complete_s": 1.090321787354635
+            },
+            "sentinel": {
+              "first_s": 1.090321787354635,
+              "ttft_s": 1.0403217873546349,
+              "prefill_complete_s": 1.090321787354635
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4533701846691325,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -1016,6 +1293,8 @@
               "prefill_complete_s": 1.2015118289546352
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.5645602262691325,
           "release_s": 0.0,
           "steps": 136,
@@ -1053,6 +1332,8 @@
               "prefill_complete_s": 0.35572190163038264
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.3522883286691325,
           "release_s": 0.0,
           "steps": 136,
@@ -1151,6 +1432,8 @@
               "prefill_complete_s": 0.9316200796663405
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.297203290587536,
           "release_s": 0.0,
           "steps": 130,
@@ -1188,7 +1471,48 @@
               "prefill_complete_s": 0.9892399313546346
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.352288328669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2623199024202551,
+              "ttft_s": 0.2623199024202551,
+              "prefill_complete_s": 0.2623199024202551
+            },
+            "foreground-1": {
+              "first_s": 0.650280188313994,
+              "ttft_s": 0.650280188313994,
+              "prefill_complete_s": 0.650280188313994
+            },
+            "foreground-2": {
+              "first_s": 0.9136293170853909,
+              "ttft_s": 0.9136293170853909,
+              "prefill_complete_s": 0.9136293170853909
+            },
+            "foreground-3": {
+              "first_s": 1.090321787354635,
+              "ttft_s": 1.090321787354635,
+              "prefill_complete_s": 1.090321787354635
+            },
+            "sentinel": {
+              "first_s": 1.090321787354635,
+              "ttft_s": 0.6903217873546349,
+              "prefill_complete_s": 1.090321787354635
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4533701846691325,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -1225,6 +1549,8 @@
               "prefill_complete_s": 1.2015118289546352
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.5645602262691325,
           "release_s": 0.0,
           "steps": 136,
@@ -1262,6 +1588,8 @@
               "prefill_complete_s": 0.7114438032607654
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.3522883286691325,
           "release_s": 0.0,
           "steps": 136,
@@ -1360,6 +1688,8 @@
               "prefill_complete_s": 0.9316200796663405
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.297203290587536,
           "release_s": 0.0,
           "steps": 130,
@@ -1397,7 +1727,48 @@
               "prefill_complete_s": 0.9892399313546346
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.352288328669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2623199024202551,
+              "ttft_s": 0.2623199024202551,
+              "prefill_complete_s": 0.2623199024202551
+            },
+            "foreground-1": {
+              "first_s": 0.650280188313994,
+              "ttft_s": 0.650280188313994,
+              "prefill_complete_s": 0.650280188313994
+            },
+            "foreground-2": {
+              "first_s": 0.9136293170853909,
+              "ttft_s": 0.9136293170853909,
+              "prefill_complete_s": 0.9136293170853909
+            },
+            "foreground-3": {
+              "first_s": 1.090321787354635,
+              "ttft_s": 1.090321787354635,
+              "prefill_complete_s": 1.090321787354635
+            },
+            "sentinel": {
+              "first_s": 1.090321787354635,
+              "ttft_s": 0.2903217873546349,
+              "prefill_complete_s": 1.090321787354635
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4533701846691325,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -1434,6 +1805,8 @@
               "prefill_complete_s": 1.2015118289546352
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.5645602262691325,
           "release_s": 0.0,
           "steps": 136,
@@ -1471,6 +1844,8 @@
               "prefill_complete_s": 0.9863882660471006
             }
           },
+          "itl": null,
+          "background_output": 256,
           "wall_s": 2.3522883286691325,
           "release_s": 0.0,
           "steps": 136,
@@ -1544,17 +1919,19 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.22796709473998894,
-              "ttft_s": 0.22796709473998894,
-              "prefill_complete_s": 0.22796709473998894
+              "first_s": 0.392056786034781,
+              "ttft_s": 0.392056786034781,
+              "prefill_complete_s": 0.392056786034781
             },
             "sentinel": {
-              "first_s": 0.2648130680035576,
-              "ttft_s": 0.06481306800355757,
-              "prefill_complete_s": 0.2648130680035576
+              "first_s": 0.42890275929834965,
+              "ttft_s": 0.22890275929834963,
+              "prefill_complete_s": 0.42890275929834965
             }
           },
-          "wall_s": 1.5109431877091593,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.6750328790039521,
           "release_s": 0.0,
           "steps": 129,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -1566,19 +1943,45 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.23714793442025509,
-              "ttft_s": 0.23714793442025509,
-              "prefill_complete_s": 0.23714793442025509
+              "first_s": 0.4469475869580448,
+              "ttft_s": 0.4469475869580448,
+              "prefill_complete_s": 0.4469475869580448
             },
             "sentinel": {
-              "first_s": 0.27399390768382376,
-              "ttft_s": 0.07399390768382375,
-              "prefill_complete_s": 0.27399390768382376
+              "first_s": 0.4469475869580448,
+              "ttft_s": 0.2469475869580448,
+              "prefill_complete_s": 0.4469475869580448
             }
           },
-          "wall_s": 1.5201240273894256,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.6933945583644847,
           "release_s": 0.0,
-          "steps": 130,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5244226589580447,
+              "ttft_s": 0.5244226589580447,
+              "prefill_complete_s": 0.5244226589580447
+            },
+            "sentinel": {
+              "first_s": 0.5244226589580447,
+              "ttft_s": 0.32442265895804473,
+              "prefill_complete_s": 0.5244226589580447
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.7708696303644853,
+          "release_s": 0.0,
+          "steps": 131,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -1588,19 +1991,21 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.29000906722025516,
-              "ttft_s": 0.29000906722025516,
-              "prefill_complete_s": 0.29000906722025516
+              "first_s": 0.6096452381580449,
+              "ttft_s": 0.6096452381580449,
+              "prefill_complete_s": 0.6096452381580449
             },
             "sentinel": {
-              "first_s": 0.3276824068838238,
-              "ttft_s": 0.12768240688382376,
-              "prefill_complete_s": 0.3276824068838238
+              "first_s": 0.6096452381580449,
+              "ttft_s": 0.40964523815804493,
+              "prefill_complete_s": 0.6096452381580449
             }
           },
-          "wall_s": 1.5738125265894258,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.8560922095644865,
           "release_s": 0.0,
-          "steps": 130,
+          "steps": 131,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -1610,9 +2015,9 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.31989810608515457,
-              "ttft_s": 0.31989810608515457,
-              "prefill_complete_s": 0.31989810608515457
+              "first_s": 0.5409739456665664,
+              "ttft_s": 0.5409739456665664,
+              "prefill_complete_s": 0.5409739456665664
             },
             "sentinel": {
               "first_s": 0.2830521328215859,
@@ -1620,35 +2025,37 @@
               "prefill_complete_s": 0.2830521328215859
             }
           },
-          "wall_s": 1.5660282257907565,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.7852029551671469,
           "release_s": 0.0,
-          "steps": 135,
+          "steps": 141,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
       "frozen_barrier_predictions": {
         "8192": {
           "foreground-0": {
-            "raw_engine_first_s": 0.22796709473998894,
-            "raw_ttft_s": 0.22796709473998894,
-            "old_empirical_corrected_ttft_s": 0.22110112779400462
+            "raw_engine_first_s": 0.392056786034781,
+            "raw_ttft_s": 0.392056786034781,
+            "old_empirical_corrected_ttft_s": 0.3851908190887967
           },
           "sentinel": {
-            "raw_engine_first_s": 0.2648130680035576,
-            "raw_ttft_s": 0.06481306800355757,
-            "old_empirical_corrected_ttft_s": 0.05794710105757326
+            "raw_engine_first_s": 0.42890275929834965,
+            "raw_ttft_s": 0.22890275929834963,
+            "old_empirical_corrected_ttft_s": 0.22203679235236531
           }
         },
         "2048": {
           "foreground-0": {
-            "raw_engine_first_s": 0.23714793442025509,
-            "raw_ttft_s": 0.23714793442025509,
-            "old_empirical_corrected_ttft_s": 0.23028196747427077
+            "raw_engine_first_s": 0.4469475869580448,
+            "raw_ttft_s": 0.4469475869580448,
+            "old_empirical_corrected_ttft_s": 0.4400816200120605
           },
           "sentinel": {
-            "raw_engine_first_s": 0.27399390768382376,
-            "raw_ttft_s": 0.07399390768382375,
-            "old_empirical_corrected_ttft_s": 0.06712794073783944
+            "raw_engine_first_s": 0.4469475869580448,
+            "raw_ttft_s": 0.2469475869580448,
+            "old_empirical_corrected_ttft_s": 0.2400816200120605
           }
         }
       }
@@ -1668,9 +2075,11 @@
               "prefill_complete_s": 0.06894703065859109
             }
           },
-          "wall_s": 8.279612851711342,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.6314933269343115,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -1685,9 +2094,30 @@
               "prefill_complete_s": 0.06894703065859109
             }
           },
-          "wall_s": 8.334697889792936,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.686578365015909,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.07052143065859107,
+              "ttft_s": 0.07052143065859107,
+              "prefill_complete_s": 0.07052143065859107
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.713343165015909,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -1702,9 +2132,11 @@
               "prefill_complete_s": 0.072253270658591
             }
           },
-          "wall_s": 8.390903969792936,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.742784445015909,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -1719,9 +2151,11 @@
               "prefill_complete_s": 0.08319749755225148
             }
           },
-          "wall_s": 8.334697889792936,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.68657836501591,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -1757,9 +2191,11 @@
               "prefill_complete_s": 0.12364359442352169
             }
           },
-          "wall_s": 8.334309415476271,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.686189890699242,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -1774,9 +2210,30 @@
               "prefill_complete_s": 0.1378940613171824
             }
           },
-          "wall_s": 8.389394453557868,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.7412749287808404,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.14418858931718237,
+              "ttft_s": 0.14418858931718237,
+              "prefill_complete_s": 0.14418858931718237
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.772759856780841,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -1791,9 +2248,11 @@
               "prefill_complete_s": 0.1511125701171825
             }
           },
-          "wall_s": 8.455512802357868,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.80739327758084,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -1808,9 +2267,11 @@
               "prefill_complete_s": 0.16639499510450306
             }
           },
-          "wall_s": 8.389394453557868,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.741274928780841,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -1846,9 +2307,11 @@
               "prefill_complete_s": 0.2330367219533831
             }
           },
-          "wall_s": 8.443702543006134,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.795583018229104,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -1863,9 +2326,30 @@
               "prefill_complete_s": 0.2615376557407041
             }
           },
-          "wall_s": 8.49878758108773,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.850668056310702,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2867096237407041,
+              "ttft_s": 0.2867096237407041,
+              "prefill_complete_s": 0.2867096237407041
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.901030424310702,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -1880,9 +2364,11 @@
               "prefill_complete_s": 0.314398788540704
             }
           },
-          "wall_s": 8.604548553887728,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.956429029110701,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -1897,9 +2383,11 @@
               "prefill_complete_s": 0.33278999020900624
             }
           },
-          "wall_s": 8.498787581087731,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.850668056310703,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -1935,9 +2423,11 @@
               "prefill_complete_s": 0.3971264132481751
             }
           },
-          "wall_s": 8.607792234300925,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.959672709523896,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -1952,9 +2442,30 @@
               "prefill_complete_s": 0.4398778139291568
             }
           },
-          "wall_s": 8.662877272382522,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.014757747605494,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5169589019291567,
+              "ttft_s": 0.5169589019291567,
+              "prefill_complete_s": 0.5169589019291567
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.117029235605494,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -1969,9 +2480,11 @@
               "prefill_complete_s": 0.6017480987291568
             }
           },
-          "wall_s": 8.877647397182521,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.229527872405494,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -1986,9 +2499,11 @@
               "prefill_complete_s": 0.582382482865761
             }
           },
-          "wall_s": 8.662877272382524,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.014757747605496,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -2039,9 +2554,11 @@
               "prefill_complete_s": 0.9191638277232208
             }
           },
-          "wall_s": 9.220781806204265,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.5726622814272355,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -2071,9 +2588,45 @@
               "prefill_complete_s": 1.0072014426918805
             }
           },
-          "wall_s": 9.27586684428586,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508833,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.39954184984408436,
+              "ttft_s": 0.39954184984408436,
+              "prefill_complete_s": 0.39954184984408436
+            },
+            "foreground-1": {
+              "first_s": 0.6706162962490445,
+              "ttft_s": 0.6706162962490445,
+              "prefill_complete_s": 0.6706162962490445
+            },
+            "foreground-2": {
+              "first_s": 0.9422094958295757,
+              "ttft_s": 0.9422094958295757,
+              "prefill_complete_s": 0.9422094958295757
+            },
+            "foreground-3": {
+              "first_s": 1.10788931469188,
+              "ttft_s": 1.10788931469188,
+              "prefill_complete_s": 1.10788931469188
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.753625591508834,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -2103,9 +2656,11 @@
               "prefill_complete_s": 1.2186459738918802
             }
           },
-          "wall_s": 9.540211215485861,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.892091690708835,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -2135,9 +2690,11 @@
               "prefill_complete_s": 1.0043497773843466
             }
           },
-          "wall_s": 9.275866844285861,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508835,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -2218,9 +2775,11 @@
               "prefill_complete_s": 0.9194806794240578
             }
           },
-          "wall_s": 9.220781806204265,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.572662281427235,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -2250,9 +2809,45 @@
               "prefill_complete_s": 1.0094194045977403
             }
           },
-          "wall_s": 9.27586684428586,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508833,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1258889686146949,
+              "ttft_s": 0.1258889686146949,
+              "prefill_complete_s": 0.1258889686146949
+            },
+            "foreground-1": {
+              "first_s": 0.25508351831717513,
+              "ttft_s": 0.25508351831717513,
+              "prefill_complete_s": 0.25508351831717513
+            },
+            "foreground-2": {
+              "first_s": 0.6973371096879721,
+              "ttft_s": 0.6973371096879721,
+              "prefill_complete_s": 0.6973371096879721
+            },
+            "foreground-3": {
+              "first_s": 1.166730380597741,
+              "ttft_s": 1.166730380597741,
+              "prefill_complete_s": 1.166730380597741
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.810248695508836,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -2282,9 +2877,11 @@
               "prefill_complete_s": 1.3397724541977405
             }
           },
-          "wall_s": 9.659119733885863,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 6.011000209108835,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -2314,9 +2911,11 @@
               "prefill_complete_s": 1.0974570195663982
             }
           },
-          "wall_s": 9.27586684428586,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508833,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -2397,9 +2996,11 @@
               "prefill_complete_s": 0.9191638277232208
             }
           },
-          "wall_s": 9.220781806204265,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.5726622814272355,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -2429,9 +3030,45 @@
               "prefill_complete_s": 1.0056171841876949
             }
           },
-          "wall_s": 9.275866844285861,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508834,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.569620770458779,
+              "ttft_s": 0.569620770458779,
+              "prefill_complete_s": 0.569620770458779
+            },
+            "foreground-1": {
+              "first_s": 1.1402968432686997,
+              "ttft_s": 1.1402968432686997,
+              "prefill_complete_s": 1.1402968432686997
+            },
+            "foreground-2": {
+              "first_s": 1.1402968432686997,
+              "ttft_s": 1.1402968432686997,
+              "prefill_complete_s": 1.1402968432686997
+            },
+            "foreground-3": {
+              "first_s": 1.1629281601876944,
+              "ttft_s": 1.1629281601876944,
+              "prefill_complete_s": 1.1629281601876944
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.810248695508835,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -2461,9 +3098,11 @@
               "prefill_complete_s": 1.3359702337876944
             }
           },
-          "wall_s": 9.659119733885863,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 6.011000209108835,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -2493,9 +3132,11 @@
               "prefill_complete_s": 0.31655107120647197
             }
           },
-          "wall_s": 9.27586684428586,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508832,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -2581,9 +3222,11 @@
               "prefill_complete_s": 0.9465121096056861
             }
           },
-          "wall_s": 9.288370254093,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.64025072931597,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -2618,9 +3261,50 @@
               "prefill_complete_s": 1.0345497245743458
             }
           },
-          "wall_s": 9.343455292174593,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397566,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.39954184984408436,
+              "ttft_s": 0.39954184984408436,
+              "prefill_complete_s": 0.39954184984408436
+            },
+            "foreground-1": {
+              "first_s": 0.6706162962490445,
+              "ttft_s": 0.6706162962490445,
+              "prefill_complete_s": 0.6706162962490445
+            },
+            "foreground-2": {
+              "first_s": 0.9422094958295757,
+              "ttft_s": 0.9422094958295757,
+              "prefill_complete_s": 0.9422094958295757
+            },
+            "foreground-3": {
+              "first_s": 1.1356315805743453,
+              "ttft_s": 1.1356315805743453,
+              "prefill_complete_s": 1.1356315805743453
+            },
+            "sentinel": {
+              "first_s": 1.1356315805743453,
+              "ttft_s": 1.0856315805743453,
+              "prefill_complete_s": 1.1356315805743453
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.8216080233975696,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -2655,9 +3339,11 @@
               "prefill_complete_s": 1.2468216221743458
             }
           },
-          "wall_s": 9.608627029774604,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.960507504997578,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -2692,9 +3378,11 @@
               "prefill_complete_s": 0.3683668818440843
             }
           },
-          "wall_s": 9.343455292174594,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397568,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -2790,9 +3478,11 @@
               "prefill_complete_s": 0.9465121096056861
             }
           },
-          "wall_s": 9.288370254093,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.64025072931597,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -2827,9 +3517,50 @@
               "prefill_complete_s": 1.0345497245743458
             }
           },
-          "wall_s": 9.343455292174593,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397566,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.39954184984408436,
+              "ttft_s": 0.39954184984408436,
+              "prefill_complete_s": 0.39954184984408436
+            },
+            "foreground-1": {
+              "first_s": 0.6706162962490445,
+              "ttft_s": 0.6706162962490445,
+              "prefill_complete_s": 0.6706162962490445
+            },
+            "foreground-2": {
+              "first_s": 0.9422094958295757,
+              "ttft_s": 0.9422094958295757,
+              "prefill_complete_s": 0.9422094958295757
+            },
+            "foreground-3": {
+              "first_s": 1.1356315805743453,
+              "ttft_s": 1.1356315805743453,
+              "prefill_complete_s": 1.1356315805743453
+            },
+            "sentinel": {
+              "first_s": 1.1356315805743453,
+              "ttft_s": 0.7356315805743452,
+              "prefill_complete_s": 1.1356315805743453
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.8216080233975696,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -2864,9 +3595,11 @@
               "prefill_complete_s": 1.2468216221743458
             }
           },
-          "wall_s": 9.608627029774604,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.960507504997578,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -2901,9 +3634,11 @@
               "prefill_complete_s": 0.7367337636881687
             }
           },
-          "wall_s": 9.343455292174593,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397566,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -2999,9 +3734,11 @@
               "prefill_complete_s": 0.9465121096056861
             }
           },
-          "wall_s": 9.288370254093,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.64025072931597,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -3036,9 +3773,50 @@
               "prefill_complete_s": 1.0345497245743458
             }
           },
-          "wall_s": 9.343455292174593,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397566,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.39954184984408436,
+              "ttft_s": 0.39954184984408436,
+              "prefill_complete_s": 0.39954184984408436
+            },
+            "foreground-1": {
+              "first_s": 0.6706162962490445,
+              "ttft_s": 0.6706162962490445,
+              "prefill_complete_s": 0.6706162962490445
+            },
+            "foreground-2": {
+              "first_s": 0.9422094958295757,
+              "ttft_s": 0.9422094958295757,
+              "prefill_complete_s": 0.9422094958295757
+            },
+            "foreground-3": {
+              "first_s": 1.1356315805743453,
+              "ttft_s": 1.1356315805743453,
+              "prefill_complete_s": 1.1356315805743453
+            },
+            "sentinel": {
+              "first_s": 1.1356315805743453,
+              "ttft_s": 0.3356315805743453,
+              "prefill_complete_s": 1.1356315805743453
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.8216080233975696,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -3073,9 +3851,11 @@
               "prefill_complete_s": 1.2468216221743458
             }
           },
-          "wall_s": 9.608627029774604,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.960507504997578,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -3110,9 +3890,11 @@
               "prefill_complete_s": 1.0316980592668115
             }
           },
-          "wall_s": 9.34345529217459,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397564,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -3183,19 +3965,21 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.2330367219533831,
-              "ttft_s": 0.2330367219533831,
-              "prefill_complete_s": 0.2330367219533831
+              "first_s": 0.3971264132481751,
+              "ttft_s": 0.3971264132481751,
+              "prefill_complete_s": 0.3971264132481751
             },
             "sentinel": {
-              "first_s": 0.27495232243034606,
-              "ttft_s": 0.07495232243034611,
-              "prefill_complete_s": 0.27495232243034606
+              "first_s": 0.43904201372513785,
+              "ttft_s": 0.2390420137251379,
+              "prefill_complete_s": 0.43904201372513785
             }
           },
-          "wall_s": 8.51129099089492,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.027261157412682,
           "release_s": 0.9099751283989439,
-          "steps": 514,
+          "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q0.0": {
@@ -3205,19 +3989,45 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.2888859376231696,
-              "ttft_s": 0.2888859376231696,
-              "prefill_complete_s": 0.2888859376231696
+              "first_s": 0.4672260958116221,
+              "ttft_s": 0.4672260958116221,
+              "prefill_complete_s": 0.4672260958116221
             },
             "sentinel": {
-              "first_s": 0.2888859376231696,
-              "ttft_s": 0.08888593762316965,
-              "prefill_complete_s": 0.2888859376231696
+              "first_s": 0.4672260958116221,
+              "ttft_s": 0.26722609581162216,
+              "prefill_complete_s": 0.4672260958116221
             }
           },
-          "wall_s": 8.566376028976515,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.082346195494281,
           "release_s": 0.9783679379157009,
-          "steps": 520,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.544701167811622,
+              "ttft_s": 0.544701167811622,
+              "prefill_complete_s": 0.544701167811622
+            },
+            "sentinel": {
+              "first_s": 0.544701167811622,
+              "ttft_s": 0.3447011678116221,
+              "prefill_complete_s": 0.544701167811622
+            }
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.1850116674942806,
+          "release_s": 1.003558337915701,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-fifo-q3.15e-09": {
@@ -3227,19 +4037,21 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.34257443682316957,
-              "ttft_s": 0.34257443682316957,
-              "prefill_complete_s": 0.34257443682316957
+              "first_s": 0.6299237470116221,
+              "ttft_s": 0.6299237470116221,
+              "prefill_complete_s": 0.6299237470116221
             },
             "sentinel": {
-              "first_s": 0.34257443682316957,
-              "ttft_s": 0.14257443682316961,
-              "prefill_complete_s": 0.34257443682316957
+              "first_s": 0.6299237470116221,
+              "ttft_s": 0.42992374701162217,
+              "prefill_complete_s": 0.6299237470116221
             }
           },
-          "wall_s": 8.672964368176515,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.29794368669428,
           "release_s": 1.0312677779157007,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         },
         "B2048-round_robin_512-q0.0": {
@@ -3249,9 +4061,9 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.36077197549314566,
-              "ttft_s": 0.36077197549314566,
-              "prefill_complete_s": 0.36077197549314566
+              "first_s": 0.6122655783549221,
+              "ttft_s": 0.6122655783549221,
+              "prefill_complete_s": 0.6122655783549221
             },
             "sentinel": {
               "first_s": 0.27694077453921995,
@@ -3259,35 +4071,37 @@
               "prefill_complete_s": 0.27694077453921995
             }
           },
-          "wall_s": 8.566376028976515,
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.082346195494281,
           "release_s": 0.9685455351897495,
-          "steps": 520,
+          "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
       "frozen_barrier_predictions": {
         "8192": {
           "foreground-0": {
-            "raw_engine_first_s": 0.23303672195338318,
-            "raw_ttft_s": 0.23303672195338318,
-            "old_empirical_corrected_ttft_s": 0.32331556515211013
+            "raw_engine_first_s": 0.3971264132481752,
+            "raw_ttft_s": 0.3971264132481752,
+            "old_empirical_corrected_ttft_s": 0.48740525644690214
           },
           "sentinel": {
-            "raw_engine_first_s": 0.27495232243034606,
-            "raw_ttft_s": 0.07495232243034605,
-            "old_empirical_corrected_ttft_s": 0.16523116562907297
+            "raw_engine_first_s": 0.4390420137251381,
+            "raw_ttft_s": 0.2390420137251381,
+            "old_empirical_corrected_ttft_s": 0.32932085692386504
           }
         },
         "2048": {
           "foreground-0": {
-            "raw_engine_first_s": 0.28888593762316933,
-            "raw_ttft_s": 0.28888593762316933,
-            "old_empirical_corrected_ttft_s": 0.37916478082189625
+            "raw_engine_first_s": 0.4672260958116219,
+            "raw_ttft_s": 0.4672260958116219,
+            "old_empirical_corrected_ttft_s": 0.5575049390103488
           },
           "sentinel": {
-            "raw_engine_first_s": 0.28888593762316933,
-            "raw_ttft_s": 0.08888593762316932,
-            "old_empirical_corrected_ttft_s": 0.17916478082189624
+            "raw_engine_first_s": 0.4672260958116219,
+            "raw_ttft_s": 0.2672260958116219,
+            "old_empirical_corrected_ttft_s": 0.3575049390103488
           }
         }
       }
