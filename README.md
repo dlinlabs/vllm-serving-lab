@@ -30,19 +30,18 @@ because vLLM's prompt counter advances when prefill completes. A super-linear te
 adds only 2–9% out of capture and is not identified per step. These are
 development associations, not causes.
 
-## Proposed next experiment: executed prefill work and timing
+## Proposed next experiment: chunk timing under realistic decode load
 
-[Draft design](experiments/prefill-service-v1.md) ·
-[Machine-readable scope](experiments/prefill-service-v1.design.json) ·
-[20 cases](experiments/prefill-service-v1.cases.json) ·
-[Fixed trial order](experiments/prefill-service-v1.order.json)
+[Revised draft](experiments/prefill-service-v1.md) ·
+[Cases/order/predictions](experiments/prefill-service-v1.design.json) ·
+[Completed2048 sensitivity](results/prefill-budget-sensitivity/summary.json)
 
-The proposal separates counter timing, actual scheduled chunks and nonlinear
-service cost using controlled single prompts, equal-total mixtures and short
-sentinel requests, with D0/D8 background decoding. Five randomized blocks give
-100 main trials, plus warmup and observer checks. **This is a design draft:**
-the version-specific collector, prompt manifests and acceptance must be completed
-before an executable protocol is frozen. No collection or MPC result is claimed.
+PR32 review changes the proposal to22 cells at D0/D16, calibration across1024–7168
+input lengths, backlog-offset sentinels and prefill-specific prediction targets.
+Frozen-parameter2048 sensitivity does not fix the cap32 bias (MAE0.742 versus0.729).
+The212-trial proposal includes an HTTP bridge, drift references and two60s real-trace
+slices, with a model-based budget of about1777s under a hard1800s active limit.
+**Collector/hooks are not implemented; the executable GPU protocol is not frozen.**
 
 ## State-aware model iteration on the 16/32 captures
 

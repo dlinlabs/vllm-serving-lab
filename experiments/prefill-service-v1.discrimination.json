@@ -1,0 +1,235 @@
+{
+  "role": "planning sensitivity, not estimated statistical power",
+  "cases": [
+    {
+      "case": "single-L1024-D0",
+      "split": "calibration",
+      "median_M2_minus_M0_ttft_s": 0.003306240000000002,
+      "exceeds_planning_noise_bands": {
+        "10": false,
+        "25": false,
+        "50": false
+      }
+    },
+    {
+      "case": "single-L2048-D0",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.013218508800000014,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": false,
+        "50": false
+      }
+    },
+    {
+      "case": "single-L4096-D0",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.05286113280000007,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "single-L7168-D0",
+      "split": "calibration",
+      "median_M2_minus_M0_ttft_s": 0.16187028479999999,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "composition-uniform-D0",
+      "split": "calibration",
+      "median_M2_minus_M0_ttft_s": 0.1453069044000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "composition-mixed-D0",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.0891750258,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "composition-reverse-D0",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.3303272826,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "sentinel-four-at50-D0",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.17171172270000012,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "sentinel-four-at400-D0",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.17171172270000012,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "sentinel-four-at800-D0",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.17171172270000012,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "sentinel-one-at200-D0",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.053274816000000044,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "single-L1024-D16",
+      "split": "calibration",
+      "median_M2_minus_M0_ttft_s": 0.003306239999999905,
+      "exceeds_planning_noise_bands": {
+        "10": false,
+        "25": false,
+        "50": false
+      }
+    },
+    {
+      "case": "single-L2048-D16",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.013218508800000084,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": false,
+        "50": false
+      }
+    },
+    {
+      "case": "single-L4096-D16",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.05286113279999993,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "single-L7168-D16",
+      "split": "calibration",
+      "median_M2_minus_M0_ttft_s": 0.16187028479999999,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "composition-uniform-D16",
+      "split": "calibration",
+      "median_M2_minus_M0_ttft_s": 0.14411330639999953,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "composition-mixed-D16",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.09532992735000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "composition-reverse-D16",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.3295559609999994,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "sentinel-four-at50-D16",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.17032291289999946,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "sentinel-four-at400-D16",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.17032291289999946,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "sentinel-four-at800-D16",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.17032291289999946,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "case": "sentinel-one-at200-D16",
+      "split": "held_case",
+      "median_M2_minus_M0_ttft_s": 0.05368849919999996,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    }
+  ],
+  "observed_microbenchmark_noise_available": false,
+  "calibration_chunk_coverage": {
+    "q_min": 2.0,
+    "q_max": 2048.0,
+    "l_min": 0.0,
+    "l_max": 6144.0,
+    "q_Z_rank": 2,
+    "q_Z_scaled_condition": 3.530767368043742
+  },
+  "gate": "Before main trials, compare declared contrasts with calibration-only observer noise; no held-case swaps. Stop unsupported precision claims rather than retune the matrix."
+}

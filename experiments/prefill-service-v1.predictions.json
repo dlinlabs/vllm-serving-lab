@@ -1,0 +1,3296 @@
+{
+  "role": "preregistered hypothetical CPU predictions; not measured GPU results",
+  "source_sha256": {
+    "prefill_design.py": "25f9138116a8fdfed48c3358a15acec48dd235391fed468dd810d60f3e99024b",
+    "scripts/build_prefill_design.py": "a4259cf0bbcc9ab24a5132655fcc616263e68fbfbff20f0e58141848f0c29ef5",
+    "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e",
+    "evaluate_low_cap_frozen.py": "0bf919d910f23480db3cc7b3069ac9f12e42f5d67e99c62ce70ceb490842ead7"
+  },
+  "frozen_coefficients": [
+    0.00918083968026616,
+    0.0003168517008371403,
+    5.341461305169013e-05
+  ],
+  "legacy_adapter": "All D16 backgrounds already decoding with511 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.",
+  "quadratic_coefficient_role": "3.15e-9 is an unvalidated sensitivity per full L^2, applied incrementally as2*k*attention_pairs",
+  "predictions": [
+    {
+      "case": "single-L1024-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06387740344519685,
+              "ttft_s": 0.06387740344519685,
+              "prefill_complete_s": 0.06387740344519685
+            }
+          },
+          "wall_s": 1.2700842088453197,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06387740344519685,
+              "ttft_s": 0.06387740344519685,
+              "prefill_complete_s": 0.06387740344519685
+            }
+          },
+          "wall_s": 1.2700842088453197,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06718364344519685,
+              "ttft_s": 0.06718364344519685,
+              "prefill_complete_s": 0.06718364344519685
+            }
+          },
+          "wall_s": 1.2733904488453196,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.07305824312546301,
+              "ttft_s": 0.07305824312546301,
+              "prefill_complete_s": 0.07305824312546301
+            }
+          },
+          "wall_s": 1.2792650485255859,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.06387740344519685,
+            "raw_ttft_s": 0.06387740344519685,
+            "old_empirical_corrected_ttft_s": 0.05701143649921254
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.06387740344519685,
+            "raw_ttft_s": 0.06387740344519685,
+            "old_empirical_corrected_ttft_s": 0.05701143649921254
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L2048-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754
+            }
+          },
+          "wall_s": 1.3247807726102505,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754
+            }
+          },
+          "wall_s": 1.3247807726102505,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.13179247601012756,
+              "ttft_s": 0.13179247601012756,
+              "prefill_complete_s": 0.13179247601012756
+            }
+          },
+          "wall_s": 1.3379992814102506,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.14611648625092602,
+              "ttft_s": 0.14611648625092602,
+              "prefill_complete_s": 0.14611648625092602
+            }
+          },
+          "wall_s": 1.352323291651049,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L4096-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.22796709473998894,
+              "ttft_s": 0.22796709473998894,
+              "prefill_complete_s": 0.22796709473998894
+            }
+          },
+          "wall_s": 1.4341739001401124,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            }
+          },
+          "wall_s": 1.4433547398203785,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516
+            }
+          },
+          "wall_s": 1.4962158726203787,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2922329725018521,
+              "ttft_s": 0.2922329725018521,
+              "prefill_complete_s": 0.2922329725018521
+            }
+          },
+          "wall_s": 1.4984397779019758,
+          "release_s": 0.0,
+          "steps": 135,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.22796709473998894,
+            "raw_ttft_s": 0.22796709473998894,
+            "old_empirical_corrected_ttft_s": 0.22110112779400462
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L7168-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.392056786034781,
+              "ttft_s": 0.392056786034781,
+              "prefill_complete_s": 0.392056786034781
+            }
+          },
+          "wall_s": 1.5982635914349053,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4195993050755795,
+              "ttft_s": 0.4195993050755795,
+              "prefill_complete_s": 0.4195993050755795
+            }
+          },
+          "wall_s": 1.625806110475704,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5814695898755795,
+              "ttft_s": 0.5814695898755795,
+              "prefill_complete_s": 0.5814695898755795
+            }
+          },
+          "wall_s": 1.7876763952757044,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5114077018782412,
+              "ttft_s": 0.5114077018782412,
+              "prefill_complete_s": 0.5114077018782412
+            }
+          },
+          "wall_s": 1.7176145072783662,
+          "release_s": 0.0,
+          "steps": 141,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.392056786034781,
+            "raw_ttft_s": 0.392056786034781,
+            "old_empirical_corrected_ttft_s": 0.3851908190887967
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4195993050755795,
+            "raw_ttft_s": 0.4195993050755795,
+            "old_empirical_corrected_ttft_s": 0.41273333812959523
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-uniform-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943
+            },
+            "foreground-3": {
+              "first_s": 0.9042717977838752,
+              "ttft_s": 0.9042717977838752,
+              "prefill_complete_s": 0.9042717977838752
+            }
+          },
+          "wall_s": 2.22961484269875,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            },
+            "foreground-1": {
+              "first_s": 0.5936601473139941,
+              "ttft_s": 0.5936601473139941,
+              "prefill_complete_s": 0.5936601473139941
+            },
+            "foreground-2": {
+              "first_s": 0.8318618300853909,
+              "ttft_s": 0.8318618300853909,
+              "prefill_complete_s": 0.8318618300853909
+            },
+            "foreground-3": {
+              "first_s": 0.9618916494721693,
+              "ttft_s": 0.9618916494721693,
+              "prefill_complete_s": 0.9618916494721693
+            }
+          },
+          "wall_s": 2.2846998807803462,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516
+            },
+            "foreground-1": {
+              "first_s": 0.7125622334139942,
+              "ttft_s": 0.7125622334139942,
+              "prefill_complete_s": 0.7125622334139942
+            },
+            "foreground-2": {
+              "first_s": 1.003573552785391,
+              "ttft_s": 1.003573552785391,
+              "prefill_complete_s": 1.003573552785391
+            },
+            "foreground-3": {
+              "first_s": 1.1733361806721696,
+              "ttft_s": 1.1733361806721696,
+              "prefill_complete_s": 1.1733361806721696
+            }
+          },
+          "wall_s": 2.496144411980346,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206
+            },
+            "foreground-1": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206
+            },
+            "foreground-2": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206
+            },
+            "foreground-3": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206
+            }
+          },
+          "wall_s": 2.2755190411000807,
+          "release_s": 0.0,
+          "steps": 135,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9042717977838752,
+            "raw_ttft_s": 0.9042717977838752,
+            "old_empirical_corrected_ttft_s": 0.8974058308378909
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.5936601473139941,
+            "raw_ttft_s": 0.5936601473139941,
+            "old_empirical_corrected_ttft_s": 0.5867941803680098
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8318618300853909,
+            "raw_ttft_s": 0.8318618300853909,
+            "old_empirical_corrected_ttft_s": 0.8249958631394066
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9618916494721693,
+            "raw_ttft_s": 0.9618916494721693,
+            "old_empirical_corrected_ttft_s": 0.955025682526185
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-mixed-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943
+            },
+            "foreground-3": {
+              "first_s": 0.9042717977838752,
+              "ttft_s": 0.9042717977838752,
+              "prefill_complete_s": 0.9042717977838752
+            }
+          },
+          "wall_s": 2.22961484269875,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754
+            },
+            "foreground-1": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754
+            },
+            "foreground-2": {
+              "first_s": 0.5949773327529214,
+              "ttft_s": 0.5949773327529214,
+              "prefill_complete_s": 0.5949773327529214
+            },
+            "foreground-3": {
+              "first_s": 0.9641096113780293,
+              "ttft_s": 0.9641096113780293,
+              "prefill_complete_s": 0.9641096113780293
+            }
+          },
+          "wall_s": 2.284699880780346,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12518644721012753,
+              "ttft_s": 0.12518644721012753,
+              "prefill_complete_s": 0.12518644721012753
+            },
+            "foreground-1": {
+              "first_s": 0.12518644721012753,
+              "ttft_s": 0.12518644721012753,
+              "prefill_complete_s": 0.12518644721012753
+            },
+            "foreground-2": {
+              "first_s": 0.7667149043529214,
+              "ttft_s": 0.7667149043529214,
+              "prefill_complete_s": 0.7667149043529214
+            },
+            "foreground-3": {
+              "first_s": 1.2944626609780294,
+              "ttft_s": 1.2944626609780294,
+              "prefill_complete_s": 1.2944626609780294
+            }
+          },
+          "wall_s": 2.6150529303803456,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            },
+            "foreground-1": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            },
+            "foreground-2": {
+              "first_s": 1.0112812165827085,
+              "ttft_s": 1.0112812165827085,
+              "prefill_complete_s": 1.0112812165827085
+            },
+            "foreground-3": {
+              "first_s": 1.0112812165827085,
+              "ttft_s": 1.0112812165827085,
+              "prefill_complete_s": 1.0112812165827085
+            }
+          },
+          "wall_s": 2.330604079181676,
+          "release_s": 0.0,
+          "steps": 141,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9042717977838752,
+            "raw_ttft_s": 0.9042717977838752,
+            "old_empirical_corrected_ttft_s": 0.8974058308378909
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.5949773327529214,
+            "raw_ttft_s": 0.5949773327529214,
+            "old_empirical_corrected_ttft_s": 0.5881113658069371
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9641096113780293,
+            "raw_ttft_s": 0.9641096113780293,
+            "old_empirical_corrected_ttft_s": 0.957243644432045
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-reverse-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-1": {
+              "first_s": 0.8937701366872088,
+              "ttft_s": 0.8937701366872088,
+              "prefill_complete_s": 0.8937701366872088
+            },
+            "foreground-2": {
+              "first_s": 0.8937701366872088,
+              "ttft_s": 0.8937701366872088,
+              "prefill_complete_s": 0.8937701366872088
+            },
+            "foreground-3": {
+              "first_s": 0.9039549460830381,
+              "ttft_s": 0.9039549460830381,
+              "prefill_complete_s": 0.9039549460830381
+            }
+          },
+          "wall_s": 2.22961484269875,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4742958688405102,
+              "ttft_s": 0.4742958688405102,
+              "prefill_complete_s": 0.4742958688405102
+            },
+            "foreground-1": {
+              "first_s": 0.9496454860321623,
+              "ttft_s": 0.9496454860321623,
+              "prefill_complete_s": 0.9496454860321623
+            },
+            "foreground-2": {
+              "first_s": 0.9496454860321623,
+              "ttft_s": 0.9496454860321623,
+              "prefill_complete_s": 0.9496454860321623
+            },
+            "foreground-3": {
+              "first_s": 0.9599905392671466,
+              "ttft_s": 0.9599905392671466,
+              "prefill_complete_s": 0.9599905392671466
+            }
+          },
+          "wall_s": 2.2846998807803462,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.6394723936405102,
+              "ttft_s": 0.6394723936405102,
+              "prefill_complete_s": 0.6394723936405102
+            },
+            "foreground-1": {
+              "first_s": 1.2799727686321622,
+              "ttft_s": 1.2799727686321622,
+              "prefill_complete_s": 1.2799727686321622
+            },
+            "foreground-2": {
+              "first_s": 1.2799727686321622,
+              "ttft_s": 1.2799727686321622,
+              "prefill_complete_s": 1.2799727686321622
+            },
+            "foreground-3": {
+              "first_s": 1.2903435888671466,
+              "ttft_s": 1.2903435888671466,
+              "prefill_complete_s": 1.2903435888671466
+            }
+          },
+          "wall_s": 2.615052930380346,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 1.0112812165827085,
+              "ttft_s": 1.0112812165827085,
+              "prefill_complete_s": 1.0112812165827085
+            },
+            "foreground-1": {
+              "first_s": 1.0112812165827085,
+              "ttft_s": 1.0112812165827085,
+              "prefill_complete_s": 1.0112812165827085
+            },
+            "foreground-2": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            },
+            "foreground-3": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            }
+          },
+          "wall_s": 2.330604079181676,
+          "release_s": 0.0,
+          "steps": 141,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.8937701366872088,
+            "raw_ttft_s": 0.8937701366872088,
+            "old_empirical_corrected_ttft_s": 0.8869041697412245
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8937701366872088,
+            "raw_ttft_s": 0.8937701366872088,
+            "old_empirical_corrected_ttft_s": 0.8869041697412245
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9039549460830381,
+            "raw_ttft_s": 0.9039549460830381,
+            "old_empirical_corrected_ttft_s": 0.8970889791370538
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4742958688405102,
+            "raw_ttft_s": 0.4742958688405102,
+            "old_empirical_corrected_ttft_s": 0.46742990189452593
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9496454860321623,
+            "raw_ttft_s": 0.9496454860321623,
+            "old_empirical_corrected_ttft_s": 0.942779519086178
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9496454860321623,
+            "raw_ttft_s": 0.9496454860321623,
+            "old_empirical_corrected_ttft_s": 0.942779519086178
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9599905392671466,
+            "raw_ttft_s": 0.9599905392671466,
+            "old_empirical_corrected_ttft_s": 0.9531245723211623
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at50-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943
+            },
+            "foreground-3": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.9316200796663405,
+              "prefill_complete_s": 0.9316200796663405
+            },
+            "sentinel": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.8816200796663405,
+              "prefill_complete_s": 0.9316200796663405
+            }
+          },
+          "wall_s": 2.297203290587536,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            },
+            "foreground-1": {
+              "first_s": 0.5936601473139941,
+              "ttft_s": 0.5936601473139941,
+              "prefill_complete_s": 0.5936601473139941
+            },
+            "foreground-2": {
+              "first_s": 0.8318618300853909,
+              "ttft_s": 0.8318618300853909,
+              "prefill_complete_s": 0.8318618300853909
+            },
+            "foreground-3": {
+              "first_s": 0.9892399313546346,
+              "ttft_s": 0.9892399313546346,
+              "prefill_complete_s": 0.9892399313546346
+            },
+            "sentinel": {
+              "first_s": 0.9892399313546346,
+              "ttft_s": 0.9392399313546346,
+              "prefill_complete_s": 0.9892399313546346
+            }
+          },
+          "wall_s": 2.352288328669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516
+            },
+            "foreground-1": {
+              "first_s": 0.7125622334139942,
+              "ttft_s": 0.7125622334139942,
+              "prefill_complete_s": 0.7125622334139942
+            },
+            "foreground-2": {
+              "first_s": 1.003573552785391,
+              "ttft_s": 1.003573552785391,
+              "prefill_complete_s": 1.003573552785391
+            },
+            "foreground-3": {
+              "first_s": 1.2015118289546352,
+              "ttft_s": 1.2015118289546352,
+              "prefill_complete_s": 1.2015118289546352
+            },
+            "sentinel": {
+              "first_s": 1.2015118289546352,
+              "ttft_s": 1.151511828954635,
+              "prefill_complete_s": 1.2015118289546352
+            }
+          },
+          "wall_s": 2.5645602262691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9499089231199477,
+              "ttft_s": 0.9499089231199477,
+              "prefill_complete_s": 0.9499089231199477
+            },
+            "foreground-1": {
+              "first_s": 0.9499089231199477,
+              "ttft_s": 0.9499089231199477,
+              "prefill_complete_s": 0.9499089231199477
+            },
+            "foreground-2": {
+              "first_s": 0.9876556728504491,
+              "ttft_s": 0.9876556728504491,
+              "prefill_complete_s": 0.9876556728504491
+            },
+            "foreground-3": {
+              "first_s": 0.9876556728504491,
+              "ttft_s": 0.9876556728504491,
+              "prefill_complete_s": 0.9876556728504491
+            },
+            "sentinel": {
+              "first_s": 0.35572190163038264,
+              "ttft_s": 0.30572190163038265,
+              "prefill_complete_s": 0.35572190163038264
+            }
+          },
+          "wall_s": 2.3522883286691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.9316200796663405,
+            "old_empirical_corrected_ttft_s": 0.9247541127203562
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.8816200796663405,
+            "old_empirical_corrected_ttft_s": 0.8747541127203562
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.5936601473139941,
+            "raw_ttft_s": 0.5936601473139941,
+            "old_empirical_corrected_ttft_s": 0.5867941803680098
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8318618300853909,
+            "raw_ttft_s": 0.8318618300853909,
+            "old_empirical_corrected_ttft_s": 0.8249958631394066
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9892399313546346,
+            "raw_ttft_s": 0.9892399313546346,
+            "old_empirical_corrected_ttft_s": 0.9823739644086503
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9892399313546346,
+            "raw_ttft_s": 0.9392399313546346,
+            "old_empirical_corrected_ttft_s": 0.9323739644086503
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at400-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943
+            },
+            "foreground-3": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.9316200796663405,
+              "prefill_complete_s": 0.9316200796663405
+            },
+            "sentinel": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.5316200796663405,
+              "prefill_complete_s": 0.9316200796663405
+            }
+          },
+          "wall_s": 2.297203290587536,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            },
+            "foreground-1": {
+              "first_s": 0.5936601473139941,
+              "ttft_s": 0.5936601473139941,
+              "prefill_complete_s": 0.5936601473139941
+            },
+            "foreground-2": {
+              "first_s": 0.8318618300853909,
+              "ttft_s": 0.8318618300853909,
+              "prefill_complete_s": 0.8318618300853909
+            },
+            "foreground-3": {
+              "first_s": 0.9892399313546346,
+              "ttft_s": 0.9892399313546346,
+              "prefill_complete_s": 0.9892399313546346
+            },
+            "sentinel": {
+              "first_s": 0.9892399313546346,
+              "ttft_s": 0.5892399313546346,
+              "prefill_complete_s": 0.9892399313546346
+            }
+          },
+          "wall_s": 2.352288328669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516
+            },
+            "foreground-1": {
+              "first_s": 0.7125622334139942,
+              "ttft_s": 0.7125622334139942,
+              "prefill_complete_s": 0.7125622334139942
+            },
+            "foreground-2": {
+              "first_s": 1.003573552785391,
+              "ttft_s": 1.003573552785391,
+              "prefill_complete_s": 1.003573552785391
+            },
+            "foreground-3": {
+              "first_s": 1.2015118289546352,
+              "ttft_s": 1.2015118289546352,
+              "prefill_complete_s": 1.2015118289546352
+            },
+            "sentinel": {
+              "first_s": 1.2015118289546352,
+              "ttft_s": 0.8015118289546351,
+              "prefill_complete_s": 1.2015118289546352
+            }
+          },
+          "wall_s": 2.5645602262691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9491186118565914,
+              "ttft_s": 0.9491186118565914,
+              "prefill_complete_s": 0.9491186118565914
+            },
+            "foreground-1": {
+              "first_s": 0.9491186118565914,
+              "ttft_s": 0.9491186118565914,
+              "prefill_complete_s": 0.9491186118565914
+            },
+            "foreground-2": {
+              "first_s": 0.9867051177479377,
+              "ttft_s": 0.9867051177479377,
+              "prefill_complete_s": 0.9867051177479377
+            },
+            "foreground-3": {
+              "first_s": 0.9867051177479377,
+              "ttft_s": 0.9867051177479377,
+              "prefill_complete_s": 0.9867051177479377
+            },
+            "sentinel": {
+              "first_s": 0.7114438032607654,
+              "ttft_s": 0.3114438032607654,
+              "prefill_complete_s": 0.7114438032607654
+            }
+          },
+          "wall_s": 2.3522883286691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.9316200796663405,
+            "old_empirical_corrected_ttft_s": 0.9247541127203562
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.5316200796663405,
+            "old_empirical_corrected_ttft_s": 0.5247541127203562
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.5936601473139941,
+            "raw_ttft_s": 0.5936601473139941,
+            "old_empirical_corrected_ttft_s": 0.5867941803680098
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8318618300853909,
+            "raw_ttft_s": 0.8318618300853909,
+            "old_empirical_corrected_ttft_s": 0.8249958631394066
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9892399313546346,
+            "raw_ttft_s": 0.9892399313546346,
+            "old_empirical_corrected_ttft_s": 0.9823739644086503
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9892399313546346,
+            "raw_ttft_s": 0.5892399313546346,
+            "old_empirical_corrected_ttft_s": 0.5823739644086503
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at800-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943
+            },
+            "foreground-3": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.9316200796663405,
+              "prefill_complete_s": 0.9316200796663405
+            },
+            "sentinel": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.13162007966634048,
+              "prefill_complete_s": 0.9316200796663405
+            }
+          },
+          "wall_s": 2.297203290587536,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            },
+            "foreground-1": {
+              "first_s": 0.5936601473139941,
+              "ttft_s": 0.5936601473139941,
+              "prefill_complete_s": 0.5936601473139941
+            },
+            "foreground-2": {
+              "first_s": 0.8318618300853909,
+              "ttft_s": 0.8318618300853909,
+              "prefill_complete_s": 0.8318618300853909
+            },
+            "foreground-3": {
+              "first_s": 0.9892399313546346,
+              "ttft_s": 0.9892399313546346,
+              "prefill_complete_s": 0.9892399313546346
+            },
+            "sentinel": {
+              "first_s": 0.9892399313546346,
+              "ttft_s": 0.18923993135463457,
+              "prefill_complete_s": 0.9892399313546346
+            }
+          },
+          "wall_s": 2.352288328669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516
+            },
+            "foreground-1": {
+              "first_s": 0.7125622334139942,
+              "ttft_s": 0.7125622334139942,
+              "prefill_complete_s": 0.7125622334139942
+            },
+            "foreground-2": {
+              "first_s": 1.003573552785391,
+              "ttft_s": 1.003573552785391,
+              "prefill_complete_s": 1.003573552785391
+            },
+            "foreground-3": {
+              "first_s": 1.2015118289546352,
+              "ttft_s": 1.2015118289546352,
+              "prefill_complete_s": 1.2015118289546352
+            },
+            "sentinel": {
+              "first_s": 1.2015118289546352,
+              "ttft_s": 0.4015118289546351,
+              "prefill_complete_s": 1.2015118289546352
+            }
+          },
+          "wall_s": 2.5645602262691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206
+            },
+            "foreground-1": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206
+            },
+            "foreground-2": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206
+            },
+            "foreground-3": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206
+            },
+            "sentinel": {
+              "first_s": 0.9863882660471006,
+              "ttft_s": 0.18638826604710057,
+              "prefill_complete_s": 0.9863882660471006
+            }
+          },
+          "wall_s": 2.3522883286691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.9316200796663405,
+            "old_empirical_corrected_ttft_s": 0.9247541127203562
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.13162007966634048,
+            "old_empirical_corrected_ttft_s": 0.12475411272035618
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.5936601473139941,
+            "raw_ttft_s": 0.5936601473139941,
+            "old_empirical_corrected_ttft_s": 0.5867941803680098
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8318618300853909,
+            "raw_ttft_s": 0.8318618300853909,
+            "old_empirical_corrected_ttft_s": 0.8249958631394066
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9892399313546346,
+            "raw_ttft_s": 0.9892399313546346,
+            "old_empirical_corrected_ttft_s": 0.9823739644086503
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9892399313546346,
+            "raw_ttft_s": 0.18923993135463457,
+            "old_empirical_corrected_ttft_s": 0.18237396440865025
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-one-at200-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.22796709473998894,
+              "ttft_s": 0.22796709473998894,
+              "prefill_complete_s": 0.22796709473998894
+            },
+            "sentinel": {
+              "first_s": 0.2648130680035576,
+              "ttft_s": 0.06481306800355757,
+              "prefill_complete_s": 0.2648130680035576
+            }
+          },
+          "wall_s": 1.5109431877091593,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509
+            },
+            "sentinel": {
+              "first_s": 0.27399390768382376,
+              "ttft_s": 0.07399390768382375,
+              "prefill_complete_s": 0.27399390768382376
+            }
+          },
+          "wall_s": 1.5201240273894256,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516
+            },
+            "sentinel": {
+              "first_s": 0.3276824068838238,
+              "ttft_s": 0.12768240688382376,
+              "prefill_complete_s": 0.3276824068838238
+            }
+          },
+          "wall_s": 1.5738125265894258,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.31989810608515457,
+              "ttft_s": 0.31989810608515457,
+              "prefill_complete_s": 0.31989810608515457
+            },
+            "sentinel": {
+              "first_s": 0.2830521328215859,
+              "ttft_s": 0.08305213282158591,
+              "prefill_complete_s": 0.2830521328215859
+            }
+          },
+          "wall_s": 1.5660282257907565,
+          "release_s": 0.0,
+          "steps": 135,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.22796709473998894,
+            "raw_ttft_s": 0.22796709473998894,
+            "old_empirical_corrected_ttft_s": 0.22110112779400462
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.2648130680035576,
+            "raw_ttft_s": 0.06481306800355757,
+            "old_empirical_corrected_ttft_s": 0.05794710105757326
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.27399390768382376,
+            "raw_ttft_s": 0.07399390768382375,
+            "old_empirical_corrected_ttft_s": 0.06712794073783944
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L1024-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06894703065859109,
+              "ttft_s": 0.06894703065859109,
+              "prefill_complete_s": 0.06894703065859109
+            }
+          },
+          "wall_s": 8.279612851711342,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06894703065859109,
+              "ttft_s": 0.06894703065859109,
+              "prefill_complete_s": 0.06894703065859109
+            }
+          },
+          "wall_s": 8.334697889792936,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.072253270658591,
+              "ttft_s": 0.072253270658591,
+              "prefill_complete_s": 0.072253270658591
+            }
+          },
+          "wall_s": 8.390903969792936,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.08319749755225148,
+              "ttft_s": 0.08319749755225148,
+              "prefill_complete_s": 0.08319749755225148
+            }
+          },
+          "wall_s": 8.334697889792936,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.06894703065859109,
+            "raw_ttft_s": 0.06894703065859109,
+            "old_empirical_corrected_ttft_s": 0.159225873857318
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.06894703065859109,
+            "raw_ttft_s": 0.06894703065859109,
+            "old_empirical_corrected_ttft_s": 0.159225873857318
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L2048-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12364359442352169,
+              "ttft_s": 0.12364359442352169,
+              "prefill_complete_s": 0.12364359442352169
+            }
+          },
+          "wall_s": 8.334309415476271,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1378940613171824,
+              "ttft_s": 0.1378940613171824,
+              "prefill_complete_s": 0.1378940613171824
+            }
+          },
+          "wall_s": 8.389394453557868,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1511125701171825,
+              "ttft_s": 0.1511125701171825,
+              "prefill_complete_s": 0.1511125701171825
+            }
+          },
+          "wall_s": 8.455512802357868,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.16639499510450306,
+              "ttft_s": 0.16639499510450306,
+              "prefill_complete_s": 0.16639499510450306
+            }
+          },
+          "wall_s": 8.389394453557868,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.1236435944235218,
+            "raw_ttft_s": 0.1236435944235218,
+            "old_empirical_corrected_ttft_s": 0.21392243762224872
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.1378940613171822,
+            "raw_ttft_s": 0.1378940613171822,
+            "old_empirical_corrected_ttft_s": 0.22817290451590913
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L4096-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2330367219533831,
+              "ttft_s": 0.2330367219533831,
+              "prefill_complete_s": 0.2330367219533831
+            }
+          },
+          "wall_s": 8.443702543006134,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2615376557407041,
+              "ttft_s": 0.2615376557407041,
+              "prefill_complete_s": 0.2615376557407041
+            }
+          },
+          "wall_s": 8.49878758108773,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.314398788540704,
+              "ttft_s": 0.314398788540704,
+              "prefill_complete_s": 0.314398788540704
+            }
+          },
+          "wall_s": 8.604548553887728,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.33278999020900624,
+              "ttft_s": 0.33278999020900624,
+              "prefill_complete_s": 0.33278999020900624
+            }
+          },
+          "wall_s": 8.498787581087731,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23303672195338318,
+            "raw_ttft_s": 0.23303672195338318,
+            "old_empirical_corrected_ttft_s": 0.32331556515211013
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.26153765574070403,
+            "raw_ttft_s": 0.26153765574070403,
+            "old_empirical_corrected_ttft_s": 0.35181649893943095
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L7168-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.3971264132481751,
+              "ttft_s": 0.3971264132481751,
+              "prefill_complete_s": 0.3971264132481751
+            }
+          },
+          "wall_s": 8.607792234300925,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4398778139291568,
+              "ttft_s": 0.4398778139291568,
+              "prefill_complete_s": 0.4398778139291568
+            }
+          },
+          "wall_s": 8.662877272382522,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.6017480987291568,
+              "ttft_s": 0.6017480987291568,
+              "prefill_complete_s": 0.6017480987291568
+            }
+          },
+          "wall_s": 8.877647397182521,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.582382482865761,
+              "ttft_s": 0.582382482865761,
+              "prefill_complete_s": 0.582382482865761
+            }
+          },
+          "wall_s": 8.662877272382524,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.3971264132481752,
+            "raw_ttft_s": 0.3971264132481752,
+            "old_empirical_corrected_ttft_s": 0.48740525644690214
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.43987781392915654,
+            "raw_ttft_s": 0.43987781392915654,
+            "old_empirical_corrected_ttft_s": 0.5301566571278835
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-uniform-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788
+            },
+            "foreground-1": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-2": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-3": {
+              "first_s": 0.9191638277232208,
+              "ttft_s": 0.9191638277232208,
+              "prefill_complete_s": 0.9191638277232208
+            }
+          },
+          "wall_s": 9.220781806204265,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.3683668818440844,
+              "ttft_s": 0.3683668818440844,
+              "prefill_complete_s": 0.3683668818440844
+            },
+            "foreground-1": {
+              "first_s": 0.6144716772490448,
+              "ttft_s": 0.6144716772490448,
+              "prefill_complete_s": 0.6144716772490448
+            },
+            "foreground-2": {
+              "first_s": 0.8611033468295761,
+              "ttft_s": 0.8611033468295761,
+              "prefill_complete_s": 0.8611033468295761
+            },
+            "foreground-3": {
+              "first_s": 1.0072014426918805,
+              "ttft_s": 1.0072014426918805,
+              "prefill_complete_s": 1.0072014426918805
+            }
+          },
+          "wall_s": 9.27586684428586,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4338343146440844,
+              "ttft_s": 0.4338343146440844,
+              "prefill_complete_s": 0.4338343146440844
+            },
+            "foreground-1": {
+              "first_s": 0.7323753771490444,
+              "ttft_s": 0.7323753771490444,
+              "prefill_complete_s": 0.7323753771490444
+            },
+            "foreground-2": {
+              "first_s": 1.0314262597295756,
+              "ttft_s": 1.0314262597295756,
+              "prefill_complete_s": 1.0314262597295756
+            },
+            "foreground-3": {
+              "first_s": 1.2186459738918802,
+              "ttft_s": 1.2186459738918802,
+              "prefill_complete_s": 1.2186459738918802
+            }
+          },
+          "wall_s": 9.540211215485861,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583
+            },
+            "foreground-1": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583
+            },
+            "foreground-2": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583
+            },
+            "foreground-3": {
+              "first_s": 1.0043497773843466,
+              "ttft_s": 1.0043497773843466,
+              "prefill_complete_s": 1.0043497773843466
+            }
+          },
+          "wall_s": 9.275866844285861,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9191638277232208,
+            "raw_ttft_s": 0.9191638277232208,
+            "old_empirical_corrected_ttft_s": 1.0094426709219477
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.3683668818440843,
+            "raw_ttft_s": 0.3683668818440843,
+            "old_empirical_corrected_ttft_s": 0.4586457250428112
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.6144716772490447,
+            "raw_ttft_s": 0.6144716772490447,
+            "old_empirical_corrected_ttft_s": 0.7047505204477716
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8611033468295761,
+            "raw_ttft_s": 0.8611033468295761,
+            "old_empirical_corrected_ttft_s": 0.951382190028303
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0072014426918805,
+            "raw_ttft_s": 1.0072014426918805,
+            "old_empirical_corrected_ttft_s": 1.0974802858906074
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-mixed-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788
+            },
+            "foreground-1": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788
+            },
+            "foreground-2": {
+              "first_s": 0.9024635605841285,
+              "ttft_s": 0.9024635605841285,
+              "prefill_complete_s": 0.9024635605841285
+            },
+            "foreground-3": {
+              "first_s": 0.9194806794240578,
+              "ttft_s": 0.9194806794240578,
+              "prefill_complete_s": 0.9194806794240578
+            }
+          },
+          "wall_s": 9.220781806204265,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1227889606146948,
+              "ttft_s": 0.1227889606146948,
+              "prefill_complete_s": 0.1227889606146948
+            },
+            "foreground-1": {
+              "first_s": 0.24584135831717502,
+              "ttft_s": 0.24584135831717502,
+              "prefill_complete_s": 0.24584135831717502
+            },
+            "foreground-2": {
+              "first_s": 0.615788862687972,
+              "ttft_s": 0.615788862687972,
+              "prefill_complete_s": 0.615788862687972
+            },
+            "foreground-3": {
+              "first_s": 1.0094194045977403,
+              "ttft_s": 1.0094194045977403,
+              "prefill_complete_s": 1.0094194045977403
+            }
+          },
+          "wall_s": 9.27586684428586,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12929897741469487,
+              "ttft_s": 0.12929897741469487,
+              "prefill_complete_s": 0.12929897741469487
+            },
+            "foreground-1": {
+              "first_s": 0.26524989431717505,
+              "ttft_s": 0.26524989431717505,
+              "prefill_complete_s": 0.26524989431717505
+            },
+            "foreground-2": {
+              "first_s": 0.7870401813879719,
+              "ttft_s": 0.7870401813879719,
+              "prefill_complete_s": 0.7870401813879719
+            },
+            "foreground-3": {
+              "first_s": 1.3397724541977405,
+              "ttft_s": 1.3397724541977405,
+              "prefill_complete_s": 1.3397724541977405
+            }
+          },
+          "wall_s": 9.659119733885863,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.24557792122938948,
+              "ttft_s": 0.24557792122938948,
+              "prefill_complete_s": 0.24557792122938948
+            },
+            "foreground-1": {
+              "first_s": 0.24557792122938948,
+              "ttft_s": 0.24557792122938948,
+              "prefill_complete_s": 0.24557792122938948
+            },
+            "foreground-2": {
+              "first_s": 1.0805467299525722,
+              "ttft_s": 1.0805467299525722,
+              "prefill_complete_s": 1.0805467299525722
+            },
+            "foreground-3": {
+              "first_s": 1.0974570195663982,
+              "ttft_s": 1.0974570195663982,
+              "prefill_complete_s": 1.0974570195663982
+            }
+          },
+          "wall_s": 9.27586684428586,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9024635605841287,
+            "raw_ttft_s": 0.9024635605841287,
+            "old_empirical_corrected_ttft_s": 0.9927424037828556
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.919480679424058,
+            "raw_ttft_s": 0.919480679424058,
+            "old_empirical_corrected_ttft_s": 1.009759522622785
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.12278896061469474,
+            "raw_ttft_s": 0.12278896061469474,
+            "old_empirical_corrected_ttft_s": 0.21306780381342166
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.24584135831717496,
+            "raw_ttft_s": 0.24584135831717496,
+            "old_empirical_corrected_ttft_s": 0.3361202015159019
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.615788862687972,
+            "raw_ttft_s": 0.615788862687972,
+            "old_empirical_corrected_ttft_s": 0.7060677058866989
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0094194045977403,
+            "raw_ttft_s": 1.0094194045977403,
+            "old_empirical_corrected_ttft_s": 1.0996982477964672
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-reverse-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788
+            },
+            "foreground-1": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-2": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-3": {
+              "first_s": 0.9191638277232208,
+              "ttft_s": 0.9191638277232208,
+              "prefill_complete_s": 0.9191638277232208
+            }
+          },
+          "wall_s": 9.220781806204265,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4911558424587792,
+              "ttft_s": 0.4911558424587792,
+              "prefill_complete_s": 0.4911558424587792
+            },
+            "foreground-1": {
+              "first_s": 0.9833654332687001,
+              "ttft_s": 0.9833654332687001,
+              "prefill_complete_s": 0.9833654332687001
+            },
+            "foreground-2": {
+              "first_s": 0.9833654332687001,
+              "ttft_s": 0.9833654332687001,
+              "prefill_complete_s": 0.9833654332687001
+            },
+            "foreground-3": {
+              "first_s": 1.0056171841876949,
+              "ttft_s": 1.0056171841876949,
+              "prefill_complete_s": 1.0056171841876949
+            }
+          },
+          "wall_s": 9.275866844285861,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.6559321912587792,
+              "ttft_s": 0.6559321912587792,
+              "prefill_complete_s": 0.6559321912587792
+            },
+            "foreground-1": {
+              "first_s": 1.3129213942686995,
+              "ttft_s": 1.3129213942686995,
+              "prefill_complete_s": 1.3129213942686995
+            },
+            "foreground-2": {
+              "first_s": 1.3129213942686995,
+              "ttft_s": 1.3129213942686995,
+              "prefill_complete_s": 1.3129213942686995
+            },
+            "foreground-3": {
+              "first_s": 1.3359702337876944,
+              "ttft_s": 1.3359702337876944,
+              "prefill_complete_s": 1.3359702337876944
+            }
+          },
+          "wall_s": 9.659119733885863,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 1.0819391458693892,
+              "ttft_s": 1.0819391458693892,
+              "prefill_complete_s": 1.0819391458693892
+            },
+            "foreground-1": {
+              "first_s": 1.0819391458693892,
+              "ttft_s": 1.0819391458693892,
+              "prefill_complete_s": 1.0819391458693892
+            },
+            "foreground-2": {
+              "first_s": 0.24557792122938948,
+              "ttft_s": 0.24557792122938948,
+              "prefill_complete_s": 0.24557792122938948
+            },
+            "foreground-3": {
+              "first_s": 0.31655107120647197,
+              "ttft_s": 0.31655107120647197,
+              "prefill_complete_s": 0.31655107120647197
+            }
+          },
+          "wall_s": 9.27586684428586,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9191638277232208,
+            "raw_ttft_s": 0.9191638277232208,
+            "old_empirical_corrected_ttft_s": 1.0094426709219477
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4911558424587791,
+            "raw_ttft_s": 0.4911558424587791,
+            "old_empirical_corrected_ttft_s": 0.581434685657506
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9833654332687,
+            "raw_ttft_s": 0.9833654332687,
+            "old_empirical_corrected_ttft_s": 1.073644276467427
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9833654332687,
+            "raw_ttft_s": 0.9833654332687,
+            "old_empirical_corrected_ttft_s": 1.073644276467427
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0056171841876949,
+            "raw_ttft_s": 1.0056171841876949,
+            "old_empirical_corrected_ttft_s": 1.0958960273864218
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at50-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788
+            },
+            "foreground-1": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-2": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-3": {
+              "first_s": 0.9465121096056861,
+              "ttft_s": 0.9465121096056861,
+              "prefill_complete_s": 0.9465121096056861
+            },
+            "sentinel": {
+              "first_s": 0.9465121096056861,
+              "ttft_s": 0.8965121096056861,
+              "prefill_complete_s": 0.9465121096056861
+            }
+          },
+          "wall_s": 9.288370254093,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.3683668818440844,
+              "ttft_s": 0.3683668818440844,
+              "prefill_complete_s": 0.3683668818440844
+            },
+            "foreground-1": {
+              "first_s": 0.6144716772490448,
+              "ttft_s": 0.6144716772490448,
+              "prefill_complete_s": 0.6144716772490448
+            },
+            "foreground-2": {
+              "first_s": 0.8611033468295761,
+              "ttft_s": 0.8611033468295761,
+              "prefill_complete_s": 0.8611033468295761
+            },
+            "foreground-3": {
+              "first_s": 1.0345497245743458,
+              "ttft_s": 1.0345497245743458,
+              "prefill_complete_s": 1.0345497245743458
+            },
+            "sentinel": {
+              "first_s": 1.0345497245743458,
+              "ttft_s": 0.9845497245743458,
+              "prefill_complete_s": 1.0345497245743458
+            }
+          },
+          "wall_s": 9.343455292174593,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4338343146440844,
+              "ttft_s": 0.4338343146440844,
+              "prefill_complete_s": 0.4338343146440844
+            },
+            "foreground-1": {
+              "first_s": 0.7323753771490444,
+              "ttft_s": 0.7323753771490444,
+              "prefill_complete_s": 0.7323753771490444
+            },
+            "foreground-2": {
+              "first_s": 1.0314262597295756,
+              "ttft_s": 1.0314262597295756,
+              "prefill_complete_s": 1.0314262597295756
+            },
+            "foreground-3": {
+              "first_s": 1.2468216221743458,
+              "ttft_s": 1.2468216221743458,
+              "prefill_complete_s": 1.2468216221743458
+            },
+            "sentinel": {
+              "first_s": 1.2468216221743458,
+              "ttft_s": 1.1968216221743457,
+              "prefill_complete_s": 1.2468216221743458
+            }
+          },
+          "wall_s": 9.608627029774604,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9836288703564854,
+              "ttft_s": 0.9836288703564854,
+              "prefill_complete_s": 0.9836288703564854
+            },
+            "foreground-1": {
+              "first_s": 0.9836288703564854,
+              "ttft_s": 0.9836288703564854,
+              "prefill_complete_s": 0.9836288703564854
+            },
+            "foreground-2": {
+              "first_s": 1.031573050153343,
+              "ttft_s": 1.031573050153343,
+              "prefill_complete_s": 1.031573050153343
+            },
+            "foreground-3": {
+              "first_s": 1.0488001914680063,
+              "ttft_s": 1.0488001914680063,
+              "prefill_complete_s": 1.0488001914680063
+            },
+            "sentinel": {
+              "first_s": 0.3683668818440843,
+              "ttft_s": 0.31836688184408435,
+              "prefill_complete_s": 0.3683668818440843
+            }
+          },
+          "wall_s": 9.343455292174594,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9465121096056862,
+            "raw_ttft_s": 0.9465121096056862,
+            "old_empirical_corrected_ttft_s": 1.036790952804413
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9465121096056862,
+            "raw_ttft_s": 0.8965121096056862,
+            "old_empirical_corrected_ttft_s": 0.9867909528044131
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.3683668818440843,
+            "raw_ttft_s": 0.3683668818440843,
+            "old_empirical_corrected_ttft_s": 0.4586457250428112
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.6144716772490447,
+            "raw_ttft_s": 0.6144716772490447,
+            "old_empirical_corrected_ttft_s": 0.7047505204477716
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8611033468295761,
+            "raw_ttft_s": 0.8611033468295761,
+            "old_empirical_corrected_ttft_s": 0.951382190028303
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0345497245743458,
+            "raw_ttft_s": 1.0345497245743458,
+            "old_empirical_corrected_ttft_s": 1.1248285677730727
+          },
+          "sentinel": {
+            "raw_engine_first_s": 1.0345497245743458,
+            "raw_ttft_s": 0.9845497245743458,
+            "old_empirical_corrected_ttft_s": 1.0748285677730727
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at400-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788
+            },
+            "foreground-1": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-2": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-3": {
+              "first_s": 0.9465121096056861,
+              "ttft_s": 0.9465121096056861,
+              "prefill_complete_s": 0.9465121096056861
+            },
+            "sentinel": {
+              "first_s": 0.9465121096056861,
+              "ttft_s": 0.546512109605686,
+              "prefill_complete_s": 0.9465121096056861
+            }
+          },
+          "wall_s": 9.288370254093,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.3683668818440844,
+              "ttft_s": 0.3683668818440844,
+              "prefill_complete_s": 0.3683668818440844
+            },
+            "foreground-1": {
+              "first_s": 0.6144716772490448,
+              "ttft_s": 0.6144716772490448,
+              "prefill_complete_s": 0.6144716772490448
+            },
+            "foreground-2": {
+              "first_s": 0.8611033468295761,
+              "ttft_s": 0.8611033468295761,
+              "prefill_complete_s": 0.8611033468295761
+            },
+            "foreground-3": {
+              "first_s": 1.0345497245743458,
+              "ttft_s": 1.0345497245743458,
+              "prefill_complete_s": 1.0345497245743458
+            },
+            "sentinel": {
+              "first_s": 1.0345497245743458,
+              "ttft_s": 0.6345497245743457,
+              "prefill_complete_s": 1.0345497245743458
+            }
+          },
+          "wall_s": 9.343455292174593,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4338343146440844,
+              "ttft_s": 0.4338343146440844,
+              "prefill_complete_s": 0.4338343146440844
+            },
+            "foreground-1": {
+              "first_s": 0.7323753771490444,
+              "ttft_s": 0.7323753771490444,
+              "prefill_complete_s": 0.7323753771490444
+            },
+            "foreground-2": {
+              "first_s": 1.0314262597295756,
+              "ttft_s": 1.0314262597295756,
+              "prefill_complete_s": 1.0314262597295756
+            },
+            "foreground-3": {
+              "first_s": 1.2468216221743458,
+              "ttft_s": 1.2468216221743458,
+              "prefill_complete_s": 1.2468216221743458
+            },
+            "sentinel": {
+              "first_s": 1.2468216221743458,
+              "ttft_s": 0.8468216221743456,
+              "prefill_complete_s": 1.2468216221743458
+            }
+          },
+          "wall_s": 9.608627029774604,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9828385590931291,
+              "ttft_s": 0.9828385590931291,
+              "prefill_complete_s": 0.9828385590931291
+            },
+            "foreground-1": {
+              "first_s": 0.9828385590931291,
+              "ttft_s": 0.9828385590931291,
+              "prefill_complete_s": 0.9828385590931291
+            },
+            "foreground-2": {
+              "first_s": 1.0280585936243507,
+              "ttft_s": 1.0280585936243507,
+              "prefill_complete_s": 1.0280585936243507
+            },
+            "foreground-3": {
+              "first_s": 1.0478496363654948,
+              "ttft_s": 1.0478496363654948,
+              "prefill_complete_s": 1.0478496363654948
+            },
+            "sentinel": {
+              "first_s": 0.7367337636881687,
+              "ttft_s": 0.33673376368816865,
+              "prefill_complete_s": 0.7367337636881687
+            }
+          },
+          "wall_s": 9.343455292174593,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9465121096056862,
+            "raw_ttft_s": 0.9465121096056862,
+            "old_empirical_corrected_ttft_s": 1.036790952804413
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9465121096056862,
+            "raw_ttft_s": 0.5465121096056862,
+            "old_empirical_corrected_ttft_s": 0.6367909528044131
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.3683668818440843,
+            "raw_ttft_s": 0.3683668818440843,
+            "old_empirical_corrected_ttft_s": 0.4586457250428112
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.6144716772490447,
+            "raw_ttft_s": 0.6144716772490447,
+            "old_empirical_corrected_ttft_s": 0.7047505204477716
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8611033468295761,
+            "raw_ttft_s": 0.8611033468295761,
+            "old_empirical_corrected_ttft_s": 0.951382190028303
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0345497245743458,
+            "raw_ttft_s": 1.0345497245743458,
+            "old_empirical_corrected_ttft_s": 1.1248285677730727
+          },
+          "sentinel": {
+            "raw_engine_first_s": 1.0345497245743458,
+            "raw_ttft_s": 0.6345497245743458,
+            "old_empirical_corrected_ttft_s": 0.7263841501093506
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at800-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788
+            },
+            "foreground-1": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-2": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433
+            },
+            "foreground-3": {
+              "first_s": 0.9465121096056861,
+              "ttft_s": 0.9465121096056861,
+              "prefill_complete_s": 0.9465121096056861
+            },
+            "sentinel": {
+              "first_s": 0.9465121096056861,
+              "ttft_s": 0.14651210960568606,
+              "prefill_complete_s": 0.9465121096056861
+            }
+          },
+          "wall_s": 9.288370254093,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.3683668818440844,
+              "ttft_s": 0.3683668818440844,
+              "prefill_complete_s": 0.3683668818440844
+            },
+            "foreground-1": {
+              "first_s": 0.6144716772490448,
+              "ttft_s": 0.6144716772490448,
+              "prefill_complete_s": 0.6144716772490448
+            },
+            "foreground-2": {
+              "first_s": 0.8611033468295761,
+              "ttft_s": 0.8611033468295761,
+              "prefill_complete_s": 0.8611033468295761
+            },
+            "foreground-3": {
+              "first_s": 1.0345497245743458,
+              "ttft_s": 1.0345497245743458,
+              "prefill_complete_s": 1.0345497245743458
+            },
+            "sentinel": {
+              "first_s": 1.0345497245743458,
+              "ttft_s": 0.23454972457434575,
+              "prefill_complete_s": 1.0345497245743458
+            }
+          },
+          "wall_s": 9.343455292174593,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4338343146440844,
+              "ttft_s": 0.4338343146440844,
+              "prefill_complete_s": 0.4338343146440844
+            },
+            "foreground-1": {
+              "first_s": 0.7323753771490444,
+              "ttft_s": 0.7323753771490444,
+              "prefill_complete_s": 0.7323753771490444
+            },
+            "foreground-2": {
+              "first_s": 1.0314262597295756,
+              "ttft_s": 1.0314262597295756,
+              "prefill_complete_s": 1.0314262597295756
+            },
+            "foreground-3": {
+              "first_s": 1.2468216221743458,
+              "ttft_s": 1.2468216221743458,
+              "prefill_complete_s": 1.2468216221743458
+            },
+            "sentinel": {
+              "first_s": 1.2468216221743458,
+              "ttft_s": 0.44682162217434573,
+              "prefill_complete_s": 1.2468216221743458
+            }
+          },
+          "wall_s": 9.608627029774604,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583
+            },
+            "foreground-1": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583
+            },
+            "foreground-2": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583
+            },
+            "foreground-3": {
+              "first_s": 1.0316980592668115,
+              "ttft_s": 1.0316980592668115,
+              "prefill_complete_s": 1.0316980592668115
+            },
+            "sentinel": {
+              "first_s": 1.0316980592668115,
+              "ttft_s": 0.23169805926681164,
+              "prefill_complete_s": 1.0316980592668115
+            }
+          },
+          "wall_s": 9.34345529217459,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9465121096056862,
+            "raw_ttft_s": 0.9465121096056862,
+            "old_empirical_corrected_ttft_s": 1.036790952804413
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9465121096056862,
+            "raw_ttft_s": 0.14651210960568617,
+            "old_empirical_corrected_ttft_s": 0.23834653514069098
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.3683668818440843,
+            "raw_ttft_s": 0.3683668818440843,
+            "old_empirical_corrected_ttft_s": 0.4586457250428112
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.6144716772490447,
+            "raw_ttft_s": 0.6144716772490447,
+            "old_empirical_corrected_ttft_s": 0.7047505204477716
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8611033468295761,
+            "raw_ttft_s": 0.8611033468295761,
+            "old_empirical_corrected_ttft_s": 0.951382190028303
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0345497245743458,
+            "raw_ttft_s": 1.0345497245743458,
+            "old_empirical_corrected_ttft_s": 1.1248285677730727
+          },
+          "sentinel": {
+            "raw_engine_first_s": 1.0345497245743458,
+            "raw_ttft_s": 0.23454972457434575,
+            "old_empirical_corrected_ttft_s": 0.34999516148631354
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-one-at200-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2330367219533831,
+              "ttft_s": 0.2330367219533831,
+              "prefill_complete_s": 0.2330367219533831
+            },
+            "sentinel": {
+              "first_s": 0.27495232243034606,
+              "ttft_s": 0.07495232243034611,
+              "prefill_complete_s": 0.27495232243034606
+            }
+          },
+          "wall_s": 8.51129099089492,
+          "release_s": 0.9099751283989439,
+          "steps": 514,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2888859376231696,
+              "ttft_s": 0.2888859376231696,
+              "prefill_complete_s": 0.2888859376231696
+            },
+            "sentinel": {
+              "first_s": 0.2888859376231696,
+              "ttft_s": 0.08888593762316965,
+              "prefill_complete_s": 0.2888859376231696
+            }
+          },
+          "wall_s": 8.566376028976515,
+          "release_s": 0.9783679379157009,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.34257443682316957,
+              "ttft_s": 0.34257443682316957,
+              "prefill_complete_s": 0.34257443682316957
+            },
+            "sentinel": {
+              "first_s": 0.34257443682316957,
+              "ttft_s": 0.14257443682316961,
+              "prefill_complete_s": 0.34257443682316957
+            }
+          },
+          "wall_s": 8.672964368176515,
+          "release_s": 1.0312677779157007,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.36077197549314566,
+              "ttft_s": 0.36077197549314566,
+              "prefill_complete_s": 0.36077197549314566
+            },
+            "sentinel": {
+              "first_s": 0.27694077453921995,
+              "ttft_s": 0.07694077453921988,
+              "prefill_complete_s": 0.27694077453921995
+            }
+          },
+          "wall_s": 8.566376028976515,
+          "release_s": 0.9685455351897495,
+          "steps": 520,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23303672195338318,
+            "raw_ttft_s": 0.23303672195338318,
+            "old_empirical_corrected_ttft_s": 0.32331556515211013
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.27495232243034606,
+            "raw_ttft_s": 0.07495232243034605,
+            "old_empirical_corrected_ttft_s": 0.16523116562907297
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.28888593762316933,
+            "raw_ttft_s": 0.28888593762316933,
+            "old_empirical_corrected_ttft_s": 0.37916478082189625
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.28888593762316933,
+            "raw_ttft_s": 0.08888593762316932,
+            "old_empirical_corrected_ttft_s": 0.17916478082189624
+          }
+        }
+      }
+    }
+  ]
+}

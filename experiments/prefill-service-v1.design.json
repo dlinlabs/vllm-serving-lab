@@ -1,99 +1,169 @@
 {
-  "schema": "service-microbenchmark-design-v1",
+  "schema": "service-microbenchmark-design-v2",
   "protocol": "prefill-service-v1",
+  "revision": 2,
   "status": "draft_not_executable",
   "collector_implemented": false,
-  "independent_policy_acceptance": false,
-  "source_parent_commit": "6a3db67f6d57e67d6eafe02527b22937f2a2a56a",
-  "purpose": "Identify executed prefill work/timing and scheduler composition before revising the cap-control simulator",
+  "source_parent_commit": "78344d8dec59e835086fb64215cb4675e5b745fb",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6329953794",
   "runtime": {
     "gpu": "RTX4090",
     "same_host": true,
     "same_engine_identity": true,
+    "usage_context": "OPENAI_API_SERVER",
+    "max_num_batched_tokens": 2048,
+    "max_model_len": 8192,
+    "max_num_seqs_minimum": 21,
     "python": "3.12",
     "vllm": "0.30.0",
     "torch": "2.13.0+cu130",
     "model": "Qwen/Qwen3-4B-Instruct-2507",
-    "max_model_len": 8192,
     "prefix_cache": false,
     "speculative_decoding": false,
     "tensor_parallel_size": 1,
-    "preserve_resolved_graph_and_async_behavior": true,
-    "record_actual_scheduler_token_budget": true
+    "preserve_graph_and_async": true,
+    "old_config_identity_established": false,
+    "kv_headroom_fraction": 0.1
   },
   "workload": {
-    "foreground_output_tokens": 128,
-    "background_input_tokens": 256,
+    "background_counts": [
+      0,
+      16
+    ],
+    "background_input_tokens": 1024,
     "background_output_tokens": 512,
-    "temperature": 0,
-    "ignore_eos": true,
+    "foreground_output_tokens": 128,
+    "sentinel_input_tokens": 512,
+    "sentinel_offsets_ms": [
+      50,
+      400,
+      800
+    ],
+    "forced_microbenchmark_outputs": true,
+    "trace_replay_natural_eos": true,
     "content_seed": 20261024,
-    "prompt_manifest_status": "must_be_materialized_and_hashed_before_freeze",
-    "gateway_admission": "bypassed_engine_identification_only"
+    "prompt_manifest_status": "pending implementation"
   },
   "measurement": {
-    "cpu_and_gpu_targets_separate": true,
-    "no_per_step_global_synchronize": true,
-    "bounded_buffer": true,
-    "drain_before_next_trial": true,
+    "separate_cpu_gpu_targets": true,
+    "actual_executed_chunks_required": true,
+    "global_synchronize_each_step": false,
     "max_injection_lag_ms": 5,
-    "short_trace_steps": 5,
-    "observer_slowdown_upper95_limit": 0.05,
-    "bootstrap_pairs": 10000,
-    "bootstrap_seed": 20261023
+    "observer_estimator": "mean paired log ratio; one-sided95 Student-t bound; expm1",
+    "observer_pairs": {
+      "cheap": 20,
+      "demanding": 10
+    },
+    "observer_slowdown_limit": 0.05,
+    "drift_reference": "single-L1024-D16 at block start/end",
+    "drift_flag_fraction": 0.1,
+    "bootstrap_seed": 20261023,
+    "gate_bootstrap_resamples": 10000
   },
   "collection": {
-    "warmup": 40,
-    "observer_check": 40,
-    "main": 100,
-    "deep_diagnostic": 4,
-    "total": 184,
-    "main_blocks": 5,
+    "trial_counts": {
+      "warmup": 22,
+      "observer_check": 60,
+      "drift_reference": 10,
+      "main": 110,
+      "http_bridge": 8,
+      "deep_diagnostic": 2
+    },
+    "total_trials": 212,
+    "main_roles": {
+      "held_case": 80,
+      "train": 18,
+      "repeat_check": 12
+    },
+    "frozen_linear_serial_trial_seconds": 1099.2114439090356,
+    "planning_service_multiplier": 1.35,
+    "idle_gap_seconds": 0.25,
+    "transfer_seconds": 120,
+    "flush_and_frontend_reserve_seconds": 120,
+    "estimated_active_seconds": 1776.9354492771981,
+    "hard_collection_limit_seconds": 1800,
+    "fits_planning_budget": true,
+    "caveat": "A planning estimate, not runtime evidence. Timeout/failure preserves an incomplete suite; optional work is not enabled adaptively.",
     "per_trial_timeout_seconds": 45,
-    "active_collection_budget_seconds": 1800,
     "attempts_per_trial": 1,
-    "stop_on_failed_qualification": true,
-    "partial_attempt_is_not_complete": true
+    "transfer_slices": [
+      {
+        "start": 60,
+        "duration": 60,
+        "cap": 32
+      },
+      {
+        "start": 180,
+        "duration": 60,
+        "cap": 32
+      }
+    ],
+    "transfer_is_development": true
   },
   "analysis": {
-    "calibration_cells": 8,
-    "train_trials": 24,
-    "repeat_check_trials": 16,
-    "held_case_trials": 60,
+    "calibration_cells": 6,
+    "train_trials": 18,
+    "repeat_check_trials": 12,
+    "held_case_trials": 80,
     "candidates": [
-      "M0_linear_executed_work",
+      "M0_executed_work",
       "M1_add_decode_context",
       "M2_add_chunk_attention_pairs"
     ],
-    "nonnegative_coefficients": true,
-    "selection": "leave-one-calibration-cell-out on training trials; simpler wins ties",
-    "source_and_candidate_hash_before_opening_held_cases": true,
-    "service_screen": {
-      "overall_relative_mae_improvement": 0.1,
-      "max_case_regression_fraction": 0.1,
-      "case_regression_absolute_floor_ms": 1
-    },
-    "requires_separate_causal_rollout_and_azure_checks": true
+    "primary_targets": [
+      "prefill-bearing-step time",
+      "cumulative release-to-last-prefill wall time"
+    ],
+    "decode_only_target": "separate no-regression check",
+    "candidate_freeze_before_held_scoring": true,
+    "selection": "leave-one-calibration-cell-out; equal case/normalized-target weights; simpler tie break",
+    "service_improvement_fraction": 0.1,
+    "case_regression_fraction": 0.1,
+    "case_regression_floor_ms": 1,
+    "sentinel_gate": {
+      "cells": 8,
+      "bias_limit_fraction": 0.1,
+      "bias_floor_ms": 25,
+      "min_cells_beating_frozen_B2048": 6,
+      "rank_resolution_ms": 25,
+      "bootstrap_seed": 20261023,
+      "bootstrap_replicates": 10000,
+      "causal_rollout_required": true,
+      "future_observed_chunks_allowed": false,
+      "unevaluated_is_not_passed": true
+    }
   },
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "6fe91129a517e5e6ea7e0c9a96a2bd76a79300319ec7fc7d83278b0f4992b4b0"
+      "sha256": "662ccbaa1872a53637fc51362b9fff34a059c3f94f511a63aadf92b4fc97bf38"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
-      "sha256": "a5ca0c9e7cd5eed4bd0ce86adbf12b32c88269fc3c7226978d043676b412c231"
+      "sha256": "358ede107de33cf80481c35c34225fd9c0bb05896baa971f3459d750b764a14a"
     },
     "prefill-service-v1.order.json": {
       "path": "experiments/prefill-service-v1.order.json",
-      "sha256": "434d6fa48ab38ed479fac91c0048d678a61ab36a515858f11262f48e0539f1ae"
+      "sha256": "a90b7afc9382b51d3d686a3d9f4d8181c0f20c53ffb9ae36d27610e8547b01b4"
+    },
+    "prefill-service-v1.predictions.json": {
+      "path": "experiments/prefill-service-v1.predictions.json",
+      "sha256": "038b580fb37db3056bbda901f634362ac86b8fe39eb18465bc38975914c637b9"
+    },
+    "prefill-service-v1.discrimination.json": {
+      "path": "experiments/prefill-service-v1.discrimination.json",
+      "sha256": "d7e10d082db442ba38e0d7091271ae4a7908d7dc9f6e2c017ec46227fcc3fdde"
+    },
+    "prefill-service-v1.budget.json": {
+      "path": "experiments/prefill-service-v1.budget.json",
+      "sha256": "f2204221d13dc9530ea29daf212e02f418030d5319bcb2646101d1ac3de7b230"
     }
   },
   "readiness": {
     "executable_protocol_frozen": false,
-    "source_hooks_verified_on_installed_wheel": false,
+    "installed_hooks_verified": false,
     "native_cpu_acceptance": false,
-    "gpu_observer_overhead_validated": false,
+    "observer_overhead_validated": false,
     "C_used": false,
     "mpc_evaluated": false
   }

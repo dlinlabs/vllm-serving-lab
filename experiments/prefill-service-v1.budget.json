@@ -1,0 +1,25 @@
+{
+  "trial_counts": {
+    "warmup": 22,
+    "observer_check": 60,
+    "drift_reference": 10,
+    "main": 110,
+    "http_bridge": 8,
+    "deep_diagnostic": 2
+  },
+  "total_trials": 212,
+  "main_roles": {
+    "held_case": 80,
+    "train": 18,
+    "repeat_check": 12
+  },
+  "frozen_linear_serial_trial_seconds": 1099.2114439090356,
+  "planning_service_multiplier": 1.35,
+  "idle_gap_seconds": 0.25,
+  "transfer_seconds": 120,
+  "flush_and_frontend_reserve_seconds": 120,
+  "estimated_active_seconds": 1776.9354492771981,
+  "hard_collection_limit_seconds": 1800,
+  "fits_planning_budget": true,
+  "caveat": "A planning estimate, not runtime evidence. Timeout/failure preserves an incomplete suite; optional work is not enabled adaptively."
+}

@@ -1,248 +1,275 @@
-# Prefill service identification v1 — proposed next GPU experiment
+# Prefill service identification v1 — revised after PR32 review
 
-Status: **design draft; collector and version-specific hooks are not implemented**.
-The accompanying design, cases and order files are reviewable proposals, not an
-executable collection protocol. Freeze their final hashes and an accepted collector
-commit before renting a GPU for collection. Existing trace protocols and results stay historical.
+**Draft design, revision2. Collector/hooks are not implemented; this is not an executable
+GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
+reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
+analysis and token manifests before GPU collection. C remains unused.
 
-## Question and evidence
+## Review decisions and CPU evidence
 
-Determine whether the cap-32 forecast error is better explained by work/metric timing,
-scheduler/chunk composition, or a nonlinear prefill service term. The output is a
-measured service/state representation for the next simulator iteration, not a cap
-optimum or MPC-benefit experiment.
+| Review item | Revision |
+|---|---|
+| 1: test2048 before GPU | Completed the six-capture,288-window frozen-parameter sensitivity. Capture gates re-audit;8192 predictions reproduce the archive.2048 does not repair the pooled error. Keep both as preregistered scenarios. |
+| 1: establish compatibility | Preserve OpenAI-server usage context. Pin2048 for the new experiment, archive resolved config/source/launch. Compare short replay ITL tails descriptively; zero gaps above0.2s is not a validity gate or proof of old config. |
+| 2: calibration support | Train on single1024/7168 and uniform4x4096, at both background levels. Hold2048/4096, mixtures/orders and all sentinels out of fitting. Check actual chunk-position coverage/rank. |
+| 3: realistic decode pressure | Replace D8 with D16:16 backgrounds,input1024/output512. Record actual counts/context; target about16–24k background context. D9 is deferred to keep the budget fixed. |
+| 4: sentinel discrimination | Replace staggered arrival cell with a four4096 burst and sentinel offsets50/400/800ms; add one4096 plus sentinel200ms. |
+| 5: prefill-sensitive targets | Primary: prefill-bearing step timing AND per-request cumulative release-to-last-prefill time. Decode-only steps are a separate no-regression check. |
+| 6: measurable rollout gate | Declare latency-error, tie-aware ordering and6-of8 improvement checks below. No required preferred cap or named segment. |
+| 7: preregister predictions/power | Commit8192/2048 frozen-barrier predictions, nonlinear sensitivity and round-robin alternative. Compare contrast sizes with10/25/50ms planning bands; actual noise is unknown until GPU calibration. |
+| 8: normal endpoint bridge | One block of all eight sentinel cases through the shared-client gateway and normal OpenAI server, with per-request cross-process joins. |
+| 9: transfer slices | Two fixed32,60s development slices are scheduled, not adaptively added. One warmup pass and two deep traces keep the recomputed proposal within1800s. |
+| Minor: overhead/drift | Mean-log-ratio t interval;20 cheap and10 demanding pairs. Fixed reference before/after each main block. Actual step work comes from scheduler/execution records, not iteration-token histograms. |
 
-* PR26/27: one-step flow consistency did not make multistep goodput reliable;
-  evolving endogenous work/history matters, and additional counter inputs alone did not fix it.
-* PR28: FIFO prefill, 8192 scheduled tokens per step and partial-prefill progress are
-  approximations. The verified context limit does not verify the scheduler token budget.
-* PR29/30: fixed/switch 16/32 data exist. State calibration improves mean forecast
-  error, but leaves large segment bias and unreliable hypothetical action rankings.
-* PR31: recent accepted prompt volume is associated with short-request misses on
-  both hosts. A linear timing control explains much of the apparent squared-term gain.
-  Uniformly spreading tokens over accept-to-first spans uses future observations;
-  it is diagnostic and cannot become an online feature.
+The verified vLLM v0.30.0 `EngineArgs.get_batch_defaults` source sets API-server2048
+versus LLM-class8192 in its smaller-GPU branch. This is an upstream default, not
+proof of the historical wheel/config or its overrides. Bypassing HTTP must not
+instantiate an offline LLM with different defaults. Use one OpenAI-server engine
+with an engine-side enqueue barrier instead.
 
-## Hypotheses to distinguish
+### Completed development sensitivity
 
-| Hypothesis | Discriminating observation | Consequence |
-|---|---|---|
-| H1: counter timing obscures the workload that actually ran | Scheduled prompt-token progress reconciles with request state before aggregate counter increments | Attribute work to executed steps; model pending prefill explicitly |
-| H2: shape/context adds service cost beyond total scheduled tokens | A context/chunk term improves predictions for held-out lengths and mixtures after controlling decode context | Retain that term only if the prespecified validation supports it |
-| H3: scheduler/backlog changes make short requests wait | Same demand delivered as a burst versus staggered arrivals changes measured queue/chunk history and sentinel TTFT | Correct scheduler/state approximation rather than simply raising a global delay |
-| H4: observation changes the system materially | Paired observer-off/light captures differ by more than the declared overhead allowance | Fix the observer before using timing captures |
+| Unchanged service/overhead parameters;288 common windows | Goodput MAE | Cap32 bias |
+|---|---:|---:|
+| B8192 |0.7290|+0.3163|
+| B2048 |0.7423|+0.3816|
 
-These are competing/overlapping explanations. Failure to establish H2 is a valid result.
-No requirement says the model must prefer cap16 in a named Azure segment.
+See [CPU sensitivity](../results/prefill-budget-sensitivity/summary.json). Only B
+changes; the original causal bias rule is recomputed from closed history per B.
+The old model restarts pending prompts from full input and uses approximate decode
+progress. A worse2048 score cannot reject2048 as the real historical setting.
+The additional short-miss quartile diagnostic forces observed admissions from the
+new-host fixed32 capture and uses raw service only; it is not an online prediction
+or an isolated causal test of the scheduler. Its scope/limitations are in the JSON.
+The forced-admission quartile diagnostic already shows increasing short-miss rates
+at8192 (0.4/6.3/17.5/52.5%);2048 gives0/0/12.5/59.2%, versus actual0.8/3.8/15.4/63.3%.
+Thus the association is not unique evidence for2048. An ITL histogram is not a per-step work trace, and frontend/async effects can alter
+which gaps are observed. We do not infer a unique scheduler budget from a0.2s bound.
 
-## Environment and version contract
+## Questions and environment
 
-One RTX4090, one host, one loaded EngineCore for the entire benchmark. Match current
-Qwen/Qwen3-4B-Instruct-2507, Python3.12, vLLM0.30.0 and Torch2.13.0+cu130; pin model
-and tokenizer revisions, package lock, installed-source hashes and observer patch.
-Save driver/CUDA, GPU UUID/clocks/power/temperature, CPU affinity/quota and resolved
-engine config. GPU clocks are observed, not silently changed.
+Separate (H1) work/counter timing, (H2) chunk/context-dependent service cost, and
+(H3) scheduler backlog ahead of short requests. A null nonlinear result is useful.
+Record per-step evidence before deciding which simulator assumptions to change.
 
-Required resolved config includes model/context8192, max_num_batched_tokens,
-max_num_seqs, chunked-prefill and partial-prefill limits, long-prefill threshold,
-attention backend/dtype, KV capacity, prefix-cache flag, graph/compile settings,
-async scheduling, worker mode, speculative decoding and tensor parallelism.
-The new run measures its actual setting; it cannot retroactively establish old defaults.
-Keep normal graph/async behavior. Do not silently force eager/serial mode to simplify hooks.
-Require prefix caching off, speculative decoding off, TP1 and no external traffic.
-If these cannot be reconciled with the selected runtime, stop and revise the draft before collection.
+One RTX4090, one loaded OpenAI-server EngineCore, Qwen/Qwen3-4B-Instruct-2507,
+Python3.12, vLLM0.30.0, Torch2.13.0+cu130. Pin model/tokenizer/package/source revisions.
+New launch explicitly uses max_model_len8192 and max_num_batched_tokens2048;
+record max_num_seqs (must support at least21 requests), chunked/partial-prefill
+settings, thresholds, dtype/attention backend, graph/compile/async settings, KV
+capacity, prefix cache, speculative decoding and TP. Require prefix cache off,
+speculation off, TP1. Keep recorded normal graph/async behavior; no silent eager
+or serialization workaround. Archive literal launch argv and resolved config.
 
-## Three distinct measurement layers
+Before first trial, bind actual host/GPU UUID, driver/CUDA, CPU quota/affinity,
+clock/power/temperature, config and installed-source hashes to the manifest.
+Fail unexpected runtime/config rather than choosing settings from observed latency.
+Calculate peak block-rounded KV demand from inputs plus full output caps and
+require at least10% capacity headroom. The old86k KV capacity is not assumed on a
+new rental. Backgrounds plus foreground/sentinel can approach42k tokens before
+block rounding. A failed capacity check stops collection; do not call it safe by assumption.
 
-1. **Engine-side enqueue barrier:** submit a foreground cohort before the next
-   scheduler pass. This fixes logical arrivals while leaving actual chunking to
-   vLLM. Separate admission wall time, scheduling decisions and execution.
-2. **Per-step observer:** request identity, prompt length, prior computed position,
-   scheduled prompt/decode tokens, context lengths, running/waiting IDs, preemptions,
-   graph mode, scheduler/execute timing and result visibility, joined by step ID.
-3. **Short independent trace:** use supported profiler facilities on named cases
-   to validate GPU timing and stream/graph coverage. Deep traces are never the
-   primary performance measurements.
+## Workload and splits
 
-The official v0.30.0 scheduler output exposes request-level scheduled-token counts
-and computed positions; the adapter must inspect the exact installed implementation
-to reconcile progress, including async in-flight work. A scheduler decision alone
-is not proof the tokens completed. Reconcile scheduled, executed, committed and
-metric-reported work at trial drain.
+Actual engine input token IDs define length, including templates/special tokens.
+Materialize/hash all trial content before freeze, content seed20261024. Foreground
+and sentinel outputs are forced128 tokens, background outputs512, temperature0,
+ignore EOS. This is a mechanistic workload; the later Azure slices retain natural
+EOS and the historical128 output cap. All requests must fit context8192.
 
-Record CPU monotonic iteration wall time and CUDA event spans as different targets.
-CUDA launches are asynchronous: a Python function's return is not GPU completion.
-Use stream-correct event recording with delayed resolution, no per-step global
-cuda.synchronize. Confirm multi-stream/graph boundaries against short traces.
-If there is no unambiguous GPU span, do not label a CPU span as GPU time. Async
-overlapping steps cannot be converted into a serial service model by adding spans.
+D0 means no background. D16 means16 requests with1024 input tokens, released first;
+wait until all are decoding before the foreground barrier. Record their actual
+context and remaining output at release and every subsequent step. D16 is an
+initial target, not an assertion that the decode population remains16. Drain all
+work before each trial;250ms idle gap; external traffic prohibited.
 
-Use bounded in-memory records and deferred flush after drain. An overflow, dropped
-event, restart, unexpected worker or failed reconciliation invalidates the trial.
-Store prefill chunks and positions, not just sums of entire admitted prompt lengths.
+| Family | Conditions at each of D0/D16 | Cells | Split |
+|---|---|---:|---|
+| Single |1024/2048/4096/7168 input |8|1024/7168 calibration;2048/4096 held |
+| Composition |4x4096;1024/1024/7168/7168; reverse order |6|Uniform calibration; mixed/reverse held |
+| Sentinel |4x4096 burst,512 sentinel at50/400/800ms;1x4096 with sentinel200ms |8|All held |
 
-## Workloads: 20 cells, five randomized complete blocks
+Composition cases have four requests and16384 total prompt tokens. This controls
+offered work/count, not actual step composition. Preserve common content pools
+within a block, including request IDs/arrival order mapping. Insert simultaneous
+requests at one engine-side barrier; let the real scheduler choose chunks.
+Sentinel target and actual enqueue times are logged; maximum offset error5ms.
+The case/order files contain22 cells, five randomized complete main blocks, seed20261022.
 
-All lengths mean **actual engine input token IDs**, including any template/special
-tokens. Prebuild and hash IDs before GPU collection; exclude special/EOS IDs from
-the synthetic body. Do not approximate length by repeated text. Materialize the
-100 per-trial prompt manifests from the fixed content seed before freezing.
+Calibration: six cells x blocks1–3 =18 fitting trials. The same cells in blocks4–5
+are12 repeat checks. Other16 cells x five blocks =80 held-case trials. Warmup/bridge
+and held timings must not be used to choose model features or coefficients.
+These controlled-case checks are not unseen-production or MPC acceptance.
 
-Foreground outputs are forced to exactly128 tokens (ignore EOS for this mechanistic
-study, temperature0). Report this difference from historical natural-EOS replay.
-For D8, eight background requests have input256 and forced output512; wait until
-all are decoding before releasing the foreground barrier. Record actual live count
-and context of each background request; eight is a target at release, not assumed
-constant during subsequent steps. Wait for **all** work to drain before the next trial.
-Input plus requested output must stay within8192 for every foreground/background/sentinel request.
+## Execution and time budget
 
-| Family | Foreground at relative time0 | Extra request | Background at release | Cells |
-|---|---|---|---|---:|
-| Single-length | one of1024/2048/4096/7168 tokens | none | D0 or D8 | 8 |
-| Equal total/number | four4096, or1024/1024/7168/7168, or reverse order | none | D0 or D8 | 6 |
-| Sentinel | none, or four4096 as one burst, or four4096 at0/50/100/150ms | one512-token sentinel at200ms | D0 or D8 | 6 |
+| Stage | Count | Role |
+|---|---:|---|
+| One warmup pass |22|Cover each shape/background; unscored |
+| Observer off/light |60|20 pairs single1024-D0,10 pairs uniform-D16 |
+| Main |110|Five22-cell blocks |
+| Drift references |10|Single1024-D16 before/after each main block |
+| HTTP sentinel bridge |8|One randomized block; diagnostic |
+| Deep traces |2|Single7168-D16 and mixed-D16; five steps from foreground release |
+| **Total trials** |**212**|Plus the two60s transfer slices |
 
-The equal-total cases each have four requests and16384 prompt tokens; sum-of-squares
-and admission order differ. This controls offered demand/count, **not** actual
-per-step composition, which must be observed. Contrasting the two heterogeneous
-orders helps distinguish order effects. Same token content is paired within each
-block for observer checks and sentinel burst/staggered comparisons.
+Order: warmup, observer check, main+references, HTTP bridge, transfer slices, deep
+traces. Main blocks are not reordered based on outcomes. Deep traces are last so
+profiler flush/clock effects cannot contaminate later performance stages.
 
-For sentinel trials, target offsets are engine enqueue times from a common release
-epoch. Maximum offset error is5ms; simultaneous groups are inserted at one barrier,
-not four independent HTTP sends. Retain target and actual times. The sentinel's
-200ms arrival means all four staggered requests should already have arrived.
+[Budget calculation](prefill-service-v1.budget.json) sums the frozen linear scenario
+wall times, multiplies by1.35, then adds idle gaps,120s of replay and120s frontend/
+profiler reserve. It estimates about1777s; this is a planning estimate, not a
+measured completion-time promise. Hard active budget1800s excludes installation
+and initial model load, includes every stage/flush. Per-trial timeout45s. No automatic
+retry, shape removal, opportunistic extra level or resizing a partial suite into a
+successful one. If on-host preparation predicts insufficient margin, stop and
+version a smaller plan before scoring. An overrun preserves an incomplete attempt.
 
-Gateway cap is bypassed in this engine experiment. It is not an admission-policy
-comparison: cap16 versus32 and SLO goodput will be tested later through the gateway.
-No synthetic case is called an Azure replay or held-out C workload.
+## Observer, drift and timing contracts
 
-## Fixed order, warmup, observer check and resource budget
+Observer modes retain identical minimal request/release logging. Light additionally
+records bounded per-step data and CUDA events; deep adds short profiling. Flush
+buffers after drain, fail overflow/drop/reconciliation errors. Off does not pretend
+to have step evidence. All modes retain request outcomes and release background state.
 
-The generated order uses Python3.12 Random seed20261022. Each of five main blocks
-contains every cell once, randomized before collection; do not reorder after seeing
-latency. A block, not a GPU step, is the replication unit. All traces share one host.
+For each observer cell and each of trial wall time/foreground TTFT, form paired
+log(light/off) ratios. The one-sided95% Student-t upper limit on their mean,
+converted with expm1, must be<=5%. Use20 cheap/10 demanding pairs as declared,
+balanced off-first/light-first and identical paired content. Record raw ratios,
+variance and assumptions; this is a geometric-mean overhead allowance, not proof
+of no effect. Failed/inconclusive qualification stops before main trials.
 
-* 40 unscored warmups: two passes through all20 cells, to cover long prompts,
-  background decoding and graph shapes. Any compilation first seen during scored
-  work invalidates that affected trial; do not silently discard/retry it.
-* 40 observer trials: two demanding cells ×10 off/light pairs. Pair order is
-  balanced five off-first/five light-first, randomized in advance.
-* 100 main light-observer trials: five complete20-cell blocks.
-* Four deep diagnostic trials: two named cells ×two traces, after the main series;
-  trace only five actual execution steps beginning at foreground release, with config/source
-  support verified beforehand. Profiler flush time is recorded separately.
+Drift references are calibration cells only. Report before/after wall/TTFT ratios
+and clocks in each block. A>10% change flags the batch as drift-affected; preserve
+all trials and do not make an unqualified pooled service-parameter claim. Do not
+remove the worst block or refit an unregistered clock feature after viewing held data.
 
-Total planned:184 trials, of which100 are model/association trials. Each trial has
-a45s timeout including background/drain; no hidden cancellations to speed up runs.
-After timeout, preserve the partial trial, stop, and leave the suite incomplete.
-Target active collection is15–30min after setup, **not a guarantee**. Hard collection
-budget is1800s including warmup/observer checks and deep flush, excluding installation
-and initial model loading. A budget expiry preserves an incomplete attempt; it does
-not authorize a smaller successful suite. No auto-retry or adaptive cell selection.
+Map request IDs through scheduler, worker and output with stable step/iteration IDs.
+Capture pre-step prompt length/computed position, scheduled/executed/committed
+prefill tokens, decode count/context, queue order, waiting/running status, preemption,
+mode and timestamps. Reconcile actual input/output progress at drain. The exporter
+prompt and iteration histograms are time-correlated observations, not ground truth
+for executed per-step work. Trace/source-map where counters are updated.
 
-Observer allowance: paired case wall time and foreground TTFT are measured in both
-off/light modes. For each of the two cells, the upper95% paired-bootstrap interval
-(10000 pair resamples, seed20261023) on median light/off relative slowdown must be
-<=5% for both metrics. This is an engineering measurement allowance, not a theorem
-or proof of zero observer effect. If inconclusive/failing, stop before the100 main
-trials and improve the observer. Deep-profile latency is separately labelled.
+CPU monotonic iteration wall time and stream-correct CUDA spans are separate
+labels. Use delayed CUDA-event resolution, no per-step global synchronize. Confirm
+multi-stream/graph scope with the two short traces; asynchronous overlapping steps
+cannot simply be added into a serial service model. Mark unavailable scopes; never
+substitute Python return duration for GPU time. Exact-revision CPU/mock acceptance
+and adapter tests must cover partial chunks, async IDs, cancellations, duplicates,
+missing events, bounded buffers and future-observation isolation before collection.
 
-## Outputs and qualification
+## Predictive models, primary targets and gates
 
-Save suite/order/case/prompt/source hashes; environment/config/source mapping;
-per-request target/enqueue/first/completion times and output counts; per-step
-scheduler/execution records; raw metrics with send/receive timestamps; short traces;
-GPU/CPU resource samples; gate decisions, stdout/stderr and complete failure evidence.
+Fit fixed nonnegative models, with training-only scaling:
 
-Mandatory before interpreting service coefficients:
+* M0: intercept + executed decode-token count + executed prefill-token count.
+* M1: M0 + summed decode context lengths.
+* M2: M1 + Z=sum(q*l+q*(q+1)/2), actual prompt chunk q and pre-chunk position l.
 
-* Exact-revision CPU/mock acceptance, plus adapter tests for token accounting,
-  chunked/partial prefill, async IDs, duplicate timestamps, cancellation and output
-  completion, missing events and future-observation isolation.
-* One stable engine identity/config, all declared184 trials accounted for, no
-  silent retries, no OOM/preemptions/prefix hits, clean drain between trials.
-* Every request identity, and every light/deep-observed step identity, reconciles.
-  Observer-off trials retain request/outcome evidence without pretending to have step logs.
-  Completed foreground/sentinel output128,
-  background512. All scheduled prompt progress reconciles with input IDs at drain;
-  counter semantics and any offsets are documented from source and observed traces.
-* Target D8 backgrounds are all decoding at release; measured context is retained.
-  Injected timing error <=5ms, no dropped/overwritten logs and observer gate passes.
+Fit GPU-span and valid iteration-wall targets separately. Primary service scores
+are (a) prefill-bearing steps and (b) cumulative per-request release-to-last-prefill
+wall time. Neither is diluted by hundreds of decode-only steps. Report decode-only
+error separately, with a no-regression allowance of max(10% M0 MAE,1ms).
+These service scores condition on observed executed work, including held-case chunks;
+they are not causal workload forecasts. Cumulative targets include all intervening
+work from release until that request's final prefill chunk, not just its own chunks.
 
-Existing replay50ms load/control gates remain unchanged for future Azure runs.
-They are not automatically applicable to this new engine-side harness.
+Select the family using leave-one-calibration-cell-out errors on fitting trials,
+with equal case weighting and equal weight to normalized primary targets (each
+scaled by that target's M0 calibration MAE, floor1ms); simpler wins ties. Freeze
+candidate/source/coefficient hashes before opening held cases. Do not select a
+winner from the held report. Actual q/l coverage, scaled design rank/condition and
+held feature ranges must be reported; numerical interpolation is not proof of
+causal support. Report unsupported regions rather than retune after the fact.
 
-## Fitting and validation, declared before collection
+Service screen: selected context/nonlinear model must improve each primary
+held-case target's case-weighted MAE by>=10% versus refitted M0, without per-case
+regression above max(10% case M0 MAE,1ms). M0 may remain the appropriate model if
+accounting/state changes suffice; do not force M2 to pass. These are engineering
+screening margins, not physical laws or MPC guarantees.
 
-The cases file assigns eight calibration cells: single1024/4096, uniform four4096,
-and no-burst sentinel, each at D0/D8. Fit only blocks1–3 for those cells (24 trials).
-Blocks4–5 of those cells are repeat checks (16 trials). Other lengths, heterogeneous
-orders and burst/staggered sentinel cases form60 held-case trials across all five
-blocks. Do not inspect their timing summaries before freezing the candidate fit.
-These are controlled-case transfer checks, not independent production acceptance.
+**Separate causal sentinel rollout gate, eight cells, five blocks each:**
 
-Fit three fixed nonnegative regression specifications, separately for valid GPU
-spans and valid engine iteration wall-time targets; never mix target units/scopes:
+1. Per cell, abs(median(predicted-measured engine TTFT)) <=max(10% measured median,25ms).
+2. Compare50/400/800ms offsets within each D level. Measured pairs with a block-bootstrap
+   95% interval excluding0 and median difference>25ms are distinguishable; predicted
+   ordering must agree for all such pairs. Others are unresolved/ties, not automatic
+   ranking successes. No discernible ordering means policy identification is unresolved.
+3. Paired absolute-error MAE must beat the preregistered frozen-B2048 **raw engine**
+   baseline in at least6/8 cells; report B8192 too. No cell may regress by more than
+   max(10% baseline MAE,25ms).
 
-* M0: intercept + scheduled decode-token count + scheduled prefill-token count.
-* M1: M0 + sum of decode context lengths.
-* M2: M1 + attention-pair proxy Z = sum(q*l + q*(q+1)/2), where q is the **executed
-  prompt chunk** and l its pre-chunk computed prompt position. This is a candidate
-  explanatory proxy, not a physical law or squared full-prompt cost per chunk.
+The causal rollout must use only release-time state, injected arrivals and its own
+predicted scheduler progress. Measured future chunks/first tokens are oracle-only.
+If no causal rollout exists, this gate is **not evaluated**, not passed by step-fit
+accuracy. Old fitted TTFT overhead is archived separately and is not pure engine
+cost. Passing microbenchmark gates nominates a simulator candidate, not an MPC policy.
 
-Train-only scaling; no fitted request/run/time-of-segment identities. Choose one
-of M0/M1/M2 using leave-one-calibration-cell-out MAE inside the24 training trials,
-with simpler model winning ties. Store all training fits, source and chosen-model
-hash before opening held cases. Report every model's held-case results once;
-changing the candidate afterwards creates a new development iteration, not a pass.
+## Preregistered predictions and discrimination
 
-Report per-cell/block service-time MAE and signed bias, next-prefill/first-token
-timing, remaining-work error, sentinel TTFT and queue wait, output throughput,
-measured chunk/decoder-context distribution, and observer effect. GPU steps within
-a trial are not independent replicates. Use cell/block summaries and disclose five
-blocks; avoid claims of precise population significance from thousands of steps.
+[Predictions](prefill-service-v1.predictions.json) include the unchanged PR28 simulator
+with an explicit barrier-state adapter at B8192 and B2048: D16 backgrounds start
+already decoding with511 remaining outputs; raw engine and old empirical correction
+are separate. The model cannot infer their actual release state before measurement.
+A variable-output CPU scenario additionally models background preparation for budgeting.
+Neither adapter is represented as a new fitted physical model.
 
-The fixed simulator from PR28/30 remains an archived reference. Its coefficients
-were learned from interval wall time, so comparing them with CUDA time requires
-matching the target scope, not reusing the old1.0286/0.729 forecast thresholds.
-Any end-to-end first-token replay uses only injected arrivals, pre-decision request
-attributes and predicted state progress. Future first-content times and measured
-future chunk decisions are confined to oracle diagnostics. A GPU-time fit alone
-does not supply a valid end-to-end rollout, particularly with async overlap.
+Further scenarios use an unvalidated nonlinear sensitivity (3.15e-9 per full L²,
+charged incrementally as2*k*Z) and a round-robin512 alternative, **not a claim about
+vLLM's actual interleaving policy**. [Discrimination](prefill-service-v1.discrimination.json)
+records expected contrasts and planning noise bands10/25/50ms. These are not measured
+noise or power estimates. Before main, compute1.4826*MAD of off-mode foreground
+TTFT in each calibration observer cell; use the larger value as a provisional jitter
+scale, not a universal bound. Mark a contrast unresolved if its expected gap is less
+than three times that scale. If all intended primary contrasts are unresolved, stop.
+This calibration-only check does not inspect held timing or justify precision on
+other states. Stop if the
+intended distinction cannot be measured; do not swap held cells after inspecting them.
 
-Decision rules:
+## Endpoint bridge and real-composition transfer
 
-1. If only timing/accounting changes help, fix work attribution/prefill state and
-   keep the simpler service form. Do not add a square term just because its sign is positive.
-2. A selected context/nonlinear model passes the service-time screen if held-case
-   wall-time MAE improves by>=10% versus refitted M0, with no per-case MAE increase
-   greater than max(10% of that case's M0 MAE, 1ms). The floor prevents unstable
-   ratios when reference error is near zero. It is then a **service-model candidate**;
-   its causal scheduler rollout must separately predict the sentinel cases before
-   Azure development replay. No measured future chunks may be used to pass that check.
-   These margins are engineering screening choices, not MPC acceptance guarantees.
-3. Otherwise report mixed/negative results and the unresolved scheduler/overlap
-   behavior. Do not relax gates or force cap rankings.
+For all eight sentinel cases, use normal shared-client gateway -> OpenAI API ->
+EngineCore. Gateway baseline mode admits all (backgrounds included); this stage
+measures transport, not cap policy. Record scheduled/actual send, API/gateway receipt,
+EngineCore enqueue, first engine output, gateway first content, SSE send and client
+first content, with request IDs and host monotonic clocks. If a scope is not observable,
+mark it unavailable rather than merge spans. HTTP cannot guarantee simultaneous
+engine enqueue; retain actual arrivals and state. Do not subtract unrelated percentiles
+or assume a matched barrier/HTTP state. No held bridge delay becomes a fitted predictor.
 
-After this experiment: implement causal pending-prefill state and the supported
-service/queue update, compare it with frozen baselines on existing development
-replays, then freeze a separate same-host repeated fixed/reactive/MPC evaluation.
-This experiment alone cannot establish dynamic cap benefit; C remains unused.
+Restart only the gateway between transport baseline and cost-aware transfer; keep
+EngineCore/config unchanged and bind each gateway identity separately. Then run two
+fixed32,60s slices [60,120),[180,240) from the historical development trace
+SHA25662f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e,
+rebased locally with original trace IDs/provenance. Natural EOS, output cap128,
+original shared-client/process sampler/runner-GC settings and all enabled replay
+integrity/load/control/diagnostic gates, including50ms limits, remain required.
+Freeze derived trace hashes before collection. No C. ITL-tail/CDF comparisons and
+actual chunk distributions connect to old captures, but are not old-default or
+same-host policy equivalence tests. These slices are development observation;
+no new model is fitted to their outcomes before reporting its frozen predictions.
 
-## Sources and preparation checklist
+## Reproduce and freeze checklist
 
-* [PR31 diagnosis](https://github.com/dlinlabs/vllm-serving-lab/pull/31), with PR26–30
-  reports as linked there.
-* [vLLM v0.30.0 profiling](https://docs.vllm.ai/en/v0.30.0/contributing/profiling/):
-  detailed profilers add overhead; short traces validate scope, not benchmark latency.
-* [v0.30.0 scheduler output](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/core/sched/output.py):
-  inspect against installed wheel source, not current-main assumptions.
-* [PyTorch CUDA semantics](https://docs.pytorch.org/docs/stable/notes/cuda.html):
-  asynchronous execution requires appropriate event/stream timing. Keep the chosen Torch build pinned.
+```
+python scripts/build_prefill_design.py --output-dir /tmp/fresh-prefill-design
+python scripts/check_prefill_budget.py --suite-dir NEW/results/low-cap-switch-v1 --old-suite-dir OLD/results/cap-range-v1 --output-dir /tmp/fresh-budget-check
+```
 
-Before collection, implement/review the opt-in adapter and runner, materialize token
-manifests, verify resolved config and step/metric source mapping, validate buffering/
-async timing contracts, run CPU acceptance, replace draft placeholders with exact
-hashes, and freeze a new executable protocol. This design intentionally supplies
-no pretend runnable vLLM command for hooks that do not yet exist.
+The plan generator reproduces cases/order/predictions/discrimination/budget. The
+budget sensitivity re-audits the archived suite and checks8192 parity. Raw bundles
+are the public PR30/31 evidence; see their extraction instructions. Published
+CPU results are development sensitivity, not a native collector/GPU acceptance.
+
+Next implement/review the version-specific server adapter, collector, trace slicing,
+metric update-site mapping, exact token manifests and causal rollout. Run CPU
+acceptance at that exact revision, bind host config, verify budget/observer and
+freeze an executable protocol. Afterwards compare revised simulator on Azure dev
+captures; independent repeated fixed/reactive/MPC evaluation remains separate.
+
+Sources: [v0.30.0 defaults](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/engine/arg_utils.py),
+[scheduler output](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/core/sched/output.py),
+[profiling](https://docs.vllm.ai/en/v0.30.0/contributing/profiling/),
+[CUDA async timing](https://docs.pytorch.org/docs/stable/notes/cuda.html).
