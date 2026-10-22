@@ -1,11 +1,11 @@
 {
-  "schema": "service-microbenchmark-design-v7",
+  "schema": "service-microbenchmark-design-v8",
   "protocol": "prefill-service-v1",
-  "revision": 7,
+  "revision": 8,
   "status": "draft_not_executable",
   "collector_implemented": false,
-  "source_parent_commit": "73279c4cb7186ca6a410c0811a55f05a14031485",
-  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6331855173",
+  "source_parent_commit": "c726a423426aaa3ece2334ac0d1f0d9de245153a",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6351586487",
   "runtime": {
     "gpu": "RTX4090",
     "same_host": true,
@@ -48,19 +48,19 @@
     "content_seed": 20261024,
     "prompt_manifest_status": "pending implementation",
     "backgrounds_must_outlive_foreground": true,
-    "sentinel_one_foreground_tokens": 7168,
+    "sentinel_one_foreground_tokens": 7680,
     "sentinel_foreground_by_offset_ms": {
       "50": [
-        1024,
-        1024,
-        7168,
-        7168
+        512,
+        512,
+        7680,
+        7680
       ],
       "400": [
-        1024,
-        1024,
-        7168,
-        7168
+        512,
+        512,
+        7680,
+        7680
       ],
       "800": [
         4096,
@@ -119,12 +119,12 @@
       "train": 18,
       "repeat_check": 12
     },
-    "frozen_linear_serial_trial_seconds": 729.4647739376677,
+    "frozen_linear_serial_trial_seconds": 729.8476498840222,
     "planning_service_multiplier": 1.35,
     "idle_gap_seconds": 0.25,
     "transfer_seconds": 320,
     "flush_and_frontend_reserve_seconds": 120,
-    "estimated_active_seconds": 1517.7774448158516,
+    "estimated_active_seconds": 1518.29432734343,
     "hard_collection_limit_seconds": 1800,
     "fits_planning_budget": true,
     "caveat": "Planning estimate only. Stage statuses are independent; suite complete requires every stage. Preserve all failures/timeouts and never turn a selected subset into a complete suite.",
@@ -237,8 +237,6 @@
       "unevaluated_is_not_passed": true,
       "eligibility_source": "Frozen candidate and EACH calibrated comparator, calibration-only per-position jitter, preregistered per-cell reference mapping",
       "eligibility_threshold": "abs predicted TTFT difference >max(3*jitter[cell],25ms)",
-      "minimum_eligible_cells": 4,
-      "minimum_strict_win_fraction": 0.75,
       "unresolved_is_not_passed": true,
       "all_cells_no_regression": true,
       "policy_tie_controls": [
@@ -252,7 +250,6 @@
       "raw_B2048_role": "staleness/recalibration baseline only",
       "selected_M0_structural_status": "not_applicable",
       "same_comparator_training_and_accounting_required": true,
-      "win_improvement_threshold": "comparator MAE minus candidate MAE >max(3*jitter[cell],25ms); numerical equality is non-win",
       "insufficient_resolved_wins": "inconclusive",
       "any_material_regression": "failed",
       "matched_offset_pairs_ms": [
@@ -261,7 +258,26 @@
           400
         ]
       ],
-      "uniform_800_is_separate_control": true
+      "uniform_800_is_separate_control": true,
+      "minimum_distinct_groups": 2,
+      "contrast_groups": {
+        "mixed_burst": [
+          "sentinel-four-at50-D0",
+          "sentinel-four-at400-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at400-D16"
+        ],
+        "single_long": [
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ]
+      },
+      "all_group_members_must_be_eligible": true,
+      "win_rule": "Average paired absolute-error gains within each group/block; across FIVE block means require mean-t(.95,4)*sample_SD/sqrt(5)>1e-12s for BOTH groups",
+      "block_dependence_default": "unresolved",
+      "block_dependence_required": "qualified by a preregistered calibration-only assessment; not implemented yet; unresolved/violated cannot pass",
+      "implementation": "prefill_grouped_validation.py",
+      "block_count": 5
     },
     "nonlinear_planning_k": [
       1.5e-09,
@@ -330,7 +346,7 @@
     "M0Z": "M0 plus attention_pairs; same calibration folds/weights/masks; reporting only, not selectable",
     "calibrated_design_screen": {
       "artifact": "results/prefill-design-round5/calibrated-planning.json",
-      "role": "synthetic feasibility, not statistical power",
+      "role": "Historical revision7 deterministic feasibility; superseded by noise_screen_v8",
       "refit_all_comparators": true,
       "loco_selection_training_only": true,
       "k_1p5e9_eligible_cells_zero_jitter": 4,
@@ -338,32 +354,61 @@
       "jitter_15ms_resolved": false,
       "actual_eligibility_required_before_held_scoring": true
     },
-    "azure_replay_scope": "Retained arrivals/input lengths from Azure; synthetic prompt content, fixed128 output cap with natural EOS; source GeneratedTokens audit-only"
+    "azure_replay_scope": "Retained arrivals/input lengths from Azure; synthetic prompt content, fixed128 output cap with natural EOS; source GeneratedTokens audit-only",
+    "noise_screen_v8": {
+      "artifact": "results/prefill-design-round6/noise-screen.json",
+      "role": "conditional synthetic sensitivity, not GPU power",
+      "held_sigma_ms": [
+        8,
+        10,
+        12,
+        15
+      ],
+      "calibration_label_cv": [
+        0.01,
+        0.02,
+        0.05
+      ],
+      "training_fits": 480,
+      "held_draws_per_fit": 200,
+      "exact_fit_held_draws": 20000,
+      "single_long_gap_ms": 30.2,
+      "at_12_and_15ms": "inconclusive",
+      "cross_block_ar_null": "about14% nominal false passes; dependence qualification blocks passing"
+    },
+    "calibration_noise_readiness": {
+      "expected_strata": "Freeze executed-work/position/mode/padding identity before opening labels",
+      "repeats": 3,
+      "warning_cv": 0.02,
+      "stop_cv": 0.05,
+      "missing": "inconclusive",
+      "within_range_accepts_model": false
+    }
   },
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "bf8f6b1a43effc993f5f3c49c1471c0e9b6e70c1efaa4e967255f1455dc13033"
+      "sha256": "a3cbaccbb5111b57d611a57bad7e70cb9e41542399cb0e886639bf117e14144f"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
-      "sha256": "5c665ff4c070dcc9e3432f76adf63ce8e91be59790734fe3f6fb4a35f7935caa"
+      "sha256": "c265cac7e8de14407b0f52f1b2bbff442570292ff4a6941abf98898b508417cd"
     },
     "prefill-service-v1.order.json": {
       "path": "experiments/prefill-service-v1.order.json",
-      "sha256": "f18bd304fe95d6af4c1ceabaee63a42463cadf5b184306ce7880571de3d8b87f"
+      "sha256": "c6d7bb493e19d4ba10d4824d299c73a179126441073504bd58bc7f432f903c4b"
     },
     "prefill-service-v1.predictions.json": {
       "path": "experiments/prefill-service-v1.predictions.json",
-      "sha256": "37203f81e2d3b3a5bef4599327dc558a75bb742c242f829099292f174ce8a3ee"
+      "sha256": "7a64a7ce17a99291e8f98e4c2e6e0ea9d28509cffbe90a602be6353878e872f1"
     },
     "prefill-service-v1.discrimination.json": {
       "path": "experiments/prefill-service-v1.discrimination.json",
-      "sha256": "d23eac4d53650bd688b9f6e4b19ca7399579551275249b247bb7abd2a648ecf7"
+      "sha256": "ce0c306e56ac62b6932c5fc7188d9114df8937bbf9fe432b987a8be2ed0d89cc"
     },
     "prefill-service-v1.budget.json": {
       "path": "experiments/prefill-service-v1.budget.json",
-      "sha256": "c704a210bd3a6e8d3f50d6c09f1185bf156bda86cdfb9fc0baf488cae471264e"
+      "sha256": "374ed429a7d9a5d90d12a35e67c47c0e890e4be1c357e45e9dcb78e609120ea6"
     },
     "ITL-preregistration": {
       "path": "results/prefill-design-round4/itl-scenarios.json",
@@ -396,6 +441,30 @@
     "historical-source-snapshots": {
       "path": "results/prefill-design-round4/source-snapshots.json",
       "sha256": "f3bd58f59ebf91728284b88b12a676060ddd1903d9eb631c29fb62be2c31bfaf"
+    },
+    "noise-screen": {
+      "path": "results/prefill-design-round6/noise-screen.json",
+      "sha256": "d151b6900d0452117ee08be3b44f7d27ff2719bbcd5146766316cfd69aa334e2"
+    },
+    "noise-report": {
+      "path": "results/prefill-design-round6/report.md",
+      "sha256": "1e907c6698e5485cd688ec5d70bb902b7ab877a05c25a8341155ca679a3b6f6a"
+    },
+    "grouped-validation": {
+      "path": "prefill_grouped_validation.py",
+      "sha256": "74ce259442c36fd2c8f67cd694d18150240fb98809d715ca15bf41954e8aedc7"
+    },
+    "noise-simulation": {
+      "path": "prefill_noise.py",
+      "sha256": "078fca7a9e403c33a933d8f18f67d188ab3297626d5be494197c39401f22727e"
+    },
+    "noise-script": {
+      "path": "scripts/check_prefill_noise.py",
+      "sha256": "82c70906cc6eaf7166769b8dff2d9b3e0bced92b94d787dbe63acf3b5166e7e6"
+    },
+    "revision7-source-snapshots": {
+      "path": "results/prefill-design-round5/source-snapshots.json",
+      "sha256": "bef8303b06e1aec4c7b933a801d921286fbe08607c3319f5d113fb32b7c31b29"
     }
   },
   "readiness": {
@@ -407,7 +476,8 @@
     "mpc_evaluated": false,
     "mode_aware_accounting_implemented": false,
     "calibrated_physical_models_fitted": false,
-    "installed_scheduler_parity_verified": false
+    "installed_scheduler_parity_verified": false,
+    "block_dependence_assessment_implemented": false
   },
-  "revision_reason": "Calibrated-comparator discrimination and composition correction; user-requested review follow-up"
+  "revision_reason": "Round5: grouped paired blocks, two structural contrasts, explicit held and calibration-label noise"
 }

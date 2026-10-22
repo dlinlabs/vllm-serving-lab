@@ -6,7 +6,13 @@ import pytest
 from prefill_design import COEF, requests_for, simulate
 from prefill_planning import (FAMILIES, collect_training, fit, legacy_cases,
                               rollout, synthetic_check)
-from scripts.build_prefill_design import cases, ROOT, digest
+from scripts.build_prefill_design import cases as current_cases, ROOT, digest
+from prefill_noise import cases_at_revision
+
+
+def cases():
+    # Preserve revision7 regressions independently of the current design.
+    return cases_at_revision(current_cases(), 7)
 
 
 @pytest.mark.parametrize('k', [0., 1.5e-9, 3.15e-9])
@@ -78,8 +84,9 @@ def test_composition_swap_preserves_load_and_keeps_independent_policy_control():
 
 def test_committed_planning_has_current_sources_and_all_comparators():
     data = json.loads((ROOT/'results/prefill-design-round5/calibrated-planning.json').read_text())
+    snapshots = json.loads((ROOT/'results/prefill-design-round5/source-snapshots.json').read_text())
     for path, sha in data['source_sha256'].items():
-        assert digest(ROOT/path) == sha
+        assert digest(ROOT/snapshots.get(path,path)) == sha
     assert len(data['scenarios']) == 12 and len(data['controls']) == 4
     for r in data['scenarios'] + data['controls']:
         assert not r['complete_experiment_passed']

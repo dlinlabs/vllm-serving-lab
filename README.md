@@ -36,15 +36,17 @@ development associations, not causes.
 [Cases/order/predictions](experiments/prefill-service-v1.design.json) ·
 [Completed2048 sensitivity](results/prefill-budget-sensitivity/summary.json)
 
-PR32 revision7 keeps22 cells at D0/D16 and the212-trial,1517.78s planning
-budget. [Calibrated design checks](results/prefill-design-round5/report.md) expose
-a blind spot: at synthetic k=1.5e-9, recalibrated M0 leaves ZERO eligible cells in
-the old uniform-sentinel design. Mixed1024/1024/7168/7168 foregrounds at50/400ms
-produce four resolved contrasts at hypothetical0/10ms jitter, but not15ms.
-The uniform800ms tie control remains separate from the mixed offset comparison.
-Same-training-data NNLS/LOCO, M0Z attribution ablation and calibrated causal toy
-comparators are reproduced in the report. These are synthetic feasibility checks,
-not power, measured physical fits or actual-vLLM rollout validation.
+PR32 revision8 keeps22 cells and212 trials, with a1518.29s planning budget.
+[Noise-aware checks](results/prefill-design-round6/report.md) require two distinct
+structural contrasts: mixed512/512/7680/7680 bursts and a single7680 prompt.
+The grouped paired-t screen uses five block means and calibrated comparators;
+all-cell regression guards remain. Explicit held Gaussian noise and1/2/5%
+calibration-label noise are tested, including480 refitted training experiments.
+The10ms single-long eligibility margin is fragile;12–15ms remains inconclusive.
+Correlated-block nulls expose about14% nominal false passes, so unresolved or
+violated block-dependence assumptions cannot pass. A calibration-only dependence
+assessment remains a pre-freeze blocker. These are synthetic sensitivities, not
+measured GPU power, physical fits or actual-vLLM rollout validation.
 Azure development replay remains unchanged; its arrivals/input lengths are trace
 based, prompt content synthetic, and outputs capped128 rather than replaying source
 GeneratedTokens. Controlled identification and real-composition transfer answer

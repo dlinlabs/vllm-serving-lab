@@ -26,8 +26,8 @@ def cases():
         for name,lengths in [('uniform',[4096]*4),('mixed',[1024,1024,7168,7168]),('reverse',[7168,7168,1024,1024])]:
             result.append(dict(id=f'composition-{name}-D{d}',family='composition',background_decoders=d,foreground_tokens=lengths,foreground_offsets_ms=[0]*4,sentinel=None,split='calibration' if name=='uniform' else 'held_case'))
         for offset in (50,400,800):
-            result.append(dict(id=f'sentinel-four-at{offset}-D{d}',family='sentinel',background_decoders=d,foreground_tokens=([1024,1024,7168,7168] if offset in (50,400) else [4096]*4),foreground_offsets_ms=[0]*4,sentinel=dict(input_tokens=512,arrival_ms=offset),split='held_case'))
-        result.append(dict(id=f'sentinel-one-at200-D{d}',family='sentinel',background_decoders=d,foreground_tokens=[7168],foreground_offsets_ms=[0],sentinel=dict(input_tokens=512,arrival_ms=200),split='held_case'))
+            result.append(dict(id=f'sentinel-four-at{offset}-D{d}',family='sentinel',background_decoders=d,foreground_tokens=([512,512,7680,7680] if offset in (50,400) else [4096]*4),foreground_offsets_ms=[0]*4,sentinel=dict(input_tokens=512,arrival_ms=offset),split='held_case'))
+        result.append(dict(id=f'sentinel-one-at200-D{d}',family='sentinel',background_decoders=d,foreground_tokens=[7680],foreground_offsets_ms=[0],sentinel=dict(input_tokens=512,arrival_ms=200),split='held_case'))
     return result
 
 
@@ -151,15 +151,15 @@ def build(output):
     estimated=linear_time*1.35+len(trials)*.25+transfer_seconds+terminal_reserve+120
     fit_rows=np.array([[r['q'],r['q']*r['l']+r['q']*(r['q']+1)/2] for r in coverage])
     scaled=fit_rows/np.maximum(np.linalg.norm(fit_rows,axis=0),1e-12)
-    write(output/'cases.json',dict(schema='prefill-service-design-cases-v7',status='draft_not_executable',cases=cells))
-    write(output/'order.json',dict(schema='prefill-service-design-order-v7',seed=20261022,order=trials,
+    write(output/'cases.json',dict(schema='prefill-service-design-cases-v8',status='draft_not_executable',cases=cells))
+    write(output/'order.json',dict(schema='prefill-service-design-order-v8',seed=20261022,order=trials,
         transfer_slices=transfer_attempts))
     source={f:digest(ROOT/f) for f in ['prefill_design.py','prefill_identifiability.py','prefill_validation.py','scripts/build_prefill_design.py','greybox_simulator.py','evaluate_low_cap_frozen.py']}
     write(output/'predictions.json',dict(role='preregistered hypothetical CPU predictions; not measured GPU results',source_sha256=source,
         frozen_coefficients=coef,legacy_adapter='All D16 backgrounds already decoding with255 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.',
         quadratic_coefficient_role='1.5e-9 and3.15e-9 are unvalidated sensitivities per full L^2, not fitted bounds; applied incrementally as2*k*attention_pairs',predictions=predictions))
-    write(output/'discrimination.json',dict(role='raw-coefficient sensitivity only; calibrated discrimination is in calibrated-planning.json; not statistical power',cases=gaps,offset_contrasts=offset_contrasts(predictions),
-        eligibility_rule='Freeze candidate/comparator and per-cell position-derived jitter before held timing; abs delta >max(3*jitter[cell],25ms); >=4 eligible, >=ceil(.75*n) wins with baseline MAE minus candidate MAE strictly above that SAME per-cell threshold. Near-ties are non-wins; insufficient wins inconclusive; any material regression on all8 fails. Structural comparators are calibrated M0 and retained calibrated M1; raw B2048 is staleness-only. Selected M0 => structural N/A',
+    write(output/'discrimination.json',dict(role='raw-coefficient sensitivity only; revision8 noise-aware discrimination is in results/prefill-design-round6/noise-screen.json; not statistical power',cases=gaps,offset_contrasts=offset_contrasts(predictions),
+        eligibility_rule='Freeze per-cell abs prediction gap >max(3*jitter[cell],25ms). Require BOTH mixed_burst and single_long groups with all constituent cells eligible. Average paired MAE gains within each block/group; both one-sided t95 lower bounds across five blocks must exceed0. All8 cell regression guards retained. Unresolved or violated cross-block dependence prevents passing. Calibrated M0 and retained M1 required; M0 structural N/A.',
         primary_contrasts=[dict(id=f"{c['case']}|{x['scenario']}|{x['request_id']}",hypothesis=x['identification_hypothesis'],delta_s=x['delta_s'])
             for c in gaps for x in c['contrasts'] if x['identification_hypothesis']],
         resolution_rule='Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.',

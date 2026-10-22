@@ -4,7 +4,7 @@
     "prefill_design.py": "5e4eae9b4e8caba5baa300e78cac1fc3d75224f9804e6e08b1af3b1fb3ecd7aa",
     "prefill_identifiability.py": "e03636ac8b0f8695c43c90d672eeb6c0f1e557ea5698b316ccdf0bf4b9e4ead8",
     "prefill_validation.py": "d1b5006f8f6ee20b85cc697b54125249bfacbcb45699f1ce7a4d503bdf15f075",
-    "scripts/build_prefill_design.py": "a8462444e9af6d1423c0a0454df950531f32c7cc199e4fd49856732aaa10f353",
+    "scripts/build_prefill_design.py": "1c17ea5459649b81213ca15469165f6bad521766de61038e283a36dff4498a92",
     "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e",
     "evaluate_low_cap_frozen.py": "0bf919d910f23480db3cc7b3069ac9f12e42f5d67e99c62ce70ceb490842ead7"
   },
@@ -1469,43 +1469,43 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.12172276721012754,
-              "ttft_s": 0.12172276721012754,
-              "prefill_complete_s": 0.12172276721012754,
-              "completed_s": 2.4302095372102612
+              "first_s": 0.12093633521012755,
+              "ttft_s": 0.12093633521012755,
+              "prefill_complete_s": 0.12093633521012755,
+              "completed_s": 2.4506567692102608
             },
             "foreground-1": {
-              "first_s": 0.12172276721012754,
-              "ttft_s": 0.12172276721012754,
-              "prefill_complete_s": 0.12172276721012754,
-              "completed_s": 2.4302095372102612
+              "first_s": 0.12093633521012755,
+              "ttft_s": 0.12093633521012755,
+              "prefill_complete_s": 0.12093633521012755,
+              "completed_s": 2.4506567692102608
             },
             "foreground-2": {
-              "first_s": 0.6767571287529214,
-              "ttft_s": 0.6767571287529214,
-              "prefill_complete_s": 0.6767571287529214,
-              "completed_s": 2.470735116341371
+              "first_s": 0.6877548887529213,
+              "ttft_s": 0.6877548887529213,
+              "prefill_complete_s": 0.6877548887529213,
+              "completed_s": 2.4911823483413706
             },
             "foreground-3": {
-              "first_s": 1.149162853260495,
-              "ttft_s": 1.149162853260495,
-              "prefill_complete_s": 1.149162853260495,
-              "completed_s": 2.5099932886691323
+              "first_s": 1.1696100852604947,
+              "ttft_s": 1.1696100852604947,
+              "prefill_complete_s": 1.1696100852604947,
+              "completed_s": 2.530440520669132
             },
             "sentinel": {
-              "first_s": 1.149162853260495,
-              "ttft_s": 1.099162853260495,
-              "prefill_complete_s": 1.149162853260495,
-              "completed_s": 2.5099932886691323
+              "first_s": 1.1696100852604947,
+              "ttft_s": 1.1196100852604947,
+              "prefill_complete_s": 1.1696100852604947,
+              "completed_s": 2.530440520669132
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 2.5099932886691323
+            "end_s": 2.530440520669132
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 2.5099932886691323,
+          "wall_s": 2.530440520669132,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -1517,43 +1517,43 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.12518644721012753,
-              "ttft_s": 0.12518644721012753,
-              "prefill_complete_s": 0.12518644721012753,
-              "completed_s": 2.603684993210261
+              "first_s": 0.12353494001012755,
+              "ttft_s": 0.12353494001012755,
+              "prefill_complete_s": 0.12353494001012755,
+              "completed_s": 2.6466241804102615
             },
             "foreground-1": {
-              "first_s": 0.12518644721012753,
-              "ttft_s": 0.12518644721012753,
-              "prefill_complete_s": 0.12518644721012753,
-              "completed_s": 2.603684993210261
+              "first_s": 0.12353494001012755,
+              "ttft_s": 0.12353494001012755,
+              "prefill_complete_s": 0.12353494001012755,
+              "completed_s": 2.6466241804102615
             },
             "foreground-2": {
-              "first_s": 0.7667149043529214,
-              "ttft_s": 0.7667149043529214,
-              "prefill_complete_s": 0.7667149043529214,
-              "completed_s": 2.644210572341371
+              "first_s": 0.7898102003529214,
+              "ttft_s": 0.7898102003529214,
+              "prefill_complete_s": 0.7898102003529214,
+              "completed_s": 2.6871497595413714
             },
             "foreground-3": {
-              "first_s": 1.322638309260495,
-              "ttft_s": 1.322638309260495,
-              "prefill_complete_s": 1.322638309260495,
-              "completed_s": 2.683468744669132
+              "first_s": 1.3655774964604952,
+              "ttft_s": 1.3655774964604952,
+              "prefill_complete_s": 1.3655774964604952,
+              "completed_s": 2.7264079318691326
             },
             "sentinel": {
-              "first_s": 1.322638309260495,
-              "ttft_s": 1.272638309260495,
-              "prefill_complete_s": 1.322638309260495,
-              "completed_s": 2.683468744669132
+              "first_s": 1.3655774964604952,
+              "ttft_s": 1.3155774964604952,
+              "prefill_complete_s": 1.3655774964604952,
+              "completed_s": 2.7264079318691326
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 2.683468744669132
+            "end_s": 2.7264079318691326
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 2.683468744669132,
+          "wall_s": 2.7264079318691326,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -1565,45 +1565,45 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.23714793442025509,
-              "ttft_s": 0.23714793442025509,
-              "prefill_complete_s": 0.23714793442025509,
-              "completed_s": 2.2801011583863415
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.269652911902727
             },
             "foreground-1": {
-              "first_s": 0.23714793442025509,
-              "ttft_s": 0.23714793442025509,
-              "prefill_complete_s": 0.23714793442025509,
-              "completed_s": 2.2801011583863415
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.269652911902727
             },
             "foreground-2": {
-              "first_s": 1.0421148671743827,
-              "ttft_s": 1.0421148671743827,
-              "prefill_complete_s": 1.0421148671743827,
-              "completed_s": 2.3981925270704623
+              "first_s": 1.0531968170596717,
+              "ttft_s": 1.0531968170596717,
+              "prefill_complete_s": 1.0531968170596717,
+              "completed_s": 2.407373366750728
             },
             "foreground-3": {
-              "first_s": 1.0421148671743827,
-              "ttft_s": 1.0421148671743827,
-              "prefill_complete_s": 1.0421148671743827,
-              "completed_s": 2.3981925270704623
+              "first_s": 1.0531968170596717,
+              "ttft_s": 1.0531968170596717,
+              "prefill_complete_s": 1.0531968170596717,
+              "completed_s": 2.407373366750728
             },
             "sentinel": {
-              "first_s": 0.3290073231495916,
-              "ttft_s": 0.2790073231495916,
-              "prefill_complete_s": 0.3290073231495916,
-              "completed_s": 2.290232553169119
+              "first_s": 0.21043335593946402,
+              "ttft_s": 0.160433355939464,
+              "prefill_complete_s": 0.21043335593946402,
+              "completed_s": 2.2797843066855044
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 2.3981925270704623
+            "end_s": 2.407373366750728
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 2.3981925270704623,
+          "wall_s": 2.407373366750728,
           "release_s": 0.0,
-          "steps": 141,
+          "steps": 142,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -1770,43 +1770,43 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.12172276721012754,
-              "ttft_s": 0.12172276721012754,
-              "prefill_complete_s": 0.12172276721012754,
-              "completed_s": 2.4302095372102612
+              "first_s": 0.12093633521012755,
+              "ttft_s": 0.12093633521012755,
+              "prefill_complete_s": 0.12093633521012755,
+              "completed_s": 2.4506567692102608
             },
             "foreground-1": {
-              "first_s": 0.12172276721012754,
-              "ttft_s": 0.12172276721012754,
-              "prefill_complete_s": 0.12172276721012754,
-              "completed_s": 2.4302095372102612
+              "first_s": 0.12093633521012755,
+              "ttft_s": 0.12093633521012755,
+              "prefill_complete_s": 0.12093633521012755,
+              "completed_s": 2.4506567692102608
             },
             "foreground-2": {
-              "first_s": 0.6767571287529214,
-              "ttft_s": 0.6767571287529214,
-              "prefill_complete_s": 0.6767571287529214,
-              "completed_s": 2.470735116341371
+              "first_s": 0.6877548887529213,
+              "ttft_s": 0.6877548887529213,
+              "prefill_complete_s": 0.6877548887529213,
+              "completed_s": 2.4911823483413706
             },
             "foreground-3": {
-              "first_s": 1.149162853260495,
-              "ttft_s": 1.149162853260495,
-              "prefill_complete_s": 1.149162853260495,
-              "completed_s": 2.5099932886691323
+              "first_s": 1.1696100852604947,
+              "ttft_s": 1.1696100852604947,
+              "prefill_complete_s": 1.1696100852604947,
+              "completed_s": 2.530440520669132
             },
             "sentinel": {
-              "first_s": 1.149162853260495,
-              "ttft_s": 0.7491628532604949,
-              "prefill_complete_s": 1.149162853260495,
-              "completed_s": 2.5099932886691323
+              "first_s": 1.1696100852604947,
+              "ttft_s": 0.7696100852604947,
+              "prefill_complete_s": 1.1696100852604947,
+              "completed_s": 2.530440520669132
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 2.5099932886691323
+            "end_s": 2.530440520669132
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 2.5099932886691323,
+          "wall_s": 2.530440520669132,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -1818,43 +1818,43 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.12518644721012753,
-              "ttft_s": 0.12518644721012753,
-              "prefill_complete_s": 0.12518644721012753,
-              "completed_s": 2.603684993210261
+              "first_s": 0.12353494001012755,
+              "ttft_s": 0.12353494001012755,
+              "prefill_complete_s": 0.12353494001012755,
+              "completed_s": 2.6466241804102615
             },
             "foreground-1": {
-              "first_s": 0.12518644721012753,
-              "ttft_s": 0.12518644721012753,
-              "prefill_complete_s": 0.12518644721012753,
-              "completed_s": 2.603684993210261
+              "first_s": 0.12353494001012755,
+              "ttft_s": 0.12353494001012755,
+              "prefill_complete_s": 0.12353494001012755,
+              "completed_s": 2.6466241804102615
             },
             "foreground-2": {
-              "first_s": 0.7667149043529214,
-              "ttft_s": 0.7667149043529214,
-              "prefill_complete_s": 0.7667149043529214,
-              "completed_s": 2.644210572341371
+              "first_s": 0.7898102003529214,
+              "ttft_s": 0.7898102003529214,
+              "prefill_complete_s": 0.7898102003529214,
+              "completed_s": 2.6871497595413714
             },
             "foreground-3": {
-              "first_s": 1.322638309260495,
-              "ttft_s": 1.322638309260495,
-              "prefill_complete_s": 1.322638309260495,
-              "completed_s": 2.683468744669132
+              "first_s": 1.3655774964604952,
+              "ttft_s": 1.3655774964604952,
+              "prefill_complete_s": 1.3655774964604952,
+              "completed_s": 2.7264079318691326
             },
             "sentinel": {
-              "first_s": 1.322638309260495,
-              "ttft_s": 0.922638309260495,
-              "prefill_complete_s": 1.322638309260495,
-              "completed_s": 2.683468744669132
+              "first_s": 1.3655774964604952,
+              "ttft_s": 0.9655774964604952,
+              "prefill_complete_s": 1.3655774964604952,
+              "completed_s": 2.7264079318691326
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 2.683468744669132
+            "end_s": 2.7264079318691326
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 2.683468744669132,
+          "wall_s": 2.7264079318691326,
           "release_s": 0.0,
           "steps": 136,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -1866,45 +1866,45 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.23714793442025509,
-              "ttft_s": 0.23714793442025509,
-              "prefill_complete_s": 0.23714793442025509,
-              "completed_s": 2.27915060328383
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.2680686533985415
             },
             "foreground-1": {
-              "first_s": 0.23714793442025509,
-              "ttft_s": 0.23714793442025509,
-              "prefill_complete_s": 0.23714793442025509,
-              "completed_s": 2.27915060328383
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.2680686533985415
             },
             "foreground-2": {
-              "first_s": 1.0411643120718712,
-              "ttft_s": 1.0411643120718712,
-              "prefill_complete_s": 1.0411643120718712,
-              "completed_s": 2.3981925270704623
+              "first_s": 1.051612558555486,
+              "ttft_s": 1.051612558555486,
+              "prefill_complete_s": 1.051612558555486,
+              "completed_s": 2.4073733667507287
             },
             "foreground-3": {
-              "first_s": 1.0411643120718712,
-              "ttft_s": 1.0411643120718712,
-              "prefill_complete_s": 1.0411643120718712,
-              "completed_s": 2.3981925270704623
+              "first_s": 1.051612558555486,
+              "ttft_s": 1.051612558555486,
+              "prefill_complete_s": 1.051612558555486,
+              "completed_s": 2.4073733667507287
             },
             "sentinel": {
-              "first_s": 0.522540643690205,
-              "ttft_s": 0.12254064369020501,
-              "prefill_complete_s": 0.522540643690205,
-              "completed_s": 2.31967618241494
+              "first_s": 0.5329888901738199,
+              "ttft_s": 0.13298889017381987,
+              "prefill_complete_s": 0.5329888901738199,
+              "completed_s": 2.3288570220952063
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 2.3981925270704623
+            "end_s": 2.4073733667507287
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 2.3981925270704623,
+          "wall_s": 2.4073733667507287,
           "release_s": 0.0,
-          "steps": 141,
+          "steps": 142,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
@@ -2276,25 +2276,25 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.392056786034781,
-              "ttft_s": 0.392056786034781,
-              "prefill_complete_s": 0.392056786034781,
-              "completed_s": 1.6655351876228488
+              "first_s": 0.41940506791724635,
+              "ttft_s": 0.41940506791724635,
+              "prefill_complete_s": 0.41940506791724635,
+              "completed_s": 1.6928834695053143
             },
             "sentinel": {
-              "first_s": 0.42890275929834965,
-              "ttft_s": 0.22890275929834963,
-              "prefill_complete_s": 0.42890275929834965,
-              "completed_s": 1.6750328790039521
+              "first_s": 0.456251041180815,
+              "ttft_s": 0.256251041180815,
+              "prefill_complete_s": 0.456251041180815,
+              "completed_s": 1.7023811608864177
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 1.6750328790039521
+            "end_s": 1.7023811608864177
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 1.6750328790039521,
+          "wall_s": 1.7023811608864177,
           "release_s": 0.0,
           "steps": 129,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -2306,25 +2306,25 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.4469475869580448,
-              "ttft_s": 0.4469475869580448,
-              "prefill_complete_s": 0.4469475869580448,
-              "completed_s": 1.6933945583644847
+              "first_s": 0.4742958688405102,
+              "ttft_s": 0.4742958688405102,
+              "prefill_complete_s": 0.4742958688405102,
+              "completed_s": 1.7207428402469502
             },
             "sentinel": {
-              "first_s": 0.4469475869580448,
-              "ttft_s": 0.2469475869580448,
-              "prefill_complete_s": 0.4469475869580448,
-              "completed_s": 1.6933945583644847
+              "first_s": 0.4742958688405102,
+              "ttft_s": 0.2742958688405102,
+              "prefill_complete_s": 0.4742958688405102,
+              "completed_s": 1.7207428402469502
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 1.6933945583644847
+            "end_s": 1.7207428402469502
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 1.6933945583644847,
+          "wall_s": 1.7207428402469502,
           "release_s": 0.0,
           "steps": 131,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -2336,25 +2336,25 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.5244226589580447,
-              "ttft_s": 0.5244226589580447,
-              "prefill_complete_s": 0.5244226589580447,
-              "completed_s": 1.7708696303644853
+              "first_s": 0.5631749728405102,
+              "ttft_s": 0.5631749728405102,
+              "prefill_complete_s": 0.5631749728405102,
+              "completed_s": 1.8096219442469512
             },
             "sentinel": {
-              "first_s": 0.5244226589580447,
-              "ttft_s": 0.32442265895804473,
-              "prefill_complete_s": 0.5244226589580447,
-              "completed_s": 1.7708696303644853
+              "first_s": 0.5631749728405102,
+              "ttft_s": 0.3631749728405102,
+              "prefill_complete_s": 0.5631749728405102,
+              "completed_s": 1.8096219442469512
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 1.7708696303644853
+            "end_s": 1.8096219442469512
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 1.7708696303644853,
+          "wall_s": 1.8096219442469512,
           "release_s": 0.0,
           "steps": 131,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -2366,25 +2366,25 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.6096452381580449,
-              "ttft_s": 0.6096452381580449,
-              "prefill_complete_s": 0.6096452381580449,
-              "completed_s": 1.8560922095644865
+              "first_s": 0.6609419872405102,
+              "ttft_s": 0.6609419872405102,
+              "prefill_complete_s": 0.6609419872405102,
+              "completed_s": 1.9073889586469523
             },
             "sentinel": {
-              "first_s": 0.6096452381580449,
-              "ttft_s": 0.40964523815804493,
-              "prefill_complete_s": 0.6096452381580449,
-              "completed_s": 1.8560922095644865
+              "first_s": 0.6609419872405102,
+              "ttft_s": 0.4609419872405102,
+              "prefill_complete_s": 0.6609419872405102,
+              "completed_s": 1.9073889586469523
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 1.8560922095644865
+            "end_s": 1.9073889586469523
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 1.8560922095644865,
+          "wall_s": 1.9073889586469523,
           "release_s": 0.0,
           "steps": 131,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -2396,53 +2396,53 @@
           "backgrounds": 0,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.5409739456665664,
-              "ttft_s": 0.5409739456665664,
-              "prefill_complete_s": 0.5409739456665664,
-              "completed_s": 1.7852029551671469
+              "first_s": 0.5778199189301351,
+              "ttft_s": 0.5778199189301351,
+              "prefill_complete_s": 0.5778199189301351,
+              "completed_s": 1.8217320767298788
             },
             "sentinel": {
               "first_s": 0.2830521328215859,
               "ttft_s": 0.08305213282158591,
               "prefill_complete_s": 0.2830521328215859,
-              "completed_s": 1.7187191154994235
+              "completed_s": 1.745750545681052
             }
           },
           "scored_step_window": {
             "start_s": 0.0,
-            "end_s": 1.7852029551671469
+            "end_s": 1.8217320767298788
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 1.7852029551671469,
+          "wall_s": 1.8217320767298788,
           "release_s": 0.0,
-          "steps": 141,
+          "steps": 142,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
         }
       },
       "frozen_barrier_predictions": {
         "8192": {
           "foreground-0": {
-            "raw_engine_first_s": 0.392056786034781,
-            "raw_ttft_s": 0.392056786034781,
-            "old_empirical_corrected_ttft_s": 0.3851908190887967
+            "raw_engine_first_s": 0.41940506791724635,
+            "raw_ttft_s": 0.41940506791724635,
+            "old_empirical_corrected_ttft_s": 0.41253910097126206
           },
           "sentinel": {
-            "raw_engine_first_s": 0.42890275929834965,
-            "raw_ttft_s": 0.22890275929834963,
-            "old_empirical_corrected_ttft_s": 0.22203679235236531
+            "raw_engine_first_s": 0.456251041180815,
+            "raw_ttft_s": 0.256251041180815,
+            "old_empirical_corrected_ttft_s": 0.24938507423483067
           }
         },
         "2048": {
           "foreground-0": {
-            "raw_engine_first_s": 0.4469475869580448,
-            "raw_ttft_s": 0.4469475869580448,
-            "old_empirical_corrected_ttft_s": 0.4400816200120605
+            "raw_engine_first_s": 0.4742958688405102,
+            "raw_ttft_s": 0.4742958688405102,
+            "old_empirical_corrected_ttft_s": 0.46742990189452593
           },
           "sentinel": {
-            "raw_engine_first_s": 0.4469475869580448,
-            "raw_ttft_s": 0.2469475869580448,
-            "old_empirical_corrected_ttft_s": 0.2400816200120605
+            "raw_engine_first_s": 0.4742958688405102,
+            "raw_ttft_s": 0.2742958688405102,
+            "old_empirical_corrected_ttft_s": 0.2674299018945259
           }
         }
       }
@@ -3855,30 +3855,30 @@
               "first_s": 0.1227889606146948,
               "ttft_s": 0.1227889606146948,
               "prefill_complete_s": 0.1227889606146948,
-              "completed_s": 2.921100008823843
+              "completed_s": 2.9214168605246806
             },
             "foreground-1": {
-              "first_s": 0.24584135831717502,
-              "ttft_s": 0.24584135831717502,
-              "prefill_complete_s": 0.24584135831717502,
-              "completed_s": 2.936617882520852
+              "first_s": 0.1227889606146948,
+              "ttft_s": 0.1227889606146948,
+              "prefill_complete_s": 0.1227889606146948,
+              "completed_s": 2.9214168605246806
             },
             "foreground-2": {
-              "first_s": 0.615788862687972,
-              "ttft_s": 0.615788862687972,
-              "prefill_complete_s": 0.615788862687972,
+              "first_s": 0.6160522997757574,
+              "ttft_s": 0.6160522997757574,
+              "prefill_complete_s": 0.6160522997757574,
               "completed_s": 2.982220948509368
             },
             "foreground-3": {
-              "first_s": 1.0367676864802056,
-              "ttft_s": 1.0367676864802056,
-              "prefill_complete_s": 1.0367676864802056,
+              "first_s": 1.0370845381810427,
+              "ttft_s": 1.0370845381810427,
+              "prefill_complete_s": 1.0370845381810427,
               "completed_s": 3.0417576296907054
             },
             "sentinel": {
-              "first_s": 1.0367676864802056,
-              "ttft_s": 0.9867676864802055,
-              "prefill_complete_s": 1.0367676864802056,
+              "first_s": 1.0370845381810427,
+              "ttft_s": 0.9870845381810427,
+              "prefill_complete_s": 1.0370845381810427,
               "completed_s": 3.0417576296907054
             }
           },
@@ -3900,43 +3900,43 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.1258889686146949,
-              "ttft_s": 0.1258889686146949,
-              "prefill_complete_s": 0.1258889686146949,
-              "completed_s": 3.0788049688238486
+              "first_s": 0.12510253661469473,
+              "ttft_s": 0.12510253661469473,
+              "prefill_complete_s": 0.12510253661469473,
+              "completed_s": 3.0995690525246866
             },
             "foreground-1": {
-              "first_s": 0.25508351831717513,
-              "ttft_s": 0.25508351831717513,
-              "prefill_complete_s": 0.25508351831717513,
-              "completed_s": 3.0943228425208575
+              "first_s": 0.12510253661469473,
+              "ttft_s": 0.12510253661469473,
+              "prefill_complete_s": 0.12510253661469473,
+              "completed_s": 3.0995690525246866
             },
             "foreground-2": {
-              "first_s": 0.6973371096879721,
-              "ttft_s": 0.6973371096879721,
-              "prefill_complete_s": 0.6973371096879721,
-              "completed_s": 3.1399259085093743
+              "first_s": 0.7084726157757573,
+              "ttft_s": 0.7084726157757573,
+              "prefill_complete_s": 0.7084726157757573,
+              "completed_s": 3.1603731405093756
             },
             "foreground-3": {
-              "first_s": 1.1944726464802062,
-              "ttft_s": 1.1944726464802062,
-              "prefill_complete_s": 1.1944726464802062,
-              "completed_s": 3.1994625896907127
+              "first_s": 1.215236730181043,
+              "ttft_s": 1.215236730181043,
+              "prefill_complete_s": 1.215236730181043,
+              "completed_s": 3.219909821690714
             },
             "sentinel": {
-              "first_s": 1.1944726464802062,
-              "ttft_s": 1.1444726464802062,
-              "prefill_complete_s": 1.1944726464802062,
-              "completed_s": 3.1994625896907127
+              "first_s": 1.215236730181043,
+              "ttft_s": 1.165236730181043,
+              "prefill_complete_s": 1.215236730181043,
+              "completed_s": 3.219909821690714
             }
           },
           "scored_step_window": {
             "start_s": 1.003558337915701,
-            "end_s": 4.203020927606413
+            "end_s": 4.223468159606415
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 5.878231127397573,
+          "wall_s": 5.898678359397574,
           "release_s": 1.003558337915701,
           "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -3948,43 +3948,43 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.12929897741469487,
-              "ttft_s": 0.12929897741469487,
-              "prefill_complete_s": 0.12929897741469487,
-              "completed_s": 3.2522804248238595
+              "first_s": 0.1276474702146948,
+              "ttft_s": 0.1276474702146948,
+              "prefill_complete_s": 0.1276474702146948,
+              "completed_s": 3.2955364637246998
             },
             "foreground-1": {
-              "first_s": 0.26524989431717505,
-              "ttft_s": 0.26524989431717505,
-              "prefill_complete_s": 0.26524989431717505,
-              "completed_s": 3.2677982985208684
+              "first_s": 0.1276474702146948,
+              "ttft_s": 0.1276474702146948,
+              "prefill_complete_s": 0.1276474702146948,
+              "completed_s": 3.2955364637246998
             },
             "foreground-2": {
-              "first_s": 0.7870401813879719,
-              "ttft_s": 0.7870401813879719,
-              "prefill_complete_s": 0.7870401813879719,
-              "completed_s": 3.313401364509385
+              "first_s": 0.8101349633757573,
+              "ttft_s": 0.8101349633757573,
+              "prefill_complete_s": 0.8101349633757573,
+              "completed_s": 3.3563405517093887
             },
             "foreground-3": {
-              "first_s": 1.3679481024802056,
-              "ttft_s": 1.3679481024802056,
-              "prefill_complete_s": 1.3679481024802056,
-              "completed_s": 3.3729380456907236
+              "first_s": 1.4112041413810432,
+              "ttft_s": 1.4112041413810432,
+              "prefill_complete_s": 1.4112041413810432,
+              "completed_s": 3.415877232890727
             },
             "sentinel": {
-              "first_s": 1.3679481024802056,
-              "ttft_s": 1.3179481024802056,
-              "prefill_complete_s": 1.3679481024802056,
-              "completed_s": 3.3729380456907236
+              "first_s": 1.4112041413810432,
+              "ttft_s": 1.3612041413810432,
+              "prefill_complete_s": 1.4112041413810432,
+              "completed_s": 3.415877232890727
             }
           },
           "scored_step_window": {
             "start_s": 1.0312677779157007,
-            "end_s": 4.404205823606424
+            "end_s": 4.447145010806428
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 6.079416023397584,
+          "wall_s": 6.122355210597587,
           "release_s": 1.0312677779157007,
           "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -3996,39 +3996,39 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.24557792122938948,
-              "ttft_s": 0.24557792122938948,
-              "prefill_complete_s": 0.24557792122938948,
-              "completed_s": 2.9337662172133188
+              "first_s": 0.12278896061469469,
+              "ttft_s": 0.12278896061469469,
+              "prefill_complete_s": 0.12278896061469469,
+              "completed_s": 2.9182483435163102
             },
             "foreground-1": {
-              "first_s": 0.24557792122938948,
-              "ttft_s": 0.24557792122938948,
-              "prefill_complete_s": 0.24557792122938948,
-              "completed_s": 2.9337662172133188
+              "first_s": 0.12278896061469469,
+              "ttft_s": 0.12278896061469469,
+              "prefill_complete_s": 0.12278896061469469,
+              "completed_s": 2.9182483435163102
             },
             "foreground-2": {
-              "first_s": 1.1113803805442464,
-              "ttft_s": 1.1113803805442464,
-              "prefill_complete_s": 1.1113803805442464,
-              "completed_s": 3.1126931124581714
+              "first_s": 1.1283865914517563,
+              "ttft_s": 1.1283865914517563,
+              "prefill_complete_s": 1.1283865914517563,
+              "completed_s": 3.1269435793518316
             },
             "foreground-3": {
-              "first_s": 1.1286075218589096,
-              "ttft_s": 1.1286075218589096,
-              "prefill_complete_s": 1.1286075218589096,
-              "completed_s": 3.1272604310526693
+              "first_s": 1.1447590989575924,
+              "ttft_s": 1.1447590989575924,
+              "prefill_complete_s": 1.1447590989575924,
+              "completed_s": 3.1415108979463295
             },
             "sentinel": {
-              "first_s": 0.3425069371721202,
-              "ttft_s": 0.2925069371721203,
-              "prefill_complete_s": 0.3425069371721202,
-              "completed_s": 2.9489672392094906
+              "first_s": 0.21971797655742542,
+              "ttft_s": 0.1697179765574255,
+              "prefill_complete_s": 0.21971797655742542,
+              "completed_s": 2.933449365512482
             }
           },
           "scored_step_window": {
             "start_s": 0.9685455351897495,
-            "end_s": 4.095805966242419
+            "end_s": 4.110056433136079
           },
           "itl": null,
           "background_output": 256,
@@ -4073,24 +4073,24 @@
             "old_empirical_corrected_ttft_s": 0.21306780381342166
           },
           "foreground-1": {
-            "raw_engine_first_s": 0.24584135831717496,
-            "raw_ttft_s": 0.24584135831717496,
-            "old_empirical_corrected_ttft_s": 0.3361202015159019
+            "raw_engine_first_s": 0.12278896061469474,
+            "raw_ttft_s": 0.12278896061469474,
+            "old_empirical_corrected_ttft_s": 0.21306780381342166
           },
           "foreground-2": {
-            "raw_engine_first_s": 0.615788862687972,
-            "raw_ttft_s": 0.615788862687972,
-            "old_empirical_corrected_ttft_s": 0.7060677058866989
+            "raw_engine_first_s": 0.6160522997757574,
+            "raw_ttft_s": 0.6160522997757574,
+            "old_empirical_corrected_ttft_s": 0.7063311429744843
           },
           "foreground-3": {
-            "raw_engine_first_s": 1.0367676864802056,
-            "raw_ttft_s": 1.0367676864802056,
-            "old_empirical_corrected_ttft_s": 1.1270465296789325
+            "raw_engine_first_s": 1.0370845381810427,
+            "raw_ttft_s": 1.0370845381810427,
+            "old_empirical_corrected_ttft_s": 1.1273633813797697
           },
           "sentinel": {
-            "raw_engine_first_s": 1.0367676864802056,
-            "raw_ttft_s": 0.9867676864802055,
-            "old_empirical_corrected_ttft_s": 1.0770465296789324
+            "raw_engine_first_s": 1.0370845381810427,
+            "raw_ttft_s": 0.9870845381810427,
+            "old_empirical_corrected_ttft_s": 1.0773633813797696
           }
         }
       }
@@ -4156,30 +4156,30 @@
               "first_s": 0.1227889606146948,
               "ttft_s": 0.1227889606146948,
               "prefill_complete_s": 0.1227889606146948,
-              "completed_s": 2.921100008823843
+              "completed_s": 2.9214168605246806
             },
             "foreground-1": {
-              "first_s": 0.24584135831717502,
-              "ttft_s": 0.24584135831717502,
-              "prefill_complete_s": 0.24584135831717502,
-              "completed_s": 2.936617882520852
+              "first_s": 0.1227889606146948,
+              "ttft_s": 0.1227889606146948,
+              "prefill_complete_s": 0.1227889606146948,
+              "completed_s": 2.9214168605246806
             },
             "foreground-2": {
-              "first_s": 0.615788862687972,
-              "ttft_s": 0.615788862687972,
-              "prefill_complete_s": 0.615788862687972,
+              "first_s": 0.6160522997757574,
+              "ttft_s": 0.6160522997757574,
+              "prefill_complete_s": 0.6160522997757574,
               "completed_s": 2.982220948509368
             },
             "foreground-3": {
-              "first_s": 1.0367676864802056,
-              "ttft_s": 1.0367676864802056,
-              "prefill_complete_s": 1.0367676864802056,
+              "first_s": 1.0370845381810427,
+              "ttft_s": 1.0370845381810427,
+              "prefill_complete_s": 1.0370845381810427,
               "completed_s": 3.0417576296907054
             },
             "sentinel": {
-              "first_s": 1.0367676864802056,
-              "ttft_s": 0.6367676864802054,
-              "prefill_complete_s": 1.0367676864802056,
+              "first_s": 1.0370845381810427,
+              "ttft_s": 0.6370845381810426,
+              "prefill_complete_s": 1.0370845381810427,
               "completed_s": 3.0417576296907054
             }
           },
@@ -4201,43 +4201,43 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.1258889686146949,
-              "ttft_s": 0.1258889686146949,
-              "prefill_complete_s": 0.1258889686146949,
-              "completed_s": 3.0788049688238486
+              "first_s": 0.12510253661469473,
+              "ttft_s": 0.12510253661469473,
+              "prefill_complete_s": 0.12510253661469473,
+              "completed_s": 3.0995690525246866
             },
             "foreground-1": {
-              "first_s": 0.25508351831717513,
-              "ttft_s": 0.25508351831717513,
-              "prefill_complete_s": 0.25508351831717513,
-              "completed_s": 3.0943228425208575
+              "first_s": 0.12510253661469473,
+              "ttft_s": 0.12510253661469473,
+              "prefill_complete_s": 0.12510253661469473,
+              "completed_s": 3.0995690525246866
             },
             "foreground-2": {
-              "first_s": 0.6973371096879721,
-              "ttft_s": 0.6973371096879721,
-              "prefill_complete_s": 0.6973371096879721,
-              "completed_s": 3.1399259085093743
+              "first_s": 0.7084726157757573,
+              "ttft_s": 0.7084726157757573,
+              "prefill_complete_s": 0.7084726157757573,
+              "completed_s": 3.1603731405093756
             },
             "foreground-3": {
-              "first_s": 1.1944726464802062,
-              "ttft_s": 1.1944726464802062,
-              "prefill_complete_s": 1.1944726464802062,
-              "completed_s": 3.1994625896907127
+              "first_s": 1.215236730181043,
+              "ttft_s": 1.215236730181043,
+              "prefill_complete_s": 1.215236730181043,
+              "completed_s": 3.219909821690714
             },
             "sentinel": {
-              "first_s": 1.1944726464802062,
-              "ttft_s": 0.7944726464802061,
-              "prefill_complete_s": 1.1944726464802062,
-              "completed_s": 3.1994625896907127
+              "first_s": 1.215236730181043,
+              "ttft_s": 0.8152367301810428,
+              "prefill_complete_s": 1.215236730181043,
+              "completed_s": 3.219909821690714
             }
           },
           "scored_step_window": {
             "start_s": 1.003558337915701,
-            "end_s": 4.203020927606413
+            "end_s": 4.223468159606415
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 5.878231127397573,
+          "wall_s": 5.898678359397574,
           "release_s": 1.003558337915701,
           "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -4249,43 +4249,43 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.12929897741469487,
-              "ttft_s": 0.12929897741469487,
-              "prefill_complete_s": 0.12929897741469487,
-              "completed_s": 3.2522804248238595
+              "first_s": 0.1276474702146948,
+              "ttft_s": 0.1276474702146948,
+              "prefill_complete_s": 0.1276474702146948,
+              "completed_s": 3.2955364637246998
             },
             "foreground-1": {
-              "first_s": 0.26524989431717505,
-              "ttft_s": 0.26524989431717505,
-              "prefill_complete_s": 0.26524989431717505,
-              "completed_s": 3.2677982985208684
+              "first_s": 0.1276474702146948,
+              "ttft_s": 0.1276474702146948,
+              "prefill_complete_s": 0.1276474702146948,
+              "completed_s": 3.2955364637246998
             },
             "foreground-2": {
-              "first_s": 0.7870401813879719,
-              "ttft_s": 0.7870401813879719,
-              "prefill_complete_s": 0.7870401813879719,
-              "completed_s": 3.313401364509385
+              "first_s": 0.8101349633757573,
+              "ttft_s": 0.8101349633757573,
+              "prefill_complete_s": 0.8101349633757573,
+              "completed_s": 3.3563405517093887
             },
             "foreground-3": {
-              "first_s": 1.3679481024802056,
-              "ttft_s": 1.3679481024802056,
-              "prefill_complete_s": 1.3679481024802056,
-              "completed_s": 3.3729380456907236
+              "first_s": 1.4112041413810432,
+              "ttft_s": 1.4112041413810432,
+              "prefill_complete_s": 1.4112041413810432,
+              "completed_s": 3.415877232890727
             },
             "sentinel": {
-              "first_s": 1.3679481024802056,
-              "ttft_s": 0.9679481024802055,
-              "prefill_complete_s": 1.3679481024802056,
-              "completed_s": 3.3729380456907236
+              "first_s": 1.4112041413810432,
+              "ttft_s": 1.011204141381043,
+              "prefill_complete_s": 1.4112041413810432,
+              "completed_s": 3.415877232890727
             }
           },
           "scored_step_window": {
             "start_s": 1.0312677779157007,
-            "end_s": 4.404205823606424
+            "end_s": 4.447145010806428
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 6.079416023397584,
+          "wall_s": 6.122355210597587,
           "release_s": 1.0312677779157007,
           "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -4297,39 +4297,39 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.24557792122938948,
-              "ttft_s": 0.24557792122938948,
-              "prefill_complete_s": 0.24557792122938948,
-              "completed_s": 2.9328156621108072
+              "first_s": 0.12278896061469469,
+              "ttft_s": 0.12278896061469469,
+              "prefill_complete_s": 0.12278896061469469,
+              "completed_s": 2.9169809367129615
             },
             "foreground-1": {
-              "first_s": 0.24557792122938948,
-              "ttft_s": 0.24557792122938948,
-              "prefill_complete_s": 0.24557792122938948,
-              "completed_s": 2.9328156621108072
+              "first_s": 0.12278896061469469,
+              "ttft_s": 0.12278896061469469,
+              "prefill_complete_s": 0.12278896061469469,
+              "completed_s": 2.9169809367129615
             },
             "foreground-2": {
-              "first_s": 1.1104298254417349,
-              "ttft_s": 1.1104298254417349,
-              "prefill_complete_s": 1.1104298254417349,
-              "completed_s": 3.1126931124581714
+              "first_s": 1.1271191846484077,
+              "ttft_s": 1.1271191846484077,
+              "prefill_complete_s": 1.1271191846484077,
+              "completed_s": 3.1269435793518316
             },
             "foreground-3": {
-              "first_s": 1.127656966756398,
-              "ttft_s": 1.127656966756398,
-              "prefill_complete_s": 1.127656966756398,
-              "completed_s": 3.1272604310526693
+              "first_s": 1.1434916921542437,
+              "ttft_s": 1.1434916921542437,
+              "prefill_complete_s": 1.1434916921542437,
+              "completed_s": 3.1415108979463295
             },
             "sentinel": {
-              "first_s": 0.5512491393529159,
-              "ttft_s": 0.15124913935291584,
-              "prefill_complete_s": 0.5512491393529159,
-              "completed_s": 2.9936197500954944
+              "first_s": 0.4980409127984863,
+              "ttft_s": 0.09804091279848626,
+              "prefill_complete_s": 0.4980409127984863,
+              "completed_s": 2.9929860466938205
             }
           },
           "scored_step_window": {
             "start_s": 0.9685455351897495,
-            "end_s": 4.095805966242419
+            "end_s": 4.110056433136079
           },
           "itl": null,
           "background_output": 256,
@@ -4374,24 +4374,24 @@
             "old_empirical_corrected_ttft_s": 0.21306780381342166
           },
           "foreground-1": {
-            "raw_engine_first_s": 0.24584135831717496,
-            "raw_ttft_s": 0.24584135831717496,
-            "old_empirical_corrected_ttft_s": 0.3361202015159019
+            "raw_engine_first_s": 0.12278896061469474,
+            "raw_ttft_s": 0.12278896061469474,
+            "old_empirical_corrected_ttft_s": 0.21306780381342166
           },
           "foreground-2": {
-            "raw_engine_first_s": 0.615788862687972,
-            "raw_ttft_s": 0.615788862687972,
-            "old_empirical_corrected_ttft_s": 0.7060677058866989
+            "raw_engine_first_s": 0.6160522997757574,
+            "raw_ttft_s": 0.6160522997757574,
+            "old_empirical_corrected_ttft_s": 0.7063311429744843
           },
           "foreground-3": {
-            "raw_engine_first_s": 1.0367676864802056,
-            "raw_ttft_s": 1.0367676864802056,
-            "old_empirical_corrected_ttft_s": 1.1270465296789325
+            "raw_engine_first_s": 1.0370845381810427,
+            "raw_ttft_s": 1.0370845381810427,
+            "old_empirical_corrected_ttft_s": 1.1273633813797697
           },
           "sentinel": {
-            "raw_engine_first_s": 1.0367676864802056,
-            "raw_ttft_s": 0.6367676864802055,
-            "old_empirical_corrected_ttft_s": 0.7522131233921734
+            "raw_engine_first_s": 1.0370845381810427,
+            "raw_ttft_s": 0.6370845381810427,
+            "old_empirical_corrected_ttft_s": 0.7525299750930106
           }
         }
       }
@@ -4707,25 +4707,25 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.3971264132481751,
-              "ttft_s": 0.3971264132481751,
-              "prefill_complete_s": 0.3971264132481751,
-              "completed_s": 2.3144474709373
+              "first_s": 0.4244746951306406,
+              "ttft_s": 0.4244746951306406,
+              "prefill_complete_s": 0.4244746951306406,
+              "completed_s": 2.341795752819766
             },
             "sentinel": {
-              "first_s": 0.43904201372513785,
-              "ttft_s": 0.2390420137251379,
-              "prefill_complete_s": 0.43904201372513785,
-              "completed_s": 2.329014789531797
+              "first_s": 0.4663902956076036,
+              "ttft_s": 0.26639029560760363,
+              "prefill_complete_s": 0.4663902956076036,
+              "completed_s": 2.356363071414263
             }
           },
           "scored_step_window": {
             "start_s": 0.9099751283989439,
-            "end_s": 3.2389899179307413
+            "end_s": 3.266338199813207
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 5.027261157412682,
+          "wall_s": 5.054609439295148,
           "release_s": 0.9099751283989439,
           "steps": 258,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -4737,25 +4737,25 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.4672260958116221,
-              "ttft_s": 0.4672260958116221,
-              "prefill_complete_s": 0.4672260958116221,
-              "completed_s": 2.3575157233191186
+              "first_s": 0.4911558424587792,
+              "ttft_s": 0.4911558424587792,
+              "prefill_complete_s": 0.4911558424587792,
+              "completed_s": 2.3845471535007476
             },
             "sentinel": {
-              "first_s": 0.4672260958116221,
-              "ttft_s": 0.26722609581162216,
-              "prefill_complete_s": 0.4672260958116221,
-              "completed_s": 2.3575157233191186
+              "first_s": 0.5091416962885851,
+              "ttft_s": 0.3091416962885851,
+              "prefill_complete_s": 0.5091416962885851,
+              "completed_s": 2.3991144720952446
             }
           },
           "scored_step_window": {
             "start_s": 0.9783679379157009,
-            "end_s": 3.3358836612348197
+            "end_s": 3.3774824100109457
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 5.082346195494281,
+          "wall_s": 5.109694477376746,
           "release_s": 0.9783679379157009,
           "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -4767,25 +4767,25 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.544701167811622,
-              "ttft_s": 0.544701167811622,
-              "prefill_complete_s": 0.544701167811622,
-              "completed_s": 2.434990795319119
+              "first_s": 0.579942690458779,
+              "ttft_s": 0.579942690458779,
+              "prefill_complete_s": 0.579942690458779,
+              "completed_s": 2.473426257500747
             },
             "sentinel": {
-              "first_s": 0.544701167811622,
-              "ttft_s": 0.3447011678116221,
-              "prefill_complete_s": 0.544701167811622,
-              "completed_s": 2.434990795319119
+              "first_s": 0.598020800288585,
+              "ttft_s": 0.398020800288585,
+              "prefill_complete_s": 0.598020800288585,
+              "completed_s": 2.4879935760952447
             }
           },
           "scored_step_window": {
             "start_s": 1.003558337915701,
-            "end_s": 3.4385491332348197
+            "end_s": 3.4915519140109454
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 5.1850116674942806,
+          "wall_s": 5.223763981376746,
           "release_s": 1.003558337915701,
           "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -4797,25 +4797,25 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.6299237470116221,
-              "ttft_s": 0.6299237470116221,
-              "prefill_complete_s": 0.6299237470116221,
-              "completed_s": 2.520213374519119
+              "first_s": 0.677608223258779,
+              "ttft_s": 0.677608223258779,
+              "prefill_complete_s": 0.677608223258779,
+              "completed_s": 2.5711932719007473
             },
             "sentinel": {
-              "first_s": 0.6299237470116221,
-              "ttft_s": 0.42992374701162217,
-              "prefill_complete_s": 0.6299237470116221,
-              "completed_s": 2.520213374519119
+              "first_s": 0.6957878146885847,
+              "ttft_s": 0.4957878146885848,
+              "prefill_complete_s": 0.6957878146885847,
+              "completed_s": 2.5857605904952443
             }
           },
           "scored_step_window": {
             "start_s": 1.0312677779157007,
-            "end_s": 3.5514811524348198
+            "end_s": 3.617028368410945
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 5.29794368669428,
+          "wall_s": 5.349240435776745,
           "release_s": 1.0312677779157007,
           "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -4827,25 +4827,25 @@
           "backgrounds": 16,
           "foreground": {
             "foreground-0": {
-              "first_s": 0.6122655783549221,
-              "ttft_s": 0.6122655783549221,
-              "prefill_complete_s": 0.6122655783549221,
-              "completed_s": 2.5000203922557214
+              "first_s": 0.6541811788318849,
+              "ttft_s": 0.6541811788318849,
+              "prefill_complete_s": 0.6541811788318849,
+              "completed_s": 2.541619141031847
             },
             "sentinel": {
               "first_s": 0.27694077453921995,
               "ttft_s": 0.07694077453921988,
               "prefill_complete_s": 0.27694077453921995,
-              "completed_s": 2.383481843499742
+              "completed_s": 2.41051327368137
             }
           },
           "scored_step_window": {
             "start_s": 0.9685455351897495,
-            "end_s": 3.468565927445471
+            "end_s": 3.5101646762215966
           },
           "itl": null,
           "background_output": 256,
-          "wall_s": 5.082346195494281,
+          "wall_s": 5.109694477376746,
           "release_s": 0.9685455351897495,
           "steps": 264,
           "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
@@ -4854,26 +4854,26 @@
       "frozen_barrier_predictions": {
         "8192": {
           "foreground-0": {
-            "raw_engine_first_s": 0.3971264132481752,
-            "raw_ttft_s": 0.3971264132481752,
-            "old_empirical_corrected_ttft_s": 0.48740525644690214
+            "raw_engine_first_s": 0.42447469513064057,
+            "raw_ttft_s": 0.42447469513064057,
+            "old_empirical_corrected_ttft_s": 0.5147535383293675
           },
           "sentinel": {
-            "raw_engine_first_s": 0.4390420137251381,
-            "raw_ttft_s": 0.2390420137251381,
-            "old_empirical_corrected_ttft_s": 0.32932085692386504
+            "raw_engine_first_s": 0.4663902956076035,
+            "raw_ttft_s": 0.26639029560760347,
+            "old_empirical_corrected_ttft_s": 0.3566691388063304
           }
         },
         "2048": {
           "foreground-0": {
-            "raw_engine_first_s": 0.4672260958116219,
-            "raw_ttft_s": 0.4672260958116219,
-            "old_empirical_corrected_ttft_s": 0.5575049390103488
+            "raw_engine_first_s": 0.4911558424587791,
+            "raw_ttft_s": 0.4911558424587791,
+            "old_empirical_corrected_ttft_s": 0.581434685657506
           },
           "sentinel": {
-            "raw_engine_first_s": 0.4672260958116219,
-            "raw_ttft_s": 0.2672260958116219,
-            "old_empirical_corrected_ttft_s": 0.3575049390103488
+            "raw_engine_first_s": 0.5091416962885849,
+            "raw_ttft_s": 0.30914169628858484,
+            "old_empirical_corrected_ttft_s": 0.39942053948731177
           }
         }
       }

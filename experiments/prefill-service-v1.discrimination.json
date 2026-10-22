@@ -1,5 +1,5 @@
 {
-  "role": "raw-coefficient sensitivity only; calibrated discrimination is in calibrated-planning.json; not statistical power",
+  "role": "raw-coefficient sensitivity only; revision8 noise-aware discrimination is in results/prefill-design-round6/noise-screen.json; not statistical power",
   "cases": [
     {
       "case": "single-L1024-D0",
@@ -941,7 +941,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.15770496000000034,
+          "delta_s": 0.1781521920000001,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -954,7 +954,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.33118041600000037,
+          "delta_s": 0.3741196032000006,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -967,7 +967,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.6624505701109029,
+          "delta_s": -0.7810245373210305,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -977,10 +977,10 @@
         }
       ],
       "foreground_tokens": [
-        1024,
-        1024,
-        7168,
-        7168
+        512,
+        512,
+        7680,
+        7680
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -1007,7 +1007,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.15770496000000034,
+          "delta_s": 0.1781521920000001,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -1020,7 +1020,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.33118041600000037,
+          "delta_s": 0.3741196032000006,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -1033,7 +1033,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.4689172495702896,
+          "delta_s": -0.4584690030866747,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -1043,10 +1043,10 @@
         }
       ],
       "foreground_tokens": [
-        1024,
-        1024,
-        7168,
-        7168
+        512,
+        512,
+        7680,
+        7680
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -1126,7 +1126,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.018044827659695173,
+          "delta_s": -0.01804482765969523,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": false,
@@ -1139,7 +1139,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.07747507199999992,
+          "delta_s": 0.08887910399999999,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -1152,7 +1152,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.16269765120000013,
+          "delta_s": 0.1866461184,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -1165,7 +1165,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.1638954541364589,
+          "delta_s": -0.1912437360189243,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -1175,7 +1175,7 @@
         }
       ],
       "foreground_tokens": [
-        7168
+        7680
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -2107,7 +2107,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.08993872517368251,
+          "delta_s": -0.09025557687451968,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2120,7 +2120,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.15770496000000067,
+          "delta_s": 0.1781521920000002,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2133,7 +2133,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.33118041600000003,
+          "delta_s": 0.3741196032000005,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2146,7 +2146,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.6942607493080852,
+          "delta_s": -0.8173665616236172,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2156,10 +2156,10 @@
         }
       ],
       "foreground_tokens": [
-        1024,
-        1024,
-        7168,
-        7168
+        512,
+        512,
+        7680,
+        7680
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -2173,7 +2173,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.08993872517368251,
+          "delta_s": -0.09025557687451968,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2186,7 +2186,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.15770496000000067,
+          "delta_s": 0.1781521920000002,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2199,7 +2199,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.33118041600000003,
+          "delta_s": 0.3741196032000005,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2212,7 +2212,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.4855185471272896,
+          "delta_s": -0.5390436253825563,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2222,10 +2222,10 @@
         }
       ],
       "foreground_tokens": [
-        1024,
-        1024,
-        7168,
-        7168
+        512,
+        512,
+        7680,
+        7680
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -2305,10 +2305,10 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.028184082086484263,
+          "delta_s": -0.04275140068098149,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
-            "10": false,
+            "10": true,
             "25": false,
             "50": false
           }
@@ -2318,7 +2318,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.07747507199999992,
+          "delta_s": 0.08887910399999988,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2331,7 +2331,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": 0.16269765120000002,
+          "delta_s": 0.18664611839999967,
           "identification_hypothesis": null,
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2344,7 +2344,7 @@
           "request_id": "sentinel",
           "baseline": "B2048-fifo-q0.0",
           "target": "sentinel_ttft",
-          "delta_s": -0.19028532127240227,
+          "delta_s": -0.23220092174936524,
           "identification_hypothesis": "H3",
           "exceeds_planning_noise_bands": {
             "10": true,
@@ -2354,7 +2354,7 @@
         }
       ],
       "foreground_tokens": [
-        7168
+        7680
       ],
       "policy_role": "identification",
       "nonlinear_role": "sensitivity"
@@ -2429,11 +2429,11 @@
       ],
       "scenario": "B2048-round_robin_512-q0.0",
       "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.15646667945938658,
+      "delta_s": 0.027444465765644133,
       "exceeds_planning_noise_bands": {
-        "10": true,
-        "25": true,
-        "50": true
+        "10": false,
+        "25": false,
+        "50": false
       }
     },
     {
@@ -2504,15 +2504,15 @@
       ],
       "scenario": "B2048-round_robin_512-q0.0",
       "target": "sentinel_ttft_offset_difference",
-      "delta_s": 0.14125779781920444,
+      "delta_s": 0.07167706375893923,
       "exceeds_planning_noise_bands": {
         "10": true,
-        "25": true,
+        "25": false,
         "50": false
       }
     }
   ],
-  "eligibility_rule": "Freeze candidate/comparator and per-cell position-derived jitter before held timing; abs delta >max(3*jitter[cell],25ms); >=4 eligible, >=ceil(.75*n) wins with baseline MAE minus candidate MAE strictly above that SAME per-cell threshold. Near-ties are non-wins; insufficient wins inconclusive; any material regression on all8 fails. Structural comparators are calibrated M0 and retained calibrated M1; raw B2048 is staleness-only. Selected M0 => structural N/A",
+  "eligibility_rule": "Freeze per-cell abs prediction gap >max(3*jitter[cell],25ms). Require BOTH mixed_burst and single_long groups with all constituent cells eligible. Average paired MAE gains within each block/group; both one-sided t95 lower bounds across five blocks must exceed0. All8 cell regression guards retained. Unresolved or violated cross-block dependence prevents passing. Calibrated M0 and retained M1 required; M0 structural N/A.",
   "primary_contrasts": [
     {
       "id": "single-L7168-D0|B2048-fifo-q1.5e-09|foreground-0",
@@ -2607,17 +2607,17 @@
     {
       "id": "sentinel-four-at50-D0|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.6624505701109029
+      "delta_s": -0.7810245373210305
     },
     {
       "id": "sentinel-four-at400-D0|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.4689172495702896
+      "delta_s": -0.4584690030866747
     },
     {
       "id": "sentinel-one-at200-D0|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.1638954541364589
+      "delta_s": -0.1912437360189243
     },
     {
       "id": "single-L7168-D16|B2048-fifo-q1.5e-09|foreground-0",
@@ -2712,17 +2712,17 @@
     {
       "id": "sentinel-four-at50-D16|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.6942607493080852
+      "delta_s": -0.8173665616236172
     },
     {
       "id": "sentinel-four-at400-D16|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.4855185471272896
+      "delta_s": -0.5390436253825563
     },
     {
       "id": "sentinel-one-at200-D16|B2048-round_robin_512-q0.0|sentinel",
       "hypothesis": "H3",
-      "delta_s": -0.19028532127240227
+      "delta_s": -0.23220092174936524
     }
   ],
   "resolution_rule": "Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.",
@@ -2989,7 +2989,7 @@
         "case": "sentinel-one-at200-D0",
         "request_id": "foreground-0",
         "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.4469475869580448,
+        "predicted_ttft_s": 0.4742958688405102,
         "reference_predicted_ttft_s": 0.3683668818440844,
         "outside_reference_range": false
       },
@@ -2997,7 +2997,7 @@
         "case": "sentinel-one-at200-D0",
         "request_id": "sentinel",
         "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.2469475869580448,
+        "predicted_ttft_s": 0.2742958688405102,
         "reference_predicted_ttft_s": 0.3683668818440844,
         "outside_reference_range": false
       },
@@ -3140,16 +3140,16 @@
       {
         "case": "sentinel-four-at50-D16",
         "request_id": "foreground-1",
-        "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.24584135831717502,
-        "reference_predicted_ttft_s": 0.3683668818440844,
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at50-D16",
         "request_id": "foreground-2",
         "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.615788862687972,
+        "predicted_ttft_s": 0.6160522997757574,
         "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
@@ -3157,7 +3157,7 @@
         "case": "sentinel-four-at50-D16",
         "request_id": "foreground-3",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 1.0367676864802056,
+        "predicted_ttft_s": 1.0370845381810427,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": true
       },
@@ -3165,7 +3165,7 @@
         "case": "sentinel-four-at50-D16",
         "request_id": "sentinel",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 0.9867676864802055,
+        "predicted_ttft_s": 0.9870845381810427,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": false
       },
@@ -3180,16 +3180,16 @@
       {
         "case": "sentinel-four-at400-D16",
         "request_id": "foreground-1",
-        "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.24584135831717502,
-        "reference_predicted_ttft_s": 0.3683668818440844,
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-four-at400-D16",
         "request_id": "foreground-2",
         "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.615788862687972,
+        "predicted_ttft_s": 0.6160522997757574,
         "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
@@ -3197,7 +3197,7 @@
         "case": "sentinel-four-at400-D16",
         "request_id": "foreground-3",
         "reference": "composition-uniform-D16/foreground-3",
-        "predicted_ttft_s": 1.0367676864802056,
+        "predicted_ttft_s": 1.0370845381810427,
         "reference_predicted_ttft_s": 1.0072014426918805,
         "outside_reference_range": true
       },
@@ -3205,7 +3205,7 @@
         "case": "sentinel-four-at400-D16",
         "request_id": "sentinel",
         "reference": "composition-uniform-D16/foreground-1",
-        "predicted_ttft_s": 0.6367676864802054,
+        "predicted_ttft_s": 0.6370845381810426,
         "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
@@ -3252,16 +3252,16 @@
       {
         "case": "sentinel-one-at200-D16",
         "request_id": "foreground-0",
-        "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.4672260958116221,
-        "reference_predicted_ttft_s": 0.3683668818440844,
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.4911558424587792,
+        "reference_predicted_ttft_s": 0.6144716772490448,
         "outside_reference_range": false
       },
       {
         "case": "sentinel-one-at200-D16",
         "request_id": "sentinel",
         "reference": "composition-uniform-D16/foreground-0",
-        "predicted_ttft_s": 0.26722609581162216,
+        "predicted_ttft_s": 0.3091416962885851,
         "reference_predicted_ttft_s": 0.3683668818440844,
         "outside_reference_range": false
       }

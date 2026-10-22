@@ -77,7 +77,7 @@ def test_revised_plan_structure_splits_and_budget(tmp_path):
     assert len({t['attempt_id'] for t in transfers})==4
     assert all(t['drain_before_next'] and t['attempts_allowed']==1 for t in transfers)
     assert budget['transfer_seconds']==320 and budget['transfer_terminal_reserve_seconds']==40
-    assert budget['estimated_active_seconds']==pytest.approx(1517.7774448158516)
+    assert budget['estimated_active_seconds']==pytest.approx(1518.29432734343)
     coverage=json.loads((tmp_path/'first/discrimination.json').read_text())['calibration_chunk_coverage']
     assert coverage['l_max']>=6144 and coverage['q_Z_rank']==2
 
@@ -217,6 +217,6 @@ def test_committed_design_metadata_and_generator_outputs_are_current(tmp_path):
     for name in ('cases','order','predictions','discrimination','budget'):
         assert (tmp_path/f'fresh/{name}.json').read_bytes()==(ROOT/f'experiments/prefill-service-v1.{name}.json').read_bytes()
     design=json.loads((ROOT/'experiments/prefill-service-v1.design.json').read_text())
-    assert design['revision']==7 and design['workload']['background_output_tokens']==256
+    assert design['revision']==8 and design['workload']['background_output_tokens']==256
     assert design['collection']['transfer_seconds']==320
     for row in design['files'].values():assert hashlib.sha256((ROOT/row['path']).read_bytes()).hexdigest()==row['sha256']

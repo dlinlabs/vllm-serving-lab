@@ -1,32 +1,53 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Draft design, revision7. Collector/hooks are not implemented; this is not an executable
+**Draft design, revision8. Collector/hooks are not implemented; this is not an executable
 GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
 
-## Calibrated discrimination correction (revision7)
+## Noise-aware structural correction (revision8)
 
-[CPU report](../results/prefill-design-round5/report.md) and
-[reproducible scenarios](../results/prefill-design-round5/calibrated-planning.json)
-now refit calibrated comparators before checking design feasibility. A perfect
-synthetic M2 with k=1.5e-9 has ZERO eligible sentinel cells in revision6 after M0
-recalibration, even without measurement noise. Raw-coefficient contrast size was
-not a valid estimate of calibrated structural discrimination.
+[Noise report](../results/prefill-design-round6/report.md) and
+[seed-level results](../results/prefill-design-round6/noise-screen.json) address
+[Round5](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6351586487).
+Revision7's four eligible cells represented only one composition effect, and its
+noise-free feasibility check was not a power analysis. Reusing the eligibility
+margin as the required MAE gain also discarded useful paired evidence.
 
-Replace the four-request foreground at50/400ms with1024/1024/7168/7168. Preserve
-four requests and16384 total input tokens. Keep uniform4x4096 at800ms as a policy
-tie control, and keep one7168@200. Cell IDs remain stable within this versioned
-draft; full content hashes identify the new cases. Only50-vs400 is a matched
-composition offset comparison. The800ms uniform control is not the third point
-of that curve. Six calibration cells,22 total cells,212 trials and estimated
-1517.78s remain unchanged. No observed outcomes were used to choose this revision.
+Use512/512/7680/7680 at50/400ms and one7680 at200ms. Keep uniform4x4096 at800ms
+as a control. Mixed bursts still total16384 input tokens. There are still22 cells,
+212 trials and six calibration cells; the updated planning estimate is1518.29s.
+The7680 tests extend beyond the7168 calibration maximum, so this is bounded length
+extrapolation. Actual mode/feature support and exact token manifests remain gates.
 
-The corrected synthetic scenario yields four eligible gaps around36.7–36.8ms;
-components resolve at hypothetical0/10ms jitter but not15ms. k=1e-9 remains
-unresolved. Four cells share a composition and are not independent effects.
-These are deterministic feasibility checks, NOT statistical power or GPU results.
-The25ms floor, minimum eligibility and meaningful-win gates remain unchanged.
+Keep per-cell eligibility >max(3*jitter,25ms), but require BOTH fixed structural
+groups: mixed_burst and single_long. Average paired error gains across group members
+within each block FIRST, then use five block means for the one-sided t95 lower
+bound. Both groups must exceed zero against every required calibrated comparator;
+all eight cells retain regression guards. Offsets and D levels are not independent
+structural contrasts. See the exact component rule below.
+
+The synthetic k=1.5e-9 gaps are about57.2ms and30.2ms. At10ms iid held Gaussian
+noise with noise-free calibration, the new screen passes98.83% of20000 draws.
+This is conditional synthetic sensitivity, not measured GPU power. The single-long
+gap barely clears30ms; at12–15ms the design remains INCONCLUSIVE. With1–5% training
+label noise, refitting and LOCO can change selection and eligibility substantially.
+The report archives480 training fits, including linear-truth negative controls.
+
+A correlated-block midpoint null exposes about14% nominal false passes. The public
+gate therefore defaults block dependence to unresolved; unresolved or violated
+assumptions cannot pass. A calibration-only assessment must be specified and reviewed
+before executable freeze. Five held blocks cannot establish independence, and a
+non-significant autocorrelation test is insufficient. Synthetic independent blocks
+are qualified by construction only. No full-experiment false-positive guarantee
+or automatic model acceptance is claimed.
+
+After the first three calibration blocks, before model and held-score freeze,
+`calibration_noise_readiness` checks three repeat durations per preregistered matched
+work/position/mode/padding stratum. Missing strata are inconclusive; CV>5% stops
+structural claims, CV>2% is flagged. Three repeats give an imprecise engineering
+screen, not a population-CV bound. Never pool different work or token gaps as
+independent repeats, and never tune this screen using held timings.
 
 `prefill_planning.py` performs training-only nonnegative fitting, LOCO family
 selection and causal serial FIFO rollout for these synthetic checks. All models
@@ -60,13 +81,14 @@ Later action validation must compare caps/transitions on matched offered traces,
 measure action ranking/regret and draining transients, and avoid oracle output
 lengths. D16 is a decoder population, not admission cap16.
 
-Earlier round reports below are historical. Revision6 generator source is archived
-beside round4 so its historical source hashes remain verifiable.
+Earlier round reports below are historical. Revision6 and revision7 generator/case snapshots are archived
+beside round4/round5 so historical source hashes remain verifiable. Their old
+cell-count/margin gates are superseded by revision8; they are not current rules.
 
 ## Round4 changes: support, resolution and repeat references
 
 Revision6 addresses [round4](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6331855173).
-[Current CPU report](../results/prefill-design-round4/report.md) supersedes round3's
+[Historical CPU report](../results/prefill-design-round4/report.md) supersedes round3's
 floor5 headline table. Old reports remain historical snapshots.
 
 | Review point | Change |
@@ -74,7 +96,7 @@ floor5 headline table. Old reports remain historical snapshots.
 | Floor-driven ranking | Report zero-bin support separately; headline magnitude uses5 equivalent toy steps, with a window-specific frozen linear-B2048 gaps/step reference shared by every scenario. Common-positive bins and floors1/5 are sensitivity only. |
 | Clustered gaps | Archive toy decode-bearing steps, per-bin step counts and gaps/step. These are not observed real steps or independent sample sizes. Future uncertainty uses step/time-block resampling, never independent gaps. |
 | Repeat noise | Show one same-host pair and two cross-host descriptive references beside every model window. One pair cannot calibrate a statistical envelope or factor2. Plan two attempts for each transfer window, frozen ABBA order, full drain/boundary logs and no retries. |
-| Meaningful wins | Require comparator MAE minus candidate MAE strictly greater than the SAME per-cell calibration-only eligibility threshold. Equality/near-ties are non-wins; insufficient resolved gains are inconclusive; any material regression on all8 fails. |
+| Meaningful wins (historical; superseded above) | Require comparator MAE minus candidate MAE strictly greater than the SAME per-cell calibration-only eligibility threshold. Equality/near-ties are non-wins; insufficient resolved gains are inconclusive; any material regression on all8 fails. |
 
 Adding repeat replays changes the budget:320s replay plus40s explicit terminal
 reserve, rather than160s replay. Total estimated1517.78s (25.3min), including the
@@ -223,7 +245,7 @@ work before each trial;250ms idle gap; external traffic prohibited.
 |---|---|---:|---|
 | Single |1024/2048/4096/7168 input |8|1024/7168 calibration;2048/4096 held |
 | Composition |4x4096;1024/1024/7168/7168; reverse order |6|Uniform calibration; mixed/reverse held |
-| Sentinel |Mixed1024/1024/7168/7168 at50/400ms; uniform4x4096 at800ms;1x7168 at200ms;512-token sentinel |8|All held |
+| Sentinel |Mixed512/512/7680/7680 at50/400ms; uniform4x4096 at800ms;1x7680 at200ms;512-token sentinel |8|All held |
 
 Composition cases have four requests and16384 total prompt tokens. This controls
 offered work/count, not actual step composition. Preserve common content pools
@@ -256,7 +278,7 @@ profiler flush/clock effects cannot contaminate later performance stages.
 [Budget calculation](prefill-service-v1.budget.json) sums the frozen linear scenario
 wall times, multiplies by1.35, then adds idle gaps,320s of replay including lead-ins,
 40s transfer drain/gateway/flush reserve (10s per attempt), and120s general
-frontend/profiler reserve. It estimates1517.78s; this is a planning estimate, not a
+frontend/profiler reserve. It estimates1518.29s; this is a planning estimate, not a
 measured completion-time promise. Hard active budget1800s excludes installation
 and initial model load, includes every stage/flush. Per-trial timeout45s. No automatic
 retry, shape removal, opportunistic extra level or resizing a partial suite into a
@@ -393,17 +415,26 @@ a3ms context effect can reduce a4ms baseline MAE by much more than10%.
    comparison; beating it cannot establish improved model structure.
 4. For EACH required comparator, a cell is eligible only if its predicted sentinel
    TTFT gap exceeds max(3*jitter[cell],25ms). Freeze/hash those lists before held
-   timing. Require>=4 eligible and>=ceil(.75*n) resolved paired-MAE wins. A win
-   requires comparator MAE minus candidate MAE >max(3*jitter[cell],25ms), the SAME
-   frozen per-cell threshold. Equality (within1e-12s numerical tolerance) and
-   near-ties are non-wins. Fewer than4 eligible or insufficient resolved wins is
-   inconclusive; any material regression is failed. Every cell retains the no-regression limit
-   max(10% comparator MAE,25ms), eligible or not. All8 cells x5 paired block errors
-   are required. `comparison_plan`, `paired_error_check` and
-   `structural_error_check` implement these CPU component contracts. Raw-only
-   comparator input is rejected. Components passing does NOT pass capture
-   integrity, bias/order, future-isolation or complete experiment gates.
-   Report paired block errors/intervals; do not treat cells as independent trials.
+   timing. Require both fixed groups: mixed_burst (50/400ms x D0/D16) and
+   single_long (200ms x D0/D16), with EVERY member eligible. Uniform800ms cells
+   are controls, not a third group. Within each group/block, average comparator
+   absolute error minus candidate absolute error across its member cells. Across
+   the FIVE paired block means, require mean - t(.95,4)*sample_SD/sqrt(5)>1e-12s
+   for BOTH groups. Never count20 cell observations as20 independent blocks.
+   Fewer than two eligible groups or insufficient gains is inconclusive. Any cell
+   regression >max(10% comparator MAE,25ms) is failed, including controls.
+   All8 cells x5 paired block errors and canonical block IDs are required.
+   `grouped_comparison_plan`, `grouped_error_check`, and `grouped_structural_check`
+   in `prefill_grouped_validation.py` implement the current CPU component contracts.
+   The old `prefill_validation.py` gates remain for historical reproductions only.
+   Independent, approximately normal block differences are assumptions of this
+   paired-t screen. `block_dependence_status` defaults to unresolved; unresolved
+   or violated status prevents passing and preserves nominal diagnostics. Actual
+   qualification requires the preregistered calibration-only assessment, not a
+   caller's assertion inferred from five held outcomes. Components passing does
+   NOT pass capture integrity, bias/order, future-isolation or complete experiment
+   gates; the readiness CV check is a separate required pre-freeze condition.
+
 
 
 The causal rollout must use only release-time state, injected arrivals and its own
@@ -444,7 +475,7 @@ abs(expected gap)<=3*its mapped jitter; candidate/comparator eligibility additio
 retains the25ms floor.
 The declared identification contrasts are (H2) M2-versus-M0 request TTFT for
 single7168 and mixed/reverse composition at each D, and (H3) FIFO-versus-RR
-sentinel TTFT for four@50/four@400/one7168@200 at each D. Single2048 remains
+sentinel TTFT for four@50/four@400/one7680@200 at each D. Single2048 remains
 validation-only; four@800 is a policy tie control (not necessarily an M2 tie).
 Within-D offset ordering tests policy, not the nonlinear coefficient. Publish
 resolvability for every contrast/scenario. If all identification contrasts for an
@@ -545,13 +576,16 @@ old output vector forecasts them. Admission timing and release state remain cond
 
 ```
 python scripts/build_prefill_design.py --output-dir /tmp/fresh-prefill-design
-python scripts/check_prefill_calibrated_design.py --output-dir /tmp/fresh-calibrated-design
+python scripts/check_prefill_noise.py --output-dir /tmp/fresh-prefill-noise
 python scripts/check_prefill_itl.py --old-evidence OLD --new-evidence NEW --output /tmp/fresh-itl.json
 python scripts/check_prefill_comparators.py --output /tmp/fresh-comparators.json
 python scripts/check_prefill_win_margin.py --output /tmp/fresh-win-margin.json
-python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py tests/test_prefill_review_gates.py tests/test_prefill_planning.py
+python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py tests/test_prefill_review_gates.py tests/test_prefill_planning.py tests/test_prefill_noise.py
 python scripts/check_prefill_budget.py --suite-dir NEW/results/low-cap-switch-v1 --old-suite-dir OLD/results/cap-range-v1 --output-dir /tmp/fresh-budget-check
 ```
+
+Historical round5 calibrated checks must run at commit c726a423426aaa3ece2334ac0d1f0d9de245153a;
+their generator/case hashes resolve through round5/source-snapshots.json.
 
 The plan generator reproduces cases/order/predictions/discrimination/budget,
 including complete-feature training-fold support diagnostics. The
