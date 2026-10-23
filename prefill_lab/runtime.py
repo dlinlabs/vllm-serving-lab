@@ -125,14 +125,15 @@ class Trial:
                     r['finished']=now;r['finish_reason']=str(item.finish_reason)
             # Private trial requests were never registered with frontend OutputProcessor.
             batch.outputs=retained
-        if self.release is None and all(self.requests[k]['first'] is not None for k in self.backgrounds):
+        if self.status=='running' and self.release is None and all(self.requests[k]['first'] is not None for k in self.backgrounds):
             self.release_foreground()
         if self.done is None and all(self.requests[k]['finished'] is not None for k in self.foreground):
             self.done=now
             if any(self.requests[k]['finished'] is not None and self.requests[k]['finished']<now for k in self.backgrounds):
                 self.errors.append('Background finished before foreground')
         if len(self.enqueued)==len(self.requests) and all(r['finished'] is not None for r in self.requests.values()):
-            self.status='complete';self.cancel.set()
+            self.status='invalid' if self.status=='invalid' or self.errors else 'complete'
+            self.cancel.set()
 
     def capture(self):
         return dict(schema='prefill-capture-v1',trial_id=self.id,observer=self.mode,status=self.status,

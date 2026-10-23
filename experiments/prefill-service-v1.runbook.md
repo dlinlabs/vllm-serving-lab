@@ -175,3 +175,10 @@ The utility transport is a pinned private API. EngineCore uses a0.5ms GIL switch
 interval; the unchanged5ms posting deadline must still hold on the native host.
 Invalid requests receive request-local aborts; recorder finish disables observations
 before deferred event polling, and stale timer epochs cannot enter HTTP captures.
+
+Revision12 resilience: a block3 analysis/import/archive-read exception is saved in
+model-freeze.json as inconclusive with error_type/reason, and collection continues.
+suite.complete describes collection only; inspect calibration_status separately.
+Invalid captures stay invalid after drain. Output-observer failures preserve
+request/output isolation and engine liveness; native engine exceptions still fail
+the run. The source guard now checks35 upstream files including attn_utils.py.

@@ -292,8 +292,12 @@ async def run(client,http,url,manifest,trace,output,*,hard_seconds=1800):
             if t0['stage']=='drift_reference' and t0.get('block')==3 and t0.get('position')=='end':
                 try:
                     frozen=freeze_eligibility(freeze_models(captures,order),cases,order,captures,dispatch)
-                except ValueError as exc:
-                    frozen=dict(status='inconclusive',reason=str(exc),model_accepted=False,held_labels_used=False)
+                except Exception as exc:
+                    # Freeze is analysis, not collection. Missing archived inputs,
+                    # imports or unexpected analysis errors must preserve blocks4–5.
+                    # Cancellation/KeyboardInterrupt remain outside this boundary.
+                    frozen=dict(status='inconclusive',reason=str(exc),error_type=type(exc).__name__,
+                                failed_stage='model_freeze',model_accepted=False,held_labels_used=False)
                 save(output/'model-freeze.json',frozen);summary['model_freeze_sha256']=digest(frozen)
                 summary['calibration_status']=frozen.get('noise_readiness',{}).get('status','inconclusive');record()
         summary['drift']=drift_report(captures,order);record()

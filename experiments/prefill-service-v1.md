@@ -1,12 +1,12 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Implementation revision11. Collector/hooks and the runner are implemented; native
+**Implementation revision12. Collector/hooks and the runner are implemented; native
 acceptance and actual-host GPU qualification are pending. The executable protocol
 is not frozen.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
 
-## Collection implementation (revision11)
+## Collection implementation (revision12)
 
 [Native-host runbook](prefill-service-v1.runbook.md) documents preparation, complete
 CPU acceptance and one-command collection. `scripts/run_prefill_service.py` runs
@@ -674,3 +674,25 @@ uses private core_client utility transport; its dependencies are source-pinned a
 require re-review when vLLM changes. V2 v0.30.0 initializes attn_groups during KV
 cache setup; the review's claim that it has none does not match the pinned source.
 Backend metadata is read from those initialized groups, with unavailable explicit.
+
+## Round8 resilience corrections (revision12)
+
+[Round8](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6373563645)
+confirmed the Round7 corrections and identified four remaining low-severity issues.
+[Fix report](../results/prefill-round8-fixes-20261023/report.md). Analysis exceptions
+at block3_end, including missing files/imports, now produce an inconclusive freeze
+with reason and exception type while collection continues through blocks4–5 and
+later stages. An inconclusive freeze cannot accept a model. Cancellation and real
+engine errors retain their existing failure path.
+
+Invalid trial status is sticky through terminal outputs and external_end. Late
+background outputs cannot release new foreground requests after cancellation.
+Output-observer exceptions invalidate and stop capture timers without escaping
+the engine update hook. Private controlled outputs remain filtered even if the
+observer fails midway; ordinary external outputs remain available to the frontend.
+Native scheduler update errors are outside this observer-only exception boundary.
+The source map additionally pins v1/worker/gpu/attn_utils.py (35 files total).
+
+Fresh generator checks compare JSON structure/types/IDs exactly and allow only
+float roundoff (relative1e-13, absolute1e-15). Committed artifacts retain exact
+SHA256 checks. No workload or statistical threshold changes are introduced.

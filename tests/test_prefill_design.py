@@ -209,14 +209,35 @@ def test_transfer_selects_scheduled_cohort_preserves_acceptance_delay_and_output
 
 
 
+def assert_generated_json_equal(actual,expected):
+    """Preserve exact structure/types/IDs; tolerate only float roundoff across hosts.
+
+    Committed bytes retain their separate SHA256 guard. This comparison checks
+    fresh generation on another Python/platform, not replacement artifact hashes.
+    """
+    import math
+    assert type(actual) is type(expected)
+    if isinstance(expected,dict):
+        assert actual.keys()==expected.keys()
+        for key in expected:assert_generated_json_equal(actual[key],expected[key])
+    elif isinstance(expected,list):
+        assert len(actual)==len(expected)
+        for a,b in zip(actual,expected):assert_generated_json_equal(a,b)
+    elif isinstance(expected,float):
+        assert math.isfinite(actual) and math.isfinite(expected)
+        assert math.isclose(actual,expected,rel_tol=1e-13,abs_tol=1e-15)
+    else:assert actual==expected
+
+
 def test_committed_design_metadata_and_generator_outputs_are_current(tmp_path):
     import json,hashlib
     from pathlib import Path
     from scripts.build_prefill_design import build,ROOT
     build(tmp_path/'fresh')
     for name in ('cases','order','predictions','discrimination','budget'):
-        assert (tmp_path/f'fresh/{name}.json').read_text()==(ROOT/f'experiments/prefill-service-v1.{name}.json').read_text()
+        assert_generated_json_equal(json.loads((tmp_path/f'fresh/{name}.json').read_text()),
+                                    json.loads((ROOT/f'experiments/prefill-service-v1.{name}.json').read_text()))
     design=json.loads((ROOT/'experiments/prefill-service-v1.design.json').read_text())
-    assert design['revision']==11 and design['workload']['background_output_tokens']==256
+    assert design['revision']==12 and design['workload']['background_output_tokens']==256
     assert design['collection']['transfer_seconds']==320
     for row in design['files'].values():assert hashlib.sha256((ROOT/row['path']).read_bytes()).hexdigest()==row['sha256']

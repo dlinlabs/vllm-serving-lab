@@ -35,7 +35,8 @@
     "v1/engine/__init__.py": "4e59828787634123026a6b424f48c21d691913dd338b59dd13f25fa260f2284b",
     "sampling_params.py": "f21efc98bf8ce8aab88eb67adb4207285e509a167d976e14d3e2e8282e024bea",
     "v1/executor/uniproc_executor.py": "3cb039b80fe9b03dc1122f93c1f8a4098ef1355104b317ff6df25358f4349494",
-    "v1/worker/worker_base.py": "4a1a5266b912fe97991d8dc89d92b923990da9f6cb4b817d00d52e9c0d26dd7c"
+    "v1/worker/worker_base.py": "4a1a5266b912fe97991d8dc89d92b923990da9f6cb4b817d00d52e9c0d26dd7c",
+    "v1/worker/gpu/attn_utils.py": "b9b81e59dda2720b1f9c434471381f879228832443e52756e469b4ad4905888f"
   },
   "mapping": {
     "engine_barrier": "EngineCore.prefill_lab_command via existing core_client.call_utility_async",

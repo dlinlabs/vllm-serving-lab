@@ -1,11 +1,11 @@
 {
-  "schema": "service-microbenchmark-design-v11",
+  "schema": "service-microbenchmark-design-v12",
   "protocol": "prefill-service-v1",
-  "revision": 11,
+  "revision": 12,
   "status": "implementation_pending_native_acceptance",
   "collector_implemented": true,
-  "source_parent_commit": "0ea58b9479a3d9d9e6ab330b9c5dc64f5e443623",
-  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6372790392",
+  "source_parent_commit": "477b11f86a9e95420e72dae97536dbb6a5f44d43",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6373563645",
   "runtime": {
     "gpu": "RTX4090",
     "same_host": true,
@@ -394,7 +394,7 @@
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "d31067e9f75d84fb6c9757dbcf78f6d4d3130c8aaeac13d8ee3bbb0b50036d1e"
+      "sha256": "0d0eac857caa081c892ec107b3213cbeccf724795a3df6c7b2f80b1b35b35f92"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
@@ -482,7 +482,7 @@
     },
     "prefill_lab/runtime.py": {
       "path": "prefill_lab/runtime.py",
-      "sha256": "d901e8e4affa71cb7a02cd442420703a5317a739f0a551736fdc565e2e265fc7"
+      "sha256": "100c1099a0b159a7fe2388f8199bd80aa62d43eb58e05ca4dfd6229db43436f5"
     },
     "prefill_lab/contracts.py": {
       "path": "prefill_lab/contracts.py",
@@ -506,11 +506,11 @@
     },
     "prefill_lab/suite.py": {
       "path": "prefill_lab/suite.py",
-      "sha256": "e4098936880697e4896d9fdcd766ac94043ff224209d3d14cad2c9d7db8d4d27"
+      "sha256": "264f7610a2e244988565d9245acfc7b80fdedbc9cbfe29e43de0f8c2c084fe68"
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
-      "sha256": "13e1d0d5fe2aca7dd6cd2558be65d973cbb718a2665b4a5ed6cbd8ed72f333f7"
+      "sha256": "95eece40b2c48afe8cbfebc1d729e5899e788818b3ce266c7ffcadc97639284a"
     },
     "prefill_lab/dispatch.py": {
       "path": "prefill_lab/dispatch.py",
@@ -526,11 +526,11 @@
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
-      "sha256": "a8ea7c3f6723822a174c84caa4097eb2088fc619bee06d2a800b3d11f161c13d"
+      "sha256": "925e617847482d2257074cae452681997ec4c9d0f67952c8dc10c5a2d911ac8e"
     },
     "experiments/prefill-vllm-v030-source-map.json": {
       "path": "experiments/prefill-vllm-v030-source-map.json",
-      "sha256": "e4f1d20b87dd4bd0ea4390d8d07eb67a93b982cb6ff59ca216067ee73bd18679"
+      "sha256": "ea809398e8fa7b7e00a4dad43c3028347981987aadfa4d1dfe6f65351bf83fea"
     },
     "pyproject.toml": {
       "path": "pyproject.toml",
@@ -551,6 +551,18 @@
     "results/prefill-round7-fixes-20261023/readiness-sensitivity.json": {
       "path": "results/prefill-round7-fixes-20261023/readiness-sensitivity.json",
       "sha256": "5cd1ec06f7e7bb4f9d409c5125fb8dbc3bbe854baeac9a9fdf5025cd1be3abae"
+    },
+    "tests/test_prefill_round8.py": {
+      "path": "tests/test_prefill_round8.py",
+      "sha256": "df8e0cdc031707be8bcd759f7aeeec797fd957acdd29aff0ebafa9ab49f93e3b"
+    },
+    "tests/test_prefill_design.py": {
+      "path": "tests/test_prefill_design.py",
+      "sha256": "bb2281b1a60b95ac2c90896c3aafb3d9cb99071cfbfeed30f659e083d60850c0"
+    },
+    "results/prefill-round8-fixes-20261023/report.md": {
+      "path": "results/prefill-round8-fixes-20261023/report.md",
+      "sha256": "23bc1c3b152dfcf75a90817d0442f4192289bf2555f8c71bbb8be826f77e848f"
     }
   },
   "readiness": {
@@ -568,7 +580,7 @@
     "collector_cpu_mock_tested": true,
     "actual_gpu_adapter_loaded": false
   },
-  "revision_reason": "Correct Round7 trial-local LOCO, frozen nominal eligibility/provenance, fixed phase readiness, engine rejection and worker lifecycle; native/GPU acceptance remains pending",
+  "revision_reason": "Round8: preserve collection on freeze errors, sticky invalid status, output observer isolation and attn_utils source pin; native/GPU acceptance pending",
   "implementation": {
     "entrypoint": "scripts/run_prefill_service.py",
     "plugin": "prefill_lab",
@@ -589,5 +601,12 @@
     "engine_rejection": "Invalidate capture and request-local abort; never raise from traffic validation",
     "worker_finish": "Disable recorder before deferred event polling",
     "decode_context": "Pre-step execution position; sampled token not yet processed"
+  },
+  "round8_corrections": {
+    "freeze_exceptions": "Analysis Exception -> inconclusive freeze with error_type/reason, continue collection; cancellation/native engine failures still propagate",
+    "terminal_state": "Invalid remains invalid after drain; no foreground release after cancellation",
+    "output_observer": "Isolate observer exceptions and retain frontend/private-output separation",
+    "upstream_sources": 35,
+    "generator_comparison": "Exact JSON types/structure/discrete values; float rel_tol1e-13 abs_tol1e-15; exact committed SHA256 preserved"
   }
 }

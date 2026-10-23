@@ -56,7 +56,18 @@ def core_runtime(core):
     def observed_update(output,*args,**kwargs):
         results=update(output,*args,**kwargs)
         trial=core._prefill_trial
-        if trial:trial.after_output(output,results)
+        if trial:
+            try:trial.after_output(output,results)
+            except Exception as exc:
+                # Catch instrumentation failures only; native update() above must
+                # still surface its own errors. Keep the engine and raw results.
+                trial.errors.append(f'Output capture failed ({type(exc).__name__}): {exc}')
+                trial.status='invalid';trial.cancel.set()
+                if not isinstance(trial,ExternalCapture):
+                    # A failed observer may not have completed its private-output
+                    # filter. These IDs do not exist in the frontend processor.
+                    for batch in results.values():
+                        batch.outputs=[item for item in batch.outputs if item.request_id not in trial.requests]
         return results
     scheduler.schedule, scheduler.update_from_output=observed_schedule,observed_update
     core._prefill_runtime_installed=True
@@ -122,7 +133,7 @@ def command(core,payload):
         if not isinstance(trial,ExternalCapture):raise RuntimeError('No external capture')
         workers=core.model_executor.collective_rpc('prefill_lab_worker_finish')
         if any(w['pending'] for w in workers):return dict(status='gpu_events_pending')
-        trial.status='invalid' if trial.errors else 'complete';result=trial.capture();result['workers']=workers
+        trial.status='invalid' if trial.status=='invalid' or trial.errors else 'complete';result=trial.capture();result['workers']=workers
         core._prefill_trial=None;core._prefill_external=False
         return result
     raise ValueError('Unknown prefill operation')
