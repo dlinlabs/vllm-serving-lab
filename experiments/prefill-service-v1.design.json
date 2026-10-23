@@ -1,11 +1,11 @@
 {
-  "schema": "service-microbenchmark-design-v10",
+  "schema": "service-microbenchmark-design-v11",
   "protocol": "prefill-service-v1",
-  "revision": 10,
+  "revision": 11,
   "status": "implementation_pending_native_acceptance",
   "collector_implemented": true,
-  "source_parent_commit": "959f60c52d77ddb725ce1e37d01d942a9e694432",
-  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6352203816",
+  "source_parent_commit": "0ea58b9479a3d9d9e6ab330b9c5dc64f5e443623",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6372790392",
   "runtime": {
     "gpu": "RTX4090",
     "same_host": true,
@@ -27,7 +27,8 @@
     "historical_working_batch_budget": 2048,
     "historical_sensitivity_batch_budgets": [
       8192
-    ]
+    ],
+    "engine_gil_switch_interval_s": 0.0005
   },
   "workload": {
     "background_counts": [
@@ -357,12 +358,15 @@
     },
     "azure_replay_scope": "Retained arrivals/input lengths from Azure; synthetic prompt content, fixed128 output cap with natural EOS; source GeneratedTokens audit-only",
     "calibration_noise_readiness": {
-      "expected_strata": "Freeze executed-work/position/mode/padding identity before opening labels",
+      "expected_strata": "Twelve fixed calibration-cell/prefill-bearing-or-decode-only phase totals; full ordered work/position/mode/padding signatures must match across blocks1\u20133",
       "repeats": 3,
       "warning_cv": 0.02,
       "stop_cv": 0.05,
       "missing": "inconclusive",
-      "within_range_accepts_model": false
+      "within_range_accepts_model": false,
+      "stratum_count": 12,
+      "descriptive_max_step_cv_controls_gate": false,
+      "scope": "Phase-total repeatability, not per-step label-noise CV or a model-power guarantee"
     },
     "noise_screen_v9": {
       "artifact": "results/prefill-design-round7/noise-screen.json",
@@ -390,7 +394,7 @@
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "b92351dbe45da79e8974ddc6ecd58f817dd68ff1d6c404bab5d3dcee395aac76"
+      "sha256": "d31067e9f75d84fb6c9757dbcf78f6d4d3130c8aaeac13d8ee3bbb0b50036d1e"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
@@ -474,11 +478,11 @@
     },
     "prefill_lab/scoring.py": {
       "path": "prefill_lab/scoring.py",
-      "sha256": "569e823e35a798f81f5374b4283d16430326330519920f43652f3586defe6fcb"
+      "sha256": "d1ea490d990e6ade1067bede42ab4d9b0e5fae88cb1a61eebb4a3a1b596af43a"
     },
     "prefill_lab/runtime.py": {
       "path": "prefill_lab/runtime.py",
-      "sha256": "4dd0417f154f2a17a4ea321bface2b2560b32d29ce7f643751d13dd2afdda783"
+      "sha256": "d901e8e4affa71cb7a02cd442420703a5317a739f0a551736fdc565e2e265fc7"
     },
     "prefill_lab/contracts.py": {
       "path": "prefill_lab/contracts.py",
@@ -486,7 +490,7 @@
     },
     "prefill_lab/analysis.py": {
       "path": "prefill_lab/analysis.py",
-      "sha256": "104e35e79215d73fff6811c7b6b56a9ad0ebf9bc6c92d4c804f5d9753e8e481f"
+      "sha256": "5410b6a54b9b6eb8842fd5eb0722839be176d08e883ffcbddbfd0da3ccaea5fe"
     },
     "prefill_lab/tokens.py": {
       "path": "prefill_lab/tokens.py",
@@ -502,11 +506,11 @@
     },
     "prefill_lab/suite.py": {
       "path": "prefill_lab/suite.py",
-      "sha256": "53cdbbc8e332af64b6d10bac5f8bfff90b402ed0c5b8a89ffc90bb958b32bc6a"
+      "sha256": "e4098936880697e4896d9fdcd766ac94043ff224209d3d14cad2c9d7db8d4d27"
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
-      "sha256": "5d1a53984ab01c640ab358519f3290c1eaffbd11d5a218d27266d657ccd06863"
+      "sha256": "13e1d0d5fe2aca7dd6cd2558be65d973cbb718a2665b4a5ed6cbd8ed72f333f7"
     },
     "prefill_lab/dispatch.py": {
       "path": "prefill_lab/dispatch.py",
@@ -514,7 +518,7 @@
     },
     "prefill_lab/causal.py": {
       "path": "prefill_lab/causal.py",
-      "sha256": "4d96414dc86a64b4c882e4ecc8aaca318ad70ce36e202980cf3612f1cbf17fe2"
+      "sha256": "727f2d740a976be8c19b48aaddea05edadf23211af9c2cb7b7b78d602c381f89"
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
@@ -522,15 +526,31 @@
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
-      "sha256": "a7f4f5cdf53205770465d7fbe7cda55389d87a95ea82c4798b25a53cc5b10ec3"
+      "sha256": "a8ea7c3f6723822a174c84caa4097eb2088fc619bee06d2a800b3d11f161c13d"
     },
     "experiments/prefill-vllm-v030-source-map.json": {
       "path": "experiments/prefill-vllm-v030-source-map.json",
-      "sha256": "ac668653bb4656e579b1e99824862bae4d64a25472d7a4ad5d73c43b4f732356"
+      "sha256": "e4f1d20b87dd4bd0ea4390d8d07eb67a93b982cb6ff59ca216067ee73bd18679"
     },
     "pyproject.toml": {
       "path": "pyproject.toml",
       "sha256": "4e62899bfe56335fdc20fa1311162af6b1b834fd91307d16497fbcfb81a8e6b8"
+    },
+    "tests/test_prefill_round7.py": {
+      "path": "tests/test_prefill_round7.py",
+      "sha256": "ee345f452d1b68a592430469b552382e4607261ca79f0c9f1203c622520d791a"
+    },
+    "scripts/check_prefill_phase_readiness.py": {
+      "path": "scripts/check_prefill_phase_readiness.py",
+      "sha256": "7d16b4bbe8e416b0084e6dc676a10e43575f6b7776a2d2d4deb8118d114b68c5"
+    },
+    "results/prefill-round7-fixes-20261023/report.md": {
+      "path": "results/prefill-round7-fixes-20261023/report.md",
+      "sha256": "ec81261ed4fb4c4e7741662d7fe81b5c3c0f9f6786842b6cb927861409fecd87"
+    },
+    "results/prefill-round7-fixes-20261023/readiness-sensitivity.json": {
+      "path": "results/prefill-round7-fixes-20261023/readiness-sensitivity.json",
+      "sha256": "5cd1ec06f7e7bb4f9d409c5125fb8dbc3bbe854baeac9a9fdf5025cd1be3abae"
     }
   },
   "readiness": {
@@ -548,7 +568,7 @@
     "collector_cpu_mock_tested": true,
     "actual_gpu_adapter_loaded": false
   },
-  "revision_reason": "Implement opt-in V1/V2 collector, exact tokens, full suite runner and measured analysis; native/GPU acceptance remains pending",
+  "revision_reason": "Correct Round7 trial-local LOCO, frozen nominal eligibility/provenance, fixed phase readiness, engine rejection and worker lifecycle; native/GPU acceptance remains pending",
   "implementation": {
     "entrypoint": "scripts/run_prefill_service.py",
     "plugin": "prefill_lab",
@@ -561,5 +581,13 @@
     "block_dependence": "unresolved",
     "gpu_scope": "unqualified pending real deep traces",
     "serial_wall_model": "inconclusive when actual async spans overlap"
+  },
+  "round7_corrections": {
+    "cumulative_error": "Reset within each trial, average trials per cell",
+    "eligibility_freeze": "Nominal release state and OFF observers at block3_end; immutable suite hash, input hashes and training/OFF capture hashes checked before scoring",
+    "http_bridge": "Direct OpenAI raw-token completions; gateway transport not qualified; Azure chat transfer uses fixed-cost32 gateway",
+    "engine_rejection": "Invalidate capture and request-local abort; never raise from traffic validation",
+    "worker_finish": "Disable recorder before deferred event polling",
+    "decode_context": "Pre-step execution position; sampled token not yet processed"
   }
 }

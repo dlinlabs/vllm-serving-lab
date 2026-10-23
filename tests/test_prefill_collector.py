@@ -4,6 +4,8 @@ import copy
 import json
 from pathlib import Path
 from types import SimpleNamespace as NS
+import platform
+import sys
 import numpy as np
 import pytest
 
@@ -271,6 +273,7 @@ def test_suite_order_budget_and_partial_stage_retention(monkeypatch,tmp_path,tra
     monkeypatch.setattr(suite,'dispatcher_parity',lambda *a:dict(matches=True))
     monkeypatch.setattr(suite,'observer_gate',lambda *a:dict(status='passed'))
     monkeypatch.setattr(suite,'freeze_models',lambda *a:dict(noise_readiness=dict(status='within_tested_noise_range')))
+    monkeypatch.setattr(suite,'freeze_eligibility',lambda f,*a:f)
     monkeypatch.setattr(suite,'drift_report',lambda *a:dict(rows=[]))
     history=[]
     async def controlled(client,t,deadline,partial_path=None):
@@ -376,6 +379,7 @@ def test_installed_source_guard_refuses_unreviewed_code(monkeypatch,tmp_path):
     with pytest.raises(RuntimeError,match='sources differ'):plugin.installed_sources()
 
 
+@pytest.mark.skipif(platform.system()!='Linux' or sys.version_info[:2]!=(3,12),reason='Native CPU acceptance requires Linux/Python3.12')
 def test_native_cpu_gate_does_not_turn_procfs_failure_into_acceptance(monkeypatch,tmp_path):
     from scripts.run_prefill_service import cpu_check
     from diagnostic_sampling import ObservationSampler
@@ -414,7 +418,7 @@ def test_v2_candidates_preserve_order_query_caps_and_prefill_uniformity():
     assert mode_row(dict(chunks=[],decode=3,prefill=0,decode_context=300,attention_pairs=0),frozen)['padding_excess']==1
 
 
-def test_complete_calibration_freeze_uses_18_trials_and_never_reads_held_labels():
+def calibration_fixture():
     from scripts.build_prefill_design import cases
     from prefill_planning import rollout as toy_rollout
     from prefill_design import COEF
@@ -435,6 +439,11 @@ def test_complete_calibration_freeze_uses_18_trials_and_never_reads_held_labels(
                 workers.append(dict(step_id=key,runtime_mode='NONE',padded_tokens=s['prefill']+s['decode'],microbatching=False))
             captures.append(dict(trial_id=tid,status='complete',errors=[],overflow=0,release=result['release_s'],foreground_done=result['scored_step_window']['end_s'],steps=rows,workers=[dict(rows=workers)]))
             order.append(dict(trial_id=tid,case=case['id'],block=block,analysis_role='train'))
+    return captures,order,truth
+
+
+def test_complete_calibration_freeze_uses_18_trials_and_never_reads_held_labels():
+    captures,order,truth=calibration_fixture()
     a=freeze_models(captures,order)
     assert len(a['training_capture_sha256'])==18 and a['selected']=='M2'
     assert a['noise_readiness']['status']=='within_tested_noise_range'

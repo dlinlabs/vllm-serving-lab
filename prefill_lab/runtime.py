@@ -156,14 +156,18 @@ class ExternalCapture(Trial):
         self.backgrounds,self.foreground=set(),set()
         self.release_state=None
         self.status='running';self.cancel=threading.Event();self.expected_foreground=expected_foreground
+        self.epoch=None  # Controlled-trial timer messages never belong to HTTP captures.
 
     def register_request(self,request):
         rid=request.request_id
-        if rid in self.requests:raise ValueError('Duplicate external request ID')
+        if rid in self.requests:
+            self.errors.append('Duplicate external request ID');self.status='invalid'
+            return False
         metadata=request.sampling_params.extra_args or {}
         role=metadata.get('prefill_lab_role','transfer')
         if role not in ('background','foreground','sentinel','transfer'):
-            raise ValueError('Invalid external role')
+            self.errors.append('Invalid external role');self.status='invalid'
+            return False
         self.requests[rid]=dict(role=role,input_tokens=request.num_prompt_tokens,
                                max_tokens=request.max_tokens,output_tokens=0,first=None,
                                finished=None,enqueue=self.clock(),queue_posted=None)
@@ -173,6 +177,7 @@ class ExternalCapture(Trial):
             self.foreground.add(rid)
             if self.release is None:
                 self.release=self.clock();self.release_state=snapshot(self.core.scheduler)
+        return True
 
     def after_output(self,output,results):
         now=self.clock()

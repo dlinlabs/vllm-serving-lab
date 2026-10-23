@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import time
+import sys
 import uuid
 
 from .contracts import Buffer, digest, scheduled_work, step_key
@@ -36,6 +37,8 @@ def request_factory(row):
 def core_runtime(core):
     if getattr(core,'_prefill_runtime_installed',False):return
     installed_sources()
+    # Timer threads must acquire the GIL well inside the fixed5ms posting limit.
+    sys.setswitchinterval(5e-4)
     core._prefill_trial=None
     core._prefill_external=False
     scheduler=core.scheduler
@@ -76,7 +79,7 @@ def resolved_config(core):
                 speculative=c.speculative_config is not None,enforce_eager=c.model_config.enforce_eager,
                 dtype=str(c.model_config.dtype),attention_config=str(c.attention_config),
                 compilation_config=str(c.compilation_config),kv_transfer=c.kv_transfer_config is not None,
-                source=installed_sources())
+                source=installed_sources(),gil_switch_interval_s=sys.getswitchinterval())
 
 
 def command(core,payload):
@@ -119,7 +122,7 @@ def command(core,payload):
         if not isinstance(trial,ExternalCapture):raise RuntimeError('No external capture')
         workers=core.model_executor.collective_rpc('prefill_lab_worker_finish')
         if any(w['pending'] for w in workers):return dict(status='gpu_events_pending')
-        trial.status='complete';result=trial.capture();result['workers']=workers
+        trial.status='invalid' if trial.errors else 'complete';result=trial.capture();result['workers']=workers
         core._prefill_trial=None;core._prefill_external=False
         return result
     raise ValueError('Unknown prefill operation')
@@ -128,14 +131,14 @@ def command(core,payload):
 class WorkerRecorder:
     def __init__(self,torch,trial_id,mode):
         self.torch,self.trial_id,self.mode=torch,trial_id,mode
-        self.records=Buffer();self.pending=[];self.profile=None
+        self.records=Buffer();self.pending=[];self.profile=None;self.active=True
         if mode=='deep':
             self.profile=torch.profiler.profile(activities=[torch.profiler.ProfilerActivity.CPU,torch.profiler.ProfilerActivity.CUDA],record_shapes=True)
             self.profile.start()
         self.profile_steps=0
 
-    def begin(self,output):
-        if not output.num_scheduled_tokens or self.mode=='off':return None
+    def begin(self,output,*,dummy_run=False):
+        if dummy_run or not self.active or not output.num_scheduled_tokens or self.mode=='off':return None
         torch=self.torch
         start,end=torch.cuda.Event(enable_timing=True),torch.cuda.Event(enable_timing=True)
         stream=torch.cuda.current_stream();start.record(stream)
@@ -186,6 +189,50 @@ class WorkerRecorder:
                     cuda_scope_qualified=False)
 
 
+def guarded_add(core,request,original,*args,**kwargs):
+    """Invalid traffic terminates only its request, never the EngineCore loop."""
+    trial=getattr(core,'_prefill_trial',None)
+    accepted=True
+    if isinstance(trial,ExternalCapture):accepted=trial.register_request(request)
+    elif trial and (request.request_id not in trial.requests or request.request_id in trial.enqueued):
+        trial.errors.append('External traffic during controlled trial');trial.status='invalid';accepted=False
+    if not accepted:
+        rid=request.request_id
+        # Duplicates may already be scheduled: abort that ID before replying.
+        if rid in core.scheduler.requests:core.abort_requests([rid])
+        core._send_abort_outputs_to_client([rid],getattr(request,'client_index',0))
+        if rid in trial.requests:trial.requests[rid].update(finished=time.monotonic(),finish_reason='abort')
+        return
+    return original(core,request,*args,**kwargs)
+
+
+def handle_arrival(core,payload):
+    epoch,ids,posted=payload;trial=getattr(core,'_prefill_trial',None)
+    if isinstance(trial,ExternalCapture) or not trial or trial.epoch!=epoch or trial.status!='running':return
+    try:trial.inject(ids,posted)
+    except (ValueError,KeyError,RuntimeError) as exc:trial.abort(f'Arrival injection failed: {exc}')
+
+
+def finish_worker_recorder():
+    global _WORKER
+    if _WORKER is None:raise RuntimeError('Worker recorder not initialized')
+    _WORKER.active=False  # Disable immediately, even if CUDA resolution needs another poll.
+    _WORKER.stop_profile();result=_WORKER.resolve()
+    if not result['pending']:_WORKER=None
+    return result
+
+
+def forward_context_or_none():
+    from vllm.forward_context import get_forward_context,is_forward_context_available
+    return get_forward_context() if is_forward_context_available() else None
+
+
+def attention_backends(runner):
+    groups=getattr(runner,'attn_groups',None)
+    if groups is None:return None
+    return sorted({str(g.backend) for group in groups for g in group}) or None
+
+
 def register():
     global _REGISTERED
     if _REGISTERED or os.environ.get('PREFILL_LAB_ENABLED')!='1':return
@@ -195,19 +242,13 @@ def register():
     from vllm.v1.engine.core import EngineCore,EngineCoreProc
     original_add=EngineCore.add_request
     def add(core,request,*args,**kwargs):
-        trial=getattr(core,'_prefill_trial',None)
-        if isinstance(trial,ExternalCapture):trial.register_request(request)
-        if trial and request.request_id not in trial.requests:
-            trial.errors.append('External traffic during controlled trial')
-            raise RuntimeError('External traffic during controlled trial')
-        return original_add(core,request,*args,**kwargs)
+        return guarded_add(core,request,original_add,*args,**kwargs)
     EngineCore.add_request=add
     EngineCore.prefill_lab_command=command
     original_handle=EngineCoreProc._handle_client_request
     def handle(core,kind,payload):
         if kind==INTERNAL_REQUEST:
-            epoch,ids,posted=payload;trial=getattr(core,'_prefill_trial',None)
-            if trial and trial.epoch==epoch and trial.status=='running':trial.inject(ids,posted)
+            handle_arrival(core,payload)
             return
         return original_handle(core,kind,payload)
     EngineCoreProc._handle_client_request=handle
@@ -226,8 +267,7 @@ def register():
         _WORKER=WorkerRecorder(torch,trial_id,mode)
         return dict(pid=os.getpid(),source=installed_sources())
     def worker_finish(worker):
-        if _WORKER is None:raise RuntimeError('Worker recorder not initialized')
-        _WORKER.stop_profile();return _WORKER.resolve()
+        return finish_worker_recorder()
     def worker_meta(worker):
         if not isinstance(worker.model_runner,(GPUModelRunner,GPUModelRunnerV2)):
             raise RuntimeError('Unsupported installed model runner; preserve runtime defaults')
@@ -265,11 +305,9 @@ def register():
     execute_v2=GPUModelRunnerV2.execute_model
     @functools.wraps(execute_v2)
     def observed_execute_v2(runner,output,*args,**kwargs):
-        entry=_WORKER.begin(output) if _WORKER else None
-        if entry:
-            groups=getattr(runner,'attn_groups',[])
-            backends=[getattr(g,'backend',None) for group in groups for g in group]
-            entry[0]['attention_backends']=sorted({str(g) for g in backends if g is not None}) or None
+        dummy=kwargs.get('dummy_run',args[1] if len(args)>1 else False)
+        entry=_WORKER.begin(output,dummy_run=dummy) if _WORKER else None
+        if entry:entry[0]['attention_backends']=attention_backends(runner)
         token=_ACTIVE.set(entry[0] if entry else None)
         try:return execute_v2(runner,output,*args,**kwargs)
         finally:
@@ -296,9 +334,9 @@ def register():
     def observed_graph(wrapper,*args,**kwargs):
         row=_ACTIVE.get()
         if row is not None:
-            from vllm.forward_context import get_forward_context
-            ctx=get_forward_context();desc=ctx.batch_descriptor
-            if ctx.cudagraph_runtime_mode==wrapper.runtime_mode and desc is not None:
+            ctx=forward_context_or_none()
+            desc=None if ctx is None else ctx.batch_descriptor
+            if ctx is not None and ctx.cudagraph_runtime_mode==wrapper.runtime_mode and desc is not None:
                 entry=wrapper.concrete_cudagraph_entries.get(desc)
                 action='capture' if entry is None or entry.cudagraph is None else 'replay'
                 key=f'{wrapper.runtime_mode.name}:{desc}:{action}'
@@ -339,9 +377,9 @@ def register():
     def observed_breakable(wrapper,*args,**kwargs):
         row=_ACTIVE.get()
         if row is not None:
-            from vllm.forward_context import get_forward_context
-            ctx=get_forward_context();desc=ctx.batch_descriptor
-            if ctx.cudagraph_runtime_mode.name!='NONE' and (wrapper.runtime_mode is None or wrapper.runtime_mode==ctx.cudagraph_runtime_mode):
+            ctx=forward_context_or_none()
+            desc=None if ctx is None else ctx.batch_descriptor
+            if ctx is not None and ctx.cudagraph_runtime_mode.name!='NONE' and (wrapper.runtime_mode is None or wrapper.runtime_mode==ctx.cudagraph_runtime_mode):
                 entry=wrapper.entries.get(desc)
                 action='capture' if entry is None or entry.capture is None else 'replay'
                 key=f'breakable:{desc}:{action}'

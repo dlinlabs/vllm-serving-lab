@@ -121,9 +121,13 @@ NNLS weights give each calibration cell equal total squared row weight; full
 column rank and scaled condition<=1e4 are required. Unknown modes or unsupported
 padding cannot earn extrapolated held success.
 
-CV is computed within the exact same work/position/mode/padding identity across
-three independent trials. No different chunk sizes or token gaps are pooled.
-Missing strata are inconclusive, >2% flagged, >5% stops structural claims. Actual
+The readiness screen has twelve preregistered strata: six calibration cells by
+prefill-bearing/decode-only phase. Sum each phase's labels per trial only after
+matching the complete ordered work/position/mode/padding signatures across all
+three repeats. Missing work is inconclusive; phase-total CV>2% is flagged and >5%
+stops structural claims. Per-step maximum CV is descriptive and cannot stop the
+run. Aggregation reduces sensitivity to independent step noise; this is phase-total
+repeatability, not the per-step CV used in the historical power screen. Actual
 D16 mode/padding strata also report whether context varies independently of the
 other work features. A coefficient alone never earns a unique KV mechanism claim.
 
@@ -135,7 +139,14 @@ scope. It is a restricted serial FIFO predictor: async overlapping wall spans
 cannot be added into serial cumulative targets. Such captures retain their raw
 measurements and get an inconclusive model freeze instead of invented serial costs.
 
-Held scoring checks source-bound model freeze, all five blocks, calibrated M0 and
+At block3_end the runner also freezes eligibility using nominal release state and
+OFF observer jitter (1.4826*MAD per position, assigned by the frozen position-reference mapping), plus
+all nominal predictions/gaps and source identities. Measured held release states
+only condition held predictions, never eligibility. The jitter proxy is not assumed
+equal to held per-trial SD. Scoring verifies digest(model-freeze) against suite.json
+and verifies training/OFF capture hashes before opening held data.
+
+Held scoring checks this source-bound model freeze, all five blocks, calibrated M0 and
 retained M1 comparisons, the existing two structural groups, fixed5ms improvement
 floor, all-cell regressions, bias and offset ordering. Eligibility remains the
 revision9 `max(3*jitter,25ms)` rule. The latest proposed eligibility change is not
@@ -155,3 +166,12 @@ transfer files, gateway telemetry, `model-freeze.json`, `held-report.json`, and 
 two deep traces. `suite.json.complete` means all frozen collection stages completed
 with their scoped integrity checks. `model_accepted` and `gpu_validated` deliberately
 remain false pending actual-host qualification; they are not inferred from counts.
+
+Revision11: the raw-token HTTP bridge goes directly to OpenAI completions and
+explicitly does not qualify gateway transport. Azure chat transfer uses the
+cost-aware gateway. Controlled requests increment upstream cumulative metrics;
+use per-trial snapshots and IDs rather than interpreting them as offered demand.
+The utility transport is a pinned private API. EngineCore uses a0.5ms GIL switch
+interval; the unchanged5ms posting deadline must still hold on the native host.
+Invalid requests receive request-local aborts; recorder finish disables observations
+before deferred event polling, and stale timer epochs cannot enter HTTP captures.

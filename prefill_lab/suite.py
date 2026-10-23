@@ -16,6 +16,7 @@ import httpx
 
 from .analysis import observer_gate,freeze_models,drift_report
 from .causal import dispatcher_parity
+from .scoring import freeze_eligibility
 from .contracts import audit_capture,digest,save
 from .tokens import peak_kv_tokens,validate
 
@@ -101,6 +102,7 @@ async def controlled_trial(client,trial,deadline,partial_path=None):
         while True:
             status=await client.command('status')
             if status['status']=='complete':break
+            if status['status']=='invalid':raise RuntimeError('Controlled trial invalidated; see partial capture')
             if time.monotonic()>=limit:raise TimeoutError('Trial45s/shared deadline expired')
             await asyncio.sleep(.01)
         while True:
@@ -174,7 +176,8 @@ async def http_bridge(client,http,url,trial,manifest,deadline,partial_path=None)
         await asyncio.wait_for(asyncio.gather(*tasks),min(45,max(.001,deadline-time.monotonic())))
         if any(r['status']!='complete' for r in rows):raise RuntimeError('HTTP bridge request failure')
         capture=await finish_external(client,deadline)
-        return dict(capture=capture,client=rows,release=release,diagnostic_only=True)
+        return dict(capture=capture,client=rows,release=release,diagnostic_only=True,
+                    transport_path='shared HTTP client -> OpenAI completions -> EngineCore; gateway bypassed',gateway_transport_qualified=False)
     finally:
         for task in tasks:
             if not task.done():task.cancel()
@@ -288,11 +291,11 @@ async def run(client,http,url,manifest,trace,output,*,hard_seconds=1800):
             await trial(t0)
             if t0['stage']=='drift_reference' and t0.get('block')==3 and t0.get('position')=='end':
                 try:
-                    frozen=freeze_models(captures,order)
+                    frozen=freeze_eligibility(freeze_models(captures,order),cases,order,captures,dispatch)
                 except ValueError as exc:
                     frozen=dict(status='inconclusive',reason=str(exc),model_accepted=False,held_labels_used=False)
                 save(output/'model-freeze.json',frozen);summary['model_freeze_sha256']=digest(frozen)
-                summary['calibration_status']=frozen.get('noise_readiness',{}).get('status','inconclusive')
+                summary['calibration_status']=frozen.get('noise_readiness',{}).get('status','inconclusive');record()
         summary['drift']=drift_report(captures,order);record()
         for t0 in order:
             if t0['stage']=='http_bridge':await trial(t0)
@@ -314,9 +317,12 @@ async def run(client,http,url,manifest,trace,output,*,hard_seconds=1800):
         summary['block_dependence_status']='unresolved'
     except (Exception,asyncio.CancelledError) as exc:
         summary['failures'].append(dict(type=type(exc).__name__,message=str(exc)))
-        if current is not None:
-            current['integrity']='incomplete' if isinstance(exc,(TimeoutError,asyncio.CancelledError)) or current['attempted_trial_ids']!=current['planned_trial_ids'] else 'complete_invalid'
-            current['failure_reason']=str(exc);current['deadline']=isinstance(exc,TimeoutError)
+        # Interleaved stages (main/drift) can both have started. Close every
+        # unfinished running stage, while preserving all completed evidence.
+        for stage in stages.values():
+            if stage['integrity']!='running' and stage is not current:continue
+            stage['integrity']='incomplete' if isinstance(exc,(TimeoutError,asyncio.CancelledError)) or stage['completed_trial_ids']!=stage['planned_trial_ids'] else 'complete_invalid'
+            stage['failure_reason']=str(exc);stage['deadline']=isinstance(exc,TimeoutError)
         try:
             await client.command('abort',reason=type(exc).__name__)
             until=time.monotonic()+2

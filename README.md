@@ -36,7 +36,7 @@ development associations, not causes.
 [Cases/order/predictions](experiments/prefill-service-v1.design.json) ·
 [Completed2048 sensitivity](results/prefill-budget-sensitivity/summary.json)
 
-PR32 revision10 adds the [collection implementation and native-host commands](experiments/prefill-service-v1.runbook.md).
+PR32 revision11 adds the [collection implementation and native-host commands](experiments/prefill-service-v1.runbook.md).
 It includes V1/V2 engine/worker hooks, exact token manifests, paired step audits,
 observer/drift checks, HTTP/Azure stages, mode-aware calibration fitting and held
 scoring. Runtime/source guards preserve graph/async defaults. Native/GPU

@@ -28,8 +28,9 @@ def rollout(case,model,dispatch_table,release_state=None):
         if release_state is not None:
             observed=next((v for k,v in release_state['requests'].items() if k.endswith('/'+name)),None)
             if observed is None:raise ValueError('Missing measured release background state')
-        context=1025 if observed is None else observed['num_tokens']
-        remaining=256-(context-1024)
+        num_tokens=1025 if observed is None else observed['num_tokens']
+        context=num_tokens-1  # The latest sampled token has not been executed yet.
+        remaining=256-(num_tokens-1024)
         if not 0<remaining<256:raise ValueError('Background is not decoding at release')
         bg.append(dict(id=name,context=context,left=remaining))
     offered=[dict(id=f'foreground-{i}',tokens=n,out=128,at=a/1000.) for i,(n,a) in enumerate(zip(case['foreground_tokens'],case['foreground_offsets_ms']))]
@@ -57,7 +58,7 @@ def rollout(case,model,dispatch_table,release_state=None):
         decoders=[r for r in decoders if r['left']]
         for r in finished:
             outcomes[r['id']]=dict(ttft_s=end-r['at'],first_s=end)
-            decoders.append(dict(id=r['id'],context=r['tokens']+1,left=r['out']-1))
+            decoders.append(dict(id=r['id'],context=r['tokens'],left=r['out']-1))
         now=end
     return dict(foreground=outcomes,steps=steps,scope='serial FIFO planning conditional on measured initial state; actual scheduler/mode parity required')
 

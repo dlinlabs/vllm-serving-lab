@@ -52,7 +52,7 @@ def rows_from_capture(capture,label='wall'):
         if not finite(y) or y<=0:raise ValueError('Invalid timing label')
         rows.append(dict(**{k:step[k] for k in ('decode','prefill','decode_context','attention_pairs')},
                          mode=worker['runtime_mode'],padding_excess=worker['padded_tokens']-step['decode']-step['prefill'],
-                         y=y,step_id=step['step_id'],start=step['start'],end=step['end'],
+                         y=y,trial_id=capture['trial_id'],step_id=step['step_id'],start=step['start'],end=step['end'],
                          work=step['work'],padded_tokens=worker['padded_tokens']))
     if not rows:raise ValueError('Empty scored service window')
     return rows
@@ -93,17 +93,56 @@ def predict(row,model):
 
 
 def errors(rows,model):
-    residual=np.array([predict(r,model)-r['y'] for r in rows]);p=np.array([r['prefill']>0 for r in rows])
-    if not p.any() or p.all():raise ValueError('Need both prefill and decode observations')
-    # Each request's last prefill is selected by actual executed IDs/positions, not GPU timestamps.
-    endpoints={}
-    for i,row in enumerate(rows):
-        for w in row['work']:
-            if w['position']<w['prompt_length'] and w['request_id'].split('/')[-1] in ('sentinel','foreground-0','foreground-1','foreground-2','foreground-3'):
-                endpoints[w['request_id']]=i
-    if not endpoints:raise ValueError('No foreground cumulative targets')
-    return dict(decode=float(abs(residual[~p]).mean()),prefill=float(abs(residual[p]).mean()),
-                cumulative=float(np.mean([abs(residual[:i+1].sum()) for i in endpoints.values()])))
+    # A cell contains independent trials. Reset all cumulative sums at each trial.
+    trials=defaultdict(list)
+    for row in rows:trials[row['trial_id']].append(row)
+    scores=[]
+    for trial_rows in trials.values():
+        residual=np.array([predict(r,model)-r['y'] for r in trial_rows])
+        p=np.array([r['prefill']>0 for r in trial_rows])
+        if not p.any() or p.all():raise ValueError('Need both prefill and decode observations per trial')
+        endpoints={}
+        for i,row in enumerate(trial_rows):
+            for w in row['work']:
+                if w['position']<w['prompt_length'] and w['request_id'].split('/')[-1] in ('sentinel','foreground-0','foreground-1','foreground-2','foreground-3'):
+                    endpoints[w['request_id']]=i
+        if not endpoints:raise ValueError('No foreground cumulative targets')
+        scores.append(dict(decode=float(abs(residual[~p]).mean()),prefill=float(abs(residual[p]).mean()),
+                           cumulative=float(np.mean([abs(residual[:i+1].sum()) for i in endpoints.values()]))))
+    return {target:float(np.mean([s[target] for s in scores])) for target in ('decode','prefill','cumulative')}
+
+
+def calibration_readiness(training,order):
+    """Twelve fixed cell/phase totals; never maximize over hundreds of step CVs.
+
+    Compare complete ordered work/mode/padding signatures across three trials
+    before pooling durations. This is phase-total repeatability, not step-label CV.
+    """
+    from scripts.build_prefill_design import cases
+    expected=sorted(c['id'] for c in cases() if c['split']=='calibration')
+    declared={t['trial_id']:t for t in order if t.get('analysis_role')=='train'}
+    durations={};signatures={};step_cvs=[]
+    for case in expected:
+        trials=defaultdict(list)
+        for row in training.get(case,[]):trials[declared[row['trial_id']]['block']].append(row)
+        for phase in ('prefill','decode'):
+            key=case+'/'+phase;values=[];identities=[];step_values=[]
+            for block in (1,2,3):
+                rows=[r for r in trials[block] if (r['prefill']>0)==(phase=='prefill')]
+                identities.append([(r['mode'],r['padded_tokens'],[(w['request_id'].split('/')[-1],w['position'],w['tokens']) for w in r['work']]) for r in rows])
+                values.append(sum(r['y'] for r in rows));step_values.append([r['y'] for r in rows])
+            signatures[key]=digest(identities[0])
+            if not identities[0] or identities[1:]!=identities[:1]*2:
+                return dict(status='inconclusive',reason='Missing or unmatched fixed cell/phase work',model_accepted=False)
+            durations[key]=values
+            array=np.array(step_values)
+            step_cvs.extend((array.std(axis=0,ddof=1)/array.mean(axis=0)).tolist())
+    result=calibration_noise_readiness(durations,expected_strata=[c+'/'+p for c in expected for p in ('prefill','decode')])
+    result.update(protocol='six-cells-two-phase-totals-v1',stratum_count=12,work_signature_sha256=signatures,
+                  phase_totals_s=durations,descriptive_max_step_cv=max(step_cvs),
+                  step_cv_controls_gate=False,
+                  note='Fixed phase-total CV screen; not a population bound, per-step noise estimate or power guarantee. Per-step maximum is descriptive only.')
+    return result
 
 
 def freeze_models(captures,order,label='wall'):
@@ -112,19 +151,14 @@ def freeze_models(captures,order,label='wall'):
     chosen=[c for c in captures if c['trial_id'] in allowed]
     if len(chosen)!=18 or len({c['trial_id'] for c in chosen})!=18:
         raise ValueError('Need every one of the18 frozen calibration trials')
-    training=defaultdict(list);strata=defaultdict(dict)
+    training=defaultdict(list)
     for c in chosen:
         trial=allowed[c['trial_id']]
         rows=rows_from_capture(c,label)
         if any(b['start']<a['end'] for a,b in zip(rows,rows[1:])):
             raise ValueError('Overlapping wall labels cannot support serial cumulative selection')
         training[trial['case']].extend(rows)
-        # IDs are normalized to request positions. Different work/mode/padding is never pooled.
-        for row in rows:
-            identity=digest([trial['case'],row['mode'],row['padded_tokens'],[(w['request_id'].split('/')[-1],w['position'],w['tokens']) for w in row['work']]])
-            if trial['block'] in strata[identity]:raise ValueError('Repeated within-trial stratum is not an independent repeat')
-            strata[identity][trial['block']]=row['y']
-    readiness=calibration_noise_readiness({k:[v[b] for b in (1,2,3) if b in v] for k,v in strata.items()},expected_strata=sorted(strata))
+    readiness=calibration_readiness(training,order)
     encoding=basis(training);fits={};scores={};unsupported={}
     for family in FAMILIES:
         try:
@@ -164,7 +198,7 @@ def freeze_models(captures,order,label='wall'):
                                     context_variation=float(np.ptp(y)),
                                     residual_context_norm=float(np.linalg.norm(residual)),
                                     noncollinear_context=bool(np.linalg.norm(residual)>1e-8)))
-    return dict(schema='prefill-measured-model-freeze-v1',label=label,selected=selected,retained_base=base,
+    return dict(schema='prefill-measured-model-freeze-v2',label=label,selected=selected,retained_base=base,
                 encoding=encoding,fits=fits,loco_errors=scores,unsupported=unsupported,noise_readiness=readiness,plain_M0_ablation=plain_ablation,
                 context_strata_support=context_support,unique_context_mechanism_claimed=False,
                 training_capture_sha256={c['trial_id']:digest(c) for c in chosen},

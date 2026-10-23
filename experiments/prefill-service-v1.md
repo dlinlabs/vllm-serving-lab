@@ -1,12 +1,12 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Implementation revision10. Collector/hooks and the runner are implemented; native
+**Implementation revision11. Collector/hooks and the runner are implemented; native
 acceptance and actual-host GPU qualification are pending. The executable protocol
 is not frozen.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
 
-## Collection implementation (revision10)
+## Collection implementation (revision11)
 
 [Native-host runbook](prefill-service-v1.runbook.md) documents preparation, complete
 CPU acceptance and one-command collection. `scripts/run_prefill_service.py` runs
@@ -25,7 +25,7 @@ environment. Before scored use, run complete CPU acceptance on the clean native
 host and qualify actual hooks, graph/stream scope, scheduling and observer cost.
 Async overlapping wall labels remain ineligible for serial cumulative fitting.
 Block-dependence qualification remains unresolved. The previous statistical rules,
-workloads and budget are unchanged by this implementation.
+workloads, structural test and budget are unchanged. Revision11 corrects trial-local cumulative errors, freezes nominal eligibility at block3, and preregisters twelve phase-total repeatability strata.
 
 ## Noise-aware structural correction (revision9)
 
@@ -72,10 +72,14 @@ are qualified by construction only. No full-experiment false-positive guarantee
 or automatic model acceptance is claimed.
 
 After the first three calibration blocks, before model and held-score freeze,
-`calibration_noise_readiness` checks three repeat durations per preregistered matched
-work/position/mode/padding stratum. Missing strata are inconclusive; CV>5% stops
-structural claims, CV>2% is flagged. Three repeats give an imprecise engineering
-screen, not a population-CV bound. Never pool different work or token gaps as
+`calibration_noise_readiness` checks twelve fixed strata: six calibration cells
+by prefill-bearing/decode-only phase, using one phase-total duration per block1–3.
+Before summing, the complete ordered work/position/mode/padding signatures must
+match across repeats. Missing/mismatched strata are inconclusive; phase-total
+CV>5% stops structural claims and CV>2% is flagged. Per-step maximum CV remains
+descriptive only. This phase-total repeatability screen is not a per-step noise
+estimate, population-CV bound or label-noise power guarantee. Independent step
+noise can average away; shared phase noise does not. Never pool different work or token gaps as
 independent repeats, and never tune this screen using held timings.
 
 `prefill_planning.py` performs training-only nonnegative fitting, LOCO family
@@ -105,7 +109,7 @@ Before executable freeze, add an exact-installed-revision scheduler parity gate:
 compare request IDs, chunk sizes, computed positions and completion/admission
 events under matched state/config, including partial chunks and async behavior.
 CPU toy-to-toy parity does not satisfy it. Collector/native adapter, mode-aware causal rollout and exact token materialization
-are implemented in revision10; installed-host/GPU acceptance remains pending.
+are implemented in revision11; installed-host/GPU acceptance remains pending.
 Later action validation must compare caps/transitions on matched offered traces,
 measure action ranking/regret and draining transients, and avoid oracle output
 lengths. D16 is a decoder population, not admission cap16.
@@ -282,7 +286,9 @@ Composition cases have four requests and16384 total prompt tokens. This controls
 offered work/count, not actual step composition. Preserve common content pools
 within a block, including request IDs/arrival order mapping. Insert simultaneous
 requests at one engine-side barrier; let the real scheduler choose chunks.
-Sentinel target and actual enqueue times are logged; maximum offset error5ms.
+Sentinel target and actual input-queue posting times are logged; maximum posting
+lag5ms. Scheduler-consumption/enqueue time is recorded separately; queue residence
+is not included in that timer-lag allowance.
 The case/order files contain22 cells, five randomized complete main blocks, seed20261022.
 
 Calibration: six cells x blocks1–3 =18 fitting trials. The same cells in blocks4–5
@@ -372,7 +378,7 @@ constant-column rule and comparator accounting basis must be frozen before held
 scoring. Every M0/M1/M2 structural comparison uses that SAME accounting basis;
 its full rank/condition checks must be repeated on the actual encoded rows. The
 current five-column toy support check does not validate this mode-aware variant.
-Implementation/source mapping is in revision10; validation of that implementation
+Implementation/source mapping is in revision11; validation of that implementation
 is a pre-freeze blocker, not permission to add features after a held failure. Plain-M0 remains an archived ablation.
 
 A mechanistic M1 context claim additionally needs improvement within D16 and the
@@ -514,23 +520,30 @@ Within-D offset ordering tests policy, not the nonlinear coefficient. Publish
 resolvability for every contrast/scenario. If all identification contrasts for an
 H2 or H3 claim are unresolved, that claim is inconclusive; stop main only if BOTH
 families are unresolved. Do not replace cells. Candidate-versus-EACH-calibrated-comparator eligibility
-is a separate frozen rule after calibration fitting and before opening held timing.
+is frozen at block3_end from nominal release state and completed OFF observers,
+stored in model-freeze.json and hash-bound in suite.json before blocks4–5.
+D16 nominal release has1024 computed/1025 tokens per background; D0 is empty.
+Held release states cannot change eligibility. Eligibility jitter is1.4826*MAD
+of OFF observer TTFT per position, assigned by the frozen position-reference mapping; it is a
+proxy rather than the held per-trial SD in the synthetic noise screen.
 This calibration-only check does not inspect held timing or justify precision on
 other states. Do not swap held cells after inspecting them.
 
 ## Endpoint bridge and real-composition transfer
 
-For all eight sentinel cases, use normal shared-client gateway -> OpenAI API ->
-EngineCore. Gateway baseline mode admits all (backgrounds included); this stage
-measures transport, not cap policy. Record scheduled/actual send, API/gateway receipt,
-EngineCore enqueue, first engine output, gateway first content, SSE send and client
-first content, with request IDs and host monotonic clocks. If a scope is not observable,
-mark it unavailable rather than merge spans. HTTP cannot guarantee simultaneous
-engine enqueue; retain actual arrivals and state. Do not subtract unrelated percentiles
-or assume a matched barrier/HTTP state. No held bridge delay becomes a fitted predictor.
+For all eight sentinel cases, the HTTP bridge uses a shared client -> OpenAI
+`/v1/completions` -> EngineCore with exact raw token IDs. This revision deliberately
+limits the bridge to API/engine transport; it bypasses the gateway, whose existing
+endpoint accepts chat rather than raw token prompts. It does not qualify gateway
+transport. Record scheduled/actual client send, EngineCore enqueue and first engine
+output, response ID and client first content. Uninstrumented API receipt/SSE-send
+scopes are unavailable. HTTP cannot guarantee simultaneous engine enqueue; retain
+actual arrivals and state. Do not subtract unrelated percentiles or assume a matched
+barrier/HTTP state. No held bridge delay becomes a fitted predictor.
 
-Restart only the gateway between transport baseline and cost-aware transfer; keep
-EngineCore/config unchanged and bind each gateway identity separately. Run four
+The fixed-cost32 gateway is loaded once for the later Azure chat transfer; no
+baseline gateway or gateway-only restart is claimed. Keep EngineCore/config
+unchanged and bind gateway launch/telemetry identity separately. Run four
 fixed32,80s replay attempts in frozen ABBA order: A-r1, B-r1, B-r2, A-r2.
 A replays[40,120), scoring[60,120); B replays[160,240), scoring[180,240).
 Use the historical development trace
@@ -626,7 +639,7 @@ budget sensitivity re-audits the archived suite and checks8192 parity. Raw bundl
 are the public PR30/31 evidence; see their extraction instructions. Published
 CPU results are development sensitivity, not a native collector/GPU acceptance.
 
-Review and qualify the revision10 server adapter, collector, trace slicing,
+Review and qualify the revision11 server adapter, collector, trace slicing,
 metric update-site mapping, exact token manifests and causal rollout. Run CPU
 acceptance at that exact revision, bind host config, verify budget/observer and
 freeze an executable protocol. Afterwards compare revised simulator on Azure dev
@@ -636,3 +649,28 @@ Sources: [v0.30.0 defaults](https://github.com/vllm-project/vllm/blob/v0.30.0/vl
 [scheduler output](https://github.com/vllm-project/vllm/blob/v0.30.0/vllm/v1/core/sched/output.py),
 [profiling](https://docs.vllm.ai/en/v0.30.0/contributing/profiling/),
 [CUDA async timing](https://docs.pytorch.org/docs/stable/notes/cuda.html).
+
+## Round7 implementation corrections (revision11)
+
+[Review](https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6372790392)
+and [fix report](../results/prefill-round7-fixes-20261023/report.md). LOCO errors
+reset cumulative sums at every trial and then average trials within each cell.
+Scoring verifies the frozen model hash, dispatcher/case/order/reference identities,
+training captures and OFF observer captures before reading held data.
+
+Invalid external traffic records an error and emits an abort only for that request;
+it does not raise out of EngineCore ADD. Stale timer messages are ignored outside
+the matching controlled epoch. EngineCore sets the GIL switch interval to0.5ms;
+the5ms posting-lag integrity limit remains unchanged and actual lag still needs
+native-host qualification. Worker finish disables recording immediately, even
+while delayed CUDA events await another query. Dummy V2 calls and absent forward
+contexts are excluded from graph/event observations. Decode context uses the
+pre-execution position, and failed interleaved stages receive terminal status.
+
+Controlled requests still increment upstream scheduler statistics and cumulative
+metrics. Use request IDs and per-trial before/after snapshots; those counters are
+not external offered demand or executed-work ground truth. The endpoint deliberately
+uses private core_client utility transport; its dependencies are source-pinned and
+require re-review when vLLM changes. V2 v0.30.0 initializes attn_groups during KV
+cache setup; the review's claim that it has none does not match the pinned source.
+Backend metadata is read from those initialized groups, with unavailable explicit.
