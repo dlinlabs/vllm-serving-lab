@@ -36,7 +36,12 @@ development associations, not causes.
 [Cases/order/predictions](experiments/prefill-service-v1.design.json) ·
 [Completed2048 sensitivity](results/prefill-budget-sensitivity/summary.json)
 
-PR32 revision9 keeps22 cells and212 trials, with a1518.29s planning budget.
+PR32 revision10 adds the [collection implementation and native-host commands](experiments/prefill-service-v1.runbook.md).
+It includes V1/V2 engine/worker hooks, exact token manifests, paired step audits,
+observer/drift checks, HTTP/Azure stages, mode-aware calibration fitting and held
+scoring. Runtime/source guards preserve graph/async defaults. Native/GPU
+qualification remains pending; the local PID/procfs namespace blocks complete
+native CPU acceptance. The unchanged statistical revision9 keeps22 cells and212 trials, with a1518.29s planning budget.
 [Noise-aware checks](results/prefill-design-round7/report.md) require two distinct
 structural contrasts: mixed512/512/7680/7680 bursts and a single7680 prompt.
 The grouped paired-t screen uses five block means and calibrated comparators,
@@ -53,7 +58,8 @@ based, prompt content synthetic, and outputs capped128 rather than replaying sou
 GeneratedTokens. Controlled identification and real-composition transfer answer
 different questions. [Round4](results/prefill-design-round4/report.md) ITL support,
 shared-floor magnitude and repeat diagnostics remain historical evidence.
-**Collector/hooks are not implemented; the executable GPU protocol is not frozen.**
+**Collector/hooks are implemented and CPU/mock tested; the executable GPU protocol
+remains unfrozen until native acceptance and actual-host qualification.**
 
 ## State-aware model iteration on the 16/32 captures
 

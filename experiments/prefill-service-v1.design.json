@@ -1,10 +1,10 @@
 {
-  "schema": "service-microbenchmark-design-v9",
+  "schema": "service-microbenchmark-design-v10",
   "protocol": "prefill-service-v1",
-  "revision": 9,
-  "status": "draft_not_executable",
-  "collector_implemented": false,
-  "source_parent_commit": "4a33e830816cd98ea4c571263f442cb92a1cb554",
+  "revision": 10,
+  "status": "implementation_pending_native_acceptance",
+  "collector_implemented": true,
+  "source_parent_commit": "959f60c52d77ddb725ce1e37d01d942a9e694432",
   "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6352203816",
   "runtime": {
     "gpu": "RTX4090",
@@ -100,7 +100,7 @@
       "decode_count",
       "decode_context"
     ],
-    "graph_fields_implemented": false,
+    "graph_fields_implemented": true,
     "jitter": "MAD across off trials per request position; complete20x1/10x4 matrices; preregistered latency-range reference mapping; per-cell thresholds",
     "missing_graph_fields": "unavailable, never inferred from D level; mode/context attribution unavailable without required labels"
   },
@@ -305,7 +305,7 @@
     },
     "service_window_membership": "same executed step IDs for wall/GPU labels; never cross-compare host and GPU timestamps",
     "graph_accounting": {
-      "status": "pre-freeze implementation/source-mapping blocker",
+      "status": "implemented; requires installed-host source/dispatcher/stream qualification",
       "baseline": "M0-level mode-specific intercepts and training-supported padding-excess covariate",
       "same_basis_all_families": true,
       "plain_five_column_toy_does_not_validate_mode_aware_basis": true,
@@ -390,7 +390,7 @@
   "files": {
     "prefill-service-v1.md": {
       "path": "experiments/prefill-service-v1.md",
-      "sha256": "20de82834858fd106fcbc074f278d64b37705433bf63949e1ca4cf92ca259fda"
+      "sha256": "b92351dbe45da79e8974ddc6ecd58f817dd68ff1d6c404bab5d3dcee395aac76"
     },
     "prefill-service-v1.cases.json": {
       "path": "experiments/prefill-service-v1.cases.json",
@@ -471,6 +471,66 @@
     "revision8-source-snapshots": {
       "path": "results/prefill-design-round6/source-snapshots.json",
       "sha256": "7e1be5e3fb83a3e974577e0c8793254935839a5af2c10359034267d03c67610d"
+    },
+    "prefill_lab/scoring.py": {
+      "path": "prefill_lab/scoring.py",
+      "sha256": "569e823e35a798f81f5374b4283d16430326330519920f43652f3586defe6fcb"
+    },
+    "prefill_lab/runtime.py": {
+      "path": "prefill_lab/runtime.py",
+      "sha256": "4dd0417f154f2a17a4ea321bface2b2560b32d29ce7f643751d13dd2afdda783"
+    },
+    "prefill_lab/contracts.py": {
+      "path": "prefill_lab/contracts.py",
+      "sha256": "cd68ad7d378bff183947d147b197e94e8d84999ee73e89780128c50593aa73dd"
+    },
+    "prefill_lab/analysis.py": {
+      "path": "prefill_lab/analysis.py",
+      "sha256": "104e35e79215d73fff6811c7b6b56a9ad0ebf9bc6c92d4c804f5d9753e8e481f"
+    },
+    "prefill_lab/tokens.py": {
+      "path": "prefill_lab/tokens.py",
+      "sha256": "c840c49ca4c9c425b0bbec011db13196d2a05e223d2f273b679753d171fcb4d1"
+    },
+    "prefill_lab/endpoint.py": {
+      "path": "prefill_lab/endpoint.py",
+      "sha256": "aa94855f05f02c32f6194f13b55f8a2b3156b09af6c4f3a79368780fb683e88b"
+    },
+    "prefill_lab/__init__.py": {
+      "path": "prefill_lab/__init__.py",
+      "sha256": "111e3c479dec680d722b09f57349ba00f909c8bafa562fede7370578b1564c1c"
+    },
+    "prefill_lab/suite.py": {
+      "path": "prefill_lab/suite.py",
+      "sha256": "53cdbbc8e332af64b6d10bac5f8bfff90b402ed0c5b8a89ffc90bb958b32bc6a"
+    },
+    "prefill_lab/plugin.py": {
+      "path": "prefill_lab/plugin.py",
+      "sha256": "5d1a53984ab01c640ab358519f3290c1eaffbd11d5a218d27266d657ccd06863"
+    },
+    "prefill_lab/dispatch.py": {
+      "path": "prefill_lab/dispatch.py",
+      "sha256": "8e6925e4242c6a9f00b9cb2f794900e5aef4dd2b71f24328e5c07af717bed604"
+    },
+    "prefill_lab/causal.py": {
+      "path": "prefill_lab/causal.py",
+      "sha256": "4d96414dc86a64b4c882e4ecc8aaca318ad70ce36e202980cf3612f1cbf17fe2"
+    },
+    "scripts/run_prefill_service.py": {
+      "path": "scripts/run_prefill_service.py",
+      "sha256": "bfa00c0f4187b6dbcb0e2b76b5c1db8028fef85f78a9d4cb529e4784fb66c371"
+    },
+    "experiments/prefill-service-v1.runbook.md": {
+      "path": "experiments/prefill-service-v1.runbook.md",
+      "sha256": "a7f4f5cdf53205770465d7fbe7cda55389d87a95ea82c4798b25a53cc5b10ec3"
+    },
+    "experiments/prefill-vllm-v030-source-map.json": {
+      "path": "experiments/prefill-vllm-v030-source-map.json",
+      "sha256": "ac668653bb4656e579b1e99824862bae4d64a25472d7a4ad5d73c43b4f732356"
+    },
+    "pyproject.toml": {
+      "path": "pyproject.toml",
+      "sha256": "4e62899bfe56335fdc20fa1311162af6b1b834fd91307d16497fbcfb81a8e6b8"
     }
   },
   "readiness": {
@@ -480,10 +540,26 @@
     "observer_overhead_validated": false,
     "C_used": false,
     "mpc_evaluated": false,
-    "mode_aware_accounting_implemented": false,
+    "mode_aware_accounting_implemented": true,
     "calibrated_physical_models_fitted": false,
     "installed_scheduler_parity_verified": false,
-    "block_dependence_assessment_implemented": false
+    "block_dependence_assessment_implemented": false,
+    "exact_token_materializer_implemented": true,
+    "collector_cpu_mock_tested": true,
+    "actual_gpu_adapter_loaded": false
   },
-  "revision_reason": "Round5 follow-up: frozen5ms mean-gain floor prevents epsilon wins; preserve two groups and dependence guards"
+  "revision_reason": "Implement opt-in V1/V2 collector, exact tokens, full suite runner and measured analysis; native/GPU acceptance remains pending",
+  "implementation": {
+    "entrypoint": "scripts/run_prefill_service.py",
+    "plugin": "prefill_lab",
+    "vllm": "0.30.0",
+    "model_runners": [
+      "V1",
+      "V2"
+    ],
+    "native_acceptance": "required before collect",
+    "block_dependence": "unresolved",
+    "gpu_scope": "unqualified pending real deep traces",
+    "serial_wall_model": "inconclusive when actual async spans overlap"
+  }
 }

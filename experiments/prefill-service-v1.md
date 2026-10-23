@@ -1,9 +1,31 @@
 # Prefill service identification v1 — revised after PR32 review
 
-**Draft design, revision9. Collector/hooks are not implemented; this is not an executable
-GPU protocol.** Parent evidence: PR26–31. The cases, order, predictions and budget are
+**Implementation revision10. Collector/hooks and the runner are implemented; native
+acceptance and actual-host GPU qualification are pending. The executable protocol
+is not frozen.** Parent evidence: PR26–31. The cases, order, predictions and budget are
 reproducible CPU artifacts. Freeze accepted collector, installed-source mapping,
 analysis and token manifests before GPU collection. C remains unused.
+
+## Collection implementation (revision10)
+
+[Native-host runbook](prefill-service-v1.runbook.md) documents preparation, complete
+CPU acceptance and one-command collection. `scripts/run_prefill_service.py` runs
+the unchanged212-trial matrix and four transfer attempts on one OpenAI-server
+EngineCore. `prefill_lab` provides opt-in V1/V2 hooks, exact input IDs, independent
+arrival queue posting, bounded step/event records, source/config/KV guards,
+actual-worker input-position/count reconciliation, installed-scheduler and
+frozen-dispatcher parity, observer/drift gates, HTTP bridge, Azure transfer,
+deep traces, calibration-only NNLS/LOCO and held scoring.
+
+Code implementation is distinct from installed-host acceptance. The current Work
+PID/procfs view fails the existing resource-identity checks; the complete native
+CPU suite has not passed here. V1/V2 source interfaces are hash-pinned to upstream
+0.30.0, but the adapter has not been loaded against a real GPU runtime in this
+environment. Before scored use, run complete CPU acceptance on the clean native
+host and qualify actual hooks, graph/stream scope, scheduling and observer cost.
+Async overlapping wall labels remain ineligible for serial cumulative fitting.
+Block-dependence qualification remains unresolved. The previous statistical rules,
+workloads and budget are unchanged by this implementation.
 
 ## Noise-aware structural correction (revision9)
 
@@ -61,7 +83,7 @@ selection and causal serial FIFO rollout for these synthetic checks. All models
 use the same training rows and weighting. M0Z (M0 plus Z, without decode context)
 is a mandatory reporting ablation; it is not a new selectable family. If M2 wins
 against M0 while M1 was rejected, report joint-feature predictive benefit, not
-unique Z attribution. Actual mode-aware feature support/rollout is still pending.
+unique Z attribution. Mode-aware fitting and rollout are implemented; actual-host support and qualification remain pending.
 
 The raw contrast table remains a policy/sensitivity diagnostic. It cannot certify
 structural feasibility. Before executable freeze, review calibrated-comparator
@@ -82,8 +104,8 @@ Azure checks usefulness under mixed load. C remains untouched.
 Before executable freeze, add an exact-installed-revision scheduler parity gate:
 compare request IDs, chunk sizes, computed positions and completion/admission
 events under matched state/config, including partial chunks and async behavior.
-CPU toy-to-toy parity does not satisfy it. Collector, native adapter, mode-aware
-causal rollout, exact token manifests and GPU acceptance are still pending.
+CPU toy-to-toy parity does not satisfy it. Collector/native adapter, mode-aware causal rollout and exact token materialization
+are implemented in revision10; installed-host/GPU acceptance remains pending.
 Later action validation must compare caps/transitions on matched offered traces,
 measure action ranking/regret and draining transients, and avoid oracle output
 lengths. D16 is a decoder population, not admission cap16.
@@ -350,8 +372,8 @@ constant-column rule and comparator accounting basis must be frozen before held
 scoring. Every M0/M1/M2 structural comparison uses that SAME accounting basis;
 its full rank/condition checks must be repeated on the actual encoded rows. The
 current five-column toy support check does not validate this mode-aware variant.
-Implementation/source mapping is a pre-freeze blocker, not permission to add
-features after a held failure. Plain-M0 remains an archived ablation.
+Implementation/source mapping is in revision10; validation of that implementation
+is a pre-freeze blocker, not permission to add features after a held failure. Plain-M0 remains an archived ablation.
 
 A mechanistic M1 context claim additionally needs improvement within D16 and the
 SAME observed runtime mode/padded-size strata, with varying context and adequate
@@ -604,7 +626,7 @@ budget sensitivity re-audits the archived suite and checks8192 parity. Raw bundl
 are the public PR30/31 evidence; see their extraction instructions. Published
 CPU results are development sensitivity, not a native collector/GPU acceptance.
 
-Next implement/review the version-specific server adapter, collector, trace slicing,
+Review and qualify the revision10 server adapter, collector, trace slicing,
 metric update-site mapping, exact token manifests and causal rollout. Run CPU
 acceptance at that exact revision, bind host config, verify budget/observer and
 freeze an executable protocol. Afterwards compare revised simulator on Azure dev
