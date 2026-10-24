@@ -129,9 +129,10 @@ async def collect(args):
     # Credentials stay in the environment on an isolated localhost benchmark server.
     # The instrument endpoint authenticates itself; this runtime is never remotely bound.
     save(output/'launch.json',dict(argv=command,source_sha256=code_identity(),cpu_acceptance=acceptance,
+                                  scope='targeted_foreground_diagnostic_only' if getattr(args,'diagnostics_only',False) else 'complete_suite',
                                   environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS')}))
     from scripts.setup_v1 import check_port
-    for port in (8000,8080):check_port(port)
+    for port in ((8000,) if getattr(args,'diagnostics_only',False) else (8000,8080)):check_port(port)
     server=gateway=None
     server_log=(output/'server.log').open('w');gateway_log=(output/'gateway.log').open('w')
     try:
@@ -151,6 +152,10 @@ async def collect(args):
                 except httpx.HTTPError:pass
                 if time.monotonic()>deadline:raise TimeoutError('Initial model load deadline expired')
                 await asyncio.sleep(1)
+            if getattr(args,'diagnostics_only',False):
+                from prefill_lab.deep_diagnostic import run as run_diagnostic
+                summary=await run_diagnostic(client,http,client.url,manifest,output)
+                return 0 if summary['diagnostic_complete'] else 1
             gateway_env=dict(runtime_environment(),ADMISSION_MODE='cost_aware',MAX_ADMITTED_COST='32',
                              MODEL_NAME=str(Path(args.tokenizer).resolve()),VLLM_URL=client.url,
                              ADMIN_API_KEY=secrets.token_hex(32),SHARED_UPSTREAM_CLIENT='1',
@@ -201,6 +206,7 @@ def main():
     p=sub.add_parser('collect')
     for name in ('manifest','tokenizer','trace','cpu-acceptance','output'):p.add_argument('--'+name,required=True)
     p.add_argument('--startup-timeout',type=float,default=900.)
+    p.add_argument('--diagnostics-only',action='store_true',help='Two frozen light warmups and two foreground deep traces; no suite/model acceptance')
     args=parser.parse_args()
     if args.command=='prepare':prepare(args);return 0
     if args.command=='cpu-check':return cpu_check(args.output)

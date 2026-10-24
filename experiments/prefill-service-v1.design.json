@@ -506,11 +506,11 @@
     },
     "prefill_lab/suite.py": {
       "path": "prefill_lab/suite.py",
-      "sha256": "e06c9a9de591608a2173d3f923bc1240e9844e4f5eba0a1fa59ad5f415d8fc14"
+      "sha256": "7d814af4f227d30774c8f8eb58eb1ffc7178094db50360dad36184e4bacc73ed"
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
-      "sha256": "15fc6b9d9975f790218492b3528e160a8d817aa259424921c280df497f867512"
+      "sha256": "df484e8885e9b53dd036d260e5af1581fece7db171706ec7d14f46ef98d8ea69"
     },
     "prefill_lab/dispatch.py": {
       "path": "prefill_lab/dispatch.py",
@@ -522,11 +522,11 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "208c7a2a5cc962538cd889df349e4a763214caa0432ec957fcc2718ab693b1b1"
+      "sha256": "634e14af66695082676dee4872bfdc6aa49f3de660cdabe5a954efc2483bb542"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
-      "sha256": "62f0c73c0879ffd9636fe6e5f735532dbc097adc84bf9cc9667c2afa1c35ddc0"
+      "sha256": "450c7c610a0ccc1015b22958e951542eea6f405c43670097f3290004b0470034"
     },
     "experiments/prefill-vllm-v030-source-map.json": {
       "path": "experiments/prefill-vllm-v030-source-map.json",
@@ -554,7 +554,7 @@
     },
     "tests/test_prefill_round8.py": {
       "path": "tests/test_prefill_round8.py",
-      "sha256": "df8e0cdc031707be8bcd759f7aeeec797fd957acdd29aff0ebafa9ab49f93e3b"
+      "sha256": "22e6efbaa7b86fa0b40fe9026cc6359815069f29e47c65da6ba58f67126ee0ce"
     },
     "tests/test_prefill_design.py": {
       "path": "tests/test_prefill_design.py",
@@ -566,11 +566,11 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "a5c9b3b92085a96b427d1ac018b61d7d6fab59c05366d91e51e0b67b9d4e4bf4"
+      "sha256": "773858977306049f9ddd62437db2d35c7d9d2ed509e703208482fb6bdd3a849c"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
-      "sha256": "0dcf5fe0957780fdd15d7d31cb98264742e4059ec1a97562ad6700d32f0f2164"
+      "sha256": "874c54330efd5db7dce276f0f309e8d3bbbd018cbb9ca12b33b1b08393283f20"
     },
     "prefill_lab/transfer_runner.py": {
       "path": "prefill_lab/transfer_runner.py",
@@ -595,6 +595,22 @@
     "telemetry.py": {
       "path": "telemetry.py",
       "sha256": "315123d4234076297f9c63259596810a687d467c3fc0aadc2e8419152f8e6c18"
+    },
+    "prefill_lab/deep_diagnostic.py": {
+      "path": "prefill_lab/deep_diagnostic.py",
+      "sha256": "4413994a0efe2c9bd19e739ec6a30d9d67bc4fe2b51ea21f3f1ef98351a0afdc"
+    },
+    "scripts/analyze_prefill_capture.py": {
+      "path": "scripts/analyze_prefill_capture.py",
+      "sha256": "706b0ac72dbbe641b54b9972ab3e75ea9ea91f317afbe6610e3ded7174d87bf3"
+    },
+    "scripts/plot_prefill_capture_audit.py": {
+      "path": "scripts/plot_prefill_capture_audit.py",
+      "sha256": "fc071c8982faeca7b2afb1ce450a87357e327704f6fce2605ea1b7e4ec56302f"
+    },
+    "tests/test_prefill_deep.py": {
+      "path": "tests/test_prefill_deep.py",
+      "sha256": "3d52ee8f0b9b0c05d1c427b157bf6d6fc65365132133507934ece8efca96cc30"
     }
   },
   "readiness": {
@@ -635,7 +651,9 @@
       "native_pid_procfs_guard": "unchanged",
       "scope": "offer_start through client drain; restored before capture decoding and HTTP cleanup",
       "evidence": "gc-window.json, runner_gc_control.json, gc-audit.json plus complete runner diagnostics"
-    }
+    },
+    "targeted_diagnostic": "prefill_host.py diagnose: same exact-revision native gate; two matching frozen light warmups plus two foreground profiles; separate output and no suite/GPU/model acceptance",
+    "deep_profile_window": "First foreground/sentinel worker call, then five consecutive calls; exact step-ID CPU ranges and artifact hash; profile-window integrity only"
   },
   "round7_corrections": {
     "cumulative_error": "Reset within each trial, average trials per cell",

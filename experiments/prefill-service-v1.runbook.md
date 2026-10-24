@@ -38,6 +38,21 @@ Prepare does not launch collection. Collect reads ready.json and delegates to th
 existing frozen runner with a fresh ~/pr32-captures/<timestamp> output directory.
 Use --output-dir to select a separate input/pin directory.
 
+For the foreground profile correction, retain the completed b04477e capture and
+use the targeted diagnostic after updating and preparing the new exact revision:
+
+```bash
+.venv/bin/python scripts/prefill_host.py prepare
+.venv/bin/python scripts/prefill_host.py diagnose
+```
+
+Diagnose launches one normal source-pinned engine, runs the two matching frozen
+light warmups and the two deep cases, and writes ~/pr32-diagnostics/<timestamp>.
+It has a180s active diagnostic bound after model startup. No gateway/Azure replay,
+held scoring or full-suite acceptance runs in this mode. diagnostic_complete is
+only work/dispatcher/foreground-profile integrity; GPU stream/event coverage and
+physical-model acceptance remain false. Read diagnostic.json and both deep traces.
+
 ## Native host commands
 
 Use a clean checkout of the PR branch on Linux x86_64 / Python3.12. Install the
@@ -123,8 +138,13 @@ that limitation; the committed local test record does not claim native acceptanc
   final60 seconds of each80-second replay, retains natural EOS with cap128 and
   uses the normal fixed32 admission-cost gateway. Raw exporter buckets and gateway
   snapshots straddle the scored boundaries; every offer/rejection/failure is kept.
-  Deep CPU/CUDA traces profile at most five execute calls in each of the two final
-  deep trials and are written under `deep-traces/`.
+  Deep CPU/CUDA traces wait for the first foreground/sentinel-bearing worker call,
+  then record five consecutive execute calls with stable per-step CPU ranges.
+  Artifact hashes and exact step IDs must pass the foreground-window audit.
+  Traces are written under `deep-traces/`; passing this window audit does not
+  qualify stream/event scope or a physical model. The old b04477e profiles ended
+  before foreground began; their measured findings are archived in
+  results/prefill-native-b04477e-analysis/report.md.
 - Each stage keeps its planned/attempted/completed IDs, integrity, deadline and
   failure reason. One attempt only, no retries or changing workload shapes. Later
   transfer/deep failures retain a separately complete main stage but cannot pass

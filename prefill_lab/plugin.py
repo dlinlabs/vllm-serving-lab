@@ -158,17 +158,25 @@ class WorkerRecorder:
     def __init__(self,torch,trial_id,mode):
         self.torch,self.trial_id,self.mode=torch,trial_id,mode
         self.records=Buffer();self.pending=[];self.profile=None;self.active=True
-        if mode=='deep':
-            self.profile=torch.profiler.profile(activities=[torch.profiler.ProfilerActivity.CPU,torch.profiler.ProfilerActivity.CUDA],record_shapes=True)
-            self.profile.start()
-        self.profile_steps=0
+        self.profile_steps=0;self.profile_state='waiting_for_foreground';self.profile_step_ids=[]
+        self.profile_ranges={};self.profile_artifact=None
 
     def begin(self,output,*,dummy_run=False):
         if dummy_run or not self.active or not output.num_scheduled_tokens or self.mode=='off':return None
         torch=self.torch
+        if self.mode=='deep' and self.profile_state=='waiting_for_foreground':
+            foreground=any(rid.rsplit('/',1)[-1]=='sentinel' or rid.rsplit('/',1)[-1].startswith('foreground-')
+                           for rid in output.num_scheduled_tokens)
+            if foreground:
+                self.profile=torch.profiler.profile(activities=[torch.profiler.ProfilerActivity.CPU,torch.profiler.ProfilerActivity.CUDA],record_shapes=True)
+                self.profile.start();self.profile_state='recording'
+        key=step_key(output)
+        if self.profile:
+            scope=torch.profiler.record_function('prefill_lab_step/'+key);scope.__enter__()
+            self.profile_ranges[key]=scope
         start,end=torch.cuda.Event(enable_timing=True),torch.cuda.Event(enable_timing=True)
         stream=torch.cuda.current_stream();start.record(stream)
-        row=dict(step_id=step_key(output),counts=dict(output.num_scheduled_tokens),
+        row=dict(step_id=key,counts=dict(output.num_scheduled_tokens),
                  executed_counts=None,executed_positions=None,actual_tokens=None,
                  host_start=time.monotonic(),host_end=None,gpu_forward_s=None,
                  query_uniformity=len(set(output.num_scheduled_tokens.values()))==1,
@@ -182,10 +190,14 @@ class WorkerRecorder:
         if entry is None:return
         row,start,end,stream=entry
         end.record(stream);row['host_end']=time.monotonic()
+        if self.mode=='deep':
+            scope=self.profile_ranges.pop(row['step_id'],None)
+            if scope is not None:scope.__exit__(None,None,None)
         if len(self.pending)>=self.records.capacity:
             self.records.overflow+=1
         else:self.pending.append(entry)
         if self.profile and self.profile_steps<5:
+            self.profile_step_ids.append(row['step_id'])
             self.profile.step();self.profile_steps+=1
             if self.profile_steps==5:self.stop_profile()
 
@@ -194,6 +206,10 @@ class WorkerRecorder:
         self.profile.stop()
         directory=Path(os.environ['PREFILL_LAB_ARTIFACT_DIR']);directory.mkdir(parents=True,exist_ok=True)
         self.profile.export_chrome_trace(str(directory/f'{self.trial_id}-worker-{os.getpid()}.json'))
+        import hashlib
+        path=directory/f'{self.trial_id}-worker-{os.getpid()}.json'
+        self.profile_artifact=dict(name=path.name,sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+        self.profile_state='complete' if self.profile_steps==5 else 'incomplete'
         self.profile=None
 
     def resolve(self):
@@ -211,8 +227,10 @@ class WorkerRecorder:
             try:self.records.append(row)
             except RuntimeError:pass
         self.pending=remaining
-        return dict(rows=self.records.rows,pending=len(remaining),overflow=self.records.overflow,
-                    cuda_scope_qualified=False)
+        result=dict(rows=self.records.rows,pending=len(remaining),overflow=self.records.overflow,cuda_scope_qualified=False)
+        if self.mode=='deep':result['deep_profile']=dict(schema='foreground-profile-v1',state=self.profile_state,
+            step_ids=list(self.profile_step_ids),artifact=self.profile_artifact,cuda_scope_qualified=False)
+        return result
 
 
 def guarded_add(core,request,original,*args,**kwargs):

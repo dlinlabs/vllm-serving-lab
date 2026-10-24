@@ -66,27 +66,28 @@ def prepare_host(output):
     return ready
 
 
-def collect_host(output):
+def collect_host(output,diagnostics=False):
     ready=json.loads((output/'ready.json').read_text())
     if not accepted(Path(ready['cpu_acceptance']),commit()):
         raise RuntimeError('Run prefill_host.py prepare for this exact checkout before collection')
-    capture=Path.home()/'pr32-captures'/str(time.time_ns())
+    capture=Path.home()/('pr32-diagnostics' if diagnostics else 'pr32-captures')/str(time.time_ns())
     capture.parent.mkdir(parents=True,exist_ok=True)
     print('Capture output: '+str(capture),flush=True)
     args=[sys.executable,str(ROOT/'scripts/run_prefill_service.py'),'collect']
     for name in ('manifest','tokenizer','trace'):
         args.extend(['--'+name,ready[name]])
     args.extend(['--cpu-acceptance',ready['cpu_acceptance'],'--output',str(capture)])
+    if diagnostics:args.append('--diagnostics-only')
     subprocess.run(args,cwd=ROOT,check=True)
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('operation',choices=('prepare','collect'))
+    parser.add_argument('operation',choices=('prepare','collect','diagnose'))
     parser.add_argument('--output-dir',type=Path,default=Path.home()/'pr32-inputs')
     args=parser.parse_args();output=args.output_dir.expanduser().resolve()
     if args.operation=='prepare':prepare_host(output)
-    else:collect_host(output)
+    else:collect_host(output,diagnostics=args.operation=='diagnose')
 
 
 if __name__=='__main__':main()

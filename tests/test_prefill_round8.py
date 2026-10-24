@@ -13,6 +13,8 @@ from tests.test_prefill_collector import FakeCore,Clock,Tokenizer,small_plan,goo
 @pytest.mark.parametrize('error',[FileNotFoundError('archived input absent'),ModuleNotFoundError('analysis import absent'),RuntimeError('analysis failed')])
 def test_freeze_error_retains_blocks4_5_and_later_stages(monkeypatch,tmp_path,error):
     import prefill_lab.suite as s
+    import prefill_lab.deep_diagnostic as diagnostic
+    monkeypatch.setattr(diagnostic,'profile_audit',lambda *a:dict(valid=True))  # This test mocks every capture.
     from prefill_lab.tokens import materialize
     cases,_=small_plan()
     order=[dict(trial_id=tid,case='single',stage=stage,observer='light',**extra) for tid,stage,extra in (

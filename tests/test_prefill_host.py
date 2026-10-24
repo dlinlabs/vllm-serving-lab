@@ -90,3 +90,15 @@ def test_failure_tail_surfaces_child_root_cause_and_redacts_key(tmp_path,capsys)
     assert 'TorchVersion is not serializable' in err and '[REDACTED]' in err
     assert secret not in err and err.count('old line')==78
     failure_log_tails(tmp_path/'missing',secret)
+
+
+def test_targeted_diagnostic_requires_exact_acceptance_and_uses_distinct_output(monkeypatch,tmp_path):
+    mock_host(monkeypatch,tmp_path);host.prepare_host(tmp_path/'inputs');calls=[]
+    monkeypatch.setattr(host.subprocess,'run',lambda args,**kw:calls.append(args))
+    monkeypatch.setattr(host.Path,'home',classmethod(lambda cls:tmp_path))
+    host.collect_host(tmp_path/'inputs',diagnostics=True)
+    assert '--diagnostics-only' in calls[0]
+    assert '/pr32-diagnostics/' in calls[0][calls[0].index('--output')+1]
+    monkeypatch.setattr(host,'commit',lambda:'c'*40)
+    with pytest.raises(RuntimeError,match='exact checkout'):host.collect_host(tmp_path/'inputs',diagnostics=True)
+    assert len(calls)==1

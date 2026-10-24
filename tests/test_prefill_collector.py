@@ -369,6 +369,8 @@ def test_endpoint_auth_and_frozen_trial_selection(monkeypatch):
 @pytest.mark.parametrize('transfer_failure',[False,True])
 def test_suite_order_budget_and_partial_stage_retention(monkeypatch,tmp_path,transfer_failure):
     import prefill_lab.suite as suite
+    import prefill_lab.deep_diagnostic as diagnostic
+    monkeypatch.setattr(diagnostic,'profile_audit',lambda *a:dict(valid=True))  # Profiling has separate real recorder tests.
     cs,_=small_plan()
     order=[dict(trial_id='warm',case='single',stage='warmup',observer='light'),
            dict(trial_id='observer',case='single',stage='observer_check',observer='light'),

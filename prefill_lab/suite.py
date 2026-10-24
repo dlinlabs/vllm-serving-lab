@@ -295,8 +295,11 @@ async def run(client,http,url,manifest,trace,output,*,hard_seconds=1800):
         worker=[r for w in capture['workers'] for r in w['rows']]
         integrity=audit_capture(capture,worker,require_steps=t0['observer']!='off')
         if t0['observer']!='off':integrity['dispatcher']=dispatcher_parity(capture,dispatch)
+        if t0['stage']=='deep_diagnostic':
+            from .deep_diagnostic import profile_audit
+            integrity['profile']=profile_audit(capture,output/'deep-traces')
         save(output/f'{tid}-audit.json',integrity)
-        if not integrity['valid'] or not integrity.get('dispatcher',{}).get('matches',True):
+        if not integrity['valid'] or not integrity.get('dispatcher',{}).get('matches',True) or not integrity.get('profile',{'valid':True})['valid']:
             raise RuntimeError('Capture work/parity integrity failed; see audit')
         current['completed_trial_ids'].append(tid)
         if current['completed_trial_ids']==current['planned_trial_ids']:current['integrity']='complete_valid'
