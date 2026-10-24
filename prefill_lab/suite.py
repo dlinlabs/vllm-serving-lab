@@ -194,6 +194,23 @@ async def finish_external(client,deadline):
 
 
 async def transfer(client,http,url,attempt,trace,deadline,output):
+    from .transfer_runner import isolated_transfer
+    return await isolated_transfer(http,url,attempt,trace,deadline,output)
+
+
+def transfer_offer_audit(rows,capture,native_audit):
+    failures=[r for r in rows if r['status'] not in ('complete','rejected')]
+    if not native_audit['valid']:failures.append(dict(error='Transfer work/worker integrity failed'))
+    maximum=max((r['sent']-r['scheduled'] for r in rows),default=0)
+    completed=sum(r['status']=='complete' for r in rows)
+    if len(capture['requests'])!=completed:
+        failures.append(dict(error='External/unreconciled engine requests during transfer'))
+    return dict(valid=not failures and maximum<=.05,max_offer_lag_s=maximum,
+                max_allowed_offer_lag_s=.05,completed_requests=completed,
+                engine_requests=len(capture['requests']),failures=failures)
+
+
+async def transfer_local(client,http,url,attempt,trace,deadline,output):
     tid=attempt['attempt_id'];await client.command('external_begin',trial_id=tid,observer='light')
     start=time.monotonic();rows=[];tasks=[];observations=[];stop=asyncio.Event()
     async def sample():
@@ -224,24 +241,22 @@ async def transfer(client,http,url,attempt,trace,deadline,output):
         await asyncio.sleep(max(0,start+80-time.monotonic()))
         await asyncio.wait_for(asyncio.gather(*tasks),min(10,max(.001,deadline-time.monotonic())))
         result=await finish_external(client,min(deadline,start+90))
-        failures=[r for r in rows if r['status'] not in ('complete','rejected')]
         native_audit=audit_capture(result,[r for w in result['workers'] for r in w['rows']],forced_outputs=False)
-        if not native_audit['valid']:failures.append(dict(error='Transfer work/worker integrity failed'))
-        lags=[r['sent']-r['scheduled'] for r in rows]
-        if len(result['requests'])!=sum(r['status']=='complete' for r in rows):
-            failures.append(dict(error='External/unreconciled engine requests during transfer'))
+        offers=transfer_offer_audit(rows,result,native_audit)
         save(output/f'{tid}.json',dict(attempt=attempt,rows=rows,observations=observations,capture=result,
-                                     offered_valid=not failures and max(lags,default=0)<=.05,work_audit=native_audit,
+                                     offered_valid=offers['valid'],offer_audit=offers,work_audit=native_audit,
                                      output_policy='cap128, natural EOS; source GeneratedTokens not used',
                                      lead_in_seconds=20,score_start=start+20,score_end=start+80,
                                      boundary_state_note='Raw gateway/engine snapshots straddle score boundaries; no empty-boundary assumption'))
-        if failures or max(lags,default=0)>.05:raise RuntimeError('Transfer integrity/load fidelity failed')
+        if not offers['valid']:
+            raise RuntimeError(f'Transfer integrity/load fidelity failed: max offer lag {1000*offers["max_offer_lag_s"]:.3f}ms (limit50ms); integrity failures {len(offers["failures"])}')
         return result
     finally:
-        stop.set();await sampler
         for task in tasks:
             if not task.done():task.cancel()
         await asyncio.gather(*tasks,return_exceptions=True)
+        stop.set();sampler.cancel()
+        await asyncio.gather(sampler,return_exceptions=True)
         # Preserve partial offers even on timeout/cancellation.
         if not (output/f'{tid}.json').exists():save(output/f'{tid}.json',dict(attempt=attempt,rows=rows,observations=observations,incomplete=True))
 

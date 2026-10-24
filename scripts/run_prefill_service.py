@@ -166,6 +166,8 @@ async def collect(args):
                 await asyncio.sleep(1)
             else:raise TimeoutError('Gateway tokenizer/startup deadline')
             summary=await run(client,http,client.url,manifest,trace,output)
+            if not summary['complete']:
+                print('Collection incomplete: '+json.dumps(summary['failures']),file=sys.stderr,flush=True)
             if summary['complete']:
                 from prefill_lab.scoring import score
                 frozen=json.loads((output/'model-freeze.json').read_text())

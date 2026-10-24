@@ -222,3 +222,22 @@ handler returns a failure), before they can terminate the output IO thread. This
 does not stringify arbitrary objects or enable pickle. No per-step observer hook
 or experimental threshold changes. Collection failures print the last80 lines of
 both child logs alongside the wrapper error, with the experiment key redacted.
+
+Azure transfer now runs each frozen attempt in a fresh request-generator process.
+It shares the same already-loaded localhost engine and fixed-cost32 gateway;
+there is no model/gateway restart or automatic attempt retry. Request selection,
+order, payloads, cap128/natural EOS,20s lead-in,60s score,10s drain and50ms maximum
+offer lag remain unchanged. Parent capture/calibration objects do not enter the
+generator's heap/event loop. This addresses a possible source of interference,
+not a demonstrated attribution of the reported204ms stall to GC or a guarantee
+of fidelity on the rental host. Automatic GC policy and thresholds are unchanged.
+
+Each transfer-*-runner/ directory stores the selected input, process log, outcome
+bound to the input hash/PID, and runner GC/CPU/event-loop observations with their
+closure status. Credentials travel in the child environment, not argv/artifacts.
+Child startup, diagnostics and shutdown all count against the unchanged1800s
+collection deadline; an individual child has a120s outer watchdog. Cancellation
+stops only the owned child and keeps partial offers. A failed fidelity gate stays
+failed and requires a new complete ordered collection; old partial captures are
+retained without relabeling or merging runs. Transfer JSON now includes an explicit
+offer_audit, and incomplete collection prints its failure reason before exiting.

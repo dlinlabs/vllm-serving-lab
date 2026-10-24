@@ -506,7 +506,7 @@
     },
     "prefill_lab/suite.py": {
       "path": "prefill_lab/suite.py",
-      "sha256": "264f7610a2e244988565d9245acfc7b80fdedbc9cbfe29e43de0f8c2c084fe68"
+      "sha256": "d2a239511cbf2d05930cea673183ea9ae74780f0837db95ef41e34ff8eb69a43"
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
@@ -522,11 +522,11 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "81c970c51610ff5e8eb1ebb644b9c5487cc29b442c801c9939918556ea48866a"
+      "sha256": "208c7a2a5cc962538cd889df349e4a763214caa0432ec957fcc2718ab693b1b1"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
-      "sha256": "7ef6d125e1c6263a101ae7896a6a8bf3fa64ed3d3dcae6a7361489a10168145d"
+      "sha256": "7259d9ca94d438b7ba2fdd535141d12becf27a4c49e019b9a7296931d6c792f4"
     },
     "experiments/prefill-vllm-v030-source-map.json": {
       "path": "experiments/prefill-vllm-v030-source-map.json",
@@ -571,6 +571,14 @@
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
       "sha256": "0dcf5fe0957780fdd15d7d31cb98264742e4059ec1a97562ad6700d32f0f2164"
+    },
+    "prefill_lab/transfer_runner.py": {
+      "path": "prefill_lab/transfer_runner.py",
+      "sha256": "2946022cac809a8b89d2095ebc324ed668d5cc325410e57be89e1511dc9a4a41"
+    },
+    "tests/test_prefill_transfer.py": {
+      "path": "tests/test_prefill_transfer.py",
+      "sha256": "3430296dcb840df072c22c238f0041acc632d7ed19b5691f35d83d6a414ded6d"
     }
   },
   "readiness": {
@@ -601,7 +609,8 @@
     "block_dependence": "unresolved",
     "gpu_scope": "unqualified pending real deep traces",
     "serial_wall_model": "inconclusive when actual async spans overlap",
-    "rental_host_helper": "scripts/prefill_host.py prepare|collect; same frozen runner and exact-revision CPU gate"
+    "rental_host_helper": "scripts/prefill_host.py prepare|collect; same frozen runner and exact-revision CPU gate",
+    "transfer_generator": "Fresh process per frozen attempt; unchanged automatic GC and50ms offer-lag gate; no retry; same loaded engine/gateway; runner GC/CPU/loop evidence"
   },
   "round7_corrections": {
     "cumulative_error": "Reset within each trial, average trials per cell",
