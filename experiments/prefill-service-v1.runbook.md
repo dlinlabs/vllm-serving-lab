@@ -201,3 +201,7 @@ suite.complete describes collection only; inspect calibration_status separately.
 Invalid captures stay invalid after drain. Output-observer failures preserve
 request/output isolation and engine liveness; native engine exceptions still fail
 the run. The source guard now checks35 upstream files including attn_utils.py.
+
+The collection launcher prepends the current interpreter's bin directory to the
+API-server and gateway child PATH. FlashInfer's EngineCore descendants can find
+venv-local ninja even when invoking .venv/bin/python without shell activation.

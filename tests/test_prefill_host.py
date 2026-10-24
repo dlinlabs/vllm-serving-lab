@@ -58,3 +58,22 @@ def test_collect_requires_exact_acceptance_and_delegates_frozen_runner(monkeypat
     monkeypatch.setattr(host,'commit',lambda:'c'*40)
     with pytest.raises(RuntimeError,match='exact checkout'):host.collect_host(tmp_path/'inputs')
     assert len(calls)==1
+
+
+def test_engine_descendant_finds_ninja_without_shell_activation(monkeypatch,tmp_path):
+    import os
+    import subprocess
+    from scripts import run_prefill_service as runner
+    real_python=sys.executable
+    venv=tmp_path/'venv';bindir=venv/'bin';bindir.mkdir(parents=True)
+    ninja=bindir/'ninja';ninja.write_text('#!/bin/sh\nprintf "venv-ninja\\n"\n');ninja.chmod(0o755)
+    monkeypatch.setenv('PATH','/usr/bin:/bin');monkeypatch.setenv('PYTHONHOME','/invalid')
+    monkeypatch.setenv('VIRTUAL_ENV','/other')
+    monkeypatch.setattr(runner.sys,'executable',str(bindir/'python'))
+    monkeypatch.setattr(runner.sys,'prefix',str(venv))
+    env=runner.runtime_environment()
+    child=subprocess.run([real_python,'-c','import subprocess; subprocess.run(["ninja", "--version"],check=True)'],
+                         env=env,text=True,capture_output=True,check=True)
+    assert child.stdout.strip()=='venv-ninja'
+    assert env['VIRTUAL_ENV']==str(venv) and 'PYTHONHOME' not in env
+    assert os.environ['PATH']=='/usr/bin:/bin' and os.environ['VIRTUAL_ENV']=='/other'

@@ -19,6 +19,15 @@ from prefill_lab.suite import inputs,Client,run
 from prefill_lab.tokens import materialize,validate
 
 
+def runtime_environment():
+    """Make interpreter-local tools visible to EngineCore/FlashInfer descendants."""
+    env=os.environ.copy()
+    env['PATH']=str(Path(sys.executable).parent)+os.pathsep+env.get('PATH',os.defpath)
+    env.pop('PYTHONHOME',None)
+    if sys.prefix!=sys.base_prefix:env['VIRTUAL_ENV']=sys.prefix
+    return env
+
+
 def code_identity():
     paths=sorted([*ROOT.glob('prefill_lab/*.py'),ROOT/'scripts/run_prefill_service.py',
                   ROOT/'experiments/prefill-vllm-v030-source-map.json',ROOT/'gateway.py',
@@ -96,7 +105,7 @@ async def collect(args):
     save(output/'token-manifest.json',manifest);save(output/'collection-sources.json',code_identity())
     save(output/'trace-identity.json',dict(sha256=hashlib.sha256(Path(args.trace).read_bytes()).hexdigest(),provenance=trace.get('provenance')))
     key=secrets.token_hex(32)
-    env=dict(os.environ,PREFILL_LAB_ENABLED='1',PREFILL_LAB_KEY=key,
+    env=dict(runtime_environment(),PREFILL_LAB_ENABLED='1',PREFILL_LAB_KEY=key,
              PREFILL_LAB_MANIFEST=str(output/'token-manifest.json'),PREFILL_LAB_ARTIFACT_DIR=str(output/'deep-traces'),
              VLLM_PLUGINS='prefill_lab')
     command=[sys.executable,'-m','vllm.entrypoints.openai.api_server','--model',manifest['model'],
@@ -129,7 +138,7 @@ async def collect(args):
                 except httpx.HTTPError:pass
                 if time.monotonic()>deadline:raise TimeoutError('Initial model load deadline expired')
                 await asyncio.sleep(1)
-            gateway_env=dict(os.environ,ADMISSION_MODE='cost_aware',MAX_ADMITTED_COST='32',
+            gateway_env=dict(runtime_environment(),ADMISSION_MODE='cost_aware',MAX_ADMITTED_COST='32',
                              MODEL_NAME=str(Path(args.tokenizer).resolve()),VLLM_URL=client.url,
                              ADMIN_API_KEY=secrets.token_hex(32),SHARED_UPSTREAM_CLIENT='1',
                              GATEWAY_DIAGNOSTICS='1',BENCHMARK_REQUEST_IDS='1',LOOP_LAG_TELEMETRY='1',
