@@ -230,7 +230,8 @@ order, payloads, cap128/natural EOS,20s lead-in,60s score,10s drain and50ms maxi
 offer lag remain unchanged. Parent capture/calibration objects do not enter the
 generator's heap/event loop. This addresses a possible source of interference,
 not a demonstrated attribution of the reported204ms stall to GC or a guarantee
-of fidelity on the rental host. Automatic GC policy and thresholds are unchanged.
+of fidelity on the rental host. The follow-up native diagnostics identified a
+generation2 runner GC pause; bounded deferral is now applied as described below.
 
 Each transfer-*-runner/ directory stores the selected input, process log, outcome
 bound to the input hash/PID, and runner GC/CPU/event-loop observations with their
@@ -241,3 +242,28 @@ stops only the owned child and keeps partial offers. A failed fidelity gate stay
 failed and requires a new complete ordered collection; old partial captures are
 retained without relabeling or merging runs. Transfer JSON now includes an explicit
 offer_audit, and incomplete collection prints its failure reason before exiting.
+
+The reported86e9b4f B-r1 stall overlaps an on-loop generation2 GC span of49.673ms
+(49.671ms thread CPU) and53.917ms loop lag; the offer lag is54.374ms. This is direct
+evidence that runner GC dominated that stall, rather than evidence to relax50ms.
+It does not retroactively establish the cause of the older204ms stall.
+
+Each isolated transfer now uses the existing RunnerGCControl only for offered
+traffic and client drain. It precollects before choosing offer_start, then defers
+automatic cyclic GC with the unchanged native PID/procfs-guarded resource reader:
+1536MiB sampled RSS bound,100ms polling,500ms maximum observation gap and91s maximum
+disabled window. Resource/policy/time failures cancel traffic and invalidate the
+attempt. This is a sampled RSS guard, not an OS memory ceiling. The original
+1800s suite deadline and120s child watchdog include setup and cleanup.
+
+GC and thresholds are restored before large EngineCore capture decoding/auditing
+and before cancellation-prone HTTP shutdown. This intervention is confined to
+the request-generator child; the loaded backend and gateway retain their policies.
+The exact offer_start/drain_end timestamps bind gc-window.json to the transfer.
+runner_gc_control.json records resource samples and restoration. gc-audit.json
+independently checks complete runner diagnostics, no GC overlap, sampled identity,
+RSS/time/gap bounds, coverage and restoration; the parent requires a valid PID/run-
+bound audit and the declared spec before accepting the transfer. Missing/corrupt
+evidence stays invalid. Existing offers/native work and the50ms gate still apply.
+No retry or cross-run merging is introduced. Full native acceptance and a fresh
+ordered suite are required after this generator-policy correction.

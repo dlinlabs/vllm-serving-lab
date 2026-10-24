@@ -210,9 +210,10 @@ def transfer_offer_audit(rows,capture,native_audit):
                 engine_requests=len(capture['requests']),failures=failures)
 
 
-async def transfer_local(client,http,url,attempt,trace,deadline,output):
+async def transfer_local(client,http,url,attempt,trace,deadline,output,*,gc_control=None):
     tid=attempt['attempt_id'];await client.command('external_begin',trial_id=tid,observer='light')
-    start=time.monotonic();rows=[];tasks=[];observations=[];stop=asyncio.Event()
+    if gc_control is not None:await gc_control.prepare()
+    start=time.monotonic();rows=[];tasks=[];observations=[];stop=asyncio.Event();bounds={}
     async def sample():
         while not stop.is_set():
             sent=time.monotonic()
@@ -223,8 +224,7 @@ async def transfer_local(client,http,url,attempt,trace,deadline,output):
             except httpx.HTTPError as exc:observations.append(dict(sent=sent,error=type(exc).__name__))
             try:await asyncio.wait_for(stop.wait(),1.)
             except asyncio.TimeoutError:pass
-    sampler=asyncio.create_task(sample())
-    try:
+    async def offer_and_drain():
         for request in trace['requests']:
             at=request['arrival_seconds']
             if not attempt['replay_start']<=at<attempt['score_end']:continue
@@ -240,6 +240,12 @@ async def transfer_local(client,http,url,attempt,trace,deadline,output):
             tasks.append(asyncio.create_task(completion(http,'http://127.0.0.1:8080/v1/chat/completions',payload,scheduled,row)))
         await asyncio.sleep(max(0,start+80-time.monotonic()))
         await asyncio.wait_for(asyncio.gather(*tasks),min(10,max(.001,deadline-time.monotonic())))
+        bounds['drain_end']=time.monotonic()
+    sampler=asyncio.create_task(sample())
+    try:
+        if gc_control is None:await offer_and_drain()
+        else:await gc_control.supervise(offer_and_drain())
+        # GC is restored before fetching/decoding/auditing large engine captures.
         result=await finish_external(client,min(deadline,start+90))
         native_audit=audit_capture(result,[r for w in result['workers'] for r in w['rows']],forced_outputs=False)
         offers=transfer_offer_audit(rows,result,native_audit)
@@ -247,6 +253,7 @@ async def transfer_local(client,http,url,attempt,trace,deadline,output):
                                      offered_valid=offers['valid'],offer_audit=offers,work_audit=native_audit,
                                      output_policy='cap128, natural EOS; source GeneratedTokens not used',
                                      lead_in_seconds=20,score_start=start+20,score_end=start+80,
+                                     offer_start=start,drain_end=bounds['drain_end'],
                                      boundary_state_note='Raw gateway/engine snapshots straddle score boundaries; no empty-boundary assumption'))
         if not offers['valid']:
             raise RuntimeError(f'Transfer integrity/load fidelity failed: max offer lag {1000*offers["max_offer_lag_s"]:.3f}ms (limit50ms); integrity failures {len(offers["failures"])}')

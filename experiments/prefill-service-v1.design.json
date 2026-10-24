@@ -506,7 +506,7 @@
     },
     "prefill_lab/suite.py": {
       "path": "prefill_lab/suite.py",
-      "sha256": "d2a239511cbf2d05930cea673183ea9ae74780f0837db95ef41e34ff8eb69a43"
+      "sha256": "e06c9a9de591608a2173d3f923bc1240e9844e4f5eba0a1fa59ad5f415d8fc14"
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
@@ -526,7 +526,7 @@
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
-      "sha256": "7259d9ca94d438b7ba2fdd535141d12becf27a4c49e019b9a7296931d6c792f4"
+      "sha256": "62f0c73c0879ffd9636fe6e5f735532dbc097adc84bf9cc9667c2afa1c35ddc0"
     },
     "experiments/prefill-vllm-v030-source-map.json": {
       "path": "experiments/prefill-vllm-v030-source-map.json",
@@ -574,11 +574,27 @@
     },
     "prefill_lab/transfer_runner.py": {
       "path": "prefill_lab/transfer_runner.py",
-      "sha256": "2946022cac809a8b89d2095ebc324ed668d5cc325410e57be89e1511dc9a4a41"
+      "sha256": "fc9f0d78b0cbc209e7f84c1adaf3e9ae28c422f50ce9b4534581c3b1d0b9b959"
     },
     "tests/test_prefill_transfer.py": {
       "path": "tests/test_prefill_transfer.py",
-      "sha256": "3430296dcb840df072c22c238f0041acc632d7ed19b5691f35d83d6a414ded6d"
+      "sha256": "31a253ff50116092b061d11f5e82bcedaa817e396240815556df6383499f896c"
+    },
+    "runner_gc_control.py": {
+      "path": "runner_gc_control.py",
+      "sha256": "9f7c858814d8370e5b2695dbeb3ff6962f55cbd964fbca369f33146289544d8b"
+    },
+    "runner_diagnostics.py": {
+      "path": "runner_diagnostics.py",
+      "sha256": "123cd2fba49d37b8f14e5347fa6b9badfddfdb563d97fbb03a9d879fb504c94a"
+    },
+    "diagnostic_sampling.py": {
+      "path": "diagnostic_sampling.py",
+      "sha256": "4e477dbf5597eaa5803ae6cbf25c1ffc5860afea9ebe397fd1d224ad468dfbc6"
+    },
+    "telemetry.py": {
+      "path": "telemetry.py",
+      "sha256": "315123d4234076297f9c63259596810a687d467c3fc0aadc2e8419152f8e6c18"
     }
   },
   "readiness": {
@@ -610,7 +626,16 @@
     "gpu_scope": "unqualified pending real deep traces",
     "serial_wall_model": "inconclusive when actual async spans overlap",
     "rental_host_helper": "scripts/prefill_host.py prepare|collect; same frozen runner and exact-revision CPU gate",
-    "transfer_generator": "Fresh process per frozen attempt; unchanged automatic GC and50ms offer-lag gate; no retry; same loaded engine/gateway; runner GC/CPU/loop evidence"
+    "transfer_generator": "Fresh process per frozen attempt; bounded runner-only cyclic-GC deferral; unchanged50ms offer-lag gate; no retry; same loaded engine/gateway",
+    "transfer_gc_control": {
+      "max_rss_mib": 1536,
+      "rss_poll_seconds": 0.1,
+      "max_poll_gap_seconds": 0.5,
+      "max_disabled_seconds": 91,
+      "native_pid_procfs_guard": "unchanged",
+      "scope": "offer_start through client drain; restored before capture decoding and HTTP cleanup",
+      "evidence": "gc-window.json, runner_gc_control.json, gc-audit.json plus complete runner diagnostics"
+    }
   },
   "round7_corrections": {
     "cumulative_error": "Reset within each trial, average trials per cell",
