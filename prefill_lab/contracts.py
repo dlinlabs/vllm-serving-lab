@@ -3,6 +3,39 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import numpy as np
+
+
+def wire_value(value,path='$'):
+    """Copy experiment replies into a strict MessagePack/JSON scalar tree.
+
+    Third-party scalar subclasses (TorchVersion, NumPy scalars) must not reach
+    vLLM's output IO thread. Unknown objects fail in the utility call instead of
+    being silently stringified or sent to a pickle fallback. Revision semantics
+    are resolved by revision_identity before this representation-only conversion.
+    """
+    if value is None:return None
+    if isinstance(value,(bool,np.bool_)):return bool(value)
+    if isinstance(value,str):return str(value)
+    if isinstance(value,(int,np.integer)):
+        result=int(value)
+        if not -(1<<63)<=result<(1<<64):raise ValueError(f'Integer outside MessagePack range at {path}')
+        return result
+    if isinstance(value,(float,np.floating)):
+        if isinstance(value,np.floating) and value.dtype.itemsize>8:
+            raise TypeError(f'Unsupported extended-precision reply value at {path}')
+        result=float(value)
+        if not math.isfinite(result):raise ValueError(f'Non-finite reply value at {path}')
+        return result
+    if isinstance(value,dict):
+        result={}
+        for key,item in value.items():
+            if not isinstance(key,str):raise TypeError(f'Non-string reply key at {path}')
+            result[str(key)]=wire_value(item,f'{path}.{key}')
+        return result
+    if isinstance(value,(list,tuple)):
+        return [wire_value(item,f'{path}[{i}]') for i,item in enumerate(value)]
+    raise TypeError(f'Unsupported reply type {type(value).__name__} at {path}')
 
 
 def canonical(value):

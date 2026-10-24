@@ -9,7 +9,7 @@ import time
 import sys
 import uuid
 
-from .contracts import Buffer, digest, scheduled_work, step_key
+from .contracts import Buffer, digest, scheduled_work, step_key, wire_value
 from .runtime import INTERNAL_REQUEST, Trial, ExternalCapture
 
 _ACTIVE = contextvars.ContextVar('prefill_worker_step',default=None)
@@ -100,6 +100,14 @@ def resolved_config(core):
                 source=installed_sources(),gil_switch_interval_s=sys.getswitchinterval())
 
 
+def wire_reply(function):
+    @functools.wraps(function)
+    def wrapped(*args,**kwargs):
+        return wire_value(function(*args,**kwargs))
+    return wrapped
+
+
+@wire_reply
 def command(core,payload):
     core_runtime(core)
     op=payload['operation'];trial=core._prefill_trial
@@ -278,14 +286,17 @@ def register():
     from vllm.v1.worker.gpu.cudagraph_utils import CudaGraphManager
     from vllm.compilation.breakable_cudagraph import BreakableCUDAGraphWrapper
     from vllm.compilation.cuda_graph import CUDAGraphWrapper
+    @wire_reply
     def worker_begin(worker,trial_id,mode):
         global _WORKER
         if _WORKER and _WORKER.pending:raise RuntimeError('Unresolved CUDA events from previous trial')
         if not isinstance(worker.model_runner,(GPUModelRunner,GPUModelRunnerV2)):raise RuntimeError('Unreviewed model runner; no graph/async override is allowed')
         _WORKER=WorkerRecorder(torch,trial_id,mode)
         return dict(pid=os.getpid(),source=installed_sources())
+    @wire_reply
     def worker_finish(worker):
         return finish_worker_recorder()
+    @wire_reply
     def worker_meta(worker):
         if not isinstance(worker.model_runner,(GPUModelRunner,GPUModelRunnerV2)):
             raise RuntimeError('Unsupported installed model runner; preserve runtime defaults')
@@ -305,7 +316,7 @@ def register():
         props=torch.cuda.get_device_properties(torch.cuda.current_device())
         return dict(dispatch_table=table,uniform_decode_query_len=query_len,pid=os.getpid(),gpu_uuid=str(getattr(props,'uuid',None)),
                     model_runner=f'{type(runner).__module__}.{type(runner).__name__}',adapter='V2' if isinstance(runner,GPUModelRunnerV2) else 'V1',device_name=props.name,
-                    total_memory=props.total_memory,torch_version=torch.__version__,
+                    total_memory=props.total_memory,torch_version=str(torch.__version__),
                     cuda_version=torch.version.cuda,source=installed_sources())
     Worker.prefill_lab_worker_meta=worker_meta
     Worker.prefill_lab_worker_begin=worker_begin

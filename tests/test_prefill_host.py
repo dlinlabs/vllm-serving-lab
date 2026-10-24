@@ -77,3 +77,16 @@ def test_engine_descendant_finds_ninja_without_shell_activation(monkeypatch,tmp_
     assert child.stdout.strip()=='venv-ninja'
     assert env['VIRTUAL_ENV']==str(venv) and 'PYTHONHOME' not in env
     assert os.environ['PATH']=='/usr/bin:/bin' and os.environ['VIRTUAL_ENV']=='/other'
+
+
+def test_failure_tail_surfaces_child_root_cause_and_redacts_key(tmp_path,capsys):
+    from scripts.run_prefill_service import failure_log_tails
+    secret='test-only-secret'
+    (tmp_path/'server.log').write_text('old line\n'*100+
+        'TypeError: TorchVersion is not serializable\n'+secret+'\n')
+    # A missing/empty gateway log must not hide the server root cause.
+    failure_log_tails(tmp_path,secret)
+    err=capsys.readouterr().err
+    assert 'TorchVersion is not serializable' in err and '[REDACTED]' in err
+    assert secret not in err and err.count('old line')==78
+    failure_log_tails(tmp_path/'missing',secret)

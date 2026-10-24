@@ -30,10 +30,15 @@ def test_meta_utility_serializes_resolved_revisions_and_preserves_commit(monkeyp
             obj.resolved=resolved
             return obj
 
+    class TorchVersion(str):pass  # torch.torch_version.TorchVersion is a str subclass.
+
     revision=ResolvedRevision('a'*40,initial)
     with pytest.raises(TypeError):msgspec.msgpack.encode(dict(revision=revision))
+    version=TorchVersion('2.13.0+cu130')
+    with pytest.raises(TypeError):msgspec.msgpack.encode(dict(torch_version=version))
     worker=dict(device_name='NVIDIA GeForce RTX 4090',uniform_decode_query_len=1,
-                torch_version='2.13.0+cu130',cuda_version='13.0')
+                torch_version=version,cuda_version='13.0',dispatch_table={
+                    'candidates':{'1':[dict(num_tokens=np.int64(1),uniform=np.bool_(True))]}})
     core=NS(vllm_config=NS(
         model_config=NS(model='model',revision=revision,tokenizer_revision=revision,
                         max_model_len=8192,enforce_eager=False,dtype='bfloat16'),
@@ -50,6 +55,9 @@ def test_meta_utility_serializes_resolved_revisions_and_preserves_commit(monkeyp
     reply=plugin.command(core,dict(operation='meta'))
     decoded=msgspec.msgpack.decode(msgspec.msgpack.encode(reply))
     assert decoded==reply
+    assert type(reply['workers'][0]['torch_version']) is str
+    assert type(reply['workers'][0]['dispatch_table']['candidates']['1'][0]['num_tokens']) is int
+    assert type(reply['workers'][0]['dispatch_table']['candidates']['1'][0]['uniform']) is bool
     for field in ('revision','tokenizer_revision'):
         assert type(decoded[field]) is str and decoded[field]=='a'*40
     manifest=dict(model='model',revision='a'*40,trials={'t':[dict(input_tokens=17,max_tokens=16)]})
@@ -66,6 +74,59 @@ def test_plain_and_missing_revision_identity():
     assert revision_identity(None) is None
     assert revision_identity('a'*40)=='a'*40
     assert type(revision_identity('a'*40)) is str
+
+
+def test_worker_reply_normalizes_nested_scalars_before_transport():
+    import msgspec
+    from prefill_lab.plugin import wire_reply
+    class TorchVersion(str):pass
+    class Count(int):pass
+    class Span(float):pass
+    original={'torch_version':TorchVersion('2.13.0+cu130'),'rows':(
+        {'counts':{TorchVersion('r'):Count(4)},'gpu_forward_s':Span(.012),
+         'pending':np.int64(0),'uniform':np.bool_(False),'host':np.float64(1.25)},),
+        'optional':None}
+    reply=wire_reply(lambda:original)()
+    assert reply==dict(torch_version='2.13.0+cu130',rows=[dict(counts={'r':4},
+        gpu_forward_s=.012,pending=0,uniform=False,host=1.25)],optional=None)
+    def builtin_tree(value):
+        assert type(value) in (type(None),str,int,float,bool,list,dict)
+        if type(value) is dict:
+            for key,item in value.items():assert type(key) is str;builtin_tree(item)
+        elif type(value) is list:
+            for item in value:builtin_tree(item)
+    builtin_tree(reply)
+    assert msgspec.msgpack.decode(msgspec.msgpack.encode(reply))==reply
+    assert json.loads(json.dumps(reply,allow_nan=False))==reply
+    assert type(original['torch_version']) is TorchVersion and type(original['rows']) is tuple
+
+
+@pytest.mark.parametrize('bad,error',[(object(),TypeError),(np.array([1]),TypeError),
+    (float('nan'),ValueError),(float('inf'),ValueError),(1<<64,ValueError),({1:'x'},TypeError)])
+def test_unknown_worker_values_fail_before_the_output_io_thread(bad,error):
+    from prefill_lab.plugin import wire_reply
+    @wire_reply
+    def worker_meta():return {'workers':[{'bad':bad}]}
+    with pytest.raises(error,match=r'\$\.workers\[0\]\.bad'):worker_meta()
+
+
+@pytest.mark.parametrize('operation',['status','abort','finish','external_end'])
+def test_core_utility_capture_replies_are_plain_serializable_trees(monkeypatch,operation):
+    import msgspec
+    from prefill_lab import plugin
+    monkeypatch.setattr(plugin,'core_runtime',lambda core:None)
+    trial=object.__new__(ExternalCapture)
+    trial.status='complete';trial.errors=[];trial.abort=lambda reason:None
+    trial.capture=lambda:dict(status=trial.status,steps=[{'chunks':[('r',np.int64(4),0)]}])
+    core=NS(_prefill_trial=trial,_prefill_external=True,batch_queue=[],
+        scheduler=NS(has_requests=lambda:False),model_executor=NS(collective_rpc=lambda *a,**kw:
+            [dict(pending=np.int64(0),overflow=np.int64(0),rows=[])]))
+    reply=plugin.command(core,dict(operation=operation))
+    assert msgspec.msgpack.decode(msgspec.msgpack.encode(reply))==reply
+    if operation in ('finish','external_end'):
+        assert reply['steps'][0]['chunks']==[['r',4,0]]
+        assert type(reply['workers'][0]['pending']) is int
+        assert core._prefill_trial is None
 
 
 class Tokenizer:

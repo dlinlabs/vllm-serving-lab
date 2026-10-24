@@ -212,3 +212,13 @@ it records the resolved commit rather than a requested alias such as main. Exact
 manifest revision checks remain in force; no pickle fallback is enabled. Updating
 this code requires prepare again for the new commit/source-bound CPU acceptance;
 the pinned model snapshot and prepared exact tokens are reused.
+
+Worker metadata explicitly stores str(torch.__version__). All worker RPC and
+EngineCore command replies also recursively normalize supported string/numeric
+subclasses and NumPy scalars to builtin MessagePack/JSON types, including nested
+dispatcher metadata and trial captures. Unknown objects, non-string keys and
+non-finite/out-of-range values raise inside the utility call (whose pinned vLLM
+handler returns a failure), before they can terminate the output IO thread. This
+does not stringify arbitrary objects or enable pickle. No per-step observer hook
+or experimental threshold changes. Collection failures print the last80 lines of
+both child logs alongside the wrapper error, with the experiment key redacted.

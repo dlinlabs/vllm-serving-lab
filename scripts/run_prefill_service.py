@@ -1,6 +1,7 @@
 """Prepare exact tokens, validate CPU code, and collect the complete PR32 suite."""
 import argparse
 import asyncio
+from collections import deque
 import hashlib
 import json
 import os
@@ -26,6 +27,18 @@ def runtime_environment():
     env.pop('PYTHONHOME',None)
     if sys.prefix!=sys.base_prefix:env['VIRTUAL_ENV']=sys.prefix
     return env
+
+
+def failure_log_tails(output,secret):
+    """Show child failures alongside the wrapper traceback, without credentials."""
+    for name in ('server.log','gateway.log'):
+        try:
+            with (Path(output)/name).open(errors='replace') as stream:
+                tail=''.join(deque(stream,maxlen=80))
+        except OSError:continue
+        if tail:
+            if secret:tail=tail.replace(secret,'[REDACTED]')
+            print(f'\n{name} (last80 lines):\n'+tail,file=sys.stderr,flush=True)
 
 
 def code_identity():
@@ -167,6 +180,7 @@ async def collect(args):
             return 0 if summary['complete'] else 1
     except BaseException as exc:
         save(output/'startup-or-run-failure.json',dict(type=type(exc).__name__,message=str(exc),complete=False))
+        failure_log_tails(output,key)
         raise
     finally:
         for process in (gateway,server):
