@@ -73,10 +73,17 @@ def core_runtime(core):
     core._prefill_runtime_installed=True
 
 
+def revision_identity(revision):
+    # HF ResolvedRevision is a str subclass whose value can still be an alias
+    # (e.g. main). Preserve its resolved commit and emit an exact builtin str:
+    # vLLM's msgspec utility transport rejects custom str subclasses.
+    return None if revision is None else str(getattr(revision,'resolved',revision))
+
+
 def resolved_config(core):
     c=core.vllm_config;s=c.scheduler_config;p=c.parallel_config
-    return dict(model=c.model_config.model,revision=c.model_config.revision,
-                tokenizer_revision=c.model_config.tokenizer_revision,
+    return dict(model=c.model_config.model,revision=revision_identity(c.model_config.revision),
+                tokenizer_revision=revision_identity(c.model_config.tokenizer_revision),
                 max_model_len=c.model_config.max_model_len,max_num_batched_tokens=s.max_num_batched_tokens,
                 max_num_seqs=s.max_num_seqs,enable_chunked_prefill=s.enable_chunked_prefill,
                 long_prefill_token_threshold=s.long_prefill_token_threshold,

@@ -17,6 +17,57 @@ from prefill_lab.causal import rollout,dispatcher_parity
 from prefill_lab.plugin import WorkerRecorder
 
 
+@pytest.mark.parametrize('initial', [None,'main','a'*40])
+def test_meta_utility_serializes_resolved_revisions_and_preserves_commit(monkeypatch,initial):
+    import msgspec
+    from prefill_lab import plugin
+    from prefill_lab.suite import runtime_preflight
+
+    class ResolvedRevision(str):
+        # Same string/attribute contract as huggingface_hub._revision.
+        def __new__(cls,resolved,initial):
+            obj=super().__new__(cls,initial if initial is not None else 'main')
+            obj.resolved=resolved
+            return obj
+
+    revision=ResolvedRevision('a'*40,initial)
+    with pytest.raises(TypeError):msgspec.msgpack.encode(dict(revision=revision))
+    worker=dict(device_name='NVIDIA GeForce RTX 4090',uniform_decode_query_len=1,
+                torch_version='2.13.0+cu130',cuda_version='13.0')
+    core=NS(vllm_config=NS(
+        model_config=NS(model='model',revision=revision,tokenizer_revision=revision,
+                        max_model_len=8192,enforce_eager=False,dtype='bfloat16'),
+        scheduler_config=NS(max_num_batched_tokens=2048,max_num_seqs=32,
+                            enable_chunked_prefill=True,long_prefill_token_threshold=0,
+                            policy='fcfs',max_num_scheduled_tokens=2048),
+        parallel_config=NS(tensor_parallel_size=1,pipeline_parallel_size=1,data_parallel_size=1),
+        cache_config=NS(enable_prefix_caching=False,block_size=16,num_gpu_blocks=100),
+        speculative_config=None,kv_transfer_config=None,attention_config={},compilation_config={}),
+        scheduler=NS(),async_scheduling=True,batch_queue_size=2,_prefill_trial=None,
+        model_executor=NS(collective_rpc=lambda method:[worker]))
+    monkeypatch.setattr(plugin,'core_runtime',lambda core:None)
+    monkeypatch.setattr(plugin,'installed_sources',lambda:dict(version='0.30.0',files={}))
+    reply=plugin.command(core,dict(operation='meta'))
+    decoded=msgspec.msgpack.decode(msgspec.msgpack.encode(reply))
+    assert decoded==reply
+    for field in ('revision','tokenizer_revision'):
+        assert type(decoded[field]) is str and decoded[field]=='a'*40
+    manifest=dict(model='model',revision='a'*40,trials={'t':[dict(input_tokens=17,max_tokens=16)]})
+    decoded['token_manifest_sha256']=digest(manifest)
+    assert runtime_preflight(decoded,manifest)['valid']
+    # Serialization normalization cannot conceal a different resolved commit.
+    core.vllm_config.model_config.revision=ResolvedRevision('b'*40,initial)
+    decoded.update(plugin.command(core,dict(operation='meta')))
+    with pytest.raises(ValueError,match='revision mismatch'):runtime_preflight(decoded,manifest)
+
+
+def test_plain_and_missing_revision_identity():
+    from prefill_lab.plugin import revision_identity
+    assert revision_identity(None) is None
+    assert revision_identity('a'*40)=='a'*40
+    assert type(revision_identity('a'*40)) is str
+
+
 class Tokenizer:
     all_special_ids=[0,1]
     def get_vocab(self):return {str(i):i for i in range(20)}

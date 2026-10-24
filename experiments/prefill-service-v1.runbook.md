@@ -205,3 +205,10 @@ the run. The source guard now checks35 upstream files including attn_utils.py.
 The collection launcher prepends the current interpreter's bin directory to the
 API-server and gateway child PATH. FlashInfer's EngineCore descendants can find
 venv-local ninja even when invoking .venv/bin/python without shell activation.
+
+The meta utility reply converts model and tokenizer revisions to builtin strings
+before crossing EngineCore's msgspec transport. For Hugging Face ResolvedRevision,
+it records the resolved commit rather than a requested alias such as main. Exact
+manifest revision checks remain in force; no pickle fallback is enabled. Updating
+this code requires prepare again for the new commit/source-bound CPU acceptance;
+the pinned model snapshot and prepared exact tokens are reused.
