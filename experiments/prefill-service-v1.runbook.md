@@ -19,6 +19,25 @@ before scored collection; there is no silent eager/async override.
 upstream files and hook/counter update sites. Hash equality establishes the source
 boundary; only actual-host collection establishes that the hooks work together.
 
+## Short rental-host commands
+
+After installing the pinned runtime and CPU dependencies in .venv, use:
+
+```bash
+.venv/bin/python scripts/prefill_host.py prepare
+.venv/bin/python scripts/prefill_host.py collect
+```
+
+Prepare pins the model/tokenizer to one full HF commit before downloading, resumes
+that pin on repeated calls, verifies every retained Azure prompt length and creates
+the exact token manifest under ~/pr32-inputs. It runs complete native CPU acceptance
+for the updated checkout/final environment, or reuses only already-valid evidence
+matching that commit and current source fingerprints. Failed evidence is retained
+in a separate directory; it cannot produce READY. Outputs stay outside the checkout.
+Prepare does not launch collection. Collect reads ready.json and delegates to the
+existing frozen runner with a fresh ~/pr32-captures/<timestamp> output directory.
+Use --output-dir to select a separate input/pin directory.
+
 ## Native host commands
 
 Use a clean checkout of the PR branch on Linux x86_64 / Python3.12. Install the

@@ -526,7 +526,7 @@
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
-      "sha256": "925e617847482d2257074cae452681997ec4c9d0f67952c8dc10c5a2d911ac8e"
+      "sha256": "0a48731356cf1aa998aa754afe5dd4efc9920a458c629c1c6e7f9eed111a1d31"
     },
     "experiments/prefill-vllm-v030-source-map.json": {
       "path": "experiments/prefill-vllm-v030-source-map.json",
@@ -563,6 +563,14 @@
     "results/prefill-round8-fixes-20261023/report.md": {
       "path": "results/prefill-round8-fixes-20261023/report.md",
       "sha256": "23bc1c3b152dfcf75a90817d0442f4192289bf2555f8c71bbb8be826f77e848f"
+    },
+    "scripts/prefill_host.py": {
+      "path": "scripts/prefill_host.py",
+      "sha256": "a5c9b3b92085a96b427d1ac018b61d7d6fab59c05366d91e51e0b67b9d4e4bf4"
+    },
+    "tests/test_prefill_host.py": {
+      "path": "tests/test_prefill_host.py",
+      "sha256": "47c17bd4f259426b08872229e450fc8180d4b98a5c9e22d265c8f8814a23676d"
     }
   },
   "readiness": {
@@ -592,7 +600,8 @@
     "native_acceptance": "required before collect",
     "block_dependence": "unresolved",
     "gpu_scope": "unqualified pending real deep traces",
-    "serial_wall_model": "inconclusive when actual async spans overlap"
+    "serial_wall_model": "inconclusive when actual async spans overlap",
+    "rental_host_helper": "scripts/prefill_host.py prepare|collect; same frozen runner and exact-revision CPU gate"
   },
   "round7_corrections": {
     "cumulative_error": "Reset within each trial, average trials per cell",
