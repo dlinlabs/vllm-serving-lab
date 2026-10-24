@@ -1,0 +1,3804 @@
+{
+  "role": "raw-coefficient sensitivity only; revision9 noise-aware discrimination is in results/prefill-design-round7/noise-screen.json; not statistical power",
+  "cases": [
+    {
+      "case": "single-L1024-D0",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0015744000000000036,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.003306240000000002,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.009180839680266159,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        1024
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "single-L2048-D0",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.006294527999999994,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.013218508800000014,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.027542519040798477,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        2048
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "low_signal_validation_only"
+    },
+    {
+      "case": "single-L4096-D0",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.009180839680266145,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.025171968000000017,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.05286113280000007,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.05508503808159701,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        4096
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "single-L7168-D0",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.02754251904079852,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.07708108799999996,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.16187028479999999,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.09180839680266173,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        7168
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-uniform-D0",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.20960541537945662,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.14690679751428237,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.06217174368960332,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.05761985168829409,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.025171968000000017,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.056620040999999954,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08176748699999992,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.10068787200000007,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.05286113280000007,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.11890208610000008,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.17171172270000012,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.21144453120000029,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.7114438032607655,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3549315903670265,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.11672990759562962,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.013299911791148755,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-mixed-D0",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3281793825895842,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3281793825895842,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.29905624102207284,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.05983781359415408,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0031487999999999933,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0031487999999999933,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08177979599999996,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1573109760000001,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.00661247999999999,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.00661247999999999,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.17173757160000003,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303530496000001,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.11857396721012754,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.11857396721012754,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.4163038838297871,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.04717160520467922,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-reverse-D0",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.02754251904079852,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.05587534934495342,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.05587534934495342,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.056035593184108556,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.078655488,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15729870600000007,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15729870600000007,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1573109760000002,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1651765248,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303272826,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303272826,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303530496,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.5369853477421983,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.061635730550546275,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.7124975516119072,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.7228426048468916,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at50-D0",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.05983781359415408,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1781521920000001,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.3741196032000006,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.7810245373210305,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "foreground_tokens": [
+        512,
+        512,
+        7680,
+        7680
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at400-D0",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.05983781359415408,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1781521920000001,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.3741196032000006,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.4584690030866747,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "foreground_tokens": [
+        512,
+        512,
+        7680,
+        7680
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at800-D0",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.05761985168829409,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1010818560000003,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.21227189760000054,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.0028516653075340015,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "policy_role": "negative_control_expected_fifo_rr_tie",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-one-at200-D0",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.01804482765969523,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.08887910399999999,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1866461184,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.1912437360189243,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "foreground_tokens": [
+        7680
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "single-L1024-D16",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0015743999999999758,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.003306239999999905,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.014250466893660385,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        1024
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "single-L2048-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.014250466893660718,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.006294527999999966,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.013218508800000084,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.02850093378732066,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        2048
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "low_signal_validation_only"
+    },
+    {
+      "case": "single-L4096-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.028500933787320992,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.02517196799999999,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.05286113279999993,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.07125233446830215,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        4096
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "single-L7168-D16",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.04275140068098171,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.07708108799999991,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.16187028479999999,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.14250466893660418,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        7168
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-uniform-D16",
+      "split": "calibration",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08260146136019442,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.28772844624729843,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.04109677666676714,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.0880376149686597,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.03117496799999997,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.056144618999999674,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08110614899999957,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.10068787199999951,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0654674328,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1179036998999996,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.17032291289999946,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.21144453119999973,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.6139448030734739,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.36784000766851344,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.12120833808798215,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.0028516653075338905,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-mixed-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.328179382589584,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.2051269848871038,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.2866746978961565,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.08993872517368251,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0031000080000000985,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.00924216000000011,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08154824700000018,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15731097600000066,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.0065100168000000735,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.019408536000000032,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.1712513187,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3303530496000002,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.12278896061469469,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.0002634370877855341,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.4647578672646002,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.08803761496865792,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "composition-reverse-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.04018749925450038,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.08116530977235681,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.08116530977235681,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.08645335646447405,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.07846492799999982,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15693140999999966,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15693140999999966,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.15731097599999955,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.16477634880000003,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3295559609999994,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.3295559609999994,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.33035304959999956,
+          "identification_hypothesis": "H2",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-0",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.59078330341061,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-1",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": 0.09857371260068915,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-2",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.7377875120393106,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "foreground-3",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "request_ttft",
+          "delta_s": -0.6890661129812229,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at50-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.09025557687451968,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1781521920000002,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.3741196032000005,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.8173665616236172,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "foreground_tokens": [
+        512,
+        512,
+        7680,
+        7680
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at400-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.09025557687451968,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.1781521920000002,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.3741196032000005,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.5390436253825563,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "foreground_tokens": [
+        512,
+        512,
+        7680,
+        7680
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-four-at800-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.0880376149686597,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.10108185599999953,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.21227189759999998,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.0028516653075341125,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": false,
+            "25": false,
+            "50": false
+          }
+        }
+      ],
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "policy_role": "negative_control_expected_fifo_rr_tie",
+      "nonlinear_role": "sensitivity"
+    },
+    {
+      "case": "sentinel-one-at200-D16",
+      "split": "held_case",
+      "contrasts": [
+        {
+          "scenario": "B8192-fifo-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.04275140068098149,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": false,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q1.5e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.08887910399999988,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": false
+          }
+        },
+        {
+          "scenario": "B2048-fifo-q3.15e-09",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": 0.18664611839999967,
+          "identification_hypothesis": null,
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        },
+        {
+          "scenario": "B2048-round_robin_512-q0.0",
+          "request_id": "sentinel",
+          "baseline": "B2048-fifo-q0.0",
+          "target": "sentinel_ttft",
+          "delta_s": -0.23220092174936524,
+          "identification_hypothesis": "H3",
+          "exceeds_planning_noise_bands": {
+            "10": true,
+            "25": true,
+            "50": true
+          }
+        }
+      ],
+      "foreground_tokens": [
+        7680
+      ],
+      "policy_role": "identification",
+      "nonlinear_role": "sensitivity"
+    }
+  ],
+  "offset_contrasts": [
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B8192-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.35,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.35,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q1.5e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.35,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q3.15e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.35,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 0,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-round_robin_512-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.027444465765644133,
+      "exceeds_planning_noise_bands": {
+        "10": false,
+        "25": false,
+        "50": false
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B8192-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3500000000000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3500000000000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q1.5e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3500000000000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-fifo-q3.15e-09",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.3500000000000001,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": true,
+        "50": true
+      }
+    },
+    {
+      "backgrounds": 16,
+      "offsets_ms": [
+        50,
+        400
+      ],
+      "scenario": "B2048-round_robin_512-q0.0",
+      "target": "sentinel_ttft_offset_difference",
+      "delta_s": 0.07167706375893923,
+      "exceeds_planning_noise_bands": {
+        "10": true,
+        "25": false,
+        "50": false
+      }
+    }
+  ],
+  "eligibility_rule": "Freeze per-cell abs prediction gap >max(3*jitter[cell],25ms). Require BOTH mixed_burst and single_long groups with all constituent cells eligible. Average paired MAE gains within each block/group; both groups require mean gain >max(t(.95,4)*SD/sqrt(5),5ms) across five blocks. All8 cell regression guards retained. Unresolved or violated cross-block dependence prevents passing. Calibrated M0 and retained M1 required; M0 structural N/A.",
+  "primary_contrasts": [
+    {
+      "id": "single-L7168-D0|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.07708108799999996
+    },
+    {
+      "id": "single-L7168-D0|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.16187028479999999
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.0031487999999999933
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q1.5e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.0031487999999999933
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q1.5e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.08177979599999996
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q1.5e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.1573109760000001
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.00661247999999999
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q3.15e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.00661247999999999
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q3.15e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.17173757160000003
+    },
+    {
+      "id": "composition-mixed-D0|B2048-fifo-q3.15e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.3303530496000001
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.078655488
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q1.5e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.15729870600000007
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q1.5e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.15729870600000007
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q1.5e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.1573109760000002
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.1651765248
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q3.15e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.3303272826
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q3.15e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.3303272826
+    },
+    {
+      "id": "composition-reverse-D0|B2048-fifo-q3.15e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.3303530496
+    },
+    {
+      "id": "sentinel-four-at50-D0|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.7810245373210305
+    },
+    {
+      "id": "sentinel-four-at400-D0|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.4584690030866747
+    },
+    {
+      "id": "sentinel-one-at200-D0|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.1912437360189243
+    },
+    {
+      "id": "single-L7168-D16|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.07708108799999991
+    },
+    {
+      "id": "single-L7168-D16|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.16187028479999999
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.0031000080000000985
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q1.5e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.00924216000000011
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q1.5e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.08154824700000018
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q1.5e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.15731097600000066
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.0065100168000000735
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q3.15e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.019408536000000032
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q3.15e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.1712513187
+    },
+    {
+      "id": "composition-mixed-D16|B2048-fifo-q3.15e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.3303530496000002
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q1.5e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.07846492799999982
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q1.5e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.15693140999999966
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q1.5e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.15693140999999966
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q1.5e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.15731097599999955
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q3.15e-09|foreground-0",
+      "hypothesis": "H2",
+      "delta_s": 0.16477634880000003
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q3.15e-09|foreground-1",
+      "hypothesis": "H2",
+      "delta_s": 0.3295559609999994
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q3.15e-09|foreground-2",
+      "hypothesis": "H2",
+      "delta_s": 0.3295559609999994
+    },
+    {
+      "id": "composition-reverse-D16|B2048-fifo-q3.15e-09|foreground-3",
+      "hypothesis": "H2",
+      "delta_s": 0.33035304959999956
+    },
+    {
+      "id": "sentinel-four-at50-D16|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.8173665616236172
+    },
+    {
+      "id": "sentinel-four-at400-D16|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.5390436253825563
+    },
+    {
+      "id": "sentinel-one-at200-D16|B2048-round_robin_512-q0.0|sentinel",
+      "hypothesis": "H3",
+      "delta_s": -0.23220092174936524
+    }
+  ],
+  "resolution_rule": "Before main, abs(expected delta)>3*calibration-only jitter; if an entire H2/H3 family is unresolved its identification claim is inconclusive. Stop main only when both families are unresolved. No cell replacement.",
+  "observed_microbenchmark_noise_available": false,
+  "jitter_references": {
+    "rule": "Nearest absolute log-latency distance using raw-B2048 toy only; freeze before collection. Compute MAD across off trials per position, never pool request positions.",
+    "references": {
+      "single-L1024-D0/foreground-0": 0.06387740344519685,
+      "composition-uniform-D16/foreground-0": 0.3683668818440844,
+      "composition-uniform-D16/foreground-1": 0.6144716772490448,
+      "composition-uniform-D16/foreground-2": 0.8611033468295761,
+      "composition-uniform-D16/foreground-3": 1.0072014426918805
+    },
+    "targets": [
+      {
+        "case": "single-L1024-D0",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.06387740344519685,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L2048-D0",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L4096-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23714793442025509,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L7168-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4195993050755795,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23714793442025509,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D0",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5936601473139941,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8318618300853909,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9618916494721693,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D0",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D0",
+        "request_id": "foreground-1",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5949773327529214,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9641096113780293,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4742958688405102,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D0",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9496454860321623,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9496454860321623,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9599905392671466,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "foreground-1",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5949773327529214,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9914578932604946,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D0",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9414578932604946,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "foreground-1",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.11857396721012754,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5949773327529214,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9914578932604946,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D0",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5914578932604946,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23714793442025509,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.5936601473139941,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8318618300853909,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9892399313546346,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D0",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.18923993135463457,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-one-at200-D0",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4742958688405102,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-one-at200-D0",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.2742958688405102,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L1024-D16",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.06894703065859109,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L2048-D16",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1378940613171824,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L4096-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.2615376557407041,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "single-L7168-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.4398778139291568,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.3683668818440844,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6144716772490448,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8611033468295761,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-uniform-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0072014426918805,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D16",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.24584135831717502,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.615788862687972,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-mixed-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0094194045977403,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": true
+      },
+      {
+        "case": "composition-reverse-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.4911558424587792,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9833654332687001,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9833654332687001,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "composition-reverse-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0056171841876949,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "foreground-1",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6160522997757574,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0370845381810427,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": true
+      },
+      {
+        "case": "sentinel-four-at50-D16",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 0.9870845381810427,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "foreground-0",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "foreground-1",
+        "reference": "single-L1024-D0/foreground-0",
+        "predicted_ttft_s": 0.1227889606146948,
+        "reference_predicted_ttft_s": 0.06387740344519685,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6160522997757574,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0370845381810427,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": true
+      },
+      {
+        "case": "sentinel-four-at400-D16",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6370845381810426,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.3683668818440844,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "foreground-1",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.6144716772490448,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "foreground-2",
+        "reference": "composition-uniform-D16/foreground-2",
+        "predicted_ttft_s": 0.8611033468295761,
+        "reference_predicted_ttft_s": 0.8611033468295761,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "foreground-3",
+        "reference": "composition-uniform-D16/foreground-3",
+        "predicted_ttft_s": 1.0345497245743458,
+        "reference_predicted_ttft_s": 1.0072014426918805,
+        "outside_reference_range": true
+      },
+      {
+        "case": "sentinel-four-at800-D16",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.23454972457434575,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-one-at200-D16",
+        "request_id": "foreground-0",
+        "reference": "composition-uniform-D16/foreground-1",
+        "predicted_ttft_s": 0.4911558424587792,
+        "reference_predicted_ttft_s": 0.6144716772490448,
+        "outside_reference_range": false
+      },
+      {
+        "case": "sentinel-one-at200-D16",
+        "request_id": "sentinel",
+        "reference": "composition-uniform-D16/foreground-0",
+        "predicted_ttft_s": 0.3091416962885851,
+        "reference_predicted_ttft_s": 0.3683668818440844,
+        "outside_reference_range": false
+      }
+    ],
+    "sentinel_mapping": {
+      "sentinel-four-at50-D0": "composition-uniform-D16/foreground-3",
+      "sentinel-four-at400-D0": "composition-uniform-D16/foreground-1",
+      "sentinel-four-at800-D0": "composition-uniform-D16/foreground-0",
+      "sentinel-one-at200-D0": "composition-uniform-D16/foreground-0",
+      "sentinel-four-at50-D16": "composition-uniform-D16/foreground-3",
+      "sentinel-four-at400-D16": "composition-uniform-D16/foreground-1",
+      "sentinel-four-at800-D16": "composition-uniform-D16/foreground-0",
+      "sentinel-one-at200-D16": "composition-uniform-D16/foreground-0"
+    },
+    "caveat": "Noise-range proxies, not cell-specific measured variance or power. Out-of-range targets and mode differences must be reported; do not tune mapping from held data."
+  },
+  "full_model_calibration_support": {
+    "role": "toy structural support, not fitted parameter certainty or measured validation",
+    "row_scope": "foreground release through last foreground completion; background prep/drain excluded",
+    "weighting": "each calibration cell has equal total squared row weight",
+    "condition_limit": 10000.0,
+    "folds": [
+      {
+        "held_cell": null,
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 790,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.4494897427831956,
+              31.360414838228508,
+              844.3623629432428
+            ],
+            "scaled_condition_number": 2.8513251558022903,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 790,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.4494897427831956,
+              31.360414838228508,
+              844.3623629432428,
+              48588.628261773345
+            ],
+            "scaled_condition_number": 8.728843512920163,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 790,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.4494897427831956,
+              31.360414838228508,
+              844.3623629432428,
+              48588.628261773345,
+              2362087.9895444764
+            ],
+            "scaled_condition_number": 8.833828896950427,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "single-L1024-D0",
+        "training_cells": [
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499799,
+              31.34459173965714,
+              839.4973495819368
+            ],
+            "scaled_condition_number": 3.395219097836157,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499799,
+              31.34459173965714,
+              839.4973495819368,
+              48576.52691229375
+            ],
+            "scaled_condition_number": 10.202732739702506,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499799,
+              31.34459173965714,
+              839.4973495819368,
+              48576.52691229375,
+              2361632.484183402
+            ],
+            "scaled_condition_number": 10.320937346346847,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "single-L7168-D0",
+        "training_cells": [
+          "single-L1024-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              31.344954190059486,
+              780.3144492124652
+            ],
+            "scaled_condition_number": 3.381882291898988,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              31.344954190059486,
+              780.3144492124652,
+              48064.00598845782
+            ],
+            "scaled_condition_number": 8.89693172875085,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              31.344954190059486,
+              780.3144492124652,
+              48064.00598845782,
+              2012323.834626773
+            ],
+            "scaled_condition_number": 9.012207861389662,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "composition-uniform-D0",
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "single-L1024-D16",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997965,
+              31.126719673767614,
+              683.0258628828497
+            ],
+            "scaled_condition_number": 3.0437779508815725,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997965,
+              31.126719673767614,
+              683.0258628828497,
+              45914.305167429666
+            ],
+            "scaled_condition_number": 11.181057259923628,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997965,
+              31.126719673767614,
+              683.0258628828497,
+              45914.305167429666,
+              2071124.6913020262
+            ],
+            "scaled_condition_number": 11.314218192265177,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "single-L1024-D16",
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L7168-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              26.35779640496863,
+              839.4973495819368
+            ],
+            "scaled_condition_number": 2.533673678544983,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              26.35779640496863,
+              839.4973495819368,
+              44899.250315131096
+            ],
+            "scaled_condition_number": 10.707909980055828,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 662,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              26.35779640496863,
+              839.4973495819368,
+              44899.250315131096,
+              2361632.484183402
+            ],
+            "scaled_condition_number": 10.87428271855105,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "single-L7168-D16",
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "composition-uniform-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              26.37201646468399,
+              780.7801236467371
+            ],
+            "scaled_condition_number": 2.528652732730832,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              26.37201646468399,
+              780.7801236467371,
+              41921.42530794186
+            ],
+            "scaled_condition_number": 7.451802362938558,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 659,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.2360679774997987,
+              26.37201646468399,
+              780.7801236467371,
+              41921.42530794186,
+              2013582.5923933373
+            ],
+            "scaled_condition_number": 7.547025118896159,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      },
+      {
+        "held_cell": "composition-uniform-D16",
+        "training_cells": [
+          "single-L1024-D0",
+          "single-L7168-D0",
+          "composition-uniform-D0",
+          "single-L1024-D16",
+          "single-L7168-D16"
+        ],
+        "models": {
+          "M0": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens"
+            ],
+            "rank": 3,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              24.357732822197164,
+              685.7075392372913
+            ],
+            "scaled_condition_number": 2.5741035459673784,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M1": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context"
+            ],
+            "rank": 4,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              24.357732822197164,
+              685.7075392372913,
+              35397.37766511357
+            ],
+            "scaled_condition_number": 7.451412457135507,
+            "full_column_rank": true,
+            "supported": true
+          },
+          "M2": {
+            "rows": 654,
+            "features": [
+              "intercept",
+              "decode_tokens",
+              "prefill_tokens",
+              "decode_context",
+              "attention_pairs"
+            ],
+            "rank": 5,
+            "zero_columns": [],
+            "training_column_norms": [
+              2.236067977499796,
+              24.357732822197164,
+              685.7075392372913,
+              35397.37766511357,
+              2085464.6514226543
+            ],
+            "scaled_condition_number": 7.5113125444841335,
+            "full_column_rank": true,
+            "supported": true
+          }
+        }
+      }
+    ],
+    "all_families_supported": true
+  },
+  "calibration_chunk_coverage": {
+    "q_min": 2.0,
+    "q_max": 2048.0,
+    "l_min": 0.0,
+    "l_max": 6144.0,
+    "q_Z_rank": 2,
+    "q_Z_scaled_condition": 3.530767368043742
+  },
+  "gate": "Before main trials, compare declared contrasts with calibration-only observer noise; no held-case swaps. Stop unsupported precision claims rather than retune the matrix."
+}

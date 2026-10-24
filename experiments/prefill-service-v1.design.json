@@ -1,0 +1,673 @@
+{
+  "schema": "service-microbenchmark-design-v12",
+  "protocol": "prefill-service-v1",
+  "revision": 12,
+  "status": "implementation_pending_native_acceptance",
+  "collector_implemented": true,
+  "source_parent_commit": "477b11f86a9e95420e72dae97536dbb6a5f44d43",
+  "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6373563645",
+  "runtime": {
+    "gpu": "RTX4090",
+    "same_host": true,
+    "same_engine_identity": true,
+    "usage_context": "OPENAI_API_SERVER",
+    "max_num_batched_tokens": 2048,
+    "max_model_len": 8192,
+    "max_num_seqs_minimum": 21,
+    "python": "3.12",
+    "vllm": "0.30.0",
+    "torch": "2.13.0+cu130",
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "prefix_cache": false,
+    "speculative_decoding": false,
+    "tensor_parallel_size": 1,
+    "preserve_graph_and_async": true,
+    "old_config_identity_established": false,
+    "kv_headroom_fraction": 0.1,
+    "historical_working_batch_budget": 2048,
+    "historical_sensitivity_batch_budgets": [
+      8192
+    ],
+    "engine_gil_switch_interval_s": 0.0005
+  },
+  "workload": {
+    "background_counts": [
+      0,
+      16
+    ],
+    "background_input_tokens": 1024,
+    "background_output_tokens": 256,
+    "foreground_output_tokens": 128,
+    "sentinel_input_tokens": 512,
+    "sentinel_offsets_ms": [
+      50,
+      400,
+      800
+    ],
+    "forced_microbenchmark_outputs": true,
+    "trace_replay_natural_eos": true,
+    "content_seed": 20261024,
+    "prompt_manifest_status": "pending implementation",
+    "backgrounds_must_outlive_foreground": true,
+    "sentinel_one_foreground_tokens": 7680,
+    "sentinel_foreground_by_offset_ms": {
+      "50": [
+        512,
+        512,
+        7680,
+        7680
+      ],
+      "400": [
+        512,
+        512,
+        7680,
+        7680
+      ],
+      "800": [
+        4096,
+        4096,
+        4096,
+        4096
+      ]
+    }
+  },
+  "measurement": {
+    "separate_cpu_gpu_targets": true,
+    "actual_executed_chunks_required": true,
+    "global_synchronize_each_step": false,
+    "max_injection_lag_ms": 5,
+    "observer_estimator": "mean paired log ratio; one-sided95 Student-t bound; expm1",
+    "observer_pairs": {
+      "cheap": 20,
+      "demanding": 10
+    },
+    "observer_slowdown_limit": 0.05,
+    "drift_reference": "single-L1024-D16 at block start/end",
+    "drift_flag_fraction": 0.1,
+    "bootstrap_seed": 20261023,
+    "gate_bootstrap_resamples": 10000,
+    "per_step_graph_fields": [
+      "runtime_graph_mode",
+      "capture_or_replay",
+      "actual_tokens",
+      "padded_tokens",
+      "actual_requests",
+      "padded_requests_if_available",
+      "query_uniformity",
+      "capture_key",
+      "attention_backend",
+      "step_wall_time",
+      "valid_cuda_span",
+      "decode_count",
+      "decode_context"
+    ],
+    "graph_fields_implemented": true,
+    "jitter": "MAD across off trials per request position; complete20x1/10x4 matrices; preregistered latency-range reference mapping; per-cell thresholds",
+    "missing_graph_fields": "unavailable, never inferred from D level; mode/context attribution unavailable without required labels"
+  },
+  "collection": {
+    "trial_counts": {
+      "warmup": 22,
+      "observer_check": 60,
+      "drift_reference": 10,
+      "main": 110,
+      "http_bridge": 8,
+      "deep_diagnostic": 2
+    },
+    "total_trials": 212,
+    "main_roles": {
+      "held_case": 80,
+      "train": 18,
+      "repeat_check": 12
+    },
+    "frozen_linear_serial_trial_seconds": 729.8476498840222,
+    "planning_service_multiplier": 1.35,
+    "idle_gap_seconds": 0.25,
+    "transfer_seconds": 320,
+    "flush_and_frontend_reserve_seconds": 120,
+    "estimated_active_seconds": 1518.29432734343,
+    "hard_collection_limit_seconds": 1800,
+    "fits_planning_budget": true,
+    "caveat": "Planning estimate only. Stage statuses are independent; suite complete requires every stage. Preserve all failures/timeouts and never turn a selected subset into a complete suite.",
+    "per_trial_timeout_seconds": 45,
+    "attempts_per_trial": 1,
+    "transfer_slices": [
+      {
+        "attempt_id": "transfer-a-r1",
+        "window": "a",
+        "replicate": 1,
+        "replay_start": 40,
+        "score_start": 60,
+        "score_end": 120,
+        "lead_in_seconds": 20,
+        "cap": 32,
+        "attempts_allowed": 1,
+        "drain_before_next": true
+      },
+      {
+        "attempt_id": "transfer-b-r1",
+        "window": "b",
+        "replicate": 1,
+        "replay_start": 160,
+        "score_start": 180,
+        "score_end": 240,
+        "lead_in_seconds": 20,
+        "cap": 32,
+        "attempts_allowed": 1,
+        "drain_before_next": true
+      },
+      {
+        "attempt_id": "transfer-b-r2",
+        "window": "b",
+        "replicate": 2,
+        "replay_start": 160,
+        "score_start": 180,
+        "score_end": 240,
+        "lead_in_seconds": 20,
+        "cap": 32,
+        "attempts_allowed": 1,
+        "drain_before_next": true
+      },
+      {
+        "attempt_id": "transfer-a-r2",
+        "window": "a",
+        "replicate": 2,
+        "replay_start": 40,
+        "score_start": 60,
+        "score_end": 120,
+        "lead_in_seconds": 20,
+        "cap": 32,
+        "attempts_allowed": 1,
+        "drain_before_next": true
+      }
+    ],
+    "transfer_is_development": true,
+    "stage_completion_independent": true,
+    "full_suite_requires_all_stages": true,
+    "stage_status_contract": {
+      "fields": [
+        "planned_trial_ids",
+        "attempted_trial_ids",
+        "completed_trial_ids",
+        "integrity",
+        "deadline",
+        "failure_reason"
+      ],
+      "states": [
+        "not_started",
+        "complete_valid",
+        "complete_invalid",
+        "incomplete"
+      ],
+      "shared_failure_invalidates_affected_stages": true
+    },
+    "transfer_attempts": 4,
+    "transfer_terminal_reserve_seconds": 40,
+    "transfer_terminal_reserve_per_attempt_seconds": 10
+  },
+  "analysis": {
+    "calibration_cells": 6,
+    "train_trials": 18,
+    "repeat_check_trials": 12,
+    "held_case_trials": 80,
+    "candidates": [
+      "M0_executed_work",
+      "M1_add_decode_context",
+      "M2_add_chunk_attention_pairs"
+    ],
+    "primary_targets": [
+      "decode-only step MAE (M1)",
+      "prefill-bearing step MAE (M2)",
+      "cumulative release-to-last-prefill wall MAE (M2)"
+    ],
+    "decode_only_target": "M1 benefit target; M2 no-regression check",
+    "candidate_freeze_before_held_scoring": true,
+    "selection": "Two-stage training-only LOCO: M1 decode >=10% with prefill guard, then M2 both prefill targets >=10% versus retained base with all-target guard. No held selection.",
+    "service_improvement_fraction": 0.1,
+    "case_regression_fraction": 0.1,
+    "case_regression_floor_ms": 1,
+    "sentinel_gate": {
+      "cells": 8,
+      "bias_limit_fraction": 0.1,
+      "bias_floor_ms": 25,
+      "rank_resolution_ms": 25,
+      "bootstrap_seed": 20261023,
+      "bootstrap_replicates": 10000,
+      "causal_rollout_required": true,
+      "future_observed_chunks_allowed": false,
+      "unevaluated_is_not_passed": true,
+      "eligibility_source": "Frozen candidate and EACH calibrated comparator, calibration-only per-position jitter, preregistered per-cell reference mapping",
+      "eligibility_threshold": "abs predicted TTFT difference >max(3*jitter[cell],25ms)",
+      "unresolved_is_not_passed": true,
+      "all_cells_no_regression": true,
+      "policy_tie_controls": [
+        "sentinel-four-at800-D0",
+        "sentinel-four-at800-D16"
+      ],
+      "structural_comparators": [
+        "calibrated_M0",
+        "calibrated_M1_when_retained_for_M2"
+      ],
+      "raw_B2048_role": "staleness/recalibration baseline only",
+      "selected_M0_structural_status": "not_applicable",
+      "same_comparator_training_and_accounting_required": true,
+      "insufficient_resolved_wins": "inconclusive",
+      "any_material_regression": "failed",
+      "matched_offset_pairs_ms": [
+        [
+          50,
+          400
+        ]
+      ],
+      "uniform_800_is_separate_control": true,
+      "minimum_distinct_groups": 2,
+      "contrast_groups": {
+        "mixed_burst": [
+          "sentinel-four-at50-D0",
+          "sentinel-four-at400-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at400-D16"
+        ],
+        "single_long": [
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ]
+      },
+      "all_group_members_must_be_eligible": true,
+      "win_rule": "Average paired absolute-error gains within each group/block; across FIVE block means require mean>max(t(.95,4)*sample_SD/sqrt(5),0.005s) with1e-12s tolerance for BOTH groups",
+      "block_dependence_default": "unresolved",
+      "block_dependence_required": "qualified by a preregistered calibration-only assessment; not implemented yet; unresolved/violated cannot pass",
+      "implementation": "prefill_grouped_validation.py",
+      "block_count": 5,
+      "minimum_mean_gain_s": 0.005
+    },
+    "nonlinear_planning_k": [
+      1.5e-09,
+      3.15e-09
+    ],
+    "nonlinear_k_is_fitted_bound": false,
+    "transfer_ITL_counts": "results/prefill-design-round4/itl-scenarios.json; full matched-window vectors, support flags, common shared step-floor and repeat references; conditional historical paths",
+    "service_step_window": "foreground release through last foreground/sentinel completion; exclude background prep/drain",
+    "fitting_weights": "equal total squared row weight per calibration cell; training partition only",
+    "identifiability": {
+      "features": [
+        "intercept",
+        "decode_tokens",
+        "prefill_tokens",
+        "decode_context",
+        "attention_pairs"
+      ],
+      "training_partitions": "all fitting rows and each LOCO training partition, each valid timing-label mask",
+      "scaling": "column norms from that training partition only",
+      "condition_limit": 10000.0,
+      "require_full_column_rank": true,
+      "unsupported_family_excluded_before_held": true,
+      "toy_is_not_measured_support": true
+    },
+    "service_window_membership": "same executed step IDs for wall/GPU labels; never cross-compare host and GPU timestamps",
+    "graph_accounting": {
+      "status": "implemented; requires installed-host source/dispatcher/stream qualification",
+      "baseline": "M0-level mode-specific intercepts and training-supported padding-excess covariate",
+      "same_basis_all_families": true,
+      "plain_five_column_toy_does_not_validate_mode_aware_basis": true,
+      "context_claim_requires_same_mode_padding_D16_strata": true,
+      "future_measured_mode_oracle_forbidden": true
+    },
+    "histogram_contract": {
+      "all_exporter_buckets_archived": true,
+      "scored_bin_lower_bound_s": 0.025,
+      "intervals": "disjoint, including+Inf",
+      "max_abs_log_rate_ratio_primary": true,
+      "engineering_factor_limit": 2,
+      "automatic_acceptance": false,
+      "matched_scrape_endpoints": true,
+      "failed_samples_resets_and_identity_changes_rejected": true,
+      "k_not_supported_by_selected_tail": true,
+      "shared_reference": "Per window frozen linear B2048; five times total gaps/decode-bearing steps, SAME floor for all scenarios",
+      "primary_evidence": [
+        "categorical zero-bin support including sub-floor flags",
+        "all-bin shared toy-equivalent-step magnitude"
+      ],
+      "common_positive_bins": "Shared observed/linear/k1.5 mask, sensitivity only",
+      "count_floor_sensitivity": [
+        1,
+        5
+      ],
+      "step_units_are_measured": false,
+      "independent_gap_uncertainty_forbidden": true,
+      "replicate_envelope_calibrated": false,
+      "replicate_references": "One same-host old32 pair; cross-host32/16 context; not matched to60s transfer windows"
+    },
+    "historical_output_lengths": "All five admitted paths have128 outputs; forced128 variant is duplicate evidence, not independent sensitivity. Future natural EOS remains measured.",
+    "reporting_ablations": [
+      "M0",
+      "M1",
+      "M0Z",
+      "M2"
+    ],
+    "M0Z": "M0 plus attention_pairs; same calibration folds/weights/masks; reporting only, not selectable",
+    "calibrated_design_screen": {
+      "artifact": "results/prefill-design-round5/calibrated-planning.json",
+      "role": "Historical revision7 deterministic feasibility; superseded by noise_screen_v8",
+      "refit_all_comparators": true,
+      "loco_selection_training_only": true,
+      "k_1p5e9_eligible_cells_zero_jitter": 4,
+      "k_1e9_resolved": false,
+      "jitter_15ms_resolved": false,
+      "actual_eligibility_required_before_held_scoring": true
+    },
+    "azure_replay_scope": "Retained arrivals/input lengths from Azure; synthetic prompt content, fixed128 output cap with natural EOS; source GeneratedTokens audit-only",
+    "calibration_noise_readiness": {
+      "expected_strata": "Twelve fixed calibration-cell/prefill-bearing-or-decode-only phase totals; full ordered work/position/mode/padding signatures must match across blocks1\u20133",
+      "repeats": 3,
+      "warning_cv": 0.02,
+      "stop_cv": 0.05,
+      "missing": "inconclusive",
+      "within_range_accepts_model": false,
+      "stratum_count": 12,
+      "descriptive_max_step_cv_controls_gate": false,
+      "scope": "Phase-total repeatability, not per-step label-noise CV or a model-power guarantee"
+    },
+    "noise_screen_v9": {
+      "artifact": "results/prefill-design-round7/noise-screen.json",
+      "role": "conditional synthetic sensitivity, not GPU power",
+      "held_sigma_ms": [
+        8,
+        10,
+        12,
+        15
+      ],
+      "calibration_label_cv": [
+        0.01,
+        0.02,
+        0.05
+      ],
+      "training_fits": 480,
+      "held_draws_per_fit": 200,
+      "exact_fit_held_draws": 20000,
+      "single_long_gap_ms": 30.2,
+      "at_12_and_15ms": "inconclusive",
+      "cross_block_ar_null": "about14% nominal false passes; dependence qualification blocks passing",
+      "minimum_mean_gain_s": 0.005
+    }
+  },
+  "files": {
+    "prefill-service-v1.md": {
+      "path": "experiments/prefill-service-v1.md",
+      "sha256": "0d0eac857caa081c892ec107b3213cbeccf724795a3df6c7b2f80b1b35b35f92"
+    },
+    "prefill-service-v1.cases.json": {
+      "path": "experiments/prefill-service-v1.cases.json",
+      "sha256": "c265cac7e8de14407b0f52f1b2bbff442570292ff4a6941abf98898b508417cd"
+    },
+    "prefill-service-v1.order.json": {
+      "path": "experiments/prefill-service-v1.order.json",
+      "sha256": "c6d7bb493e19d4ba10d4824d299c73a179126441073504bd58bc7f432f903c4b"
+    },
+    "prefill-service-v1.predictions.json": {
+      "path": "experiments/prefill-service-v1.predictions.json",
+      "sha256": "c06527da28ed4c18221b6927453c30c7947156b86b97f821c246da45023f04ec"
+    },
+    "prefill-service-v1.discrimination.json": {
+      "path": "experiments/prefill-service-v1.discrimination.json",
+      "sha256": "0b018a40436286c1763541d077700ec8063868d52391446f09dcbaa8829ba75c"
+    },
+    "prefill-service-v1.budget.json": {
+      "path": "experiments/prefill-service-v1.budget.json",
+      "sha256": "374ed429a7d9a5d90d12a35e67c47c0e890e4be1c357e45e9dcb78e609120ea6"
+    },
+    "ITL-preregistration": {
+      "path": "results/prefill-design-round4/itl-scenarios.json",
+      "sha256": "7ee7d2f1c4f9d2f9c75763bcfdf9414667eda21227e076ccfca3f8251d5d38cc"
+    },
+    "calibration-counterexample": {
+      "path": "results/prefill-design-round4/comparator-counterexample.json",
+      "sha256": "29b905900b6304d764d92df7611f23c1808f851b494841249211d1f6b7e1fb9f"
+    },
+    "win-margin-counterexample": {
+      "path": "results/prefill-design-round4/win-margin-counterexample.json",
+      "sha256": "07c817ec03f5d20de7ce21e8cd76632876c9fd95c09f9ace6a4245c9687936f7"
+    },
+    "calibrated-planning": {
+      "path": "results/prefill-design-round5/calibrated-planning.json",
+      "sha256": "416036623fe7064c449c67f561952ab3cef22f69484f233ed3db0bc408873dd3"
+    },
+    "calibrated-report": {
+      "path": "results/prefill-design-round5/report.md",
+      "sha256": "9a6834ac71205e2418cf14df245c09a5f11eb46195cb88bc51f8c73a6217c6a6"
+    },
+    "calibrated-planning-code": {
+      "path": "prefill_planning.py",
+      "sha256": "92bce4a8b7c5ed765ee31e834481944589668d0eb06c601bffd58356da726569"
+    },
+    "calibrated-planning-script": {
+      "path": "scripts/check_prefill_calibrated_design.py",
+      "sha256": "e616a61cedc7c0bed94fa3636db1e9de78cf30c34c7716cd06510c1a14273771"
+    },
+    "historical-source-snapshots": {
+      "path": "results/prefill-design-round4/source-snapshots.json",
+      "sha256": "f3bd58f59ebf91728284b88b12a676060ddd1903d9eb631c29fb62be2c31bfaf"
+    },
+    "noise-screen": {
+      "path": "results/prefill-design-round7/noise-screen.json",
+      "sha256": "baa8b6a5ca3d1eb8b8cf14e52603cc1583956a72398ae28d522686b5347c805b"
+    },
+    "noise-report": {
+      "path": "results/prefill-design-round7/report.md",
+      "sha256": "6cb8a630ad1b216414e2dc417c1cc924fdcacc378abf1d5ab33fdbe51baaa098"
+    },
+    "grouped-validation": {
+      "path": "prefill_grouped_validation.py",
+      "sha256": "8e9f6ed223e1c8c12ec1db112432b2095729024cca733fb8f28eb82f147ce8c9"
+    },
+    "noise-simulation": {
+      "path": "prefill_noise.py",
+      "sha256": "078fca7a9e403c33a933d8f18f67d188ab3297626d5be494197c39401f22727e"
+    },
+    "noise-script": {
+      "path": "scripts/check_prefill_noise.py",
+      "sha256": "deedea244370058b5448cb3daa05cf63dfc33c1b6b261edd4616ecf19262bc15"
+    },
+    "revision7-source-snapshots": {
+      "path": "results/prefill-design-round5/source-snapshots.json",
+      "sha256": "bef8303b06e1aec4c7b933a801d921286fbe08607c3319f5d113fb32b7c31b29"
+    },
+    "revision8-source-snapshots": {
+      "path": "results/prefill-design-round6/source-snapshots.json",
+      "sha256": "7e1be5e3fb83a3e974577e0c8793254935839a5af2c10359034267d03c67610d"
+    },
+    "prefill_lab/scoring.py": {
+      "path": "prefill_lab/scoring.py",
+      "sha256": "d1ea490d990e6ade1067bede42ab4d9b0e5fae88cb1a61eebb4a3a1b596af43a"
+    },
+    "prefill_lab/runtime.py": {
+      "path": "prefill_lab/runtime.py",
+      "sha256": "100c1099a0b159a7fe2388f8199bd80aa62d43eb58e05ca4dfd6229db43436f5"
+    },
+    "prefill_lab/contracts.py": {
+      "path": "prefill_lab/contracts.py",
+      "sha256": "4d5cda37f5d5f765f286476da675f4155fffcce5e8b22d35d8623f8d8429a23f"
+    },
+    "prefill_lab/analysis.py": {
+      "path": "prefill_lab/analysis.py",
+      "sha256": "5410b6a54b9b6eb8842fd5eb0722839be176d08e883ffcbddbfd0da3ccaea5fe"
+    },
+    "prefill_lab/tokens.py": {
+      "path": "prefill_lab/tokens.py",
+      "sha256": "c840c49ca4c9c425b0bbec011db13196d2a05e223d2f273b679753d171fcb4d1"
+    },
+    "prefill_lab/endpoint.py": {
+      "path": "prefill_lab/endpoint.py",
+      "sha256": "aa94855f05f02c32f6194f13b55f8a2b3156b09af6c4f3a79368780fb683e88b"
+    },
+    "prefill_lab/__init__.py": {
+      "path": "prefill_lab/__init__.py",
+      "sha256": "111e3c479dec680d722b09f57349ba00f909c8bafa562fede7370578b1564c1c"
+    },
+    "prefill_lab/suite.py": {
+      "path": "prefill_lab/suite.py",
+      "sha256": "7d814af4f227d30774c8f8eb58eb1ffc7178094db50360dad36184e4bacc73ed"
+    },
+    "prefill_lab/plugin.py": {
+      "path": "prefill_lab/plugin.py",
+      "sha256": "df484e8885e9b53dd036d260e5af1581fece7db171706ec7d14f46ef98d8ea69"
+    },
+    "prefill_lab/dispatch.py": {
+      "path": "prefill_lab/dispatch.py",
+      "sha256": "8e6925e4242c6a9f00b9cb2f794900e5aef4dd2b71f24328e5c07af717bed604"
+    },
+    "prefill_lab/causal.py": {
+      "path": "prefill_lab/causal.py",
+      "sha256": "727f2d740a976be8c19b48aaddea05edadf23211af9c2cb7b7b78d602c381f89"
+    },
+    "scripts/run_prefill_service.py": {
+      "path": "scripts/run_prefill_service.py",
+      "sha256": "634e14af66695082676dee4872bfdc6aa49f3de660cdabe5a954efc2483bb542"
+    },
+    "experiments/prefill-service-v1.runbook.md": {
+      "path": "experiments/prefill-service-v1.runbook.md",
+      "sha256": "450c7c610a0ccc1015b22958e951542eea6f405c43670097f3290004b0470034"
+    },
+    "experiments/prefill-vllm-v030-source-map.json": {
+      "path": "experiments/prefill-vllm-v030-source-map.json",
+      "sha256": "ea809398e8fa7b7e00a4dad43c3028347981987aadfa4d1dfe6f65351bf83fea"
+    },
+    "pyproject.toml": {
+      "path": "pyproject.toml",
+      "sha256": "4e62899bfe56335fdc20fa1311162af6b1b834fd91307d16497fbcfb81a8e6b8"
+    },
+    "tests/test_prefill_round7.py": {
+      "path": "tests/test_prefill_round7.py",
+      "sha256": "ee345f452d1b68a592430469b552382e4607261ca79f0c9f1203c622520d791a"
+    },
+    "scripts/check_prefill_phase_readiness.py": {
+      "path": "scripts/check_prefill_phase_readiness.py",
+      "sha256": "7d16b4bbe8e416b0084e6dc676a10e43575f6b7776a2d2d4deb8118d114b68c5"
+    },
+    "results/prefill-round7-fixes-20261023/report.md": {
+      "path": "results/prefill-round7-fixes-20261023/report.md",
+      "sha256": "ec81261ed4fb4c4e7741662d7fe81b5c3c0f9f6786842b6cb927861409fecd87"
+    },
+    "results/prefill-round7-fixes-20261023/readiness-sensitivity.json": {
+      "path": "results/prefill-round7-fixes-20261023/readiness-sensitivity.json",
+      "sha256": "5cd1ec06f7e7bb4f9d409c5125fb8dbc3bbe854baeac9a9fdf5025cd1be3abae"
+    },
+    "tests/test_prefill_round8.py": {
+      "path": "tests/test_prefill_round8.py",
+      "sha256": "22e6efbaa7b86fa0b40fe9026cc6359815069f29e47c65da6ba58f67126ee0ce"
+    },
+    "tests/test_prefill_design.py": {
+      "path": "tests/test_prefill_design.py",
+      "sha256": "bb2281b1a60b95ac2c90896c3aafb3d9cb99071cfbfeed30f659e083d60850c0"
+    },
+    "results/prefill-round8-fixes-20261023/report.md": {
+      "path": "results/prefill-round8-fixes-20261023/report.md",
+      "sha256": "23bc1c3b152dfcf75a90817d0442f4192289bf2555f8c71bbb8be826f77e848f"
+    },
+    "scripts/prefill_host.py": {
+      "path": "scripts/prefill_host.py",
+      "sha256": "773858977306049f9ddd62437db2d35c7d9d2ed509e703208482fb6bdd3a849c"
+    },
+    "tests/test_prefill_host.py": {
+      "path": "tests/test_prefill_host.py",
+      "sha256": "874c54330efd5db7dce276f0f309e8d3bbbd018cbb9ca12b33b1b08393283f20"
+    },
+    "prefill_lab/transfer_runner.py": {
+      "path": "prefill_lab/transfer_runner.py",
+      "sha256": "fc9f0d78b0cbc209e7f84c1adaf3e9ae28c422f50ce9b4534581c3b1d0b9b959"
+    },
+    "tests/test_prefill_transfer.py": {
+      "path": "tests/test_prefill_transfer.py",
+      "sha256": "31a253ff50116092b061d11f5e82bcedaa817e396240815556df6383499f896c"
+    },
+    "runner_gc_control.py": {
+      "path": "runner_gc_control.py",
+      "sha256": "9f7c858814d8370e5b2695dbeb3ff6962f55cbd964fbca369f33146289544d8b"
+    },
+    "runner_diagnostics.py": {
+      "path": "runner_diagnostics.py",
+      "sha256": "123cd2fba49d37b8f14e5347fa6b9badfddfdb563d97fbb03a9d879fb504c94a"
+    },
+    "diagnostic_sampling.py": {
+      "path": "diagnostic_sampling.py",
+      "sha256": "4e477dbf5597eaa5803ae6cbf25c1ffc5860afea9ebe397fd1d224ad468dfbc6"
+    },
+    "telemetry.py": {
+      "path": "telemetry.py",
+      "sha256": "315123d4234076297f9c63259596810a687d467c3fc0aadc2e8419152f8e6c18"
+    },
+    "prefill_lab/deep_diagnostic.py": {
+      "path": "prefill_lab/deep_diagnostic.py",
+      "sha256": "4413994a0efe2c9bd19e739ec6a30d9d67bc4fe2b51ea21f3f1ef98351a0afdc"
+    },
+    "scripts/analyze_prefill_capture.py": {
+      "path": "scripts/analyze_prefill_capture.py",
+      "sha256": "706b0ac72dbbe641b54b9972ab3e75ea9ea91f317afbe6610e3ded7174d87bf3"
+    },
+    "scripts/plot_prefill_capture_audit.py": {
+      "path": "scripts/plot_prefill_capture_audit.py",
+      "sha256": "fc071c8982faeca7b2afb1ce450a87357e327704f6fce2605ea1b7e4ec56302f"
+    },
+    "tests/test_prefill_deep.py": {
+      "path": "tests/test_prefill_deep.py",
+      "sha256": "3d52ee8f0b9b0c05d1c427b157bf6d6fc65365132133507934ece8efca96cc30"
+    }
+  },
+  "readiness": {
+    "executable_protocol_frozen": false,
+    "installed_hooks_verified": false,
+    "native_cpu_acceptance": false,
+    "observer_overhead_validated": false,
+    "C_used": false,
+    "mpc_evaluated": false,
+    "mode_aware_accounting_implemented": true,
+    "calibrated_physical_models_fitted": false,
+    "installed_scheduler_parity_verified": false,
+    "block_dependence_assessment_implemented": false,
+    "exact_token_materializer_implemented": true,
+    "collector_cpu_mock_tested": true,
+    "actual_gpu_adapter_loaded": false
+  },
+  "revision_reason": "Round8: preserve collection on freeze errors, sticky invalid status, output observer isolation and attn_utils source pin; native/GPU acceptance pending",
+  "implementation": {
+    "entrypoint": "scripts/run_prefill_service.py",
+    "plugin": "prefill_lab",
+    "vllm": "0.30.0",
+    "model_runners": [
+      "V1",
+      "V2"
+    ],
+    "native_acceptance": "required before collect",
+    "block_dependence": "unresolved",
+    "gpu_scope": "unqualified pending real deep traces",
+    "serial_wall_model": "inconclusive when actual async spans overlap",
+    "rental_host_helper": "scripts/prefill_host.py prepare|collect; same frozen runner and exact-revision CPU gate",
+    "transfer_generator": "Fresh process per frozen attempt; bounded runner-only cyclic-GC deferral; unchanged50ms offer-lag gate; no retry; same loaded engine/gateway",
+    "transfer_gc_control": {
+      "max_rss_mib": 1536,
+      "rss_poll_seconds": 0.1,
+      "max_poll_gap_seconds": 0.5,
+      "max_disabled_seconds": 91,
+      "native_pid_procfs_guard": "unchanged",
+      "scope": "offer_start through client drain; restored before capture decoding and HTTP cleanup",
+      "evidence": "gc-window.json, runner_gc_control.json, gc-audit.json plus complete runner diagnostics"
+    },
+    "targeted_diagnostic": "prefill_host.py diagnose: same exact-revision native gate; two matching frozen light warmups plus two foreground profiles; separate output and no suite/GPU/model acceptance",
+    "deep_profile_window": "First foreground/sentinel worker call, then five consecutive calls; exact step-ID CPU ranges and artifact hash; profile-window integrity only"
+  },
+  "round7_corrections": {
+    "cumulative_error": "Reset within each trial, average trials per cell",
+    "eligibility_freeze": "Nominal release state and OFF observers at block3_end; immutable suite hash, input hashes and training/OFF capture hashes checked before scoring",
+    "http_bridge": "Direct OpenAI raw-token completions; gateway transport not qualified; Azure chat transfer uses fixed-cost32 gateway",
+    "engine_rejection": "Invalidate capture and request-local abort; never raise from traffic validation",
+    "worker_finish": "Disable recorder before deferred event polling",
+    "decode_context": "Pre-step execution position; sampled token not yet processed"
+  },
+  "round8_corrections": {
+    "freeze_exceptions": "Analysis Exception -> inconclusive freeze with error_type/reason, continue collection; cancellation/native engine failures still propagate",
+    "terminal_state": "Invalid remains invalid after drain; no foreground release after cancellation",
+    "output_observer": "Isolate observer exceptions and retain frontend/private-output separation",
+    "upstream_sources": 35,
+    "generator_comparison": "Exact JSON types/structure/discrete values; float rel_tol1e-13 abs_tol1e-15; exact committed SHA256 preserved"
+  }
+}

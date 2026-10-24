@@ -1,0 +1,876 @@
+{
+  "role": "synthetic counterexample: calibration gain is not structural gain",
+  "measured_data_used": false,
+  "models_fitted": false,
+  "jitter_is_synthetic": true,
+  "jitter_s": 0.005,
+  "frozen_coefficients": [
+    0.00918083968026616,
+    0.0003168517008371403,
+    5.341461305169013e-05
+  ],
+  "source_sha256": {
+    "prefill_design.py": "5e4eae9b4e8caba5baa300e78cac1fc3d75224f9804e6e08b1af3b1fb3ecd7aa",
+    "prefill_validation.py": "d1b5006f8f6ee20b85cc697b54125249bfacbcb45699f1ce7a4d503bdf15f075",
+    "scripts/build_prefill_design.py": "372dd18e2bc0338aac9b7941ef73c5d3312ab82ac85daced6de05ac8f7a05802",
+    "scripts/check_prefill_comparators.py": "7c74a122634a0e53ff126e89714e2769de180ca9763a7fc33d31172270c77431"
+  },
+  "cases": [
+    {
+      "scale": 0.95,
+      "delta_s": {
+        "sentinel-four-at50-D0": -0.04946199656773187,
+        "sentinel-four-at400-D0": -0.04946199656773187,
+        "sentinel-four-at800-D0": -0.04946199656773187,
+        "sentinel-one-at200-D0": -0.022347379347902263,
+        "sentinel-four-at50-D16": -0.05172748622871792,
+        "sentinel-four-at400-D16": -0.05172748622871781,
+        "sentinel-four-at800-D16": -0.05172748622871781,
+        "sentinel-one-at200-D16": -0.02336130479058185
+      },
+      "raw_baseline_eligibility": {
+        "threshold_s_by_cell": {
+          "sentinel-four-at50-D0": 0.025,
+          "sentinel-four-at400-D0": 0.025,
+          "sentinel-four-at800-D0": 0.025,
+          "sentinel-one-at200-D0": 0.025,
+          "sentinel-four-at50-D16": 0.025,
+          "sentinel-four-at400-D16": 0.025,
+          "sentinel-four-at800-D16": 0.025,
+          "sentinel-one-at200-D16": 0.025
+        },
+        "eligible_cells": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16"
+        ],
+        "minimum_eligible": 4,
+        "comparison_evaluable": true,
+        "strict_wins_required": 5,
+        "no_regression_cells": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16",
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ],
+        "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+      },
+      "raw_baseline_component_with_current_margin": {
+        "component_status": "passed",
+        "wins": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16"
+        ],
+        "regressions": [],
+        "per_cell": {
+          "sentinel-four-at400-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.04946199656773187,
+            "improvement_s": 0.04946199656773187,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187
+            ]
+          },
+          "sentinel-four-at400-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.05172748622871781,
+            "improvement_s": 0.05172748622871781,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.05172748622871781,
+              -0.05172748622871781,
+              -0.05172748622871781,
+              -0.05172748622871781,
+              -0.05172748622871781
+            ]
+          },
+          "sentinel-four-at50-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.04946199656773187,
+            "improvement_s": 0.04946199656773187,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187
+            ]
+          },
+          "sentinel-four-at50-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.05172748622871792,
+            "improvement_s": 0.05172748622871792,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.05172748622871792,
+              -0.05172748622871792,
+              -0.05172748622871792,
+              -0.05172748622871792,
+              -0.05172748622871792
+            ]
+          },
+          "sentinel-four-at800-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.04946199656773187,
+            "improvement_s": 0.04946199656773187,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187,
+              -0.04946199656773187
+            ]
+          },
+          "sentinel-four-at800-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.05172748622871781,
+            "improvement_s": 0.05172748622871781,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.05172748622871781,
+              -0.05172748622871781,
+              -0.05172748622871781,
+              -0.05172748622871781,
+              -0.05172748622871781
+            ]
+          },
+          "sentinel-one-at200-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.022347379347902263,
+            "improvement_s": 0.022347379347902263,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.022347379347902263,
+              -0.022347379347902263,
+              -0.022347379347902263,
+              -0.022347379347902263,
+              -0.022347379347902263
+            ]
+          },
+          "sentinel-one-at200-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.02336130479058185,
+            "improvement_s": 0.02336130479058185,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.02336130479058185,
+              -0.02336130479058185,
+              -0.02336130479058185,
+              -0.02336130479058185,
+              -0.02336130479058185
+            ]
+          }
+        },
+        "win_rule": "baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win",
+        "unresolved_cells": [],
+        "complete_experiment_passed": false,
+        "statistical_significance_claimed": false
+      },
+      "revised_comparison_plan": {
+        "selected_family": "M0",
+        "retained_base": "M0",
+        "structure_status": "not_applicable",
+        "required_structural_comparators": {},
+        "raw_B2048_staleness_only": {
+          "threshold_s_by_cell": {
+            "sentinel-four-at50-D0": 0.025,
+            "sentinel-four-at400-D0": 0.025,
+            "sentinel-four-at800-D0": 0.025,
+            "sentinel-one-at200-D0": 0.025,
+            "sentinel-four-at50-D16": 0.025,
+            "sentinel-four-at400-D16": 0.025,
+            "sentinel-four-at800-D16": 0.025,
+            "sentinel-one-at200-D16": 0.025
+          },
+          "eligible_cells": [
+            "sentinel-four-at400-D0",
+            "sentinel-four-at400-D16",
+            "sentinel-four-at50-D0",
+            "sentinel-four-at50-D16",
+            "sentinel-four-at800-D0",
+            "sentinel-four-at800-D16"
+          ],
+          "minimum_eligible": 4,
+          "comparison_evaluable": true,
+          "strict_wins_required": 5,
+          "no_regression_cells": [
+            "sentinel-four-at400-D0",
+            "sentinel-four-at400-D16",
+            "sentinel-four-at50-D0",
+            "sentinel-four-at50-D16",
+            "sentinel-four-at800-D0",
+            "sentinel-four-at800-D16",
+            "sentinel-one-at200-D0",
+            "sentinel-one-at200-D16"
+          ],
+          "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+        },
+        "actual_held_data_used": false,
+        "note": "Same training data, weights, timing/accounting basis and freeze boundary for calibrated comparators. Raw historical coefficients cannot support a structural claim."
+      }
+    },
+    {
+      "scale": 1.05,
+      "delta_s": {
+        "sentinel-four-at50-D0": 0.04946199656773176,
+        "sentinel-four-at400-D0": 0.04946199656773176,
+        "sentinel-four-at800-D0": 0.04946199656773176,
+        "sentinel-one-at200-D0": 0.022347379347902263,
+        "sentinel-four-at50-D16": 0.05172748622871737,
+        "sentinel-four-at400-D16": 0.05172748622871737,
+        "sentinel-four-at800-D16": 0.05172748622871737,
+        "sentinel-one-at200-D16": 0.023361304790581183
+      },
+      "raw_baseline_eligibility": {
+        "threshold_s_by_cell": {
+          "sentinel-four-at50-D0": 0.025,
+          "sentinel-four-at400-D0": 0.025,
+          "sentinel-four-at800-D0": 0.025,
+          "sentinel-one-at200-D0": 0.025,
+          "sentinel-four-at50-D16": 0.025,
+          "sentinel-four-at400-D16": 0.025,
+          "sentinel-four-at800-D16": 0.025,
+          "sentinel-one-at200-D16": 0.025
+        },
+        "eligible_cells": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16"
+        ],
+        "minimum_eligible": 4,
+        "comparison_evaluable": true,
+        "strict_wins_required": 5,
+        "no_regression_cells": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16",
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ],
+        "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+      },
+      "raw_baseline_component_with_current_margin": {
+        "component_status": "passed",
+        "wins": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16"
+        ],
+        "regressions": [],
+        "per_cell": {
+          "sentinel-four-at400-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.04946199656773176,
+            "improvement_s": 0.04946199656773176,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176
+            ]
+          },
+          "sentinel-four-at400-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.05172748622871737,
+            "improvement_s": 0.05172748622871737,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737
+            ]
+          },
+          "sentinel-four-at50-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.04946199656773176,
+            "improvement_s": 0.04946199656773176,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176
+            ]
+          },
+          "sentinel-four-at50-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.05172748622871737,
+            "improvement_s": 0.05172748622871737,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737
+            ]
+          },
+          "sentinel-four-at800-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.04946199656773176,
+            "improvement_s": 0.04946199656773176,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176,
+              -0.04946199656773176
+            ]
+          },
+          "sentinel-four-at800-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.05172748622871737,
+            "improvement_s": 0.05172748622871737,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737,
+              -0.05172748622871737
+            ]
+          },
+          "sentinel-one-at200-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.022347379347902263,
+            "improvement_s": 0.022347379347902263,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.022347379347902263,
+              -0.022347379347902263,
+              -0.022347379347902263,
+              -0.022347379347902263,
+              -0.022347379347902263
+            ]
+          },
+          "sentinel-one-at200-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.023361304790581183,
+            "improvement_s": 0.023361304790581183,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.023361304790581183,
+              -0.023361304790581183,
+              -0.023361304790581183,
+              -0.023361304790581183,
+              -0.023361304790581183
+            ]
+          }
+        },
+        "win_rule": "baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win",
+        "unresolved_cells": [],
+        "complete_experiment_passed": false,
+        "statistical_significance_claimed": false
+      },
+      "revised_comparison_plan": {
+        "selected_family": "M0",
+        "retained_base": "M0",
+        "structure_status": "not_applicable",
+        "required_structural_comparators": {},
+        "raw_B2048_staleness_only": {
+          "threshold_s_by_cell": {
+            "sentinel-four-at50-D0": 0.025,
+            "sentinel-four-at400-D0": 0.025,
+            "sentinel-four-at800-D0": 0.025,
+            "sentinel-one-at200-D0": 0.025,
+            "sentinel-four-at50-D16": 0.025,
+            "sentinel-four-at400-D16": 0.025,
+            "sentinel-four-at800-D16": 0.025,
+            "sentinel-one-at200-D16": 0.025
+          },
+          "eligible_cells": [
+            "sentinel-four-at400-D0",
+            "sentinel-four-at400-D16",
+            "sentinel-four-at50-D0",
+            "sentinel-four-at50-D16",
+            "sentinel-four-at800-D0",
+            "sentinel-four-at800-D16"
+          ],
+          "minimum_eligible": 4,
+          "comparison_evaluable": true,
+          "strict_wins_required": 5,
+          "no_regression_cells": [
+            "sentinel-four-at400-D0",
+            "sentinel-four-at400-D16",
+            "sentinel-four-at50-D0",
+            "sentinel-four-at50-D16",
+            "sentinel-four-at800-D0",
+            "sentinel-four-at800-D16",
+            "sentinel-one-at200-D0",
+            "sentinel-one-at200-D16"
+          ],
+          "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+        },
+        "actual_held_data_used": false,
+        "note": "Same training data, weights, timing/accounting basis and freeze boundary for calibrated comparators. Raw historical coefficients cannot support a structural claim."
+      }
+    },
+    {
+      "scale": 0.9,
+      "delta_s": {
+        "sentinel-four-at50-D0": -0.09892399313546318,
+        "sentinel-four-at400-D0": -0.09892399313546318,
+        "sentinel-four-at800-D0": -0.09892399313546318,
+        "sentinel-one-at200-D0": -0.044694758695804415,
+        "sentinel-four-at50-D16": -0.10345497245743518,
+        "sentinel-four-at400-D16": -0.10345497245743518,
+        "sentinel-four-at800-D16": -0.10345497245743518,
+        "sentinel-one-at200-D16": -0.046722609581162367
+      },
+      "raw_baseline_eligibility": {
+        "threshold_s_by_cell": {
+          "sentinel-four-at50-D0": 0.025,
+          "sentinel-four-at400-D0": 0.025,
+          "sentinel-four-at800-D0": 0.025,
+          "sentinel-one-at200-D0": 0.025,
+          "sentinel-four-at50-D16": 0.025,
+          "sentinel-four-at400-D16": 0.025,
+          "sentinel-four-at800-D16": 0.025,
+          "sentinel-one-at200-D16": 0.025
+        },
+        "eligible_cells": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16",
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ],
+        "minimum_eligible": 4,
+        "comparison_evaluable": true,
+        "strict_wins_required": 6,
+        "no_regression_cells": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16",
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ],
+        "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+      },
+      "raw_baseline_component_with_current_margin": {
+        "component_status": "passed",
+        "wins": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16",
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ],
+        "regressions": [],
+        "per_cell": {
+          "sentinel-four-at400-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.09892399313546318,
+            "improvement_s": 0.09892399313546318,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318
+            ]
+          },
+          "sentinel-four-at400-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.10345497245743518,
+            "improvement_s": 0.10345497245743518,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518
+            ]
+          },
+          "sentinel-four-at50-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.09892399313546318,
+            "improvement_s": 0.09892399313546318,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318
+            ]
+          },
+          "sentinel-four-at50-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.10345497245743518,
+            "improvement_s": 0.10345497245743518,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518
+            ]
+          },
+          "sentinel-four-at800-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.09892399313546318,
+            "improvement_s": 0.09892399313546318,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318,
+              -0.09892399313546318
+            ]
+          },
+          "sentinel-four-at800-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.10345497245743518,
+            "improvement_s": 0.10345497245743518,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518,
+              -0.10345497245743518
+            ]
+          },
+          "sentinel-one-at200-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.044694758695804415,
+            "improvement_s": 0.044694758695804415,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.044694758695804415,
+              -0.044694758695804415,
+              -0.044694758695804415,
+              -0.044694758695804415,
+              -0.044694758695804415
+            ]
+          },
+          "sentinel-one-at200-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.046722609581162367,
+            "improvement_s": 0.046722609581162367,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.046722609581162367,
+              -0.046722609581162367,
+              -0.046722609581162367,
+              -0.046722609581162367,
+              -0.046722609581162367
+            ]
+          }
+        },
+        "win_rule": "baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win",
+        "unresolved_cells": [],
+        "complete_experiment_passed": false,
+        "statistical_significance_claimed": false
+      },
+      "revised_comparison_plan": {
+        "selected_family": "M0",
+        "retained_base": "M0",
+        "structure_status": "not_applicable",
+        "required_structural_comparators": {},
+        "raw_B2048_staleness_only": {
+          "threshold_s_by_cell": {
+            "sentinel-four-at50-D0": 0.025,
+            "sentinel-four-at400-D0": 0.025,
+            "sentinel-four-at800-D0": 0.025,
+            "sentinel-one-at200-D0": 0.025,
+            "sentinel-four-at50-D16": 0.025,
+            "sentinel-four-at400-D16": 0.025,
+            "sentinel-four-at800-D16": 0.025,
+            "sentinel-one-at200-D16": 0.025
+          },
+          "eligible_cells": [
+            "sentinel-four-at400-D0",
+            "sentinel-four-at400-D16",
+            "sentinel-four-at50-D0",
+            "sentinel-four-at50-D16",
+            "sentinel-four-at800-D0",
+            "sentinel-four-at800-D16",
+            "sentinel-one-at200-D0",
+            "sentinel-one-at200-D16"
+          ],
+          "minimum_eligible": 4,
+          "comparison_evaluable": true,
+          "strict_wins_required": 6,
+          "no_regression_cells": [
+            "sentinel-four-at400-D0",
+            "sentinel-four-at400-D16",
+            "sentinel-four-at50-D0",
+            "sentinel-four-at50-D16",
+            "sentinel-four-at800-D0",
+            "sentinel-four-at800-D16",
+            "sentinel-one-at200-D0",
+            "sentinel-one-at200-D16"
+          ],
+          "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+        },
+        "actual_held_data_used": false,
+        "note": "Same training data, weights, timing/accounting basis and freeze boundary for calibrated comparators. Raw historical coefficients cannot support a structural claim."
+      }
+    },
+    {
+      "scale": 1.1,
+      "delta_s": {
+        "sentinel-four-at50-D0": 0.09892399313546363,
+        "sentinel-four-at400-D0": 0.09892399313546363,
+        "sentinel-four-at800-D0": 0.09892399313546363,
+        "sentinel-one-at200-D0": 0.04469475869580464,
+        "sentinel-four-at50-D16": 0.10345497245743385,
+        "sentinel-four-at400-D16": 0.10345497245743385,
+        "sentinel-four-at800-D16": 0.10345497245743385,
+        "sentinel-one-at200-D16": 0.046722609581162144
+      },
+      "raw_baseline_eligibility": {
+        "threshold_s_by_cell": {
+          "sentinel-four-at50-D0": 0.025,
+          "sentinel-four-at400-D0": 0.025,
+          "sentinel-four-at800-D0": 0.025,
+          "sentinel-one-at200-D0": 0.025,
+          "sentinel-four-at50-D16": 0.025,
+          "sentinel-four-at400-D16": 0.025,
+          "sentinel-four-at800-D16": 0.025,
+          "sentinel-one-at200-D16": 0.025
+        },
+        "eligible_cells": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16",
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ],
+        "minimum_eligible": 4,
+        "comparison_evaluable": true,
+        "strict_wins_required": 6,
+        "no_regression_cells": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16",
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ],
+        "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+      },
+      "raw_baseline_component_with_current_margin": {
+        "component_status": "passed",
+        "wins": [
+          "sentinel-four-at400-D0",
+          "sentinel-four-at400-D16",
+          "sentinel-four-at50-D0",
+          "sentinel-four-at50-D16",
+          "sentinel-four-at800-D0",
+          "sentinel-four-at800-D16",
+          "sentinel-one-at200-D0",
+          "sentinel-one-at200-D16"
+        ],
+        "regressions": [],
+        "per_cell": {
+          "sentinel-four-at400-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.09892399313546363,
+            "improvement_s": 0.09892399313546363,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363
+            ]
+          },
+          "sentinel-four-at400-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.10345497245743385,
+            "improvement_s": 0.10345497245743385,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385
+            ]
+          },
+          "sentinel-four-at50-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.09892399313546363,
+            "improvement_s": 0.09892399313546363,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363
+            ]
+          },
+          "sentinel-four-at50-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.10345497245743385,
+            "improvement_s": 0.10345497245743385,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385
+            ]
+          },
+          "sentinel-four-at800-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.09892399313546363,
+            "improvement_s": 0.09892399313546363,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363,
+              -0.09892399313546363
+            ]
+          },
+          "sentinel-four-at800-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.10345497245743385,
+            "improvement_s": 0.10345497245743385,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385,
+              -0.10345497245743385
+            ]
+          },
+          "sentinel-one-at200-D0": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.04469475869580464,
+            "improvement_s": 0.04469475869580464,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.04469475869580464,
+              -0.04469475869580464,
+              -0.04469475869580464,
+              -0.04469475869580464,
+              -0.04469475869580464
+            ]
+          },
+          "sentinel-one-at200-D16": {
+            "candidate_mae_s": 0.0,
+            "baseline_mae_s": 0.046722609581162144,
+            "improvement_s": 0.046722609581162144,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.046722609581162144,
+              -0.046722609581162144,
+              -0.046722609581162144,
+              -0.046722609581162144,
+              -0.046722609581162144
+            ]
+          }
+        },
+        "win_rule": "baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win",
+        "unresolved_cells": [],
+        "complete_experiment_passed": false,
+        "statistical_significance_claimed": false
+      },
+      "revised_comparison_plan": {
+        "selected_family": "M0",
+        "retained_base": "M0",
+        "structure_status": "not_applicable",
+        "required_structural_comparators": {},
+        "raw_B2048_staleness_only": {
+          "threshold_s_by_cell": {
+            "sentinel-four-at50-D0": 0.025,
+            "sentinel-four-at400-D0": 0.025,
+            "sentinel-four-at800-D0": 0.025,
+            "sentinel-one-at200-D0": 0.025,
+            "sentinel-four-at50-D16": 0.025,
+            "sentinel-four-at400-D16": 0.025,
+            "sentinel-four-at800-D16": 0.025,
+            "sentinel-one-at200-D16": 0.025
+          },
+          "eligible_cells": [
+            "sentinel-four-at400-D0",
+            "sentinel-four-at400-D16",
+            "sentinel-four-at50-D0",
+            "sentinel-four-at50-D16",
+            "sentinel-four-at800-D0",
+            "sentinel-four-at800-D16",
+            "sentinel-one-at200-D0",
+            "sentinel-one-at200-D16"
+          ],
+          "minimum_eligible": 4,
+          "comparison_evaluable": true,
+          "strict_wins_required": 6,
+          "no_regression_cells": [
+            "sentinel-four-at400-D0",
+            "sentinel-four-at400-D16",
+            "sentinel-four-at50-D0",
+            "sentinel-four-at50-D16",
+            "sentinel-four-at800-D0",
+            "sentinel-four-at800-D16",
+            "sentinel-one-at200-D0",
+            "sentinel-one-at200-D16"
+          ],
+          "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+        },
+        "actual_held_data_used": false,
+        "note": "Same training data, weights, timing/accounting basis and freeze boundary for calibrated comparators. Raw historical coefficients cannot support a structural claim."
+      }
+    }
+  ]
+}

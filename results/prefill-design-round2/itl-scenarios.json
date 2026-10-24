@@ -1,0 +1,492 @@
+{
+  "role": "development mechanism diagnostic and conditional transfer preregistration; no GPU collection",
+  "historical_working_budget": 2048,
+  "historical_config_verified": false,
+  "verified_source_files": {
+    "old": 161,
+    "new": 138
+  },
+  "code_sha256": {
+    "prefill_design.py": "50dea063f646d88ad6fa246b0384a5635dbee6f7b67765a11f17207dde9f3462",
+    "scripts/check_prefill_itl.py": "d2d123bc2686b694b69f1a8b74503f0bf60d6700bed30cc8f3ced83e27143bb5",
+    "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e",
+    "evaluate_low_cap_frozen.py": "0bf919d910f23480db3cc7b3069ac9f12e42f5d67e99c62ce70ceb490842ead7",
+    "scripts/check_prefill_budget.py": "3480cd87dbd3ea38f69575ef43ef6c2dd2c9b46a4c92130b06818a59e9737a50",
+    "scripts/reproduce_cap_miss_causes.py": "40586ab04dc58545e673ce7fe9ef2429d9d39412c1e69864ce615e5653346443"
+  },
+  "capture_sha256": {
+    "cap-range-v1-fixed-32-r1": {
+      "trace.json": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "client.json": "37bd8a0845587a836bc941528befd0f6723fef23f67cb9356f05adb352a1cc1b",
+      "gateway.jsonl": "ab17697c59a6f95049cdf5066cfaec63988a5a2898ee0e8fb64af227dacc9717",
+      "manifest.json": "e0251807cec8b1fc0653181cb23474ffe6ac47f02e0f4481f6dbe712db6c6be7",
+      "engine_observations.jsonl": "99786499f92058e2fddbd200ef55d0a6be18bacd3bc9b7f9c0bb3129ff697a0d"
+    },
+    "cap-range-v1-fixed-32-r2": {
+      "trace.json": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "client.json": "c9e50d4e3176990a9b1718b8450e028481cf1dc88e4c43523984ec78912a24f5",
+      "gateway.jsonl": "690ab64e50f6fc2fa0942e6423623bf61005552b88ab9ce10f3fc17472a148a0",
+      "manifest.json": "f94e936e3625953d04c7228994b74a1914ef1aa2c099391ca56e481563e58e6d",
+      "engine_observations.jsonl": "16885b80f1f6aaf8163357aea56af7a2499a5a1e645fd39fd97a4f8f86f423aa"
+    },
+    "cap-range-v1-fixed-16-r1": {
+      "trace.json": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "client.json": "46acc6323d3a416ac6708a567493d82be2d2174b51bf241033f04766ef86c9ba",
+      "gateway.jsonl": "c1a7514e0476701a2e2b05d9299ebdb68063242704009bd1bf70204b5b7a3039",
+      "manifest.json": "98802b08940514224d00b65b3dcea01c8bfe855d200ac4334bf3ac01ebd2ab17",
+      "engine_observations.jsonl": "b65293057dc0982080f6c43387654b217f6a2b58a40e80450dad5abd29cc81a0"
+    },
+    "low-cap-switch-v1-fixed-32-r1": {
+      "trace.json": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "client.json": "853f03f05eafd5ae8436b76727d1220087a5ebe606cd3d1446faf3c98cf67ce1",
+      "gateway.jsonl": "8568ab03135d760145bffb596b114b395e07a0ac35370e824e8f8c8467e9e5e0",
+      "manifest.json": "beb706f66738da6f77542aca967c466e206d097bc44672d74eb58bef813683d5",
+      "engine_observations.jsonl": "4ebf06e0e81b4a44e6455cfa2ee40f0f9cd977a4e8e8d919b45a928958a865c3"
+    },
+    "low-cap-switch-v1-fixed-16-r1": {
+      "trace.json": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+      "client.json": "58c1cfcc1647e943cd08d8d9b8a23a1e559081ef2da0210fd1183698dd6037ff",
+      "gateway.jsonl": "c4919664378c5de2bc4383285d7c963603f946c215610e3460242c2523a52c54",
+      "manifest.json": "ef7c46795bcd0fe7f0feacfa258a2971b1590404b6ad08f682e432a1f860bed8",
+      "engine_observations.jsonl": "a62ee89691ca9f141744d895743bf32f454797452dec2e9bd33ba95b81717f1d"
+    }
+  },
+  "historical": [
+    {
+      "capture": "cap-range-v1-fixed-32-r1",
+      "observed_exporter": {
+        "capture": "cap-range-v1-fixed-32-r1",
+        "start_sample_s": 60.659278320999874,
+        "end_sample_s": 299.0199373539981,
+        "count": 178038.0,
+        "gap_100_150ms": 6269.0,
+        "gap_150_200ms": 137.0,
+        "gap_above200ms": 0.0,
+        "metrics_sha256": "99786499f92058e2fddbd200ef55d0a6be18bacd3bc9b7f9c0bb3129ff697a0d",
+        "interpretation": "Exporter ITL gaps, not measured GPU step duration or a config identity test"
+      },
+      "simulated": {
+        "B8192-fifo-k0.0": {
+          "count": 179704,
+          "gap_100_150ms": 1856,
+          "gap_150_200ms": 1426,
+          "gap_above200ms": 2255,
+          "max_gap_s": 0.4520220915554205
+        },
+        "B2048-fifo-k0.0": {
+          "count": 179688,
+          "gap_100_150ms": 9591,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1267405169314486
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 179668,
+          "gap_100_150ms": 10531,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.14728062022916788
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 179674,
+          "gap_100_150ms": 10922,
+          "gap_150_200ms": 236,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1590916734047596
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 179651,
+          "gap_100_150ms": 10926,
+          "gap_150_200ms": 1823,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1965540859536361
+        }
+      }
+    },
+    {
+      "capture": "cap-range-v1-fixed-32-r2",
+      "observed_exporter": {
+        "capture": "cap-range-v1-fixed-32-r2",
+        "start_sample_s": 60.71020234599928,
+        "end_sample_s": 299.06071970799894,
+        "count": 173333.0,
+        "gap_100_150ms": 6616.0,
+        "gap_150_200ms": 88.0,
+        "gap_above200ms": 0.0,
+        "metrics_sha256": "16885b80f1f6aaf8163357aea56af7a2499a5a1e645fd39fd97a4f8f86f423aa",
+        "interpretation": "Exporter ITL gaps, not measured GPU step duration or a config identity test"
+      },
+      "simulated": {
+        "B8192-fifo-k0.0": {
+          "count": 174740,
+          "gap_100_150ms": 1681,
+          "gap_150_200ms": 1197,
+          "gap_above200ms": 2334,
+          "max_gap_s": 0.4538661511699047
+        },
+        "B2048-fifo-k0.0": {
+          "count": 174787,
+          "gap_100_150ms": 9831,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1264770798436956
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 174807,
+          "gap_100_150ms": 10739,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1486652780536133
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 174812,
+          "gap_100_150ms": 11126,
+          "gap_150_200ms": 235,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.16094484405360276
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 174742,
+          "gap_100_150ms": 11227,
+          "gap_150_200ms": 2166,
+          "gap_above200ms": 22,
+          "max_gap_s": 0.20158419124140892
+        }
+      }
+    },
+    {
+      "capture": "cap-range-v1-fixed-16-r1",
+      "observed_exporter": {
+        "capture": "cap-range-v1-fixed-16-r1",
+        "start_sample_s": 60.58877069600203,
+        "end_sample_s": 299.9415994150004,
+        "count": 129485.0,
+        "gap_100_150ms": 888.0,
+        "gap_150_200ms": 0.0,
+        "gap_above200ms": 0.0,
+        "metrics_sha256": "b65293057dc0982080f6c43387654b217f6a2b58a40e80450dad5abd29cc81a0",
+        "interpretation": "Exporter ITL gaps, not measured GPU step duration or a config identity test"
+      },
+      "simulated": {
+        "B8192-fifo-k0.0": {
+          "count": 129972,
+          "gap_100_150ms": 766,
+          "gap_150_200ms": 277,
+          "gap_above200ms": 436,
+          "max_gap_s": 0.44780709815086084
+        },
+        "B2048-fifo-k0.0": {
+          "count": 129972,
+          "gap_100_150ms": 2057,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1219986493513261
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 129977,
+          "gap_100_150ms": 2177,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.14173454500016192
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 129984,
+          "gap_100_150ms": 2233,
+          "gap_150_200ms": 29,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.15210489900016455
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 129985,
+          "gap_100_150ms": 2196,
+          "gap_150_200ms": 354,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1868307534757605
+        }
+      }
+    },
+    {
+      "capture": "low-cap-switch-v1-fixed-32-r1",
+      "observed_exporter": {
+        "capture": "low-cap-switch-v1-fixed-32-r1",
+        "start_sample_s": 60.680514573003165,
+        "end_sample_s": 299.0441176059976,
+        "count": 159572.0,
+        "gap_100_150ms": 5594.0,
+        "gap_150_200ms": 109.0,
+        "gap_above200ms": 0.0,
+        "metrics_sha256": "4ebf06e0e81b4a44e6455cfa2ee40f0f9cd977a4e8e8d919b45a928958a865c3",
+        "interpretation": "Exporter ITL gaps, not measured GPU step duration or a config identity test"
+      },
+      "simulated": {
+        "B8192-fifo-k0.0": {
+          "count": 160590,
+          "gap_100_150ms": 1006,
+          "gap_150_200ms": 875,
+          "gap_above200ms": 2207,
+          "max_gap_s": 0.45307583990657463
+        },
+        "B2048-fifo-k0.0": {
+          "count": 160619,
+          "gap_100_150ms": 8596,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.12542333149252727
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 160649,
+          "gap_100_150ms": 9604,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1459344420536013
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 160675,
+          "gap_100_150ms": 10014,
+          "gap_150_200ms": 165,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.15756762922916323
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 160740,
+          "gap_100_150ms": 10401,
+          "gap_150_200ms": 2154,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.19914304462919574
+        }
+      }
+    },
+    {
+      "capture": "low-cap-switch-v1-fixed-16-r1",
+      "observed_exporter": {
+        "capture": "low-cap-switch-v1-fixed-16-r1",
+        "start_sample_s": 60.699874219004414,
+        "end_sample_s": 299.0602220270084,
+        "count": 136146.0,
+        "gap_100_150ms": 522.0,
+        "gap_150_200ms": 0.0,
+        "gap_above200ms": 0.0,
+        "metrics_sha256": "a62ee89691ca9f141744d895743bf32f454797452dec2e9bd33ba95b81717f1d",
+        "interpretation": "Exporter ITL gaps, not measured GPU step duration or a config identity test"
+      },
+      "simulated": {
+        "B8192-fifo-k0.0": {
+          "count": 136857,
+          "gap_100_150ms": 858,
+          "gap_150_200ms": 505,
+          "gap_above200ms": 268,
+          "max_gap_s": 0.39364104453896687
+        },
+        "B2048-fifo-k0.0": {
+          "count": 136853,
+          "gap_100_150ms": 1999,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1219986493513403
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 136859,
+          "gap_100_150ms": 2151,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.13504204064904002
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 136873,
+          "gap_100_150ms": 2169,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1426174846490369
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 136876,
+          "gap_100_150ms": 2258,
+          "gap_150_200ms": 132,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1679423036246419
+        }
+      }
+    }
+  ],
+  "transfer_slices": [
+    {
+      "replay_start": 40,
+      "score_start": 60,
+      "score_end": 120,
+      "cap": 32,
+      "lead_in_seconds": 20,
+      "score_window_local": [
+        20,
+        80
+      ],
+      "realized_output_oracle": {
+        "B8192-fifo-k0.0": {
+          "count": 39509,
+          "gap_100_150ms": 282,
+          "gap_150_200ms": 221,
+          "gap_above200ms": 578,
+          "max_gap_s": 0.4520220915554276
+        },
+        "B2048-fifo-k0.0": {
+          "count": 39543,
+          "gap_100_150ms": 2133,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.12410614605362724
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 39611,
+          "gap_100_150ms": 2417,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.14512949317577295
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 39637,
+          "gap_100_150ms": 2553,
+          "gap_150_200ms": 26,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1568264822635541
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 39773,
+          "gap_100_150ms": 2467,
+          "gap_150_200ms": 555,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.19089547522919048
+        }
+      },
+      "forced128_output_sensitivity": {
+        "B8192-fifo-k0.0": {
+          "count": 39509,
+          "gap_100_150ms": 282,
+          "gap_150_200ms": 221,
+          "gap_above200ms": 578,
+          "max_gap_s": 0.4520220915554276
+        },
+        "B2048-fifo-k0.0": {
+          "count": 39543,
+          "gap_100_150ms": 2133,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.12410614605362724
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 39611,
+          "gap_100_150ms": 2417,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.14512949317577295
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 39637,
+          "gap_100_150ms": 2553,
+          "gap_150_200ms": 26,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.1568264822635541
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 39773,
+          "gap_100_150ms": 2467,
+          "gap_150_200ms": 555,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.19089547522919048
+        }
+      }
+    },
+    {
+      "replay_start": 160,
+      "score_start": 180,
+      "score_end": 240,
+      "cap": 32,
+      "lead_in_seconds": 20,
+      "score_window_local": [
+        20,
+        80
+      ],
+      "realized_output_oracle": {
+        "B8192-fifo-k0.0": {
+          "count": 38280,
+          "gap_100_150ms": 147,
+          "gap_150_200ms": 200,
+          "gap_above200ms": 503,
+          "max_gap_s": 0.45307583990656397
+        },
+        "B2048-fifo-k0.0": {
+          "count": 38273,
+          "gap_100_150ms": 1947,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.12542333149254858
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 38272,
+          "gap_100_150ms": 2229,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.14360240114141476
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 38284,
+          "gap_100_150ms": 2374,
+          "gap_150_200ms": 37,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.15926141482462697
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 38309,
+          "gap_100_150ms": 2584,
+          "gap_150_200ms": 620,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.18837060172462827
+        }
+      },
+      "forced128_output_sensitivity": {
+        "B8192-fifo-k0.0": {
+          "count": 38280,
+          "gap_100_150ms": 147,
+          "gap_150_200ms": 200,
+          "gap_above200ms": 503,
+          "max_gap_s": 0.45307583990656397
+        },
+        "B2048-fifo-k0.0": {
+          "count": 38273,
+          "gap_100_150ms": 1947,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.12542333149254858
+        },
+        "B2048-fifo-k1e-09": {
+          "count": 38272,
+          "gap_100_150ms": 2229,
+          "gap_150_200ms": 0,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.14360240114141476
+        },
+        "B2048-fifo-k1.5e-09": {
+          "count": 38284,
+          "gap_100_150ms": 2374,
+          "gap_150_200ms": 37,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.15926141482462697
+        },
+        "B2048-fifo-k3.15e-09": {
+          "count": 38309,
+          "gap_100_150ms": 2584,
+          "gap_150_200ms": 620,
+          "gap_above200ms": 0,
+          "max_gap_s": 0.18837060172462827
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Running-first FIFO assumes every live decoder emits one token in each executed step; counter/async semantics must be checked.",
+    "A gap is counted by its right token timestamp: start < timestamp <= end. Exporter scrapes cover slightly different endpoints.",
+    "Historical realized output lengths and admissions are retrospective oracle inputs; transfer counts do not predict fresh admission/EOS.",
+    "Transfer simulation starts empty at the lead-in, not with reconstructed historical state. Boundary state must be measured.",
+    "k values are sensitivities with unchanged linear coefficients, not fitted parameters or physical upper bounds.",
+    "A new transfer run also needs a frozen conditional replay on its actual accepted arrivals/outputs; this cannot pass a causal forecasting gate.",
+    "Tail mismatches can falsify the joint scenario; matching tails do not uniquely establish scheduler budget or nonlinear cost."
+  ]
+}

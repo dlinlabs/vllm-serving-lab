@@ -1,0 +1,43 @@
+{
+  "schema": "prefill-round8-fix-validation-v1",
+  "parent_commit": "477b11f86a9e95420e72dae97536dbb6a5f44d43",
+  "review": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6373563645",
+  "tests": 159,
+  "passed": 159,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "round8_regression_cases": 10,
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "junit": "results/prefill-round8-fixes-20261023/related-tests-junit.xml",
+  "original_junit_sha256": "fabd4191720ef0860fa62eab5d76096a3179035f9c0306b0be37bbb6f73534d7",
+  "archived_junit_sha256": "f33da6fce4c324546878eb5911237062e45346d65958b8965b1b3594b41e3f5c",
+  "junit_normalization": "Trailing whitespace only; every case retained",
+  "source_sha256": {
+    "prefill_lab/runtime.py": "100c1099a0b159a7fe2388f8199bd80aa62d43eb58e05ca4dfd6229db43436f5",
+    "prefill_lab/plugin.py": "95eece40b2c48afe8cbfebc1d729e5899e788818b3ce266c7ffcadc97639284a",
+    "prefill_lab/suite.py": "264f7610a2e244988565d9245acfc7b80fdedbc9cbfe29e43de0f8c2c084fe68",
+    "tests/test_prefill_round8.py": "df8e0cdc031707be8bcd759f7aeeec797fd957acdd29aff0ebafa9ab49f93e3b",
+    "tests/test_prefill_design.py": "bb2281b1a60b95ac2c90896c3aafb3d9cb99071cfbfeed30f659e083d60850c0",
+    "experiments/prefill-vllm-v030-source-map.json": "ea809398e8fa7b7e00a4dad43c3028347981987aadfa4d1dfe6f65351bf83fea",
+    "experiments/prefill-service-v1.design.json": "a0a545a05f4e2523bf00ce1f1df63984af8d7a4f080d7409bc27baf3476fdcca",
+    "experiments/prefill-service-v1.md": "0d0eac857caa081c892ec107b3213cbeccf724795a3df6c7b2f80b1b35b35f92",
+    "experiments/prefill-service-v1.runbook.md": "925e617847482d2257074cae452681997ec4c9d0f67952c8dc10c5a2d911ac8e",
+    "results/prefill-round8-fixes-20261023/report.md": "23bc1c3b152dfcf75a90817d0442f4192289bf2555f8c71bbb8be826f77e848f"
+  },
+  "process_resources": {
+    "available": false,
+    "pid": 5,
+    "sample_start": 448.078567815,
+    "sample_end": 448.078626072,
+    "error_reason": "procfs_pid_namespace_unverified"
+  },
+  "upstream_pin_count": 35,
+  "attn_utils_raw_sha256": "b9b81e59dda2720b1f9c434471381f879228832443e52756e469b4ad4905888f",
+  "native_cpu_acceptance": false,
+  "gpu_executed": false,
+  "model_accepted": false,
+  "mpc_evaluated": false,
+  "full_suite_scope": "Not rerun for these observer/analysis resilience fixes. The earlier781 passed/13 failed/26 errors is historical Round7 evidence; native process-resource preflight remains unavailable. This related run cannot replace exact-revision native acceptance."
+}
