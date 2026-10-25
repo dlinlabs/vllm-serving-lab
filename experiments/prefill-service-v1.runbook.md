@@ -53,6 +53,51 @@ held scoring or full-suite acceptance runs in this mode. diagnostic_complete is
 only work/dispatcher/foreground-profile integrity; GPU stream/event coverage and
 physical-model acceptance remain false. Read diagnostic.json and both deep traces.
 
+For the subsequent opt-in V2 pipeline-stage diagnostic, update the checkout and use:
+
+```bash
+.venv/bin/python scripts/prefill_host.py prepare
+.venv/bin/python scripts/prefill_host.py stages
+```
+
+This separate development protocol is frozen in prefill-stage-diagnostic-v1.json.
+It runs the same two light warmups and two deep cases, with extra stage events only
+when --stage-diagnostics-only explicitly sets PREFILL_LAB_STAGES=1. Normal collect
+and diagnose set that flag to0. Outputs go to ~/pr32-stage-diagnostics/<timestamp>;
+diagnostic.json includes per-trial pipeline_audits and stage-protocol.json retains
+the exact development plan. It never starts a gateway, fits a model or scores held
+cases. The unchanged180s active bound and all exact-source/native-CPU gates apply.
+
+Stage mode requires the source-pinned V2 GPUModelRunner and UniProcExecutor, one
+worker in the EngineCore process and two native async batch slots. There is no
+runner/async/eager override. Three additionally reviewed upstream files bring the
+installed source map to38 files: gpu/async_utils.py, gpu/input_batch.py and
+gpu/sample/output.py. Other native boundaries remain unchanged.
+
+Each step retains CPU forward, sample_tokens, logits/sample, native copy enqueue,
+GPU post-update, native output-ready and scheduler commit spans. Stream-local CUDA
+events resolve by query after drain; native copy_event synchronization and stream
+waits are preserved. No per-step device/event synchronization is added. The copy
+event span includes copy-stream waits, and the primary byte count excludes optional
+payloads, whose presence is recorded. Nested elapsed spans are not additive and
+are not pure kernel compute labels.
+
+Stable forward bindings attach to native AsyncOutput objects, so reaping an older
+batch cannot acquire the newer batch's identity. Committed token totals and each
+request's first-output timestamp must match existing capture records. Missing,
+duplicate, reordered, failed or pending stages invalidate the diagnostic. Deep
+profiles stop after the fifth matching sample_tokens returns, including its native
+copy enqueue and post-update; CPU reap/commit can occur later and is retained in
+the stage log. Profiler stop/export times are separate diagnostic overhead.
+Passing these gates does not qualify all CUDA streams, fit the async model or
+establish adaptive-cap/MPC benefit. Keep the existing serial overlap guard.
+
+Analyze an uploaded stage capture with scripts/analyze_prefill_diagnostic.py and
+the same --capture/--archive/--output options as the foreground report. It verifies
+the source-bound stage protocol and recomputes pipeline audits; its launch join
+now distinguishes the captured fifth sampling tail from the legacy forward-only
+diagnostic. Raw archives and acceptance flags must remain unchanged.
+
 ## Native host commands
 
 Use a clean checkout of the PR branch on Linux x86_64 / Python3.12. Install the

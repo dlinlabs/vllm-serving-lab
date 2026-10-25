@@ -44,6 +44,7 @@ def failure_log_tails(output,secret):
 def code_identity():
     paths=sorted([*ROOT.glob('prefill_lab/*.py'),ROOT/'scripts/run_prefill_service.py',
                   ROOT/'experiments/prefill-vllm-v030-source-map.json',ROOT/'gateway.py',
+                  ROOT/'experiments/prefill-stage-diagnostic-v1.json',
                   ROOT/'prefill_grouped_validation.py',ROOT/'prefill_validation.py',
                   *ROOT.glob('experiments/prefill-service-v1.*'),*ROOT.glob('*.py'),
                   *ROOT.glob('scripts/*.py'),*ROOT.glob('tests/*.py'),ROOT/'pyproject.toml'])
@@ -118,9 +119,11 @@ async def collect(args):
     save(output/'token-manifest.json',manifest);save(output/'collection-sources.json',code_identity())
     save(output/'trace-identity.json',dict(sha256=hashlib.sha256(Path(args.trace).read_bytes()).hexdigest(),provenance=trace.get('provenance')))
     key=secrets.token_hex(32)
+    stages=getattr(args,'stage_diagnostics_only',False)
+    diagnostics=getattr(args,'diagnostics_only',False) or stages
     env=dict(runtime_environment(),PREFILL_LAB_ENABLED='1',PREFILL_LAB_KEY=key,
              PREFILL_LAB_MANIFEST=str(output/'token-manifest.json'),PREFILL_LAB_ARTIFACT_DIR=str(output/'deep-traces'),
-             VLLM_PLUGINS='prefill_lab')
+             VLLM_PLUGINS='prefill_lab',PREFILL_LAB_STAGES='1' if stages else '0')
     command=[sys.executable,'-m','vllm.entrypoints.openai.api_server','--model',manifest['model'],
              '--revision',manifest['revision'],'--tokenizer',str(Path(args.tokenizer).resolve()),
              '--tokenizer-revision',manifest['revision'],'--host','127.0.0.1','--port','8000',
@@ -129,10 +132,10 @@ async def collect(args):
     # Credentials stay in the environment on an isolated localhost benchmark server.
     # The instrument endpoint authenticates itself; this runtime is never remotely bound.
     save(output/'launch.json',dict(argv=command,source_sha256=code_identity(),cpu_acceptance=acceptance,
-                                  scope='targeted_foreground_diagnostic_only' if getattr(args,'diagnostics_only',False) else 'complete_suite',
-                                  environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS')}))
+                                  scope='targeted_stage_diagnostic_only' if stages else 'targeted_foreground_diagnostic_only' if diagnostics else 'complete_suite',
+                                  environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS','PREFILL_LAB_STAGES')}))
     from scripts.setup_v1 import check_port
-    for port in ((8000,) if getattr(args,'diagnostics_only',False) else (8000,8080)):check_port(port)
+    for port in ((8000,) if diagnostics else (8000,8080)):check_port(port)
     server=gateway=None
     server_log=(output/'server.log').open('w');gateway_log=(output/'gateway.log').open('w')
     try:
@@ -152,9 +155,9 @@ async def collect(args):
                 except httpx.HTTPError:pass
                 if time.monotonic()>deadline:raise TimeoutError('Initial model load deadline expired')
                 await asyncio.sleep(1)
-            if getattr(args,'diagnostics_only',False):
+            if diagnostics:
                 from prefill_lab.deep_diagnostic import run as run_diagnostic
-                summary=await run_diagnostic(client,http,client.url,manifest,output)
+                summary=await run_diagnostic(client,http,client.url,manifest,output,stages=True) if stages else await run_diagnostic(client,http,client.url,manifest,output)
                 return 0 if summary['diagnostic_complete'] else 1
             gateway_env=dict(runtime_environment(),ADMISSION_MODE='cost_aware',MAX_ADMITTED_COST='32',
                              MODEL_NAME=str(Path(args.tokenizer).resolve()),VLLM_URL=client.url,
@@ -206,7 +209,9 @@ def main():
     p=sub.add_parser('collect')
     for name in ('manifest','tokenizer','trace','cpu-acceptance','output'):p.add_argument('--'+name,required=True)
     p.add_argument('--startup-timeout',type=float,default=900.)
-    p.add_argument('--diagnostics-only',action='store_true',help='Two frozen light warmups and two foreground deep traces; no suite/model acceptance')
+    group=p.add_mutually_exclusive_group()
+    group.add_argument('--diagnostics-only',action='store_true',help='Two frozen light warmups and two foreground deep traces; no suite/model acceptance')
+    group.add_argument('--stage-diagnostics-only',action='store_true',help='Opt-in V2 stage timing diagnostic; no suite/model acceptance')
     args=parser.parse_args()
     if args.command=='prepare':prepare(args);return 0
     if args.command=='cpu-check':return cpu_check(args.output)

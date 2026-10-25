@@ -510,7 +510,7 @@
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
-      "sha256": "df484e8885e9b53dd036d260e5af1581fece7db171706ec7d14f46ef98d8ea69"
+      "sha256": "d24e2988da45b237e8317d72f157a8490be7f87efe95eb9a6ee7cf66ec12b80d"
     },
     "prefill_lab/dispatch.py": {
       "path": "prefill_lab/dispatch.py",
@@ -522,15 +522,15 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "634e14af66695082676dee4872bfdc6aa49f3de660cdabe5a954efc2483bb542"
+      "sha256": "e2153d88c3523ce3eadd8515f7bd3207a7064438b038d41bc26cb99240c2bdb5"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
-      "sha256": "450c7c610a0ccc1015b22958e951542eea6f405c43670097f3290004b0470034"
+      "sha256": "9a651eec24965a3f73cabe9a30a47b543d6b137a4f05286ff234e6dc52748c1a"
     },
     "experiments/prefill-vllm-v030-source-map.json": {
       "path": "experiments/prefill-vllm-v030-source-map.json",
-      "sha256": "ea809398e8fa7b7e00a4dad43c3028347981987aadfa4d1dfe6f65351bf83fea"
+      "sha256": "d03f263b50c758b9e02e9e3df929c4c996b96c67d79fa415766bc20c2f80a21c"
     },
     "pyproject.toml": {
       "path": "pyproject.toml",
@@ -566,7 +566,7 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "773858977306049f9ddd62437db2d35c7d9d2ed509e703208482fb6bdd3a849c"
+      "sha256": "c08a4fcae35c9edf17a2239174ad47dee68b1d1fcb47c31ab7923f6ec1baeafd"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
@@ -598,7 +598,7 @@
     },
     "prefill_lab/deep_diagnostic.py": {
       "path": "prefill_lab/deep_diagnostic.py",
-      "sha256": "4413994a0efe2c9bd19e739ec6a30d9d67bc4fe2b51ea21f3f1ef98351a0afdc"
+      "sha256": "45002c4c80cba063c60976f6bff95611639e65d0c03a7a9a4ca4581f39c1238c"
     },
     "scripts/analyze_prefill_capture.py": {
       "path": "scripts/analyze_prefill_capture.py",
@@ -611,6 +611,30 @@
     "tests/test_prefill_deep.py": {
       "path": "tests/test_prefill_deep.py",
       "sha256": "3d52ee8f0b9b0c05d1c427b157bf6d6fc65365132133507934ece8efca96cc30"
+    },
+    "prefill_lab/pipeline.py": {
+      "path": "prefill_lab/pipeline.py",
+      "sha256": "0ca2dca01786843f50b49fb4fa7cd2ea5319e843bd2b914b82af7bebecdf88ef"
+    },
+    "tests/test_prefill_pipeline.py": {
+      "path": "tests/test_prefill_pipeline.py",
+      "sha256": "75ce42455bb66a8f3ee9b6a20e17248fdb395f2b4190ba4cc2550f5a7c1fc4de"
+    },
+    "experiments/prefill-stage-diagnostic-v1.json": {
+      "path": "experiments/prefill-stage-diagnostic-v1.json",
+      "sha256": "0f72e5a3a49bcc889b91cfe514141a45994a892b5036035059aaae2991231457"
+    },
+    "experiments/prefill-async-pipeline-v1.md": {
+      "path": "experiments/prefill-async-pipeline-v1.md",
+      "sha256": "0b3d12237cafbbf176ee7219e5b0cbb018fb00b06ca2fc5dde7b72737758f7e5"
+    },
+    "scripts/analyze_prefill_diagnostic.py": {
+      "path": "scripts/analyze_prefill_diagnostic.py",
+      "sha256": "c78647b199ad839c762d502c0a2d907b0fd4c22b80246855b3ba978cfad8c9c8"
+    },
+    "tests/test_prefill_diagnostic_analysis.py": {
+      "path": "tests/test_prefill_diagnostic_analysis.py",
+      "sha256": "e5a232b2602ea875d0473c3fcad358774bb7f37303d540b8b14d9f2be020c2e6"
     }
   },
   "readiness": {
@@ -653,7 +677,17 @@
       "evidence": "gc-window.json, runner_gc_control.json, gc-audit.json plus complete runner diagnostics"
     },
     "targeted_diagnostic": "prefill_host.py diagnose: same exact-revision native gate; two matching frozen light warmups plus two foreground profiles; separate output and no suite/GPU/model acceptance",
-    "deep_profile_window": "First foreground/sentinel worker call, then five consecutive calls; exact step-ID CPU ranges and artifact hash; profile-window integrity only"
+    "deep_profile_window": "First foreground/sentinel worker call, then five consecutive calls; exact step-ID CPU ranges and artifact hash; profile-window integrity only",
+    "pipeline_diagnostic": {
+      "command": "prefill_host.py stages",
+      "scope": "development-only V2/same-process UniProcExecutor/two async slots",
+      "installed_source_files": 38,
+      "protocol": "experiments/prefill-stage-diagnostic-v1.json",
+      "normal_collection_enabled": false,
+      "profile_stop": "after matching fifth sample_tokens; no complete CUDA scope acceptance",
+      "predictive_model_implemented": false,
+      "native_gpu_tested": false
+    }
   },
   "round7_corrections": {
     "cumulative_error": "Reset within each trial, average trials per cell",

@@ -30,7 +30,7 @@ def union_us(events):
     return total
 
 
-def correlate(events, step_ids):
+def correlate(events, step_ids, *, sampling_profiled=False):
     """Join GPU activity to its launch API and CPU step, not GPU clock overlap.
 
     Graph nodes share the graph-launch correlation. Runtime/driver correlation
@@ -95,10 +95,11 @@ def correlate(events, step_ids):
         outside_forward_streams=sorted({e['args']['stream'] for e in outside}),
         outside_forward_kernel_names=dict(Counter(e['name'] for e in outside if e['cat']=='kernel')),
         outside_forward_timeline=[dict(category=e['cat'],start_us=e['ts'],duration_us=e['dur'],stream=e['args']['stream']) for e in outside],
-        device_synchronizations=syncs,profile_stop_precedes_fifth_sampling=True,
+        device_synchronizations=syncs,profile_stop_precedes_fifth_sampling=not sampling_profiled,
         cuda_scope_qualified=False,model_accepted=False,
         limitations=['Only the five captured calls; absence outside this window is not evidence of absence.',
-                    'Fifth-call sampling follows profiler.stop and is not captured.',
+                    'Fifth-call sampling follows profiler.stop and is not captured.' if not sampling_profiled
+                    else 'Fifth sampling/copy enqueue is recorded; CPU output reap/commit may lie outside the profile window.',
                     'CUDA event endpoints have no CUPTI timestamps in this artifact.',
                     'Forward GPU envelopes and event elapsed values include idle gaps; neither is kernel busy time.'])
 
@@ -133,8 +134,14 @@ def analyze(capture, output, archive):
     deep = [t for t in order if t['stage']=='deep_diagnostic']
     warm = [next(t for t in order if t['stage']=='warmup' and t['case']==d['case']) for d in deep]
     expected = [t['trial_id'] for t in warm+deep]
-    if launch['scope']!='targeted_foreground_diagnostic_only' or summary['planned']!=expected or summary['completed']!=expected:
+    stages=launch['scope']=='targeted_stage_diagnostic_only'
+    if launch['scope'] not in ('targeted_foreground_diagnostic_only','targeted_stage_diagnostic_only') or summary['scope']!=launch['scope'] or summary['planned']!=expected or summary['completed']!=expected:
         raise ValueError('Targeted diagnostic order/scope mismatch')
+    if stages:
+        from prefill_lab.pipeline import preflight
+        preflight(meta)
+        if load('stage-protocol.json')!=json.loads(source('experiments/prefill-stage-diagnostic-v1.json')):
+            raise ValueError('Stage protocol does not match its source-bound development plan')
     if not summary['diagnostic_complete'] or summary['failures']:
         raise ValueError('Incomplete diagnostic')
     if any(summary.get(k) is not False for k in ('cuda_scope_qualified','model_accepted','gpu_validated','complete_experiment_passed')):
@@ -144,7 +151,7 @@ def analyze(capture, output, archive):
         source_files_verified=len(declared),installed_source_files=len(pins),
         recorded_native_cpu_acceptance={k:acceptance[k] for k in ('valid','tests','tracked_clean')},
         original_junit_in_archive=False,scope='Offline diagnostic identity/work/profile/correlation audit only',
-        diagnostic_complete=True,elapsed_seconds=summary['elapsed_seconds'],
+        diagnostic_complete=True,diagnostic_scope=launch['scope'],elapsed_seconds=summary['elapsed_seconds'],
         runtime={k:meta[k] for k in ('async_scheduling','max_concurrent_batches','scheduler_class','num_gpu_blocks','revision')},
         host=load('host.json'),trials=[],profiles=[],model_accepted=False,cuda_scope_qualified=False,gpu_validated=False)
     for trial in warm+deep:
@@ -155,13 +162,17 @@ def analyze(capture, output, archive):
         if trial['stage']=='deep_diagnostic':
             audit['profile']=profile_audit(c,capture/'deep-traces')
             if not audit['profile']['valid']:raise ValueError('Invalid foreground profile')
+        if stages:
+            from prefill_lab.pipeline import audit as pipeline_audit
+            audit['pipeline']=pipeline_audit(c,capture/'deep-traces')
+            if not audit['pipeline']['valid']:raise ValueError('Invalid pipeline-stage capture')
         if not audit['valid'] or not audit['dispatcher']['matches'] or audit!=load(tid+'-audit.json'):
             raise ValueError('Invalid/mismatched diagnostic work audit')
         report['trials'].append(dict(trial_id=tid,case=trial['case'],observer=c['observer'],audit=audit,
             foreground_ttft_s={k.rsplit('/',1)[-1]:v['first']-c['release'] for k,v in c['requests'].items() if v['role']=='foreground'}))
         if trial['stage']!='deep_diagnostic':continue
         proof=c['workers'][0]['deep_profile'];path=capture/'deep-traces'/proof['artifact']['name']
-        events=json.loads(path.read_text())['traceEvents'];correlation=correlate(events,proof['step_ids'])
+        events=json.loads(path.read_text())['traceEvents'];correlation=correlate(events,proof['step_ids'],sampling_profiled=stages)
         by_id={s['step_id']:s for s in workers}
         for row in correlation['steps']:
             worker=by_id[row['step_id']]

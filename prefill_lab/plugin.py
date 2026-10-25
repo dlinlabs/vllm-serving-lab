@@ -8,6 +8,7 @@ from pathlib import Path
 import time
 import sys
 import uuid
+from contextlib import nullcontext
 
 from .contracts import Buffer, digest, scheduled_work, step_key, wire_value
 from .runtime import INTERNAL_REQUEST, Trial, ExternalCapture
@@ -54,8 +55,13 @@ def core_runtime(core):
         return output
     @functools.wraps(update)
     def observed_update(output,*args,**kwargs):
-        results=update(output,*args,**kwargs)
         trial=core._prefill_trial
+        rec=_WORKER
+        stages=rec.stages if rec and rec.active and rec.stages and trial and trial.mode!='off' and output.num_scheduled_tokens else None
+        key=step_key(output) if stages else None
+        with stages.span(key,'commit',profiler=rec.profile) if stages else nullcontext():
+            results=update(output,*args,**kwargs)
+            if stages:stages.committed(key,results)
         if trial:
             try:trial.after_output(output,results)
             except Exception as exc:
@@ -97,7 +103,8 @@ def resolved_config(core):
                 speculative=c.speculative_config is not None,enforce_eager=c.model_config.enforce_eager,
                 dtype=str(c.model_config.dtype),attention_config=str(c.attention_config),
                 compilation_config=str(c.compilation_config),kv_transfer=c.kv_transfer_config is not None,
-                source=installed_sources(),gil_switch_interval_s=sys.getswitchinterval())
+                source=installed_sources(),gil_switch_interval_s=sys.getswitchinterval(),
+                process_id=os.getpid(),executor_class=f'{type(core.model_executor).__module__}.{type(core.model_executor).__name__}')
 
 
 def wire_reply(function):
@@ -155,11 +162,14 @@ def command(core,payload):
 
 
 class WorkerRecorder:
-    def __init__(self,torch,trial_id,mode):
+    def __init__(self,torch,trial_id,mode,*,stages=False):
         self.torch,self.trial_id,self.mode=torch,trial_id,mode
         self.records=Buffer();self.pending=[];self.profile=None;self.active=True
         self.profile_steps=0;self.profile_state='waiting_for_foreground';self.profile_step_ids=[]
         self.profile_ranges={};self.profile_artifact=None
+        self.profile_stage_step_ids=[];self.profile_stop_span=None
+        from .pipeline import StageRecorder
+        self.stages=StageRecorder(torch) if stages else None
 
     def begin(self,output,*,dummy_run=False):
         if dummy_run or not self.active or not output.num_scheduled_tokens or self.mode=='off':return None
@@ -184,12 +194,14 @@ class WorkerRecorder:
                  capture_key=None,graph_actions={},attention_backends=None,
                  cuda_stream_id=getattr(stream,'cuda_stream',None),
                  cuda_scope='current-stream execute_model preparation and forward; sampling/multi-stream scope unqualified')
+        if self.stages:self.stages.forward_begin(row,start,end,stream)
         return row,start,end,stream
 
     def end(self,entry):
         if entry is None:return
         row,start,end,stream=entry
         end.record(stream);row['host_end']=time.monotonic()
+        if self.stages:self.stages.forward_end(row)
         if self.mode=='deep':
             scope=self.profile_ranges.pop(row['step_id'],None)
             if scope is not None:scope.__exit__(None,None,None)
@@ -198,18 +210,30 @@ class WorkerRecorder:
         else:self.pending.append(entry)
         if self.profile and self.profile_steps<5:
             self.profile_step_ids.append(row['step_id'])
-            self.profile.step();self.profile_steps+=1
-            if self.profile_steps==5:self.stop_profile()
+            self.profile_steps+=1
+            if not self.stages:
+                self.profile.step()
+                if self.profile_steps==5:self.stop_profile()
+
+    def profile_after_sample(self,key):
+        if not self.profile:return
+        if self.profile_step_ids[len(self.profile_stage_step_ids)]!=key:
+            raise RuntimeError('Profile sample/forward identity mismatch')
+        self.profile_stage_step_ids.append(key);self.profile.step()
+        if len(self.profile_stage_step_ids)==5:self.stop_profile()
 
     def stop_profile(self):
         if not self.profile:return
+        start=time.monotonic()
         self.profile.stop()
+        stopped=time.monotonic()
         directory=Path(os.environ['PREFILL_LAB_ARTIFACT_DIR']);directory.mkdir(parents=True,exist_ok=True)
         self.profile.export_chrome_trace(str(directory/f'{self.trial_id}-worker-{os.getpid()}.json'))
         import hashlib
         path=directory/f'{self.trial_id}-worker-{os.getpid()}.json'
         self.profile_artifact=dict(name=path.name,sha256=hashlib.sha256(path.read_bytes()).hexdigest())
-        self.profile_state='complete' if self.profile_steps==5 else 'incomplete'
+        self.profile_state='complete' if self.profile_steps==5 and (not self.stages or self.profile_stage_step_ids==self.profile_step_ids) else 'incomplete'
+        self.profile_stop_span=dict(host_start=start,stop_return=stopped,export_return=time.monotonic())
         self.profile=None
 
     def resolve(self):
@@ -228,8 +252,12 @@ class WorkerRecorder:
             except RuntimeError:pass
         self.pending=remaining
         result=dict(rows=self.records.rows,pending=len(remaining),overflow=self.records.overflow,cuda_scope_qualified=False)
+        if self.stages:
+            result['pipeline']=self.stages.capture();result['pending']+=result['pipeline']['pending']
         if self.mode=='deep':result['deep_profile']=dict(schema='foreground-profile-v1',state=self.profile_state,
             step_ids=list(self.profile_step_ids),artifact=self.profile_artifact,cuda_scope_qualified=False)
+        if self.mode=='deep' and self.stages:
+            result['deep_profile'].update(stage_step_ids=list(self.profile_stage_step_ids),profile_stop_span=self.profile_stop_span)
         return result
 
 
@@ -307,9 +335,12 @@ def register():
     @wire_reply
     def worker_begin(worker,trial_id,mode):
         global _WORKER
-        if _WORKER and _WORKER.pending:raise RuntimeError('Unresolved CUDA events from previous trial')
+        if _WORKER and (_WORKER.pending or _WORKER.stages and _WORKER.stages.pending):raise RuntimeError('Unresolved CUDA events from previous trial')
         if not isinstance(worker.model_runner,(GPUModelRunner,GPUModelRunnerV2)):raise RuntimeError('Unreviewed model runner; no graph/async override is allowed')
-        _WORKER=WorkerRecorder(torch,trial_id,mode)
+        stages=os.environ.get('PREFILL_LAB_STAGES')=='1'
+        if stages and (mode=='off' or not isinstance(worker.model_runner,GPUModelRunnerV2)):
+            raise RuntimeError('Stage diagnostic requires observed V2 calls')
+        _WORKER=WorkerRecorder(torch,trial_id,mode,stages=stages)
         return dict(pid=os.getpid(),source=installed_sources())
     @wire_reply
     def worker_finish(worker):
@@ -333,6 +364,7 @@ def register():
                     table[f'{count}:{int(uniform)}']=[mode.name,desc.num_tokens,desc.num_reqs,desc.uniform]
         props=torch.cuda.get_device_properties(torch.cuda.current_device())
         return dict(dispatch_table=table,uniform_decode_query_len=query_len,pid=os.getpid(),gpu_uuid=str(getattr(props,'uuid',None)),
+                    pipeline_stages=os.environ.get('PREFILL_LAB_STAGES')=='1',
                     model_runner=f'{type(runner).__module__}.{type(runner).__name__}',adapter='V2' if isinstance(runner,GPUModelRunnerV2) else 'V1',device_name=props.name,
                     total_memory=props.total_memory,torch_version=str(torch.__version__),
                     cuda_version=torch.version.cuda,source=installed_sources())
@@ -354,6 +386,9 @@ def register():
     def observed_execute_v2(runner,output,*args,**kwargs):
         dummy=kwargs.get('dummy_run',args[1] if len(args)>1 else False)
         entry=_WORKER.begin(output,dummy_run=dummy) if _WORKER else None
+        if entry and _WORKER.stages:
+            from .pipeline import bind_forward
+            bind_forward(runner,_WORKER,entry)
         if entry:entry[0]['attention_backends']=attention_backends(runner)
         token=_ACTIVE.set(entry[0] if entry else None)
         try:return execute_v2(runner,output,*args,**kwargs)
@@ -361,6 +396,10 @@ def register():
             _ACTIVE.reset(token)
             if _WORKER:_WORKER.end(entry)
     GPUModelRunnerV2.execute_model=observed_execute_v2
+    if os.environ.get('PREFILL_LAB_STAGES')=='1':
+        from .pipeline import install
+        from vllm.v1.worker.gpu.async_utils import AsyncOutput
+        install(torch,GPUModelRunnerV2,AsyncOutput,lambda:_WORKER)
     determine=GPUModelRunner._determine_batch_execution_and_padding
     @functools.wraps(determine)
     def observed_padding(runner,*args,**kwargs):

@@ -6,6 +6,13 @@ proposal. Keep the serial overlap guard, current statistical thresholds and all
 GPU/model acceptance flags unchanged. Review and freeze a new collection/analysis
 protocol before collecting fresh confirmatory data.
 
+Implementation update: the separate `prefill_host.py stages` development command
+now implements stage instrumentation and integrity checks under the frozen
+prefill-stage-diagnostic-v1.json plan. It still needs exact-revision native CPU
+acceptance and an actual GPU run. This proposal's predictive event graph, stage
+coefficient fitting and physical-model acceptance remain unimplemented. The
+legacy diagnose/full-suite collector does not enable stage instrumentation.
+
 ## Problem and evidence
 
 The b04477e complete suite observed AsyncScheduler with two batches in flight.
@@ -70,8 +77,9 @@ and its own qualification. A forward finish is not an output commit.
    event and explicit dependencies. Do not synchronize the device per step.
    Elapsed event pairs alone have no common-clock start/end timestamps, so retain
    deep CUDA launch correlations to qualify dependency and event coverage.
-3. Extend deep capture through the fifth call's token/output work. The current
-   profiler stops at that call's forward return. Keep profiler stopping/export
+3. Extend deep capture through the fifth call's token/output work. The legacy
+   diagnose profiler stops at that call's forward return; opt-in stages now stops
+   after its sample_tokens return and retains stop/export timestamps. Keep stopping/export
    outside performance-scored windows and document its synchronization cost.
 4. Cover every runtime mode/padding and pipeline stage used in a claim. This
    upload contains nine NONE calls and one FULL call, no profiled PIECEWISE call,
@@ -123,6 +131,6 @@ against that capture's Git identity. Relevant upstream code:
   (scheduled placeholders and output accounting).
 
 Any additional hook or async-output file must be inspected and source-pinned
-before its collector implementation is allowed to run. No new hook, changed
-engine setting, stage-cost fitting or model-acceptance shortcut is introduced by
-this proposal.
+before its collector implementation is allowed to run. The separate stage
+diagnostic adds reviewed source pins for AsyncOutput, InputBatch and SamplerOutput.
+It changes no engine setting, fits no stage costs and grants no model acceptance.

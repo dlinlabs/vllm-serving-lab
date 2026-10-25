@@ -36,7 +36,10 @@
     "sampling_params.py": "f21efc98bf8ce8aab88eb67adb4207285e509a167d976e14d3e2e8282e024bea",
     "v1/executor/uniproc_executor.py": "3cb039b80fe9b03dc1122f93c1f8a4098ef1355104b317ff6df25358f4349494",
     "v1/worker/worker_base.py": "4a1a5266b912fe97991d8dc89d92b923990da9f6cb4b817d00d52e9c0d26dd7c",
-    "v1/worker/gpu/attn_utils.py": "b9b81e59dda2720b1f9c434471381f879228832443e52756e469b4ad4905888f"
+    "v1/worker/gpu/attn_utils.py": "b9b81e59dda2720b1f9c434471381f879228832443e52756e469b4ad4905888f",
+    "v1/worker/gpu/async_utils.py": "77e17a4570ead2be30ae9b00888cf077a3b873018c12ca0549b853bfda02c1ba",
+    "v1/worker/gpu/input_batch.py": "d5dd956eb319bd69dd9e762047833d81ad40b21fce619fcb2133759e73620694",
+    "v1/worker/gpu/sample/output.py": "d6e298c0f197d487a8faaf7200f500fa83df1d7a4bbf4339cadd6a18008f7f9c"
   },
   "mapping": {
     "engine_barrier": "EngineCore.prefill_lab_command via existing core_client.call_utility_async",
@@ -44,6 +47,7 @@
     "commit": "Scheduler.update_from_output; match scheduler_output fingerprint, not most recent submission",
     "worker_forward": "GPUModelRunner V1/V2 execute_model; current-stream CUDA events; delayed query",
     "graph_padding": "V1 determine/padding + CUDAGraphWrapper; V2 CudaGraphManager.dispatch/run_fullgraph and breakable/PW wrappers",
-    "counters": "v1/metrics/stats.py accumulates prompt progress on output; v1/metrics/loggers.py records prompt and iteration histograms; not executed-work ground truth"
+    "counters": "v1/metrics/stats.py accumulates prompt progress on output; v1/metrics/loggers.py records prompt and iteration histograms; not executed-work ground truth",
+    "pipeline_stages": "Opt-in V2 only: stable forward->sample_tokens; sample/logits, AsyncOutput copy enqueue/get_output, postprocess and same-process core commit; local CUDA event pairs resolve after drain"
   }
 }

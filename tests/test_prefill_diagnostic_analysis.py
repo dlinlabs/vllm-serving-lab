@@ -28,6 +28,12 @@ def test_graph_nodes_join_by_launch_not_gpu_timestamp_or_stream_handle():
     assert not d['cuda_scope_qualified'] and not d['model_accepted']
 
 
+def test_stage_profile_tail_is_distinguished_without_accepting_gpu_scope():
+    d=correlate(events(),['a'],sampling_profiled=True)
+    assert not d['profile_stop_precedes_fifth_sampling']
+    assert not d['cuda_scope_qualified'] and not d['model_accepted']
+
+
 def test_same_clock_time_on_another_thread_is_not_owned_by_cpu_step():
     es=events();es[1]['tid']=11
     with pytest.raises(ValueError,match='no correlated GPU work'):
