@@ -1,0 +1,69 @@
+{
+  "schema": "async-stage-costs-v1",
+  "provenance": "Illustrative synthetic coefficients chosen for CPU mechanism tests; not derived from any GPU capture; no physical accuracy claim",
+  "launches": {
+    "forward": {
+      "cpu_to_first": {
+        "bias": 4e-05
+      },
+      "cpu_between": {
+        "bias": 2e-05
+      },
+      "cpu_after": {
+        "bias": 1e-05
+      },
+      "gpu_prefix": {
+        "bias": 4e-05
+      },
+      "gpu_tail": {
+        "bias": 0.0002,
+        "prefill": 4e-06,
+        "attention_pairs": 4e-11
+      }
+    },
+    "logits_sample": {
+      "cpu_to_first": {
+        "bias": 1e-05
+      },
+      "cpu_between": {
+        "bias": 1e-05
+      },
+      "cpu_after": {},
+      "gpu_prefix": {},
+      "gpu_tail": {
+        "bias": 2e-05
+      }
+    },
+    "post_update": {
+      "cpu_to_first": {
+        "bias": 1e-05
+      },
+      "cpu_between": {},
+      "cpu_after": {},
+      "gpu_prefix": {},
+      "gpu_tail": {
+        "bias": 2e-05
+      }
+    }
+  },
+  "scalar": {
+    "schedule_cpu": {
+      "bias": 2e-05
+    },
+    "empty_submit_cpu": {
+      "bias": 1e-05
+    },
+    "copy_enqueue_cpu": {
+      "bias": 1e-05
+    },
+    "copy_service": {
+      "bias": 8e-06
+    },
+    "output_ready_cpu": {
+      "bias": 1e-05
+    },
+    "commit_cpu": {
+      "bias": 2e-05
+    }
+  }
+}

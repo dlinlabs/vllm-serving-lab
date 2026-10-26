@@ -1,7 +1,9 @@
 # Async pipeline model: proposed next protocol
 
-Status: design proposal, not a fitted model or executable replacement for the
-current serial rollout. The uploaded 6edb3e3 foreground diagnostic motivates this
+Status: unfitted CPU predictive prototype now implemented separately in
+prefill_lab/async_predictor.py; see prefill-async-predictor-v1.md for runnable
+commands, approximations and explicit limits. It is not an accepted replacement
+for the current serial fitter. The uploaded 6edb3e3 foreground diagnostic motivates this
 proposal. Keep the serial overlap guard, current statistical thresholds and all
 GPU/model acceptance flags unchanged. Review and freeze a new collection/analysis
 protocol before collecting fresh confirmatory data.
@@ -13,7 +15,8 @@ integrity for four trials/1056 steps after recorded927-test CPU acceptance; its
 two traces attribute all4421 GPU activities to forward/logits/copy/update leaves
 and include fifth-call token/output work. See
 ../results/prefill-stages-ab24416-analysis/report.md. This is a narrow measurement
-milestone, not full CUDA-scope acceptance. This proposal's predictive event graph, stage
+milestone, not full CUDA-scope acceptance. The separate CPU prototype implements
+the predictive resource graph and two-slot scheduler/placeholder rollout. Stage
 coefficient fitting and physical-model acceptance remain unimplemented. The
 legacy diagnose/full-suite collector does not enable stage instrumentation.
 
@@ -54,7 +57,7 @@ start(v) = max(ready(v), finish(each dependency of v), available(resource(v)))
 finish(v) = start(v) + d(v)
 ```
 
-This is an event-graph rule, not a numerical implementation or a claim that the
+This event-graph rule is implemented by the separate CPU prototype, without a claim that the
 entire engine follows a simple two-stage queue. CPU enqueue spans can overlap the
 GPU work they launch. In particular, do not use worker CPU-return time as a
 blanket prerequisite for GPU forward start; the new traces contradict that

@@ -626,7 +626,7 @@
     },
     "experiments/prefill-async-pipeline-v1.md": {
       "path": "experiments/prefill-async-pipeline-v1.md",
-      "sha256": "63b28f9b4ff95b8e5637e25524c33e30b7d7738722cd0406d65568f1176b914e"
+      "sha256": "57e11db3fdefea70bca9945771cbcffeec2e1b6b7e9dfc83d010aecfccceafde"
     },
     "scripts/analyze_prefill_diagnostic.py": {
       "path": "scripts/analyze_prefill_diagnostic.py",
@@ -635,6 +635,30 @@
     "tests/test_prefill_diagnostic_analysis.py": {
       "path": "tests/test_prefill_diagnostic_analysis.py",
       "sha256": "8c33cee344e28506a1af484bc949a4ab312562814954ec14ba058e200324c817"
+    },
+    "prefill_lab/async_predictor.py": {
+      "path": "prefill_lab/async_predictor.py",
+      "sha256": "13588b27f11b81d770b11acbdafabc1d4d211923dde31464a0add028632d5383"
+    },
+    "scripts/predict_prefill_async.py": {
+      "path": "scripts/predict_prefill_async.py",
+      "sha256": "801595c6e59c0ee989cb2bf8b284daa4cdd528887bfb63d4cbffd5f82a493724"
+    },
+    "tests/test_prefill_async_predictor.py": {
+      "path": "tests/test_prefill_async_predictor.py",
+      "sha256": "c459be1a63760c0db880160bb621867b9ade4184747f34b5cdac0bde0d64200d"
+    },
+    "experiments/prefill-async-predictor-v1.md": {
+      "path": "experiments/prefill-async-predictor-v1.md",
+      "sha256": "adf8098080bb7351779bec9551f9662d3d7a64cc30af2ac9d36156107d744dbf"
+    },
+    "experiments/prefill-async-synthetic-costs-v1.json": {
+      "path": "experiments/prefill-async-synthetic-costs-v1.json",
+      "sha256": "82e4164c21360c7fe570e38243bfb3b35352444e723b4d8ea1688ae27e176de3"
+    },
+    "scripts/validate_prefill_async.py": {
+      "path": "scripts/validate_prefill_async.py",
+      "sha256": "c794f809b2b48d430873e97ae91372ee04e12fd001e195fe8118e0dcabf974d7"
     }
   },
   "readiness": {
@@ -685,11 +709,20 @@
       "protocol": "experiments/prefill-stage-diagnostic-v1.json",
       "normal_collection_enabled": false,
       "profile_stop": "after matching fifth sample_tokens; no complete CUDA scope acceptance",
-      "predictive_model_implemented": false,
+      "predictive_model_implemented": true,
       "native_gpu_tested": true,
       "native_capture_commit": "ab24416334174f31c0c8b686ff4d0e496f86a969",
       "native_capture": "1792991194546315502",
       "measured_scope": "Four-trial stage/profile integrity only; full CUDA scope and predictive model remain unqualified"
+    },
+    "async_predictor": {
+      "implemented": true,
+      "entrypoint": "scripts/predict_prefill_async.py",
+      "module": "prefill_lab/async_predictor.py",
+      "status": "unfitted_prototype",
+      "cost_fitting_implemented": false,
+      "physical_model_accepted": false,
+      "scope": "CPU max-plus resource graph; empty-engine two-slot FCFS and placeholders; synthetic costs; no collector/serial guard changes"
     }
   },
   "round7_corrections": {
