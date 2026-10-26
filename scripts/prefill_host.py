@@ -67,29 +67,31 @@ def prepare_host(output):
     return ready
 
 
-def collect_host(output,diagnostics=False,*,stages=False,calibration=False):
+def collect_host(output,diagnostics=False,*,stages=False,calibration=False,arrivals=False):
     ready=json.loads((output/'ready.json').read_text())
     if not accepted(Path(ready['cpu_acceptance']),commit()):
         raise RuntimeError('Run prefill_host.py prepare for this exact checkout before collection')
+    if sum((diagnostics,stages,calibration,arrivals))>1:raise ValueError('Choose one host collection mode')
     manifest=ready['manifest']
-    if calibration:
-        manifest=str(output/'calibration-tokens.json')
+    if calibration or arrivals:
+        manifest=str(output/('arrival-tokens.json' if arrivals else 'calibration-tokens.json'))
         prepare(SimpleNamespace(tokenizer=ready['tokenizer'],model=ready['model'],revision=ready['revision'],
-                                output=Path(manifest),calibration_only=True))
-    capture=Path.home()/('pr32-calibrations' if calibration else 'pr32-stage-diagnostics' if stages else 'pr32-diagnostics' if diagnostics else 'pr32-captures')/str(time.time_ns())
+                                output=Path(manifest),calibration_only=not arrivals,arrivals_only=arrivals))
+    capture=Path.home()/('pr32-arrivals' if arrivals else 'pr32-calibrations' if calibration else 'pr32-stage-diagnostics' if stages else 'pr32-diagnostics' if diagnostics else 'pr32-captures')/str(time.time_ns())
     capture.parent.mkdir(parents=True,exist_ok=True)
     print('Capture output: '+str(capture),flush=True)
     args=[sys.executable,str(ROOT/'scripts/run_prefill_service.py'),'collect']
     for name in ('manifest','tokenizer','trace'):
         args.extend(['--'+name,manifest if name=='manifest' else ready[name]])
     args.extend(['--cpu-acceptance',ready['cpu_acceptance'],'--output',str(capture)])
-    if calibration:args.append('--calibration-only')
+    if arrivals:args.append('--arrivals-only')
+    elif calibration:args.append('--calibration-only')
     elif stages:args.append('--stage-diagnostics-only')
     elif diagnostics:args.append('--diagnostics-only')
     try:
         subprocess.run(args,cwd=ROOT,check=True)
     finally:
-        if calibration and capture.is_dir():
+        if (calibration or arrivals) and capture.is_dir():
             archive=capture.with_suffix('.tar.gz')
             with tarfile.open(archive,'x:gz') as bundle:
                 bundle.add(capture,arcname=capture.name)
@@ -98,10 +100,11 @@ def collect_host(output,diagnostics=False,*,stages=False,calibration=False):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('operation',choices=('prepare','collect','diagnose','stages','calibrate'))
+    parser.add_argument('operation',choices=('prepare','collect','diagnose','stages','calibrate','arrivals'))
     parser.add_argument('--output-dir',type=Path,default=Path.home()/'pr32-inputs')
     args=parser.parse_args();output=args.output_dir.expanduser().resolve()
     if args.operation=='prepare':prepare_host(output)
+    elif args.operation=='arrivals':collect_host(output,arrivals=True)
     elif args.operation=='calibrate':collect_host(output,calibration=True)
     elif args.operation=='stages':collect_host(output,stages=True)
     else:collect_host(output,diagnostics=args.operation=='diagnose')

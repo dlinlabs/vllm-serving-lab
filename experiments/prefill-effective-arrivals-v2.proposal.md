@@ -1,6 +1,6 @@
 # Delayed-arrival validation: next engineering design
 
-Status: design only, NOT an executable native collector or a rental request.
+Implementation follow-up: [the executable v2 pilot](prefill-effective-arrivals-v2.md) now exists with CPU validation; first native delayed qualification is pending. The original planning notes below retain their design-stage scope.
 The v1 native pilot establishes a useful effective candidate for simultaneous
 arrivals. This proposal tests its next missing mechanism: a new request entering
 while prefill/decode work is already in flight. It does not change v1 data,
@@ -17,10 +17,9 @@ native integrity check; no background is artificially extended to force a pass.
 
 The generated JSON proposal binds the original v1 freeze and runtime and includes
 own-rollout forecasts, not new observations. It is produced by
-scripts/analyze_prefill_effective_capture.py. It is not consumed by an endpoint
-and cannot be launched by prefill_host.py calibrate, which remains the v1 pilot.
+scripts/analyze_prefill_effective_capture.py. That original proposal JSON is not consumed by an endpoint. The separate executable v2 JSON is selected by prefill_host.py arrivals; calibrate remains the v1 pilot.
 
-Before another rental, implement and test:
+Implementation checklist (covered by the v2 implementation and CPU tests):
 
 1. A dedicated source-bound token manifest, trial order and endpoint mode. Four
    fresh OFF/LIGHT pairs per delayed cell, balanced directions, fixed randomized

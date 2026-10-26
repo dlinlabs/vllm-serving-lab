@@ -498,7 +498,7 @@
     },
     "prefill_lab/endpoint.py": {
       "path": "prefill_lab/endpoint.py",
-      "sha256": "4d9320e6f84fcce09a3d3d6340f02e78d4f502ea2e4bf0a5d2d39ced19c09168"
+      "sha256": "a6cb397639d1a4000c47ba58b4efe8b6607073b627da710afe24ba98578df7f8"
     },
     "prefill_lab/__init__.py": {
       "path": "prefill_lab/__init__.py",
@@ -522,7 +522,7 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "955ca0a5ecae54ef1fc5f7d4988e374771a6cc482bb17188c3ffa3058ff0a82c"
+      "sha256": "9c8b0f953c4637d93d5d9a6628852b29510a5ed072ed41b2878fa0e54ad90c04"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
@@ -566,11 +566,11 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "28f222f1b3bbc90f77bd94b6402a6448e95f8e2db51bd3982af2e4073308767c"
+      "sha256": "188b0a4c47bfb8764d114c3e40889964c7eabebd6e375fe7aae354da0c31ed2a"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
-      "sha256": "3f5b59c2f6ff43ed1aea40040f876fa33b103b3d23776adb5de66e2f572b6895"
+      "sha256": "690a7f14bd3a9841df226c08ac490aaead2e651d3f93812c084de592629f5893"
     },
     "prefill_lab/transfer_runner.py": {
       "path": "prefill_lab/transfer_runner.py",
@@ -686,7 +686,7 @@
     },
     "scripts/setup_prefill_calibration.py": {
       "path": "scripts/setup_prefill_calibration.py",
-      "sha256": "b694555279bd8f6d894e9d99731c3835b7bf7b0e82f5806dce315477143159f0"
+      "sha256": "b5ef13acff7ccad060125ed0c4a6b7fe58808d1edd74e14080c741aa0a62231f"
     },
     "tests/test_prefill_effective_calibration.py": {
       "path": "tests/test_prefill_effective_calibration.py",
@@ -698,7 +698,7 @@
     },
     "experiments/prefill-effective-calibration-v1.md": {
       "path": "experiments/prefill-effective-calibration-v1.md",
-      "sha256": "ce8eac254385ea9f1f6e17656abfe82f65554437697c88bd85dac094ece51346"
+      "sha256": "5a69b68c0623779a7cf7900fff419e69ea0f72c3ea82acc21c58deb13fc7f2dd"
     },
     "scripts/analyze_prefill_effective_capture.py": {
       "path": "scripts/analyze_prefill_effective_capture.py",
@@ -710,7 +710,27 @@
     },
     "experiments/prefill-effective-arrivals-v2.proposal.md": {
       "path": "experiments/prefill-effective-arrivals-v2.proposal.md",
-      "sha256": "1572282ba6d307c36ce7857301dd30ad33d2a6a5d24df8edc17d984c626ed528"
+      "sha256": "16e4662dbd210dbd9c8a049d49737ec648ba4fe4564c384008ddd2c93344f7ec"
+    },
+    "prefill_lab/delayed_calibration.py": {
+      "path": "prefill_lab/delayed_calibration.py",
+      "sha256": "0cce02959a2a84035c8d60a74af53a2ceb7c53844092a001dd1be8ff443e8de8"
+    },
+    "scripts/check_prefill_arrivals.py": {
+      "path": "scripts/check_prefill_arrivals.py",
+      "sha256": "6fd49452f804574ae659ac00b7cf49af814980ed776990e606b8a08fd429c564"
+    },
+    "tests/test_prefill_delayed_calibration.py": {
+      "path": "tests/test_prefill_delayed_calibration.py",
+      "sha256": "03a1d6ac3d3f0849089c7a1fb162b339bb79e665c2105dd5b000b47561c97e11"
+    },
+    "experiments/prefill-effective-arrivals-v2.json": {
+      "path": "experiments/prefill-effective-arrivals-v2.json",
+      "sha256": "cdb2256eeddf348d053726d95aca500931846b59a649419cd7dcfa3f753974bb"
+    },
+    "experiments/prefill-effective-arrivals-v2.md": {
+      "path": "experiments/prefill-effective-arrivals-v2.md",
+      "sha256": "a9089d0953352a74ef3447fd622a715a0c86f28b99e012c426efd341cdef1c28"
     }
   },
   "readiness": {
@@ -803,9 +823,14 @@
       "candidate_passed": true
     },
     "delayed_arrival_proposal": {
-      "status": "design_only_not_collection_ready",
-      "native_collection_implemented": false,
-      "path": "experiments/prefill-effective-arrivals-v2.proposal.md"
+      "status": "implemented_cpu_validated_native_pending",
+      "native_collection_implemented": true,
+      "path": "experiments/prefill-effective-arrivals-v2.md",
+      "protocol": "experiments/prefill-effective-arrivals-v2.json",
+      "command": "prefill_host.py arrivals",
+      "trials": 136,
+      "native_gpu_run_performed": false,
+      "model_accepted": false
     }
   },
   "round7_corrections": {

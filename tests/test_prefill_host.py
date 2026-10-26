@@ -141,3 +141,21 @@ def test_setup_calibration_uses_declared_pins_and_does_not_collect(monkeypatch,t
     compile(probe,'setup-probe','exec')
     from prefill_lab.plugin import installed_sources
     assert callable(installed_sources)
+
+
+def test_delayed_host_uses_own_mode_manifest_and_archive(monkeypatch,tmp_path):
+    import subprocess
+    mock_host(monkeypatch,tmp_path);host.prepare_host(tmp_path/'inputs');calls=[];prepared=[]
+    monkeypatch.setattr(host.Path,'home',classmethod(lambda cls:tmp_path))
+    monkeypatch.setattr(host,'prepare',lambda args:prepared.append(args))
+    def run(args,**kw):
+        calls.append(args);capture=Path(args[args.index('--output')+1]);capture.mkdir()
+        (capture/'calibration.json').write_text('{}')
+        raise subprocess.CalledProcessError(2,args)
+    monkeypatch.setattr(host.subprocess,'run',run)
+    with pytest.raises(subprocess.CalledProcessError):host.collect_host(tmp_path/'inputs',arrivals=True)
+    assert prepared[0].arrivals_only and not prepared[0].calibration_only
+    assert '--arrivals-only' in calls[0] and '--calibration-only' not in calls[0]
+    assert calls[0][calls[0].index('--manifest')+1].endswith('/arrival-tokens.json')
+    assert len(list((tmp_path/'pr32-arrivals').glob('*.tar.gz')))==1
+    with pytest.raises(ValueError,match='one host'):host.collect_host(tmp_path/'inputs',arrivals=True,calibration=True)

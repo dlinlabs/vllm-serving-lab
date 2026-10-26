@@ -157,8 +157,8 @@ CPU-only noiseless recovery (saved metadata supplies scope/dispatcher only):
 python scripts/check_prefill_effective_calibration.py demo --runtime /path/to/runtime.json --output /tmp/new-demo
 ```
 
-The first native pilot is complete. Next is implementing the
-[delayed-arrival proposal](prefill-effective-arrivals-v2.proposal.md), then fresh
+The first native pilot is complete. The [delayed-arrival collector](prefill-effective-arrivals-v2.md) is now implemented
+and awaits its first native qualification, followed by fresh
 native delayed-arrival/support and HTTP validation before fixed-cap versus
-state-aware-cap tests. No new rental is requested until that collector is ready.
+state-aware-cap tests. Use its dedicated arrivals operation after exact-source preparation.
 This pilot does not enable a controller or justify MPC deployment.

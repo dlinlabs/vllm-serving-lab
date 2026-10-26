@@ -4,6 +4,7 @@ Installs the pinned runtime, verifies CUDA/source files and runs native CPU
 acceptance. Does not start collection. Use nohup to survive SSH disconnection.
 """
 import json
+import argparse
 import os
 from pathlib import Path
 import platform
@@ -15,7 +16,8 @@ MODEL='Qwen/Qwen3-4B-Instruct-2507'
 REVISION='cdbee75f17c01a7cc42f958dc650907174af0554'
 
 
-def main():
+def main(*,operation='calibrate'):
+    if operation not in ('calibrate','arrivals'):raise ValueError('Invalid next experiment')
     if platform.system()!='Linux' or sys.version_info[:2]!=(3,12):
         raise RuntimeError('Use native Linux with Python3.12')
     if subprocess.check_output(['git','diff','HEAD','--name-only'],cwd=ROOT,text=True).strip():
@@ -44,7 +46,10 @@ print(json.dumps({'cuda_compute':'passed','verified_source_files':len(installed_
         raise RuntimeError('Existing model pin differs; use a fresh host or explicitly preserve/move the old input directory')
     if not pin.exists():pin.write_text(json.dumps(spec)+'\n')
     run('scripts/prefill_host.py','prepare')
-    print('PREPARED. Start the pilot: .venv/bin/python scripts/prefill_host.py calibrate',flush=True)
+    print('PREPARED. Start the pilot: .venv/bin/python scripts/prefill_host.py '+operation,flush=True)
 
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--next',dest='operation',choices=('calibrate','arrivals'),default='calibrate')
+    main(operation=parser.parse_args().operation)

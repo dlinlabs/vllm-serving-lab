@@ -45,7 +45,7 @@ def failure_log_tails(output,secret):
 def code_identity():
     paths=sorted([*ROOT.glob('prefill_lab/*.py'),ROOT/'scripts/run_prefill_service.py',
                   ROOT/'experiments/prefill-vllm-v030-source-map.json',ROOT/'gateway.py',
-                  ROOT/'experiments/prefill-stage-diagnostic-v1.json',ROOT/'experiments/prefill-effective-calibration-v1.json',
+                  ROOT/'experiments/prefill-stage-diagnostic-v1.json',ROOT/'experiments/prefill-effective-calibration-v1.json',ROOT/'experiments/prefill-effective-arrivals-v2.json',
                   ROOT/'prefill_grouped_validation.py',ROOT/'prefill_validation.py',
                   *ROOT.glob('experiments/prefill-service-v1.*'),*ROOT.glob('*.py'),
                   *ROOT.glob('scripts/*.py'),*ROOT.glob('tests/*.py'),ROOT/'pyproject.toml'])
@@ -91,7 +91,10 @@ def prepare(args):
     tokenizer=AutoTokenizer.from_pretrained(directory,local_files_only=True,trust_remote_code=False)
     hashes={str(p.relative_to(directory)):hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.rglob('*') if p.is_file() and (p.suffix in ('.json','.model') or p.name.endswith('.txt'))}
     cases,order,_=inputs()
-    if getattr(args,'calibration_only',False):
+    if getattr(args,'arrivals_only',False):
+        from prefill_lab.delayed_calibration import protocol
+        plan=protocol();cases,order=plan['cases'],plan['order']
+    elif getattr(args,'calibration_only',False):
         from prefill_lab.effective_calibration import protocol
         plan=protocol();cases,order=plan['cases'],plan['order']
     manifest=materialize(cases,order,tokenizer,model=args.model,revision=args.revision,tokenizer_sha256=digest(hashes))
@@ -113,12 +116,14 @@ async def collect(args):
     if not acceptance.get('valid') or acceptance.get('commit')!=current_commit or acceptance['source_sha256']!=code_identity():
         raise RuntimeError('Run cpu-check for this exact source tree before collection')
     manifest=json.loads(Path(args.manifest).read_text());cases,order,_=inputs()
-    calibration=getattr(args,'calibration_only',False)
+    arrivals=getattr(args,'arrivals_only',False)
+    calibration=getattr(args,'calibration_only',False) or arrivals
     if calibration:
-        from prefill_lab.effective_calibration import protocol
-        plan=protocol();cases,order=plan['cases'],plan['order']
-        from prefill_lab.effective_calibration import validate_manifest
-        validate_manifest(manifest)
+        if arrivals:
+            from prefill_lab.delayed_calibration import protocol,validate_manifest
+        else:
+            from prefill_lab.effective_calibration import protocol,validate_manifest
+        plan=protocol();cases,order=plan['cases'],plan['order'];validate_manifest(manifest)
     validate(manifest,cases,order)
     tokenizer=AutoTokenizer.from_pretrained(args.tokenizer,local_files_only=True,trust_remote_code=False)
     for name,sha in manifest['tokenizer_files'].items():
@@ -140,7 +145,8 @@ async def collect(args):
     env=dict(runtime_environment(),PREFILL_LAB_ENABLED='1',PREFILL_LAB_KEY=key,
              PREFILL_LAB_MANIFEST=str(output/'token-manifest.json'),PREFILL_LAB_ARTIFACT_DIR=str(output/'deep-traces'),
              VLLM_PLUGINS='prefill_lab',PREFILL_LAB_STAGES='1' if stages else '0',
-             PREFILL_LAB_EFFECTIVE_CALIBRATION='1' if calibration else '0')
+             PREFILL_LAB_EFFECTIVE_CALIBRATION='1' if calibration and not arrivals else '0',
+             PREFILL_LAB_DELAYED_ARRIVALS='1' if arrivals else '0')
     command=[sys.executable,'-m','vllm.entrypoints.openai.api_server','--model',manifest['model'],
              '--revision',manifest['revision'],'--tokenizer',str(Path(args.tokenizer).resolve()),
              '--tokenizer-revision',manifest['revision'],'--host','127.0.0.1','--port','8000',
@@ -149,8 +155,8 @@ async def collect(args):
     # Credentials stay in the environment on an isolated localhost benchmark server.
     # The instrument endpoint authenticates itself; this runtime is never remotely bound.
     save(output/'launch.json',dict(argv=command,source_sha256=code_identity(),cpu_acceptance=acceptance,
-                                  scope='effective_calibration_pilot' if calibration else 'targeted_stage_diagnostic_only' if stages else 'targeted_foreground_diagnostic_only' if diagnostics else 'complete_suite',
-                                  environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS','PREFILL_LAB_STAGES','PREFILL_LAB_EFFECTIVE_CALIBRATION')}))
+                                  scope='effective_delayed_arrivals_pilot' if arrivals else 'effective_calibration_pilot' if calibration else 'targeted_stage_diagnostic_only' if stages else 'targeted_foreground_diagnostic_only' if diagnostics else 'complete_suite',
+                                  environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS','PREFILL_LAB_STAGES','PREFILL_LAB_EFFECTIVE_CALIBRATION','PREFILL_LAB_DELAYED_ARRIVALS')}))
     from scripts.setup_v1 import check_port
     for port in ((8000,) if diagnostics else (8000,8080)):check_port(port)
     server=gateway=None
@@ -173,7 +179,10 @@ async def collect(args):
                 if time.monotonic()>deadline:raise TimeoutError('Initial model load deadline expired')
                 await asyncio.sleep(1)
             if calibration:
-                from prefill_lab.effective_calibration import run as run_calibration
+                if arrivals:
+                    from prefill_lab.delayed_calibration import run as run_calibration
+                else:
+                    from prefill_lab.effective_calibration import run as run_calibration
                 summary=await run_calibration(client,http,client.url,manifest,output)
                 print('Calibration result: '+json.dumps(summary),flush=True)
                 return 0 if summary['candidate_passed'] else 2
@@ -232,6 +241,7 @@ def main():
     for name in ('manifest','tokenizer','trace','cpu-acceptance','output'):p.add_argument('--'+name,required=True)
     p.add_argument('--startup-timeout',type=float,default=900.)
     group=p.add_mutually_exclusive_group()
+    group.add_argument('--arrivals-only',action='store_true',help='Delayed arrivals: fresh training, freeze, anchors, held sentinel trials')
     group.add_argument('--calibration-only',action='store_true',help='Reduced effective-service pilot; train/freeze/fresh held endpoints')
     group.add_argument('--diagnostics-only',action='store_true',help='Two frozen light warmups and two foreground deep traces; no suite/model acceptance')
     group.add_argument('--stage-diagnostics-only',action='store_true',help='Opt-in V2 stage timing diagnostic; no suite/model acceptance')
