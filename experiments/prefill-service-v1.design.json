@@ -626,15 +626,15 @@
     },
     "experiments/prefill-async-pipeline-v1.md": {
       "path": "experiments/prefill-async-pipeline-v1.md",
-      "sha256": "0b3d12237cafbbf176ee7219e5b0cbb018fb00b06ca2fc5dde7b72737758f7e5"
+      "sha256": "63b28f9b4ff95b8e5637e25524c33e30b7d7738722cd0406d65568f1176b914e"
     },
     "scripts/analyze_prefill_diagnostic.py": {
       "path": "scripts/analyze_prefill_diagnostic.py",
-      "sha256": "c78647b199ad839c762d502c0a2d907b0fd4c22b80246855b3ba978cfad8c9c8"
+      "sha256": "434258cb9fa59f948237bd742d8d99c32d156c44469b4dd4c2e8ea6306feb85b"
     },
     "tests/test_prefill_diagnostic_analysis.py": {
       "path": "tests/test_prefill_diagnostic_analysis.py",
-      "sha256": "e5a232b2602ea875d0473c3fcad358774bb7f37303d540b8b14d9f2be020c2e6"
+      "sha256": "8c33cee344e28506a1af484bc949a4ab312562814954ec14ba058e200324c817"
     }
   },
   "readiness": {
@@ -686,7 +686,10 @@
       "normal_collection_enabled": false,
       "profile_stop": "after matching fifth sample_tokens; no complete CUDA scope acceptance",
       "predictive_model_implemented": false,
-      "native_gpu_tested": false
+      "native_gpu_tested": true,
+      "native_capture_commit": "ab24416334174f31c0c8b686ff4d0e496f86a969",
+      "native_capture": "1792991194546315502",
+      "measured_scope": "Four-trial stage/profile integrity only; full CUDA scope and predictive model remain unqualified"
     }
   },
   "round7_corrections": {

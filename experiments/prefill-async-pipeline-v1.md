@@ -8,8 +8,12 @@ protocol before collecting fresh confirmatory data.
 
 Implementation update: the separate `prefill_host.py stages` development command
 now implements stage instrumentation and integrity checks under the frozen
-prefill-stage-diagnostic-v1.json plan. It still needs exact-revision native CPU
-acceptance and an actual GPU run. This proposal's predictive event graph, stage
+prefill-stage-diagnostic-v1.json plan. The uploaded ab24416 run passed native stage
+integrity for four trials/1056 steps after recorded927-test CPU acceptance; its
+two traces attribute all4421 GPU activities to forward/logits/copy/update leaves
+and include fifth-call token/output work. See
+../results/prefill-stages-ab24416-analysis/report.md. This is a narrow measurement
+milestone, not full CUDA-scope acceptance. This proposal's predictive event graph, stage
 coefficient fitting and physical-model acceptance remain unimplemented. The
 legacy diagnose/full-suite collector does not enable stage instrumentation.
 
@@ -81,9 +85,20 @@ and its own qualification. A forward finish is not an output commit.
    diagnose profiler stops at that call's forward return; opt-in stages now stops
    after its sample_tokens return and retains stop/export timestamps. Keep stopping/export
    outside performance-scored windows and document its synchronization cost.
-4. Cover every runtime mode/padding and pipeline stage used in a claim. This
-   upload contains nine NONE calls and one FULL call, no profiled PIECEWISE call,
-   and no fifth-call sampling tail. It cannot qualify other modes or all streams.
+4. Cover every runtime mode/padding and pipeline stage used in a claim. The earlier
+   6edb3e3 upload lacked the fifth sampling tail; the ab24416 stage upload includes
+   it. Both profile samples contain nine NONE calls and one FULL call, with no
+   profiled PIECEWISE call. Neither qualifies other modes or all possible streams.
+
+The ab24416 trace makes a resource-model distinction concrete: the copy_enqueue
+event starts before the native copy-stream wait. Its15.140–154.043ms recorded
+spans include waiting, whereas the two small DtoH transfers per profiled call
+occupy3.648–7.072us envelopes. A predictor must not use that wait-inclusive span
+as a copy-service node *after* waiting on logits readiness: it would charge the
+same dependency twice. It must also exclude the nested sample_tokens parent when
+separately costing logits/sample and post-update. CPU submission, GPU execution
+and output-reap times remain distinct. These are label-scope findings, not fitted
+costs; do not choose coefficients from the held-composition development trace.
 
 Forward feature candidates can retain M0/M1/M0Z/M2's actual prefill, decode,
 decode-context and attention-pair features, plus supported mode/padding terms.
