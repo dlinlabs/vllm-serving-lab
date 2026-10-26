@@ -698,7 +698,19 @@
     },
     "experiments/prefill-effective-calibration-v1.md": {
       "path": "experiments/prefill-effective-calibration-v1.md",
-      "sha256": "8ccd3f8c7f94ebb1804e31a50c2bef5b03b8f2d9d2338b7cc49cedca51a325fa"
+      "sha256": "ce8eac254385ea9f1f6e17656abfe82f65554437697c88bd85dac094ece51346"
+    },
+    "scripts/analyze_prefill_effective_capture.py": {
+      "path": "scripts/analyze_prefill_effective_capture.py",
+      "sha256": "b745cff16054a1e11dfe6a9e49c7d0d8f02bbea8037ad84a6cf856597452ece3"
+    },
+    "tests/test_prefill_effective_analysis.py": {
+      "path": "tests/test_prefill_effective_analysis.py",
+      "sha256": "3ffe148d0529c9f6691bc325741e3e808872d91358d91fe93b6aa181176350c8"
+    },
+    "experiments/prefill-effective-arrivals-v2.proposal.md": {
+      "path": "experiments/prefill-effective-arrivals-v2.proposal.md",
+      "sha256": "1572282ba6d307c36ce7857301dd30ad33d2a6a5d24df8edc17d984c626ed528"
     }
   },
   "readiness": {
@@ -776,15 +788,24 @@
     },
     "effective_endpoint_calibration": {
       "implemented": true,
-      "native_gpu_run_performed": false,
-      "first_native_qualification_pending": true,
+      "native_gpu_run_performed": true,
+      "first_native_qualification_pending": false,
       "protocol": "experiments/prefill-effective-calibration-v1.json",
       "command": "prefill_host.py calibrate",
       "trials": 138,
       "effective_parameters": 4,
       "physical_stage_costs_identified": false,
       "model_accepted": false,
-      "scope": "zero-offset B2048 pilot, not cap/MPC acceptance"
+      "scope": "native zero-offset B2048 effective pilot only; no delayed/HTTP/cap/MPC acceptance",
+      "captured_commit": "dc9847e33d93541071a0bbc4ea38e4fff4623131",
+      "native_evidence": "results/prefill-effective-dc9847e-analysis/report.md",
+      "native_archive_sha256": "c77b76ff3ce8aa09781c7538d81f7f9a38c04affe62998fc0a4d498751e47f58",
+      "candidate_passed": true
+    },
+    "delayed_arrival_proposal": {
+      "status": "design_only_not_collection_ready",
+      "native_collection_implemented": false,
+      "path": "experiments/prefill-effective-arrivals-v2.proposal.md"
     }
   },
   "round7_corrections": {

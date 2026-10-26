@@ -1,7 +1,8 @@
 # Effective async endpoint calibration pilot
 
-Status: implementation ready for its first native GPU qualification. CPU tests
-and synthetic recovery do not establish real accuracy. This is a separate,
+Status: the first native pilot at dc9847e passed its fixed-B2048 zero-offset
+endpoint gates. See [the measured audit and errors](../results/prefill-effective-dc9847e-analysis/report.md).
+CPU tests and synthetic recovery alone do not establish real accuracy. This is a separate,
 reduced candidate, not completion of the 21-channel physical stage estimator.
 The old serial overlap guard and the full-suite statistical protocol are intact.
 
@@ -98,8 +99,8 @@ No automatic retry, best-run selection, threshold adjustment or cross-run stitch
 The active pilot is bounded to1800s after server startup, including fitting;
 server startup has its separate900s bound. Installation/download/CPU acceptance
 are separate and can take longer. GPU is held during CPU fitting so the held
-phase uses the same engine. This is a first native attempt, so no measured runtime
-estimate or guaranteed success is advertised.
+phase uses the same engine. The first native attempt completed in534.591s; future host/runtime changes
+can change duration and success, and this is not a guaranteed runtime estimate.
 
 ## Rental-host commands
 
@@ -156,6 +157,8 @@ CPU-only noiseless recovery (saved metadata supplies scope/dispatcher only):
 python scripts/check_prefill_effective_calibration.py demo --runtime /path/to/runtime.json --output /tmp/new-demo
 ```
 
-The first native pilot is the next GPU-dependent step. Passing it would justify
-fresh delayed-arrival/mode/support and HTTP validation, then fixed-cap versus
-state-aware-cap tests. It does not enable a controller or justify MPC deployment.
+The first native pilot is complete. Next is implementing the
+[delayed-arrival proposal](prefill-effective-arrivals-v2.proposal.md), then fresh
+native delayed-arrival/support and HTTP validation before fixed-cap versus
+state-aware-cap tests. No new rental is requested until that collector is ready.
+This pilot does not enable a controller or justify MPC deployment.
