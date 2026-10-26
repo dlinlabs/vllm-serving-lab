@@ -16,8 +16,9 @@ two traces attribute all4421 GPU activities to forward/logits/copy/update leaves
 and include fifth-call token/output work. See
 ../results/prefill-stages-ab24416-analysis/report.md. This is a narrow measurement
 milestone, not full CUDA-scope acceptance. The separate CPU prototype implements
-the predictive resource graph and two-slot scheduler/placeholder rollout. Stage
-coefficient fitting and physical-model acceptance remain unimplemented. The
+the predictive resource graph and two-slot scheduler/placeholder rollout. Synthetic stage-cost fitting and held scoring now have a separate CPU contract
+(see prefill-async-calibration-v1.md). Native label extraction, native coefficient
+fitting and physical-model acceptance remain unimplemented. The
 legacy diagnose/full-suite collector does not enable stage instrumentation.
 
 ## Problem and evidence

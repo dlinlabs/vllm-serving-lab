@@ -626,7 +626,7 @@
     },
     "experiments/prefill-async-pipeline-v1.md": {
       "path": "experiments/prefill-async-pipeline-v1.md",
-      "sha256": "57e11db3fdefea70bca9945771cbcffeec2e1b6b7e9dfc83d010aecfccceafde"
+      "sha256": "73af788b620a20e04f6367129808c4b5ebfe533092f0b74016da79141a582abb"
     },
     "scripts/analyze_prefill_diagnostic.py": {
       "path": "scripts/analyze_prefill_diagnostic.py",
@@ -659,6 +659,22 @@
     "scripts/validate_prefill_async.py": {
       "path": "scripts/validate_prefill_async.py",
       "sha256": "c794f809b2b48d430873e97ae91372ee04e12fd001e195fe8118e0dcabf974d7"
+    },
+    "prefill_lab/async_calibration.py": {
+      "path": "prefill_lab/async_calibration.py",
+      "sha256": "b35fe5a6e1710f115a4c2ca8de48f3ee745f20b018260db88302b765b19b0d67"
+    },
+    "scripts/calibrate_prefill_async.py": {
+      "path": "scripts/calibrate_prefill_async.py",
+      "sha256": "3e6f760d31a3fcc8376535e5fa984f5f380bf226045cf0aba4352739ca99b3ad"
+    },
+    "tests/test_prefill_async_calibration.py": {
+      "path": "tests/test_prefill_async_calibration.py",
+      "sha256": "ad8ed7e196353aaae5c976f50e4385c2e7a8683a2c6c82d211b2bac9afc255bc"
+    },
+    "experiments/prefill-async-calibration-v1.md": {
+      "path": "experiments/prefill-async-calibration-v1.md",
+      "sha256": "c952dd09cec53134a3457a7e5bef71dc1637bfb2606c3d92e40d9e10e4152f06"
     }
   },
   "readiness": {
@@ -720,9 +736,19 @@
       "entrypoint": "scripts/predict_prefill_async.py",
       "module": "prefill_lab/async_predictor.py",
       "status": "unfitted_prototype",
-      "cost_fitting_implemented": false,
+      "cost_fitting_implemented": true,
       "physical_model_accepted": false,
-      "scope": "CPU max-plus resource graph; empty-engine two-slot FCFS and placeholders; synthetic costs; no collector/serial guard changes"
+      "scope": "CPU max-plus resource graph; empty-engine two-slot FCFS and placeholders; synthetic costs; no collector/serial guard changes",
+      "cost_fitting_scope": "Synthetic exclusive-service contract only; native extraction blocked"
+    },
+    "async_calibration": {
+      "implemented": "CPU contract, synthetic fitting, immutable freeze and held evaluation",
+      "native_collection_ready": false,
+      "native_extractor_implemented": false,
+      "model_accepted": false,
+      "entrypoint": "scripts/calibrate_prefill_async.py",
+      "protocol": "experiments/prefill-async-calibration-v1.md",
+      "blocker": "Current aggregate spans do not identify exclusive launch service components"
     }
   },
   "round7_corrections": {
