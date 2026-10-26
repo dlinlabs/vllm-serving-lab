@@ -100,3 +100,11 @@ training model before independent held labels are inspected. Unsupported modes,
 backgrounds finishing too early, work/arrival mismatch and insufficient numerical
 support remain failures, not reasons to tune thresholds. Native acceptance must
 also precede any rental-host collection. Cap/MPC experiments remain downstream.
+
+## Separate reduced native pilot
+
+The21-channel native exclusive-service extractor above remains blocked.
+A separate [effective endpoint calibration pilot](prefill-effective-calibration-v1.md)
+now has collection/fitting/frozen-held orchestration ready for first native GPU
+qualification. Its four effective parameters do not identify the21 stage costs;
+the synthetic-only input restriction of this module remains unchanged.

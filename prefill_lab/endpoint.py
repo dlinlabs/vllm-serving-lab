@@ -51,10 +51,17 @@ class Endpoint:
         self.manifest=json.loads(Path(os.environ['PREFILL_LAB_MANIFEST']).read_text())
         cases=json.loads((root/'experiments/prefill-service-v1.cases.json').read_text())['cases']
         order=json.loads((root/'experiments/prefill-service-v1.order.json').read_text())['order']
+        calibration=os.environ.get('PREFILL_LAB_EFFECTIVE_CALIBRATION','0')
+        if calibration not in ('0','1'):raise ValueError('Invalid calibration mode')
+        if calibration=='1':
+            from .effective_calibration import protocol,validate_manifest
+            plan=protocol();cases,order=plan['cases'],plan['order']
+            validate_manifest(self.manifest)
         validate(self.manifest,cases,order)
         self.trials={t['trial_id']:t for t in order}
         transfers=json.loads((root/'experiments/prefill-service-v1.order.json').read_text())['transfer_slices']
         self.external_ids={t['trial_id'] for t in order if t['stage']=='http_bridge'}|{t['attempt_id'] for t in transfers}
+        if calibration=='1':self.external_ids=set()
         self.engine=engine_client
         import sys
         self.argv=sys.argv

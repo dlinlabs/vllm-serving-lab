@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import time
+import tarfile
 from types import SimpleNamespace
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -66,28 +67,42 @@ def prepare_host(output):
     return ready
 
 
-def collect_host(output,diagnostics=False,*,stages=False):
+def collect_host(output,diagnostics=False,*,stages=False,calibration=False):
     ready=json.loads((output/'ready.json').read_text())
     if not accepted(Path(ready['cpu_acceptance']),commit()):
         raise RuntimeError('Run prefill_host.py prepare for this exact checkout before collection')
-    capture=Path.home()/('pr32-stage-diagnostics' if stages else 'pr32-diagnostics' if diagnostics else 'pr32-captures')/str(time.time_ns())
+    manifest=ready['manifest']
+    if calibration:
+        manifest=str(output/'calibration-tokens.json')
+        prepare(SimpleNamespace(tokenizer=ready['tokenizer'],model=ready['model'],revision=ready['revision'],
+                                output=Path(manifest),calibration_only=True))
+    capture=Path.home()/('pr32-calibrations' if calibration else 'pr32-stage-diagnostics' if stages else 'pr32-diagnostics' if diagnostics else 'pr32-captures')/str(time.time_ns())
     capture.parent.mkdir(parents=True,exist_ok=True)
     print('Capture output: '+str(capture),flush=True)
     args=[sys.executable,str(ROOT/'scripts/run_prefill_service.py'),'collect']
     for name in ('manifest','tokenizer','trace'):
-        args.extend(['--'+name,ready[name]])
+        args.extend(['--'+name,manifest if name=='manifest' else ready[name]])
     args.extend(['--cpu-acceptance',ready['cpu_acceptance'],'--output',str(capture)])
-    if stages:args.append('--stage-diagnostics-only')
+    if calibration:args.append('--calibration-only')
+    elif stages:args.append('--stage-diagnostics-only')
     elif diagnostics:args.append('--diagnostics-only')
-    subprocess.run(args,cwd=ROOT,check=True)
+    try:
+        subprocess.run(args,cwd=ROOT,check=True)
+    finally:
+        if calibration and capture.is_dir():
+            archive=capture.with_suffix('.tar.gz')
+            with tarfile.open(archive,'x:gz') as bundle:
+                bundle.add(capture,arcname=capture.name)
+            print('Download evidence: '+str(archive),flush=True)
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('operation',choices=('prepare','collect','diagnose','stages'))
+    parser.add_argument('operation',choices=('prepare','collect','diagnose','stages','calibrate'))
     parser.add_argument('--output-dir',type=Path,default=Path.home()/'pr32-inputs')
     args=parser.parse_args();output=args.output_dir.expanduser().resolve()
     if args.operation=='prepare':prepare_host(output)
+    elif args.operation=='calibrate':collect_host(output,calibration=True)
     elif args.operation=='stages':collect_host(output,stages=True)
     else:collect_host(output,diagnostics=args.operation=='diagnose')
 

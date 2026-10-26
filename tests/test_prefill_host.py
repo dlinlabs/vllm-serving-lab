@@ -102,3 +102,42 @@ def test_targeted_diagnostic_requires_exact_acceptance_and_uses_distinct_output(
     monkeypatch.setattr(host,'commit',lambda:'c'*40)
     with pytest.raises(RuntimeError,match='exact checkout'):host.collect_host(tmp_path/'inputs',diagnostics=True)
     assert len(calls)==1
+
+
+def test_calibration_host_uses_dedicated_manifest_and_archives_failed_attempt(monkeypatch,tmp_path):
+    import tarfile
+    import subprocess
+    mock_host(monkeypatch,tmp_path);ready=host.prepare_host(tmp_path/'inputs');calls=[]
+    monkeypatch.setattr(host.Path,'home',classmethod(lambda cls:tmp_path))
+    def collect(args,**kw):
+        calls.append(args);capture=Path(args[args.index('--output')+1]);capture.mkdir()
+        (capture/'calibration.json').write_text('{"collection_complete":false}')
+        raise subprocess.CalledProcessError(2,args)
+    monkeypatch.setattr(host.subprocess,'run',collect)
+    with pytest.raises(subprocess.CalledProcessError):host.collect_host(tmp_path/'inputs',calibration=True)
+    args=calls[0]
+    assert '--calibration-only' in args
+    assert args[args.index('--manifest')+1]==str(tmp_path/'inputs/calibration-tokens.json')
+    assert args[args.index('--cpu-acceptance')+1]==ready['cpu_acceptance']
+    archives=list((tmp_path/'pr32-calibrations').glob('*.tar.gz'));assert len(archives)==1
+    with tarfile.open(archives[0]) as bundle:
+        assert any(n.endswith('/calibration.json') for n in bundle.getnames())
+
+
+def test_setup_calibration_uses_declared_pins_and_does_not_collect(monkeypatch,tmp_path):
+    from scripts import setup_prefill_calibration as setup
+    monkeypatch.setattr(setup,'ROOT',tmp_path)
+    monkeypatch.setattr(setup.Path,'home',classmethod(lambda cls:tmp_path))
+    monkeypatch.setattr(setup.subprocess,'check_output',lambda *a,**kw:'')
+    calls=[]
+    monkeypatch.setattr(setup.subprocess,'run',lambda args,**kw:calls.append(args))
+    setup.main()
+    assert any('ninja' in a and 'requirements-v1.txt' in a and 'requirements-cpu-tests.txt' in a for a in calls)
+    assert calls[-1][-2:]==['scripts/prefill_host.py','prepare']
+    assert not any('collect' in a or 'calibrate' in a for a in calls)
+    pin=json.loads((tmp_path/'pr32-inputs/model.json').read_text());assert pin['revision']==setup.REVISION
+    probe=next(a[-1] for a in calls if a[-2]=='-c' and 'installed_sources' in a[-1])
+    # Compile the actual child probe and verify its import target exists.
+    compile(probe,'setup-probe','exec')
+    from prefill_lab.plugin import installed_sources
+    assert callable(installed_sources)

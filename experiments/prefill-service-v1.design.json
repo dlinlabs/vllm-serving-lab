@@ -498,7 +498,7 @@
     },
     "prefill_lab/endpoint.py": {
       "path": "prefill_lab/endpoint.py",
-      "sha256": "aa94855f05f02c32f6194f13b55f8a2b3156b09af6c4f3a79368780fb683e88b"
+      "sha256": "4d9320e6f84fcce09a3d3d6340f02e78d4f502ea2e4bf0a5d2d39ced19c09168"
     },
     "prefill_lab/__init__.py": {
       "path": "prefill_lab/__init__.py",
@@ -522,11 +522,11 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "e2153d88c3523ce3eadd8515f7bd3207a7064438b038d41bc26cb99240c2bdb5"
+      "sha256": "955ca0a5ecae54ef1fc5f7d4988e374771a6cc482bb17188c3ffa3058ff0a82c"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
-      "sha256": "9a651eec24965a3f73cabe9a30a47b543d6b137a4f05286ff234e6dc52748c1a"
+      "sha256": "1ce28f338a2adea3929ba1fa93cb43c9a6aaee332158c5261e698064bcc7ae31"
     },
     "experiments/prefill-vllm-v030-source-map.json": {
       "path": "experiments/prefill-vllm-v030-source-map.json",
@@ -566,11 +566,11 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "c08a4fcae35c9edf17a2239174ad47dee68b1d1fcb47c31ab7923f6ec1baeafd"
+      "sha256": "28f222f1b3bbc90f77bd94b6402a6448e95f8e2db51bd3982af2e4073308767c"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
-      "sha256": "874c54330efd5db7dce276f0f309e8d3bbbd018cbb9ca12b33b1b08393283f20"
+      "sha256": "3f5b59c2f6ff43ed1aea40040f876fa33b103b3d23776adb5de66e2f572b6895"
     },
     "prefill_lab/transfer_runner.py": {
       "path": "prefill_lab/transfer_runner.py",
@@ -674,7 +674,31 @@
     },
     "experiments/prefill-async-calibration-v1.md": {
       "path": "experiments/prefill-async-calibration-v1.md",
-      "sha256": "c952dd09cec53134a3457a7e5bef71dc1637bfb2606c3d92e40d9e10e4152f06"
+      "sha256": "8207d22647e06a0c7588dd9e271aa1836e6de33d65f079a2a22bffec67efcf27"
+    },
+    "prefill_lab/effective_calibration.py": {
+      "path": "prefill_lab/effective_calibration.py",
+      "sha256": "373399c2be55edf71d8bba81e95ceebd698f6ab76f3d389452bd6d7358956888"
+    },
+    "scripts/check_prefill_effective_calibration.py": {
+      "path": "scripts/check_prefill_effective_calibration.py",
+      "sha256": "349f1a114697031224d8433bdbe2037984c8f9d881917bac2841b690e4e88676"
+    },
+    "scripts/setup_prefill_calibration.py": {
+      "path": "scripts/setup_prefill_calibration.py",
+      "sha256": "b694555279bd8f6d894e9d99731c3835b7bf7b0e82f5806dce315477143159f0"
+    },
+    "tests/test_prefill_effective_calibration.py": {
+      "path": "tests/test_prefill_effective_calibration.py",
+      "sha256": "710dd99477a8f5eb8c977734ff2456ff36c94e91441d09890230d98923e7e95c"
+    },
+    "experiments/prefill-effective-calibration-v1.json": {
+      "path": "experiments/prefill-effective-calibration-v1.json",
+      "sha256": "3cc81d9d078788522b867d3de070f274297e26a2b55f97824b20905b07561d8e"
+    },
+    "experiments/prefill-effective-calibration-v1.md": {
+      "path": "experiments/prefill-effective-calibration-v1.md",
+      "sha256": "8ccd3f8c7f94ebb1804e31a50c2bef5b03b8f2d9d2338b7cc49cedca51a325fa"
     }
   },
   "readiness": {
@@ -749,6 +773,18 @@
       "entrypoint": "scripts/calibrate_prefill_async.py",
       "protocol": "experiments/prefill-async-calibration-v1.md",
       "blocker": "Current aggregate spans do not identify exclusive launch service components"
+    },
+    "effective_endpoint_calibration": {
+      "implemented": true,
+      "native_gpu_run_performed": false,
+      "first_native_qualification_pending": true,
+      "protocol": "experiments/prefill-effective-calibration-v1.json",
+      "command": "prefill_host.py calibrate",
+      "trials": 138,
+      "effective_parameters": 4,
+      "physical_stage_costs_identified": false,
+      "model_accepted": false,
+      "scope": "zero-offset B2048 pilot, not cap/MPC acceptance"
     }
   },
   "round7_corrections": {

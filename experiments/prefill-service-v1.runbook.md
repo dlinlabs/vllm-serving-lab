@@ -332,3 +332,11 @@ bound audit and the declared spec before accepting the transfer. Missing/corrupt
 evidence stays invalid. Existing offers/native work and the50ms gate still apply.
 No retry or cross-run merging is introduced. Full native acceptance and a fresh
 ordered suite are required after this generator-policy correction.
+
+## Effective endpoint calibration pilot
+
+The next GPU attempt is `prefill_host.py calibrate`, after exact-source prepare.
+See [the separate frozen pilot and short setup commands](prefill-effective-calibration-v1.md).
+It fits four effective endpoint parameters and freezes before fresh held trials;
+it does not use the serial cumulative fitter or qualify21 physical stage costs.
+It uses a dedicated138-trial manifest and no gateway/Azure/deep run.
