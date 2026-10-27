@@ -24,15 +24,30 @@ EXTRAS={'experiments/prefill-effective-arrivals-v2.json','experiments/prefill-ev
     'experiments/prefill-queue-phase-v1.json','experiments/prefill-queue-probe-v1.json'}
 
 
+def pinned_git(*arguments,text=False):
+    """An unavailable historical snapshot is a prerequisite error, never a pass.
+
+    Native CPU tests use isolated source fixtures and need no repository history.
+    Reproducing an actual historical capture still requires its exact Git tree.
+    Do not fetch implicitly, substitute HEAD or relax the source/hash checks.
+    """
+    try:
+        return subprocess.check_output(['git',*arguments],cwd=ROOT,text=text,stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as exc:
+        raise ValueError('Pinned Git source '+COMMIT+' is unavailable or incomplete. '
+            'From the repository run: git fetch --depth 1 origin '+COMMIT+
+            ' ; then retry the audit. No source substitution is permitted.') from exc
+
+
 def original_source(capture,destination):
     load=lambda n:json.loads((capture/n).read_text())
     launch=load('launch.json');sources=load('collection-sources.json')
     if launch['cpu_acceptance']['commit']!=COMMIT or launch['scope']!='queue_receipt_calibration_probe':
         raise ValueError('Unsupported receipt capture source/scope')
-    names=subprocess.check_output(['git','ls-tree','-r','--name-only',COMMIT],cwd=ROOT,text=True).splitlines()
+    names=pinned_git('ls-tree','-r','--name-only',COMMIT,text=True).splitlines()
     if set(sources)!=source_paths(names)|EXTRAS:raise ValueError('Native source inventory differs')
     for name,sha in sources.items():
-        raw=subprocess.check_output(['git','show',COMMIT+':'+name],cwd=ROOT)
+        raw=pinned_git('show',COMMIT+':'+name)
         if hashlib.sha256(raw).hexdigest()!=sha:raise ValueError('Git/native source mismatch: '+name)
         target=destination/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(raw)
     return sources

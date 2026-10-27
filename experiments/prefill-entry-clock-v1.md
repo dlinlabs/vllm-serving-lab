@@ -117,3 +117,21 @@ CPU audit. A previous diagnostic took about 16 minutes; no fixed runtime or
 successful verdict is promised for the new host. The helper audits complete
 pass/fail/inconclusive reports, then archives evidence even when collection or
 qualification fails. Keep the archive before returning the machine.
+
+## Shallow-clone support
+
+Native CPU acceptance does not require the historical 8bd96cb commit. Source
+rejection unit tests use isolated fixtures; an additional local Git regression
+creates a real depth-one clone and checks exact source success, invalid inventory,
+invalid hashes, an absent parent and an unavailable blob. No test downloads Git
+history or skips provenance checks.
+
+Offline reproduction of the OLD 8bd96cb capture still requires its exact Git
+snapshot. Missing source now stops with an explicit prerequisite error and the
+command `git fetch --depth 1 origin 8bd96cbe07ba8e7f26aab9fd33ff31af5453e55f`.
+The auditor never substitutes HEAD, fetches implicitly or weakens hash checks.
+
+After an interrupted setup with dependencies already installed, run only
+` .venv/bin/python scripts/prefill_host.py prepare ` again, then the confirmation
+command. Preparation retains the model pin and reruns full exact-checkout native
+CPU acceptance. A prior failed acceptance cannot be reused.
