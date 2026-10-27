@@ -522,7 +522,7 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "40335f48c49b7271df429f735e8912d7cdd77903be2fc67f0a209c463188e27f"
+      "sha256": "a84cc7f3b21aacdfccfd9b988b9590fd9b793b7286f6dec67a6b5e827570616a"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
@@ -827,6 +827,26 @@
     "tests/test_prefill_queue_phase.py": {
       "path": "tests/test_prefill_queue_phase.py",
       "sha256": "c3c8cd03af64fc4ccf6cc7a07980f966ded209307887728c514e21b556ef94b4"
+    },
+    "prefill_lab/queue_phase.py": {
+      "path": "prefill_lab/queue_phase.py",
+      "sha256": "d53e7982b4e27f2bfd925fe9a7670ff49590bdc45300901cd4a558718cb678af"
+    },
+    "experiments/prefill-queue-phase-v1.json": {
+      "path": "experiments/prefill-queue-phase-v1.json",
+      "sha256": "dab0bedaf1329fe1791180f7e00f5272eb50caa5092e63fdd4be2ace43ef6f7d"
+    },
+    "experiments/prefill-phase-margin-v1.md": {
+      "path": "experiments/prefill-phase-margin-v1.md",
+      "sha256": "80022f8e318f1fe487e4827f5e4dc45eed9a756ffef59d199ca6fffae00541e2"
+    },
+    "scripts/develop_prefill_phase_margin.py": {
+      "path": "scripts/develop_prefill_phase_margin.py",
+      "sha256": "617269733600a3777c8aa47df611d65f618712a04ff39bd360185f07efa5ba18"
+    },
+    "tests/test_prefill_phase_margin.py": {
+      "path": "tests/test_prefill_phase_margin.py",
+      "sha256": "992e97f5c1413673a77a2d7d8edbb996cded789fb8d6d9d0a0c382facb2abe23"
     }
   },
   "readiness": {
@@ -983,6 +1003,21 @@
       "completed_http_trials": 0,
       "last_attempt_commit": "4c89188a6af64624ab76f3c39f17c01e2f31906f",
       "latest_native_evidence": "results/prefill-clock-4c89188-queue-phase/report.md"
+    },
+    "queue_phase_proposal": {
+      "status": "cpu_implemented_development_rejected",
+      "path": "experiments/prefill-phase-margin-v1.md",
+      "policy": "experiments/prefill-queue-phase-v1.json",
+      "review_comment": "https://github.com/dlinlabs/vllm-serving-lab/pull/32#issuecomment-6437204879",
+      "native_collection_enabled": false,
+      "calibration_source": "TRAIN OFF relative endpoint residual envelope only",
+      "native_candidate_promoted": false,
+      "model_accepted": false,
+      "http_accepted": false,
+      "adaptive_cap_accepted": false,
+      "mpc_accepted": false,
+      "evidence": "results/prefill-phase-margin-development/report.md",
+      "cpu_evidence": "results/prefill-phase-margin-development/cpu-validation.json"
     }
   },
   "round7_corrections": {

@@ -45,7 +45,7 @@ def failure_log_tails(output,secret):
 def code_identity():
     paths=sorted([*ROOT.glob('prefill_lab/*.py'),ROOT/'scripts/run_prefill_service.py',
                   ROOT/'experiments/prefill-vllm-v030-source-map.json',ROOT/'gateway.py',
-                  ROOT/'experiments/prefill-stage-diagnostic-v1.json',ROOT/'experiments/prefill-effective-calibration-v1.json',ROOT/'experiments/prefill-effective-arrivals-v2.json',ROOT/'experiments/prefill-event-clock-v1.json',ROOT/'experiments/prefill-event-clock-confirmation-v1.json',ROOT/'experiments/prefill-live-http-v1.json',
+                  ROOT/'experiments/prefill-stage-diagnostic-v1.json',ROOT/'experiments/prefill-effective-calibration-v1.json',ROOT/'experiments/prefill-effective-arrivals-v2.json',ROOT/'experiments/prefill-event-clock-v1.json',ROOT/'experiments/prefill-event-clock-confirmation-v1.json',ROOT/'experiments/prefill-live-http-v1.json',ROOT/'experiments/prefill-queue-phase-v1.json',
                   ROOT/'prefill_grouped_validation.py',ROOT/'prefill_validation.py',
                   *ROOT.glob('experiments/prefill-service-v1.*'),*ROOT.glob('*.py'),
                   *ROOT.glob('scripts/*.py'),*ROOT.glob('tests/*.py'),ROOT/'pyproject.toml'])
