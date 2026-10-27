@@ -154,6 +154,19 @@ def evaluate(rows,plan,runtime,frozen,predicted):
         complete_experiment_passed=False,adaptive_cap_accepted=False,mpc_accepted=False)
 
 
+def rejection_reasons(report):
+    """Expose existing failures without changing any score or threshold."""
+    reasons=[]
+    if not report['quality']['passed']:reasons.append(dict(gate='quality'))
+    if not report['structure_and_background_lifetime_valid']:reasons.append(dict(gate='structure_and_background_lifetime'))
+    for key in ('endpoint_scores',):
+        reasons.extend(dict(gate=key,**r) for r in report[key]['cells'] if not r['passed'])
+    for phase,score in report['anchor_phase_scores'].items():
+        reasons.extend(dict(gate=phase,**r) for r in score['cells'] if not r['passed'])
+    reasons.extend(dict(gate='sentinel_queue',**r) for r in report['sentinel_queue_scores'] if not r['passed'])
+    return reasons
+
+
 async def run(client,http,url,manifest,output):
     from .suite import controlled_trial,runtime_preflight,host_identity
     from .causal import dispatcher_parity
@@ -183,7 +196,9 @@ async def run(client,http,url,manifest,output):
         if digest(meta)!=digest(final):raise ValueError('Delayed runtime drift')
         save(output/'host-after.json',host_identity());report=evaluate(rows,p,meta,frozen,predicted);save(output/'held-report.json',report)
         if time.monotonic()>=deadline:raise TimeoutError('Delayed pilot deadline during analysis')
-        summary.update(collection_complete=True,candidate_passed=report['candidate_passed'])
+        summary.update(collection_complete=True,candidate_passed=report['candidate_passed'],rejection_reasons=rejection_reasons(report))
+        if summary['rejection_reasons']:
+            print('Delayed validation rejected: '+json.dumps(summary['rejection_reasons']),flush=True)
     except BaseException as exc:
         summary['failures'].append(dict(type=type(exc).__name__,message=str(exc)));raise
     finally:

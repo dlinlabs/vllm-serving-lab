@@ -1,6 +1,6 @@
 # Delayed-arrival validation: next engineering design
 
-Implementation follow-up: [the executable v2 pilot](prefill-effective-arrivals-v2.md) now exists with CPU validation; first native delayed qualification is pending. The original planning notes below retain their design-stage scope.
+Implementation follow-up: [the executable v2 pilot](prefill-effective-arrivals-v2.md) now exists with CPU validation; the first native delayed pilot completed with one queue gate rejected; see the executable protocol for its measured report. The original planning notes below retain their design-stage scope.
 The v1 native pilot establishes a useful effective candidate for simultaneous
 arrivals. This proposal tests its next missing mechanism: a new request entering
 while prefill/decode work is already in flight. It does not change v1 data,

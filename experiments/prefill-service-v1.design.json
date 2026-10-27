@@ -710,11 +710,11 @@
     },
     "experiments/prefill-effective-arrivals-v2.proposal.md": {
       "path": "experiments/prefill-effective-arrivals-v2.proposal.md",
-      "sha256": "16e4662dbd210dbd9c8a049d49737ec648ba4fe4564c384008ddd2c93344f7ec"
+      "sha256": "91afca37dd94bea887f3517d9b136e645c17c22c042e11f4dc6518f3e39aac82"
     },
     "prefill_lab/delayed_calibration.py": {
       "path": "prefill_lab/delayed_calibration.py",
-      "sha256": "0cce02959a2a84035c8d60a74af53a2ceb7c53844092a001dd1be8ff443e8de8"
+      "sha256": "cee8563f505c326358d53fbb43db5283173450123339ded909bd22059d4beabd"
     },
     "scripts/check_prefill_arrivals.py": {
       "path": "scripts/check_prefill_arrivals.py",
@@ -730,7 +730,15 @@
     },
     "experiments/prefill-effective-arrivals-v2.md": {
       "path": "experiments/prefill-effective-arrivals-v2.md",
-      "sha256": "a9089d0953352a74ef3447fd622a715a0c86f28b99e012c426efd341cdef1c28"
+      "sha256": "6a33693e512d2f6c6cb341a728cd765b05e6481a9be855d4e1cc8e3a7e44f257"
+    },
+    "scripts/analyze_prefill_arrival_capture.py": {
+      "path": "scripts/analyze_prefill_arrival_capture.py",
+      "sha256": "69b2172002bf9e6ab7ae2965fef0bdde520b71a8d2bd1f7159576c22a433b09c"
+    },
+    "tests/test_prefill_arrival_diagnosis.py": {
+      "path": "tests/test_prefill_arrival_diagnosis.py",
+      "sha256": "6d7706b9539f24b978134169c3bffaeb09d3009627c2372e59e485b7bfd09d1b"
     }
   },
   "readiness": {
@@ -823,14 +831,18 @@
       "candidate_passed": true
     },
     "delayed_arrival_proposal": {
-      "status": "implemented_cpu_validated_native_pending",
+      "status": "native_pilot_complete_candidate_rejected",
       "native_collection_implemented": true,
       "path": "experiments/prefill-effective-arrivals-v2.md",
       "protocol": "experiments/prefill-effective-arrivals-v2.json",
       "command": "prefill_host.py arrivals",
       "trials": 136,
-      "native_gpu_run_performed": false,
-      "model_accepted": false
+      "native_gpu_run_performed": true,
+      "model_accepted": false,
+      "captured_commit": "39d0c7d6aa02e9667a5b67bc94740f5d2148264a",
+      "candidate_passed": false,
+      "native_evidence": "results/prefill-arrivals-39d0c7d-analysis/report.md",
+      "failed_gate": "sentinel queue at800ms/D16"
     }
   },
   "round7_corrections": {

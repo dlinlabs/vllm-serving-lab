@@ -1,7 +1,9 @@
 # Executable delayed-arrival pilot v2
 
-Status: CPU implementation ready for first native GPU qualification. No native
-v2 timing or successful delayed validation is claimed. v1 evidence stays intact.
+Status: the first native v2 collection completed, but the candidate failed the
+800ms/D16 queue-residence gate. See [the measured diagnosis](../results/prefill-arrivals-39d0c7d-analysis/report.md).
+All primary endpoint, observation, work and anchor gates pass. No unchanged-model
+rerun is requested; timing-model development can proceed on retained training data.
 
 The source-bound JSON protocol has16 cases and136 trials, fixed RTX4090/Qwen
 revision/vLLM0.30.0/Torch2.13.0+cu130/B2048/seq32/context8192, same-process
