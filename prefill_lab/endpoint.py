@@ -62,7 +62,13 @@ class Endpoint:
             raise ValueError('Invalid/conflicting event-clock mode')
         if arrivals not in ('0','1') or (arrivals=='1' and calibration!='0'):raise ValueError('Invalid/conflicting delayed mode')
         if calibration not in ('0','1'):raise ValueError('Invalid calibration mode')
-        if clock=='1':
+        probe=os.environ.get('PREFILL_LAB_QUEUE_PROBE','0')
+        if probe not in ('0','1') or (probe=='1' and any(x!='0' for x in (clock,arrivals,calibration,os.environ.get('PREFILL_LAB_LIVE_STATE','0')))):
+            raise ValueError('Invalid/conflicting queue probe mode')
+        if probe=='1':
+            from .queue_probe import protocol,validate_manifest
+            plan=protocol();cases,order=plan['cases'],plan['order'];validate_manifest(self.manifest)
+        elif clock=='1':
             from .event_clock_calibration import protocol,validate_manifest
             plan=protocol();cases,order=plan['cases'],plan['order'];validate_manifest(self.manifest)
         elif arrivals=='1':
@@ -76,7 +82,7 @@ class Endpoint:
         self.trials={t['trial_id']:t for t in order}
         transfers=json.loads((root/'experiments/prefill-service-v1.order.json').read_text())['transfer_slices']
         self.external_ids={t['trial_id'] for t in order if t['stage']=='http_bridge'}|{t['attempt_id'] for t in transfers}
-        if calibration=='1' or arrivals=='1':self.external_ids=set()
+        if calibration=='1' or arrivals=='1' or probe=='1':self.external_ids=set()
         live_flag=os.environ.get('PREFILL_LAB_LIVE_STATE','0')
         if live_flag not in ('0','1'):raise ValueError('Invalid live-state launch flag')
         self.live_enabled=live_flag=='1';self.live_trials={}

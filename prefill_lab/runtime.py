@@ -37,6 +37,10 @@ class Trial:
         self.foreground = set(self.requests)-self.backgrounds
         self.release_state = None
         self.epoch = specification['epoch']
+        self.receipt = None
+        if specification.get('receipt_observer', False):
+            from .receipt import ReceiptRecorder
+            self.receipt = ReceiptRecorder(clock, capacity)
 
     def begin(self):
         if self.backgrounds:
@@ -50,6 +54,9 @@ class Trial:
         for rid in sorted(identifiers):
             if rid in self.enqueued:raise ValueError('Duplicate engine enqueue')
             row = self.pending[rid]
+            if self.receipt and row['role']=='sentinel':
+                try:self.receipt.receive(rid,posted,now,self.core.scheduler)
+                except Exception as exc:self.errors.append('Receipt capture failed: '+str(exc))
             self.core.add_request(self.factory(row))
             self.enqueued.add(rid)
             self.requests[rid].update(enqueue=now,queue_posted=posted,
@@ -61,6 +68,9 @@ class Trial:
     def release_foreground(self):
         if self.release is not None:raise RuntimeError('Duplicate foreground barrier')
         self.release = self.clock()
+        if self.receipt:
+            try:self.receipt.release()
+            except Exception as exc:self.errors.append('Receipt release failed: '+str(exc))
         self.release_state = snapshot(self.core.scheduler)
         immediate = [rid for rid in self.foreground if self.pending[rid]['at']==0]
         self.inject(immediate,self.release)
@@ -136,11 +146,13 @@ class Trial:
             self.cancel.set()
 
     def capture(self):
-        return dict(schema='prefill-capture-v1',trial_id=self.id,observer=self.mode,status=self.status,
+        result = dict(schema='prefill-capture-v1',trial_id=self.id,observer=self.mode,status=self.status,
                     start=self.started,release=self.release,foreground_done=self.done,
                     end=self.clock(),release_state=self.release_state,requests=self.requests,
                     steps=self.steps.rows,overflow=self.steps.overflow,errors=self.errors,
                     pending_step_ids=sorted(self.inflight))
+        if getattr(self,'receipt',None):result['receipt']=self.receipt.capture()
+        return result
 
     def abort(self,reason):
         self.cancel.set();self.errors.append(reason);self.status='invalid'

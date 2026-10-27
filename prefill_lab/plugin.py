@@ -51,6 +51,10 @@ def core_runtime(core):
         live=getattr(core,'_prefill_live',None)
         live_started=time.monotonic() if live and live.observed else None
         output=schedule(*args,**kwargs)
+        receipt=getattr(trial,'receipt',None)
+        if receipt:
+            try:receipt.schedule(output)
+            except Exception as exc:trial.errors.append('Receipt schedule failed: '+str(exc))
         if live and live.observed:
             try:live.scheduled(output,live_started)
             except Exception as exc:live.errors.append(str(exc))
@@ -67,6 +71,10 @@ def core_runtime(core):
         with stages.span(key,'commit',profiler=rec.profile) if stages else nullcontext():
             results=update(output,*args,**kwargs)
             if stages:stages.committed(key,results)
+        receipt=getattr(trial,'receipt',None)
+        if receipt:
+            try:receipt.commit(output)
+            except Exception as exc:trial.errors.append('Receipt commit failed: '+str(exc))
         live=getattr(core,'_prefill_live',None)
         if live and live.observed:
             try:live.committed(output)

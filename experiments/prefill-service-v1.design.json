@@ -482,7 +482,7 @@
     },
     "prefill_lab/runtime.py": {
       "path": "prefill_lab/runtime.py",
-      "sha256": "94180487df4f5b5f7dae3e3fb21eb54c5c88fc50be6dacff5b94fe54ee229145"
+      "sha256": "c136380a889d83fba0c0a058657d4c238883c50461fd4934d4162933b00a426c"
     },
     "prefill_lab/contracts.py": {
       "path": "prefill_lab/contracts.py",
@@ -498,7 +498,7 @@
     },
     "prefill_lab/endpoint.py": {
       "path": "prefill_lab/endpoint.py",
-      "sha256": "8d327e60f54087c5cb11303a5d40b725ef3f2fdf4348ecc68caaa90fdec3930f"
+      "sha256": "d288446fe4e95ba1a75616d40b226a9537aac4c14c79a19782c18c1f19771805"
     },
     "prefill_lab/__init__.py": {
       "path": "prefill_lab/__init__.py",
@@ -510,7 +510,7 @@
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
-      "sha256": "6ff9de23b6e79772fb8accf26027930d9d9b7183f4dbcbaa1ade4fdb75affaf3"
+      "sha256": "5ae84ce3d50cbc4b41cee172a2cb97a8525842f8bdd204a916859449ca686157"
     },
     "prefill_lab/dispatch.py": {
       "path": "prefill_lab/dispatch.py",
@@ -522,7 +522,7 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "a84cc7f3b21aacdfccfd9b988b9590fd9b793b7286f6dec67a6b5e827570616a"
+      "sha256": "b91d05a63ea6a8fed65a08f8e90d581c03536740e6e11fc2d94f25d00b6ab83e"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
@@ -566,7 +566,7 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "e32a5fc2013958a69e9546d060a47f14395d38e8d118bfaaf305fcd75d929316"
+      "sha256": "a9c8295652ad645f37ba0dc03a29f27532c261b474febf2027f4e95b55c1e3b9"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
@@ -686,7 +686,7 @@
     },
     "scripts/setup_prefill_calibration.py": {
       "path": "scripts/setup_prefill_calibration.py",
-      "sha256": "6140e752f352dc0912c5bbc0c57c2c2f0cb78144c0709e9001f5aa76dae15a95"
+      "sha256": "7c3ad1da0ac67093cf105e2a2dea2523c0b3ea973c21b22527476ffb61441d3e"
     },
     "tests/test_prefill_effective_calibration.py": {
       "path": "tests/test_prefill_effective_calibration.py",
@@ -847,6 +847,38 @@
     "tests/test_prefill_phase_margin.py": {
       "path": "tests/test_prefill_phase_margin.py",
       "sha256": "992e97f5c1413673a77a2d7d8edbb996cded789fb8d6d9d0a0c382facb2abe23"
+    },
+    "prefill_lab/receipt.py": {
+      "path": "prefill_lab/receipt.py",
+      "sha256": "eec70cbd8061dcc5067b905feda011c7860b3d333f4f7c56109c5040957c239c"
+    },
+    "prefill_lab/queue_probe.py": {
+      "path": "prefill_lab/queue_probe.py",
+      "sha256": "af2ce4b4408dfa2029747afe06bf1665694a2cdf6ccf8f900aaedfbbea7f9ac3"
+    },
+    "scripts/check_prefill_queue_probe.py": {
+      "path": "scripts/check_prefill_queue_probe.py",
+      "sha256": "ba47a3cb9121a3dd7a5105a2b32356d75020ad8b78e0c22caf1a9c18940272ec"
+    },
+    "scripts/fit_prefill_queue_probe.py": {
+      "path": "scripts/fit_prefill_queue_probe.py",
+      "sha256": "8eaa7910e9dcaa272aab5e6384c7cd91d2e2e282cb408789350f4461b01dfeb2"
+    },
+    "tests/test_prefill_queue_probe.py": {
+      "path": "tests/test_prefill_queue_probe.py",
+      "sha256": "c06007845c395c9f93bc710d243d7c32b395c4197f26c46f9b5b9a6b414a5ddd"
+    },
+    "experiments/prefill-queue-probe-v1.json": {
+      "path": "experiments/prefill-queue-probe-v1.json",
+      "sha256": "f584cc47ec348aa8f19f457a8bd292859fa1a72d0b3340dd29750754e51f0069"
+    },
+    "experiments/prefill-queue-probe-v1.md": {
+      "path": "experiments/prefill-queue-probe-v1.md",
+      "sha256": "b495e233c9b0fa41a6d80a435ca0d3a16094cffa28b7bc39f4bcd2130110644e"
+    },
+    "experiments/prefill-queue-confirmation-v2.md": {
+      "path": "experiments/prefill-queue-confirmation-v2.md",
+      "sha256": "d36256651851710279110e130dc37e243e7e80f1f2a0cdd63bf742836084a9ec"
     }
   },
   "readiness": {
@@ -1018,6 +1050,29 @@
       "mpc_accepted": false,
       "evidence": "results/prefill-phase-margin-development/report.md",
       "cpu_evidence": "results/prefill-phase-margin-development/cpu-validation.json"
+    },
+    "queue_receipt_probe": {
+      "status": "implemented_requires_native_evidence",
+      "policy": "experiments/prefill-queue-probe-v1.json",
+      "path": "experiments/prefill-queue-probe-v1.md",
+      "command": "prefill_host.py queue-probe",
+      "trials": 232,
+      "clock_training_trials": 48,
+      "scored_samples": 144,
+      "receipt_light_pairs": 48,
+      "offline_fit": "scripts/fit_prefill_queue_probe.py",
+      "native_run_performed": false,
+      "model_accepted": false,
+      "http_accepted": false,
+      "adaptive_cap_accepted": false,
+      "mpc_accepted": false
+    },
+    "queue_confirmation_v2": {
+      "status": "design_only_not_enabled",
+      "path": "experiments/prefill-queue-confirmation-v2.md",
+      "proposed_trials": 240,
+      "additional_candidate_defined": false,
+      "native_collection_enabled": false
     }
   },
   "round7_corrections": {
