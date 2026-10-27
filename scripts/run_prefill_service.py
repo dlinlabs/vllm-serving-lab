@@ -45,7 +45,7 @@ def failure_log_tails(output,secret):
 def code_identity():
     paths=sorted([*ROOT.glob('prefill_lab/*.py'),ROOT/'scripts/run_prefill_service.py',
                   ROOT/'experiments/prefill-vllm-v030-source-map.json',ROOT/'gateway.py',
-                  ROOT/'experiments/prefill-stage-diagnostic-v1.json',ROOT/'experiments/prefill-effective-calibration-v1.json',ROOT/'experiments/prefill-effective-arrivals-v2.json',ROOT/'experiments/prefill-event-clock-v1.json',ROOT/'experiments/prefill-event-clock-confirmation-v1.json',
+                  ROOT/'experiments/prefill-stage-diagnostic-v1.json',ROOT/'experiments/prefill-effective-calibration-v1.json',ROOT/'experiments/prefill-effective-arrivals-v2.json',ROOT/'experiments/prefill-event-clock-v1.json',ROOT/'experiments/prefill-event-clock-confirmation-v1.json',ROOT/'experiments/prefill-live-http-v1.json',
                   ROOT/'prefill_grouped_validation.py',ROOT/'prefill_validation.py',
                   *ROOT.glob('experiments/prefill-service-v1.*'),*ROOT.glob('*.py'),
                   *ROOT.glob('scripts/*.py'),*ROOT.glob('tests/*.py'),ROOT/'pyproject.toml'])
@@ -91,7 +91,10 @@ def prepare(args):
     tokenizer=AutoTokenizer.from_pretrained(directory,local_files_only=True,trust_remote_code=False)
     hashes={str(p.relative_to(directory)):hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.rglob('*') if p.is_file() and (p.suffix in ('.json','.model') or p.name.endswith('.txt'))}
     cases,order,_=inputs()
-    if getattr(args,'event_clock_only',False):
+    if getattr(args,'live_http_tokens',False):
+        from prefill_lab.live_http import protocol
+        plan=protocol();cases,order=plan['cases'],plan['order']
+    elif getattr(args,'event_clock_only',False) or getattr(args,'live_http_only',False):
         from prefill_lab.event_clock_calibration import protocol
         plan=protocol();cases,order=plan['cases'],plan['order']
     elif getattr(args,'arrivals_only',False):
@@ -119,7 +122,8 @@ async def collect(args):
     if not acceptance.get('valid') or acceptance.get('commit')!=current_commit or acceptance['source_sha256']!=code_identity():
         raise RuntimeError('Run cpu-check for this exact source tree before collection')
     manifest=json.loads(Path(args.manifest).read_text());cases,order,_=inputs()
-    clock=getattr(args,'event_clock_only',False)
+    bridge=getattr(args,'live_http_only',False)
+    clock=getattr(args,'event_clock_only',False) or bridge
     arrivals=getattr(args,'arrivals_only',False) or clock
     calibration=getattr(args,'calibration_only',False) or arrivals
     if calibration:
@@ -131,6 +135,9 @@ async def collect(args):
             from prefill_lab.effective_calibration import protocol,validate_manifest
         plan=protocol();cases,order=plan['cases'],plan['order'];validate_manifest(manifest)
     validate(manifest,cases,order)
+    if bridge:
+        from prefill_lab.live_experiment import validate_manifest as validate_http,validate_pair
+        http_manifest=json.loads(Path(args.http_manifest).read_text());validate_http(http_manifest);validate_pair(manifest,http_manifest)
     tokenizer=AutoTokenizer.from_pretrained(args.tokenizer,local_files_only=True,trust_remote_code=False)
     for name,sha in manifest['tokenizer_files'].items():
         if hashlib.sha256((Path(args.tokenizer)/name).read_bytes()).hexdigest()!=sha:raise ValueError('Tokenizer snapshot changed')
@@ -153,7 +160,8 @@ async def collect(args):
              VLLM_PLUGINS='prefill_lab',PREFILL_LAB_STAGES='1' if stages else '0',
              PREFILL_LAB_EFFECTIVE_CALIBRATION='1' if calibration and not arrivals else '0',
              PREFILL_LAB_DELAYED_ARRIVALS='1' if arrivals else '0',
-             PREFILL_LAB_EVENT_CLOCK='1' if clock else '0')
+             PREFILL_LAB_EVENT_CLOCK='1' if clock else '0',
+             PREFILL_LAB_LIVE_STATE='1' if bridge else '0')
     command=[sys.executable,'-m','vllm.entrypoints.openai.api_server','--model',manifest['model'],
              '--revision',manifest['revision'],'--tokenizer',str(Path(args.tokenizer).resolve()),
              '--tokenizer-revision',manifest['revision'],'--host','127.0.0.1','--port','8000',
@@ -162,10 +170,10 @@ async def collect(args):
     # Credentials stay in the environment on an isolated localhost benchmark server.
     # The instrument endpoint authenticates itself; this runtime is never remotely bound.
     save(output/'launch.json',dict(argv=command,source_sha256=code_identity(),cpu_acceptance=acceptance,
-                                  scope='effective_event_clock_confirmation' if clock else 'effective_delayed_arrivals_pilot' if arrivals else 'effective_calibration_pilot' if calibration else 'targeted_stage_diagnostic_only' if stages else 'targeted_foreground_diagnostic_only' if diagnostics else 'complete_suite',
-                                  environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS','PREFILL_LAB_STAGES','PREFILL_LAB_EFFECTIVE_CALIBRATION','PREFILL_LAB_DELAYED_ARRIVALS','PREFILL_LAB_EVENT_CLOCK')}))
+                                  scope='live_http_state_bridge' if bridge else 'effective_event_clock_confirmation' if clock else 'effective_delayed_arrivals_pilot' if arrivals else 'effective_calibration_pilot' if calibration else 'targeted_stage_diagnostic_only' if stages else 'targeted_foreground_diagnostic_only' if diagnostics else 'complete_suite',
+                                  environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS','PREFILL_LAB_STAGES','PREFILL_LAB_EFFECTIVE_CALIBRATION','PREFILL_LAB_DELAYED_ARRIVALS','PREFILL_LAB_EVENT_CLOCK','PREFILL_LAB_LIVE_STATE')}))
     from scripts.setup_v1 import check_port
-    for port in ((8000,) if diagnostics else (8000,8080)):check_port(port)
+    for port in ((8000,) if diagnostics and not bridge else (8000,8080)):check_port(port)
     server=gateway=None
     server_log=(output/'server.log').open('w');gateway_log=(output/'gateway.log').open('w')
     try:
@@ -185,6 +193,29 @@ async def collect(args):
                 except httpx.HTTPError:pass
                 if time.monotonic()>deadline:raise TimeoutError('Initial model load deadline expired')
                 await asyncio.sleep(1)
+            if bridge:
+                combined_deadline=time.monotonic()+1800
+                gateway_env=dict(runtime_environment(),ADMISSION_MODE='protected',MAX_IN_FLIGHT='32',MAX_WAITING='0',
+                    MODEL_NAME=str(Path(args.tokenizer).resolve()),VLLM_URL=client.url,SHARED_UPSTREAM_CLIENT='1',
+                    GATEWAY_DIAGNOSTICS='1',BENCHMARK_REQUEST_IDS='1',PREFILL_LAB_RAW_COMPLETIONS='1',
+                    TELEMETRY_JSONL=str(output/'gateway.jsonl'),TELEMETRY_STATUS_JSON=str(output/'telemetry-status.json'))
+                gateway=subprocess.Popen([sys.executable,'-m','uvicorn','gateway:app','--host','127.0.0.1','--port','8080'],cwd=ROOT,env=gateway_env,stdout=gateway_log,stderr=subprocess.STDOUT,start_new_session=True)
+                for _ in range(120):
+                    if gateway.poll() is not None:raise RuntimeError('Live HTTP gateway startup failed')
+                    try:
+                        response=await http.get('http://127.0.0.1:8080/metrics')
+                        if response.status_code==200:
+                            from prefill_lab.live_http import gateway_contract
+                            gateway_start=response.json();gateway_contract(gateway_start)
+                            if gateway_start['accepted_requests']!=0:raise ValueError('Gateway was not empty at bridge startup')
+                            save(output/'gateway-start.json',gateway_start);break
+                    except httpx.HTTPError:pass
+                    await asyncio.sleep(1)
+                else:raise TimeoutError('Live HTTP gateway startup timeout')
+                from prefill_lab.live_experiment import run as run_live
+                summary=await asyncio.wait_for(run_live(client,http,client.url,manifest,http_manifest,output,'http://127.0.0.1:8080',combined_deadline),max(.001,combined_deadline-time.monotonic()))
+                print('Live HTTP result: '+json.dumps(summary),flush=True)
+                return 0 if summary['candidate_passed'] else 2
             if calibration:
                 if arrivals:
                     from prefill_lab.delayed_calibration import run as run_calibration
@@ -199,7 +230,7 @@ async def collect(args):
                 return 0 if summary['diagnostic_complete'] else 1
             gateway_env=dict(runtime_environment(),ADMISSION_MODE='cost_aware',MAX_ADMITTED_COST='32',
                              MODEL_NAME=str(Path(args.tokenizer).resolve()),VLLM_URL=client.url,
-                             ADMIN_API_KEY=secrets.token_hex(32),SHARED_UPSTREAM_CLIENT='1',
+                             ADMIN_API_KEY=secrets.token_hex(32),SHARED_UPSTREAM_CLIENT='1',PREFILL_LAB_RAW_COMPLETIONS='0',
                              GATEWAY_DIAGNOSTICS='1',BENCHMARK_REQUEST_IDS='1',LOOP_LAG_TELEMETRY='1',
                              TELEMETRY_JSONL=str(output/'gateway.jsonl'),TELEMETRY_STATUS_JSON=str(output/'telemetry-status.json'))
             gateway=subprocess.Popen([sys.executable,'-m','uvicorn','gateway:app','--host','127.0.0.1','--port','8080'],cwd=ROOT,env=gateway_env,stdout=gateway_log,stderr=subprocess.STDOUT,start_new_session=True)
@@ -248,12 +279,15 @@ def main():
     for name in ('manifest','tokenizer','trace','cpu-acceptance','output'):p.add_argument('--'+name,required=True)
     p.add_argument('--startup-timeout',type=float,default=900.)
     group=p.add_mutually_exclusive_group()
+    group.add_argument('--live-http-only',action='store_true',help='Fresh clock calibration then busy-state HTTP qualification')
+    p.add_argument('--http-manifest',help='Dedicated exact-token HTTP input manifest')
     group.add_argument('--event-clock-only',action='store_true',help='Fresh training-event clock fit, freeze and independent delayed confirmation')
     group.add_argument('--arrivals-only',action='store_true',help='Delayed arrivals: fresh training, freeze, anchors, held sentinel trials')
     group.add_argument('--calibration-only',action='store_true',help='Reduced effective-service pilot; train/freeze/fresh held endpoints')
     group.add_argument('--diagnostics-only',action='store_true',help='Two frozen light warmups and two foreground deep traces; no suite/model acceptance')
     group.add_argument('--stage-diagnostics-only',action='store_true',help='Opt-in V2 stage timing diagnostic; no suite/model acceptance')
     args=parser.parse_args()
+    if args.command=='collect' and bool(args.live_http_only)!=bool(args.http_manifest):parser.error('--live-http-only requires --http-manifest, and vice versa')
     if args.command=='prepare':prepare(args);return 0
     if args.command=='cpu-check':return cpu_check(args.output)
     return asyncio.run(collect(args))

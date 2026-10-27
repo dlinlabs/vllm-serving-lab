@@ -172,13 +172,14 @@ def rejection_reasons(report):
     return reasons
 
 
-async def run(client,http,url,manifest,output,*,event_clock=False):
+async def run(client,http,url,manifest,output,*,event_clock=False,shared_deadline=None):
     from .suite import controlled_trial,runtime_preflight,host_identity
     from .causal import dispatcher_parity
     from scripts.predict_prefill_async import runtime_inputs
     if event_clock:
         from . import event_clock_calibration as clock
     p=clock.protocol() if event_clock else protocol();output=Path(output);start=time.monotonic();deadline=start+p['hard_seconds'];rows=[];event_rows=[];frozen=predicted=None
+    if shared_deadline is not None:deadline=min(deadline,shared_deadline)
     summary=dict(collection_complete=False,candidate_passed=False,model_accepted=False,scope=p['scope'],completed=[],failures=[])
     save(output/'calibration-plan.json',p)
     try:

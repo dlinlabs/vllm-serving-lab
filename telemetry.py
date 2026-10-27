@@ -233,7 +233,7 @@ class GatewayDiagnostics:
         return RequestDiagnostics(self.emit, request_id)
 
 
-def has_sse_content(event):
+def has_sse_content(event, *, completions=False):
     """Validate text-stream fields before counting any chunk as first content."""
     if not isinstance(event, dict):
         raise ValueError('SSE payload must be an object')
@@ -249,7 +249,7 @@ def has_sse_content(event):
     for choice in choices:
         if not isinstance(choice, dict) or not isinstance(choice.get('delta', {}), dict):
             raise ValueError('SSE choice and delta must be objects')
-        content = choice.get('delta', {}).get('content')
+        content = choice.get('text') if completions else choice.get('delta', {}).get('content')
         if content is not None and not isinstance(content, str):
             raise ValueError('SSE text content must be a string or null')
         content_seen |= bool(content)
@@ -258,7 +258,8 @@ def has_sse_content(event):
 
 class SSEObserver:
     """Observe complete SSE events without delaying forwarding of byte chunks."""
-    def __init__(self):
+    def __init__(self, *, completions=False):
+        self.completions = completions
         self.decoder = codecs.getincrementaldecoder('utf-8')(errors='replace')
         self.buffer = ''
         self.data = []
@@ -287,7 +288,7 @@ class SSEObserver:
                     continue
                 try:
                     event = json.loads(data)
-                    self.has_content |= has_sse_content(event)
+                    self.has_content |= has_sse_content(event, completions=self.completions)
                 except (ValueError, AttributeError, TypeError):
                     self.invalid = True
 

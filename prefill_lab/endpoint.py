@@ -22,11 +22,13 @@ class Endpoint:
             if len(secret)<32 or not hmac.compare_digest(request.headers.get('authorization',''),'Bearer '+secret):
                 raise HTTPException(401,'Invalid experiment credential')
             payload=await request.json()
-            if not isinstance(payload,dict) or set(payload)-{'operation','trial_id','reason','observer'}:
+            if not isinstance(payload,dict) or set(payload)-{'operation','trial_id','reason','observer','frozen','runtime'}:
                 raise HTTPException(400,'Unexpected command fields')
             operation=payload.get('operation')
-            if operation not in ('meta','start','status','abort','finish','external_begin','external_end'):
+            if operation not in ('meta','start','status','abort','finish','external_begin','external_end','live_configure'):
                 raise HTTPException(400,'Unknown experiment operation')
+            if operation=='live_configure' and not self.live_enabled:raise HTTPException(400,'Live bridge is disabled')
+            if operation!='live_configure' and set(payload)&{'frozen','runtime'}:raise HTTPException(400,'Unexpected live fields')
             if operation=='start':
                 tid=payload.get('trial_id')
                 if tid not in self.trials:raise HTTPException(400,'Trial is not frozen')
@@ -35,7 +37,9 @@ class Endpoint:
                                    for r in self.manifest['trials'][tid]]
                 payload=dict(operation='start',trial=trial)
             if operation=='external_begin':
-                if payload.get('trial_id') not in self.external_ids or payload.get('observer','light')!='light':
+                live_trial=payload.get('trial_id') in getattr(self,'live_trials',{})
+                allowed=('off','light') if live_trial else ('light',)
+                if payload.get('trial_id') not in self.external_ids or payload.get('observer','light') not in allowed:
                     raise HTTPException(400,'External stage is not frozen')
                 if payload['trial_id'] in self.manifest['trials']:
                     payload=dict(payload,expected_foreground=sum(r['role']!='background' for r in self.manifest['trials'][payload['trial_id']]))
@@ -73,6 +77,14 @@ class Endpoint:
         transfers=json.loads((root/'experiments/prefill-service-v1.order.json').read_text())['transfer_slices']
         self.external_ids={t['trial_id'] for t in order if t['stage']=='http_bridge'}|{t['attempt_id'] for t in transfers}
         if calibration=='1' or arrivals=='1':self.external_ids=set()
+        live_flag=os.environ.get('PREFILL_LAB_LIVE_STATE','0')
+        if live_flag not in ('0','1'):raise ValueError('Invalid live-state launch flag')
+        self.live_enabled=live_flag=='1';self.live_trials={}
+        if self.live_enabled:
+            if clock!='1':raise ValueError('Live bridge requires the dedicated clock launch')
+            from .live_http import protocol
+            self.live_trials={t['trial_id']:t for t in protocol()['order']}
+            self.external_ids=set(self.live_trials)
         self.engine=engine_client
         import sys
         self.argv=sys.argv

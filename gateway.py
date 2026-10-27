@@ -72,6 +72,9 @@ LOOP_LAG_TELEMETRY = os.getenv("LOOP_LAG_TELEMETRY", "0") == "1"
 TELEMETRY_STATUS_JSON = os.getenv('TELEMETRY_STATUS_JSON', '')
 GATEWAY_DIAGNOSTICS = os.getenv('GATEWAY_DIAGNOSTICS', '0') == '1'
 SHARED_UPSTREAM_CLIENT = os.getenv('SHARED_UPSTREAM_CLIENT', '0') == '1'
+PREFILL_RAW_COMPLETIONS = os.getenv('PREFILL_LAB_RAW_COMPLETIONS', '0') == '1'
+if PREFILL_RAW_COMPLETIONS and (not BENCHMARK_REQUEST_IDS or not SHARED_UPSTREAM_CLIENT or ADMISSION_MODE!='protected'):
+    raise RuntimeError('Raw prefill bridge requires benchmark IDs, shared client and fixed protected admission')
 NO_PHASE = nullcontext()
 benchmark_ids = set()
 
@@ -281,6 +284,7 @@ async def snapshot_metrics() -> Dict[str, Any]:
     if telemetry.diagnostics is not None:
         metrics['diagnostics'] = dict(gc=telemetry.diagnostics.gc_state(),
                                      health=telemetry.diagnostics.health(), sampled_at=time.monotonic())
+    if PREFILL_RAW_COMPLETIONS:metrics['prefill_raw_completions']=True
     if SHARED_UPSTREAM_CLIENT:
         metrics['shared_upstream_client'] = True
     return metrics
@@ -379,6 +383,29 @@ async def finish_request(request_cost: float) -> None:
 
 @app.post("/v1/chat/completions")
 async def proxy_chat_completions(request: Request):
+    return await _proxy_completions(request, '/v1/chat/completions')
+
+
+async def proxy_raw_completions(request: Request):
+    if not PREFILL_RAW_COMPLETIONS:return JSONResponse({'detail':'not found'},status_code=404)
+    try:
+        payload=json.loads(await request.body());ids=payload['prompt'];extra=payload['vllm_xargs']
+        identifier=request.headers.get('x-benchmark-request-id','')
+        if (set(payload)-{'model','prompt','max_tokens','temperature','ignore_eos','stream','stream_options','request_id','vllm_xargs'}
+                or not re.fullmatch('[0-9a-f]{32}',identifier) or payload['request_id']!=identifier
+                or not isinstance(ids,list) or not ids or any(type(x) is not int or x<0 for x in ids)
+                or payload['max_tokens'] not in (128,256) or len(ids)+payload['max_tokens']>8192
+                or payload['ignore_eos'] is not True or payload['stream'] is not True
+                or type(payload['temperature']) not in (int,float) or payload['temperature']!=0
+                or extra['prefill_lab_trace_id']!=identifier):raise ValueError('Invalid frozen raw request')
+    except (ValueError,KeyError,TypeError):return JSONResponse({'detail':'invalid benchmark raw request'},status_code=422)
+    return await _proxy_completions(request, '/v1/completions')
+
+
+if PREFILL_RAW_COMPLETIONS:app.post('/v1/completions')(proxy_raw_completions)
+
+
+async def _proxy_completions(request, upstream_path):
     request_id = None
     if BENCHMARK_REQUEST_IDS:
         request_id = request.headers.get('x-benchmark-request-id')
@@ -392,6 +419,9 @@ async def proxy_chat_completions(request: Request):
                 return JSONResponse({'detail': 'benchmark ID capacity exceeded'}, status_code=503)
             benchmark_ids.add(request_id)
     request_id = telemetry.received(request_id)
+    if upstream_path=='/v1/completions':
+        from prefill_lab.live_http import clock_domain
+        telemetry.emit('bridge_clock',request_id,clock_domain=clock_domain())
     phases = telemetry.diagnostics.request(request_id) if telemetry.diagnostics is not None else None
     reserved = False
     cleaned = False
@@ -501,7 +531,7 @@ async def proxy_chat_completions(request: Request):
             with phases.phase('client_construction') if phases else NO_PHASE:
                 client = httpx.AsyncClient()
         upstream_request = client.build_request(
-            method=request.method, url=f"{VLLM_URL}/v1/chat/completions",
+            method=request.method, url=f"{VLLM_URL}{upstream_path}",
             content=body, headers=headers, timeout=60.0,
         )
         with phases.phase('http_send_headers') if phases else NO_PHASE:
@@ -520,7 +550,7 @@ async def proxy_chat_completions(request: Request):
         raise
 
     async def stream_upstream():
-        observer = SSEObserver()
+        observer = SSEObserver(completions=upstream_path=='/v1/completions')
         is_sse = "text/event-stream" in upstream.headers.get("content-type", "")
         streaming_expected = bool(payload.get("stream")) or is_sse
         outcome = "cancelled"

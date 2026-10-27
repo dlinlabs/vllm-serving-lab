@@ -25,7 +25,8 @@ def synthetic_rows(plan, runtime, theta):
     return rows
 
 
-def audit(directory,*,event_clock=False):
+def audit(directory,*,event_clock=False,launch_scope=None):
+    if launch_scope is not None and (not event_clock or launch_scope!='live_http_state_bridge'):raise ValueError('Unsupported parent clock scope')
     from prefill_lab.tokens import validate
     from prefill_lab.suite import runtime_preflight
     from prefill_lab.causal import dispatcher_parity
@@ -48,7 +49,7 @@ def audit(directory,*,event_clock=False):
         if source['version']!='0.30.0' or source['files']!=pins:raise ValueError('Installed source pins differ')
     launch=load('launch.json');acceptance=launch['cpu_acceptance'];sources=load('collection-sources.json')
     if (not acceptance.get('valid') or acceptance.get('source_sha256')!=sources or
-            launch['source_sha256']!=sources or launch['scope']!=('effective_event_clock_confirmation' if event_clock else 'effective_delayed_arrivals_pilot')):
+            launch['source_sha256']!=sources or launch['scope']!=(launch_scope or ('effective_event_clock_confirmation' if event_clock else 'effective_delayed_arrivals_pilot'))):
         raise ValueError('Source/CPU acceptance identity mismatch')
     if load('native-cpu-acceptance/acceptance.json')!=acceptance:
         raise ValueError('Original CPU acceptance differs from launch record')

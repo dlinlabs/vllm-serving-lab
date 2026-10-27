@@ -48,7 +48,12 @@ def core_runtime(core):
     def observed_schedule(*args,**kwargs):
         trial=core._prefill_trial
         before=trial.before_schedule() if trial and trial.mode!='off' else None
+        live=getattr(core,'_prefill_live',None)
+        live_started=time.monotonic() if live and live.observed else None
         output=schedule(*args,**kwargs)
+        if live and live.observed:
+            try:live.scheduled(output,live_started)
+            except Exception as exc:live.errors.append(str(exc))
         if trial and trial.mode!='off':
             try:trial.after_schedule(output,before)
             except (ValueError,KeyError,RuntimeError) as exc:trial.errors.append(f'Step capture failed: {exc}')
@@ -62,6 +67,10 @@ def core_runtime(core):
         with stages.span(key,'commit',profiler=rec.profile) if stages else nullcontext():
             results=update(output,*args,**kwargs)
             if stages:stages.committed(key,results)
+        live=getattr(core,'_prefill_live',None)
+        if live and live.observed:
+            try:live.committed(output)
+            except Exception as exc:live.errors.append(str(exc))
         if trial:
             try:trial.after_output(output,results)
             except Exception as exc:
@@ -122,6 +131,20 @@ def command(core,payload):
         result=resolved_config(core)
         result['workers']=core.model_executor.collective_rpc('prefill_lab_worker_meta')
         return result
+    if op=='live_configure':
+        if os.environ.get('PREFILL_LAB_LIVE_STATE')!='1' or trial or core.scheduler.has_requests() or core.batch_queue:
+            raise RuntimeError('Live configuration requires an empty opt-in engine')
+        from . import event_clock_calibration as clock
+        from scripts.predict_prefill_async import runtime_inputs
+        supplied=payload['runtime'];actual=resolved_config(core)
+        actual['workers']=core.model_executor.collective_rpc('prefill_lab_worker_meta')
+        if any(supplied.get(k)!=v for k,v in actual.items()):raise ValueError('Live runtime differs from native engine')
+        frozen=payload['frozen']
+        if frozen.get('measurement_origin')!='fresh_native_training_events':raise ValueError('Live phase requires fresh same-host training')
+        clock.predict_frozen(frozen,clock.protocol(),supplied)
+        scope,dispatch=runtime_inputs(supplied)
+        core._prefill_live_config=(clock.costs(frozen['parameters_s'],clock.protocol(),clock.specification()),scope,dispatch)
+        return dict(configured=True,frozen_sha256=frozen['sha256'])
     if op=='start':
         if trial or core.scheduler.has_requests() or core.batch_queue:
             raise RuntimeError('Start requires an empty engine and a fully fetched prior trial')
@@ -145,8 +168,13 @@ def command(core,payload):
         core._prefill_trial=None
         return result
     if op=='external_begin':
-        if trial or core.scheduler.has_requests():raise RuntimeError('External stage needs drained engine')
+        if trial or core.scheduler.has_requests() or core.batch_queue:raise RuntimeError('External stage needs drained engine')
         core._prefill_external=True
+        if os.environ.get('PREFILL_LAB_LIVE_STATE')=='1':
+            from .live_runtime import LiveTracker
+            config=getattr(core,'_prefill_live_config',None)
+            if config is None:raise RuntimeError('Configure fresh live model first')
+            core._prefill_live=LiveTracker(core,*config,observed=payload['observer']=='light')
         core._prefill_trial=ExternalCapture(core,payload['trial_id'],payload.get('observer','light'),payload.get('expected_foreground'))
         core.model_executor.collective_rpc('prefill_lab_worker_begin',args=(payload['trial_id'],payload.get('observer','light')))
         return dict(external=True)
@@ -156,6 +184,8 @@ def command(core,payload):
         workers=core.model_executor.collective_rpc('prefill_lab_worker_finish')
         if any(w['pending'] for w in workers):return dict(status='gpu_events_pending')
         trial.status='invalid' if trial.status=='invalid' or trial.errors else 'complete';result=trial.capture();result['workers']=workers
+        if getattr(core,'_prefill_live',None):
+            result['live']=core._prefill_live.capture();core._prefill_live=None
         core._prefill_trial=None;core._prefill_external=False
         return result
     raise ValueError('Unknown prefill operation')
@@ -275,7 +305,15 @@ def guarded_add(core,request,original,*args,**kwargs):
         core._send_abort_outputs_to_client([rid],getattr(request,'client_index',0))
         if rid in trial.requests:trial.requests[rid].update(finished=time.monotonic(),finish_reason='abort')
         return
-    return original(core,request,*args,**kwargs)
+    live=getattr(core,'_prefill_live',None)
+    if live:
+        try:live.before_add(request)
+        except Exception as exc:live.errors.append(str(exc))
+    result=original(core,request,*args,**kwargs)
+    if live:
+        try:live.after_add(request)
+        except Exception as exc:live.errors.append(str(exc))
+    return result
 
 
 def handle_arrival(core,payload):

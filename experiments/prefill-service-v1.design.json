@@ -482,7 +482,7 @@
     },
     "prefill_lab/runtime.py": {
       "path": "prefill_lab/runtime.py",
-      "sha256": "100c1099a0b159a7fe2388f8199bd80aa62d43eb58e05ca4dfd6229db43436f5"
+      "sha256": "94180487df4f5b5f7dae3e3fb21eb54c5c88fc50be6dacff5b94fe54ee229145"
     },
     "prefill_lab/contracts.py": {
       "path": "prefill_lab/contracts.py",
@@ -498,7 +498,7 @@
     },
     "prefill_lab/endpoint.py": {
       "path": "prefill_lab/endpoint.py",
-      "sha256": "5d781c7ff661a34ff174dd81c66c013c87cc03a51b4c10d69c8cde6bcc0f3be3"
+      "sha256": "8d327e60f54087c5cb11303a5d40b725ef3f2fdf4348ecc68caaa90fdec3930f"
     },
     "prefill_lab/__init__.py": {
       "path": "prefill_lab/__init__.py",
@@ -510,7 +510,7 @@
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
-      "sha256": "d24e2988da45b237e8317d72f157a8490be7f87efe95eb9a6ee7cf66ec12b80d"
+      "sha256": "6ff9de23b6e79772fb8accf26027930d9d9b7183f4dbcbaa1ade4fdb75affaf3"
     },
     "prefill_lab/dispatch.py": {
       "path": "prefill_lab/dispatch.py",
@@ -522,7 +522,7 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "b8caee2f41d8f86e73e0d4db6e485ee6f3b2cdd60f50350da9d4499075fef0d6"
+      "sha256": "40335f48c49b7271df429f735e8912d7cdd77903be2fc67f0a209c463188e27f"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
@@ -566,7 +566,7 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "168ec741b7da8b5bd8f14eca315e1bc755ca0b0f598d170ca51f31c1df0c1543"
+      "sha256": "e32a5fc2013958a69e9546d060a47f14395d38e8d118bfaaf305fcd75d929316"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
@@ -594,7 +594,7 @@
     },
     "telemetry.py": {
       "path": "telemetry.py",
-      "sha256": "315123d4234076297f9c63259596810a687d467c3fc0aadc2e8419152f8e6c18"
+      "sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370"
     },
     "prefill_lab/deep_diagnostic.py": {
       "path": "prefill_lab/deep_diagnostic.py",
@@ -686,7 +686,7 @@
     },
     "scripts/setup_prefill_calibration.py": {
       "path": "scripts/setup_prefill_calibration.py",
-      "sha256": "f8b06b29f05b26ccf1471613e9a880cbfa066042671c6566553f45fb91f4de58"
+      "sha256": "6140e752f352dc0912c5bbc0c57c2c2f0cb78144c0709e9001f5aa76dae15a95"
     },
     "tests/test_prefill_effective_calibration.py": {
       "path": "tests/test_prefill_effective_calibration.py",
@@ -714,11 +714,11 @@
     },
     "prefill_lab/delayed_calibration.py": {
       "path": "prefill_lab/delayed_calibration.py",
-      "sha256": "9713e7e61880f8043bcc4b72c7698e3de927c41f2786d1195022d1609568cc14"
+      "sha256": "17be0a64bcdf4d4ac6226eb396aec91972c1642d16d617830f0cdaa8a928da52"
     },
     "scripts/check_prefill_arrivals.py": {
       "path": "scripts/check_prefill_arrivals.py",
-      "sha256": "332af957161b5d03ba90d8631fd23a39d96ed21fa72e01a469aa85ed6c8a7225"
+      "sha256": "620690a22317494569003f9b25067fd6b90b9678e9fca5a194d959843489a735"
     },
     "tests/test_prefill_delayed_calibration.py": {
       "path": "tests/test_prefill_delayed_calibration.py",
@@ -775,6 +775,50 @@
     "tests/test_prefill_clock_analysis.py": {
       "path": "tests/test_prefill_clock_analysis.py",
       "sha256": "9eeabdc0724dca6eff7a1459040e74f45c6e2dc57cf667277274fc40287ed135"
+    },
+    "prefill_lab/live_predictor.py": {
+      "path": "prefill_lab/live_predictor.py",
+      "sha256": "e5e969d7d07708d67841bc2e5d7549c9b50564d2758a569011577716ef72ea79"
+    },
+    "prefill_lab/live_http.py": {
+      "path": "prefill_lab/live_http.py",
+      "sha256": "5eb55e139d7da0fa0f4c40ee9eca77e824823b2a73661f44fda6e0f7bc6e5da3"
+    },
+    "prefill_lab/live_runtime.py": {
+      "path": "prefill_lab/live_runtime.py",
+      "sha256": "91a53f7ca0f0fa426b4ef65361c24cda416e784b7abc1bd302b8b673acfc4ebc"
+    },
+    "prefill_lab/live_experiment.py": {
+      "path": "prefill_lab/live_experiment.py",
+      "sha256": "80b2be58d2b70b1efe92d5795511f021a251f0876df0c7bc11651178761d32e0"
+    },
+    "scripts/predict_prefill_live.py": {
+      "path": "scripts/predict_prefill_live.py",
+      "sha256": "d71c3f97f686af52c7c8eb66391d758e889f5bbfd4b79c969ad4fcfae221cb01"
+    },
+    "scripts/prefill_live_http_trial.py": {
+      "path": "scripts/prefill_live_http_trial.py",
+      "sha256": "c299d459a60d30757ae8fc07a65e29ca628208bd29186f88f4254c706af9043c"
+    },
+    "scripts/check_prefill_live_http.py": {
+      "path": "scripts/check_prefill_live_http.py",
+      "sha256": "8fb450b6c788f65f2c416a38e2f9e477f63c84e62a05d0ea7223549f8df98a49"
+    },
+    "tests/test_prefill_live.py": {
+      "path": "tests/test_prefill_live.py",
+      "sha256": "38e20b04752d3b851c3c1c70a6f986596c4725b00d93235a12e34f38ff8ff3d5"
+    },
+    "experiments/prefill-live-http-v1.json": {
+      "path": "experiments/prefill-live-http-v1.json",
+      "sha256": "4f04487d79f644add2519c17e92f1e01f4226ceb8005ae3ff81b92e477e57a9e"
+    },
+    "experiments/prefill-live-http-v1.md": {
+      "path": "experiments/prefill-live-http-v1.md",
+      "sha256": "ace762199d8f70f36e5c679ae573bdcb098dc373500b6562bfeba564fb530348"
+    },
+    "gateway.py": {
+      "path": "gateway.py",
+      "sha256": "659abc46a9361aeba91098671303a1133d37daac48d280632f9e177180165677"
     }
   },
   "readiness": {
@@ -901,6 +945,22 @@
       "native_evidence": "results/prefill-clock-33876f3-confirmation/report.md",
       "native_archive_sha256": "2d1a78e03ca81705257910a1428e76eeb64c7904a9dcb17a0c034a417cdd9fe2",
       "trials": 136
+    },
+    "live_http_state": {
+      "status": "local_cpu_regressions_passed_pending_native_qualification",
+      "path": "experiments/prefill-live-http-v1.md",
+      "protocol": "experiments/prefill-live-http-v1.json",
+      "command": "prefill_host.py live-http",
+      "clock_trials": 136,
+      "http_trials": 98,
+      "native_gpu_run_performed": false,
+      "model_accepted": false,
+      "http_accepted": false,
+      "adaptive_cap_accepted": false,
+      "mpc_accepted": false,
+      "prediction_point": "EngineCore pre-ADD; HTTP ingress elapsed is known, not predicted",
+      "pending_debt": "copy-ready query or explicit commit-anchored effective approximation; unavailable is failure",
+      "cpu_evidence": "results/prefill-live-http-implementation/validation.json"
     }
   },
   "round7_corrections": {

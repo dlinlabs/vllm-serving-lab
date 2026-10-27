@@ -172,6 +172,9 @@ class ExternalCapture(Trial):
         self.requests[rid]=dict(role=role,input_tokens=request.num_prompt_tokens,
                                max_tokens=request.max_tokens,output_tokens=0,first=None,
                                finished=None,enqueue=self.clock(),queue_posted=None)
+        if 'prefill_lab_trace_id' in metadata:
+            from .contracts import digest
+            self.requests[rid].update(trace_id=metadata['prefill_lab_trace_id'],input_ids_sha256=digest(list(request.prompt_token_ids)))
         self.enqueued.add(rid)
         if role=='background':self.backgrounds.add(rid)
         else:

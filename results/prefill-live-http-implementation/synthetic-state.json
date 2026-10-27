@@ -1,0 +1,32 @@
+{
+  "schema": "live-engine-state-v1",
+  "clock_domain": "synthetic-demo-only",
+  "observed_at": 10.0,
+  "last_commit_at": 9.998,
+  "running": [
+    "existing"
+  ],
+  "waiting": [],
+  "requests": {
+    "existing": {
+      "prompt_tokens": 1024,
+      "max_tokens": 128,
+      "num_tokens": 1025,
+      "computed": 1025,
+      "placeholders": 1
+    }
+  },
+  "pending": [
+    {
+      "work": [
+        {
+          "request_id": "existing",
+          "position": 1024,
+          "tokens": 1
+        }
+      ],
+      "scheduled_at": 9.99,
+      "ready": false
+    }
+  ]
+}
