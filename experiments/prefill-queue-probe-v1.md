@@ -43,7 +43,8 @@ wait; it is explanatory evidence and never a pre-arrival forecast input.
 
 Report all per-arm min/median/max/ranges and state counts. Matching normalized
 receipt-state pairs retain max(10 ms,20% receipt-arm residence). Different-state
-pairs stay unassessable, with counts; zero comparable pairs cannot pass. Equal
+pairs stay unassessable, with counts. Report coverage separately for each cell;
+zero comparable pairs in any cell blocks the whole same-state control verdict. Equal
 observed state does not prove equal physical phase. Baseline/receipt and
 baseline/LIGHT endpoint controls use original observer limits independently.
 Six repeats do not establish statistical coverage or identify perturbation's

@@ -116,9 +116,13 @@ def analyze(rows,plan):
             values=[r['queue_s'] for r in samples if r['case']==case and r['arm']==arm]
             distributions.append(dict(case=case,arm=arm,samples=len(values),minimum_s=min(values),median_s=statistics.median(values),maximum_s=max(values),spread_s=max(values)-min(values)))
     assessable=[r for r in checks if r['assessable']]
+    coverage=[dict(case=case,comparable_pairs=sum(r['assessable'] for r in checks if r['case']==case),
+        total_pairs=sum(r['case']==case for r in checks)) for case in sorted(counts)]
+    uncovered=[r['case'] for r in coverage if r['comparable_pairs']==0]
     return dict(schema='queue-receipt-probe-report-v1',diagnostic_complete=True,
         endpoint_observer_controls_passed=all(r['passed'] for r in controls),
-        same_state_queue_controls_passed=bool(assessable) and all(r['passed'] for r in assessable),
+        same_state_queue_controls_passed=bool(assessable) and not uncovered and all(r['passed'] for r in assessable),
+        state_control_coverage=coverage,unassessable_state_control_cases=uncovered,
         same_state_pairs=len(assessable),different_state_pairs=len(checks)-len(assessable),controls=controls,
         receipt_pair_checks=checks,samples=samples,state_counts=counts,queue_distributions=distributions,
         plan_sha256=digest(plan),rows_sha256=digest(rows),

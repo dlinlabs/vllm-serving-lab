@@ -854,7 +854,7 @@
     },
     "prefill_lab/queue_probe.py": {
       "path": "prefill_lab/queue_probe.py",
-      "sha256": "af2ce4b4408dfa2029747afe06bf1665694a2cdf6ccf8f900aaedfbbea7f9ac3"
+      "sha256": "b3259bf7e0c8c7c68c94d9dcfedb580204702b024979acc740607211208fb4b8"
     },
     "scripts/check_prefill_queue_probe.py": {
       "path": "scripts/check_prefill_queue_probe.py",
@@ -866,7 +866,7 @@
     },
     "tests/test_prefill_queue_probe.py": {
       "path": "tests/test_prefill_queue_probe.py",
-      "sha256": "c06007845c395c9f93bc710d243d7c32b395c4197f26c46f9b5b9a6b414a5ddd"
+      "sha256": "67760b328e7b5ae4d66ae6fd4232b3f141c109ac9909976c9ad214a44bfb13b6"
     },
     "experiments/prefill-queue-probe-v1.json": {
       "path": "experiments/prefill-queue-probe-v1.json",
@@ -874,7 +874,7 @@
     },
     "experiments/prefill-queue-probe-v1.md": {
       "path": "experiments/prefill-queue-probe-v1.md",
-      "sha256": "b495e233c9b0fa41a6d80a435ca0d3a16094cffa28b7bc39f4bcd2130110644e"
+      "sha256": "86b039277d81ad32a184349b64a45d76e3c40033689d051e5893041c65a6314f"
     },
     "experiments/prefill-queue-confirmation-v2.md": {
       "path": "experiments/prefill-queue-confirmation-v2.md",
@@ -1065,7 +1065,8 @@
       "model_accepted": false,
       "http_accepted": false,
       "adaptive_cap_accepted": false,
-      "mpc_accepted": false
+      "mpc_accepted": false,
+      "evidence": "results/prefill-queue-probe-implementation/report.md"
     },
     "queue_confirmation_v2": {
       "status": "design_only_not_enabled",

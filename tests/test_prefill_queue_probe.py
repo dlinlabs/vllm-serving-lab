@@ -263,3 +263,16 @@ def test_independent_audit_rebuild_and_corruption(monkeypatch,tmp_path,damage):
 def test_new_policy_bound_into_cpu_identity():
     from scripts.run_prefill_service import code_identity
     assert 'experiments/prefill-queue-probe-v1.json' in code_identity()
+
+
+def test_one_unassessable_cell_blocks_whole_state_control():
+    p=qp.protocol();data=rows(p)
+    case=next(r['case'] for r in data if r['stage']=='calibration_probe')
+    for r in data:
+        if r['stage']=='calibration_probe' and r['case']==case and r['arm']=='light':
+            r['receipt']['state']['committed']=9;r['receipt']['state_sha256']=digest(r['receipt']['state'])
+    report=qp.analyze(data,p)
+    assert report['same_state_pairs']==42 and report['different_state_pairs']==6
+    assert report['unassessable_state_control_cases']==[case]
+    assert not report['same_state_queue_controls_passed']
+    assert next(r for r in report['state_control_coverage'] if r['case']==case)['comparable_pairs']==0
