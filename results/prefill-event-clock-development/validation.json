@@ -1,0 +1,38 @@
+{
+  "scope": "local related CPU verification only; no native full/resource/GPU acceptance",
+  "tests": 445,
+  "new_event_clock_tests": 30,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "elapsed_seconds": 203.29,
+  "source_sha256": {
+    "prefill_lab/event_clock_calibration.py": "946da8076c355e3dffb36f9a7e2d6d3dea9670c330f649193ee0565c4dc09fce",
+    "prefill_lab/delayed_calibration.py": "9713e7e61880f8043bcc4b72c7698e3de927c41f2786d1195022d1609568cc14",
+    "prefill_lab/endpoint.py": "5d781c7ff661a34ff174dd81c66c013c87cc03a51b4c10d69c8cde6bcc0f3be3",
+    "scripts/calibrate_prefill_event_clock.py": "76c7ec9f86f2d4a2a528a76c88808e342b8caa309ee5753df79b9587b6abf1b1",
+    "scripts/check_prefill_event_clock.py": "07ee2e632615f5db28b7412b3ab8c236ad59f090c86d9183034aabbab49778bf",
+    "scripts/check_prefill_arrivals.py": "332af957161b5d03ba90d8631fd23a39d96ed21fa72e01a469aa85ed6c8a7225",
+    "scripts/prefill_host.py": "168ec741b7da8b5bd8f14eca315e1bc755ca0b0f598d170ca51f31c1df0c1543",
+    "scripts/run_prefill_service.py": "b8caee2f41d8f86e73e0d4db6e485ee6f3b2cdd60f50350da9d4499075fef0d6",
+    "scripts/setup_prefill_calibration.py": "f8b06b29f05b26ccf1471613e9a880cbfa066042671c6566553f45fb91f4de58",
+    "tests/test_prefill_event_clock.py": "bd757db7de70bdff99954882522246372b7d25697339f64a859dbc8add0aecbf"
+  },
+  "compile_passed": true,
+  "original_v2_candidate_passed": false,
+  "development_rules_satisfied": true,
+  "fresh_confirmation_required": true,
+  "model_accepted": false,
+  "adaptive_cap_accepted": false,
+  "mpc_accepted": false,
+  "self_review": [
+    "Training labels only; plan controls membership; held/warmup poison ignored",
+    "Own work and foreground commit prefix precede event residuals",
+    "Event timestamps are labels; overlapping wall spans are not summed",
+    "Mixed term serialized under separate schema",
+    "Original numeric gates unchanged; earlier rejected candidates retained",
+    "Retrospective delayed data is not independent confirmation",
+    "New host operation trains/freezes before new-content confirmation",
+    "No change to native worker hooks, original serial guard or v1 four-term fit"
+  ]
+}

@@ -53,9 +53,15 @@ class Endpoint:
         order=json.loads((root/'experiments/prefill-service-v1.order.json').read_text())['order']
         calibration=os.environ.get('PREFILL_LAB_EFFECTIVE_CALIBRATION','0')
         arrivals=os.environ.get('PREFILL_LAB_DELAYED_ARRIVALS','0')
+        clock=os.environ.get('PREFILL_LAB_EVENT_CLOCK','0')
+        if clock not in ('0','1') or (clock=='1' and (arrivals!='1' or calibration!='0')):
+            raise ValueError('Invalid/conflicting event-clock mode')
         if arrivals not in ('0','1') or (arrivals=='1' and calibration!='0'):raise ValueError('Invalid/conflicting delayed mode')
         if calibration not in ('0','1'):raise ValueError('Invalid calibration mode')
-        if arrivals=='1':
+        if clock=='1':
+            from .event_clock_calibration import protocol,validate_manifest
+            plan=protocol();cases,order=plan['cases'],plan['order'];validate_manifest(self.manifest)
+        elif arrivals=='1':
             from .delayed_calibration import protocol,validate_manifest
             plan=protocol();cases,order=plan['cases'],plan['order'];validate_manifest(self.manifest)
         elif calibration=='1':

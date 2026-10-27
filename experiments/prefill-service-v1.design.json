@@ -498,7 +498,7 @@
     },
     "prefill_lab/endpoint.py": {
       "path": "prefill_lab/endpoint.py",
-      "sha256": "a6cb397639d1a4000c47ba58b4efe8b6607073b627da710afe24ba98578df7f8"
+      "sha256": "5d781c7ff661a34ff174dd81c66c013c87cc03a51b4c10d69c8cde6bcc0f3be3"
     },
     "prefill_lab/__init__.py": {
       "path": "prefill_lab/__init__.py",
@@ -522,7 +522,7 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "9c8b0f953c4637d93d5d9a6628852b29510a5ed072ed41b2878fa0e54ad90c04"
+      "sha256": "b8caee2f41d8f86e73e0d4db6e485ee6f3b2cdd60f50350da9d4499075fef0d6"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
@@ -566,7 +566,7 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "188b0a4c47bfb8764d114c3e40889964c7eabebd6e375fe7aae354da0c31ed2a"
+      "sha256": "168ec741b7da8b5bd8f14eca315e1bc755ca0b0f598d170ca51f31c1df0c1543"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
@@ -686,7 +686,7 @@
     },
     "scripts/setup_prefill_calibration.py": {
       "path": "scripts/setup_prefill_calibration.py",
-      "sha256": "b5ef13acff7ccad060125ed0c4a6b7fe58808d1edd74e14080c741aa0a62231f"
+      "sha256": "f8b06b29f05b26ccf1471613e9a880cbfa066042671c6566553f45fb91f4de58"
     },
     "tests/test_prefill_effective_calibration.py": {
       "path": "tests/test_prefill_effective_calibration.py",
@@ -714,11 +714,11 @@
     },
     "prefill_lab/delayed_calibration.py": {
       "path": "prefill_lab/delayed_calibration.py",
-      "sha256": "cee8563f505c326358d53fbb43db5283173450123339ded909bd22059d4beabd"
+      "sha256": "9713e7e61880f8043bcc4b72c7698e3de927c41f2786d1195022d1609568cc14"
     },
     "scripts/check_prefill_arrivals.py": {
       "path": "scripts/check_prefill_arrivals.py",
-      "sha256": "6fd49452f804574ae659ac00b7cf49af814980ed776990e606b8a08fd429c564"
+      "sha256": "332af957161b5d03ba90d8631fd23a39d96ed21fa72e01a469aa85ed6c8a7225"
     },
     "tests/test_prefill_delayed_calibration.py": {
       "path": "tests/test_prefill_delayed_calibration.py",
@@ -730,7 +730,7 @@
     },
     "experiments/prefill-effective-arrivals-v2.md": {
       "path": "experiments/prefill-effective-arrivals-v2.md",
-      "sha256": "6a33693e512d2f6c6cb341a728cd765b05e6481a9be855d4e1cc8e3a7e44f257"
+      "sha256": "3bd4980f042600a788a57b0ecaacb58f64538fe9a790b96312b1163b5cab8e05"
     },
     "scripts/analyze_prefill_arrival_capture.py": {
       "path": "scripts/analyze_prefill_arrival_capture.py",
@@ -739,6 +739,34 @@
     "tests/test_prefill_arrival_diagnosis.py": {
       "path": "tests/test_prefill_arrival_diagnosis.py",
       "sha256": "6d7706b9539f24b978134169c3bffaeb09d3009627c2372e59e485b7bfd09d1b"
+    },
+    "prefill_lab/event_clock_calibration.py": {
+      "path": "prefill_lab/event_clock_calibration.py",
+      "sha256": "946da8076c355e3dffb36f9a7e2d6d3dea9670c330f649193ee0565c4dc09fce"
+    },
+    "scripts/calibrate_prefill_event_clock.py": {
+      "path": "scripts/calibrate_prefill_event_clock.py",
+      "sha256": "76c7ec9f86f2d4a2a528a76c88808e342b8caa309ee5753df79b9587b6abf1b1"
+    },
+    "scripts/check_prefill_event_clock.py": {
+      "path": "scripts/check_prefill_event_clock.py",
+      "sha256": "07ee2e632615f5db28b7412b3ab8c236ad59f090c86d9183034aabbab49778bf"
+    },
+    "tests/test_prefill_event_clock.py": {
+      "path": "tests/test_prefill_event_clock.py",
+      "sha256": "bd757db7de70bdff99954882522246372b7d25697339f64a859dbc8add0aecbf"
+    },
+    "experiments/prefill-event-clock-v1.json": {
+      "path": "experiments/prefill-event-clock-v1.json",
+      "sha256": "1e993c388f1fca98d65f4bead72efb515f46805841d4873a48e19320c2913990"
+    },
+    "experiments/prefill-event-clock-confirmation-v1.json": {
+      "path": "experiments/prefill-event-clock-confirmation-v1.json",
+      "sha256": "ad67f585bf3f57a93199306dc0ce58383f85c8abacf4e6763d066db0964f9540"
+    },
+    "experiments/prefill-event-clock-v1.md": {
+      "path": "experiments/prefill-event-clock-v1.md",
+      "sha256": "f07a671a011a9d3158d2b17bdad1a627ceeb6bd2d269bcc3b36084a8acbfb60a"
     }
   },
   "readiness": {
@@ -843,6 +871,22 @@
       "candidate_passed": false,
       "native_evidence": "results/prefill-arrivals-39d0c7d-analysis/report.md",
       "failed_gate": "sentinel queue at800ms/D16"
+    },
+    "event_clock_calibration": {
+      "status": "training_only_development_fitted_fresh_confirmation_pending",
+      "protocol": "experiments/prefill-event-clock-confirmation-v1.json",
+      "specification": "experiments/prefill-event-clock-v1.json",
+      "path": "experiments/prefill-event-clock-v1.md",
+      "command": "prefill_host.py clock",
+      "effective_parameters": 6,
+      "native_confirmation_implemented": true,
+      "native_gpu_confirmation_performed": false,
+      "model_accepted": false,
+      "adaptive_cap_accepted": false,
+      "mpc_accepted": false,
+      "development_evidence": "results/prefill-event-clock-development/report.md",
+      "retrospective_rules_satisfied": true,
+      "fresh_confirmation_required": true
     }
   },
   "round7_corrections": {

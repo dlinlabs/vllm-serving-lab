@@ -131,6 +131,11 @@ def evaluate(rows,plan,runtime,frozen,predicted):
         raise ValueError('Delayed frozen identity changed')
     if digest(predicted)!=digest(forecasts(frozen['parameters_s'],plan,runtime)):raise ValueError('Delayed forecasts changed')
     if frozen['training_sha256']!=digest(base.select(rows,plan,{'train'},'off')):raise ValueError('Delayed training identity changed')
+    return score(rows,plan,predicted,frozen['sha256'])
+
+
+def score(rows,plan,predicted,frozen_sha):
+    """Unchanged v2 gates shared with the separately identified clock model."""
     held=select(rows,plan,HELD,'off');light=select(rows,plan,HELD,'light')
     q=quality(rows,plan);delayed=[r for r in held if r['stage']=='held_delayed'];anchors=[r for r in held if r['stage']!='held_delayed']
     scores=base.endpoint_scores(delayed,predicted,plan);anchor_scores=base.endpoint_scores(anchors,predicted,plan)
@@ -147,7 +152,7 @@ def evaluate(rows,plan,runtime,frozen,predicted):
     passed=q['passed'] and scores['passed'] and all(p['passed'] for p in anchor_phases.values()) and structure and all(r['passed'] for r in queue)
     return dict(schema='effective-delayed-report-v2',candidate_passed=passed,quality=q,endpoint_scores=scores,
         anchor_scores=anchor_scores,anchor_phase_scores=anchor_phases,sentinel_queue_scores=queue,
-        structure_and_background_lifetime_valid=structure,frozen_sha256=frozen['sha256'],
+        structure_and_background_lifetime_valid=structure,frozen_sha256=frozen_sha,
         primary_clock='declared target-to-first/final output',secondary_clock='actual queue-post-to-first and enqueue residence',
         clock_diagnostics=[dict(trial_id=r['trial_id'],case=r['case'],sentinel=r['clocks']['sentinel']) for r in delayed],
         signed_bias_requires_cap_uncertainty_qualification=True,model_accepted=False,physical_costs_identified=False,
@@ -167,34 +172,38 @@ def rejection_reasons(report):
     return reasons
 
 
-async def run(client,http,url,manifest,output):
+async def run(client,http,url,manifest,output,*,event_clock=False):
     from .suite import controlled_trial,runtime_preflight,host_identity
     from .causal import dispatcher_parity
     from scripts.predict_prefill_async import runtime_inputs
-    p=protocol();output=Path(output);start=time.monotonic();deadline=start+p['hard_seconds'];rows=[];frozen=predicted=None
+    if event_clock:
+        from . import event_clock_calibration as clock
+    p=clock.protocol() if event_clock else protocol();output=Path(output);start=time.monotonic();deadline=start+p['hard_seconds'];rows=[];event_rows=[];frozen=predicted=None
     summary=dict(collection_complete=False,candidate_passed=False,model_accepted=False,scope=p['scope'],completed=[],failures=[])
     save(output/'calibration-plan.json',p)
     try:
-        validate_manifest(manifest);meta=await client.command('meta');runtime_preflight(meta,manifest);runtime_inputs(meta)
+        (clock.validate_manifest if event_clock else validate_manifest)(manifest);meta=await client.command('meta');runtime_preflight(meta,manifest);runtime_inputs(meta)
         if any(w.get('pipeline_stages') for w in meta['workers']):raise ValueError('Delayed pilot prohibits deep stage timers')
         save(output/'runtime.json',meta);save(output/'host-before.json',host_identity());cases={c['id']:c for c in p['cases']}
         for t in p['order']:
             if time.monotonic()>=deadline:raise TimeoutError('Delayed pilot1800s deadline')
             if t['stage'] in HELD and frozen is None:
                 print('Delayed pilot: training-only fit and forecast freeze before held trials',flush=True)
-                frozen=base.fit(rows,p,meta,deadline=deadline,origin='native_controlled_endpoints')
+                frozen=clock.fit(rows,event_rows,p,meta,deadline=deadline,origin='fresh_native_training_events') if event_clock else base.fit(rows,p,meta,deadline=deadline,origin='native_controlled_endpoints')
                 save(output/'frozen.json',frozen);save(output/'costs.json',frozen['costs'])
-                predicted=forecasts(frozen['parameters_s'],p,meta);save(output/'pre-held-predictions.json',predicted)
+                predicted=clock.predict_frozen(frozen,p,meta) if event_clock else forecasts(frozen['parameters_s'],p,meta);save(output/'pre-held-predictions.json',predicted)
                 if not all(r['background_outlives_foreground'] for r in predicted.values()):raise ValueError('Predicted background lifetime outside delayed scope')
             tid=t['trial_id'];print(f'Delayed {len(summary["completed"])+1}/{len(p["order"])}: {tid} {t["stage"]} {t["case"]} {t["observer"]}',flush=True)
             capture=await controlled_trial(client,t,deadline,output/(tid+'.json'));save(output/(tid+'.json'),capture)
             row=extract(capture,t,cases[t['case']],p)
             if t['observer']=='light' and not dispatcher_parity(capture,meta['workers'][0]['dispatch_table'])['matches']:
                 raise ValueError('Delayed native dispatcher mismatch')
+            if event_clock and t['stage']=='train' and t['observer']=='light':
+                event_rows.append(clock.event_labels(capture,t,cases[t['case']]));save(output/'training-events.json',event_rows)
             rows.append(row);save(output/'endpoints.json',rows);summary['completed'].append(tid);save(output/'calibration.json',summary)
         final=await client.command('meta');save(output/'runtime-final.json',final)
         if digest(meta)!=digest(final):raise ValueError('Delayed runtime drift')
-        save(output/'host-after.json',host_identity());report=evaluate(rows,p,meta,frozen,predicted);save(output/'held-report.json',report)
+        save(output/'host-after.json',host_identity());report=clock.evaluate(rows,event_rows,p,meta,frozen,predicted) if event_clock else evaluate(rows,p,meta,frozen,predicted);save(output/'held-report.json',report)
         if time.monotonic()>=deadline:raise TimeoutError('Delayed pilot deadline during analysis')
         summary.update(collection_complete=True,candidate_passed=report['candidate_passed'],rejection_reasons=rejection_reasons(report))
         if summary['rejection_reasons']:

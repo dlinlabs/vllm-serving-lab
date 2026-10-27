@@ -25,12 +25,14 @@ def synthetic_rows(plan, runtime, theta):
     return rows
 
 
-def audit(directory):
+def audit(directory,*,event_clock=False):
     from prefill_lab.tokens import validate
     from prefill_lab.suite import runtime_preflight
     from prefill_lab.causal import dispatcher_parity
     load=lambda name:json.loads((directory/name).read_text())
-    p=protocol();saved=load('calibration-plan.json')
+    if event_clock:
+        from prefill_lab import event_clock_calibration as clock
+    p=clock.protocol() if event_clock else protocol();saved=load('calibration-plan.json')
     if digest(saved)!=digest(p):raise ValueError('Protocol differs from this checkout')
     summary=load('calibration.json')
     if (not summary['collection_complete'] or summary['failures'] or
@@ -40,13 +42,13 @@ def audit(directory):
     if digest(runtime)!=digest(load('runtime-final.json')):raise ValueError('Runtime drift')
     manifest=load('token-manifest.json');validate(manifest,p['cases'],p['order']);runtime_preflight(runtime,manifest)
     from prefill_lab.delayed_calibration import validate_manifest
-    validate_manifest(manifest)
+    (clock.validate_manifest if event_clock else validate_manifest)(manifest)
     pins=json.loads((ROOT/'experiments/prefill-vllm-v030-source-map.json').read_text())['sha256']
     for source in [runtime['source'],*[w['source'] for w in runtime['workers']]]:
         if source['version']!='0.30.0' or source['files']!=pins:raise ValueError('Installed source pins differ')
     launch=load('launch.json');acceptance=launch['cpu_acceptance'];sources=load('collection-sources.json')
     if (not acceptance.get('valid') or acceptance.get('source_sha256')!=sources or
-            launch['source_sha256']!=sources or launch['scope']!='effective_delayed_arrivals_pilot'):
+            launch['source_sha256']!=sources or launch['scope']!=('effective_event_clock_confirmation' if event_clock else 'effective_delayed_arrivals_pilot')):
         raise ValueError('Source/CPU acceptance identity mismatch')
     if load('native-cpu-acceptance/acceptance.json')!=acceptance:
         raise ValueError('Original CPU acceptance differs from launch record')
@@ -57,19 +59,23 @@ def audit(directory):
     # Offline analysis must use the same source content as the native run.
     from scripts.run_prefill_service import code_identity
     if code_identity()!=sources:raise ValueError('Use the exact recorded source checkout for offline audit')
-    rows=[];cases={c['id']:c for c in p['cases']}
+    rows=[];events=[];cases={c['id']:c for c in p['cases']}
     for t in p['order']:
         capture=load(t['trial_id']+'.json')
         rows.append(extract(capture,t,cases[t['case']],p))
+        if event_clock and t['stage']=='train' and t['observer']=='light':events.append(clock.event_labels(capture,t,cases[t['case']]))
         if t['observer']=='light' and not dispatcher_parity(capture,runtime['workers'][0]['dispatch_table'])['matches']:
             raise ValueError('Dispatcher mismatch')
     if digest(rows)!=digest(load('endpoints.json')):raise ValueError('Saved endpoints differ from raw captures')
     frozen=load('frozen.json')
-    if frozen['data_origin']!='native_controlled_endpoints':raise ValueError('Not a native endpoint freeze')
+    if frozen['data_origin']!=('training_OFF_endpoints_and_LIGHT_events' if event_clock else 'native_controlled_endpoints'):
+        raise ValueError('Not the expected native calibration freeze')
+    if event_clock and frozen.get('measurement_origin')!='fresh_native_training_events':raise ValueError('Not a fresh native clock freeze')
+    if event_clock and digest(events)!=digest(load('training-events.json')):raise ValueError('Training events differ from raw capture')
     from prefill_lab.effective_calibration import select
     if frozen['training_sha256']!=digest(select(rows,p,{'train'},'off')):
         raise ValueError('Frozen training digest mismatch')
-    result=evaluate(rows,p,runtime,frozen,load('pre-held-predictions.json'))
+    result=clock.evaluate(rows,events,p,runtime,frozen,load('pre-held-predictions.json')) if event_clock else evaluate(rows,p,runtime,frozen,load('pre-held-predictions.json'))
     if digest(result)!=digest(load('held-report.json')):raise ValueError('Saved report differs from independent audit')
     if result['candidate_passed']!=summary['candidate_passed']:raise ValueError('Summary disagrees with report')
     return result

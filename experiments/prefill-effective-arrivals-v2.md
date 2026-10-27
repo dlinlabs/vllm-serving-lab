@@ -1,5 +1,7 @@
 # Executable delayed-arrival pilot v2
 
+The next calibration/confirmation operation is documented in [event-clock v1](prefill-event-clock-v1.md). This original four-term protocol is retained for historical reproduction; its first native candidate was rejected.
+
 Status: the first native v2 collection completed, but the candidate failed the
 800ms/D16 queue-residence gate. See [the measured diagnosis](../results/prefill-arrivals-39d0c7d-analysis/report.md).
 All primary endpoint, observation, work and anchor gates pass. No unchanged-model
