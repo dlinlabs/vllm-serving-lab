@@ -1,8 +1,13 @@
 # Busy-state and HTTP qualification v1
 
-Implementation and CPU verification precede the first native attempt. No native
-busy-state/HTTP result, production model, adaptive-cap or MPC acceptance exists.
-The previously passing fixed-B2048 event-clock evidence stays unchanged.
+The first native attempt on 4c89188 completed 136 clock trials and was rejected
+before any HTTP trial. See [the queue-phase diagnosis](../results/prefill-clock-4c89188-queue-phase/report.md).
+No native busy-state/HTTP result, production model, adaptive-cap or MPC acceptance
+exists. The earlier passing fixed-B2048 event-clock evidence stays historical.
+Future clock scoring now includes separate queue observer/repeat controls using
+the existing queue budget; this is a stricter development correction. The point
+model has not been repaired or qualified by that guard. Further model/phase
+design should precede another rental run of this unchanged protocol.
 
 ## Prediction point and state contract
 
@@ -43,7 +48,7 @@ explicit approximation. It can overestimate when
 GPU work overlaps CPU commit; it does not identify exclusive physical stage time.
 If an unready batch is already overdue under that approximation, the forecast is
 UNAVAILABLE, never silently zero. Ready old output still occupies a slot: new
-submission retains priority over FIFO reap. Native conditional1ms idle yields
+submission retains priority over FIFO reap. Native conditional1 ms idle yields
 and output placeholders/termination are retained. There is no cap decision.
 
 The engine stores the state/forecast before ADD. Snapshot width and cut-to-ADD
@@ -94,23 +99,23 @@ One loaded4090/vLLM0.30/Torch2.13+cu130/Qwen revision, B2048/seq32/context8192:
    trials,4 anchor-before,64 held and4 anchor-after. Every paired OFF/LIGHT trial
    shares exact token content; before/after anchors share their content too.
 3. The two transport-training cases are mixed [1024,1024,7168,7168], sentinel512
-   at200ms, D0/D16. Four OFF repeats each provide8 egress labels. Freeze their
-   single nonnegative median before any anchor/held trial. Spread must be<=10ms.
-4. Eight held cases use50/400/800ms mixed sentinels, plus an alternate
-   [2048,6144,2048,6144] composition at200ms, all D0/D16, four OFF/LIGHT pairs each.
+   at200 ms, D0/D16. Four OFF repeats each provide8 egress labels. Freeze their
+   single nonnegative median before any anchor/held trial. Spread must be<=10 ms.
+4. Eight held cases use50/400/800 ms mixed sentinels, plus an alternate
+   [2048,6144,2048,6144] composition at200 ms, all D0/D16, four OFF/LIGHT pairs each.
 
 All10 warmup snapshots must be available and structurally match before the full
 HTTP phase proceeds. A failure preserves the diagnostics and stops; no model
 selection/refitting occurs from these warmups. Warmup latency gates are not scored.
 For every scored LIGHT probe (8 train/32 held/4 anchor), require availability,
-exact own future-work prefix to first output, snapshot width<=1ms, cut-to-ADD age
-<=5ms. No later unmodeled arrivals may occur after its snapshot. Each per-trial
-engine error must be<=max(10ms,20% measured interval), HTTP error<=max(15ms,20%).
+exact own future-work prefix to first output, snapshot width<=1 ms, cut-to-ADD age
+<=5 ms. No later unmodeled arrivals may occur after its snapshot. Each per-trial
+engine error must be<=max(10 ms,20% measured interval), HTTP error<=max(15 ms,20%).
 These are new preregistered bridge budgets, not changes to older clock gates.
 No sign cancellation or medians across changing states can hide individual errors.
 Unavailable predictions fail and stay in the denominator. Separate before/after
-anchors are scored individually. Paired HTTP observer delta must be<=max(2ms,10%)
-for train/held/anchors. Posting lag stays<=5ms, including rejected/failed offers;
+anchors are scored individually. Paired HTTP observer delta must be<=max(2 ms,10%)
+for train/held/anchors. Posting lag stays<=5 ms, including rejected/failed offers;
 all planned requests must finish with exact inputs/forced counts and backgrounds
 must outlive foreground completion. Native worker/dispatcher audits still apply.
 

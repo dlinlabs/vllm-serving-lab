@@ -105,6 +105,33 @@ def select(rows,plan,stages,observer):
     return [found[k] for k in sorted(wanted)]
 
 
+def queue_quality(rows,plan):
+    """Queue residence needs its own controls; endpoint stability cannot imply it.
+
+    Use the existing queue error budget, without fitting a new tolerance from
+    held evidence. A point median must not hide repeat/observer phase changes.
+    """
+    off=select(rows,plan,HELD,'off');light=select(rows,plan,HELD,'light')
+    pairs={(r['stage'],r['case'],r['block']):r for r in light};checks=[];groups={}
+    for r in off:
+        if 'sentinel' not in r.get('clocks',{}):continue
+        pair=pairs[(r['stage'],r['case'],r['block'])]
+        value=r['clocks']['sentinel']['queue_residence_s'];observed=pair['clocks']['sentinel']['queue_residence_s']
+        if not all(finite(v) and v>=0 for v in (value,observed)):raise ValueError('Invalid queue residence control')
+        limit=max(plan['queue_absolute_s'],plan['queue_relative']*value);delta=abs(observed-value)
+        checks.append(dict(trial=r['trial_id'],paired_trial=pair['trial_id'],case=r['case'],off_s=value,light_s=observed,
+            delta_s=delta,limit_s=limit,passed=delta<=limit))
+        groups.setdefault(r['case'],[]).append(value)
+    spreads=[]
+    for case,values in sorted(groups.items()):
+        median=float(np.median(values));spread=max(values)-min(values)
+        limit=max(plan['queue_absolute_s'],plan['queue_relative']*median)
+        spreads.append(dict(case=case,repeats=len(values),minimum_s=min(values),maximum_s=max(values),median_s=median,
+            spread_s=spread,limit_s=limit,passed=spread<=limit))
+    return dict(passed=all(r['passed'] for r in checks+spreads),paired_observer=checks,repeat_spread=spreads,
+        scope='queue-specific OFF/LIGHT and OFF repeats; existing queue absolute/relative budgets, no new fitted tolerance')
+
+
 def quality(rows,plan):
     off=select(rows,plan,HELD,'off');light=select(rows,plan,HELD,'light');g=plan['gates']
     pairs={(r['stage'],r['case'],r['block']):r for r in light};checks=[];groups={}
@@ -122,7 +149,9 @@ def quality(rows,plan):
         spread=max(values)-min(values)
         spreads.append(dict(case=case,request=rid,metric=metric,repeats=len(values),spread_s=spread,
             passed=spread<=max(floor,g['repeat_relative_spread']*float(np.median(values)))))
-    return dict(passed=all(r['passed'] for r in checks+spreads),paired_observer=checks,repeat_spread=spreads)
+    queues=queue_quality(rows,plan)
+    return dict(passed=all(r['passed'] for r in checks+spreads) and queues['passed'],
+        paired_observer=checks,repeat_spread=spreads,queue_residence=queues)
 
 
 def evaluate(rows,plan,runtime,frozen,predicted):
@@ -163,6 +192,9 @@ def rejection_reasons(report):
     """Expose existing failures without changing any score or threshold."""
     reasons=[]
     if not report['quality']['passed']:reasons.append(dict(gate='quality'))
+    queue=report['quality'].get('queue_residence',{})
+    for name in ('paired_observer','repeat_spread'):
+        reasons.extend(dict(gate='queue_'+name,**r) for r in queue.get(name,[]) if not r['passed'])
     if not report['structure_and_background_lifetime_valid']:reasons.append(dict(gate='structure_and_background_lifetime'))
     for key in ('endpoint_scores',):
         reasons.extend(dict(gate=key,**r) for r in report[key]['cells'] if not r['passed'])

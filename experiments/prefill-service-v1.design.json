@@ -714,7 +714,7 @@
     },
     "prefill_lab/delayed_calibration.py": {
       "path": "prefill_lab/delayed_calibration.py",
-      "sha256": "17be0a64bcdf4d4ac6226eb396aec91972c1642d16d617830f0cdaa8a928da52"
+      "sha256": "8aa79623133e627e0a1deaa953283260ad0437552c3c0cc10d242a81f2999923"
     },
     "scripts/check_prefill_arrivals.py": {
       "path": "scripts/check_prefill_arrivals.py",
@@ -730,7 +730,7 @@
     },
     "experiments/prefill-effective-arrivals-v2.md": {
       "path": "experiments/prefill-effective-arrivals-v2.md",
-      "sha256": "3bd4980f042600a788a57b0ecaacb58f64538fe9a790b96312b1163b5cab8e05"
+      "sha256": "97657d7f90af92dcf05537214f2e5d42a278cf03d36782fd39f7981f744655db"
     },
     "scripts/analyze_prefill_arrival_capture.py": {
       "path": "scripts/analyze_prefill_arrival_capture.py",
@@ -766,7 +766,7 @@
     },
     "experiments/prefill-event-clock-v1.md": {
       "path": "experiments/prefill-event-clock-v1.md",
-      "sha256": "3c9a1a53b5d0f6df40726fa5bddb40707730227b2443048d9178866364360621"
+      "sha256": "f8a4e8fbf2fe56bb312e9fa6b83df594731ebdb320391cd08c68e224e43ad35f"
     },
     "scripts/analyze_prefill_clock_capture.py": {
       "path": "scripts/analyze_prefill_clock_capture.py",
@@ -814,11 +814,19 @@
     },
     "experiments/prefill-live-http-v1.md": {
       "path": "experiments/prefill-live-http-v1.md",
-      "sha256": "ace762199d8f70f36e5c679ae573bdcb098dc373500b6562bfeba564fb530348"
+      "sha256": "a02ade6f0b8c0c5c2be4ed89802bd291104c2562f7c22bb78280a76664ccb1d2"
     },
     "gateway.py": {
       "path": "gateway.py",
       "sha256": "659abc46a9361aeba91098671303a1133d37daac48d280632f9e177180165677"
+    },
+    "scripts/analyze_prefill_queue_phase.py": {
+      "path": "scripts/analyze_prefill_queue_phase.py",
+      "sha256": "d4998db8364f60f1542d00dcbdbe957e505c50095f450e1e8d9d83327a4ae2c3"
+    },
+    "tests/test_prefill_queue_phase.py": {
+      "path": "tests/test_prefill_queue_phase.py",
+      "sha256": "c3c8cd03af64fc4ccf6cc7a07980f966ded209307887728c514e21b556ef94b4"
     }
   },
   "readiness": {
@@ -925,7 +933,7 @@
       "failed_gate": "sentinel queue at800ms/D16"
     },
     "event_clock_calibration": {
-      "status": "native_confirmation_complete_candidate_passed",
+      "status": "latest_native_confirmation_rejected_queue_phase",
       "protocol": "experiments/prefill-event-clock-confirmation-v1.json",
       "specification": "experiments/prefill-event-clock-v1.json",
       "path": "experiments/prefill-event-clock-v1.md",
@@ -938,16 +946,25 @@
       "mpc_accepted": false,
       "development_evidence": "results/prefill-event-clock-development/report.md",
       "retrospective_rules_satisfied": true,
-      "fresh_confirmation_required": false,
-      "candidate_passed": true,
-      "captured_commit": "33876f34b8e540c7008ecf5e64880289a60e2b84",
-      "native_cpu_tests": 1116,
-      "native_evidence": "results/prefill-clock-33876f3-confirmation/report.md",
-      "native_archive_sha256": "2d1a78e03ca81705257910a1428e76eeb64c7904a9dcb17a0c034a417cdd9fe2",
-      "trials": 136
+      "fresh_confirmation_required": true,
+      "candidate_passed": false,
+      "captured_commit": "4c89188a6af64624ab76f3c39f17c01e2f31906f",
+      "native_cpu_tests": 1180,
+      "native_evidence": "results/prefill-clock-4c89188-queue-phase/report.md",
+      "native_archive_sha256": "2e9ef84b537857652251cb17e89b485a5d6835a333a630ee2a96dd78241649fd",
+      "trials": 136,
+      "historical_confirmation": {
+        "candidate_passed": true,
+        "captured_commit": "33876f34b8e540c7008ecf5e64880289a60e2b84",
+        "native_cpu_tests": 1116,
+        "native_evidence": "results/prefill-clock-33876f3-confirmation/report.md",
+        "native_archive_sha256": "2d1a78e03ca81705257910a1428e76eeb64c7904a9dcb17a0c034a417cdd9fe2"
+      },
+      "queue_quality": "stricter separate OFF/LIGHT and repeat checks added after latest rejection; point accuracy not repaired",
+      "cpu_correction_evidence": "results/prefill-clock-4c89188-queue-phase/cpu-validation.json"
     },
     "live_http_state": {
-      "status": "local_cpu_regressions_passed_pending_native_qualification",
+      "status": "native_attempt_stopped_at_clock_rejection",
       "path": "experiments/prefill-live-http-v1.md",
       "protocol": "experiments/prefill-live-http-v1.json",
       "command": "prefill_host.py live-http",
@@ -960,7 +977,12 @@
       "mpc_accepted": false,
       "prediction_point": "EngineCore pre-ADD; HTTP ingress elapsed is known, not predicted",
       "pending_debt": "copy-ready query or explicit commit-anchored effective approximation; unavailable is failure",
-      "cpu_evidence": "results/prefill-live-http-implementation/validation.json"
+      "cpu_evidence": "results/prefill-clock-4c89188-queue-phase/cpu-validation.json",
+      "native_clock_prerequisite_performed": true,
+      "native_http_phase_performed": false,
+      "completed_http_trials": 0,
+      "last_attempt_commit": "4c89188a6af64624ab76f3c39f17c01e2f31906f",
+      "latest_native_evidence": "results/prefill-clock-4c89188-queue-phase/report.md"
     }
   },
   "round7_corrections": {

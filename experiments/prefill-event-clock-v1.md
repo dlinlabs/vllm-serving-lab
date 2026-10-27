@@ -1,9 +1,22 @@
 # Effective batch-event clock: development and fresh confirmation
 
-The first fresh native confirmation now passes its controlled pilot gates. See [the audited native result](../results/prefill-clock-33876f3-confirmation/report.md). Full-model/HTTP/cap/MPC acceptance remains false.
+The first fresh native confirmation passed its original controlled pilot gates.
+The later same-host clock prerequisite on 4c89188 was **rejected**: the400 ms/D16
+queue point prediction failed, and retrospective queue controls exposed phase
+instability hidden by stable endpoint metrics. See [the new diagnosis](../results/prefill-clock-4c89188-queue-phase/report.md)
+and [the historical passing result](../results/prefill-clock-33876f3-confirmation/report.md).
+HTTP trials were not attempted. Full-model/HTTP/cap/MPC acceptance remains false.
+
+Future runs additionally require queue-specific OFF/LIGHT agreement and OFF
+repeat spread within the existing max(10 ms,20%) queue budget. These are stricter
+checks added after the later failure, not original preregistered results or new
+validated uncertainty bounds. Endpoint controls, numeric error limits, fitting
+basis and training-only coefficient fitting remain unchanged. A fresh run is
+required after any model redesign; rerunning the unchanged point model is not
+the prescribed next step.
 
 The original39d0c7d delayed pilot is complete and rejected. Its frozen model,
-raw archive and max(10ms,20%) queue rule remain unchanged. This is a separately
+raw archive and max(10 ms,20%) queue rule remain unchanged. This is a separately
 identified model developed after examining that failure. Old delayed cases are
 now development data; passing them cannot establish independent validation.
 
@@ -42,7 +55,7 @@ signatures, prefill/decode groups and foreground completion index must match the
 own rollout before any event residual can be formed. Labels never provide work
 or cost covariates.
 
-For each event, normalize by max(10ms,2% of absolute time from release).
+For each event, normalize by max(10 ms,2% of absolute time from release).
 Each training trial gives equal total squared weight to its prefill and decode
 phases, and equal weight to starts and commits. Endpoint and event groups have
 equal normalized total weight. This prevents127 decode steps from overwhelming
@@ -90,8 +103,9 @@ arrival patterns or serving configurations.
 The dedicated clock operation creates clock-tokens.json, uses an isolated
 endpoint flag and records all training event labels. All launches reset that
 flag, along with the existing calibration/arrivals flags. Conflicting modes or
-source/CPU acceptance mismatch fail. Normal collection and legacy v1/v2 pilots
-keep their existing model and scoring behavior. No GPU worker hook is added.
+source/CPU acceptance mismatch fail. Normal collection is unaffected. Future delayed/event-clock pilots retain their
+model basis and numeric budgets and gain the queue controls described above.
+No GPU worker hook is added.
 
 On the fresh native Linux/Python3.12 RTX4090 host, from the PR32 checkout:
 
