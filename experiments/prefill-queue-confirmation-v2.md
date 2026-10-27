@@ -71,8 +71,10 @@ any confirmation collection, it needs a committed addendum containing:
 
 Do not preselect a convenient +12 ms bias or alter the width using old held
 errors. Clock-origin, per-state interference and observation effects are competing
-explanations until the new probes distinguish them. F1 is **not yet specified
-or implemented**; calling an open equation a complete model would hide the gap.
+explanations until the new probes distinguish them. A TRAIN-only CPU-return hypothesis is now specified and prototyped in
+[prefill-submit-clock-development-v1.md](prefill-submit-clock-development-v1.md).
+It remains an ablation: nominal first-commit timing and unobserved branch controls
+are unresolved. It has **not been admitted or selected** for confirmation.
 If only F0 is admissible, retain it or report no adequate candidate.
 
 For any additional queue correction estimated from probe outcomes, use grouped
@@ -128,7 +130,9 @@ hashed before running this design; **no 240-trial native command is enabled yet*
 2. **Measurement qualification:** preserve baseline/receipt and baseline/LIGHT
    endpoint checks and observed-state receipt/LIGHT checks. Report comparable
    denominators for every cell; zero coverage is inconclusive. Global success
-   cannot hide an unassessable cell. OFF phase remains unknown.
+   cannot hide an unassessable cell. A predicted branch with no matching observed
+   control does not become qualified because another branch passed; report its
+   coverage gap and retain an inconclusive whole-domain verdict. OFF phase remains unknown.
 3. **Queue prediction:** each held baseline OFF sample must satisfy the original
    max(10 ms,20% observed queue residence) budget against the nearest frozen
    eligible point. Stable cells keep their point condition. Score receipt and
