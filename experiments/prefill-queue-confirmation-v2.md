@@ -1,6 +1,7 @@
 # Queue-model selection and independent confirmation: design
 
-Status: **design only; not a native collection command or model approval**.
+Status: **implemented for one predeclared first-entry clock family; no native confirmation or model approval yet**.
+See [the implementation addendum](prefill-entry-clock-v1.md) for the exact estimator, numeric plan, sealing and independent audit.
 The queue-probe collector is implemented separately. This document governs the
 next decision after fresh calibration probes; it cannot infer missing evidence
 from the old failed run. The current six-term model, phase uncertainty and
@@ -118,8 +119,10 @@ This order keeps all 88 warmup/TRAIN trials before held data. The 48 TRAIN rows
 are the only same-host cost fitting inputs. Warmup labels cannot select the model.
 Use new qc- identities and content disjoint from qr-/ct-/qp-; observer arms share
 content within a held case/block. Every arm's six permutations are retained.
-The numeric case/order manifest and executable collector must be reviewed and
-hashed before running this design; **no 240-trial native command is enabled yet**.
+The numeric case/order manifest and executable collector are now committed.
+`queue-confirmation` implements this order with the first-entry family specified
+in the implementation addendum. The older submit ablation remains unselected;
+no native confirmation has been performed. Missing branch controls remain inconclusive.
 
 ## Independent verdicts
 

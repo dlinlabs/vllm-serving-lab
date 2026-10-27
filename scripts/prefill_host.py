@@ -67,28 +67,29 @@ def prepare_host(output):
     return ready
 
 
-def collect_host(output,diagnostics=False,*,stages=False,calibration=False,arrivals=False,event_clock=False,live_http=False,queue_probe=False):
+def collect_host(output,diagnostics=False,*,stages=False,calibration=False,arrivals=False,event_clock=False,live_http=False,queue_probe=False,queue_confirmation=False):
     ready=json.loads((output/'ready.json').read_text())
     if not accepted(Path(ready['cpu_acceptance']),commit()):
         raise RuntimeError('Run prefill_host.py prepare for this exact checkout before collection')
-    if sum((diagnostics,stages,calibration,arrivals,event_clock,live_http,queue_probe))>1:raise ValueError('Choose one host collection mode')
+    if sum((diagnostics,stages,calibration,arrivals,event_clock,live_http,queue_probe,queue_confirmation))>1:raise ValueError('Choose one host collection mode')
     manifest=ready['manifest']
-    if calibration or arrivals or event_clock or live_http or queue_probe:
-        manifest=str(output/('queue-probe-tokens.json' if queue_probe else 'live-clock-tokens.json' if live_http else 'clock-tokens.json' if event_clock else 'arrival-tokens.json' if arrivals else 'calibration-tokens.json'))
+    if calibration or arrivals or event_clock or live_http or queue_probe or queue_confirmation:
+        manifest=str(output/('queue-confirmation-tokens.json' if queue_confirmation else 'queue-probe-tokens.json' if queue_probe else 'live-clock-tokens.json' if live_http else 'clock-tokens.json' if event_clock else 'arrival-tokens.json' if arrivals else 'calibration-tokens.json'))
         prepare(SimpleNamespace(tokenizer=ready['tokenizer'],model=ready['model'],revision=ready['revision'],
-                                output=Path(manifest),calibration_only=calibration,arrivals_only=arrivals,event_clock_only=event_clock or live_http,queue_probe_only=queue_probe))
+                                output=Path(manifest),calibration_only=calibration,arrivals_only=arrivals,event_clock_only=event_clock or live_http,queue_probe_only=queue_probe,queue_confirmation_only=queue_confirmation))
         if live_http:
             http_manifest=output/'live-http-tokens.json'
             prepare(SimpleNamespace(tokenizer=ready['tokenizer'],model=ready['model'],revision=ready['revision'],
                                     output=http_manifest,live_http_tokens=True))
-    capture=Path.home()/('pr32-queue-probes' if queue_probe else 'pr32-live-http' if live_http else 'pr32-clocks' if event_clock else 'pr32-arrivals' if arrivals else 'pr32-calibrations' if calibration else 'pr32-stage-diagnostics' if stages else 'pr32-diagnostics' if diagnostics else 'pr32-captures')/str(time.time_ns())
+    capture=Path.home()/('pr32-queue-confirmations' if queue_confirmation else 'pr32-queue-probes' if queue_probe else 'pr32-live-http' if live_http else 'pr32-clocks' if event_clock else 'pr32-arrivals' if arrivals else 'pr32-calibrations' if calibration else 'pr32-stage-diagnostics' if stages else 'pr32-diagnostics' if diagnostics else 'pr32-captures')/str(time.time_ns())
     capture.parent.mkdir(parents=True,exist_ok=True)
     print('Capture output: '+str(capture),flush=True)
     args=[sys.executable,str(ROOT/'scripts/run_prefill_service.py'),'collect']
     for name in ('manifest','tokenizer','trace'):
         args.extend(['--'+name,manifest if name=='manifest' else ready[name]])
     args.extend(['--cpu-acceptance',ready['cpu_acceptance'],'--output',str(capture)])
-    if queue_probe:args.append('--queue-probe-only')
+    if queue_confirmation:args.append('--queue-confirmation-only')
+    elif queue_probe:args.append('--queue-probe-only')
     elif live_http:args.extend(['--live-http-only','--http-manifest',str(http_manifest)])
     elif event_clock:args.append('--event-clock-only')
     elif arrivals:args.append('--arrivals-only')
@@ -96,13 +97,16 @@ def collect_host(output,diagnostics=False,*,stages=False,calibration=False,arriv
     elif stages:args.append('--stage-diagnostics-only')
     elif diagnostics:args.append('--diagnostics-only')
     try:
-        subprocess.run(args,cwd=ROOT,check=True)
+        result=subprocess.run(args,cwd=ROOT,check=not queue_confirmation)
+        if queue_confirmation and (capture/'confirmation-report.json').exists():
+            subprocess.run([sys.executable,str(ROOT/'scripts/check_prefill_queue_confirmation.py'),str(capture)],cwd=ROOT,check=True,timeout=300)
+        if queue_confirmation:result.check_returncode()
         if queue_probe:
             subprocess.run([sys.executable,str(ROOT/'scripts/check_prefill_queue_probe.py'),str(capture)],cwd=ROOT,check=True,timeout=180)
         if live_http:
             subprocess.run([sys.executable,str(ROOT/'scripts/check_prefill_live_http.py'),str(capture)],cwd=ROOT,check=True,timeout=180)
     finally:
-        if (calibration or arrivals or event_clock or live_http or queue_probe) and capture.is_dir():
+        if (calibration or arrivals or event_clock or live_http or queue_probe or queue_confirmation) and capture.is_dir():
             archive=capture.with_suffix('.tar.gz')
             with tarfile.open(archive,'x:gz') as bundle:
                 bundle.add(capture,arcname=capture.name)
@@ -111,10 +115,11 @@ def collect_host(output,diagnostics=False,*,stages=False,calibration=False,arriv
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('operation',choices=('prepare','collect','diagnose','stages','calibrate','arrivals','clock','live-http','queue-probe'))
+    parser.add_argument('operation',choices=('prepare','collect','diagnose','stages','calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation'))
     parser.add_argument('--output-dir',type=Path,default=Path.home()/'pr32-inputs')
     args=parser.parse_args();output=args.output_dir.expanduser().resolve()
     if args.operation=='prepare':prepare_host(output)
+    elif args.operation=='queue-confirmation':collect_host(output,queue_confirmation=True)
     elif args.operation=='queue-probe':collect_host(output,queue_probe=True)
     elif args.operation=='live-http':collect_host(output,live_http=True)
     elif args.operation=='clock':collect_host(output,event_clock=True)

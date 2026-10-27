@@ -46,7 +46,7 @@ def code_identity():
     paths=sorted([*ROOT.glob('prefill_lab/*.py'),ROOT/'scripts/run_prefill_service.py',
                   ROOT/'experiments/prefill-vllm-v030-source-map.json',ROOT/'gateway.py',
                   ROOT/'experiments/prefill-stage-diagnostic-v1.json',ROOT/'experiments/prefill-effective-calibration-v1.json',ROOT/'experiments/prefill-effective-arrivals-v2.json',ROOT/'experiments/prefill-event-clock-v1.json',ROOT/'experiments/prefill-event-clock-confirmation-v1.json',ROOT/'experiments/prefill-live-http-v1.json',ROOT/'experiments/prefill-queue-phase-v1.json',ROOT/'experiments/prefill-queue-probe-v1.json',
-                  ROOT/'prefill_grouped_validation.py',ROOT/'prefill_validation.py',
+                  ROOT/'experiments/prefill-queue-confirmation-v2.json',ROOT/'experiments/prefill-queue-confirmation-v2.plan.json',ROOT/'prefill_grouped_validation.py',ROOT/'prefill_validation.py',
                   *ROOT.glob('experiments/prefill-service-v1.*'),*ROOT.glob('*.py'),
                   *ROOT.glob('scripts/*.py'),*ROOT.glob('tests/*.py'),ROOT/'pyproject.toml'])
     return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
@@ -91,7 +91,10 @@ def prepare(args):
     tokenizer=AutoTokenizer.from_pretrained(directory,local_files_only=True,trust_remote_code=False)
     hashes={str(p.relative_to(directory)):hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.rglob('*') if p.is_file() and (p.suffix in ('.json','.model') or p.name.endswith('.txt'))}
     cases,order,_=inputs()
-    if getattr(args,'queue_probe_only',False):
+    if getattr(args,'queue_confirmation_only',False):
+        from prefill_lab.queue_confirmation import protocol
+        plan=protocol();cases,order=plan['cases'],plan['order']
+    elif getattr(args,'queue_probe_only',False):
         from prefill_lab.queue_probe import protocol
         plan=protocol();cases,order=plan['cases'],plan['order']
     elif getattr(args,'live_http_tokens',False):
@@ -125,13 +128,16 @@ async def collect(args):
     if not acceptance.get('valid') or acceptance.get('commit')!=current_commit or acceptance['source_sha256']!=code_identity():
         raise RuntimeError('Run cpu-check for this exact source tree before collection')
     manifest=json.loads(Path(args.manifest).read_text());cases,order,_=inputs()
+    confirmation=getattr(args,'queue_confirmation_only',False)
     probe=getattr(args,'queue_probe_only',False)
     bridge=getattr(args,'live_http_only',False)
     clock=getattr(args,'event_clock_only',False) or bridge
     arrivals=getattr(args,'arrivals_only',False) or clock
-    calibration=getattr(args,'calibration_only',False) or arrivals or probe
+    calibration=getattr(args,'calibration_only',False) or arrivals or probe or confirmation
     if calibration:
-        if probe:
+        if confirmation:
+            from prefill_lab.queue_confirmation import protocol,validate_manifest
+        elif probe:
             from prefill_lab.queue_probe import protocol,validate_manifest
         elif clock:
             from prefill_lab.event_clock_calibration import protocol,validate_manifest
@@ -164,11 +170,12 @@ async def collect(args):
     env=dict(runtime_environment(),PREFILL_LAB_ENABLED='1',PREFILL_LAB_KEY=key,
              PREFILL_LAB_MANIFEST=str(output/'token-manifest.json'),PREFILL_LAB_ARTIFACT_DIR=str(output/'deep-traces'),
              VLLM_PLUGINS='prefill_lab',PREFILL_LAB_STAGES='1' if stages else '0',
-             PREFILL_LAB_EFFECTIVE_CALIBRATION='1' if calibration and not arrivals and not probe else '0',
+             PREFILL_LAB_EFFECTIVE_CALIBRATION='1' if calibration and not arrivals and not probe and not confirmation else '0',
              PREFILL_LAB_DELAYED_ARRIVALS='1' if arrivals else '0',
              PREFILL_LAB_EVENT_CLOCK='1' if clock else '0',
              PREFILL_LAB_LIVE_STATE='1' if bridge else '0',
-             PREFILL_LAB_QUEUE_PROBE='1' if probe else '0')
+             PREFILL_LAB_QUEUE_PROBE='1' if probe else '0',
+             PREFILL_LAB_QUEUE_CONFIRMATION='1' if confirmation else '0')
     command=[sys.executable,'-m','vllm.entrypoints.openai.api_server','--model',manifest['model'],
              '--revision',manifest['revision'],'--tokenizer',str(Path(args.tokenizer).resolve()),
              '--tokenizer-revision',manifest['revision'],'--host','127.0.0.1','--port','8000',
@@ -177,8 +184,8 @@ async def collect(args):
     # Credentials stay in the environment on an isolated localhost benchmark server.
     # The instrument endpoint authenticates itself; this runtime is never remotely bound.
     save(output/'launch.json',dict(argv=command,source_sha256=code_identity(),cpu_acceptance=acceptance,
-                                  scope='queue_receipt_calibration_probe' if probe else 'live_http_state_bridge' if bridge else 'effective_event_clock_confirmation' if clock else 'effective_delayed_arrivals_pilot' if arrivals else 'effective_calibration_pilot' if calibration else 'targeted_stage_diagnostic_only' if stages else 'targeted_foreground_diagnostic_only' if diagnostics else 'complete_suite',
-                                  environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS','PREFILL_LAB_STAGES','PREFILL_LAB_EFFECTIVE_CALIBRATION','PREFILL_LAB_DELAYED_ARRIVALS','PREFILL_LAB_EVENT_CLOCK','PREFILL_LAB_LIVE_STATE','PREFILL_LAB_QUEUE_PROBE')}))
+                                  scope='independent_queue_confirmation' if confirmation else 'queue_receipt_calibration_probe' if probe else 'live_http_state_bridge' if bridge else 'effective_event_clock_confirmation' if clock else 'effective_delayed_arrivals_pilot' if arrivals else 'effective_calibration_pilot' if calibration else 'targeted_stage_diagnostic_only' if stages else 'targeted_foreground_diagnostic_only' if diagnostics else 'complete_suite',
+                                  environment={k:env[k] for k in ('PREFILL_LAB_ENABLED','VLLM_PLUGINS','PREFILL_LAB_STAGES','PREFILL_LAB_EFFECTIVE_CALIBRATION','PREFILL_LAB_DELAYED_ARRIVALS','PREFILL_LAB_EVENT_CLOCK','PREFILL_LAB_LIVE_STATE','PREFILL_LAB_QUEUE_PROBE','PREFILL_LAB_QUEUE_CONFIRMATION')}))
     from scripts.setup_v1 import check_port
     for port in ((8000,) if diagnostics and not bridge else (8000,8080)):check_port(port)
     server=gateway=None
@@ -222,6 +229,11 @@ async def collect(args):
                 from prefill_lab.live_experiment import run as run_live
                 summary=await asyncio.wait_for(run_live(client,http,client.url,manifest,http_manifest,output,'http://127.0.0.1:8080',combined_deadline),max(.001,combined_deadline-time.monotonic()))
                 print('Live HTTP result: '+json.dumps(summary),flush=True)
+                return 0 if summary['candidate_passed'] else 2
+            if confirmation:
+                from prefill_lab.queue_confirmation import run as run_confirmation
+                summary=await run_confirmation(client,http,client.url,manifest,output)
+                print('Queue confirmation result: '+json.dumps(summary),flush=True)
                 return 0 if summary['candidate_passed'] else 2
             if probe:
                 from prefill_lab.queue_probe import run as run_probe
@@ -291,6 +303,7 @@ def main():
     for name in ('manifest','tokenizer','trace','cpu-acceptance','output'):p.add_argument('--'+name,required=True)
     p.add_argument('--startup-timeout',type=float,default=900.)
     group=p.add_mutually_exclusive_group()
+    group.add_argument('--queue-confirmation-only',action='store_true',help='Fresh TRAIN freeze then 240-trial independent controlled queue confirmation')
     group.add_argument('--queue-probe-only',action='store_true',help='Receipt-state calibration probes; no model/HTTP acceptance')
     group.add_argument('--live-http-only',action='store_true',help='Fresh clock calibration then busy-state HTTP qualification')
     p.add_argument('--http-manifest',help='Dedicated exact-token HTTP input manifest')
