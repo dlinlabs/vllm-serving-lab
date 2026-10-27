@@ -766,7 +766,15 @@
     },
     "experiments/prefill-event-clock-v1.md": {
       "path": "experiments/prefill-event-clock-v1.md",
-      "sha256": "f07a671a011a9d3158d2b17bdad1a627ceeb6bd2d269bcc3b36084a8acbfb60a"
+      "sha256": "3c9a1a53b5d0f6df40726fa5bddb40707730227b2443048d9178866364360621"
+    },
+    "scripts/analyze_prefill_clock_capture.py": {
+      "path": "scripts/analyze_prefill_clock_capture.py",
+      "sha256": "f7c3574e5504471161e3a4b661433da4d1e6414973aec0511004c340a1bb81f8"
+    },
+    "tests/test_prefill_clock_analysis.py": {
+      "path": "tests/test_prefill_clock_analysis.py",
+      "sha256": "9eeabdc0724dca6eff7a1459040e74f45c6e2dc57cf667277274fc40287ed135"
     }
   },
   "readiness": {
@@ -873,20 +881,26 @@
       "failed_gate": "sentinel queue at800ms/D16"
     },
     "event_clock_calibration": {
-      "status": "training_only_development_fitted_fresh_confirmation_pending",
+      "status": "native_confirmation_complete_candidate_passed",
       "protocol": "experiments/prefill-event-clock-confirmation-v1.json",
       "specification": "experiments/prefill-event-clock-v1.json",
       "path": "experiments/prefill-event-clock-v1.md",
       "command": "prefill_host.py clock",
       "effective_parameters": 6,
       "native_confirmation_implemented": true,
-      "native_gpu_confirmation_performed": false,
+      "native_gpu_confirmation_performed": true,
       "model_accepted": false,
       "adaptive_cap_accepted": false,
       "mpc_accepted": false,
       "development_evidence": "results/prefill-event-clock-development/report.md",
       "retrospective_rules_satisfied": true,
-      "fresh_confirmation_required": true
+      "fresh_confirmation_required": false,
+      "candidate_passed": true,
+      "captured_commit": "33876f34b8e540c7008ecf5e64880289a60e2b84",
+      "native_cpu_tests": 1116,
+      "native_evidence": "results/prefill-clock-33876f3-confirmation/report.md",
+      "native_archive_sha256": "2d1a78e03ca81705257910a1428e76eeb64c7904a9dcb17a0c034a417cdd9fe2",
+      "trials": 136
     }
   },
   "round7_corrections": {

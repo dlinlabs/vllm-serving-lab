@@ -1,5 +1,7 @@
 # Effective batch-event clock: development and fresh confirmation
 
+The first fresh native confirmation now passes its controlled pilot gates. See [the audited native result](../results/prefill-clock-33876f3-confirmation/report.md). Full-model/HTTP/cap/MPC acceptance remains false.
+
 The original39d0c7d delayed pilot is complete and rejected. Its frozen model,
 raw archive and max(10ms,20%) queue rule remain unchanged. This is a separately
 identified model developed after examining that failure. Old delayed cases are
