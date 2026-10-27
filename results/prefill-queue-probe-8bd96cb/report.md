@@ -67,7 +67,7 @@ perturbation of unobserved OFF states.
 
 The late trial's commit10 was already at48.161ms, before queue-post; the request
 reaches the next receive state. The early request is received before schedule12.
-Thus this paired delta is a different observed state, not a77ms same-state
+Thus this paired delta is a different observed state, not a 77ms same-state
 observer shift. These CPU boundaries bracket transitions but do not timestamp
 exact input-poll entry or reveal OFF internals.
 
@@ -106,7 +106,8 @@ PYTHONDONTWRITEBYTECODE=1 python scripts/analyze_prefill_queue_probe.py \
   --output /path/to/new-output
 ```
 
-The raw archive remains in the supplied Library file. This directory retains its
+The raw archive remains in the supplied Library file. These are controlled
+exact-token probes, not a new Azure replay or cap-comparison experiment. This directory retains its
 per-file SHA256 inventory, original full CPU/JUnit proof, exact-source TRAIN fit,
 both development reports, event diagnosis, native measurement report and the new
 submit freeze. Source/provenance details are in provenance.json and summary.json.
@@ -120,3 +121,17 @@ collector before acquiring fresh held measurements.
 
 Local regression/replay evidence is in cpu-validation.json. Local CPU counts
 are separate from the original1250-case native acceptance and must not be added.
+
+## Local validation
+
+**153 related CPU cases passed** (77.19s), including original async-predictor,
+event-clock and queue-quality regressions and the new submit/analysis tests.
+A focused **64-case** run also passed (5.78s); it is contained in the broader
+run and must not be added. All are local CPU tests, not native acceptance or
+GPU accuracy. Final source replay rebuilt both TRAIN-bound freezes, every
+per-sample score and the event diagnosis from immutable raw evidence.
+
+The first broader run had one missing historical input-index fixture in the
+sparse checkout. The unchanged Git fixture was restored and the entire
+153-case selection rerun without exclusions. Its initial JUnit is retained;
+the final JUnit has zero failures/errors/skips.
