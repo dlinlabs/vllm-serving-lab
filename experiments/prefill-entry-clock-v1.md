@@ -1,8 +1,10 @@
 # First-entry submit clock and independent controlled confirmation
 
-Status: CPU implementation and retrospective calibration development. The
-single entry-clock family is specified for a fresh confirmation attempt;
-no model, HTTP, cap or MPC accuracy has been accepted.
+Status: the predeclared 240-trial native controlled confirmation at 2ebb185
+passes and is strictly replayed from raw evidence. This host has one eligible
+branch per cell and identical F0/entry forecasts; no correction advantage or
+previous-host phase-switch result is established. Global model, HTTP, cap and
+MPC acceptance remain false. See results/prefill-queue-confirmation-2ebb185/report.md.
 
 ## Estimator refinement
 

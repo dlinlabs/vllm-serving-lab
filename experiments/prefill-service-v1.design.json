@@ -878,7 +878,7 @@
     },
     "experiments/prefill-queue-confirmation-v2.md": {
       "path": "experiments/prefill-queue-confirmation-v2.md",
-      "sha256": "9467998afefd7adc092d2e964765b9ffa1869e4cd3b5228252ad407683d047df"
+      "sha256": "f484eff39ff0bf977223dfeecb35a20b00e3d0408f431348659ee67bbcd17d7c"
     },
     "prefill_lab/submit_clock.py": {
       "path": "prefill_lab/submit_clock.py",
@@ -926,7 +926,7 @@
     },
     "experiments/prefill-entry-clock-v1.md": {
       "path": "experiments/prefill-entry-clock-v1.md",
-      "sha256": "b89d450215312c4d342adc3b996cc7fa26acd27c7fd9376185ebfb1985c0324b"
+      "sha256": "abd65c8eb3525f08a0ce391f263c1adce4259031b7f5af108ff7af6f16517957"
     },
     "experiments/prefill-queue-confirmation-v2.json": {
       "path": "experiments/prefill-queue-confirmation-v2.json",
@@ -935,6 +935,14 @@
     "experiments/prefill-queue-confirmation-v2.plan.json": {
       "path": "experiments/prefill-queue-confirmation-v2.plan.json",
       "sha256": "2027e147135e7d76f7c82fd4c707f383e9caa6bd9dc1c3e6994e49210a9b45a5"
+    },
+    "scripts/analyze_prefill_queue_confirmation.py": {
+      "path": "scripts/analyze_prefill_queue_confirmation.py",
+      "sha256": "31303f30eec4209c00b4752674b929079e30071319611af40391c051d0f8318f"
+    },
+    "tests/test_prefill_queue_confirmation_analysis.py": {
+      "path": "tests/test_prefill_queue_confirmation_analysis.py",
+      "sha256": "1d4ea6385e3e1bc17ee18b59199f2d9b62f832e6ce6216a58d8a2cec0321d171"
     }
   },
   "readiness": {
@@ -1130,21 +1138,34 @@
       "independent_model_confirmation_performed": false
     },
     "queue_confirmation_v2": {
-      "status": "implemented_cpu_verified_not_native_confirmed",
+      "status": "native_controlled_confirmation_passed_independent_strict_replay",
       "path": "experiments/prefill-queue-confirmation-v2.md",
       "proposed_trials": 240,
       "additional_candidate_defined": true,
       "native_collection_enabled": true,
       "submit_ablation_defined": true,
       "additional_candidate_admitted": true,
-      "native_collection_performed": false,
+      "native_collection_performed": true,
       "predeclared_confirmation_family": "entry-submit-clock-v1",
       "numeric_plan": "experiments/prefill-queue-confirmation-v2.plan.json",
       "module": "prefill_lab/queue_confirmation.py",
       "audit": "scripts/check_prefill_queue_confirmation.py",
       "entry_train_readiness_required": true,
       "branch_controls_required": true,
-      "admission_scope": "single predeclared family for a fresh controlled experiment; no model accuracy acceptance"
+      "admission_scope": "single predeclared family for a fresh controlled experiment; no model accuracy acceptance",
+      "captured_commit": "2ebb18566b0e4c4751bded54ab6f18fab73abcbb",
+      "native_cpu_tests": 1331,
+      "native_trials": 240,
+      "evidence": "results/prefill-queue-confirmation-2ebb185/report.md",
+      "candidate_passed": true,
+      "source_files_verified": 191,
+      "archive_sha256": "c569e2d78ccefdab3ecc8d275181bb320c07f51ba6e983a5fdd1b7e7027858b5",
+      "correction_benefit_established": false,
+      "previous_host_phase_switch_confirmed": false,
+      "model_accepted": false,
+      "http_accepted": false,
+      "adaptive_cap_accepted": false,
+      "mpc_accepted": false
     },
     "submit_clock_development": {
       "status": "cpu_ablation_only_nominal_timing_and_branch_controls_unresolved",
@@ -1165,11 +1186,12 @@
       "path": "experiments/prefill-entry-clock-v1.md",
       "evidence": "results/prefill-entry-clock-development/report.md",
       "parameters_derived_from_probes": false,
-      "held_confirmation_performed": false,
+      "held_confirmation_performed": true,
       "model_accepted": false,
       "http_accepted": false,
       "adaptive_cap_accepted": false,
-      "mpc_accepted": false
+      "mpc_accepted": false,
+      "native_confirmation_evidence": "results/prefill-queue-confirmation-2ebb185/report.md"
     }
   },
   "round7_corrections": {

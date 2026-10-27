@@ -1,6 +1,6 @@
 # Queue-model selection and independent confirmation: design
 
-Status: **implemented for one predeclared first-entry clock family; no native confirmation or model approval yet**.
+Status: **the native 240-trial controlled confirmation at 2ebb185 passes and is independently replayed; global model/HTTP/cap/MPC approval remains false**.
 See [the implementation addendum](prefill-entry-clock-v1.md) for the exact estimator, numeric plan, sealing and independent audit.
 The queue-probe collector is implemented separately. This document governs the
 next decision after fresh calibration probes; it cannot infer missing evidence
@@ -122,7 +122,10 @@ content within a held case/block. Every arm's six permutations are retained.
 The numeric case/order manifest and executable collector are now committed.
 `queue-confirmation` implements this order with the first-entry family specified
 in the implementation addendum. The older submit ablation remains unselected;
-no native confirmation has been performed. Missing branch controls remain inconclusive.
+the entry family now has a passing native confirmation on one host. F0 and entry
+forecasts are identical there, and all cells have one eligible branch. This does
+not confirm the previous host's phase switch or a correction advantage. Missing
+branch controls remain inconclusive.
 
 ## Independent verdicts
 
