@@ -151,3 +151,79 @@ def test_cli_replay_cannot_claim_live_clock_or_native_qualification(tmp_path):
     for flag,name in [('snapshot','state'),('request','request'),('runtime','runtime'),('support','support')]:args+=['--'+flag,str(tmp_path/(name+'.json'))]
     main(args);r=json.loads((tmp_path/'output/envelope.json').read_text())
     assert r['clock_check']=='recorded_metadata_only' and not r['online_compute_age_qualified'] and not r['actuation_authorized']
+
+
+@pytest.mark.parametrize('now',[5.,10.,15.])
+def test_cross_boot_clock_returns_fallback_before_comparing_uptime(now):
+    result=evaluate(empty(),now=now,domain='another-boot')
+    assert result['reason']=='clock_domain_mismatch'
+    assert not result['available'] and result['fallback_required']
+    assert all(result[k] is False for k in env.FLAGS)
+
+
+@pytest.mark.parametrize('now',[float('nan'),float('inf'),-1.,True])
+def test_cross_boot_clock_still_rejects_invalid_evaluation_times(now):
+    with pytest.raises(ValueError,match='evaluation time'):
+        evaluate(empty(),now=now,domain='another-boot')
+
+
+def test_same_clock_still_rejects_backward_evaluation_time():
+    with pytest.raises(ValueError,match='evaluation time'):evaluate(empty(),now=5.)
+
+
+@pytest.mark.parametrize('now',[5.,10.,15.])
+def test_cli_cross_boot_writes_unavailable_artifact(tmp_path,monkeypatch,now):
+    from scripts import predict_prefill_envelope as cli
+    for name,doc in [('state',empty()),('request',dict(id='z',prompt_tokens=1024,max_tokens=4)),
+                     ('runtime',runtime_metadata()),('support',support())]:
+        save(tmp_path/(name+'.json'),doc)
+    monkeypatch.setattr(cli,'clock_domain',lambda:'another-boot')
+    monkeypatch.setattr(cli.time,'monotonic',lambda:now)
+    args=['predict','--output',str(tmp_path/'output')]
+    for flag,name in [('snapshot','state'),('request','request'),('runtime','runtime'),('support','support')]:
+        args+=['--'+flag,str(tmp_path/(name+'.json'))]
+    cli.main(args)
+    result=json.loads((tmp_path/'output/envelope.json').read_text())
+    assert result['reason']=='clock_domain_mismatch' and result['fallback_required']
+    assert result['clock_check']=='current_boot_and_monotonic_clock'
+    assert not result['available'] and not result['actuation_authorized']
+
+
+@pytest.mark.parametrize('fault',['decode_scale','mixed_scale','plan_features','generated_costs'])
+def test_old_support_rejects_changed_cost_semantics(monkeypatch,fault):
+    from prefill_lab import queue_confirmation
+    b=support();original=evaluate(empty(),b,until_first=False)
+    if fault in ('decode_scale','mixed_scale'):
+        spec=env.clock.specification();spec[fault]*=100
+        monkeypatch.setattr(env.clock,'specification',lambda:copy.deepcopy(spec))
+    elif fault=='plan_features':
+        plan=queue_confirmation.protocol();plan['features']['prefill']*=2
+        monkeypatch.setattr(queue_confirmation,'protocol',lambda:copy.deepcopy(plan))
+    else:
+        costs=env.submit_clock.costs
+        monkeypatch.setattr(env.submit_clock,'costs',lambda theta,*a,**kw:costs([v*2 for v in theta],*a,**kw))
+    with pytest.raises(ValueError,match='Support .*differs'):
+        evaluate(empty(),b,until_first=False)
+    fresh=support()
+    assert fresh['sha256']!=original['support_sha256']
+    evaluate(empty(),fresh,until_first=False)
+
+
+@pytest.mark.parametrize('path',[
+    'prefill_lab/async_predictor.py','prefill_lab/causal.py','prefill_lab/contracts.py',
+    'prefill_lab/dispatch.py','prefill_lab/effective_calibration.py','prefill_lab/event_clock_calibration.py',
+    'prefill_lab/submit_clock.py','prefill_lab/queue_confirmation.py','scripts/predict_prefill_async.py'])
+def test_old_support_rejects_changed_cost_feature_and_continuation_dependencies(monkeypatch,path):
+    b=support();read=Path.read_bytes;target=Path(__file__).resolve().parents[1]/path
+    monkeypatch.setattr(Path,'read_bytes',lambda p:read(p)+(b'\n' if p==target else b''))
+    with pytest.raises(ValueError,match='Support .*differs'):evaluate(empty(),b)
+
+
+def test_prepared_costs_keep_the_validated_specification_after_configuration(monkeypatch):
+    b=support();prepared=env.PreparedEnvelope(b,runtime_metadata())
+    request=Request('z',1024,4)
+    before=prepared.forecast(empty(),request,now=10.,domain='test',until_first=False)
+    spec=env.clock.specification();spec['decode_scale']*=100
+    monkeypatch.setattr(env.clock,'specification',lambda:copy.deepcopy(spec))
+    assert prepared.forecast(empty(),request,now=10.,domain='test',until_first=False)==before
+    with pytest.raises(ValueError,match='Support .*differs'):env.PreparedEnvelope(b,runtime_metadata())

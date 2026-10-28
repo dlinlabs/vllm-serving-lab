@@ -18,6 +18,11 @@ pending state cannot be reconstructed from later commits or worker durations.
 The new API returns missing_pending_time_state for that legacy shape. Extra
 future timing fields are rejected by the strict snapshot validator. A supplied
 evaluation clock must share the domain and satisfy the support's age policy.
+Clock format/finite-value checks precede the domain check, but timestamps are
+compared across the snapshot and evaluation only within the same domain.
+Another boot returns `clock_domain_mismatch` even when its uptime is smaller;
+the CLI still writes the unavailable artifact. Malformed clocks and backward
+same-domain timestamps remain invalid inputs, not successful fallback records.
 
 The scope remains V2/UniProc, TP=PP=DP=1, two slots, FCFS, B2048, seq32,
 context8192, forced lengths, no prefix/speculation/preemption, and conservative
@@ -29,6 +34,17 @@ KV headroom. Natural future EOS and arrivals are not controller inputs here.
 and pure-decode CPU-return intervals, runtime/dispatcher/scope identities,
 implementation hashes and frozen age/width policy. Every future batch may take
 a different duration inside these intervals; a shared P/D scalar is not assumed.
+The required `cost_definition` also binds the confirmation-plan digest, actual
+feature scales and event-clock specification, both generated cost-document
+hashes, and source dependencies for cost construction, feature extraction,
+dispatch, runtime validation and continuation. Both corners use the captured
+specification, not separate reads of a mutable current specification.
+
+Older support documents without these bindings are rejected, not silently
+upgraded or rebound. Rebuild support from the original provenance and intended
+runtime, or supply explicitly labeled assumptions for a new runtime. A prepared
+predictor validates these identities once before the observation path and keeps
+its detached costs; this is not a per-request file-integrity monitor.
 
 `from_training` requires exactly the declared TRAIN LIGHT set, a fresh native
 base-model identity, and matching reconstructed TRAIN event hashes. It takes
@@ -128,7 +144,9 @@ that scope and analysis first. An observed-envelope miss is a model/support
 failure; a wide interval is a usefulness failure. Coverage obtained by expanding
 bounds after held outcomes is not a validation result.
 
-This CPU layer provides the state/uncertainty representation required for that
-test. It is not a new native collector command or an instruction to rerun the
-old entry-http workflow. C16/C32 action ranking and closed-loop MPC benefit
-remain separate gates in prefill-to-mpc-roadmap.md.
+The separate [short shadow workflow](prefill-envelope-shadow-v1.md) now supplies
+that collection and raw-audit interface, with CPU/mock validation only. It
+measures completion/enqueue age and retains misses, wide intervals and
+unavailable cases without changing the old entry-http workflow. Native coverage
+is still unmeasured. C16/C32 action ranking and closed-loop MPC benefit remain
+separate gates in prefill-to-mpc-roadmap.md.

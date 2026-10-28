@@ -7,6 +7,7 @@ nonnegative additions and maxima. Extremal runs bound that fixed event graph.
 Empirical TRAIN extrema do not establish probability or physical guarantees.
 """
 from dataclasses import asdict
+import copy
 import hashlib
 from pathlib import Path
 from . import event_clock_calibration as clock,submit_clock,live_predictor as live
@@ -15,6 +16,9 @@ from scripts.predict_prefill_async import runtime_inputs
 
 FLAGS=('model_accepted','http_accepted','adaptive_cap_accepted','mpc_accepted')
 MEANING='conditional cost-box envelope; empirical support is not coverage qualification'
+DEPENDENCIES=('prefill_lab/async_predictor.py','prefill_lab/causal.py','prefill_lab/contracts.py',
+    'prefill_lab/dispatch.py','prefill_lab/effective_calibration.py','prefill_lab/event_clock_calibration.py',
+    'prefill_lab/submit_clock.py','prefill_lab/queue_confirmation.py','scripts/predict_prefill_async.py')
 
 
 def pair(values):
@@ -23,6 +27,7 @@ def pair(values):
 
 
 def make_support(gpu_lower,gpu_upper,prefill,decode,runtime,*,origin='explicit_assumptions',training=None,max_age_s=.005,max_width_s=.010):
+    from .queue_confirmation import protocol
     scope,dispatch=runtime_inputs(runtime)
     if (scope.token_budget,scope.max_seqs,scope.max_model_len)!=(2048,32,8192):raise ValueError('Envelope scope requires B2048/seq32/context8192')
     if len(gpu_lower)!=6 or len(gpu_upper)!=6:raise ValueError('Six GPU coefficients required')
@@ -34,28 +39,41 @@ def make_support(gpu_lower,gpu_upper,prefill,decode,runtime,*,origin='explicit_a
         if not isinstance(training,dict) or set(training)!=keys or training['held_labels_used'] is not False or training['coverage_claim'] is not False:raise ValueError('Invalid TRAIN support provenance')
         if not training['trial_ids'] or training['trial_ids']!=sorted(set(training['trial_ids'])) or type(training['sample_count']) is not int or training['sample_count']<1:raise ValueError('Invalid TRAIN support membership')
     if not all(finite(v) and v>0 for v in (max_age_s,max_width_s)):raise ValueError('Positive age/width policy required')
+    plan=protocol();root=Path(__file__).resolve().parents[1]
+    definition=dict(plan_sha256=digest(plan),features=copy.deepcopy(plan['features']),
+        specification=copy.deepcopy(clock.specification()),
+        source_sha256={name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in DEPENDENCIES})
     doc=dict(schema='state-time-support-v1',meaning=MEANING,scope=asdict(scope),runtime_sha256=digest(runtime),dispatcher_sha256=digest(dispatch),
         implementation_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),continuation_sha256=hashlib.sha256(Path(live.__file__).read_bytes()).hexdigest(),
+        cost_definition=definition,
         gpu_lower_s=list(gpu_lower),gpu_upper_s=list(gpu_upper),prefill_return_s=pair(prefill),decode_return_s=pair(decode),
         policy=dict(max_age_s=max_age_s,max_width_s=max_width_s),origin=origin,training=training,
         native_coverage_qualified=False,**{k:False for k in FLAGS})
+    definition['cost_sha256']=[digest(model.to_dict()) for model in _cost_models(doc)]
     doc['sha256']=digest(doc);return doc
 
 
+def _cost_models(support):
+    definition=support['cost_definition']
+    # Use the captured scaling inputs for both corners, never reread a live spec.
+    return tuple(submit_clock.costs(support[key],dict(features=definition['features']),
+        support['prefill_return_s'][i],support['decode_return_s'][i],spec=definition['specification'])
+        for i,key in enumerate(('gpu_lower_s','gpu_upper_s')))
+
+
 def models(support,runtime):
-    required={'schema','meaning','scope','runtime_sha256','dispatcher_sha256','implementation_sha256','continuation_sha256','gpu_lower_s','gpu_upper_s','prefill_return_s','decode_return_s','policy','origin','training','native_coverage_qualified','sha256',*FLAGS}
+    required={'schema','meaning','scope','runtime_sha256','dispatcher_sha256','implementation_sha256','continuation_sha256','cost_definition','gpu_lower_s','gpu_upper_s','prefill_return_s','decode_return_s','policy','origin','training','native_coverage_qualified','sha256',*FLAGS}
     if set(support)!=required or support['schema']!='state-time-support-v1' or support['meaning']!=MEANING or support['sha256']!=digest({k:v for k,v in support.items() if k!='sha256'}):raise ValueError('Support document identity differs')
     if support['native_coverage_qualified'] is not False or any(support[k] is not False for k in FLAGS):raise ValueError('Unqualified support cannot promote acceptance')
     policy=support['policy']
     if set(policy)!={'max_age_s','max_width_s'}:raise ValueError('Support policy differs')
     rebuilt=make_support(support['gpu_lower_s'],support['gpu_upper_s'],support['prefill_return_s'],support['decode_return_s'],runtime,
         origin=support['origin'],training=support['training'],**policy)
-    if rebuilt!=support:raise ValueError('Support runtime/scope/dispatcher differs')
-    # The fixed original plan supplies scaling units, not future cases/work.
-    from .queue_confirmation import protocol
-    p=protocol();lo=submit_clock.costs(support['gpu_lower_s'],p,support['prefill_return_s'][0],support['decode_return_s'][0])
-    hi=submit_clock.costs(support['gpu_upper_s'],p,support['prefill_return_s'][1],support['decode_return_s'][1])
-    return lo,hi
+    if rebuilt!=support:raise ValueError('Support runtime/scope/dispatcher/cost definition differs')
+    result=_cost_models(support)
+    if [digest(model.to_dict()) for model in result]!=support['cost_definition']['cost_sha256']:
+        raise ValueError('Support generated cost identity differs')
+    return result
 
 
 def from_training(captures,plan,runtime,base_model,**policy):
@@ -85,12 +103,35 @@ def unavailable(snapshot,support,reason):
 
 
 def forecast(snapshot,proposed,support,runtime,*,now,domain,deadline_s=None,until_first=True):
-    lower,upper=models(support,runtime);scope,dispatch=runtime_inputs(runtime)
+    return PreparedEnvelope(support,runtime).forecast(snapshot,proposed,now=now,domain=domain,
+        deadline_s=deadline_s,until_first=until_first)
+
+
+class PreparedEnvelope:
+    """Validate and detach fixed inputs once, outside the native observation cut."""
+    def __init__(self,support,runtime):
+        self._support=copy.deepcopy(support)
+        runtime=copy.deepcopy(runtime)
+        self._lower,self._upper=models(self._support,runtime)
+        self._scope,self._dispatch=runtime_inputs(runtime)
+
+    @property
+    def support(self):
+        return copy.deepcopy(self._support)
+
+    def forecast(self,snapshot,proposed,*,now,domain,deadline_s=None,until_first=True):
+        return _forecast(snapshot,proposed,self._support,self._lower,self._upper,self._scope,self._dispatch,
+            now=now,domain=domain,deadline_s=deadline_s,until_first=until_first)
+
+
+def _forecast(snapshot,proposed,support,lower,upper,scope,dispatch,*,now,domain,deadline_s,until_first):
     if set(snapshot)=={'running','waiting','requests'}:return unavailable(snapshot,support,'missing_pending_time_state')
     live.validate(snapshot,scope)
-    if not finite(now) or now<snapshot['observed_at']:raise ValueError('Invalid envelope evaluation time')
+    if not finite(now) or now<0:raise ValueError('Invalid envelope evaluation time')
     if deadline_s is not None and (not finite(deadline_s) or deadline_s<0):raise ValueError('Invalid relative deadline')
+    if not isinstance(domain,str) or not domain:raise ValueError('Invalid envelope clock domain')
     if snapshot['clock_domain']!=domain:return unavailable(snapshot,support,'clock_domain_mismatch')
+    if now<snapshot['observed_at']:raise ValueError('Invalid envelope evaluation time')
     age=now-snapshot['observed_at']
     if age>support['policy']['max_age_s']:return unavailable(snapshot,support,'stale_snapshot')
     debts=[]

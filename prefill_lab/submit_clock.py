@@ -35,8 +35,8 @@ class SubmitCosts(PipelineCosts):
             forward_cpu_after=dict(rule='prefill>0 else pure decode',prefill_s=law.prefill_s,decode_s=law.decode_s))
 
 
-def costs(theta,plan,prefill_s,decode_s):
-    base=clock.costs(theta,plan,clock.specification());launches={k:dict(v) for k,v in base.launches.items()}
+def costs(theta,plan,prefill_s,decode_s,*,spec=None):
+    base=clock.costs(theta,plan,clock.specification() if spec is None else spec);launches={k:dict(v) for k,v in base.launches.items()}
     launches['forward']['cpu_after']=SubmitLaw({},prefill_s,decode_s)
     return SubmitCosts(launches,dict(base.scalar),'development host-return hypothesis, not physical pipeline costs',base.to_dict())
 

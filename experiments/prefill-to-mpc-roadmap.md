@@ -39,8 +39,10 @@ CPU HTTP integration and a separate conditional state-envelope prototype are
 implemented. The envelope permits independently varying future service times
 and explicit unavailable/wide-interval fallback; it has no native coverage or
 actuation qualification. See prefill-state-envelope-v1.md. The old failed TRAIN
-point gate is unchanged, and no native shadow collector is added by that CPU
-layer. Action validity can be designed and its CPU runner built before demanding
+point gate is unchanged. A separate [short shadow collector and raw auditor](prefill-envelope-shadow-v1.md)
+now measure conditional intervals and actual completion/enqueue age without
+actuation; implementation has CPU/mock checks, not native qualification.
+Action validity can be designed and its CPU runner built before demanding
 production-grade HTTP accuracy; no additional open-ended calibration stage is
 inserted by this plan.
 Native action and closed-loop claims still require their own frozen experiments.

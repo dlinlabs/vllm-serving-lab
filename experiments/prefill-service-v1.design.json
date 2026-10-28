@@ -498,7 +498,7 @@
     },
     "prefill_lab/endpoint.py": {
       "path": "prefill_lab/endpoint.py",
-      "sha256": "88ae7987a7f71a31ab2d5c8ed23da1fe49d9a252cf74ae1caca068d0d3d8c10b"
+      "sha256": "5c57d62a18fad15842321ac07197ddbfc7686e4d98a825e26f115c049fb2dc78"
     },
     "prefill_lab/__init__.py": {
       "path": "prefill_lab/__init__.py",
@@ -510,7 +510,7 @@
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
-      "sha256": "750c362bcdbda0aee2ab3b1f0f06a96cdc2b97738c1a2601a0f58dc84b52a4af"
+      "sha256": "7bdb7585047e42e8ec035e543fc6b1f79df425fc6706348989dd0856d42b82e2"
     },
     "prefill_lab/dispatch.py": {
       "path": "prefill_lab/dispatch.py",
@@ -522,7 +522,7 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "888fbaaa09c52d29a8c0d96497c1e9245951456bbe297e947310b99967706740"
+      "sha256": "71637e1ffcbbba9c106f4327c050e49f4124cf0a6b86abf0bbe0c75721efbd92"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
@@ -566,7 +566,7 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "879292e452acad18a8d511d395b7a8dd7df779f38ead5a5af025d44c92b84903"
+      "sha256": "eb2ac401a72c54e14a915bc3c76d51eeffa2ae6f3721f945810cc78219352568"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
@@ -686,7 +686,7 @@
     },
     "scripts/setup_prefill_calibration.py": {
       "path": "scripts/setup_prefill_calibration.py",
-      "sha256": "94cc39a64bafbdeda0fc824184280c22deae9119f448ac4cefe3fb1e149445e1"
+      "sha256": "007503595e280dd9eb3cbfef47e18a442c9fa564efcff97644d2a168c6a3669a"
     },
     "tests/test_prefill_effective_calibration.py": {
       "path": "tests/test_prefill_effective_calibration.py",
@@ -786,7 +786,7 @@
     },
     "prefill_lab/live_runtime.py": {
       "path": "prefill_lab/live_runtime.py",
-      "sha256": "16393d537524abb9a195db361ce2d75623c929f8afc76aa7a9b15e753031631b"
+      "sha256": "308232acbadbcbe7893bbd0388333ed8a67961a252b1616db239cabcb975dad9"
     },
     "prefill_lab/live_experiment.py": {
       "path": "prefill_lab/live_experiment.py",
@@ -882,7 +882,7 @@
     },
     "prefill_lab/submit_clock.py": {
       "path": "prefill_lab/submit_clock.py",
-      "sha256": "0f8f6fe00ac907f5a6592a056b482af46292861b36a3b4eb6b7550176a0d7009"
+      "sha256": "a4524a04c1c7134f4c82897a206828773876de28653cce9c2768a18e562e98fb"
     },
     "scripts/analyze_prefill_queue_probe.py": {
       "path": "scripts/analyze_prefill_queue_probe.py",
@@ -974,7 +974,7 @@
     },
     "experiments/prefill-to-mpc-roadmap.md": {
       "path": "experiments/prefill-to-mpc-roadmap.md",
-      "sha256": "ca60e2d56ba04d9757a1059b2a0cf70cbb4a7dfb264ad96447ad9f806d4786ef"
+      "sha256": "50e387135771d08b1cb599b553a082161419556bdf8589c60941cba117145a27"
     },
     "scripts/analyze_prefill_entry_http_failure.py": {
       "path": "scripts/analyze_prefill_entry_http_failure.py",
@@ -986,7 +986,7 @@
     },
     "prefill_lab/state_envelope.py": {
       "path": "prefill_lab/state_envelope.py",
-      "sha256": "5d7cf7d4e5a1cb7193c5ddb128070da79e6e5ba0e99b0d7d5ccae918533216e6"
+      "sha256": "6977e15fe44f96dd9486b57fc0736af29d2ac7bab78025af0a62ac33703954b1"
     },
     "scripts/predict_prefill_envelope.py": {
       "path": "scripts/predict_prefill_envelope.py",
@@ -994,11 +994,31 @@
     },
     "tests/test_prefill_state_envelope.py": {
       "path": "tests/test_prefill_state_envelope.py",
-      "sha256": "a7749dfffd03de6e76df7f5b07cbd3cf0cbbb41e1c353aa145b00fe351bc37d4"
+      "sha256": "850149b2d8f09a9dc12e5eaf275b687e2dde4e9111a09d024305844abf52b2d7"
     },
     "experiments/prefill-state-envelope-v1.md": {
       "path": "experiments/prefill-state-envelope-v1.md",
-      "sha256": "7b9cbbafda43eb9e39926aa959275cd13134c6de682a27d9a172f47b589dba1b"
+      "sha256": "4f8b30c28314433a43d797419f540db7db93f3fb033b17e9ad6656a5477961f5"
+    },
+    "prefill_lab/envelope_shadow.py": {
+      "path": "prefill_lab/envelope_shadow.py",
+      "sha256": "62db435098b7e7673d10bf5b4394583a501f2f13456c3f257f7e87287a817d58"
+    },
+    "scripts/check_prefill_envelope_shadow.py": {
+      "path": "scripts/check_prefill_envelope_shadow.py",
+      "sha256": "a26993a613628293cabb6f685de6ac1b77ffa64346222dfbacf98ccbcc7a194f"
+    },
+    "tests/test_prefill_envelope_shadow.py": {
+      "path": "tests/test_prefill_envelope_shadow.py",
+      "sha256": "b87e2a8e060f337990e42f7e5e898a36235b0c2b754e01081780a61acef8c0f9"
+    },
+    "tests/test_prefill_shadow_launch.py": {
+      "path": "tests/test_prefill_shadow_launch.py",
+      "sha256": "cdd23adda96dc7d7dc239998b0b57bf87215d9fad7fce3af3ee90bf88d20b242"
+    },
+    "experiments/prefill-envelope-shadow-v1.md": {
+      "path": "experiments/prefill-envelope-shadow-v1.md",
+      "sha256": "f54630e8a912e55b2fc69d1840163b503b4d00060318ef427cb39ea285f76ea1"
     }
   },
   "readiness": {
@@ -1297,14 +1317,27 @@
       "closed_loop_benefit_validated": false
     },
     "state_envelope": {
-      "status": "conditional_cpu_prototype_native_shadow_pending",
+      "status": "shadow_collection_implemented_native_measurements_pending",
       "module": "prefill_lab/state_envelope.py",
       "cli": "scripts/predict_prefill_envelope.py",
       "path": "experiments/prefill-state-envelope-v1.md",
       "independent_per_batch_variation": true,
       "empirical_train_support_is_coverage": false,
       "missing_pending_state_unavailable": true,
-      "native_shadow_collector_implemented": false,
+      "native_shadow_collector_implemented": true,
+      "shadow_command": "prefill_host.py envelope-shadow --support PATH",
+      "shadow_protocol": "prefill_lab/envelope_shadow.py",
+      "shadow_auditor": "scripts/check_prefill_envelope_shadow.py",
+      "shadow_documentation": "experiments/prefill-envelope-shadow-v1.md",
+      "shadow_trials": 20,
+      "shadow_offered_requests": 220,
+      "shadow_collection_limit_seconds": 600,
+      "shadow_cleanup_reserve_seconds": 40,
+      "native_shadow_collection_performed": false,
+      "completion_and_enqueue_age_measurement_implemented": true,
+      "support_prepared_before_observation": true,
+      "cost_definition_and_dependency_identity_bound": true,
+      "cross_domain_clock_fallback_before_chronology": true,
       "old_point_gate_unchanged": true,
       "native_coverage_qualified": false,
       "actuation_authorized": false,

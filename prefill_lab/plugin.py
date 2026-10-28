@@ -131,6 +131,18 @@ def wire_reply(function):
     return wrapped
 
 
+def shadow_enabled():
+    flag=os.environ.get('PREFILL_LAB_ENVELOPE_SHADOW','0')
+    if flag not in ('0','1'):raise ValueError('Invalid envelope-shadow launch flag')
+    if flag=='1':
+        legacy=('STAGES','EFFECTIVE_CALIBRATION','DELAYED_ARRIVALS','EVENT_CLOCK',
+                'QUEUE_PROBE','QUEUE_CONFIRMATION','ENTRY_HTTP')
+        if os.environ.get('PREFILL_LAB_LIVE_STATE')!='1' or any(
+                os.environ.get('PREFILL_LAB_'+name,'0')!='0' for name in legacy):
+            raise ValueError('Envelope shadow requires live state without legacy calibration modes')
+    return flag=='1'
+
+
 @wire_reply
 def command(core,payload):
     core_runtime(core)
@@ -139,8 +151,29 @@ def command(core,payload):
         result=resolved_config(core)
         result['workers']=core.model_executor.collective_rpc('prefill_lab_worker_meta')
         return result
+    if op=='shadow_configure':
+        if (not shadow_enabled() or trial or core.scheduler.has_requests() or core.batch_queue
+                or core._prefill_external or getattr(core,'_prefill_live_config',None) is not None):
+            raise RuntimeError('Shadow configuration requires an empty dedicated opt-in engine')
+        from . import envelope_shadow
+        from .live_http import clock_domain
+        from scripts.run_prefill_service import code_identity
+        supplied=payload['runtime'];actual=resolved_config(core)
+        actual['workers']=core.model_executor.collective_rpc('prefill_lab_worker_meta')
+        if any(supplied.get(k)!=v for k,v in actual.items()):raise ValueError('Shadow runtime differs from native engine')
+        frozen=payload['frozen']
+        manifest=json.loads(Path(os.environ['PREFILL_LAB_MANIFEST']).read_text())
+        manifest_sha=envelope_shadow.validate_manifest(manifest)
+        if frozen.get('manifest_sha256')!=manifest_sha or supplied.get('token_manifest_sha256')!=manifest_sha:
+            raise ValueError('Shadow configuration manifest differs')
+        config=envelope_shadow.validate_config(frozen,supplied,now=time.monotonic(),
+                                              domain=clock_domain(),sources=code_identity())
+        core._prefill_shadow_config=config
+        core._prefill_shadow_config_sha256=frozen['sha256']
+        return dict(configured=True,frozen_sha256=frozen['sha256'])
     if op=='live_configure':
-        if os.environ.get('PREFILL_LAB_LIVE_STATE')!='1' or trial or core.scheduler.has_requests() or core.batch_queue:
+        if (shadow_enabled() or getattr(core,'_prefill_shadow_config',None) is not None
+                or os.environ.get('PREFILL_LAB_LIVE_STATE')!='1' or trial or core.scheduler.has_requests() or core.batch_queue):
             raise RuntimeError('Live configuration requires an empty opt-in engine')
         from . import event_clock_calibration as clock
         from scripts.predict_prefill_async import runtime_inputs
@@ -160,6 +193,7 @@ def command(core,payload):
         core._prefill_live_config=(clock.costs(frozen['parameters_s'],clock.protocol(),clock.specification()),scope,dispatch)
         return dict(configured=True,frozen_sha256=frozen['sha256'])
     if op=='start':
+        if shadow_enabled():raise RuntimeError('Envelope shadow only permits external trials')
         if trial or core.scheduler.has_requests() or core.batch_queue:
             raise RuntimeError('Start requires an empty engine and a fully fetched prior trial')
         spec=dict(payload['trial'],epoch=uuid.uuid4().hex)
@@ -183,12 +217,21 @@ def command(core,payload):
         return result
     if op=='external_begin':
         if trial or core.scheduler.has_requests() or core.batch_queue:raise RuntimeError('External stage needs drained engine')
-        core._prefill_external=True
-        if os.environ.get('PREFILL_LAB_LIVE_STATE')=='1':
+        tracker=None
+        if shadow_enabled():
+            from .live_runtime import EnvelopeTracker
+            config=getattr(core,'_prefill_shadow_config',None)
+            if config is None or getattr(core,'_prefill_live_config',None) is not None:
+                raise RuntimeError('Configure the dedicated shadow envelope first')
+            tracker=EnvelopeTracker(core,config,observed=payload.get('observer','light')=='light',
+                                    configuration_sha256=core._prefill_shadow_config_sha256)
+        elif os.environ.get('PREFILL_LAB_LIVE_STATE')=='1':
             from .live_runtime import LiveTracker
             config=getattr(core,'_prefill_live_config',None)
             if config is None:raise RuntimeError('Configure fresh live model first')
-            core._prefill_live=LiveTracker(core,*config,observed=payload['observer']=='light',configuration_sha256=getattr(core,'_prefill_live_config_sha256',None))
+            tracker=LiveTracker(core,*config,observed=payload.get('observer','light')=='light',configuration_sha256=getattr(core,'_prefill_live_config_sha256',None))
+        core._prefill_live=tracker
+        core._prefill_external=True
         core._prefill_trial=ExternalCapture(core,payload['trial_id'],payload.get('observer','light'),payload.get('expected_foreground'))
         core.model_executor.collective_rpc('prefill_lab_worker_begin',args=(payload['trial_id'],payload.get('observer','light')))
         return dict(external=True)

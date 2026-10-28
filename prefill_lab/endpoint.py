@@ -25,10 +25,14 @@ class Endpoint:
             if not isinstance(payload,dict) or set(payload)-{'operation','trial_id','reason','observer','frozen','runtime'}:
                 raise HTTPException(400,'Unexpected command fields')
             operation=payload.get('operation')
-            if operation not in ('meta','start','status','abort','finish','external_begin','external_end','live_configure'):
+            if operation not in ('meta','start','status','abort','finish','external_begin','external_end','live_configure','shadow_configure'):
                 raise HTTPException(400,'Unknown experiment operation')
-            if operation=='live_configure' and not self.live_enabled:raise HTTPException(400,'Live bridge is disabled')
-            if operation!='live_configure' and set(payload)&{'frozen','runtime'}:raise HTTPException(400,'Unexpected live fields')
+            shadow=getattr(self,'shadow_enabled',False)
+            if operation=='shadow_configure' and not shadow:raise HTTPException(400,'Envelope shadow is disabled')
+            if operation=='live_configure' and (not self.live_enabled or shadow):raise HTTPException(400,'Live bridge is disabled')
+            if operation in ('live_configure','shadow_configure'):
+                if set(payload)!={'operation','frozen','runtime'}:raise HTTPException(400,'Invalid configuration fields')
+            elif set(payload)&{'frozen','runtime'}:raise HTTPException(400,'Unexpected configuration fields')
             if operation=='start':
                 tid=payload.get('trial_id')
                 if tid not in self.trials:raise HTTPException(400,'Trial is not frozen')
@@ -38,7 +42,7 @@ class Endpoint:
                 payload=dict(operation='start',trial=trial)
             if operation=='external_begin':
                 live_trial=payload.get('trial_id') in getattr(self,'live_trials',{})
-                allowed=('off','light') if live_trial else ('light',)
+                allowed=(self.live_trials[payload['trial_id']]['observer'],) if shadow and live_trial else ('off','light') if live_trial else ('light',)
                 if payload.get('trial_id') not in self.external_ids or payload.get('observer','light') not in allowed:
                     raise HTTPException(400,'External stage is not frozen')
                 if payload['trial_id'] in self.manifest['trials']:
@@ -58,6 +62,8 @@ class Endpoint:
         calibration=os.environ.get('PREFILL_LAB_EFFECTIVE_CALIBRATION','0')
         arrivals=os.environ.get('PREFILL_LAB_DELAYED_ARRIVALS','0')
         clock=os.environ.get('PREFILL_LAB_EVENT_CLOCK','0')
+        from .plugin import shadow_enabled
+        self.shadow_enabled=shadow_enabled()
         if clock not in ('0','1') or (clock=='1' and (arrivals!='1' or calibration!='0')):
             raise ValueError('Invalid/conflicting event-clock mode')
         if arrivals not in ('0','1') or (arrivals=='1' and calibration!='0'):raise ValueError('Invalid/conflicting delayed mode')
@@ -72,7 +78,10 @@ class Endpoint:
         if confirmation not in ('0','1') or (confirmation=='1' and (any(x!='0' for x in (probe,clock,arrivals,calibration)) or
                 entry_http!='1' and os.environ.get('PREFILL_LAB_LIVE_STATE','0')!='0')):
             raise ValueError('Invalid/conflicting queue confirmation mode')
-        if confirmation=='1':
+        if self.shadow_enabled:
+            from .envelope_shadow import protocol,validate_manifest
+            plan=protocol();cases,order=plan['cases'],plan['order'];validate_manifest(self.manifest)
+        elif confirmation=='1':
             from .queue_confirmation import protocol,validate_manifest
             plan=protocol();cases,order=plan['cases'],plan['order'];validate_manifest(self.manifest)
         elif probe=='1':
@@ -90,6 +99,7 @@ class Endpoint:
             validate_manifest(self.manifest)
         validate(self.manifest,cases,order)
         self.trials={t['trial_id']:t for t in order}
+        if self.shadow_enabled:self.trials={}
         transfers=json.loads((root/'experiments/prefill-service-v1.order.json').read_text())['transfer_slices']
         self.external_ids={t['trial_id'] for t in order if t['stage']=='http_bridge'}|{t['attempt_id'] for t in transfers}
         if calibration=='1' or arrivals=='1' or probe=='1' or confirmation=='1':self.external_ids=set()
@@ -97,8 +107,9 @@ class Endpoint:
         if live_flag not in ('0','1'):raise ValueError('Invalid live-state launch flag')
         self.live_enabled=live_flag=='1';self.live_trials={}
         if self.live_enabled:
-            if clock!='1' and entry_http!='1':raise ValueError('Live bridge requires a dedicated clock/entry launch')
-            if entry_http=='1':from .entry_http import protocol
+            if clock!='1' and entry_http!='1' and not self.shadow_enabled:raise ValueError('Live bridge requires a dedicated clock/entry/shadow launch')
+            if self.shadow_enabled:from .envelope_shadow import protocol
+            elif entry_http=='1':from .entry_http import protocol
             else:from .live_http import protocol
             self.live_trials={t['trial_id']:t for t in protocol()['order']}
             self.external_ids=set(self.live_trials)
