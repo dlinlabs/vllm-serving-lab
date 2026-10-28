@@ -83,6 +83,16 @@ def validate(snapshot,scope=Scope()):
 
 
 def forecast(snapshot,proposed,model,dispatch,*,scope=Scope(),until_first=True,max_iterations=20000):
+    return _continue(snapshot,proposed,model,dispatch,scope=scope,until_first=until_first,max_iterations=max_iterations)
+
+
+def _continue(snapshot,proposed,model,dispatch,*,scope=Scope(),until_first=True,max_iterations=20000,pending_residuals=None):
+    """Shared logical engine; explicit debt is for conditional envelope corners.
+
+    The public point forecast still derives its original effective pending debt
+    and rejects overdue unready work. Envelope callers supply bounded debt;
+    an observed ready job must still have zero debt.
+    """
     validate(snapshot,scope)
     if type(max_iterations) is not int or max_iterations<1:raise ValueError('Invalid busy iteration bound')
     validate_costs(model)
@@ -100,10 +110,13 @@ def forecast(snapshot,proposed,model,dispatch,*,scope=Scope(),until_first=True,m
     reserved=sum(math.ceil((r['prompt_tokens']+r['max_tokens'])/scope.block_size) for r in rows.values())
     if reserved>.9*scope.kv_blocks:raise ValueError('Less than 10% conservative KV headroom')
     queue=[];now=gpu=0.;steps=[];out=dict(initial_outputs);first=None;finished=None
-    for job in snapshot['pending']:
+    if pending_residuals is not None:
+        if len(pending_residuals)!=len(snapshot['pending']) or any(not finite(v) or v<0 for v in pending_residuals):raise ValueError('Invalid explicit pending debt')
+        if any(job['ready'] and v!=0 for job,v in zip(snapshot['pending'],pending_residuals)):raise ValueError('Ready job cannot carry pending debt')
+    for i,job in enumerate(snapshot['pending']):
         row=feature_row(job['work'],rows,dispatch);duration=service(model,row) if job['work'] else 0.
         anchor=max(job['scheduled_at'],snapshot['last_commit_at'] or job['scheduled_at'])
-        residual=0. if job['ready'] else anchor+duration-snapshot['observed_at']
+        residual=(0. if job['ready'] else anchor+duration-snapshot['observed_at']) if pending_residuals is None else pending_residuals[i]
         if residual<0:raise ValueError('Unready pending batch overdue under effective clock; prediction unavailable')
         gpu=max(gpu,residual)
         queue.append(dict(work=copy.deepcopy(job['work']),emits=[w['request_id'] for w in job['work']

@@ -35,9 +35,14 @@ a prediction of future ingress or input-queue waiting.
 | 2. Action validity | Under matched offered trace prefixes and qualified states, C16/C32 outcome ranking and drain transients are predicted on fresh held episodes | If one fixed cap wins throughout, or ranking differences cannot be distinguished from repeated-run variation, report that evidence; do not assert an adaptive/MPC advantage |
 | 3. Minimal closed loop | A predeclared finite-horizon controller beats replicated fixed16/fixed32 and a myopic/hysteresis baseline on fresh offered traces | Retain all rejections/failures and transition windows; no MPC acceptance from offline oracle or simulator-only success |
 
-CPU implementation of the HTTP bridge is the present task. Action validity can
-be designed and its CPU runner built before demanding production-grade HTTP
-accuracy; no additional open-ended calibration stage is inserted by this plan.
+CPU HTTP integration and a separate conditional state-envelope prototype are
+implemented. The envelope permits independently varying future service times
+and explicit unavailable/wide-interval fallback; it has no native coverage or
+actuation qualification. See prefill-state-envelope-v1.md. The old failed TRAIN
+point gate is unchanged, and no native shadow collector is added by that CPU
+layer. Action validity can be designed and its CPU runner built before demanding
+production-grade HTTP accuracy; no additional open-ended calibration stage is
+inserted by this plan.
 Native action and closed-loop claims still require their own frozen experiments.
 
 ## Gate 2: decision-focused experiment

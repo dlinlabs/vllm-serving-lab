@@ -778,7 +778,7 @@
     },
     "prefill_lab/live_predictor.py": {
       "path": "prefill_lab/live_predictor.py",
-      "sha256": "290d0d97c971cb0c38c8abe2a6bc6d2505329dec3eec07a99b2c344de522ffc8"
+      "sha256": "44da3877da3e7cbd511be3fea0a971ffda9281352b3796c551cc1f3dc4c18bd1"
     },
     "prefill_lab/live_http.py": {
       "path": "prefill_lab/live_http.py",
@@ -974,7 +974,7 @@
     },
     "experiments/prefill-to-mpc-roadmap.md": {
       "path": "experiments/prefill-to-mpc-roadmap.md",
-      "sha256": "2b292427565180b47a3920b613631898b2b68b470c0b38a1a10d85e2e2961cb4"
+      "sha256": "ca60e2d56ba04d9757a1059b2a0cf70cbb4a7dfb264ad96447ad9f806d4786ef"
     },
     "scripts/analyze_prefill_entry_http_failure.py": {
       "path": "scripts/analyze_prefill_entry_http_failure.py",
@@ -983,6 +983,22 @@
     "tests/test_prefill_entry_http_failure.py": {
       "path": "tests/test_prefill_entry_http_failure.py",
       "sha256": "f2401999a564b4b91928cfae7a60b1a42e8fc64c1456f50928b5e7d83075f5af"
+    },
+    "prefill_lab/state_envelope.py": {
+      "path": "prefill_lab/state_envelope.py",
+      "sha256": "5d7cf7d4e5a1cb7193c5ddb128070da79e6e5ba0e99b0d7d5ccae918533216e6"
+    },
+    "scripts/predict_prefill_envelope.py": {
+      "path": "scripts/predict_prefill_envelope.py",
+      "sha256": "360f40edbadcd6fa59b3ea0ed83c9232f0ac27a4c04fde5367b8f8bbd5478e3a"
+    },
+    "tests/test_prefill_state_envelope.py": {
+      "path": "tests/test_prefill_state_envelope.py",
+      "sha256": "a7749dfffd03de6e76df7f5b07cbd3cf0cbbb41e1c353aa145b00fe351bc37d4"
+    },
+    "experiments/prefill-state-envelope-v1.md": {
+      "path": "experiments/prefill-state-envelope-v1.md",
+      "sha256": "7b9cbbafda43eb9e39926aa959275cd13134c6de682a27d9a172f47b589dba1b"
     }
   },
   "readiness": {
@@ -1279,6 +1295,23 @@
       "http_gate_passed": false,
       "action_ranking_validated": false,
       "closed_loop_benefit_validated": false
+    },
+    "state_envelope": {
+      "status": "conditional_cpu_prototype_native_shadow_pending",
+      "module": "prefill_lab/state_envelope.py",
+      "cli": "scripts/predict_prefill_envelope.py",
+      "path": "experiments/prefill-state-envelope-v1.md",
+      "independent_per_batch_variation": true,
+      "empirical_train_support_is_coverage": false,
+      "missing_pending_state_unavailable": true,
+      "native_shadow_collector_implemented": false,
+      "old_point_gate_unchanged": true,
+      "native_coverage_qualified": false,
+      "actuation_authorized": false,
+      "model_accepted": false,
+      "http_accepted": false,
+      "adaptive_cap_accepted": false,
+      "mpc_accepted": false
     }
   },
   "round7_corrections": {
