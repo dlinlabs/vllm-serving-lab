@@ -906,7 +906,7 @@
     },
     "prefill_lab/queue_confirmation.py": {
       "path": "prefill_lab/queue_confirmation.py",
-      "sha256": "20a85a3ab8cf802901f9c773c856c11117418c2f173e5742217cc8de9a6f157e"
+      "sha256": "b7d402c6575d1deb05d2831fdd7b5e94e6e420401dcc1f626d0480b1f850ef53"
     },
     "scripts/analyze_prefill_entry_clock.py": {
       "path": "scripts/analyze_prefill_entry_clock.py",
@@ -922,7 +922,7 @@
     },
     "tests/test_prefill_queue_confirmation.py": {
       "path": "tests/test_prefill_queue_confirmation.py",
-      "sha256": "f37cb7a31a2096250057e3f1cb43d1f09056bacfb958cd77082b1c7c9fa91e1b"
+      "sha256": "acd06b85bd7dc0615d2212dba9e95c16ded727a3c76cd44c6d111fc21912ea24"
     },
     "experiments/prefill-entry-clock-v1.md": {
       "path": "experiments/prefill-entry-clock-v1.md",
@@ -970,11 +970,19 @@
     },
     "experiments/prefill-entry-http-v1.md": {
       "path": "experiments/prefill-entry-http-v1.md",
-      "sha256": "b91aaba9390a54ef736d0042a4ff8bf61921ff22bd455cb0c40dcaf993aca87b"
+      "sha256": "24f621fed5329695118a8ae65f9e92ac1106e264cad9f6cb3ef5cd95a223f5f6"
     },
     "experiments/prefill-to-mpc-roadmap.md": {
       "path": "experiments/prefill-to-mpc-roadmap.md",
-      "sha256": "62bd3b13e3ad6f363052c3298afdc105cb8ead1b5e9e2b4dc6b1f69b1f959d90"
+      "sha256": "2b292427565180b47a3920b613631898b2b68b470c0b38a1a10d85e2e2961cb4"
+    },
+    "scripts/analyze_prefill_entry_http_failure.py": {
+      "path": "scripts/analyze_prefill_entry_http_failure.py",
+      "sha256": "cb61475507dc01692d0bab676d53294a3deb11654287bf4fe9a70f9a57564e24"
+    },
+    "tests/test_prefill_entry_http_failure.py": {
+      "path": "tests/test_prefill_entry_http_failure.py",
+      "sha256": "f2401999a564b4b91928cfae7a60b1a42e8fc64c1456f50928b5e7d83075f5af"
     }
   },
   "readiness": {
@@ -1242,11 +1250,24 @@
       "decision_point": "EngineCore pre-ADD after gateway admission",
       "cost_aware_cap_action_validated": false,
       "offline_f0_snapshot_ablation": true,
-      "native_collection_performed": false,
+      "native_collection_performed": true,
       "model_accepted": false,
       "http_accepted": false,
       "adaptive_cap_accepted": false,
-      "mpc_accepted": false
+      "mpc_accepted": false,
+      "latest_native_attempt": {
+        "source_commit": "efca3e4e5e1a1237e796b39d965e4fed233b5fdb",
+        "evidence": "results/prefill-entry-http-train-rejection-efca3e4/report.md",
+        "status": "rejected_at_train_readiness",
+        "native_cpu_tests": 1414,
+        "completed_controlled_prefix": 88,
+        "http_trials_completed": 0,
+        "first_commit_readiness_checks": 24,
+        "first_commit_failures": 3,
+        "phase_errors": 0
+      },
+      "rejected_train_diagnostics_preserved": true,
+      "native_http_collection_performed": false
     },
     "mpc_completion_gates": {
       "path": "experiments/prefill-to-mpc-roadmap.md",

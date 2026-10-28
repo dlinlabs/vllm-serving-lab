@@ -157,6 +157,13 @@ def evaluate(rows,p,frozen):
         scope=p['scope'],baseline_native_phase_observed=False,**{k:False for k in ACCEPTANCE})
 
 
+class TrainingReadinessError(ValueError):
+    """A rejected candidate retained for diagnosis, never sealed for held use."""
+    def __init__(self,model,frozen):
+        super().__init__('TRAIN entry-clock/phase readiness failed; held phase not attempted')
+        self.model,self.frozen=model,frozen
+
+
 def seal_training(rows,captures,p,runtime,deadline=None):
     if any(r['stage'] in HELD for r in rows):raise ValueError('Held outcomes reached confirmation estimator')
     rows=json.loads(canonical(rows))
@@ -165,7 +172,7 @@ def seal_training(rows,captures,p,runtime,deadline=None):
         for c in captures if c['trial_id']==t['trial_id']]
     model=clock.fit(rows,events,p,runtime,deadline=deadline,origin='fresh_native_training_events')
     frozen=entry_clock.freeze(captures,p,runtime,model)
-    if not frozen['readiness_passed']:raise ValueError('TRAIN entry-clock/phase readiness failed; held phase not attempted')
+    if not frozen['readiness_passed']:raise TrainingReadinessError(model,frozen)
     training=[r for r in rows if r['stage']=='train']
     if not base.endpoint_scores([r for r in training if r['observer']=='off'],frozen['predictions'],p)['passed'] or not base.structure_check(
         [r for r in training if r['observer']=='light'],frozen['predictions']):raise ValueError('Entry TRAIN endpoint/work gate failed')
@@ -208,6 +215,14 @@ async def run(client,http,url,manifest,output):
         if digest(final)!=digest(runtime):raise ValueError('Runtime drift')
         save(output/'host-after.json',host_identity());report=evaluate(rows,p,frozen);save(output/'confirmation-report.json',report)
         summary.update(collection_complete=True,candidate_passed=report['candidate_passed'],status=report['status'])
-    except BaseException as exc:summary['failures'].append(dict(type=type(exc).__name__,message=str(exc)));raise
+    except BaseException as exc:
+        if isinstance(exc,TrainingReadinessError):
+            save(output/'rejected-base-model.json',exc.model);save(output/'rejected-entry-candidate.json',exc.frozen)
+            save(output/'training-readiness-failure.json',dict(schema='queue-training-readiness-failure-v1',
+                sealed_for_held=False,completed=list(summary['completed']),source_sha256=code_identity(),
+                model_sha256=exc.model['sha256'],candidate_sha256=exc.frozen['sha256'],
+                phase_errors=exc.frozen['errors'],first_commit_failures=[r for r in exc.frozen['first_commit_readiness']['checks'] if not r['passed']],
+                **{k:False for k in ACCEPTANCE}))
+        summary['failures'].append(dict(type=type(exc).__name__,message=str(exc)));raise
     finally:summary['elapsed_seconds']=time.monotonic()-start;save(output/'confirmation.json',summary)
     return summary

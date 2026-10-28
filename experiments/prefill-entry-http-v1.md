@@ -121,3 +121,27 @@ Setup preserves the existing venv and pip cache; completed cached files may be
 reused, while an interrupted download may restart. Installation timeout stops
 before native acceptance/collection, without automatic retry. Keep the original
 log when restarting setup; no experiment gate or collection deadline is relaxed.
+
+## Native attempt at efca3e4: rejected during TRAIN
+
+Archive 1793156148422216020 completes the first 88 controlled trials, then
+fails TRAIN first-commit readiness: 21/24 checks pass, three fail, and phase
+construction has no errors. No held controlled or HTTP trial is attempted.
+Its 1414-test native CPU acceptance and 199 captured source files are verified;
+an original-source, matching-numerics reconstruction reproduces the rejection.
+See `results/prefill-entry-http-train-rejection-efca3e4/report.md`.
+
+For single-L7168-D16 the four observed first commits are 51.639, 50.539,
+25.161 and 49.974ms. Their original error-budget intervals have empty common
+intersection. Changing one case-constant prediction cannot make all four pass.
+Their normalized recorded release scheduler states match, but those states
+exclude pending-copy readiness/debt and physical CPU/GPU state. This evidence
+does not identify host contention or show that a state-conditioned predictor
+is impossible. First commit may consume a previously submitted background
+batch; it is not the foreground request's first token or full batch completion.
+
+The collector now preserves rejected candidate artifacts and failed checks
+without writing an accepted freeze/seal, retrying, or advancing into held/HTTP.
+The next model design must address decision-time observable state and/or
+explicit uncertainty, then freeze a separate test; it cannot silently pick a
+different constant from these outcomes or bypass the original failed gate.

@@ -1,8 +1,12 @@
 # Bounded route from controlled latency to a minimal admission-budget MPC
 
-The current evidence supports one fixed B2048 controlled-arrival experiment on
-one host. The most recent host gives identical F0/entry forecasts. It does not
-show that changing an action improves the outcome. This is the remaining gap
+The current evidence includes one passing fixed B2048 controlled-arrival
+experiment, with identical F0/entry forecasts, and a later native attempt
+rejected at TRAIN first-commit readiness before held/HTTP. The latter has a
+planned case whose repeat budgets cannot share one fixed prediction; matching
+recorded release scheduler state omits pending readiness/debt and physical
+CPU/GPU state. Cross-host robustness is unestablished. Neither run
+shows that changing an action improves the outcome. This is the remaining gap
 to MPC, and HTTP validation alone does not close it.
 
 ## Keep the control variables distinct

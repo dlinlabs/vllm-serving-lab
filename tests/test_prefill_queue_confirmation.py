@@ -199,7 +199,7 @@ def test_host_audits_inconclusive_run_then_archives_without_retry(monkeypatch,tm
     assert len(list((tmp_path/'pr32-queue-confirmations').glob('*.tar.gz')))==1
 
 
-@pytest.mark.parametrize('fault',[None,'freeze','source','cancel'])
+@pytest.mark.parametrize('fault',[None,'freeze','source','cancel','readiness'])
 def test_collector_seals_once_before_all_held_trials_and_retains_failure(monkeypatch,tmp_path,fault):
     from prefill_lab import suite,causal
     from scripts import predict_prefill_async,run_prefill_service
@@ -212,6 +212,9 @@ def test_collector_seals_once_before_all_held_trials_and_retains_failure(monkeyp
     def seal(data,caps,plan,runtime,deadline):
         assert len(data)==88 and len(caps)==24 and len(observed)==88
         assert not any(r['stage'] in qc.HELD for r in data)
+        if fault=='readiness':
+            rejected=dict(copy.deepcopy(frozen),readiness_passed=False,errors=[],first_commit_readiness=dict(checks=[dict(passed=False,trial_id='qc-070')]))
+            raise qc.TrainingReadinessError({'sha256':'rejected-base'},rejected)
         fitted.append(1);return {'sha256':'base'},copy.deepcopy(frozen)
     monkeypatch.setattr(qc,'seal_training',seal);monkeypatch.setattr(qc,'extract',lambda cap,t,c,p:copy.deepcopy(lookup[t['trial_id']]))
     async def trial(client,t,deadline,path):
@@ -228,7 +231,15 @@ def test_collector_seals_once_before_all_held_trials_and_retains_failure(monkeyp
     if fault:
         with pytest.raises(asyncio.CancelledError if fault=='cancel' else ValueError):asyncio.run(qc.run(Client(),None,None,{},tmp_path))
         summary=json.loads((tmp_path/'confirmation.json').read_text());assert not summary['collection_complete'] and summary['failures']
-        assert len(observed)==89
+        assert len(observed)==(88 if fault=='readiness' else 89)
+        if fault=='readiness':
+            rejected=json.loads((tmp_path/'training-readiness-failure.json').read_text())
+            assert not rejected['sealed_for_held'] and rejected['completed']==observed
+            assert rejected['first_commit_failures']==[dict(passed=False,trial_id='qc-070')]
+            assert json.loads((tmp_path/'rejected-base-model.json').read_text())==dict(sha256='rejected-base')
+            assert not json.loads((tmp_path/'rejected-entry-candidate.json').read_text())['readiness_passed']
+            assert all(not (tmp_path/n).exists() for n in ('base-model.json','entry-freeze.json','seal.json','confirmation-report.json'))
+            assert all(rejected[k] is False for k in qc.ACCEPTANCE)
     else:
         summary=asyncio.run(qc.run(Client(),None,None,{},tmp_path));assert summary['collection_complete'] and summary['candidate_passed']
         assert len(observed)==240 and len(fitted)==1
