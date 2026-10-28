@@ -148,6 +148,12 @@ def command(core,payload):
         actual['workers']=core.model_executor.collective_rpc('prefill_lab_worker_meta')
         if any(supplied.get(k)!=v for k,v in actual.items()):raise ValueError('Live runtime differs from native engine')
         frozen=payload['frozen']
+        if os.environ.get('PREFILL_LAB_ENTRY_HTTP')=='1':
+            from .entry_http_model import costs as entry_costs
+            model=entry_costs(frozen,supplied);scope,dispatch=runtime_inputs(supplied)
+            core._prefill_live_config=(model,scope,dispatch)
+            core._prefill_live_config_sha256=frozen['sha256']
+            return dict(configured=True,frozen_sha256=frozen['sha256'])
         if frozen.get('measurement_origin')!='fresh_native_training_events':raise ValueError('Live phase requires fresh same-host training')
         clock.predict_frozen(frozen,clock.protocol(),supplied)
         scope,dispatch=runtime_inputs(supplied)
@@ -182,7 +188,7 @@ def command(core,payload):
             from .live_runtime import LiveTracker
             config=getattr(core,'_prefill_live_config',None)
             if config is None:raise RuntimeError('Configure fresh live model first')
-            core._prefill_live=LiveTracker(core,*config,observed=payload['observer']=='light')
+            core._prefill_live=LiveTracker(core,*config,observed=payload['observer']=='light',configuration_sha256=getattr(core,'_prefill_live_config_sha256',None))
         core._prefill_trial=ExternalCapture(core,payload['trial_id'],payload.get('observer','light'),payload.get('expected_foreground'))
         core.model_executor.collective_rpc('prefill_lab_worker_begin',args=(payload['trial_id'],payload.get('observer','light')))
         return dict(external=True)

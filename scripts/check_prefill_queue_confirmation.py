@@ -21,7 +21,7 @@ def verify_seal(seal,plan,captures,source,manifest,model,frozen):
         raise ValueError('Freeze was not sealed between TRAIN and held collection')
 
 
-def audit(directory):
+def audit(directory,*,entry_http=False):
     from prefill_lab.suite import runtime_preflight
     from prefill_lab.causal import dispatcher_parity
     from scripts.run_prefill_service import code_identity
@@ -38,11 +38,12 @@ def audit(directory):
     if any(s['version']!='0.30.0' or s['files']!=pins for s in [runtime['source'],*[w['source'] for w in runtime['workers']]]):raise ValueError('Installed source pins differ')
     source=load('collection-sources.json');launch=load('launch.json');acceptance=launch['cpu_acceptance'];env=launch['environment']
     if (source!=code_identity() or launch['source_sha256']!=source or acceptance['source_sha256']!=source or
-            launch['scope']!='independent_queue_confirmation' or not acceptance['valid'] or not acceptance['tracked_clean'] or
+            launch['scope']!=('entry_http_state_bridge' if entry_http else 'independent_queue_confirmation') or not acceptance['valid'] or not acceptance['tracked_clean'] or
             load('native-cpu-acceptance/acceptance.json')!=acceptance):raise ValueError('Native source/CPU identity differs')
     if validate_report(root/'native-cpu-acceptance/junit.xml')['test_cases']!=acceptance['tests']:raise ValueError('Native CPU denominator differs')
     if env.get('PREFILL_LAB_QUEUE_CONFIRMATION')!='1' or any(env.get('PREFILL_LAB_'+k)!='0' for k in
-            ('QUEUE_PROBE','STAGES','EFFECTIVE_CALIBRATION','DELAYED_ARRIVALS','EVENT_CLOCK','LIVE_STATE')):raise ValueError('Conflicting launch modes')
+            ('QUEUE_PROBE','STAGES','EFFECTIVE_CALIBRATION','DELAYED_ARRIVALS','EVENT_CLOCK')) or env.get('PREFILL_LAB_LIVE_STATE')!=('1' if entry_http else '0') or env.get('PREFILL_LAB_ENTRY_HTTP','0')!=('1' if entry_http else '0'):
+        raise ValueError('Conflicting launch modes')
     captures=[];rows=[];cases={c['id']:c for c in plan['cases']};previous=None
     for t in plan['order']:
         cap=load(t['trial_id']+'.json')

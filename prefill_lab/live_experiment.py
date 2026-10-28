@@ -23,8 +23,10 @@ def validate_manifest(manifest):
     return validate(manifest,p['cases'],p['order'])
 
 
-def extract(bundle,trial,manifest,runtime,frozen):
-    p=protocol();validate_manifest(manifest);capture=bundle['capture'];client=bundle['client'];gateway=bundle['gateway']
+def extract(bundle,trial,manifest,runtime,frozen,*,plan=None,model=None,manifest_validator=None):
+    p=protocol() if plan is None else plan
+    (validate_manifest if manifest_validator is None else manifest_validator)(manifest)
+    capture=bundle['capture'];client=bundle['client'];gateway=bundle['gateway']
     workers=[r for w in capture['workers'] for r in w['rows']]
     audited=audit_capture(capture,workers,require_steps=trial['observer']=='light')
     live=capture['live']
@@ -38,7 +40,8 @@ def extract(bundle,trial,manifest,runtime,frozen):
     expected={digest(['live-http',trial['trial_id'],r['id']])[:32] for r in specs}
     if (set(native)!=expected or set(observed)!=expected or len(native)!=len(capture['requests'])
             or len(observed)!=len(live['records'])):raise ValueError('Native correlation inventory differs')
-    scope,dispatch=runtime_inputs(runtime);model=clock.costs(frozen['parameters_s'],clock.protocol(),clock.specification())
+    scope,dispatch=runtime_inputs(runtime)
+    model=clock.costs(frozen['parameters_s'],clock.protocol(),clock.specification()) if model is None else model
     if live['cost_sha256']!=digest(model.to_dict()) or live['dispatcher_sha256']!=digest(dispatch):raise ValueError('Live model identity changed')
     for spec in specs:
         row=by_id[spec['id']];tid=digest(['live-http',trial['trial_id'],spec['id']])[:32];rid,native_row=native[tid]

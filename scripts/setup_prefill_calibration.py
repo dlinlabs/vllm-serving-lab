@@ -17,7 +17,7 @@ REVISION='cdbee75f17c01a7cc42f958dc650907174af0554'
 
 
 def main(*,operation='calibrate'):
-    if operation not in ('calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation'):raise ValueError('Invalid next experiment')
+    if operation not in ('calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation','entry-http'):raise ValueError('Invalid next experiment')
     if platform.system()!='Linux' or sys.version_info[:2]!=(3,12):
         raise RuntimeError('Use native Linux with Python3.12')
     if subprocess.check_output(['git','diff','HEAD','--name-only'],cwd=ROOT,text=True).strip():
@@ -51,5 +51,5 @@ print(json.dumps({'cuda_compute':'passed','verified_source_files':len(installed_
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--next',dest='operation',choices=('calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation'),default='calibrate')
+    parser.add_argument('--next',dest='operation',choices=('calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation','entry-http'),default='calibrate')
     main(operation=parser.parse_args().operation)

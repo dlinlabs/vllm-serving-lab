@@ -8,15 +8,29 @@ No online/native/HTTP/cap/MPC qualification is implied by synthetic completion.
 import copy
 import math
 
-from .async_predictor import Request,Scope
+from .async_predictor import Request,Scope,CostLaw
 from .causal import mode_row
 from .contracts import digest,features,finite,fifo_reference
-from .event_clock_calibration import EventClockCosts
+from .event_clock_calibration import EventClockCosts,MixedCostLaw
+from .submit_clock import SubmitCosts,SubmitLaw
 
 
 def service(model,row):
-    if not isinstance(model,EventClockCosts):raise ValueError('Busy prediction requires the six-term effective lane')
     return model.launches['forward']['gpu_tail'](row)
+
+
+def validate_costs(model):
+    if type(model) not in (EventClockCosts,SubmitCosts):raise ValueError('Unsupported busy effective cost family')
+    for launch,parts in model.launches.items():
+        for name,law in parts.items():
+            if (launch,name)==('forward','gpu_tail'):
+                if type(law) is not MixedCostLaw:raise ValueError('Expected six-term GPU lane')
+            elif (launch,name)==('forward','cpu_after') and type(model) is SubmitCosts:
+                if type(law) is not SubmitLaw or law.coefficients:raise ValueError('Expected explicit submit-return constants')
+            elif type(law) is not CostLaw or any(law.coefficients.values()):
+                raise ValueError('Non-lane physical costs are outside busy continuation scope')
+    if any(type(law) is not CostLaw or any(law.coefficients.values()) for law in model.scalar.values()):
+        raise ValueError('Non-lane physical costs are outside busy continuation scope')
 
 
 def feature_row(work,requests,dispatch):
@@ -71,11 +85,7 @@ def validate(snapshot,scope=Scope()):
 def forecast(snapshot,proposed,model,dispatch,*,scope=Scope(),until_first=True,max_iterations=20000):
     validate(snapshot,scope)
     if type(max_iterations) is not int or max_iterations<1:raise ValueError('Invalid busy iteration bound')
-    if not isinstance(model,EventClockCosts):raise ValueError('Expected effective event-clock costs')
-    if any(v for k,parts in model.launches.items() for name,law in parts.items()
-           if (k,name)!=('forward','gpu_tail') for v in law.coefficients.values()) or any(
-           v for law in model.scalar.values() for v in law.coefficients.values()):
-        raise ValueError('Non-lane physical costs are outside busy continuation scope')
+    validate_costs(model)
     if not isinstance(proposed,Request) or proposed.at_s!=0 or proposed.id in snapshot['requests']:
         raise ValueError('One new unique request at the pre-ADD cut is required')
     if proposed.prompt_tokens+proposed.max_tokens>scope.max_model_len:raise ValueError('New request exceeds context')
@@ -115,6 +125,10 @@ def forecast(snapshot,proposed,model,dispatch,*,scope=Scope(),until_first=True,m
             step=dict(work=work,scheduled_s=now,committed_s=None) if work else None
             if step is not None:steps.append(step)
             queue.append(dict(work=work,emits=emits,ready=gpu if work else now,step=step))
+            # A pending job has already returned before the observed pre-ADD
+            # cut. Charge CPU-return unavailability only to future submissions.
+            # It overlaps GPU service, rather than being added to GPU duration.
+            if work:now+=model.launches['forward']['cpu_after'](row)
             if len(queue)<scope.batch_slots:
                 if not executed and rows:now+=.001
                 continue

@@ -66,7 +66,11 @@ class Endpoint:
         if probe not in ('0','1') or (probe=='1' and any(x!='0' for x in (clock,arrivals,calibration,os.environ.get('PREFILL_LAB_LIVE_STATE','0')))):
             raise ValueError('Invalid/conflicting queue probe mode')
         confirmation=os.environ.get('PREFILL_LAB_QUEUE_CONFIRMATION','0')
-        if confirmation not in ('0','1') or (confirmation=='1' and any(x!='0' for x in (probe,clock,arrivals,calibration,os.environ.get('PREFILL_LAB_LIVE_STATE','0')))):
+        entry_http=os.environ.get('PREFILL_LAB_ENTRY_HTTP','0')
+        if entry_http not in ('0','1') or (entry_http=='1' and (confirmation!='1' or os.environ.get('PREFILL_LAB_LIVE_STATE')!='1')):
+            raise ValueError('Invalid/conflicting entry HTTP mode')
+        if confirmation not in ('0','1') or (confirmation=='1' and (any(x!='0' for x in (probe,clock,arrivals,calibration)) or
+                entry_http!='1' and os.environ.get('PREFILL_LAB_LIVE_STATE','0')!='0')):
             raise ValueError('Invalid/conflicting queue confirmation mode')
         if confirmation=='1':
             from .queue_confirmation import protocol,validate_manifest
@@ -93,8 +97,9 @@ class Endpoint:
         if live_flag not in ('0','1'):raise ValueError('Invalid live-state launch flag')
         self.live_enabled=live_flag=='1';self.live_trials={}
         if self.live_enabled:
-            if clock!='1':raise ValueError('Live bridge requires the dedicated clock launch')
-            from .live_http import protocol
+            if clock!='1' and entry_http!='1':raise ValueError('Live bridge requires a dedicated clock/entry launch')
+            if entry_http=='1':from .entry_http import protocol
+            else:from .live_http import protocol
             self.live_trials={t['trial_id']:t for t in protocol()['order']}
             self.external_ids=set(self.live_trials)
         self.engine=engine_client

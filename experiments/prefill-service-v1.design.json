@@ -498,7 +498,7 @@
     },
     "prefill_lab/endpoint.py": {
       "path": "prefill_lab/endpoint.py",
-      "sha256": "bb6d43aa0cfa273835c1e428a8e7180c2873dae96268b11169afe1e188f86a8c"
+      "sha256": "88ae7987a7f71a31ab2d5c8ed23da1fe49d9a252cf74ae1caca068d0d3d8c10b"
     },
     "prefill_lab/__init__.py": {
       "path": "prefill_lab/__init__.py",
@@ -510,7 +510,7 @@
     },
     "prefill_lab/plugin.py": {
       "path": "prefill_lab/plugin.py",
-      "sha256": "5ae84ce3d50cbc4b41cee172a2cb97a8525842f8bdd204a916859449ca686157"
+      "sha256": "750c362bcdbda0aee2ab3b1f0f06a96cdc2b97738c1a2601a0f58dc84b52a4af"
     },
     "prefill_lab/dispatch.py": {
       "path": "prefill_lab/dispatch.py",
@@ -522,7 +522,7 @@
     },
     "scripts/run_prefill_service.py": {
       "path": "scripts/run_prefill_service.py",
-      "sha256": "a1b440f3c8dd9ee4a429febe143d81f72090c7d11c7e42a59e03bf408b9bc63a"
+      "sha256": "888fbaaa09c52d29a8c0d96497c1e9245951456bbe297e947310b99967706740"
     },
     "experiments/prefill-service-v1.runbook.md": {
       "path": "experiments/prefill-service-v1.runbook.md",
@@ -566,7 +566,7 @@
     },
     "scripts/prefill_host.py": {
       "path": "scripts/prefill_host.py",
-      "sha256": "697b35bed278ca0df889013f49a9a4267b469351c6afcd28140d903102d9e01a"
+      "sha256": "879292e452acad18a8d511d395b7a8dd7df779f38ead5a5af025d44c92b84903"
     },
     "tests/test_prefill_host.py": {
       "path": "tests/test_prefill_host.py",
@@ -686,7 +686,7 @@
     },
     "scripts/setup_prefill_calibration.py": {
       "path": "scripts/setup_prefill_calibration.py",
-      "sha256": "5fe4b25385ab69e06729bcae0a35e278216d710c56aaa74664cbbb1ef1f16aea"
+      "sha256": "2fb8342d6aa21231160c21cce96402b6759fed6f83e08dde4161188b0a1ca86a"
     },
     "tests/test_prefill_effective_calibration.py": {
       "path": "tests/test_prefill_effective_calibration.py",
@@ -778,7 +778,7 @@
     },
     "prefill_lab/live_predictor.py": {
       "path": "prefill_lab/live_predictor.py",
-      "sha256": "e5e969d7d07708d67841bc2e5d7549c9b50564d2758a569011577716ef72ea79"
+      "sha256": "290d0d97c971cb0c38c8abe2a6bc6d2505329dec3eec07a99b2c344de522ffc8"
     },
     "prefill_lab/live_http.py": {
       "path": "prefill_lab/live_http.py",
@@ -786,11 +786,11 @@
     },
     "prefill_lab/live_runtime.py": {
       "path": "prefill_lab/live_runtime.py",
-      "sha256": "91a53f7ca0f0fa426b4ef65361c24cda416e784b7abc1bd302b8b673acfc4ebc"
+      "sha256": "16393d537524abb9a195db361ce2d75623c929f8afc76aa7a9b15e753031631b"
     },
     "prefill_lab/live_experiment.py": {
       "path": "prefill_lab/live_experiment.py",
-      "sha256": "80b2be58d2b70b1efe92d5795511f021a251f0876df0c7bc11651178761d32e0"
+      "sha256": "33e087e0c823047425226423ad104410d846debbd5b14ecf268dcb63c9b4eccb"
     },
     "scripts/predict_prefill_live.py": {
       "path": "scripts/predict_prefill_live.py",
@@ -914,7 +914,7 @@
     },
     "scripts/check_prefill_queue_confirmation.py": {
       "path": "scripts/check_prefill_queue_confirmation.py",
-      "sha256": "831430d973fdad338e78dc714eaca502ca1603c9cb4c523a7eb1c2bf4de085c4"
+      "sha256": "9aa69cc2181a52a2d2ba5b5fa9c1994ac67a4d148fbca0bcc5653c5d32290e3e"
     },
     "tests/test_prefill_entry_clock.py": {
       "path": "tests/test_prefill_entry_clock.py",
@@ -922,7 +922,7 @@
     },
     "tests/test_prefill_queue_confirmation.py": {
       "path": "tests/test_prefill_queue_confirmation.py",
-      "sha256": "6b22f4b6f3203101f33beac05b41e60f3e0f50f327abba29409ccf92ad1256bd"
+      "sha256": "f37cb7a31a2096250057e3f1cb43d1f09056bacfb958cd77082b1c7c9fa91e1b"
     },
     "experiments/prefill-entry-clock-v1.md": {
       "path": "experiments/prefill-entry-clock-v1.md",
@@ -943,6 +943,38 @@
     "tests/test_prefill_queue_confirmation_analysis.py": {
       "path": "tests/test_prefill_queue_confirmation_analysis.py",
       "sha256": "1d4ea6385e3e1bc17ee18b59199f2d9b62f832e6ce6216a58d8a2cec0321d171"
+    },
+    "prefill_lab/entry_http.py": {
+      "path": "prefill_lab/entry_http.py",
+      "sha256": "35fe6e289ccac32575e8fb762fba5c55d136f1081880fbd7d503559db7e76c3f"
+    },
+    "prefill_lab/entry_http_model.py": {
+      "path": "prefill_lab/entry_http_model.py",
+      "sha256": "a2318e1202604deb20e9838c87114bbf85d49d396f21e70756ac1905e34329c9"
+    },
+    "scripts/check_prefill_entry_http.py": {
+      "path": "scripts/check_prefill_entry_http.py",
+      "sha256": "f42ecbb49b3e70efd2096697255ed3cb71a9ad492b637652ddeb6412add363d1"
+    },
+    "tests/test_prefill_entry_http.py": {
+      "path": "tests/test_prefill_entry_http.py",
+      "sha256": "28137314a32d413eaf51017da23ab3476d32e4e27c5de85a2b2ef46642668775"
+    },
+    "experiments/prefill-entry-http-v1.json": {
+      "path": "experiments/prefill-entry-http-v1.json",
+      "sha256": "a04627304d5c4dc7848bca8dd2c34418a7332d0d4c7d07f4d16b922a7b36b256"
+    },
+    "experiments/prefill-entry-http-v1.plan.json": {
+      "path": "experiments/prefill-entry-http-v1.plan.json",
+      "sha256": "5920cc91222f9c99b5e32239d1f52383e03c05be51ef875dca0678d1949d817b"
+    },
+    "experiments/prefill-entry-http-v1.md": {
+      "path": "experiments/prefill-entry-http-v1.md",
+      "sha256": "87d5ab9c23b17bb0a6109526106a0e978d039abf8a0d1894352b9b9d8717ea12"
+    },
+    "experiments/prefill-to-mpc-roadmap.md": {
+      "path": "experiments/prefill-to-mpc-roadmap.md",
+      "sha256": "62bd3b13e3ad6f363052c3298afdc105cb8ead1b5e9e2b4dc6b1f69b1f959d90"
     }
   },
   "readiness": {
@@ -1192,6 +1224,40 @@
       "adaptive_cap_accepted": false,
       "mpc_accepted": false,
       "native_confirmation_evidence": "results/prefill-queue-confirmation-2ebb185/report.md"
+    },
+    "entry_http": {
+      "status": "cpu_integration_native_http_pending",
+      "module": "prefill_lab/entry_http.py",
+      "model_handoff": "prefill_lab/entry_http_model.py",
+      "audit": "scripts/check_prefill_entry_http.py",
+      "path": "experiments/prefill-entry-http-v1.md",
+      "numeric_plan": "experiments/prefill-entry-http-v1.plan.json",
+      "host_operation": "entry-http",
+      "same_boot_controlled_trials": 240,
+      "http_trials": 98,
+      "combined_trials": 338,
+      "collection_deadline_seconds": 3600,
+      "engine_token_budget": 2048,
+      "gateway_protected_max_in_flight": 32,
+      "decision_point": "EngineCore pre-ADD after gateway admission",
+      "cost_aware_cap_action_validated": false,
+      "offline_f0_snapshot_ablation": true,
+      "native_collection_performed": false,
+      "model_accepted": false,
+      "http_accepted": false,
+      "adaptive_cap_accepted": false,
+      "mpc_accepted": false
+    },
+    "mpc_completion_gates": {
+      "path": "experiments/prefill-to-mpc-roadmap.md",
+      "control_variable": "cost-aware weighted admission budget C; distinct from engine B and protected concurrency",
+      "initial_actions": [
+        16,
+        32
+      ],
+      "http_gate_passed": false,
+      "action_ranking_validated": false,
+      "closed_loop_benefit_validated": false
     }
   },
   "round7_corrections": {

@@ -126,8 +126,9 @@ def test_estimator_rejects_held_rows_before_accessing_any_outcome():
     with pytest.raises(ValueError,match='Held outcomes'):qc.seal_training([dict(stage='held_queue')],[],{},None)
 
 
+@pytest.mark.parametrize('parent_mode',[False,True])
 @pytest.mark.parametrize('fault',[None,'source','raw','report','freeze','model','seal','cpu','mode','runtime','summary'])
-def test_independent_raw_audit_rebuilds_and_rejects_tampering(monkeypatch,tmp_path,fault):
+def test_independent_raw_audit_rebuilds_and_rejects_tampering(monkeypatch,tmp_path,fault,parent_mode):
     from scripts import check_prefill_queue_confirmation as checker,run_prefill_service as runner,run_linux_cpu_tests as cpu
     from prefill_lab import suite,causal
     from test_prefill_async_predictor import runtime_metadata
@@ -138,13 +139,15 @@ def test_independent_raw_audit_rebuilds_and_rejects_tampering(monkeypatch,tmp_pa
     report=qc.evaluate(rows,p,f)
     env={'PREFILL_LAB_'+k:'0' for k in ('QUEUE_PROBE','STAGES','EFFECTIVE_CALIBRATION','DELAYED_ARRIVALS','EVENT_CLOCK','LIVE_STATE')}
     env['PREFILL_LAB_QUEUE_CONFIRMATION']='1'
+    if parent_mode:
+        env['PREFILL_LAB_LIVE_STATE']='1';env['PREFILL_LAB_ENTRY_HTTP']='1'
     summary=dict(collection_complete=True,failures=[],completed=[t['trial_id'] for t in p['order']],candidate_passed=True,status='passed',**{k:False for k in qc.ACCEPTANCE})
     seal=dict(completed=summary['completed'][:88],next_trial='qc-089',at_monotonic=175.5,source_sha256=sources,
         manifest_sha256=digest({}),model_sha256=model['sha256'],freeze_sha256=f['sha256'])
     files={'queue-confirmation-plan.json':p,'confirmation.json':summary,'runtime.json':runtime,'runtime-final.json':runtime,
         'token-manifest.json':{},'collection-sources.json':sources,'base-model.json':model,'entry-freeze.json':f,'seal.json':seal,
         'confirmation-rows.json':rows,'confirmation-report.json':report,'native-cpu-acceptance/acceptance.json':acceptance,
-        'launch.json':dict(source_sha256=sources,cpu_acceptance=acceptance,environment=env,scope='independent_queue_confirmation')}
+        'launch.json':dict(source_sha256=sources,cpu_acceptance=acceptance,environment=env,scope='entry_http_state_bridge' if parent_mode else 'independent_queue_confirmation')}
     for name,value in files.items():
         path=tmp_path/name;path.parent.mkdir(exist_ok=True);save(path,value)
     for row in rows:save(tmp_path/(row['trial_id']+'.json'),row)
@@ -170,8 +173,11 @@ def test_independent_raw_audit_rebuilds_and_rejects_tampering(monkeypatch,tmp_pa
         elif fault=='runtime':data['changed']=True
         elif fault=='summary':data['model_accepted']=True
         save(tmp_path/name,data)
-        with pytest.raises(ValueError):checker.audit(tmp_path)
-    else:assert checker.audit(tmp_path)==report
+        with pytest.raises(ValueError):checker.audit(tmp_path,entry_http=parent_mode)
+    else:
+        assert checker.audit(tmp_path,entry_http=parent_mode)==report
+        if parent_mode:
+            with pytest.raises(ValueError):checker.audit(tmp_path)
 
 
 def test_host_audits_inconclusive_run_then_archives_without_retry(monkeypatch,tmp_path):

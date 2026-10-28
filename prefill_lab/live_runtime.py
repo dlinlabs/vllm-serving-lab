@@ -23,9 +23,10 @@ def copy_ready(future,work):
 
 
 class LiveTracker:
-    def __init__(self,core,model,scope,dispatch,*,observed=True,clock=time.monotonic,domain=None,ready_probe=copy_ready):
+    def __init__(self,core,model,scope,dispatch,*,observed=True,clock=time.monotonic,domain=None,ready_probe=copy_ready,configuration_sha256=None):
         self.core,self.model,self.scope,self.dispatch=core,model,scope,dispatch
         self.observed,self.clock,self.domain,self.ready_probe=observed,clock,domain or clock_domain(),ready_probe
+        self.configuration_sha256=configuration_sha256
         self.pending={};self.last_commit=None;self.records=Buffer(64);self.errors=[];self.by_id={}
 
     def scheduled(self,output,started):
@@ -78,6 +79,8 @@ class LiveTracker:
             if request.request_id in trial.requests:trial.requests[request.request_id]['enqueue']=row['engine_enqueue']
 
     def capture(self):
-        return dict(schema='live-probe-records-v1',records=self.records.rows,overflow=self.records.overflow,
+        result=dict(schema='live-probe-records-v1',records=self.records.rows,overflow=self.records.overflow,
                     errors=self.errors,clock_domain=self.domain,observed=self.observed,
                     cost_sha256=digest(self.model.to_dict()),dispatcher_sha256=digest(self.dispatch))
+        if self.configuration_sha256 is not None:result['configuration_sha256']=self.configuration_sha256
+        return result
