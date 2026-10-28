@@ -124,14 +124,20 @@ def test_calibration_host_uses_dedicated_manifest_and_archives_failed_attempt(mo
         assert any(n.endswith('/calibration.json') for n in bundle.getnames())
 
 
-def test_setup_calibration_uses_declared_pins_and_does_not_collect(monkeypatch,tmp_path):
+@pytest.mark.parametrize('timeout',[None,2700])
+def test_setup_calibration_uses_declared_pins_and_does_not_collect(monkeypatch,tmp_path,timeout):
     from scripts import setup_prefill_calibration as setup
     monkeypatch.setattr(setup,'ROOT',tmp_path)
     monkeypatch.setattr(setup.Path,'home',classmethod(lambda cls:tmp_path))
     monkeypatch.setattr(setup.subprocess,'check_output',lambda *a,**kw:'')
-    calls=[]
-    monkeypatch.setattr(setup.subprocess,'run',lambda args,**kw:calls.append(args))
-    setup.main()
+    calls=[];options=[]
+    venv=tmp_path/'.venv';venv.mkdir();marker=venv/'existing';marker.write_text('keep')
+    def run(args,**kw):calls.append(args);options.append(kw)
+    monkeypatch.setattr(setup.subprocess,'run',run)
+    setup.main(**({} if timeout is None else dict(install_timeout=timeout)))
+    install=next(i for i,a in enumerate(calls) if 'requirements-v1.txt' in a)
+    assert options[install]['timeout']==(7200 if timeout is None else timeout)
+    assert marker.read_text()=='keep' and not any('venv' in a for a in calls)
     assert any('ninja' in a and 'requirements-v1.txt' in a and 'requirements-cpu-tests.txt' in a for a in calls)
     assert calls[-1][-2:]==['scripts/prefill_host.py','prepare']
     assert not any('collect' in a or 'calibrate' in a for a in calls)
@@ -141,6 +147,29 @@ def test_setup_calibration_uses_declared_pins_and_does_not_collect(monkeypatch,t
     compile(probe,'setup-probe','exec')
     from prefill_lab.plugin import installed_sources
     assert callable(installed_sources)
+
+
+def test_setup_install_timeout_preserves_environment_and_stops_before_acceptance(monkeypatch,tmp_path):
+    import subprocess
+    from scripts import setup_prefill_calibration as setup
+    monkeypatch.setattr(setup,'ROOT',tmp_path)
+    monkeypatch.setattr(setup.subprocess,'check_output',lambda *a,**kw:'')
+    venv=tmp_path/'.venv';venv.mkdir();marker=venv/'existing';marker.write_text('keep');calls=[]
+    def run(args,**kw):
+        calls.append(args)
+        if 'requirements-v1.txt' in args:raise subprocess.TimeoutExpired(args,kw['timeout'])
+    monkeypatch.setattr(setup.subprocess,'run',run)
+    with pytest.raises(RuntimeError,match='collection has not started') as error:setup.main(install_timeout=1)
+    assert isinstance(error.value.__cause__,subprocess.TimeoutExpired)
+    assert marker.read_text()=='keep' and len(calls)==2
+    assert not any('prepare' in a or 'collect' in a for a in calls)
+
+
+@pytest.mark.parametrize('timeout',[0,-1,1.5,True])
+def test_setup_rejects_invalid_install_limit_before_running_commands(monkeypatch,timeout):
+    from scripts import setup_prefill_calibration as setup
+    monkeypatch.setattr(setup.subprocess,'run',lambda *a,**kw:pytest.fail('No command should run'))
+    with pytest.raises(ValueError,match='positive integer'):setup.main(install_timeout=timeout)
 
 
 def test_delayed_host_uses_own_mode_manifest_and_archive(monkeypatch,tmp_path):

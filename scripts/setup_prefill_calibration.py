@@ -14,10 +14,12 @@ import sys
 ROOT=Path(__file__).resolve().parents[1]
 MODEL='Qwen/Qwen3-4B-Instruct-2507'
 REVISION='cdbee75f17c01a7cc42f958dc650907174af0554'
+INSTALL_TIMEOUT=7200
 
 
-def main(*,operation='calibrate'):
+def main(*,operation='calibrate',install_timeout=INSTALL_TIMEOUT):
     if operation not in ('calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation','entry-http'):raise ValueError('Invalid next experiment')
+    if type(install_timeout) is not int or install_timeout<=0:raise ValueError('Install timeout must be a positive integer in seconds')
     if platform.system()!='Linux' or sys.version_info[:2]!=(3,12):
         raise RuntimeError('Use native Linux with Python3.12')
     if subprocess.check_output(['git','diff','HEAD','--name-only'],cwd=ROOT,text=True).strip():
@@ -28,8 +30,14 @@ def main(*,operation='calibrate'):
     env['VIRTUAL_ENV']=str(venv);env.pop('PYTHONHOME',None)
     def run(*args,**kw):return subprocess.run([str(python),*args],cwd=ROOT,env=env,check=True,**kw)
     run('-c','import sys; assert sys.version_info[:2]==(3,12)')
-    run('-m','pip','install','--only-binary=:all:','--extra-index-url','https://download.pytorch.org/whl/cu130',
-        '-r','requirements-v1.txt','-r','requirements-cpu-tests.txt','ninja',timeout=1800)
+    print(f'Installing dependencies: wall-time limit {install_timeout}s. Reusing the existing venv and pip cache where available.',flush=True)
+    try:
+        run('-m','pip','install','--only-binary=:all:','--extra-index-url','https://download.pytorch.org/whl/cu130',
+            '-r','requirements-v1.txt','-r','requirements-cpu-tests.txt','ninja',timeout=install_timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f'Dependency installation exceeded {install_timeout}s; collection has not started. '
+            'The venv and pip cache were not deleted. Retry setup with a larger --install-timeout; '
+            'completed cached downloads may be reused, but incomplete files may download again.') from exc
     run('-m','pip','install','--no-deps','-e','.',timeout=300)
     run('-m','pip','check',timeout=60)
     run('-c', '''import json,torch
@@ -52,4 +60,7 @@ print(json.dumps({'cuda_compute':'passed','verified_source_files':len(installed_
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--next',dest='operation',choices=('calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation','entry-http'),default='calibrate')
-    main(operation=parser.parse_args().operation)
+    parser.add_argument('--install-timeout',type=int,default=INSTALL_TIMEOUT,metavar='SECONDS',
+        help='Dependency installation wall-time limit (default: 7200); does not change experiment deadlines')
+    args=parser.parse_args()
+    main(operation=args.operation,install_timeout=args.install_timeout)

@@ -112,3 +112,12 @@ nohup .venv/bin/python scripts/prefill_host.py entry-http > ~/pr32-entry-http.lo
 The archive is stored under ~/pr32-entry-http. Use the new entry-http command;
 the old live-http command does not silently upgrade its model family. A fresh
 native run is still required; there is no HTTP accuracy claim in this revision.
+
+Dependency installation has its own configurable wall-time limit, default
+7200s, independent of collection. On a slow download, use
+`--install-timeout 7200` (or another positive number of seconds) on the setup
+command. This is a ceiling, not a duration estimate or a network-speed fix.
+Setup preserves the existing venv and pip cache; completed cached files may be
+reused, while an interrupted download may restart. Installation timeout stops
+before native acceptance/collection, without automatic retry. Keep the original
+log when restarting setup; no experiment gate or collection deadline is relaxed.
