@@ -8,28 +8,33 @@ import time
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from prefill_lab.contracts import digest,save
-from prefill_lab.live_http import probe,clock_domain,protocol
+from prefill_lab.live_http import prepare_probe,probe,clock_domain,protocol
 
 
 async def run(http,url,manifest,trial,output):
     tasks=[];rows=[];ready=[];domain=clock_domain();start=time.monotonic();release=None
-    def launch(r,at,event=None):
-        row={};rows.append(row);ids=manifest['pools'][r['token_key']]['input_ids']
-        payload=dict(model=manifest['model'],prompt=ids,max_tokens=r['max_tokens'],temperature=0,ignore_eos=True,stream=True,
-            stream_options=dict(include_usage=True),vllm_xargs=dict(prefill_lab_role=r['role'],prefill_lab_probe=r['role']=='sentinel'))
-        tid=digest(['live-http',trial,r['id']])[:32]
-        row.update(id=r['id'],role=r['role'],input_ids_sha256=digest(ids))
-        tasks.append(asyncio.create_task(probe(http,url,payload,tid,at,domain=domain,row=row,ready=event)))
+    def launch(item,at,event=None):
+        _,row,payload=item;rows.append(row)
+        tasks.append(asyncio.create_task(probe(http,url,payload,payload.identifier,at,domain=domain,row=row,ready=event)))
     try:
-        specs=manifest['trials'][trial]
+        specs=manifest['trials'][trial];items=[];trial_seconds=protocol()['trial_seconds']
         for r in specs:
+            ids=manifest['pools'][r['token_key']]['input_ids']
+            payload=dict(model=manifest['model'],prompt=ids,max_tokens=r['max_tokens'],temperature=0,ignore_eos=True,stream=True,
+                stream_options=dict(include_usage=True),vllm_xargs=dict(prefill_lab_role=r['role'],prefill_lab_probe=int(r['role']=='sentinel')))
+            tid=digest(['live-http',trial,r['id']])[:32]
+            row=dict(id=r['id'],role=r['role'],input_ids_sha256=digest(ids))
+            items.append((r,row,prepare_probe(payload,tid,domain)))
+        for item in items:
+            r=item[0]
             if r['role']=='background':
-                event=asyncio.Event();ready.append(event);launch(r,time.monotonic(),event)
-        if ready:await asyncio.wait_for(asyncio.gather(*(e.wait() for e in ready)),protocol()['trial_seconds'])
+                event=asyncio.Event();ready.append(event);launch(item,time.monotonic(),event)
+        if ready:await asyncio.wait_for(asyncio.gather(*(e.wait() for e in ready)),trial_seconds)
         release=time.monotonic()
-        for r in specs:
-            if r['role']!='background':launch(r,release+r['at'])
-        await asyncio.wait_for(asyncio.gather(*tasks),protocol()['trial_seconds']-min(time.monotonic()-start,protocol()['trial_seconds']-.001))
+        for item in items:
+            r=item[0]
+            if r['role']!='background':launch(item,release+r['at'])
+        await asyncio.wait_for(asyncio.gather(*tasks),trial_seconds-min(time.monotonic()-start,trial_seconds-.001))
         if any(r['status']!='complete' for r in rows):raise RuntimeError('HTTP request failed or was rejected')
     finally:
         for task in tasks:

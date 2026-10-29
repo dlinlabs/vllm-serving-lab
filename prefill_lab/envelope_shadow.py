@@ -156,6 +156,26 @@ def validate_anchors(cap, observed, record=None):
         raise ValueError('Shadow pending time/commit anchors do not reproduce')
 
 
+def validate_probe_execution(cap, trial):
+    observed = cap['live']
+    light = trial['observer'] == 'light'
+    if observed['observed'] is not light:
+        raise ValueError('Shadow observer mode differs')
+    sentinel_ids = {rid for rid, request in cap['requests'].items() if request['role'] == 'sentinel'}
+    records = [row for row in observed['records'] if row['engine_id'] in sentinel_ids]
+    if len(sentinel_ids) != 1 or len(records) != 1:
+        raise ValueError('Shadow sentinel observation inventory differs')
+    record = records[0]
+    if light:
+        if record['status'] not in ('predicted', 'unavailable'):
+            raise ValueError('Shadow LIGHT sentinel prediction was not executed: '+str(record['status']))
+        times = [record.get(k) for k in ('prediction_started', 'cut', 'prediction_finished', 'engine_enqueue')]
+        if not all(finite(value) for value in times) or times != sorted(times):
+            raise ValueError('Shadow prediction chronology differs')
+    elif record['status'] != 'off' or record['forecast'] is not None:
+        raise ValueError('OFF control executed a forecast')
+
+
 def extract(bundle, trial, manifest, runtime, config):
     """Rebuild interval arithmetic and joins, retaining misses and abstentions."""
     validate_manifest(manifest)
@@ -179,6 +199,7 @@ def extract(bundle, trial, manifest, runtime, config):
             or observed['clock_domain'] != config['clock_domain']
             or observed['actuation_authorized'] is not False or observed['native_coverage_qualified'] is not False):
         raise ValueError('Shadow native capture integrity differs')
+    validate_probe_execution(cap, trial)
     validate_anchors(cap, observed)
     predictor = validate_config(config, runtime, now=cap['start'], domain=observed['clock_domain'],
                                 sources=config['source_sha256'])
@@ -208,8 +229,11 @@ def extract(bundle, trial, manifest, runtime, config):
         times += [native_record[k] for k in ('prediction_started', 'evaluation_at', 'prediction_finished') if k in native_record]
         if not all(finite(at) and cap['start'] <= at <= cap['end'] for at in times):
             raise ValueError('Shadow probe/native timestamps are outside capture')
-        if not 0 <= row['sent']-row['scheduled'] <= protocol()['posting_lag_s']:
-            raise ValueError('Shadow posting lag outside scope')
+        lag = row['sent']-row['scheduled']
+        limit = protocol()['posting_lag_s']
+        if not 0 <= lag <= limit:
+            raise ValueError(f'Shadow posting lag outside scope: {spec["id"]} ({spec["role"]}) '
+                             f'{lag*1000:.6f}ms; limit {limit*1000:.6f}ms')
         if spec['role'] != 'background' and abs(row['scheduled']-(client['release']+spec['at'])) > 1e-9:
             raise ValueError('Shadow offered schedule differs')
         live_http.join(row, journal, records[trace], request)
@@ -407,6 +431,7 @@ async def run(client, http, url, manifest, support, output, gateway_url, deadlin
                                              max(.001, min(5, deadline-time.monotonic())))
             active = False
             save(output/(tid+'.json'), capture)
+            validate_probe_execution(capture, trial)
             if trial['observer'] == 'light' and not dispatcher_parity(capture, runtime['workers'][0]['dispatch_table'])['matches']:
                 raise ValueError('Shadow native dispatcher differs')
             summary['completed'].append(tid)

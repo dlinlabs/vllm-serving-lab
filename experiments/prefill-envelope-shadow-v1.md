@@ -3,7 +3,8 @@
 This is a separate diagnostic collection path for the conditional envelope.
 It does not run, relax or replace the failed point-readiness prerequisite in
 entry-http. It never changes admission or authorizes model/HTTP/cap/MPC use.
-The implementation is CPU/mock tested; no new native measurements are claimed.
+The implementation is CPU/mock tested. The first reported native attempt exposed
+a probe-transport defect; usable native interval measurements remain unverified.
 
 ## Frozen scope and denominator
 
@@ -32,6 +33,12 @@ calibration attempt. A miss, wide interval or unavailable prediction does not
 stop subsequent planned probes. A collection/integrity failure stops the run,
 preserves the attempted prefix and remaining planned denominator, and archives
 the attempt. Two repetitions are a diagnostic screen, not a coverage certificate.
+After each trial, the collector verifies that a LIGHT sentinel actually entered
+prediction and retained its start/finish/enqueue timestamps. An explicit
+unavailable forecast is retained and collection continues. A silently skipped
+prediction is an instrumentation failure: archive the raw trial and stop before
+spending the remaining trials on an inactive predictor. This is not an accuracy
+or point-readiness gate.
 
 ## Support must be explicit
 
@@ -69,6 +76,10 @@ accepted only in explicit shadow mode on a drained, matching engine. Fixed
 support/models are validated and copied once into `PreparedEnvelope`, before
 the observation cut. A probe does not reread support files or rebuild models.
 Changing the source/support/runtime requires a new configuration and run.
+The HTTP probe marker is integer 0/1: the pinned vLLM OpenAI `vllm_xargs` schema
+coerces JSON booleans to integers. Native selection accepts strict 0/1 and legacy
+booleans, rejects malformed markers, and checks agreement with a supplied role.
+OFF controls and non-sentinel requests still do not execute prediction.
 
 The tracker reuses nonblocking pre-ADD snapshot hooks. It does not synchronize
 CUDA, await a future or insert an admission decision. Each probe retains:
@@ -125,6 +136,31 @@ from the pre-ADD cut, not an HTTP or pre-admission forecast.
 
 `collection_complete` means a complete integrity-checked diagnostic collection.
 It does not mean intervals passed, nor promote any acceptance flag.
+
+## First reported native attempt: retain the failure
+
+The user-provided output for `1793256266872988853` at commit `b7e007b` reported
+20 completed trials but only 7 integrity-valid OFF controls, with no valid LIGHT
+measurements. Eleven trials failed prediction chronology; two failed the
+unchanged 5ms posting-lag limit. Inspected LIGHT sentinel records in `es-001` and
+`es-006` had `status=off`, no prediction start/finish, and no forecast. The
+boolean-to-integer wire conversion explains why the former `is True` check
+silently skipped them. CPU regressions now exercise that conversion through the
+HTTP producer and native ADD hooks; native CPU acceptance additionally exercises
+the installed vLLM request schema when vLLM is installed.
+
+The reported offending foreground posting lags in `es-011` and `es-019` were
+approximately 5.19ms and 6.58ms. They remain scope failures, not accepted samples.
+The corrected sender prepares fixed hashes and static JSON before offers and
+foreground release, retaining a fresh actual send timestamp. This removes
+avoidable timed work; it does not establish that native posting jitter now meets
+5ms. No timing threshold or assumption box is widened.
+
+These statements are based on supplied log/report/record excerpts, not a local
+independent audit of the full archive. Preserve that archive and its original
+source-bound report. Missing predictions cannot be recreated by relabeling OFF
+records or recomputing with future information. A new source version needs fresh
+CPU acceptance, configuration/seal and a separately archived collection.
 
 ## Commands
 

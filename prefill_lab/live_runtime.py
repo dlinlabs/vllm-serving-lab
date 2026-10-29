@@ -55,13 +55,19 @@ class LiveTracker:
 
     def _begin_record(self,request):
         metadata=request.sampling_params.extra_args or {};identifier=trace_id(metadata.get('prefill_lab_trace_id'))
+        probe=metadata.get('prefill_lab_probe')
+        # OpenAI vllm_xargs converts JSON booleans to numeric scalar values.
+        if type(probe) not in (bool,int) or probe not in (0,1):raise ValueError('Invalid live probe marker; expected 0 or 1')
+        role=metadata.get('prefill_lab_role')
+        if role is not None and (role not in ('background','foreground','sentinel') or (probe==1)!=(role=='sentinel')):
+            raise ValueError('Live probe role/marker differs')
         if (metadata.get('prefill_lab_clock_domain')!=self.domain or not finite(metadata.get('prefill_lab_client_sent'))
                 or metadata['prefill_lab_client_sent']>self.clock() or not request.sampling_params.ignore_eos
                 or request.max_tokens not in (128,256)):raise ValueError('Live request clock/forced length differs')
         row=dict(trace_id=identifier,engine_id=request.request_id,clock_domain=self.domain,cut=self.clock(),
-                 engine_enqueue=None,status='off',forecast=None,client_sent=metadata['prefill_lab_client_sent'])
+                 engine_enqueue=None,status='off',forecast=None,client_sent=metadata['prefill_lab_client_sent'],probe_requested=probe==1)
         self.records.append(row);self.by_id[request.request_id]=row
-        return row,self.observed and metadata.get('prefill_lab_probe') is True
+        return row,self.observed and probe==1
 
     def before_add(self,request):
         row,probe=self._begin_record(request)

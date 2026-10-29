@@ -174,7 +174,7 @@ def test_scoring_keeps_misses_unavailable_wide_and_unattempted_denominators():
     assert not prefix['collection_complete']
 
 
-@pytest.mark.parametrize('fault',[None,'generator','cancel','source','ack','drift'])
+@pytest.mark.parametrize('fault',[None,'generator','cancel','source','ack','drift','missing_probe'])
 def test_collector_seals_once_and_preserves_partial_failures_without_retries(monkeypatch,tmp_path,fault):
     from prefill_lab import causal
     from scripts import run_prefill_service
@@ -200,7 +200,14 @@ def test_collector_seals_once_and_preserves_partial_failures_without_retries(mon
         if fault=='generator': raise RuntimeError('generator failed')
         if fault=='cancel': raise asyncio.CancelledError()
         return {}
-    async def finish(*a): return {'partial':fault in ('generator','cancel')}
+    async def finish(*a):
+        tid=next(value for value in reversed(seen) if value.startswith('es-'))
+        trial=next(t for t in shadow.protocol()['order'] if t['trial_id']==tid)
+        light=trial['observer']=='light'
+        row=dict(engine_id='probe',status='unavailable' if light and fault!='missing_probe' else 'off',
+                 forecast=None,prediction_started=1.,cut=1.,prediction_finished=1.,engine_enqueue=1.)
+        return dict(partial=fault in ('generator','cancel'),requests={'probe':{'role':'sentinel'}},
+                    live=dict(observed=light,records=[row]))
     monkeypatch.setattr(shadow.live_experiment,'isolated_trial',generate)
     monkeypatch.setattr(shadow,'finish_external',finish)
     operation=shadow.run(NS(command=command),None,'',m,assumptions(),tmp_path,'',time.monotonic()+600)
@@ -216,6 +223,10 @@ def test_collector_seals_once_and_preserves_partial_failures_without_retries(mon
         assert json.loads((tmp_path/'es-001.json').read_text())['partial']
         assert summary['attempted']==['es-001'] and not summary['completed']
     elif fault=='ack': assert not summary['attempted']
+    elif fault=='missing_probe':
+        assert summary['attempted']==['es-001'] and not summary['completed']
+        assert 'prediction was not executed' in summary['failures'][0]['message']
+        assert (tmp_path/'es-001.json').exists()
     elif not fault: assert len(summary['completed'])==20
 
 
@@ -568,3 +579,22 @@ def test_actual_plugin_hook_order_matches_anchor_audit_inequalities(monkeypatch)
     assert evidence['anchor_events'][1]['observed_at']==4. and steps[0]['end']==5.
     assert not core._prefill_trial.errors
     shadow.validate_anchors(dict(start=0.,end=6.,steps=steps),evidence)
+
+
+def test_light_sentinel_skipped_prediction_has_explicit_integrity_error():
+    bundle,trial,m,runtime,config=raw_fixture()
+    record=bundle['capture']['live']['records'][0]
+    record.update(status='off',forecast=None)
+    for key in ('prediction_started','evaluation_at','prediction_finished'):
+        record.pop(key)
+    with pytest.raises(ValueError,match='LIGHT sentinel prediction was not executed'):
+        shadow.extract(bundle,trial,m,runtime,config)
+
+
+def test_posting_lag_limit_is_unchanged_and_reports_request_details():
+    bundle,trial,m,runtime,config=raw_fixture()
+    assert shadow.protocol()['posting_lag_s']==.005
+    row=bundle['client']['rows'][0]
+    row['scheduled']=row['sent']-.00658
+    with pytest.raises(ValueError,match=r'posting lag outside scope: sentinel \(sentinel\).*6\.580000ms; limit 5\.000000ms'):
+        shadow.extract(bundle,trial,m,runtime,config)

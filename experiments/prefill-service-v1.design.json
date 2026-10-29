@@ -782,11 +782,11 @@
     },
     "prefill_lab/live_http.py": {
       "path": "prefill_lab/live_http.py",
-      "sha256": "5eb55e139d7da0fa0f4c40ee9eca77e824823b2a73661f44fda6e0f7bc6e5da3"
+      "sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f"
     },
     "prefill_lab/live_runtime.py": {
       "path": "prefill_lab/live_runtime.py",
-      "sha256": "308232acbadbcbe7893bbd0388333ed8a67961a252b1616db239cabcb975dad9"
+      "sha256": "7b10652b61c17dc4bd09d59c01131b854e8ada3277571e806e0f5158b3b5f545"
     },
     "prefill_lab/live_experiment.py": {
       "path": "prefill_lab/live_experiment.py",
@@ -798,7 +798,7 @@
     },
     "scripts/prefill_live_http_trial.py": {
       "path": "scripts/prefill_live_http_trial.py",
-      "sha256": "c299d459a60d30757ae8fc07a65e29ca628208bd29186f88f4254c706af9043c"
+      "sha256": "b08377138777fac8001a76513b7ca75956415efb80275468feae400e5a5e071f"
     },
     "scripts/check_prefill_live_http.py": {
       "path": "scripts/check_prefill_live_http.py",
@@ -1002,7 +1002,7 @@
     },
     "prefill_lab/envelope_shadow.py": {
       "path": "prefill_lab/envelope_shadow.py",
-      "sha256": "62db435098b7e7673d10bf5b4394583a501f2f13456c3f257f7e87287a817d58"
+      "sha256": "dfb8d2e9960420712c7928921bf3d2fbfdeb5a467143338b41954c567446d6a8"
     },
     "scripts/check_prefill_envelope_shadow.py": {
       "path": "scripts/check_prefill_envelope_shadow.py",
@@ -1010,7 +1010,7 @@
     },
     "tests/test_prefill_envelope_shadow.py": {
       "path": "tests/test_prefill_envelope_shadow.py",
-      "sha256": "b87e2a8e060f337990e42f7e5e898a36235b0c2b754e01081780a61acef8c0f9"
+      "sha256": "ade3633644b51d7cd69c3af20b598b86495ac05283e105f07c07949362514936"
     },
     "tests/test_prefill_shadow_launch.py": {
       "path": "tests/test_prefill_shadow_launch.py",
@@ -1018,7 +1018,15 @@
     },
     "experiments/prefill-envelope-shadow-v1.md": {
       "path": "experiments/prefill-envelope-shadow-v1.md",
-      "sha256": "f54630e8a912e55b2fc69d1840163b503b4d00060318ef427cb39ea285f76ea1"
+      "sha256": "3696a24ffdecff9292176b1c62eb9702936b5e1fba972e182cb013c13f8c8ff6"
+    },
+    "tests/test_prefill_live_wire.py": {
+      "path": "tests/test_prefill_live_wire.py",
+      "sha256": "e00ae8340933a65e50b1994b3b8e45ccad9a02326ffa6575526736d6fc9214aa"
+    },
+    "tests/test_prefill_probe_transport.py": {
+      "path": "tests/test_prefill_probe_transport.py",
+      "sha256": "ccadbe6f84950bd5a36c212d0380bbcb3403e5d52e005c0b202c4bb405138f41"
     }
   },
   "readiness": {
@@ -1333,7 +1341,19 @@
       "shadow_offered_requests": 220,
       "shadow_collection_limit_seconds": 600,
       "shadow_cleanup_reserve_seconds": 40,
-      "native_shadow_collection_performed": false,
+      "native_shadow_collection_performed": true,
+      "native_shadow_reported_attempt": {
+        "capture_id": "1793256266872988853",
+        "commit": "b7e007b51f263329bbb9e7d9d4dc5cdd4a0a9c88",
+        "evidence": "user-provided log, report and sentinel-record excerpts",
+        "independent_archive_audit": false,
+        "completed_trials": 20,
+        "integrity_valid_trials": 7,
+        "integrity_valid_light_trials": 0,
+        "status": "rejected_instrumentation_and_posting_lag"
+      },
+      "probe_wire_contract": "integer 0/1; strict legacy boolean compatibility",
+      "missing_light_prediction_stops_collection": true,
       "completion_and_enqueue_age_measurement_implemented": true,
       "support_prepared_before_observation": true,
       "cost_definition_and_dependency_identity_bound": true,

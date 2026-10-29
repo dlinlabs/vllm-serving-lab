@@ -1,5 +1,6 @@
 """Clock-safe HTTP probe, joins and training-only transport correction."""
 import asyncio
+from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
@@ -8,7 +9,7 @@ import time
 import numpy as np
 
 from telemetry import SSEObserver
-from .contracts import digest,finite
+from .contracts import canonical,digest,finite
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -26,16 +27,46 @@ def trace_id(value):
     return value
 
 
+@dataclass(frozen=True)
+class PreparedProbe:
+    """Immutable static JSON prefix; only the actual send timestamp remains."""
+    identifier: str
+    domain: str
+    prefix: bytes
+
+    def body(self,sent):
+        if not finite(sent):raise ValueError('Invalid client sent timestamp')
+        return self.prefix+canonical(sent)+b'}}'
+
+
+def prepare_probe(payload,identifier,domain):
+    """Serialize large prompts before offers, without timestamp placeholders.
+
+    Injected IDs make both objects nonempty. Remove only their final braces,
+    then append one fresh client timestamp and close both objects at send time.
+    """
+    identifier=trace_id(identifier)
+    outer=dict(payload,request_id=identifier)
+    xargs=dict(outer.pop('vllm_xargs',{}),prefill_lab_trace_id=identifier,prefill_lab_clock_domain=domain)
+    xargs.pop('prefill_lab_client_sent',None)
+    prefix=canonical(outer)[:-1]+b',"vllm_xargs":'+canonical(xargs)[:-1]+b',"prefill_lab_client_sent":'
+    return PreparedProbe(identifier,domain,prefix)
+
+
 async def probe(http,url,payload,identifier,scheduled,*,domain=None,clock=time.monotonic,row=None,ready=None):
     identifier=trace_id(identifier);domain=domain or clock_domain()
+    if isinstance(payload,PreparedProbe):
+        if payload.identifier!=identifier:raise ValueError('Prepared probe identifier mismatch')
+        if payload.domain!=domain:raise ValueError('Prepared probe clock domain mismatch')
+        prepared=payload
+    else:prepared=prepare_probe(payload,identifier,domain)
     await asyncio.sleep(max(0.,scheduled-clock()));sent=clock()
-    payload=dict(payload,vllm_xargs=dict(payload.get('vllm_xargs',{}),prefill_lab_trace_id=identifier,
-        prefill_lab_client_sent=sent,prefill_lab_clock_domain=domain),request_id=identifier)
     row={} if row is None else row
     row.update(trace_id=identifier,clock_domain=domain,scheduled=scheduled,sent=sent,first=None,finished=None,
              stream_complete=False,status='attempted');observer=SSEObserver(completions=True);size=0
     try:
-        async with http.stream('POST',url,json=payload,headers={'x-benchmark-request-id':identifier}) as response:
+        async with http.stream('POST',url,content=prepared.body(sent),
+                headers={'x-benchmark-request-id':identifier,'content-type':'application/json'}) as response:
             row['http_status']=response.status_code;row['response_trace_id']=response.headers.get('x-request-id')
             if response.status_code!=200:row['status']='rejected' if response.status_code==503 else 'failed';return row
             if response.headers.get('content-type','').split(';')[0]!='text/event-stream':raise ValueError('Expected SSE')
