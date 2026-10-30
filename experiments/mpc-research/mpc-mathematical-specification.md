@@ -104,6 +104,23 @@ its equations look physical. The model interface accepts
 state, a timed budget plan and a shared scenario, and returns coherent outcome/
 reservation trajectories, unresolved reward mass and explicit invalid-scope reasons.
 
+The implemented reduced transition has nominal work in seconds:
+
+    w_prefill_i = theta_first + theta_p * p_i,
+    w_decode_i = theta_d * (sampled_output_i - 1),
+    slowdown = scenario_scale * (1 + theta_D * D).
+
+Between ordered arrivals/completions, the FIFO prefill head and every active
+decoder each lose delta_t/slowdown nominal work. The next event is the minimum
+of arrival, head completion, decoder completion and finite cutoff; membership
+then changes exactly once. Prefill/terminal observations use explicit transport
+delays, with reservation release at gateway terminal and client completion
+later by egress delay. Unknown old prefill progress is conservatively initialized
+to full prompt work, not claimed observed; old decode progress is an age-based
+scenario assumption. This asymmetric reduced service law does not yet identify
+prefill-induced TPOT interference, vLLM chunking or preemption. The distinct CPU
+truth plant deliberately has a different coupling.
+
 ## 4. Cohort objective and terminal treatment
 
 Let C_k include every currently unresolved admitted request whose outcome can
@@ -132,7 +149,11 @@ but are not also rewarded unless they belong to the declared cohort set.
 Unresolved target rewards retain a lower/upper interval. Initial selection uses
 the lower score and reports the upper bound, not an unspecified expected value.
 This conservative finite-tail approximation can bias selection and requires
-tail-length sensitivity. A learned residual value
+tail-length sensitivity. These bounds describe unresolved completion credit
+inside a scenario, not statistical native-plant uncertainty coverage.
+Generated scenarios currently vary arrivals/marks/service scale, use requested
+output maxima and success=true, and do not claim a calibrated EOS/failure law.
+A learned residual value
 may replace explicit tail evaluation only with a disjoint, documented partition;
 it is not added on top of already counted outcomes or congestion penalties.
 
@@ -186,6 +207,19 @@ unknown application, not cancellation; suspend new speculative writes until
 the command is definitively applied or fenced/expired.
 If transport is unavailable the last applied budget persists. No promise of a
 delivered fallback is possible without communication.
+
+`mpc_lab/actuator.py` supplies a separately opt-in library state machine.
+Both explicit enablement and an identity-matched operator approval with five
+native-evidence references are required. These references are attestations,
+not automatic scientific verification; the tests use fictitious references.
+The released CLI remains GET-only and grants no approval.
+Before POST, the library verifies the separate capability and durably records
+the operation without credentials. A lost/malformed acknowledgment remains
+pending across restarts. It permits no new command until a coherent same-run
+GET proves CAS-version advancement or same-domain expiry; an unchanged fresh
+GET is insufficient. A file lock excludes overlapping writers sharing that
+state file. Different/unknown identity stays unresolved, not optimistically
+cleared. This protocol needs independent real HTTP/deployment qualification.
 
 Under exact serial accounting, true c_i>=c_min>0, bounded budgets u<=u_max,
 finite initial R and nonnegative releases:

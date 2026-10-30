@@ -49,3 +49,14 @@ cold-start episodes and a misspecified uncalibrated model, these are exploratory
 not confirmatory superiority/equivalence/native-risk claims. Report negative
 results as well as positive ones. Native experimental acceptance remains governed
 by benchmark-protocol.md and separate authorization.
+
+## Prospective amendment before real comparison
+
+The independent evaluator executed a5s mock-controller accounting smoke on
+seed101 and printed fixed-policy outcomes. Its full report is retained as
+`proposals/gemini-evaluation-review.md`; that prefix is not untouched evidence.
+Before executing any real-model policy comparison, replace the test seeds with
+10001–10005. No outcome from those seeds has been inspected. Development seeds,
+parameters, actions, thresholds to search, objective, deadline, window, tail and
+metrics are unchanged. This corrects the holdout boundary, not a disappointing
+result. The original protocol commit and reviewer smoke remain preserved.

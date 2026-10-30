@@ -31,8 +31,16 @@ def finite(value: object, *, positive: bool = False) -> bool:
 def implementation_hash() -> str:
     root = Path(__file__).resolve().parent
     files = list(root.glob("*.py"))
-    files += [p for p in (root.parent / "gateway.py", root.parent / "telemetry.py") if p.is_file()]
-    return digest({p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(files)})
+    files += [
+        p for p in (
+            root.parent / "gateway.py", root.parent / "telemetry.py",
+            root.parent / "prefill_lab/live_http.py",
+        ) if p.is_file()
+    ]
+    return digest({
+        str(p.relative_to(root.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in sorted(files)
+    })
 
 
 @dataclass(frozen=True)

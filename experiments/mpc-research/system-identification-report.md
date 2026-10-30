@@ -93,6 +93,24 @@ action effects; and absent KV information cannot certify a 0.1% chance constrain
 These small counterexamples reject particular arguments. They are not a measured
 serving-performance advantage for any competing controller.
 
+## Constructed CPU sensitivity, not identification
+
+`model_sensitivity.py` executed21 controlled combinations, preserving output in
+`results/mpc-research-cpu/model-sensitivity.json`. With the same5s cohorts and
+four common scenarios, empty-state one/three/five-control-move best lower
+counts were43/43/43.75; all first actions were16. For a long existing first-hit
+stream they were8/20.25/33.25; all first actions were32. A constructed
+over-cap/no-timely-old-outcome state scored0 for all three freedoms.
+Higher open-loop plan value therefore does not itself establish a different
+first decision or better receding-horizon policy.
+
+For the long-hit state, tail4/10/16 changed the best lower score
+20/20.25/20.5 while upper remained21. Even the longest tested tail did not
+resolve every slow scenario. Increasing decode time20% lowered the reference
+score to17.75. These are source-bound synthetic sensitivity calculations,
+not fitted uncertainty coverage, real arrivals, measured native gains or
+grounds for tuning the frozen test policies.
+
 ## Remaining identification gates
 
 The next evidence must come from the causal, clock/version-qualified observer,

@@ -256,7 +256,7 @@ def paired_interval(differences: list[float]) -> dict:
     }
 
 
-def benchmark(duration_s: float = 12.0, seeds: tuple[int, ...] = (101, 102, 103, 104, 105)) -> dict:
+def benchmark(duration_s: float = 12.0, seeds: tuple[int, ...] = (10001, 10002, 10003, 10004, 10005)) -> dict:
     workloads = ("stationary", "burst", "shift")
     development = []
     thresholds = ((512, 2048), (2000, 6000), (4000, 10000))
@@ -302,6 +302,7 @@ def benchmark(duration_s: float = 12.0, seeds: tuple[int, ...] = (101, 102, 103,
         "duration_s": duration_s, "dt_s": 0.025, "drain_limit_s": 20,
         "warmup": "identical empty plant; no separate warmup",
         "development_seeds": [1, 2], "heldout_seeds": list(seeds),
+        "protocol_amendment": "reviewer used a mock prefix of original seed101; fresh seeds frozen before real comparison",
         "selected_fixed": fixed, "selected_feedback_thresholds": list(feedback),
         "planning_config": asdict(PlanningConfig()), "forecast_scenarios": 4,
         "identity": asdict(ModelParameters().identity),
