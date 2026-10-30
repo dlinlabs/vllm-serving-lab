@@ -1,5 +1,9 @@
 # PR33：原生 GPU／HTTP 資格與 Train-only 偵察
 
+本篇保留 scout 階段原始結論。後續已完成兩批90秒動作介入與單請求辨識，
+並實際使用修後 observer；最新證據與候選模型反證見
+[原生系統辨識與候選模型反證](native-identification-and-model-falsification.zh-TW.md)。
+
 ## 結論與範圍
 
 已使用使用者提供並完成 SSH 授權的 RTX 4090 Pod，完成真實 CUDA、

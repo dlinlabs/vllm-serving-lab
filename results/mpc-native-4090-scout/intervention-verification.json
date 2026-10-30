@@ -1,0 +1,471 @@
+{
+  "schema": "native-intervention-audit-v1",
+  "source_commit": "0588707949f651039d44a7a034c12bd35b8c8047",
+  "raw_json_sha256": "58ca7e53b3a663926f326a7dc752d6a50ebed26f9e357575a2cb4d3977ce56a9",
+  "independent_train_blocks": 4,
+  "physical_offers": 8740,
+  "episodes": [
+    {
+      "episode_id": "train-160001-1",
+      "seed_block": 160001,
+      "arm": 1,
+      "cell": "p128-m128",
+      "offered": 3047,
+      "complete": 2459,
+      "rejected": 588,
+      "other": 0,
+      "ttft_good": 2459,
+      "natural_eos": 2459,
+      "ledger_frames": 7393,
+      "native_samples": 1299,
+      "assigned_changes": 9,
+      "receipt_observations": {
+        "recorded": 0,
+        "joined": 0,
+        "with_gateway_pending_work": 0,
+        "exact_work_join": 0
+      },
+      "composite_good": 2459,
+      "hardware_samples_inside_offer_window": 0,
+      "maximum_applied_lag_s": 0.06547817203681916,
+      "median_applied_lag_s": 0.03558344201883301,
+      "assignment_retries": 0,
+      "maximum_native_receipt_gap_s": 0.20295961701776832,
+      "effective_native_samples_per_s": 14.303913909207417,
+      "gaps_longer_than_freshness": 0,
+      "phases": [
+        {
+          "begin_s": 0,
+          "end_s": 30,
+          "offered": 806,
+          "rejected": 82,
+          "complete": 724
+        },
+        {
+          "begin_s": 30,
+          "end_s": 60,
+          "offered": 1462,
+          "rejected": 472,
+          "complete": 990
+        },
+        {
+          "begin_s": 60,
+          "end_s": 90,
+          "offered": 779,
+          "rejected": 34,
+          "complete": 745
+        }
+      ],
+      "actual_output_range": [
+        31,
+        59
+      ]
+    },
+    {
+      "episode_id": "train-160001-0",
+      "seed_block": 160001,
+      "arm": 0,
+      "cell": "p128-m128",
+      "offered": 3047,
+      "complete": 2066,
+      "rejected": 981,
+      "other": 0,
+      "ttft_good": 2066,
+      "natural_eos": 2066,
+      "ledger_frames": 6214,
+      "native_samples": 1310,
+      "assigned_changes": 9,
+      "receipt_observations": {
+        "recorded": 0,
+        "joined": 0,
+        "with_gateway_pending_work": 0,
+        "exact_work_join": 0
+      },
+      "composite_good": 2066,
+      "hardware_samples_inside_offer_window": 0,
+      "maximum_applied_lag_s": 0.07875902496743947,
+      "median_applied_lag_s": 0.027377411955967546,
+      "assignment_retries": 0,
+      "maximum_native_receipt_gap_s": 0.21320005599409342,
+      "effective_native_samples_per_s": 14.474943149014074,
+      "gaps_longer_than_freshness": 0,
+      "phases": [
+        {
+          "begin_s": 0,
+          "end_s": 30,
+          "offered": 806,
+          "rejected": 142,
+          "complete": 664
+        },
+        {
+          "begin_s": 30,
+          "end_s": 60,
+          "offered": 1462,
+          "rejected": 664,
+          "complete": 798
+        },
+        {
+          "begin_s": 60,
+          "end_s": 90,
+          "offered": 779,
+          "rejected": 175,
+          "complete": 604
+        }
+      ],
+      "actual_output_range": [
+        31,
+        61
+      ]
+    },
+    {
+      "episode_id": "train-160002-1",
+      "seed_block": 160002,
+      "arm": 1,
+      "cell": "p128-m256",
+      "offered": 937,
+      "complete": 752,
+      "rejected": 185,
+      "other": 0,
+      "ttft_good": 752,
+      "natural_eos": 752,
+      "ledger_frames": 2272,
+      "native_samples": 1384,
+      "assigned_changes": 9,
+      "receipt_observations": {
+        "recorded": 0,
+        "joined": 0,
+        "with_gateway_pending_work": 0,
+        "exact_work_join": 0
+      },
+      "composite_good": 752,
+      "hardware_samples_inside_offer_window": 0,
+      "maximum_applied_lag_s": 0.03038472298067063,
+      "median_applied_lag_s": 0.025974435498937964,
+      "assignment_retries": 0,
+      "maximum_native_receipt_gap_s": 0.09677577600814402,
+      "effective_native_samples_per_s": 15.24089849769173,
+      "gaps_longer_than_freshness": 0,
+      "phases": [
+        {
+          "begin_s": 0,
+          "end_s": 30,
+          "offered": 258,
+          "rejected": 54,
+          "complete": 204
+        },
+        {
+          "begin_s": 30,
+          "end_s": 60,
+          "offered": 426,
+          "rejected": 96,
+          "complete": 330
+        },
+        {
+          "begin_s": 60,
+          "end_s": 90,
+          "offered": 253,
+          "rejected": 35,
+          "complete": 218
+        }
+      ],
+      "actual_output_range": [
+        76,
+        131
+      ]
+    },
+    {
+      "episode_id": "train-160002-0",
+      "seed_block": 160002,
+      "arm": 0,
+      "cell": "p128-m256",
+      "offered": 937,
+      "complete": 669,
+      "rejected": 268,
+      "other": 0,
+      "ttft_good": 669,
+      "natural_eos": 669,
+      "ledger_frames": 2023,
+      "native_samples": 1376,
+      "assigned_changes": 9,
+      "receipt_observations": {
+        "recorded": 0,
+        "joined": 0,
+        "with_gateway_pending_work": 0,
+        "exact_work_join": 0
+      },
+      "composite_good": 669,
+      "hardware_samples_inside_offer_window": 0,
+      "maximum_applied_lag_s": 0.031754371942952275,
+      "median_applied_lag_s": 0.02472193748690188,
+      "assignment_retries": 0,
+      "maximum_native_receipt_gap_s": 0.19268762494903058,
+      "effective_native_samples_per_s": 15.16468558661591,
+      "gaps_longer_than_freshness": 0,
+      "phases": [
+        {
+          "begin_s": 0,
+          "end_s": 30,
+          "offered": 258,
+          "rejected": 24,
+          "complete": 234
+        },
+        {
+          "begin_s": 30,
+          "end_s": 60,
+          "offered": 426,
+          "rejected": 197,
+          "complete": 229
+        },
+        {
+          "begin_s": 60,
+          "end_s": 90,
+          "offered": 253,
+          "rejected": 47,
+          "complete": 206
+        }
+      ],
+      "actual_output_range": [
+        76,
+        131
+      ]
+    },
+    {
+      "episode_id": "train-160003-0",
+      "seed_block": 160003,
+      "arm": 0,
+      "cell": "p4096-m128",
+      "offered": 213,
+      "complete": 153,
+      "rejected": 60,
+      "other": 0,
+      "ttft_good": 110,
+      "natural_eos": 153,
+      "ledger_frames": 475,
+      "native_samples": 1214,
+      "assigned_changes": 7,
+      "receipt_observations": {
+        "recorded": 0,
+        "joined": 0,
+        "with_gateway_pending_work": 0,
+        "exact_work_join": 0
+      },
+      "composite_good": 109,
+      "hardware_samples_inside_offer_window": 0,
+      "maximum_applied_lag_s": 0.022389327990822494,
+      "median_applied_lag_s": 0.019982565543614328,
+      "assignment_retries": 0,
+      "maximum_native_receipt_gap_s": 0.13638812501449138,
+      "effective_native_samples_per_s": 13.460776689136955,
+      "gaps_longer_than_freshness": 0,
+      "phases": [
+        {
+          "begin_s": 0,
+          "end_s": 30,
+          "offered": 69,
+          "rejected": 13,
+          "complete": 56
+        },
+        {
+          "begin_s": 30,
+          "end_s": 60,
+          "offered": 103,
+          "rejected": 45,
+          "complete": 58
+        },
+        {
+          "begin_s": 60,
+          "end_s": 90,
+          "offered": 41,
+          "rejected": 2,
+          "complete": 39
+        }
+      ],
+      "actual_output_range": [
+        24,
+        75
+      ]
+    },
+    {
+      "episode_id": "train-160003-1",
+      "seed_block": 160003,
+      "arm": 1,
+      "cell": "p4096-m128",
+      "offered": 213,
+      "complete": 158,
+      "rejected": 55,
+      "other": 0,
+      "ttft_good": 110,
+      "natural_eos": 158,
+      "ledger_frames": 490,
+      "native_samples": 1204,
+      "assigned_changes": 7,
+      "receipt_observations": {
+        "recorded": 0,
+        "joined": 0,
+        "with_gateway_pending_work": 0,
+        "exact_work_join": 0
+      },
+      "composite_good": 109,
+      "hardware_samples_inside_offer_window": 0,
+      "maximum_applied_lag_s": 0.023949224967509508,
+      "median_applied_lag_s": 0.020201140025164932,
+      "assignment_retries": 0,
+      "maximum_native_receipt_gap_s": 0.14390686305705458,
+      "effective_native_samples_per_s": 13.355774056329869,
+      "gaps_longer_than_freshness": 0,
+      "phases": [
+        {
+          "begin_s": 0,
+          "end_s": 30,
+          "offered": 69,
+          "rejected": 17,
+          "complete": 52
+        },
+        {
+          "begin_s": 30,
+          "end_s": 60,
+          "offered": 103,
+          "rejected": 38,
+          "complete": 65
+        },
+        {
+          "begin_s": 60,
+          "end_s": 90,
+          "offered": 41,
+          "rejected": 0,
+          "complete": 41
+        }
+      ],
+      "actual_output_range": [
+        24,
+        86
+      ]
+    },
+    {
+      "episode_id": "train-160004-0",
+      "seed_block": 160004,
+      "arm": 0,
+      "cell": "p4096-m256",
+      "offered": 173,
+      "complete": 115,
+      "rejected": 58,
+      "other": 0,
+      "ttft_good": 101,
+      "natural_eos": 115,
+      "ledger_frames": 361,
+      "native_samples": 1276,
+      "assigned_changes": 6,
+      "receipt_observations": {
+        "recorded": 0,
+        "joined": 0,
+        "with_gateway_pending_work": 0,
+        "exact_work_join": 0
+      },
+      "composite_good": 101,
+      "hardware_samples_inside_offer_window": 0,
+      "maximum_applied_lag_s": 0.031112196040339768,
+      "median_applied_lag_s": 0.0196199964848347,
+      "assignment_retries": 0,
+      "maximum_native_receipt_gap_s": 0.15101014508400112,
+      "effective_native_samples_per_s": 14.079051478808662,
+      "gaps_longer_than_freshness": 0,
+      "phases": [
+        {
+          "begin_s": 0,
+          "end_s": 30,
+          "offered": 48,
+          "rejected": 17,
+          "complete": 31
+        },
+        {
+          "begin_s": 30,
+          "end_s": 60,
+          "offered": 80,
+          "rejected": 34,
+          "complete": 46
+        },
+        {
+          "begin_s": 60,
+          "end_s": 90,
+          "offered": 45,
+          "rejected": 7,
+          "complete": 38
+        }
+      ],
+      "actual_output_range": [
+        73,
+        166
+      ]
+    },
+    {
+      "episode_id": "train-160004-1",
+      "seed_block": 160004,
+      "arm": 1,
+      "cell": "p4096-m256",
+      "offered": 173,
+      "complete": 115,
+      "rejected": 58,
+      "other": 0,
+      "ttft_good": 99,
+      "natural_eos": 115,
+      "ledger_frames": 361,
+      "native_samples": 1260,
+      "assigned_changes": 6,
+      "receipt_observations": {
+        "recorded": 0,
+        "joined": 0,
+        "with_gateway_pending_work": 0,
+        "exact_work_join": 0
+      },
+      "composite_good": 99,
+      "hardware_samples_inside_offer_window": 0,
+      "maximum_applied_lag_s": 0.030787921976298094,
+      "median_applied_lag_s": 0.01881811092607677,
+      "assignment_retries": 0,
+      "maximum_native_receipt_gap_s": 0.19050720194354653,
+      "effective_native_samples_per_s": 13.983827115371549,
+      "gaps_longer_than_freshness": 0,
+      "phases": [
+        {
+          "begin_s": 0,
+          "end_s": 30,
+          "offered": 48,
+          "rejected": 11,
+          "complete": 37
+        },
+        {
+          "begin_s": 30,
+          "end_s": 60,
+          "offered": 80,
+          "rejected": 34,
+          "complete": 46
+        },
+        {
+          "begin_s": 60,
+          "end_s": 90,
+          "offered": 45,
+          "rejected": 13,
+          "complete": 32
+        }
+      ],
+      "actual_output_range": [
+        71,
+        158
+      ]
+    }
+  ],
+  "calibration_accepted": false,
+  "mpc_performance_accepted": false,
+  "contrast": "whole assigned complementary sequence; not same-state pointwise action effects",
+  "hardware_coverage": "not recorded",
+  "research_slo": {
+    "ttft_s": 0.5,
+    "request_mean_tpot_s": 0.05,
+    "single_token_tpot_s": 0
+  },
+  "limitations": [
+    "Only four new Train blocks; no Calibration/Validation/Test execution.",
+    "Receipt joins are replayed from actual capture, not forecasts issued online.",
+    "Composite cohort counts are not controller performance comparisons or causal model acceptance."
+  ]
+}
