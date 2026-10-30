@@ -1,0 +1,38 @@
+{
+  "scope": "Read-only uploaded native evidence analysis; no new local native/GPU execution",
+  "local_tests": {
+    "passed": 343,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "elapsed_seconds": 39.5,
+    "junit": "local-cpu-tests.xml",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]"
+  },
+  "added_regression_cases": 14,
+  "native_original_junit_tests": 1042,
+  "source_commit": "dc9847e33d93541071a0bbc4ea38e4fff4623131",
+  "archived_files_unchanged_after_analysis": true,
+  "archive": {
+    "bytes": 7988044,
+    "sha256": "c77b76ff3ce8aa09781c7538d81f7f9a38c04affe62998fc0a4d498751e47f58",
+    "file_count": 158,
+    "uncompressed_bytes": 101021061
+  },
+  "library_file_id": "libfile_7f3db922dca081918c3cc87ec3910a90",
+  "complete_native_test_acceptance_for_current_analysis_commit": false,
+  "physical_costs_identified": false,
+  "model_accepted": false,
+  "adaptive_cap_accepted": false,
+  "mpc_accepted": false,
+  "next_delayed_protocol": "design_only_not_collection_ready",
+  "figure_visually_inspected": true,
+  "source_sha256": {
+    "scripts/analyze_prefill_effective_capture.py": "b745cff16054a1e11dfe6a9e49c7d0d8f02bbea8037ad84a6cf856597452ece3",
+    "tests/test_prefill_effective_analysis.py": "3ffe148d0529c9f6691bc325741e3e808872d91358d91fe93b6aa181176350c8",
+    "experiments/prefill-effective-arrivals-v2.proposal.md": "1572282ba6d307c36ce7857301dd30ad33d2a6a5d24df8edc17d984c626ed528",
+    "experiments/prefill-service-v1.design.json": "33be2c15e185c8efe466e8be3a0035990c87704dd00c3a1ccb7086239aeb966f",
+    "experiments/prefill-effective-calibration-v1.md": "ce8eac254385ea9f1f6e17656abfe82f65554437697c88bd85dac094ece51346"
+  },
+  "svg_trailing_whitespace_normalized": true
+}

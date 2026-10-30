@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vllm-serving-prefill-lab"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["httpx", "numpy", "scipy"]
+
+[project.entry-points."vllm.general_plugins"]
+prefill_lab = "prefill_lab.plugin:register"
+
+[project.entry-points."vllm.endpoint_plugins"]
+prefill_lab = "prefill_lab.endpoint:Endpoint"
+
+[tool.setuptools]
+packages = ["prefill_lab"]

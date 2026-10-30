@@ -1,0 +1,301 @@
+{
+  "parent_commit": "959f60c52d77ddb725ce1e37d01d942a9e694432",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "related_command": "python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py tests/test_prefill_review_gates.py tests/test_prefill_planning.py tests/test_prefill_noise.py tests/test_prefill_collector.py",
+  "related_tests": 140,
+  "related_passed": 140,
+  "collector_tests": 30,
+  "initial_full_suite": {
+    "command": "python -m pytest -q tests",
+    "test_cases": 797,
+    "passed": 759,
+    "failures": 11,
+    "errors": 27,
+    "unsuccessful": [
+      {
+        "test": "tests.test_diagnostic_audit.test_collected_protocol_round_trips_read_only",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_managed_sampler_round_trips_with_original_runner_identity[thread]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_managed_sampler_round_trips_with_original_runner_identity[process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[mode-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[collector_pid-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[runner_pid-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[sample_pid-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[missing_pid-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[forced-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[unjoined-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[exitcode-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[start_method-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[late_stop-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[late_ready-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[early_ready-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[execution_metadata_removed-process]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_namespace_mismatch_persists_and_fails_qualification[incompatible-procfs]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[missing_summary]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[duplicate_summary]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[unfinished_phase]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[cpu_thread]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[cpu_coverage]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[gc_loss]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[missing_engine]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[mode]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[counter_epoch]",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_audit.test_missing_core_data_retains_failed_diagnostic_verdict",
+        "outcome": "error"
+      },
+      {
+        "test": "tests.test_diagnostic_sampling.test_external_timing_resources_reset_and_missing_metrics",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_diagnostic_sampling.test_sample_failure_is_not_zero_engine_activity[transport]",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_diagnostic_sampling.test_sample_failure_is_not_zero_engine_activity[parse]",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_diagnostic_sampling.test_sample_failure_is_not_zero_engine_activity[http]",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_diagnostic_sampling.test_worker_persists_final_sample_and_explicit_status",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_sampler_worker.test_worker_identity_readiness_and_fresh_post_stop_sample[thread]",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_sampler_worker.test_worker_identity_readiness_and_fresh_post_stop_sample[process]",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_trace_replay.test_full_trace_runner_and_adversarial_analysis[True-True-thread]",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_trace_replay.test_full_trace_runner_and_adversarial_analysis[True-True-process]",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_trace_replay.test_full_trace_runner_and_adversarial_analysis[False-True-thread]",
+        "outcome": "failure"
+      },
+      {
+        "test": "tests.test_trace_replay.test_full_trace_runner_and_adversarial_analysis[False-True-process]",
+        "outcome": "failure"
+      }
+    ],
+    "scope": "Earlier implementation working tree; full native acceptance did not pass",
+    "original_junit_sha256": "f8db4a56679dd98c35b773eddfed8c3f7f3252b2882bbc860a819ea308e2f8c3",
+    "stored_junit_format": "Trailing whitespace normalized; all cases/outcomes/tracebacks retained"
+  },
+  "process_resources": {
+    "available": false,
+    "pid": 5,
+    "sample_start": 3582.905103009,
+    "sample_end": 3582.905175709,
+    "error_reason": "procfs_pid_namespace_unverified"
+  },
+  "native_cpu_acceptance": false,
+  "gpu_runtime_loaded": false,
+  "gpu_acceptance": false,
+  "packaging_entry_points_verified": true,
+  "source_sha256": {
+    "analyze_budget_dynamics.py": "3b1bfbb4f929e3b9af48dcb812cc00c40e589353dab75a64ba2f6181b4f84925",
+    "analyze_budget_pilot.py": "b21dc3b7cc169ef3ff7ad7e8b89ef8febc55175bbcbac01c8c772542828e7a48",
+    "analyze_cap_sweep.py": "110ebbda7b0a38894ebea5930ce1df462909c185f151786cc5bcf38164625658",
+    "analyze_trace_dynamics.py": "cde99f55dcd93c07be20e1b8989b4ccd3443a887f97820f3f313ccacf30407be",
+    "analyze_trace_pilot.py": "4c9a093e78db98a603ad9ffd361e072e1e627f4c109d0140616b3a7f75512820",
+    "diagnose_cap_misses.py": "a3128bcfc87c964b1a08d4dae4d17f113f7a2b9656c6f1a2c539c69afdbe0947",
+    "diagnose_flow_rollout.py": "cf19d0aae53d0536fac792d3e4f6cad274c6a773011492c25375663c0ba39e00",
+    "diagnostic_sampling.py": "4e477dbf5597eaa5803ae6cbf25c1ffc5860afea9ebe397fd1d224ad468dfbc6",
+    "evaluate_greybox.py": "a5fdcf76bb16b9c5415576ed1ed9255b6c77f95ead2f953fbc151e9bc6ee5b3f",
+    "evaluate_low_cap_frozen.py": "0bf919d910f23480db3cc7b3069ac9f12e42f5d67e99c62ce70ceb490842ead7",
+    "experiment_protocol.py": "db640e4a7b2ed681e15e7628db224a766683331d5aa7fec989c11ba7d1ca59dc",
+    "experiments/prefill-service-v1.budget.json": "374ed429a7d9a5d90d12a35e67c47c0e890e4be1c357e45e9dcb78e609120ea6",
+    "experiments/prefill-service-v1.cases.json": "c265cac7e8de14407b0f52f1b2bbff442570292ff4a6941abf98898b508417cd",
+    "experiments/prefill-service-v1.design.json": "e5f5610fbbacd1b6a1fa800fbf99d4d02d092527328c32f3fce1a7baa9280e10",
+    "experiments/prefill-service-v1.discrimination.json": "0b018a40436286c1763541d077700ec8063868d52391446f09dcbaa8829ba75c",
+    "experiments/prefill-service-v1.md": "b92351dbe45da79e8974ddc6ecd58f817dd68ff1d6c404bab5d3dcee395aac76",
+    "experiments/prefill-service-v1.order.json": "c6d7bb493e19d4ba10d4824d299c73a179126441073504bd58bc7f432f903c4b",
+    "experiments/prefill-service-v1.predictions.json": "c06527da28ed4c18221b6927453c30c7947156b86b97f821c246da45023f04ec",
+    "experiments/prefill-service-v1.runbook.md": "a7f4f5cdf53205770465d7fbe7cda55389d87a95ea82c4798b25a53cc5b10ec3",
+    "experiments/prefill-vllm-v030-source-map.json": "ac668653bb4656e579b1e99824862bae4d64a25472d7a4ad5d73c43b4f732356",
+    "forecast_baselines.py": "e7abca44a0592e921cf127d077e078600dd08bc97bc75836a13ed2c32c849c18",
+    "gateway.py": "f05006c28af341a13ce626a1a07eebb286f997ab6a805f3614b3c127c37d682b",
+    "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e",
+    "identification_features.py": "582af57b917d06b2eecfcdf3789a9e61b24fa75588d7ad2476a25892c860a38f",
+    "iterate_state_model.py": "997fc41ccc9a9b05a62e56f0726f9405e80fb799a6c809ec868485bf81de1729",
+    "make_budget_schedule.py": "751f20d300bb7f58c5a0e8eaf7805745fccf970e615185071abaef717321e6f8",
+    "non_streaming.py": "158b8d22912db06c0fa6521ad94f9b15e0aafccbc541dd95a4d2f30623a1e369",
+    "prefill_design.py": "5e4eae9b4e8caba5baa300e78cac1fc3d75224f9804e6e08b1af3b1fb3ecd7aa",
+    "prefill_grouped_validation.py": "8e9f6ed223e1c8c12ec1db112432b2095729024cca733fb8f28eb82f147ce8c9",
+    "prefill_histogram.py": "a0721b6163ebd8b4504f5480625335966daeaa469e5056cdb0b42e18f8beff48",
+    "prefill_identifiability.py": "e03636ac8b0f8695c43c90d672eeb6c0f1e557ea5698b316ccdf0bf4b9e4ead8",
+    "prefill_lab/__init__.py": "111e3c479dec680d722b09f57349ba00f909c8bafa562fede7370578b1564c1c",
+    "prefill_lab/analysis.py": "104e35e79215d73fff6811c7b6b56a9ad0ebf9bc6c92d4c804f5d9753e8e481f",
+    "prefill_lab/causal.py": "4d96414dc86a64b4c882e4ecc8aaca318ad70ce36e202980cf3612f1cbf17fe2",
+    "prefill_lab/contracts.py": "cd68ad7d378bff183947d147b197e94e8d84999ee73e89780128c50593aa73dd",
+    "prefill_lab/dispatch.py": "8e6925e4242c6a9f00b9cb2f794900e5aef4dd2b71f24328e5c07af717bed604",
+    "prefill_lab/endpoint.py": "aa94855f05f02c32f6194f13b55f8a2b3156b09af6c4f3a79368780fb683e88b",
+    "prefill_lab/plugin.py": "5d1a53984ab01c640ab358519f3290c1eaffbd11d5a218d27266d657ccd06863",
+    "prefill_lab/runtime.py": "4dd0417f154f2a17a4ea321bface2b2560b32d29ce7f643751d13dd2afdda783",
+    "prefill_lab/scoring.py": "569e823e35a798f81f5374b4283d16430326330519920f43652f3586defe6fcb",
+    "prefill_lab/suite.py": "53cdbbc8e332af64b6d10bac5f8bfff90b402ed0c5b8a89ffc90bb958b32bc6a",
+    "prefill_lab/tokens.py": "c840c49ca4c9c425b0bbec011db13196d2a05e223d2f273b679753d171fcb4d1",
+    "prefill_noise.py": "078fca7a9e403c33a933d8f18f67d188ab3297626d5be494197c39401f22727e",
+    "prefill_planning.py": "92bce4a8b7c5ed765ee31e834481944589668d0eb06c601bffd58356da726569",
+    "prefill_validation.py": "d1b5006f8f6ee20b85cc697b54125249bfacbcb45699f1ce7a4d503bdf15f075",
+    "prepare_trace.py": "1686a9ce75a24bcd63d042b6c30c2a4e304414509ee857628ac3aeaf3d210c7f",
+    "pyproject.toml": "4e62899bfe56335fdc20fa1311162af6b1b834fd91307d16497fbcfb81a8e6b8",
+    "run_budget_pilot.py": "86dae6812b46a73388f6b10b67b199a97fbd3528035f8e15dc336a5d623cb435",
+    "run_calibration.py": "42f8b2ca2d1cfa8c243ae6cd9ebe1c6b28e7ede0f62a737ee65658a62a76520f",
+    "run_cap_sweep.py": "61546e6876b28fba6532a5527684fe1c1f205905aa168a733f3dacaff532cf2e",
+    "run_experiments.py": "b72d256c4b61a622faec65f519f3c910d8a6779f4dc080b2fa4981a383bc9cd7",
+    "run_saturation.py": "bed70893ccb3d19080d1cbb166aba00d08961a35216b3c698b9227ddbd5e72e0",
+    "run_trace_pilot.py": "c02808e7cfb3aade6563620d373b1c16fc6f8af47a549c41ddf901b0cd6ad2bc",
+    "runner_diagnostics.py": "123cd2fba49d37b8f14e5347fa6b9badfddfdb563d97fbb03a9d879fb504c94a",
+    "runner_gc_control.py": "9f7c858814d8370e5b2695dbeb3ff6962f55cbd964fbca369f33146289544d8b",
+    "scripts/build_prefill_design.py": "c89f01578791112a5821237d137eeea3dd90003882fc5fac6e179be878f302c1",
+    "scripts/check_prefill_budget.py": "3480cd87dbd3ea38f69575ef43ef6c2dd2c9b46a4c92130b06818a59e9737a50",
+    "scripts/check_prefill_calibrated_design.py": "e616a61cedc7c0bed94fa3636db1e9de78cf30c34c7716cd06510c1a14273771",
+    "scripts/check_prefill_comparators.py": "7c74a122634a0e53ff126e89714e2769de180ca9763a7fc33d31172270c77431",
+    "scripts/check_prefill_itl.py": "fd82c62c3d376ad035a3bb7c242262ffc0124f2fc59d996aacd48f10d3c0c83a",
+    "scripts/check_prefill_noise.py": "deedea244370058b5448cb3daa05cf63dfc33c1b6b261edd4616ecf19262bc15",
+    "scripts/check_prefill_win_margin.py": "bdec24e29060200991473c4d081cf665a2aa82ef76cbd70b18b27af2d8392859",
+    "scripts/render_state_report.py": "737f6d65a19b06e9cd4fd392f42c1a3c934ff3f085eb6704abc06b015bdd08b0",
+    "scripts/reproduce_cap_miss_causes.py": "40586ab04dc58545e673ce7fe9ef2429d9d39412c1e69864ce615e5653346443",
+    "scripts/reproduce_state_model.py": "adf251c6898fbce95c173c59c275ff001840f3737e67bc530d74fff3d9b0ba89",
+    "scripts/run_linux_cpu_tests.py": "aa641f5ffe5cb412ea9e996328328f6a2fc64ef40a27befe40e0000aa4658902",
+    "scripts/run_prefill_service.py": "bfa00c0f4187b6dbcb0e2b76b5c1db8028fef85f78a9d4cb529e4784fb66c371",
+    "scripts/setup_v1.py": "9e893fbd7a765be77010a631bc31f735792b83af180ee55026cbc9ffc8a1b2a6",
+    "service_features.py": "5b8088fddeb78402676781219aefdf173e93279973bd1f7d42e5971de4aa317e",
+    "service_forecasts.py": "255b998a0acd381b51f30408aca9f7a75bd49088dc6dc783dddf9f7679537534",
+    "state_model.py": "ce5d6c181735e599c10eb1568745085730f29de54a34a0d2118144aeb1b192c2",
+    "streaming.py": "ca2a4cf3e9758bf315f6d44d8c0e0a74b444a1bccd2ae0c8782ca04cdb55026a",
+    "sustained_load.py": "278906b8b19060c4fb9262a93ad5fe6f7af025d9a29104727293f743c5b96219",
+    "telemetry.py": "315123d4234076297f9c63259596810a687d467c3fc0aadc2e8419152f8e6c18",
+    "tests/test_budget_pilot.py": "31ce221bc53530f70afca47aa6ea3606214564073284b07e6d90fe52eef9e037",
+    "tests/test_budget_schedule.py": "c9ed1a9ec0da14ac0530903971e20ab30cb2dfb8ee698b9627f90d8039c4d3e9",
+    "tests/test_cap_miss_causes.py": "01ded226a1e10279ac6b1bb1aac361bf5458daee7b316325c547902ac3dc9e4e",
+    "tests/test_cap_sweep.py": "390c64460800a6a1280f8a478b3e1962d4e6f38e132a91fb7c3b3931a0ddbe73",
+    "tests/test_client_errors.py": "32df9833f51d0393ee07327b96bf520c4b263359d12188401f2fc146b5bb782b",
+    "tests/test_diagnostic_audit.py": "b42f6d97b09614b9bd247ca9ab3510a03326c5f06bdffce2d2f9df225bf230a9",
+    "tests/test_diagnostic_sampling.py": "dd9fa0acd92a285f1c0c881142f9310d4582b3cb4afe190d37b33d53eb31cf98",
+    "tests/test_dynamic_budget.py": "e888494a1048d032065667e117899da37fbd8a8a98cb173439e763bfc01e7361",
+    "tests/test_experiment_protocol.py": "e7a2127c069332118d3b42b59601c0801b3cc47df23eafc44c7c9f2ec60e420c",
+    "tests/test_flow_diagnosis.py": "092bd539770e2580b362655560bff422833d894b81a7a59bdaee44d4cf75c661",
+    "tests/test_forecast_baselines.py": "204c1a7621abc2a9f00549b52cd6cc367f2d45f8ae9cc68e4d4bdc3c0cf71469",
+    "tests/test_gateway_diagnostics.py": "2c6a9ced486519d086a2802a5bec8d004d8aaf92307e1016ca3d227072ac0a6a",
+    "tests/test_greybox_simulator.py": "6f8d5c8846d5283cce596ddb840548e5e81b1340a05f8b7c0776cfc8cdc449a0",
+    "tests/test_identification_features.py": "222e7173cfca7578c149abc49c8afc0dd72dd5870c41dde5cb02d4eeff8b2ca4",
+    "tests/test_linux_cpu_ci.py": "0a28c5d7bef2b76b6e95c78e27646e1f23faed4efdde1033f49065d3ea81cadc",
+    "tests/test_low_cap_frozen.py": "e6a8e05462c56d5fc64f7e0b931a9597471aed7ac08c5c02146fbb9edac58c48",
+    "tests/test_prefill_collector.py": "a5003560e0667e42c3a85548f91a4cfd0ba60edc05395b1cde16c81a0f422acc",
+    "tests/test_prefill_design.py": "9dda1a29176b074ad292dfe59827d96daf554312880a4ae3ccaaa5159fd63a22",
+    "tests/test_prefill_identifiability.py": "29b40e2a6116389a46855c88a2930569eb236cb5f4f0479dec48ca48fec791c6",
+    "tests/test_prefill_noise.py": "1afd2619e846cc6f95303cf5b89a977f3a4d1c6baa469df9d7bb6cc4020d79f8",
+    "tests/test_prefill_planning.py": "be814ef1ee4cfb0a0445af29c871b975512dc3e682b7ba912e4a920b79a5cc96",
+    "tests/test_prefill_review_gates.py": "1c21a01468c0c807abd3f4252305fa74788f2888be57222672f4a937d359a86a",
+    "tests/test_runner_diagnostics.py": "2cd910c95082aecef8de82a54a44c6810b4ed37bbd4b3adc177df0d18f87ecb2",
+    "tests/test_runner_gc_control.py": "c33ccc1b31ef4839101b97dd64952b3e2706ab04d8c0883ca73a8a83dc26d760",
+    "tests/test_sampler_worker.py": "41fd321fcda842518b810f66fac28bf3e03ef4d3cc179d4bd247e5c30c46fc34",
+    "tests/test_service_forecasts.py": "0004bc98f5777744c2ea85a4588b209b02531b2bffe3cd393e73bc4035522097",
+    "tests/test_setup_v1.py": "66d20473608c988610bb89e5bd0ea3fb07954ab49167617517ec6e2c3f25a10a",
+    "tests/test_shared_upstream_client.py": "99b9a1fc25c9b5cde28e8642032315b14fb0f517e8b311291adfc1681fffbfa1",
+    "tests/test_state_evidence.py": "2f447e2c5a491e967187296efbf5ba9e5ed9b1eb6b5bc5f51aebfd6d8a022d6f",
+    "tests/test_state_model.py": "47ca44a6fba087c2f951740dff8288946ca0d530eb7dfc2a1bd883541a7f57d8",
+    "tests/test_telemetry.py": "2f4903a598c5b12f6cb522985e5945a51c28623a7cadcf937f5958e13530db7d",
+    "tests/test_trace_control.py": "77bc0acdec41ff012a9f5994cc80c71075c5346d1ffeee608d9233443760af10",
+    "tests/test_trace_dynamics.py": "eee30fe7e73eba02476cd623da3bef1ad07e5ce76fae0976625cd935fd6e4919",
+    "tests/test_trace_presets.py": "3ded975a6377ae666ae8d3be92cde16cdf4e3789490850cfdf1293869ad2b063",
+    "tests/test_trace_replay.py": "f97790585a9fcc38ac777a871ca73063ee91d6120a46595edbc5d28cdb624ea9",
+    "tests/test_transition_model.py": "fa4dfc955fdaaa3fb6e147649fa35848e33153c0796892eb9632bc88ef8934da",
+    "trace_control.py": "8d0d2ad169847e3e5ff02dfe53d8fba459403df741cf7c30d0b4da96ee962687",
+    "trace_workload.py": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f",
+    "transition_baselines.py": "01634ccb45f97ca9cda0d6760b8352245586c5a711b3ad625dd10f43aebc6bec",
+    "transition_features.py": "6664363beafd5cc779a360c77397b717d29e1ff71c7f8a992e19ff0bda123232"
+  },
+  "git_diff_check": "passed",
+  "note": "Existing diagnostic resource tests reject this nested PID/procfs view. No test filters, fabricated resource records or relaxed gates turn this into native acceptance."
+}

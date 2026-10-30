@@ -1,0 +1,19 @@
+{
+  "schema": "effective-event-clock-development-v1",
+  "status": "post-result development; not preregistered independent validation",
+  "parameters": ["bias", "prefill", "decode_context", "attention_pairs", "decode", "prefill_decode"],
+  "decode_scale": 16.0,
+  "mixed_scale": 32768.0,
+  "event_absolute_scale_s": 0.01,
+  "event_relative_scale": 0.02,
+  "event_group_balance": "equal squared weight per training trial and prefill/decode phase; start and commit equally weighted",
+  "endpoint_group_balance": "unchanged OFF trial/request/metric relative weighting; event and endpoint groups have equal total normalized weight",
+  "event_window": "initial background work through foreground final commit; exclude subsequent background-only drain",
+  "bounds_s": [0.0000001, 0.5],
+  "starts_s": [[0.001, 0.01, 0.001, 0.001, 0.003, 0.003], [0.005, 0.05, 0.005, 0.005, 0.003, 0.003]],
+  "fit_max_nfev": 80,
+  "model_accepted": false,
+  "physical_costs_identified": false,
+  "adaptive_cap_accepted": false,
+  "mpc_accepted": false
+}

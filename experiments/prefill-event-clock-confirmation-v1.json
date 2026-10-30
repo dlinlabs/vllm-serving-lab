@@ -1,0 +1,1425 @@
+{
+  "schema": "effective-event-clock-confirmation-v1",
+  "scope": "pilot: prospectively frozen six-parameter event-clock confirmation; B2048; no HTTP/cap/MPC acceptance",
+  "cases": [
+    {
+      "id": "single-L1024-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L7168-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-uniform-D0",
+      "family": "composition",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L1024-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L7168-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-uniform-D16",
+      "family": "composition",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-mixed-D0",
+      "family": "composition",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "composition-mixed-D16",
+      "family": "composition",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "mixed-plus-sentinel-at50-D0",
+      "family": "delayed",
+      "split": "held_delayed",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 50
+      }
+    },
+    {
+      "id": "mixed-plus-sentinel-at200-D0",
+      "family": "delayed",
+      "split": "held_delayed",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      }
+    },
+    {
+      "id": "mixed-plus-sentinel-at400-D0",
+      "family": "delayed",
+      "split": "held_delayed",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 400
+      }
+    },
+    {
+      "id": "mixed-plus-sentinel-at800-D0",
+      "family": "delayed",
+      "split": "held_delayed",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 800
+      }
+    },
+    {
+      "id": "mixed-plus-sentinel-at50-D16",
+      "family": "delayed",
+      "split": "held_delayed",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 50
+      }
+    },
+    {
+      "id": "mixed-plus-sentinel-at200-D16",
+      "family": "delayed",
+      "split": "held_delayed",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      }
+    },
+    {
+      "id": "mixed-plus-sentinel-at400-D16",
+      "family": "delayed",
+      "split": "held_delayed",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 400
+      }
+    },
+    {
+      "id": "mixed-plus-sentinel-at800-D16",
+      "family": "delayed",
+      "split": "held_delayed",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 800
+      }
+    }
+  ],
+  "order": [
+    {
+      "trial_id": "ct-001",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-002",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-003",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-004",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-005",
+      "case": "composition-uniform-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-006",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-007",
+      "case": "composition-mixed-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ct-008",
+      "case": "single-L7168-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-009",
+      "case": "composition-mixed-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ct-010",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-011",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-012",
+      "case": "single-L1024-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-013",
+      "case": "composition-uniform-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-014",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-015",
+      "case": "single-L1024-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-016",
+      "case": "single-L7168-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-warmup-0-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-017",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-1-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-018",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-1-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-019",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-1-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-020",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-1-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-021",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-1-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-022",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-1-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-023",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-1-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-024",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-1-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-025",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-1-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-026",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-1-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-027",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-1-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-028",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-1-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-029",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-2-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-030",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-2-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-031",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-2-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-032",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-2-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-033",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-2-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-034",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-2-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-035",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-2-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-036",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-2-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-037",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-2-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-038",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-2-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-039",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-2-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-040",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-2-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-041",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-3-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-042",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-3-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-043",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-3-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-044",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-3-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-045",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-3-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-046",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-3-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-047",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-3-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-048",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-3-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-049",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-3-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-050",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-3-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-051",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-3-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-052",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-3-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-053",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-4-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-054",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-4-single-L1024-D16"
+    },
+    {
+      "trial_id": "ct-055",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-4-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-056",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-4-single-L1024-D0"
+    },
+    {
+      "trial_id": "ct-057",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-4-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-058",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-4-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ct-059",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-4-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-060",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-4-single-L7168-D16"
+    },
+    {
+      "trial_id": "ct-061",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-4-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-062",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-4-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ct-063",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-train-4-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-064",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-train-4-single-L7168-D0"
+    },
+    {
+      "trial_id": "ct-065",
+      "case": "composition-mixed-D16",
+      "stage": "held_anchor_before",
+      "block": 5,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-anchor-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ct-066",
+      "case": "composition-mixed-D16",
+      "stage": "held_anchor_before",
+      "block": 5,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-anchor-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ct-067",
+      "case": "composition-mixed-D0",
+      "stage": "held_anchor_before",
+      "block": 5,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-anchor-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ct-068",
+      "case": "composition-mixed-D0",
+      "stage": "held_anchor_before",
+      "block": 5,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-anchor-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ct-069",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-070",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-071",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-072",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-073",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-074",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-075",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-076",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-077",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-078",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-079",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-080",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-081",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-082",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-083",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-084",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "held_delayed",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-1-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-085",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-086",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-087",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-088",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-089",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-090",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-091",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-092",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-093",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-094",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-095",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-096",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-097",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-098",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-099",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-100",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "held_delayed",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-2-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-101",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-102",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-103",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-104",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-105",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-106",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-107",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-108",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-109",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-110",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-111",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-112",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-113",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-114",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-115",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-116",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "held_delayed",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-3-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-117",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-118",
+      "case": "mixed-plus-sentinel-at400-D16",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at400-D16"
+    },
+    {
+      "trial_id": "ct-119",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-120",
+      "case": "mixed-plus-sentinel-at50-D16",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at50-D16"
+    },
+    {
+      "trial_id": "ct-121",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-122",
+      "case": "mixed-plus-sentinel-at50-D0",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at50-D0"
+    },
+    {
+      "trial_id": "ct-123",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-124",
+      "case": "mixed-plus-sentinel-at200-D0",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at200-D0"
+    },
+    {
+      "trial_id": "ct-125",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-126",
+      "case": "mixed-plus-sentinel-at400-D0",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at400-D0"
+    },
+    {
+      "trial_id": "ct-127",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-128",
+      "case": "mixed-plus-sentinel-at800-D16",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at800-D16"
+    },
+    {
+      "trial_id": "ct-129",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-130",
+      "case": "mixed-plus-sentinel-at800-D0",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at800-D0"
+    },
+    {
+      "trial_id": "ct-131",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-132",
+      "case": "mixed-plus-sentinel-at200-D16",
+      "stage": "held_delayed",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-held_delayed-4-mixed-plus-sentinel-at200-D16"
+    },
+    {
+      "trial_id": "ct-133",
+      "case": "composition-mixed-D0",
+      "stage": "held_anchor_after",
+      "block": 6,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-anchor-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ct-134",
+      "case": "composition-mixed-D0",
+      "stage": "held_anchor_after",
+      "block": 6,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-anchor-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ct-135",
+      "case": "composition-mixed-D16",
+      "stage": "held_anchor_after",
+      "block": 6,
+      "observer": "off",
+      "paired_content_key": "clock-v1-da-anchor-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ct-136",
+      "case": "composition-mixed-D16",
+      "stage": "held_anchor_after",
+      "block": 6,
+      "observer": "light",
+      "paired_content_key": "clock-v1-da-anchor-composition-mixed-D16"
+    }
+  ],
+  "features": {
+    "bias": 1.0,
+    "prefill": 2048.0,
+    "decode_context": 32768.0,
+    "attention_pairs": 2097152.0
+  },
+  "gates": {
+    "condition_limit": 1000.0,
+    "ttft_absolute_s": 0.005,
+    "completion_absolute_s": 0.01,
+    "relative_error": 0.2,
+    "repeat_relative_spread": 0.2,
+    "observer_absolute_s": 0.002,
+    "observer_relative": 0.1
+  },
+  "hard_seconds": 1800,
+  "model_accepted": false,
+  "model": {
+    "name": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554"
+  },
+  "posting_lag_limit_s": 0.005,
+  "queue_absolute_s": 0.01,
+  "queue_relative": 0.2,
+  "clock_spec": "experiments/prefill-event-clock-v1.json"
+}

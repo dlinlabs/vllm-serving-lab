@@ -1,0 +1,548 @@
+{
+  "role": "Deterministic Gate3 component counterexamples, not an experiment false-positive rate.",
+  "synthetic": true,
+  "eligibility": {
+    "threshold_s_by_cell": {
+      "0": 0.025,
+      "1": 0.025,
+      "2": 0.025,
+      "3": 0.025,
+      "4": 0.025,
+      "5": 0.025,
+      "6": 0.025,
+      "7": 0.025
+    },
+    "eligible_cells": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "minimum_eligible": 4,
+    "comparison_evaluable": true,
+    "strict_wins_required": 3,
+    "no_regression_cells": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "note": "Eligibility frozen before held timing; fewer than4 eligible cells is inconclusive, not passed."
+  },
+  "cases": [
+    {
+      "case": "epsilon",
+      "old_marginless_win_count": 3,
+      "old_win_count_requirement_met": true,
+      "revised": {
+        "component_status": "inconclusive",
+        "wins": [],
+        "regressions": [],
+        "per_cell": {
+          "0": {
+            "candidate_mae_s": 0.049999,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 1.000000000001e-06,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06
+            ]
+          },
+          "1": {
+            "candidate_mae_s": 0.049999,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 1.000000000001e-06,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06
+            ]
+          },
+          "2": {
+            "candidate_mae_s": 0.049999,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 1.000000000001e-06,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06,
+              -1.000000000001e-06
+            ]
+          },
+          "3": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "4": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "5": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "6": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "7": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "win_rule": "baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win",
+        "unresolved_cells": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "complete_experiment_passed": false,
+        "statistical_significance_claimed": false
+      }
+    },
+    {
+      "case": "equal_margin",
+      "old_marginless_win_count": 3,
+      "old_win_count_requirement_met": true,
+      "revised": {
+        "component_status": "inconclusive",
+        "wins": [],
+        "regressions": [],
+        "per_cell": {
+          "0": {
+            "candidate_mae_s": 0.025,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.025,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.025,
+              -0.025,
+              -0.025,
+              -0.025,
+              -0.025
+            ]
+          },
+          "1": {
+            "candidate_mae_s": 0.025,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.025,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.025,
+              -0.025,
+              -0.025,
+              -0.025,
+              -0.025
+            ]
+          },
+          "2": {
+            "candidate_mae_s": 0.025,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.025,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.025,
+              -0.025,
+              -0.025,
+              -0.025,
+              -0.025
+            ]
+          },
+          "3": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "4": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "5": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "6": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "7": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "win_rule": "baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win",
+        "unresolved_cells": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "complete_experiment_passed": false,
+        "statistical_significance_claimed": false
+      }
+    },
+    {
+      "case": "resolved_gain",
+      "old_marginless_win_count": 3,
+      "old_win_count_requirement_met": true,
+      "revised": {
+        "component_status": "passed",
+        "wins": [
+          "0",
+          "1",
+          "2"
+        ],
+        "regressions": [],
+        "per_cell": {
+          "0": {
+            "candidate_mae_s": 0.024000000000000004,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.026,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026
+            ]
+          },
+          "1": {
+            "candidate_mae_s": 0.024000000000000004,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.026,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026
+            ]
+          },
+          "2": {
+            "candidate_mae_s": 0.024000000000000004,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.026,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026
+            ]
+          },
+          "3": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "4": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "5": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "6": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "7": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "win_rule": "baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win",
+        "unresolved_cells": [
+          "3"
+        ],
+        "complete_experiment_passed": false,
+        "statistical_significance_claimed": false
+      }
+    },
+    {
+      "case": "noneligible_regression",
+      "old_marginless_win_count": 3,
+      "old_win_count_requirement_met": true,
+      "revised": {
+        "component_status": "failed",
+        "wins": [
+          "0",
+          "1",
+          "2"
+        ],
+        "regressions": [
+          "7"
+        ],
+        "per_cell": {
+          "0": {
+            "candidate_mae_s": 0.024000000000000004,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.026,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026
+            ]
+          },
+          "1": {
+            "candidate_mae_s": 0.024000000000000004,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.026,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026
+            ]
+          },
+          "2": {
+            "candidate_mae_s": 0.024000000000000004,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.026,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026,
+              -0.026
+            ]
+          },
+          "3": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "4": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "5": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "6": {
+            "candidate_mae_s": 0.05,
+            "baseline_mae_s": 0.05,
+            "improvement_s": 0.0,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "7": {
+            "candidate_mae_s": 0.1,
+            "baseline_mae_s": 0.05,
+            "improvement_s": -0.05,
+            "win_margin_s": 0.025,
+            "paired_absolute_error_deltas_s": [
+              0.05,
+              0.05,
+              0.05,
+              0.05,
+              0.05
+            ]
+          }
+        },
+        "win_rule": "baseline MAE - candidate MAE > calibration-only per-cell eligibility threshold; numerical equality is a non-win",
+        "unresolved_cells": [
+          "3"
+        ],
+        "complete_experiment_passed": false,
+        "statistical_significance_claimed": false
+      }
+    }
+  ],
+  "note": "No Monte Carlo, confidence interval, complete-experiment pass or experiment false-positive rate is claimed.",
+  "source_sha256": {
+    "prefill_design.py": "5e4eae9b4e8caba5baa300e78cac1fc3d75224f9804e6e08b1af3b1fb3ecd7aa",
+    "prefill_validation.py": "d1b5006f8f6ee20b85cc697b54125249bfacbcb45699f1ce7a4d503bdf15f075",
+    "scripts/check_prefill_win_margin.py": "bdec24e29060200991473c4d081cf665a2aa82ef76cbd70b18b27af2d8392859"
+  }
+}

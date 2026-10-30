@@ -1,0 +1,16 @@
+{
+  "scope": "CPU-only design correction",
+  "parent_commit": "73279c4cb7186ca6a410c0811a55f05a14031485",
+  "tests": {
+    "command": "python -m pytest -q tests/test_prefill_design.py tests/test_prefill_identifiability.py tests/test_prefill_review_gates.py tests/test_prefill_planning.py",
+    "passed": 86,
+    "failed": 0
+  },
+  "diff_whitespace_check": "passed",
+  "generator_reproduction": "byte-identical committed cases/order/predictions/discrimination/budget checked by tests",
+  "historical_reports": "unchanged; revision6 generator snapshot preserves round4 source hash",
+  "new_gpu_capture": false,
+  "actual_scheduler_parity_verified": false,
+  "C_used": false,
+  "mpc_evaluated": false
+}
