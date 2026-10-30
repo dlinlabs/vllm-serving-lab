@@ -1,0 +1,106 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_fluid_plant_does_not_expose_future_events_at_a_control_sample[4.975-6.0] _
+
+scheduled_at = 4.975, duration_s = 6.0
+
+    @pytest.mark.parametrize(("scheduled_at", "duration_s"), [(4.975, 6.0), (1e-13, 2.0)])
+    def test_fluid_plant_does_not_expose_future_events_at_a_control_sample(scheduled_at, duration_s):
+        from mpc_lab.benchmark import TraceOffer, run_episode
+    
+        trace = (TraceOffer("boundary", scheduled_at, 128, 128, 128, True),)
+>       result = run_episode(trace, duration_s, "feedback", 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_mpc_benchmark.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+mpc_lab/benchmark.py:137: in run_episode
+    next_budget = feedback_budget(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+snapshot = Snapshot(run_id='cpu-episode', clock_domain='cpu-clock', sampled_at=5.0, budget=32.0, budget_version=1, requests=(Requ...7', implementation_hash='a7400c7830232989fc098611055d56cda2bb811350719f9aa4079a5fd09519ac'), sequence=5, complete=True)
+low = 16.0, high = 32.0, backlog_low = 2000, backlog_high = 6000
+
+    def feedback_budget(
+        snapshot: Snapshot,
+        *,
+        low: float = 16.0,
+        high: float = 32.0,
+        backlog_low: int = 2000,
+        backlog_high: int = 6000,
+    ) -> float:
+        """Same-state hysteresis; inside the band hold the bounded current budget."""
+        if (
+            not _number(low, positive=True)
+            or not _number(high, positive=True)
+            or low >= high
+            or not _integer(backlog_low)
+            or not _integer(backlog_high)
+            or backlog_low >= backlog_high
+        ):
+            raise ValueError("invalid_feedback_config")
+        if not isinstance(snapshot, Snapshot):
+            raise ValueError("missing_snapshot")
+        reason = validate_snapshot(
+            snapshot, now=snapshot.sampled_at, clock_domain=snapshot.clock_domain,
+            expected_identity=snapshot.identity, max_age_s=0,
+        )
+        if reason:
+>           raise ValueError(reason)
+E           ValueError: invalid_request_chronology
+
+mpc_lab/controller.py:414: ValueError
+_ test_fluid_plant_does_not_expose_future_events_at_a_control_sample[1e-13-2.0] _
+
+scheduled_at = 1e-13, duration_s = 2.0
+
+    @pytest.mark.parametrize(("scheduled_at", "duration_s"), [(4.975, 6.0), (1e-13, 2.0)])
+    def test_fluid_plant_does_not_expose_future_events_at_a_control_sample(scheduled_at, duration_s):
+        from mpc_lab.benchmark import TraceOffer, run_episode
+    
+        trace = (TraceOffer("boundary", scheduled_at, 128, 128, 128, True),)
+>       result = run_episode(trace, duration_s, "feedback", 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_mpc_benchmark.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+mpc_lab/benchmark.py:137: in run_episode
+    next_budget = feedback_budget(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+snapshot = Snapshot(run_id='cpu-episode', clock_domain='cpu-clock', sampled_at=1.0, budget=32.0, budget_version=1, requests=(Requ...7', implementation_hash='a7400c7830232989fc098611055d56cda2bb811350719f9aa4079a5fd09519ac'), sequence=1, complete=True)
+low = 16.0, high = 32.0, backlog_low = 2000, backlog_high = 6000
+
+    def feedback_budget(
+        snapshot: Snapshot,
+        *,
+        low: float = 16.0,
+        high: float = 32.0,
+        backlog_low: int = 2000,
+        backlog_high: int = 6000,
+    ) -> float:
+        """Same-state hysteresis; inside the band hold the bounded current budget."""
+        if (
+            not _number(low, positive=True)
+            or not _number(high, positive=True)
+            or low >= high
+            or not _integer(backlog_low)
+            or not _integer(backlog_high)
+            or backlog_low >= backlog_high
+        ):
+            raise ValueError("invalid_feedback_config")
+        if not isinstance(snapshot, Snapshot):
+            raise ValueError("missing_snapshot")
+        reason = validate_snapshot(
+            snapshot, now=snapshot.sampled_at, clock_domain=snapshot.clock_domain,
+            expected_identity=snapshot.identity, max_age_s=0,
+        )
+        if reason:
+>           raise ValueError(reason)
+E           ValueError: invalid_request_chronology
+
+mpc_lab/controller.py:414: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_mpc_benchmark.py::test_fluid_plant_does_not_expose_future_events_at_a_control_sample[4.975-6.0]
+FAILED tests/test_mpc_benchmark.py::test_fluid_plant_does_not_expose_future_events_at_a_control_sample[1e-13-2.0]
+2 failed, 2 deselected in 0.05s

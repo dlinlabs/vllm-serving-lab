@@ -122,6 +122,7 @@ def run_episode(
     # This plant is a time-grid fluid queue, not model.rollout or its service law.
     for tick in range(math.ceil((duration_s + 20.0) / step)):
         now = tick * step
+        interval_end = (tick + 1) * step
         if now >= duration_s and not active and index == len(trace):
             break
         if now < duration_s and now + 1e-9 >= control_tick:
@@ -166,7 +167,7 @@ def run_episode(
             actions.append(budget)
             control_tick += 1
 
-        while index < len(trace) and trace[index].scheduled_at <= now + 1e-12:
+        while index < len(trace) and trace[index].scheduled_at <= now:
             offer = trace[index]
             index += 1
             observed.append(offer)
@@ -191,7 +192,7 @@ def run_episode(
             row["prompt_left"] -= spent
             remaining_prefill -= spent
             if row["prompt_left"] <= 1e-9:
-                row["first"] = now + step
+                row["first"] = interval_end
             if remaining_prefill <= 0:
                 break
         backlog = sum(r["offer"].prompt_tokens for r in awaiting)
@@ -201,7 +202,7 @@ def run_episode(
                 row["output_left"] -= decode_tokens
             if row["first"] is not None and row["output_left"] <= 1e-9:
                 offer = row["offer"]
-                terminal = now + step
+                terminal = interval_end
                 outcomes[rid] = Outcome(
                     rid, offer.scheduled_at, True, row["first"], terminal, offer.success,
                     row["cost"], offer.prompt_tokens, offer.max_tokens,

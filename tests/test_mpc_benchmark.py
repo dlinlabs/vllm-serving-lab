@@ -1,3 +1,5 @@
+import pytest
+
 from mpc_lab.benchmark import make_trace, outcome_metrics
 from mpc_lab.contracts import Outcome
 
@@ -24,3 +26,13 @@ def test_synthetic_trace_is_reproducible_and_eos_hidden_from_request_marks():
     assert all(1 <= row.output_tokens <= row.max_tokens for row in trace)
     assert len({row.output_tokens for row in trace}) > 1
     assert all(a.scheduled_at < b.scheduled_at for a, b in zip(trace, trace[1:]))
+
+
+@pytest.mark.parametrize(("scheduled_at", "duration_s"), [(4.975, 6.0), (1e-13, 2.0)])
+def test_fluid_plant_does_not_expose_future_events_at_a_control_sample(scheduled_at, duration_s):
+    from mpc_lab.benchmark import TraceOffer, run_episode
+
+    trace = (TraceOffer("boundary", scheduled_at, 128, 128, 128, True),)
+    result = run_episode(trace, duration_s, "feedback", 1)
+    assert result["accepted"] == result["successful"] == 1
+    assert result["fallback_reasons"] == {}
