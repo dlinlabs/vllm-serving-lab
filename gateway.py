@@ -787,14 +787,14 @@ async def mpc_update_budget(request: Request):
             if previous[0] != command_hash:
                 return JSONResponse({"detail": "operation ID reused"}, status_code=409)
             return dict(previous[1])
-        applied_at = mpc_now()
-        if applied_at >= payload["not_after"]:
-            return JSONResponse({"detail": "command expired"}, status_code=409)
         if payload["expected_version"] != state["budget_version"]:
             return JSONResponse({"detail": "stale budget version"}, status_code=409)
         # Refuse new operations when full; do not silently forget idempotency.
         if len(mpc_operations) >= MPC_OPERATION_LIMIT:
             return JSONResponse({"detail": "operation outcome capacity"}, status_code=503)
+        applied_at = mpc_now()
+        if applied_at >= payload["not_after"]:
+            return JSONResponse({"detail": "command expired"}, status_code=409)
         result = {
             "schema": SCHEMA, "run_id": telemetry.run_id, "clock_domain": mpc_clock_domain,
             "operation_id": payload["operation_id"], "status": "applied",

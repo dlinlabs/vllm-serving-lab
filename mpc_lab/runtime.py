@@ -162,7 +162,11 @@ async def shadow_once(
         )
     else:
         decision = planner(snapshot)
-        if not isinstance(decision, Decision) or decision.identity != snapshot.identity:
+        if (
+            not isinstance(decision, Decision)
+            or decision.identity != snapshot.identity
+            or not _number(decision.budget, positive=True)
+        ):
             raise ValueError("shadow_decision_identity")
     record = {
         "schema": SCHEMA,

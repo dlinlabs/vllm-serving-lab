@@ -86,6 +86,21 @@ def test_legacy_is_not_a_guarded_capability(legacy):
         runtime.require_guarded_capability(legacy)
 
 
+def test_shadow_rejects_legacy_without_any_post():
+    calls = []
+    def handler(request):
+        calls.append(request.method)
+        return httpx.Response(200, json={"budget": 32})
+    async def scenario():
+        async with httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), base_url="http://test",
+        ) as client:
+            with pytest.raises(ValueError, match="capability"):
+                await runtime.shadow_once(client)
+        assert calls == ["GET"]
+    asyncio.run(scenario())
+
+
 def test_shadow_does_not_post_and_lazily_calls_controller(snapshot, monkeypatch):
     calls = []
 

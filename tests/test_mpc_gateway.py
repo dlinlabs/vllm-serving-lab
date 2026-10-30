@@ -21,7 +21,7 @@ DONE = b'data: [DONE]\n\n'
 
 @pytest.fixture
 def load_gateway(monkeypatch):
-    def load(enabled="true"):
+    def load(enabled="true", settings=None):
         monkeypatch.setenv("MPC_LAB_ENABLED", enabled)
         monkeypatch.setenv("ADMISSION_MODE", "cost_aware")
         monkeypatch.setenv("MAX_ADMITTED_COST", "80")
@@ -31,6 +31,8 @@ def load_gateway(monkeypatch):
         for key in ("MPC_MODEL_VERSION", "MPC_CALIBRATION_VERSION", "MPC_SUPPORT_HASH",
                     "MPC_TOKENIZER_IDENTITY"):
             monkeypatch.delenv(key, raising=False)
+        for key, value in (settings or {}).items():
+            monkeypatch.setenv(key, value)
         def offline(*args, **kwargs):
             raise OSError("test has no tokenizer")
         monkeypatch.setitem(sys.modules, "transformers", SimpleNamespace(
@@ -81,11 +83,29 @@ def test_default_off_preserves_legacy(load_gateway):
             assert (await client.post("/admin/budget", json={"budget": 32})).status_code == 200
             metrics = (await client.get("/metrics")).json()
             assert metrics["admission_budget"] == 32 and metrics["budget_version"] == 1
-            assert await gateway.begin_request(30, False)
+            assert (await gateway.begin_request(30, False)).accepted
             assert (await gateway.begin_request(3, False)).accepted is False
             await gateway.finish_request(30)
             assert gateway.mpc_requests == {} and gateway.mpc_sequence == 0
     asyncio.run(scenario())
+
+
+def test_configured_identity_seals_actual_cost_parameters(load_gateway):
+    gateway = load_gateway(settings={
+        "MPC_MODEL_VERSION": "test-model", "MPC_CALIBRATION_VERSION": "test-cal",
+        "MPC_SUPPORT_HASH": "test-support", "MPC_TOKENIZER_IDENTITY": "test-tokenizer",
+        "COST_INTERCEPT": "0.5", "INPUT_TOKEN_COST": "0.002",
+        "OUTPUT_TOKEN_COST": "0.01", "MIN_REQUEST_COST": "0.2",
+        "DEFAULT_MAX_TOKENS": "64",
+    })
+    cost, prompt, maximum, fallback = gateway.estimate_request_cost({})
+    assert maximum == 64 and fallback
+    assert cost == gateway.mpc_cost_spec.estimate(prompt, maximum)
+    assert gateway.mpc_identity.model_version == "test-model"
+    assert gateway.mpc_identity.calibration_version == "test-cal"
+    assert gateway.mpc_identity.support_hash == "test-support"
+    assert "test-tokenizer" in gateway.mpc_cost_spec.tokenizer_identity
+    assert gateway.mpc_identity.cost_hash == gateway.mpc_cost_spec.fingerprint
 
 
 def test_auth_mode_and_single_worker_restrictions(gateway, monkeypatch):
@@ -177,6 +197,44 @@ def test_malformed_guarded_input_no_mutation(gateway, key, value):
             )
         assert response.status_code == 422
         assert control_state(gateway) == before
+    asyncio.run(scenario())
+
+
+@pytest.mark.parametrize("raw", ["{", "[]", "null", "{}", '{"budget":16}', '{"extra":true}'])
+def test_malformed_command_shape(gateway, raw):
+    async def scenario():
+        before = control_state(gateway)
+        async with client_for(gateway) as client:
+            response = await client.post("/admin/mpc/budget", content=raw)
+        assert response.status_code == 422 and control_state(gateway) == before
+    asyncio.run(scenario())
+
+
+def test_concurrent_commands_have_one_cas_winner(gateway):
+    async def scenario():
+        async with client_for(gateway) as client:
+            first = command(gateway)
+            second = {**first, "operation_id": "second", "budget": 32}
+            replies = await asyncio.gather(*(
+                client.post("/admin/mpc/budget", json=payload) for payload in (first, second)
+            ))
+            assert sorted(reply.status_code for reply in replies) == [200, 409]
+            assert gateway.state["budget_version"] == 1
+            assert len(gateway.mpc_operations) == 1
+    asyncio.run(scenario())
+
+
+def test_legacy_update_invalidates_guarded_cas_but_keeps_legacy_response(gateway):
+    async def scenario():
+        async with client_for(gateway) as client:
+            payload = command(gateway)
+            legacy = await client.post("/admin/budget", json={"budget": 32})
+            assert legacy.status_code == 200 and set(legacy.json()) == {
+                "previous_budget", "budget", "current_admitted_cost", "budget_version", "applied_at",
+            }
+            before = control_state(gateway)
+            response = await client.post("/admin/mpc/budget", json=payload)
+            assert response.status_code == 409 and control_state(gateway) == before
     asyncio.run(scenario())
 
 
