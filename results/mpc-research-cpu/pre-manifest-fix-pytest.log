@@ -1,0 +1,62 @@
+........................................................................ [  3%]
+........................................................................ [  7%]
+........................................................................ [ 10%]
+........................................................................ [ 14%]
+........................................................................ [ 18%]
+........................................................................ [ 21%]
+........................................................................ [ 25%]
+........................................................................ [ 29%]
+........................................................................ [ 32%]
+........................................................................ [ 36%]
+........F............................................................... [ 40%]
+........................................................................ [ 43%]
+........................................................................ [ 47%]
+........................................................................ [ 51%]
+........................................................................ [ 54%]
+........s............................................................... [ 58%]
+........................................................................ [ 61%]
+........................................................................ [ 65%]
+........................................................................ [ 69%]
+........................................................................ [ 72%]
+........................................................................ [ 76%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+........................................................................ [ 87%]
+........................................................................ [ 91%]
+........................................................................ [ 94%]
+........................................................................ [ 98%]
+...............................                                          [100%]
+=================================== FAILURES ===================================
+_______ test_committed_design_metadata_and_generator_outputs_are_current _______
+
+tmp_path = PosixPath('/tmp/pytest-of-daniel_lin/pytest-15/test_committed_design_metadata0')
+
+    def test_committed_design_metadata_and_generator_outputs_are_current(tmp_path):
+        import json,hashlib
+        from pathlib import Path
+        from scripts.build_prefill_design import build,ROOT
+        build(tmp_path/'fresh')
+        for name in ('cases','order','predictions','discrimination','budget'):
+            assert_generated_json_equal(json.loads((tmp_path/f'fresh/{name}.json').read_text()),
+                                        json.loads((ROOT/f'experiments/prefill-service-v1.{name}.json').read_text()))
+        design=json.loads((ROOT/'experiments/prefill-service-v1.design.json').read_text())
+        assert design['revision']==12 and design['workload']['background_output_tokens']==256
+        assert design['collection']['transfer_seconds']==320
+>       for row in design['files'].values():assert hashlib.sha256((ROOT/row['path']).read_bytes()).hexdigest()==row['sha256']
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'e6be6929805d...3d53715680b82' == '71637e1ffcbb...0c75721efbd92'
+E         
+E         - 71637e1ffcbbba9c106f4327c050e49f4124cf0a6b86abf0bbe0c75721efbd92
+E         + e6be6929805d094bc791f236aab5d8fe7c4988664bd4bc48bc13d53715680b82
+
+tests/test_prefill_design.py:243: AssertionError
+=============================== warnings summary ===============================
+../../../../.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/pr32-mpc-py312/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/pr32-mpc-py312/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_prefill_live_wire.py:134: Native vLLM is not installed in this CPU-only environment
+FAILED tests/test_prefill_design.py::test_committed_design_metadata_and_generator_outputs_are_current
+1 failed, 1973 passed, 1 skipped, 1 warning in 328.00s (0:05:27)

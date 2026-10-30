@@ -1,0 +1,15 @@
+{
+  "source_commit": "0af6e16",
+  "command": "python -m mpc_lab.benchmark --output results/mpc-research-cpu/policy-benchmark.json",
+  "result": "ValueError: invalid_request_chronology",
+  "stage": "development baseline selection, before held-out policy comparison",
+  "heldout_results_inspected": false,
+  "root_cause": "The fluid plant used accumulated interval-end addition instead of its next canonical grid timestamp, and could admit arrivals slightly ahead of now using an epsilon.",
+  "reproductions": [
+    {"scheduled_at": 4.975, "duration_s": 6.0, "result_before_fix": "invalid_request_chronology"},
+    {"scheduled_at": 1e-13, "duration_s": 2.0, "result_before_fix": "invalid_request_chronology"}
+  ],
+  "fix": "Use (tick+1)*step consistently for interval-end events and do not process future arrivals.",
+  "criteria_relaxed": false,
+  "raw_reproduction_log": "results/mpc-research-cpu/grid-boundary-before-fix.log"
+}
