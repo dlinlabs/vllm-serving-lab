@@ -20,12 +20,12 @@ def digest(value: object) -> str:
 
 
 def finite(value: object, *, positive: bool = False) -> bool:
-    return (
-        isinstance(value, (int, float))
-        and not isinstance(value, bool)
-        and math.isfinite(value)
-        and (value > 0 if positive else True)
-    )
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value) and (value > 0 if positive else True)
+    except OverflowError:
+        return False
 
 
 def implementation_hash() -> str:
@@ -63,10 +63,13 @@ class CostSpec:
             raise ValueError("invalid_prompt_tokens")
         if type(max_tokens) is not int or max_tokens <= 0:
             raise ValueError("invalid_max_tokens")
-        cost = max(
-            self.minimum,
-            self.intercept + self.input_per_token * prompt_tokens + self.output_per_token * max_tokens,
-        )
+        try:
+            cost = max(
+                self.minimum,
+                self.intercept + self.input_per_token * prompt_tokens + self.output_per_token * max_tokens,
+            )
+        except OverflowError as exc:
+            raise ValueError("nonfinite_request_cost") from exc
         if not finite(cost, positive=True):
             raise ValueError("nonfinite_request_cost")
         return cost
