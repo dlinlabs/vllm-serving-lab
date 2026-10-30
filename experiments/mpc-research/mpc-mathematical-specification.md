@@ -1,6 +1,6 @@
 # Hybrid admission MPC specification
 
-Status: engineering specification under Round3 review, not native qualification.
+Status: CPU engineering specification after Round3 corrections, not native qualification.
 Source baseline: `8e92371`. Every numerical controller setting below is a
 development configuration, not an experimentally optimal setting.
 
@@ -67,7 +67,7 @@ orphan work invalidates a native model's scope.
 
 ## 3. Executable predictive model boundary
 
-Implement a pure event-driven lifecycle reference model, explicitly labeled a
+Implement a compact event-driven lifecycle reference model, explicitly labeled a
 CPU development surrogate rather than a vLLM scheduler replica.
 Its state contains a request ledger, sampled remaining work, pending observation/
 cleanup events, a scheduler clock, and the applied budget. A scenario supplies
@@ -75,7 +75,7 @@ causally sampled future offers/marks, output lengths, service variation and
 transport delay. The generator receives past-only state and a frozen seed, never
 the benchmark's actual future arrival tape or realized EOS.
 
-A kernel-inspired candidate transition packs at most B tokens/iteration:
+A more detailed, unselected kernel-inspired candidate transition packs at most B tokens/iteration:
 one next token for each eligible decoder, then FIFO prefill chunks in the
 remaining budget. For scheduled prefill tokens q and decode tokens d, use
 
@@ -96,16 +96,19 @@ exceed a request's declared maximum; first-token hit and eventual complete
 success remain separate events. The initial remaining-work belief must represent
 the ambiguity of identical observed aggregates.
 
-Alternatives to test are the measured W_prompt TTFT law plus conditional residence
-model and more detailed native scheduling models. Do not select the detailed
-surrogate merely because its equations look physical. The model interface accepts
+The first implementation instead uses a reduced phase/work event surrogate;
+its service parameters are synthetic until intervention fitting. Alternatives
+are the measured W_prompt TTFT law plus conditional residence and more detailed
+native scheduling models. Do not select the detailed surrogate merely because
+its equations look physical. The model interface accepts
 state, a timed budget plan and a shared scenario, and returns coherent outcome/
 reservation trajectories, unresolved reward mass and explicit invalid-scope reasons.
 
 ## 4. Cohort objective and terminal treatment
 
 Let C_k include every currently unresolved admitted request whose outcome can
-change and every offered request scheduled in the prediction window. Let
+change and every offered request scheduled in a fixed evaluation window D,
+independent of the number of optimized control slots. Let
 
     g_i = 1{eventual complete success}
           * 1{client_first_content_i - scheduled_offer_i <= 0.5s}.
@@ -126,7 +129,10 @@ Receipt-age prediction must not be relabeled scheduled-arrival prediction.
 After the planned horizon, continue under the declared backup with continuing
 scenario arrivals. Score each target cohort once; tail arrivals affect contention
 but are not also rewarded unless they belong to the declared cohort set.
-Unresolved target rewards retain a lower/upper interval. A learned residual value
+Unresolved target rewards retain a lower/upper interval. Initial selection uses
+the lower score and reports the upper bound, not an unspecified expected value.
+This conservative finite-tail approximation can bias selection and requires
+tail-length sensitivity. A learned residual value
 may replace explicit tail evaluation only with a disjoint, documented partition;
 it is not added on top of already counted outcomes or congestion penalties.
 
@@ -145,9 +151,12 @@ observations; one known command state; bounded planner search; no action from
 expired or invalid input. R<=new_budget is not a hard post-reduction constraint.
 No unobserved KV chance constraint or deterministic SLO guarantee is introduced.
 
-The initial small development search uses 1s control slots and a 3s horizon,
-enumerating at most eight `{16,32}` sequences. Compare N=1/3/5 with the same model,
-state, scenarios and action set. Shorter/longer cadence and one-switch pruning
+The initial small development search uses 1s control slots and3 optimized slots,
+enumerating at most eight `{16,32}` sequences. Hold D=5s and a10s computational
+tail fixed while comparing1/3/5 control slots with the same model, state,
+scenarios and action set. This isolates control freedom, not a change of scoring
+population. A separate prediction-window ablation changes the objective and
+must be labeled separately. Shorter/longer cadence and one-switch pruning
 are development ablations, not settled performance facts.
 Use shared scenario draws across plans; later actions do not depend on unrevealed
 scenario outcomes. Execute only the first action and replan.
