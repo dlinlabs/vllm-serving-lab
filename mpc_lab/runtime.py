@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict, fields
+from dataclasses import asdict, dataclass, fields, replace
 import importlib
 import json
 import math
 import os
+import time
 from typing import Callable
 
 import httpx
@@ -18,10 +19,28 @@ from .contracts import (
     CostSpec,
     Decision,
     Identity,
+    ModelParameters,
+    PlanningConfig,
     RequestMark,
     Snapshot,
+    digest,
     finite,
 )
+
+
+@dataclass(frozen=True)
+class SyntheticPrior:
+    arrival_rate: float = 1.0
+    prompt_tokens: tuple[int, ...] = (128,)
+    max_tokens: tuple[int, ...] = (128,)
+    count: int = 16
+    service_scales: tuple[float, ...] = (0.8, 1.0, 1.2)
+
+
+def local_clock_domain() -> str:
+    from prefill_lab.live_http import clock_domain
+
+    return clock_domain()
 
 
 def _number(value: object, *, positive: bool = False) -> bool:
@@ -138,16 +157,33 @@ async def shadow_once(
     client: httpx.AsyncClient,
     *,
     planner: Callable[[Snapshot], Decision] | None = None,
+    parameters: ModelParameters | None = None,
+    config: PlanningConfig | None = None,
+    prior: SyntheticPrior | None = None,
+    seed: int = 0,
 ) -> dict:
     response = await client.get("/admin/mpc/state")
     response.raise_for_status()
     document = response.json()
     require_guarded_capability(document)
     snapshot = snapshot_from_dict(document)
+    parameters = ModelParameters() if parameters is None else parameters
+    config = PlanningConfig() if config is None else config
+    prior = SyntheticPrior() if prior is None else prior
+    expected_identity = parameters.identity
+    validated_at = None
+    domain = None
+    scenarios = None
     reason = None
-    if not snapshot.complete:
+    try:
+        domain = local_clock_domain()
+    except (OSError, ImportError):
+        reason = "clock_domain_unavailable"
+    if reason is None and snapshot.clock_domain != domain:
+        reason = "clock_domain_mismatch"
+    if reason is None and not snapshot.complete:
         reason = "incomplete_snapshot"
-    elif planner is None:
+    if reason is None:
         try:
             controller = importlib.import_module("mpc_lab.controller")
         except ModuleNotFoundError as exc:
@@ -155,19 +191,45 @@ async def shadow_once(
                 raise
             reason = "controller_unavailable"
         else:
-            planner = controller.decide
+            validated_at = time.monotonic()
+            reason = controller.validate_snapshot(
+                snapshot, now=validated_at, clock_domain=domain,
+                expected_identity=expected_identity, max_age_s=config.max_snapshot_age_s,
+            )
+    if reason is None:
+        if planner is not None:
+            decision = planner(snapshot)
+        else:
+            try:
+                model = importlib.import_module("mpc_lab.model")
+            except ModuleNotFoundError as exc:
+                if exc.name != "mpc_lab.model":
+                    raise
+                reason = "predictor_unavailable"
+            else:
+                try:
+                    scenarios = model.generate_scenarios(
+                        snapshot, **asdict(prior), seed=seed,
+                        duration_s=config.evaluation_window_s + config.tail_s,
+                    )
+                except (ValueError, OverflowError) as exc:
+                    reason = "scenario_generation:" + str(exc)
+                else:
+                    decision = controller.choose_plan(
+                        snapshot, parameters, scenarios, config,
+                        now=time.monotonic(), clock_domain=domain,
+                    )
     if reason is not None:
         decision = Decision(
-            snapshot.budget, None, reason, True, None, None, 0.0, 0, 0, snapshot.identity,
+            config.fallback_budget, None, reason, True, None, None,
+            0.0, 0, 0, expected_identity,
         )
-    else:
-        decision = planner(snapshot)
-        if (
-            not isinstance(decision, Decision)
-            or decision.identity != snapshot.identity
-            or not _number(decision.budget, positive=True)
-        ):
-            raise ValueError("shadow_decision_identity")
+    if (
+        not isinstance(decision, Decision)
+        or decision.identity != expected_identity
+        or not _number(decision.budget, positive=True)
+    ):
+        raise ValueError("shadow_decision_identity")
     record = {
         "schema": SCHEMA,
         "mode": "shadow",
@@ -178,6 +240,27 @@ async def shadow_once(
         "sequence": snapshot.sequence,
         "budget_version": snapshot.budget_version,
         "decision": asdict(decision),
+        "reproducibility": {
+            "parameters": asdict(parameters),
+            "parameters_fingerprint": digest(asdict(parameters)),
+            "config": asdict(config),
+            "config_fingerprint": digest(asdict(config)),
+            "prior": asdict(prior),
+            "prior_fingerprint": digest(asdict(prior)),
+            "prior_kind": "synthetic-poisson-full-output-no-failures-zero-transport-v1",
+            "seed": seed,
+            "snapshot_fingerprint": digest(snapshot_to_dict(snapshot)),
+            "scenario_fingerprint": (
+                None if scenarios is None else digest(tuple(asdict(s) for s in scenarios))
+            ),
+            "scenario_count": 0 if scenarios is None else len(scenarios),
+            "scenario_duration_s": config.evaluation_window_s + config.tail_s,
+            "expected_identity": asdict(expected_identity),
+            "observed_identity": asdict(snapshot.identity),
+            "local_clock_domain": domain,
+            "validated_at": validated_at,
+            "planner": "choose_plan" if planner is None else "injected",
+        },
     }
     json.dumps(record, allow_nan=False)
     return record
@@ -188,6 +271,8 @@ def main(argv: list[str] | None = None) -> None:
 
     parser = argparse.ArgumentParser(description="One GET-only MPC shadow decision; never actuates.")
     parser.add_argument("--url", default="http://127.0.0.1:8080")
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--max-wall-s", type=float, default=PlanningConfig().max_wall_s)
     args = parser.parse_args(argv)
 
     async def run():
@@ -198,7 +283,11 @@ def main(argv: list[str] | None = None) -> None:
             follow_redirects=False,
             trust_env=False,
         ) as client:
-            print(json.dumps(await shadow_once(client), sort_keys=True, allow_nan=False))
+            record = await shadow_once(
+                client, seed=args.seed,
+                config=replace(PlanningConfig(), max_wall_s=args.max_wall_s),
+            )
+            print(json.dumps(record, sort_keys=True, allow_nan=False))
 
     asyncio.run(run())
 

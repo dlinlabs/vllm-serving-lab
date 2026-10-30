@@ -190,7 +190,9 @@ if MPC_LAB_ENABLED:
     )
     from mpc_lab.runtime import snapshot_to_dict
 
-    mpc_clock_domain = "gateway-monotonic:" + secrets.token_hex(16)
+    from prefill_lab.live_http import clock_domain as mpc_local_clock_domain
+
+    mpc_clock_domain = mpc_local_clock_domain()
     mpc_cost_spec = CostSpec(
         intercept=COST_INTERCEPT,
         input_per_token=INPUT_TOKEN_COST,

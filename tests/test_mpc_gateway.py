@@ -146,6 +146,15 @@ def test_snapshot_identity_cost_and_truthful_incomplete_state(gateway):
     asyncio.run(scenario())
 
 
+def test_restarts_share_local_clock_but_not_run_identity(load_gateway):
+    from prefill_lab.live_http import clock_domain
+
+    first = load_gateway()
+    second = load_gateway()
+    assert first.mpc_clock_domain == second.mpc_clock_domain == clock_domain()
+    assert first.telemetry.run_id != second.telemetry.run_id
+
+
 @pytest.mark.parametrize("field", [
     "schema", "run_id", "clock_domain", "model_version", "calibration_version",
     "support_hash", "cost_hash", "implementation_hash",

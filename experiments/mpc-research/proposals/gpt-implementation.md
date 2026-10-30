@@ -46,8 +46,11 @@ It means successful observed SSE content, not GPU execution or client receipt.
 `scheduled_at` remains None: the gateway cannot infer client scheduled time.
 The ledger ends at gateway reservation release; it is not an outcome archive.
 
-Run identity is telemetry's process run ID. Clock domain contains a fresh
-process-boot nonce and all marks/sample/application times use monotonic seconds.
+Run identity is telemetry's fresh process run ID. Clock domain uses the existing
+`prefill_lab.live_http.clock_domain()` Linux boot-ID/time-namespace identity,
+not a per-process nonce. Co-located processes can therefore validate the same
+monotonic domain; restart fencing remains the separate run ID. All
+marks/sample/application times use monotonic seconds.
 The sequence advances on admissions, first observations, releases and either
 kind of budget update, not merely on polling. Snapshot completeness requires
 both request-count and reservation-sum reconciliation with live admission
@@ -133,16 +136,43 @@ snapshot run/clock/sequence/version and `mode="shadow", applied=false`.
 It neither compares server uptime to client uptime nor writes any budget.
 Redirect following and environment-proxy use are disabled.
 
-The lazy integration interface is `mpc_lab.controller.decide(snapshot) -> Decision`.
-Until that module is integrated, the CLI emits an explicit
-`controller_unavailable` shadow fallback. Incomplete state skips the planner
-with `incomplete_snapshot`. Controller-returned identity and positive finite
-budget are checked before serialization. Missing controller dependencies or
-API errors are not silently relabeled as an unavailable controller.
+The corrected lazy integration calls canonical `validate_snapshot(...)`, then
+`model.generate_scenarios(...)`, then
+`choose_plan(snapshot, parameters, scenarios, config, now=..., clock_domain=...)`.
+There is no `controller.decide` call. Until the modules are integrated, missing
+controller/model produces explicit `controller_unavailable`/`predictor_unavailable`
+fallback. Missing transitive dependencies or API errors are not silently
+relabeled as missing modules. An injectable one-argument planner remains
+available, after canonical snapshot validation; it does not generate scenarios.
 
-Model-specific observation age, support, scenario generation and forecast
-validation remain the controller's responsibility. The shadow adapter alone
-does not establish an age bound or resolve the unknown network/clock offset.
+Parameters/config default to the shared synthetic `ModelParameters()` and
+`PlanningConfig()`. Explicit `SyntheticPrior()` defaults are arrival rate 1/s,
+prompt/max marks `(128,)`, 16 scenarios and service scales `(0.8, 1.0, 1.2)`;
+generated outputs use the declared maximum, no failures and zero transport
+delay. Seed defaults to 0; `--seed` changes it. `--max-wall-s` configures the
+controller deadline target (default 0.1s). These are declared development
+priors/settings, not fits to the current native state.
+
+The runtime resolves the actual local boot/time namespace, rejects domain
+mismatch before cross-domain subtraction, and supplies current local
+monotonic time to canonical validation before generating any scenarios.
+Stale, future, incomplete and identity-mismatched states do not forecast.
+`choose_plan` gets refreshed local time after generation, so scenario
+generation cannot disguise a state that became stale. The server's domain is
+never adopted as the caller's expected domain. Local lookup failure is an
+observable `clock_domain_unavailable` shadow fallback.
+
+Expected identity comes from the explicit **local parameters**, never from
+rewriting/adopting native server identity. Controller-returned identity and
+positive finite budget are checked before serialization. Native unqualified
+or mismatched seals therefore remain observable fallback, not synthetic
+forecast success.
+
+JSON `reproducibility` records include full parameters/config/prior and their
+fingerprints, seed, fixed scenario duration, snapshot fingerprint, generated
+scenario-batch fingerprint/count, expected and observed identity, actual local
+domain, validation time and injected/default planner mode. No-generation
+fallbacks explicitly have a null scenario fingerprint and zero scenarios.
 No live transport or native-qualification flag exists in this CLI.
 
 ## Executed checks and toolchain provenance
@@ -194,3 +224,49 @@ No GPU/backend/model download, paid compute, final C, native experiment, policy
 gain, full-suite result or host Python 3.12 acceptance is claimed. Owner must
 integrate the controller/packaging, run host Python 3.12 focused/full checks,
 and separately qualify any live deployment.
+
+## Same-task canonical integration correction
+
+Corrected the nonexistent `decide` API and process-nonce clock domain following
+owner review. Only the same five owned files changed. Earlier research reports,
+shared contracts and peer sources were not edited.
+
+For real integration testing only, copied the canonical controller/model
+unchanged into this package, then removed these temporary copies and their
+bytecode. They were never staged or included in the scoped implementation
+commit. SHA256 before and after the final tests matched both peer originals:
+
+```text
+controller.py 863fc26145190e37eb9ed40db48cb6fc26b48449023d354de7dafd588ec47d8e
+model.py      eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec
+```
+
+Final executed commands used the same Python 3.14.4 interpreter and selectors
+listed above. Updated results:
+
+```text
+127 passed in 14.49s
+6 passed, 73 deselected, 1 warning in 1.90s
+```
+
+The seven parametrized **real CLI entrypoint** integration cases use actual
+canonical `validate_snapshot`, `choose_plan`, `generate_scenarios` and `rollout`,
+with only HTTP transport mocked. A valid same-host synthetic snapshot executes
+all eight plans over 16 scenarios and emits a selected recommendation without
+POST. Stale state, incompatible domain (including deliberately incomparable
+uptime), and changed support/cost/calibration/implementation seals return
+explicit fallback; spies prove neither generation nor prediction ran for
+these invalid cases. The successful scenario batch is exactly reproducible
+from the emitted prior/seed/duration, and the snapshot/parameter/config/prior/
+scenario fingerprints are checked. The CLI test explicitly raises its
+development solver target to 2s; this is not a timing claim.
+
+A restart test confirms two gateway instances share the real host domain but
+not the run identity. Existing run/domain/CAS/queued-expiry/idempotency and
+default-off tests remain passing. The one warning is the same installed
+Starlette/FastAPI httpx test-client deprecation. `git diff --check` passed.
+
+The canonical-module integration cases explicitly skip when those peer files
+have not yet been integrated; they did **not** skip during the executed
+127-test run. No claim is made about newer peer revisions. Owner must run
+final integrated host Python 3.12 checks; native qualification remains false.
