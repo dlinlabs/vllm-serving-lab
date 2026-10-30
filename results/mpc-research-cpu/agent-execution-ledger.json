@@ -1,5 +1,19 @@
 {
-  "phase": "implementation_in_progress",
+  "phase": "cpu_complete_native_blocked",
+  "implementation_source_commit": "de36581f16fc39784297aadcd6186883aaf1d35a",
+  "implementation_hash": "b297a58010cc33c9b577de530c9fcba5db968338d21b0b575382bf94b1a52a7c",
+  "final_cpu_validation": {
+    "python": "3.12.16",
+    "passed": 1976,
+    "failed": 0,
+    "skipped": 1,
+    "warnings": 1,
+    "duration_s": 304.02,
+    "junit": "results/mpc-research-cpu/final-full-junit.xml",
+    "native_skip": "Native vLLM is not installed in this CPU-only environment"
+  },
+  "benchmark_result": "Synthetic MPC loses to development-selected fixed16; no native superiority claim",
+  "benchmark_artifact": "results/mpc-research-cpu/policy-benchmark.json",
   "research_source": "8e92371f342be98a50682bf4e2ddbb014665498b",
   "convoy": "hq-cv-8tdlf",
   "research_independence": "Round1 reports all existed before peer release; Round2 adversarial; Round3 revision and draft review",
@@ -11,9 +25,11 @@
       "actual_models": [
         "claude-opus-5.5"
       ],
-      "usage_records": 101,
+      "usage_records": 116,
       "first_usage": "2026-10-30T01:22:38.899Z",
-      "last_usage": "2026-10-30T02:06:06.308Z",
+      "last_usage": "2026-10-30T02:17:03.699Z",
+      "events_sha256": "efaab02131465efeff06b3dd2c612415dffc82c13e8c5c69fef69a9ab2a91a85",
+      "worker_status": "terminated_by_mayor_after_push_incident",
       "session_id": "7cb63bd9-0008-4311-bbc0-583d866fe44c",
       "events_path": "/home/daniel_lin/.copilot/session-state/7cb63bd9-0008-4311-bbc0-583d866fe44c/events.jsonl",
       "native_branch": "polecat/obsidian/pr-mpc-opus@mvuabvov",
@@ -46,9 +62,11 @@
       "actual_models": [
         "gpt-6-astra"
       ],
-      "usage_records": 45,
+      "usage_records": 54,
       "first_usage": "2026-10-30T01:22:40.518Z",
-      "last_usage": "2026-10-30T02:07:10.760Z",
+      "last_usage": "2026-10-30T02:14:36.329Z",
+      "events_sha256": "fc2c37049c87c111db595105c46dcdb31c2e2fb6a95e397ddcde207a9076b9b9",
+      "worker_status": "terminated_by_mayor_after_push_incident",
       "session_id": "4408b6a4-9597-4d9c-9852-7ef0e1463943",
       "events_path": "/home/daniel_lin/.copilot/session-state/4408b6a4-9597-4d9c-9852-7ef0e1463943/events.jsonl",
       "native_branch": "polecat/quartz/pr-mpc-astra@mvuacm2e",
@@ -81,9 +99,11 @@
       "actual_models": [
         "gemini-3.8-flash"
       ],
-      "usage_records": 74,
+      "usage_records": 97,
       "first_usage": "2026-10-30T01:22:39.970Z",
-      "last_usage": "2026-10-30T02:08:23.720Z",
+      "last_usage": "2026-10-30T02:14:00.260Z",
+      "events_sha256": "83808aae968288c156e36a945a5befde83680a489edb4f93f8000598839116b5",
+      "worker_status": "terminated_by_mayor_after_push_incident",
       "session_id": "e11dddcb-155e-4326-ac42-ee1d7baaf993",
       "events_path": "/home/daniel_lin/.copilot/session-state/e11dddcb-155e-4326-ac42-ee1d7baaf993/events.jsonl",
       "native_branch": "polecat/jasper/pr-mpc-gemini@mvuadcnu",
@@ -116,9 +136,11 @@
       "actual_models": [
         "gpt-6.1-sol"
       ],
-      "usage_records": 45,
+      "usage_records": 67,
       "first_usage": "2026-10-30T01:22:41.450Z",
-      "last_usage": "2026-10-30T02:04:31.502Z",
+      "last_usage": "2026-10-30T02:23:32.344Z",
+      "events_sha256": "2982212c9f21ac9b3b76cffffd9e2b7e0974f65c7020a393fe2314b4c9f46fae",
+      "worker_status": "terminated_by_mayor_after_push_incident",
       "session_id": "e64f7ee5-cfd9-4a49-b21e-1619d651662e",
       "events_path": "/home/daniel_lin/.copilot/session-state/e64f7ee5-cfd9-4a49-b21e-1619d651662e/events.jsonl",
       "native_branch": "polecat/onyx/pr-mpc-gpt@mvuae3uv",
@@ -145,5 +167,10 @@
       ]
     }
   ],
-  "native_qualified": false
+  "native_qualified": false,
+  "execution_boundary_breached": true,
+  "incident_report": "experiments/mpc-research/execution-incident.md",
+  "remote_incident_branch": "polecat/onyx/pr-mpc-gpt@mvuae3uv",
+  "remote_incident_head": "2b231dd56f3766fc966ad3f1e97a56bdef8ac315",
+  "remote_cleanup_performed": false
 }

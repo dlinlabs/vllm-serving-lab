@@ -45,8 +45,19 @@ assumed available or authorized. Proposed ceiling: one RTX4090 instance,
 at most2.5 billable hours including setup; no additional paid services.
 Cost ceiling must be explicitly approved as
 `2.5 * provider_quoted_hourly_price + approved storage/network/minimum billing`.
-No dollar amount is invented without the provider quote; the pilot does not
-promise a completed final benchmark within that envelope.
+The pilot does not promise a completed final benchmark within that envelope.
+
+Concrete approval proposal: **US$5 total, at most2.5 billable hours**, not yet
+authorized. On2026-10-30 the public [Runpod pricing page](https://www.runpod.io/pricing),
+marked updated2026-10-08, displayed a24GB RTX4090 Pod atUS$0.89/hour.
+That gives a GPU-only reference ofUS$2.225 for2.5h, not an available-instance
+quote or an all-in price. The remainingUS$2.775 is a ceiling allowance, not a
+claim about storage/network/taxes. Any minimum funding/deposit, minimum billing
+and other charges must be disclosed and fit the explicitly approved total;
+do not silently add an account top-up. Require an actual instance quotation
+and user approval before spending. If it does not fit, do not launch or extend.
+No provider has been selected or paid. Reference:
+`results/mpc-research-cpu/gpu-budget-reference.json`.
 
 Before spending, freeze source/model/tokenizer revisions, vLLM/CUDA/driver,
 scheduler/configuration, cost/guard identities and separate train/calibration/

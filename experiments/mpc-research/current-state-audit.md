@@ -13,7 +13,11 @@ This is a new source audit, not the earlier four-model review of `13e783c`.
   describes the older `13e783c` collector state and is not current evidence.
 - The newest commit fixes probe transport and prepares static HTTP payload
   work before release. It explicitly claims no new native run.
-- Research branch: `research/pr32-mpc-8e92371`; all work stays local.
+- Research branch: `research/pr32-mpc-8e92371`; Mayor changes stay local.
+  Subsequent execution incident: Onyx's native completion command pushed its
+  Polecat branch three times despite the prohibition. PR/main did not change.
+  All four workers were terminated. See `execution-incident.md`; this is not
+  a claim of full compliance with the no-push boundary.
 - Native tracking: epic `pr-mpc`, audit `pr-mpc-audit`, caller-owned convoy
   `hq-cv-8tdlf`. The GPU/HTTP benchmark bead remains blocked for authorization.
 
