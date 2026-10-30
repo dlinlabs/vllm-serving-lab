@@ -51,6 +51,35 @@ class ActuationPermit:
         )
 
 
+@dataclass(frozen=True)
+class IdentificationPermit(ActuationPermit):
+    """Bounded open-loop assignments, never calibrated MPC authorization."""
+    run_id: str = ""
+    clock_domain: str = ""
+    expires_at: float = 0.0
+
+    def allows(self, expected: Identity) -> bool:
+        return (
+            self.approved is True and self.identity == expected
+            and expected.model_version == "native-id-unfitted-v1"
+            and expected.calibration_version == "unfitted-not-validated"
+            and isinstance(self.run_id, str) and bool(self.run_id)
+            and isinstance(self.clock_domain, str) and bool(self.clock_domain)
+            and finite(self.expires_at, positive=True)
+            and self.evidence == ()
+        )
+
+    def allows_assignment(self, snapshot, decision, now, domain):
+        return (
+            snapshot.clock_domain == domain == self.clock_domain
+            and snapshot.run_id == self.run_id
+            and now < self.expires_at
+            and 0 <= now - snapshot.sampled_at <= 0.5
+            and decision.reason == "identification_assignment" and decision.plan is None
+            and decision.budget in (16.0, 32.0)
+        )
+
+
 class GuardedActuator:
     def __init__(
         self, client: httpx.AsyncClient, parameters: ModelParameters,
@@ -66,6 +95,7 @@ class GuardedActuator:
         self.enabled = enabled
         self.max_age_s = max_age_s
         self.ttl = command_ttl_s
+        self.last_state_observation = None
 
     @contextmanager
     def _locked(self):
@@ -130,7 +160,10 @@ class GuardedActuator:
         self._sync_directory()
 
     async def _state(self) -> Snapshot:
+        self.last_state_observation = None
+        started = time.monotonic()
         response = await self.client.get("/admin/mpc/state")
+        received = time.monotonic()
         response.raise_for_status()
         document = response.json()
         require_guarded_capability(document)
@@ -146,6 +179,11 @@ class GuardedActuator:
         for mark in snapshot.requests:
             if mark.cost != self.parameters.cost_spec.estimate(mark.prompt_tokens, mark.max_tokens):
                 raise ValueError("cost_spec_mismatch")
+        self.last_state_observation = {
+            "run_id": snapshot.run_id, "clock_domain": snapshot.clock_domain,
+            "get_started_at": started, "get_received_at": received,
+            "sampled_at": snapshot.sampled_at, "budget_version": snapshot.budget_version,
+        }
         return snapshot
 
     async def submit(self, snapshot: Snapshot, decision: Decision) -> dict:
@@ -165,6 +203,10 @@ class GuardedActuator:
             or snapshot.budget not in self.parameters.supported_budgets
         ):
             return {"status": "blocked", "reason": "unsupported_decision"}
+        if isinstance(self.permit, IdentificationPermit) and not self.permit.allows_assignment(
+            snapshot, decision, time.monotonic(), clock_domain(),
+        ):
+            return {"status": "not_authorized"}
         with self._locked():
             if self._pending() is not None:
                 return {"status": "pending"}
@@ -172,7 +214,13 @@ class GuardedActuator:
             if current.run_id != snapshot.run_id or current.budget_version != snapshot.budget_version:
                 return {"status": "blocked", "reason": "state_changed"}
             now = time.monotonic()
+            if isinstance(self.permit, IdentificationPermit) and not self.permit.allows_assignment(
+                current, decision, now, clock_domain(),
+            ):
+                return {"status": "not_authorized"}
             not_after = min(now + self.ttl, snapshot.sampled_at + self.max_age_s)
+            if isinstance(self.permit, IdentificationPermit):
+                not_after = min(not_after, self.permit.expires_at, snapshot.sampled_at + 0.5)
             if now >= not_after:
                 return {"status": "blocked", "reason": "stale_snapshot"}
             command = {
@@ -200,7 +248,11 @@ class GuardedActuator:
                 and snapshot.sampled_at <= reply["applied_at"] < not_after
             ):
                 self._clear()
-                return {"status": "applied", "acknowledgment": reply}
+                result = {"status": "applied", "acknowledgment": reply}
+                if isinstance(self.permit, IdentificationPermit):
+                    result.update(scope="identification", command=command,
+                                  state_observation=self.last_state_observation)
+                return result
             # Even a server error may follow mutation; resolve through CAS/expiry.
             return {"status": "pending", "operation_id": command["operation_id"]}
 

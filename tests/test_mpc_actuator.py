@@ -6,7 +6,7 @@ import httpx
 import pytest
 
 from mpc_lab import actuator
-from mpc_lab.actuator import ActuationPermit, GuardedActuator
+from mpc_lab.actuator import ActuationPermit, GuardedActuator, IdentificationPermit
 from mpc_lab.contracts import (
     Decision, GUARDED_CAPABILITY, ModelParameters, Snapshot,
 )
@@ -56,6 +56,42 @@ def test_unqualified_and_disabled_actuation_never_even_contacts_server(monkeypat
         await client.aclose()
     asyncio.run(run())
     assert calls == []
+
+
+def test_identification_assignment_needs_no_fake_calibration_but_cannot_authorize_mpc(
+    monkeypatch, tmp_path,
+):
+    def apply(request, now, document):
+        command = json.loads(request.content)
+        assert command["not_after"] <= 100.05
+        return httpx.Response(200, json={
+            "status": "applied", "operation_id": command["operation_id"],
+            "run_id": command["run_id"], "clock_domain": command["clock_domain"],
+            "budget": command["budget"], "budget_version": 1, "applied_at": now[0],
+        })
+    driver, client, state, decision, now, document, calls = fixture(monkeypatch, tmp_path, apply)
+    parameters = replace(driver.parameters, model_version="native-id-unfitted-v1",
+                         calibration_version="unfitted-not-validated")
+    state = replace(state, identity=parameters.identity)
+    decision = replace(decision, identity=parameters.identity)
+    driver.parameters = parameters
+    document.update(snapshot_to_dict(state))
+    driver.permit = IdentificationPermit(parameters.identity, approved=True, run_id="run",
+                                         clock_domain="test-clock", expires_at=100.05)
+    async def run():
+        assert (await driver.submit(state, decision))["status"] == "not_authorized"
+        assert not calls
+        assigned = replace(decision, reason="identification_assignment")
+        driver.permit = replace(driver.permit, run_id="other")
+        assert (await driver.submit(state, assigned))["status"] == "not_authorized"
+        driver.permit = replace(driver.permit, run_id="run")
+        result = await driver.submit(state, assigned)
+        assert result["status"] == "applied" and result["scope"] == "identification"
+        now[0] = 100.06
+        assert (await driver.submit(state, assigned))["status"] == "not_authorized"
+        await client.aclose()
+    asyncio.run(run())
+    assert calls == ["GET", "POST"]
 
 
 def test_acknowledged_command_is_persisted_before_post_and_cleared(monkeypatch, tmp_path):

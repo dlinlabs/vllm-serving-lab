@@ -220,6 +220,20 @@ def mpc_now():
 def mpc_changed():
     global mpc_sequence
     mpc_sequence += 1
+    if MPC_LAB_ENABLED and telemetry.enabled:
+        marks = tuple(mpc_requests.values())
+        reserved = math.fsum(mark.cost for mark in marks)
+        telemetry.emit(
+            "mpc_ledger", clock_domain=mpc_clock_domain, identity=asdict(mpc_identity),
+            sequence=mpc_sequence, effective_at=mpc_now(), reserved_cost=reserved,
+            running=len(marks),
+            complete=(
+                len(marks) == state["current_in_flight"]
+                and math.isclose(reserved, state["current_admitted_cost"],
+                                 rel_tol=1e-12, abs_tol=1e-9)
+            ),
+            budget=state["admission_budget"], budget_version=state["budget_version"],
+        )
 
 
 async def mpc_first_content(request_id):

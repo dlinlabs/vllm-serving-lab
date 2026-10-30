@@ -74,6 +74,38 @@ def control_state(gateway):
     return dict(gateway.state), dict(gateway.mpc_operations), gateway.mpc_sequence
 
 
+def test_standard_chat_and_atomic_ledger_capture_over_mock_http(load_gateway, monkeypatch):
+    from mpc_lab.http_capture import capture_chat
+    from mpc_lab.identification import reserved_cost_at
+    gateway = load_gateway(settings={"BENCHMARK_REQUEST_IDS": "1"})
+    gateway.telemetry.enabled = True
+    real_client = httpx.AsyncClient
+    async def upstream(sent):
+        return httpx.Response(200, content=(
+            CONTENT + b'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n' + DONE
+        ), headers={"content-type": "text/event-stream"})
+    async def scenario():
+        async with client_for(gateway) as client:
+            initial = snapshot_from_dict((await client.get("/admin/mpc/state")).json())
+            monkeypatch.setattr(gateway.httpx, "AsyncClient", lambda: real_client(
+                transport=httpx.MockTransport(upstream),
+            ))
+            row = await capture_chat(client, "/v1/chat/completions",
+                                     {"messages": [{"role": "user", "content": "hello"}],
+                                      "max_tokens": 64}, "a" * 32, 0, enabled=True)
+            assert row["status"] == "complete"
+            final = snapshot_from_dict((await client.get("/admin/mpc/state")).json())
+            frames = [r for r in gateway.telemetry.records if r["event"] == "mpc_ledger"]
+            assert len(frames) == 3 and frames[0]["reserved_cost"] > 0
+            assert reserved_cost_at(
+                initial, frames, final, frames[0]["effective_at"],
+                dropped_records=gateway.telemetry.dropped,
+                write_errors=gateway.telemetry.write_errors,
+            ) == frames[0]["reserved_cost"]
+            assert final.reserved == 0 and frames[-1]["reserved_cost"] == 0
+    asyncio.run(scenario())
+
+
 def test_default_off_preserves_legacy(load_gateway):
     gateway = load_gateway("false")
     async def scenario():

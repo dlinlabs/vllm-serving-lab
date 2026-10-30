@@ -12,6 +12,31 @@ prep = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(prep)
 
 
+def test_v2_protocol_uses_independent_seed_blocks_and_no_heldout_arrival_generation():
+    from collections import Counter, defaultdict
+    source = path.with_name("native_identification_protocol.py")
+    module_spec = importlib.util.spec_from_file_location("native_identification_protocol", source)
+    protocol_module = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(protocol_module)
+    protocol = protocol_module.build_protocol()
+    assert protocol == protocol_module.build_protocol()
+    pairs = defaultdict(list)
+    for episode in protocol["episodes"]:
+        pairs[episode["seed_block"]].append(episode)
+    assert len(pairs) == 24
+    assert Counter(v[0]["split"] for v in pairs.values()) == {
+        "train": 12, "calibration": 4, "validation": 4, "test": 4,
+    }
+    for episodes in pairs.values():
+        a, b = episodes
+        assert a["arrival_tape_key"] == b["arrival_tape_key"]
+        assert a["prompt_tape_key"] == b["prompt_tape_key"]
+        assert a["split"] == b["split"] and a["arm"] != b["arm"]
+        assert all(x["at_s"] == y["at_s"] and x["budget"] + y["budget"] == 48
+                   for x, y in zip(a["schedule"], b["schedule"]))
+        assert "arrivals" not in a and "arrivals" not in b
+
+
 def row(rid="r", **changes):
     return dict(
         request_id=rid, response_request_id=rid, clock_domain="boot",
