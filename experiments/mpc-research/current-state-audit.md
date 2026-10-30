@@ -37,6 +37,8 @@ excerpts, not a fresh independent raw audit.
 | Layer | Evidence | What it does not establish |
 |---|---|---|
 | Current local CPU | 289 passed, 1 skipped in 12.58s, five selected test files; XML and log under `results/mpc-research-cpu/` | Full native CPU acceptance, GPU timing, HTTP accuracy or MPC benefit |
+| Unfiltered baseline, Python 3.14 | 1718 passed, 4 failed, 2 skipped in 222.31s; `baseline-full-junit.xml` | Not a green baseline: four setup tests require Python 3.12; rerun in an isolated 3.12 environment without changing tests |
+| Unfiltered baseline, Python 3.12.16 | 1723 passed, 1 skipped in 359.03s; `baseline-py312-junit.xml` | Native vLLM schema regression remains skipped; no GPU/HTTP/MPC acceptance |
 | Historical native controlled `2ebb185` | Source-bound report: 240 trials; 144 held queue samples pass; F0/entry forecasts identical | Correction gain or cross-host robustness |
 | Historical native TRAIN `efca3e4` | Source-bound reconstruction: 40 warmups + 48 TRAIN; 21/24 readiness pass, errors 14.225/11.242/21.795ms | Held controlled or HTTP acceptance; none were attempted |
 | Shadow `b7e007b` | Supplied evidence: prediction chronology failures from skipped LIGHT forecasts and posting-lag failures | Native interval coverage/usefulness; absent predictions are not accuracy misses |
@@ -90,6 +92,36 @@ pytest 9.2.0, pydantic 2.14.1, httpx 0.28.1 and fastapi 0.162.0.
 Neither vLLM nor torch is installed in the selected CPU environment.
 The installed-vLLM schema regression is therefore skipped, not passed.
 No GPU resources or inference backend were started.
+
+The unfiltered baseline exposed a toolchain mismatch, not a reason to weaken the
+Python 3.12 setup contract. A separate CPython 3.12.16 environment was restored
+using uv after the required interpreter was found missing. Its dependencies come
+from the unchanged `requirements-cpu-tests.txt`; the complete rerun passed all
+1723 runnable CPU/mock tests with the installed-vLLM case explicitly skipped.
+The installed-vLLM requirement remains separate. Exact installed packages are
+preserved in `results/mpc-research-cpu/python312-requirements.txt`.
+
+## Native execution qualification
+
+The four new native Polecats are obsidian/Opus, quartz/Astra, jasper/Gemini and
+onyx/Sol. Actual Copilot usage records, not just profile names, identify all four
+requested models. Round reports remain independent until all four are present.
+
+Worker command sandboxes deny Host-loopback Dolt access even though Mayor can
+read/write the same database. No sandbox was disabled or bypassed. Mayor delivered
+the common offline assignment through native `gt nudge`; workers read local
+source and write their own reports while Mayor performs authorized Beads updates.
+Initial generic startup recipes attempted `gt done` before the assignment could
+be loaded. Their generated local configuration auto-saves are not research
+implementation and will not be integrated; no history is rewritten.
+
+Convoy creation persisted nine `tracks` edges but initially stored issue type
+`task`. A native `bd update --type convoy` repaired this record. `gt convoy status`
+now finds the convoy, but displays 0/0 because the current dependency listing
+omits targets in another database. Raw native dependency records retain all nine
+PR32 IDs. Completion will be reconciled against the actual PR32 Beads, not this
+misleading aggregate. No global daemon, model profile or sandbox-rig setting was
+changed.
 
 ## Problem statement and acceptance separation
 

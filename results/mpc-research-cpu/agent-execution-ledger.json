@@ -1,0 +1,89 @@
+{
+  "schema": "pr32-native-research-execution-v1",
+  "source_sha": "8e92371f342be98a50682bf4e2ddbb014665498b",
+  "convoy": "hq-cv-8tdlf",
+  "phase": "round1_in_progress",
+  "workers": [
+    {
+      "polecat": "obsidian",
+      "profile": "copilot-opus",
+      "actual_model": "claude-opus-5.5",
+      "usage_records": {
+        "claude-opus-5.5": 44
+      },
+      "usage_first": "2026-10-30T01:22:38.899Z",
+      "usage_last": "2026-10-30T01:32:55.480Z",
+      "session_id": "7cb63bd9-0008-4311-bbc0-583d866fe44c",
+      "execution_log": "/home/daniel_lin/.copilot/session-state/7cb63bd9-0008-4311-bbc0-583d866fe44c/events.jsonl",
+      "execution_log_snapshot_sha256": "859348b454cc0275be70167d13f5fe53c1e7cbf0c0223c9e0991166a8b0760ba",
+      "native_bead": "pr-mpc-opus",
+      "branch": "polecat/obsidian/pr-mpc-opus@mvuabvov",
+      "reports": []
+    },
+    {
+      "polecat": "quartz",
+      "profile": "copilot-astra",
+      "actual_model": "gpt-6-astra",
+      "usage_records": {
+        "gpt-6-astra": 17
+      },
+      "usage_first": "2026-10-30T01:22:40.518Z",
+      "usage_last": "2026-10-30T01:35:26.932Z",
+      "session_id": "4408b6a4-9597-4d9c-9852-7ef0e1463943",
+      "execution_log": "/home/daniel_lin/.copilot/session-state/4408b6a4-9597-4d9c-9852-7ef0e1463943/events.jsonl",
+      "execution_log_snapshot_sha256": "182e7712f588a972121d3dcfd6b090764f4ca22e5ad871941fbb498576102b5e",
+      "native_bead": "pr-mpc-astra",
+      "branch": "polecat/quartz/pr-mpc-astra@mvuacm2e",
+      "reports": [
+        {
+          "path": "/home/daniel_lin/gt/pr32/polecats/quartz/pr32/experiments/mpc-research/proposals/astra-round1.md",
+          "bytes": 54397,
+          "sha256": "dbc98841590575cf7d2bbeceb7aa04a09cf79871b309580b0930503bf30754d0"
+        }
+      ]
+    },
+    {
+      "polecat": "jasper",
+      "profile": "copilot-gemini",
+      "actual_model": "gemini-3.8-flash",
+      "usage_records": {
+        "gemini-3.8-flash": 28
+      },
+      "usage_first": "2026-10-30T01:22:39.970Z",
+      "usage_last": "2026-10-30T01:28:23.179Z",
+      "session_id": "e11dddcb-155e-4326-ac42-ee1d7baaf993",
+      "execution_log": "/home/daniel_lin/.copilot/session-state/e11dddcb-155e-4326-ac42-ee1d7baaf993/events.jsonl",
+      "execution_log_snapshot_sha256": "179eb71a24da1b9d67ad4300a39c86908bd1d40b3329babdf47984192e5b6abd",
+      "native_bead": "pr-mpc-gemini",
+      "branch": "polecat/jasper/pr-mpc-gemini@mvuadcnu",
+      "reports": []
+    },
+    {
+      "polecat": "onyx",
+      "profile": "copilot-gpt",
+      "actual_model": "gpt-6.1-sol",
+      "usage_records": {
+        "gpt-6.1-sol": 16
+      },
+      "usage_first": "2026-10-30T01:22:41.450Z",
+      "usage_last": "2026-10-30T01:33:32.658Z",
+      "session_id": "e64f7ee5-cfd9-4a49-b21e-1619d651662e",
+      "execution_log": "/home/daniel_lin/.copilot/session-state/e64f7ee5-cfd9-4a49-b21e-1619d651662e/events.jsonl",
+      "execution_log_snapshot_sha256": "97f4d097c71b2e598efe90c69e1e9a8fcc1ad7c855791ee12aa77c61964226b5",
+      "native_bead": "pr-mpc-gpt",
+      "branch": "polecat/onyx/pr-mpc-gpt@mvuae3uv",
+      "reports": [
+        {
+          "path": "/home/daniel_lin/gt/pr32/polecats/onyx/pr32/experiments/mpc-research/proposals/gpt-round1.md",
+          "bytes": 63986,
+          "sha256": "84a0eb0ad207ae4cb3d42133c54786f784f9da846c6d3a00bf1bf281d959be97"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "usage records verify model execution, not correctness of conclusions",
+    "worker loopback sandbox blocks native DB; Mayor owns native tracking",
+    "original startup auto-save configuration commits are excluded from implementation"
+  ]
+}
