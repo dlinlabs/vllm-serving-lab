@@ -1,0 +1,4882 @@
+{
+  "role": "preregistered hypothetical CPU predictions; not measured GPU results",
+  "source_sha256": {
+    "prefill_design.py": "5e4eae9b4e8caba5baa300e78cac1fc3d75224f9804e6e08b1af3b1fb3ecd7aa",
+    "prefill_identifiability.py": "e03636ac8b0f8695c43c90d672eeb6c0f1e557ea5698b316ccdf0bf4b9e4ead8",
+    "prefill_validation.py": "d1b5006f8f6ee20b85cc697b54125249bfacbcb45699f1ce7a4d503bdf15f075",
+    "scripts/build_prefill_design.py": "c89f01578791112a5821237d137eeea3dd90003882fc5fac6e179be878f302c1",
+    "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e",
+    "evaluate_low_cap_frozen.py": "0bf919d910f23480db3cc7b3069ac9f12e42f5d67e99c62ce70ceb490842ead7"
+  },
+  "frozen_coefficients": [
+    0.00918083968026616,
+    0.0003168517008371403,
+    5.341461305169013e-05
+  ],
+  "legacy_adapter": "All D16 backgrounds already decoding with255 remaining outputs at barrier; context ignored by frozen code. Raw engine and old empirical TTFT correction are separate. Generic scenario includes background preparation for budgeting.",
+  "quadratic_coefficient_role": "1.5e-9 and3.15e-9 are unvalidated sensitivities per full L^2, not fitted bounds; applied incrementally as2*k*attention_pairs",
+  "predictions": [
+    {
+      "case": "single-L1024-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06387740344519685,
+              "ttft_s": 0.06387740344519685,
+              "prefill_complete_s": 0.06387740344519685,
+              "completed_s": 1.2700842088453197
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.2700842088453197
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.2700842088453197,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06387740344519685,
+              "ttft_s": 0.06387740344519685,
+              "prefill_complete_s": 0.06387740344519685,
+              "completed_s": 1.2700842088453197
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.2700842088453197
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.2700842088453197,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06545180344519685,
+              "ttft_s": 0.06545180344519685,
+              "prefill_complete_s": 0.06545180344519685,
+              "completed_s": 1.2716586088453197
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.2716586088453197
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.2716586088453197,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06718364344519685,
+              "ttft_s": 0.06718364344519685,
+              "prefill_complete_s": 0.06718364344519685,
+              "completed_s": 1.2733904488453196
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.2733904488453196
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.2733904488453196,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.07305824312546301,
+              "ttft_s": 0.07305824312546301,
+              "prefill_complete_s": 0.07305824312546301,
+              "completed_s": 1.2792650485255859
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.2792650485255859
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.2792650485255859,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.06387740344519685,
+            "raw_ttft_s": 0.06387740344519685,
+            "old_empirical_corrected_ttft_s": 0.05701143649921254
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.06387740344519685,
+            "raw_ttft_s": 0.06387740344519685,
+            "old_empirical_corrected_ttft_s": 0.05701143649921254
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L2048-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 1.3247807726102505
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.3247807726102505
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.3247807726102505,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 1.3247807726102505
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.3247807726102505
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.3247807726102505,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12486849521012754,
+              "ttft_s": 0.12486849521012754,
+              "prefill_complete_s": 0.12486849521012754,
+              "completed_s": 1.3310753006102505
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.3310753006102505
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.3310753006102505,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.13179247601012756,
+              "ttft_s": 0.13179247601012756,
+              "prefill_complete_s": 0.13179247601012756,
+              "completed_s": 1.3379992814102506
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.3379992814102506
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.3379992814102506,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.14611648625092602,
+              "ttft_s": 0.14611648625092602,
+              "prefill_complete_s": 0.14611648625092602,
+              "completed_s": 1.352323291651049
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.352323291651049
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.352323291651049,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L4096-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.22796709473998894,
+              "ttft_s": 0.22796709473998894,
+              "prefill_complete_s": 0.22796709473998894,
+              "completed_s": 1.4341739001401124
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.4341739001401124
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.4341739001401124,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509,
+              "completed_s": 1.4433547398203785
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.4433547398203785
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.4433547398203785,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2623199024202551,
+              "ttft_s": 0.2623199024202551,
+              "prefill_complete_s": 0.2623199024202551,
+              "completed_s": 1.4685267078203785
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.4685267078203785
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.4685267078203785,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516,
+              "completed_s": 1.4962158726203787
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.4962158726203787
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.4962158726203787,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2922329725018521,
+              "ttft_s": 0.2922329725018521,
+              "prefill_complete_s": 0.2922329725018521,
+              "completed_s": 1.4984397779019758
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.4984397779019758
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.4984397779019758,
+          "release_s": 0.0,
+          "steps": 135,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.22796709473998894,
+            "raw_ttft_s": 0.22796709473998894,
+            "old_empirical_corrected_ttft_s": 0.22110112779400462
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L7168-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.392056786034781,
+              "ttft_s": 0.392056786034781,
+              "prefill_complete_s": 0.392056786034781,
+              "completed_s": 1.5982635914349053
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.5982635914349053
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.5982635914349053,
+          "release_s": 0.0,
+          "steps": 128,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4195993050755795,
+              "ttft_s": 0.4195993050755795,
+              "prefill_complete_s": 0.4195993050755795,
+              "completed_s": 1.625806110475704
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.625806110475704
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.625806110475704,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4966803930755795,
+              "ttft_s": 0.4966803930755795,
+              "prefill_complete_s": 0.4966803930755795,
+              "completed_s": 1.7028871984757044
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.7028871984757044
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.7028871984757044,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5814695898755795,
+              "ttft_s": 0.5814695898755795,
+              "prefill_complete_s": 0.5814695898755795,
+              "completed_s": 1.7876763952757044
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.7876763952757044
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.7876763952757044,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5114077018782412,
+              "ttft_s": 0.5114077018782412,
+              "prefill_complete_s": 0.5114077018782412,
+              "completed_s": 1.7176145072783662
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.7176145072783662
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.7176145072783662,
+          "release_s": 0.0,
+          "steps": 141,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.392056786034781,
+            "raw_ttft_s": 0.392056786034781,
+            "old_empirical_corrected_ttft_s": 0.3851908190887967
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4195993050755795,
+            "raw_ttft_s": 0.4195993050755795,
+            "old_empirical_corrected_ttft_s": 0.41273333812959523
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-uniform-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.2103026082357067
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.2103026082357067
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943,
+              "completed_s": 2.220117151317647
+            },
+            "foreground-3": {
+              "first_s": 0.9042717977838752,
+              "ttft_s": 0.9042717977838752,
+              "prefill_complete_s": 0.9042717977838752,
+              "completed_s": 2.22961484269875
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.22961484269875
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.22961484269875,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509,
+              "completed_s": 2.215681227505927
+            },
+            "foreground-1": {
+              "first_s": 0.5936601473139941,
+              "ttft_s": 0.5936601473139941,
+              "prefill_complete_s": 0.5936601473139941,
+              "completed_s": 2.2460754118542594
+            },
+            "foreground-2": {
+              "first_s": 0.8318618300853909,
+              "ttft_s": 0.8318618300853909,
+              "prefill_complete_s": 0.8318618300853909,
+              "completed_s": 2.26570449801814
+            },
+            "foreground-3": {
+              "first_s": 0.9618916494721693,
+              "ttft_s": 0.9618916494721693,
+              "prefill_complete_s": 0.9618916494721693,
+              "completed_s": 2.2846998807803462
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.2846998807803462
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.2846998807803462,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2623199024202551,
+              "ttft_s": 0.2623199024202551,
+              "prefill_complete_s": 0.2623199024202551,
+              "completed_s": 2.3163690995059265
+            },
+            "foreground-1": {
+              "first_s": 0.650280188313994,
+              "ttft_s": 0.650280188313994,
+              "prefill_complete_s": 0.650280188313994,
+              "completed_s": 2.346763283854259
+            },
+            "foreground-2": {
+              "first_s": 0.9136293170853909,
+              "ttft_s": 0.9136293170853909,
+              "prefill_complete_s": 0.9136293170853909,
+              "completed_s": 2.3663923700181395
+            },
+            "foreground-3": {
+              "first_s": 1.0625795214721694,
+              "ttft_s": 1.0625795214721694,
+              "prefill_complete_s": 1.0625795214721694,
+              "completed_s": 2.3853877527803458
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.3853877527803458
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.3853877527803458,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516,
+              "completed_s": 2.4271257587059267
+            },
+            "foreground-1": {
+              "first_s": 0.7125622334139942,
+              "ttft_s": 0.7125622334139942,
+              "prefill_complete_s": 0.7125622334139942,
+              "completed_s": 2.457519943054259
+            },
+            "foreground-2": {
+              "first_s": 1.003573552785391,
+              "ttft_s": 1.003573552785391,
+              "prefill_complete_s": 1.003573552785391,
+              "completed_s": 2.4771490292181397
+            },
+            "foreground-3": {
+              "first_s": 1.1733361806721696,
+              "ttft_s": 1.1733361806721696,
+              "prefill_complete_s": 1.1733361806721696,
+              "completed_s": 2.496144411980346
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.496144411980346
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.496144411980346,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206,
+              "completed_s": 2.2755190411000807
+            },
+            "foreground-1": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206,
+              "completed_s": 2.2755190411000807
+            },
+            "foreground-2": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206,
+              "completed_s": 2.2755190411000807
+            },
+            "foreground-3": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206,
+              "completed_s": 2.2755190411000807
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.2755190411000807
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.2755190411000807,
+          "release_s": 0.0,
+          "steps": 135,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9042717977838752,
+            "raw_ttft_s": 0.9042717977838752,
+            "old_empirical_corrected_ttft_s": 0.8974058308378909
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.5936601473139941,
+            "raw_ttft_s": 0.5936601473139941,
+            "old_empirical_corrected_ttft_s": 0.5867941803680098
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8318618300853909,
+            "raw_ttft_s": 0.8318618300853909,
+            "old_empirical_corrected_ttft_s": 0.8249958631394066
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9618916494721693,
+            "raw_ttft_s": 0.9618916494721693,
+            "old_empirical_corrected_ttft_s": 0.955025682526185
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-mixed-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.2103026082357067
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.2103026082357067
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943,
+              "completed_s": 2.220117151317647
+            },
+            "foreground-3": {
+              "first_s": 0.9042717977838752,
+              "ttft_s": 0.9042717977838752,
+              "prefill_complete_s": 0.9042717977838752,
+              "completed_s": 2.22961484269875
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.22961484269875
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.22961484269875,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.207450942928172
+            },
+            "foreground-1": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.207450942928172
+            },
+            "foreground-2": {
+              "first_s": 0.5949773327529214,
+              "ttft_s": 0.5949773327529214,
+              "prefill_complete_s": 0.5949773327529214,
+              "completed_s": 2.2467091152559333
+            },
+            "foreground-3": {
+              "first_s": 0.9641096113780293,
+              "ttft_s": 0.9641096113780293,
+              "prefill_complete_s": 0.9641096113780293,
+              "completed_s": 2.284699880780346
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.284699880780346
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.284699880780346,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12172276721012754,
+              "ttft_s": 0.12172276721012754,
+              "prefill_complete_s": 0.12172276721012754,
+              "completed_s": 2.364761918928172
+            },
+            "foreground-1": {
+              "first_s": 0.12172276721012754,
+              "ttft_s": 0.12172276721012754,
+              "prefill_complete_s": 0.12172276721012754,
+              "completed_s": 2.364761918928172
+            },
+            "foreground-2": {
+              "first_s": 0.6767571287529214,
+              "ttft_s": 0.6767571287529214,
+              "prefill_complete_s": 0.6767571287529214,
+              "completed_s": 2.404020091255933
+            },
+            "foreground-3": {
+              "first_s": 1.1214205873780294,
+              "ttft_s": 1.1214205873780294,
+              "prefill_complete_s": 1.1214205873780294,
+              "completed_s": 2.4420108567803456
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.4420108567803456
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4420108567803456,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12518644721012753,
+              "ttft_s": 0.12518644721012753,
+              "prefill_complete_s": 0.12518644721012753,
+              "completed_s": 2.537803992528172
+            },
+            "foreground-1": {
+              "first_s": 0.12518644721012753,
+              "ttft_s": 0.12518644721012753,
+              "prefill_complete_s": 0.12518644721012753,
+              "completed_s": 2.537803992528172
+            },
+            "foreground-2": {
+              "first_s": 0.7667149043529214,
+              "ttft_s": 0.7667149043529214,
+              "prefill_complete_s": 0.7667149043529214,
+              "completed_s": 2.577062164855933
+            },
+            "foreground-3": {
+              "first_s": 1.2944626609780294,
+              "ttft_s": 1.2944626609780294,
+              "prefill_complete_s": 1.2944626609780294,
+              "completed_s": 2.6150529303803456
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.6150529303803456
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.6150529303803456,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509,
+              "completed_s": 2.2128295621983924
+            },
+            "foreground-1": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509,
+              "completed_s": 2.2128295621983924
+            },
+            "foreground-2": {
+              "first_s": 1.0112812165827085,
+              "ttft_s": 1.0112812165827085,
+              "prefill_complete_s": 1.0112812165827085,
+              "completed_s": 2.330604079181676
+            },
+            "foreground-3": {
+              "first_s": 1.0112812165827085,
+              "ttft_s": 1.0112812165827085,
+              "prefill_complete_s": 1.0112812165827085,
+              "completed_s": 2.330604079181676
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.330604079181676
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.330604079181676,
+          "release_s": 0.0,
+          "steps": 141,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9042717977838752,
+            "raw_ttft_s": 0.9042717977838752,
+            "old_empirical_corrected_ttft_s": 0.8974058308378909
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.5949773327529214,
+            "raw_ttft_s": 0.5949773327529214,
+            "old_empirical_corrected_ttft_s": 0.5881113658069371
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9641096113780293,
+            "raw_ttft_s": 0.9641096113780293,
+            "old_empirical_corrected_ttft_s": 0.957243644432045
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-reverse-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.2099857565348695
+            },
+            "foreground-1": {
+              "first_s": 0.8937701366872088,
+              "ttft_s": 0.8937701366872088,
+              "prefill_complete_s": 0.8937701366872088,
+              "completed_s": 2.220117151317647
+            },
+            "foreground-2": {
+              "first_s": 0.8937701366872088,
+              "ttft_s": 0.8937701366872088,
+              "prefill_complete_s": 0.8937701366872088,
+              "completed_s": 2.220117151317647
+            },
+            "foreground-3": {
+              "first_s": 0.9039549460830381,
+              "ttft_s": 0.9039549460830381,
+              "prefill_complete_s": 0.9039549460830381,
+              "completed_s": 2.22961484269875
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.22961484269875
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.22961484269875,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4742958688405102,
+              "ttft_s": 0.4742958688405102,
+              "prefill_complete_s": 0.4742958688405102,
+              "completed_s": 2.2346766102681332
+            },
+            "foreground-1": {
+              "first_s": 0.9496454860321623,
+              "ttft_s": 0.9496454860321623,
+              "prefill_complete_s": 0.9496454860321623,
+              "completed_s": 2.275202189399243
+            },
+            "foreground-2": {
+              "first_s": 0.9496454860321623,
+              "ttft_s": 0.9496454860321623,
+              "prefill_complete_s": 0.9496454860321623,
+              "completed_s": 2.275202189399243
+            },
+            "foreground-3": {
+              "first_s": 0.9599905392671466,
+              "ttft_s": 0.9599905392671466,
+              "prefill_complete_s": 0.9599905392671466,
+              "completed_s": 2.2846998807803462
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.2846998807803462
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.2846998807803462,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5529513568405102,
+              "ttft_s": 0.5529513568405102,
+              "prefill_complete_s": 0.5529513568405102,
+              "completed_s": 2.3919875862681335
+            },
+            "foreground-1": {
+              "first_s": 1.1069441920321623,
+              "ttft_s": 1.1069441920321623,
+              "prefill_complete_s": 1.1069441920321623,
+              "completed_s": 2.4325131653992433
+            },
+            "foreground-2": {
+              "first_s": 1.1069441920321623,
+              "ttft_s": 1.1069441920321623,
+              "prefill_complete_s": 1.1069441920321623,
+              "completed_s": 2.4325131653992433
+            },
+            "foreground-3": {
+              "first_s": 1.1173015152671468,
+              "ttft_s": 1.1173015152671468,
+              "prefill_complete_s": 1.1173015152671468,
+              "completed_s": 2.4420108567803465
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.4420108567803465
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4420108567803465,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.6394723936405102,
+              "ttft_s": 0.6394723936405102,
+              "prefill_complete_s": 0.6394723936405102,
+              "completed_s": 2.565029659868133
+            },
+            "foreground-1": {
+              "first_s": 1.2799727686321622,
+              "ttft_s": 1.2799727686321622,
+              "prefill_complete_s": 1.2799727686321622,
+              "completed_s": 2.605555238999243
+            },
+            "foreground-2": {
+              "first_s": 1.2799727686321622,
+              "ttft_s": 1.2799727686321622,
+              "prefill_complete_s": 1.2799727686321622,
+              "completed_s": 2.605555238999243
+            },
+            "foreground-3": {
+              "first_s": 1.2903435888671466,
+              "ttft_s": 1.2903435888671466,
+              "prefill_complete_s": 1.2903435888671466,
+              "completed_s": 2.615052930380346
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.615052930380346
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.615052930380346,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 1.0112812165827085,
+              "ttft_s": 1.0112812165827085,
+              "prefill_complete_s": 1.0112812165827085,
+              "completed_s": 2.330604079181676
+            },
+            "foreground-1": {
+              "first_s": 1.0112812165827085,
+              "ttft_s": 1.0112812165827085,
+              "prefill_complete_s": 1.0112812165827085,
+              "completed_s": 2.330604079181676
+            },
+            "foreground-2": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509,
+              "completed_s": 2.2128295621983924
+            },
+            "foreground-3": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509,
+              "completed_s": 2.2128295621983924
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.330604079181676
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.330604079181676,
+          "release_s": 0.0,
+          "steps": 141,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.8937701366872088,
+            "raw_ttft_s": 0.8937701366872088,
+            "old_empirical_corrected_ttft_s": 0.8869041697412245
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8937701366872088,
+            "raw_ttft_s": 0.8937701366872088,
+            "old_empirical_corrected_ttft_s": 0.8869041697412245
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9039549460830381,
+            "raw_ttft_s": 0.9039549460830381,
+            "old_empirical_corrected_ttft_s": 0.8970889791370538
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4742958688405102,
+            "raw_ttft_s": 0.4742958688405102,
+            "old_empirical_corrected_ttft_s": 0.46742990189452593
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9496454860321623,
+            "raw_ttft_s": 0.9496454860321623,
+            "old_empirical_corrected_ttft_s": 0.942779519086178
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9496454860321623,
+            "raw_ttft_s": 0.9496454860321623,
+            "old_empirical_corrected_ttft_s": 0.942779519086178
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9599905392671466,
+            "raw_ttft_s": 0.9599905392671466,
+            "old_empirical_corrected_ttft_s": 0.9531245723211623
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at50-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.277257352722818
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.277257352722818
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943,
+              "completed_s": 2.2873887475055956
+            },
+            "foreground-3": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.9316200796663405,
+              "prefill_complete_s": 0.9316200796663405,
+              "completed_s": 2.297203290587536
+            },
+            "sentinel": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.8816200796663405,
+              "prefill_complete_s": 0.9316200796663405,
+              "completed_s": 2.297203290587536
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.297203290587536
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.297203290587536,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.2725045772102606
+            },
+            "foreground-1": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.2725045772102606
+            },
+            "foreground-2": {
+              "first_s": 0.5949773327529214,
+              "ttft_s": 0.5949773327529214,
+              "prefill_complete_s": 0.5949773327529214,
+              "completed_s": 2.3130301563413704
+            },
+            "foreground-3": {
+              "first_s": 0.9914578932604946,
+              "ttft_s": 0.9914578932604946,
+              "prefill_complete_s": 0.9914578932604946,
+              "completed_s": 2.3522883286691316
+            },
+            "sentinel": {
+              "first_s": 0.9914578932604946,
+              "ttft_s": 0.9414578932604946,
+              "prefill_complete_s": 0.9914578932604946,
+              "completed_s": 2.3522883286691316
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.3522883286691316
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.3522883286691316,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12093633521012755,
+              "ttft_s": 0.12093633521012755,
+              "prefill_complete_s": 0.12093633521012755,
+              "completed_s": 2.4506567692102608
+            },
+            "foreground-1": {
+              "first_s": 0.12093633521012755,
+              "ttft_s": 0.12093633521012755,
+              "prefill_complete_s": 0.12093633521012755,
+              "completed_s": 2.4506567692102608
+            },
+            "foreground-2": {
+              "first_s": 0.6877548887529213,
+              "ttft_s": 0.6877548887529213,
+              "prefill_complete_s": 0.6877548887529213,
+              "completed_s": 2.4911823483413706
+            },
+            "foreground-3": {
+              "first_s": 1.1696100852604947,
+              "ttft_s": 1.1696100852604947,
+              "prefill_complete_s": 1.1696100852604947,
+              "completed_s": 2.530440520669132
+            },
+            "sentinel": {
+              "first_s": 1.1696100852604947,
+              "ttft_s": 1.1196100852604947,
+              "prefill_complete_s": 1.1696100852604947,
+              "completed_s": 2.530440520669132
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.530440520669132
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.530440520669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12353494001012755,
+              "ttft_s": 0.12353494001012755,
+              "prefill_complete_s": 0.12353494001012755,
+              "completed_s": 2.6466241804102615
+            },
+            "foreground-1": {
+              "first_s": 0.12353494001012755,
+              "ttft_s": 0.12353494001012755,
+              "prefill_complete_s": 0.12353494001012755,
+              "completed_s": 2.6466241804102615
+            },
+            "foreground-2": {
+              "first_s": 0.7898102003529214,
+              "ttft_s": 0.7898102003529214,
+              "prefill_complete_s": 0.7898102003529214,
+              "completed_s": 2.6871497595413714
+            },
+            "foreground-3": {
+              "first_s": 1.3655774964604952,
+              "ttft_s": 1.3655774964604952,
+              "prefill_complete_s": 1.3655774964604952,
+              "completed_s": 2.7264079318691326
+            },
+            "sentinel": {
+              "first_s": 1.3655774964604952,
+              "ttft_s": 1.3155774964604952,
+              "prefill_complete_s": 1.3655774964604952,
+              "completed_s": 2.7264079318691326
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.7264079318691326
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.7264079318691326,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.269652911902727
+            },
+            "foreground-1": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.269652911902727
+            },
+            "foreground-2": {
+              "first_s": 1.0531968170596717,
+              "ttft_s": 1.0531968170596717,
+              "prefill_complete_s": 1.0531968170596717,
+              "completed_s": 2.407373366750728
+            },
+            "foreground-3": {
+              "first_s": 1.0531968170596717,
+              "ttft_s": 1.0531968170596717,
+              "prefill_complete_s": 1.0531968170596717,
+              "completed_s": 2.407373366750728
+            },
+            "sentinel": {
+              "first_s": 0.21043335593946402,
+              "ttft_s": 0.160433355939464,
+              "prefill_complete_s": 0.21043335593946402,
+              "completed_s": 2.2797843066855044
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.407373366750728
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.407373366750728,
+          "release_s": 0.0,
+          "steps": 142,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.9316200796663405,
+            "old_empirical_corrected_ttft_s": 0.9247541127203562
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.8816200796663405,
+            "old_empirical_corrected_ttft_s": 0.8747541127203562
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.5949773327529214,
+            "raw_ttft_s": 0.5949773327529214,
+            "old_empirical_corrected_ttft_s": 0.5881113658069371
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9914578932604946,
+            "raw_ttft_s": 0.9914578932604946,
+            "old_empirical_corrected_ttft_s": 0.9845919263145103
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9914578932604946,
+            "raw_ttft_s": 0.9414578932604946,
+            "old_empirical_corrected_ttft_s": 0.9345919263145103
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at400-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.277257352722818
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.277257352722818
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943,
+              "completed_s": 2.2873887475055956
+            },
+            "foreground-3": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.9316200796663405,
+              "prefill_complete_s": 0.9316200796663405,
+              "completed_s": 2.297203290587536
+            },
+            "sentinel": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.5316200796663405,
+              "prefill_complete_s": 0.9316200796663405,
+              "completed_s": 2.297203290587536
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.297203290587536
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.297203290587536,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.2725045772102606
+            },
+            "foreground-1": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.2725045772102606
+            },
+            "foreground-2": {
+              "first_s": 0.5949773327529214,
+              "ttft_s": 0.5949773327529214,
+              "prefill_complete_s": 0.5949773327529214,
+              "completed_s": 2.3130301563413704
+            },
+            "foreground-3": {
+              "first_s": 0.9914578932604946,
+              "ttft_s": 0.9914578932604946,
+              "prefill_complete_s": 0.9914578932604946,
+              "completed_s": 2.3522883286691316
+            },
+            "sentinel": {
+              "first_s": 0.9914578932604946,
+              "ttft_s": 0.5914578932604946,
+              "prefill_complete_s": 0.9914578932604946,
+              "completed_s": 2.3522883286691316
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.3522883286691316
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.3522883286691316,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12093633521012755,
+              "ttft_s": 0.12093633521012755,
+              "prefill_complete_s": 0.12093633521012755,
+              "completed_s": 2.4506567692102608
+            },
+            "foreground-1": {
+              "first_s": 0.12093633521012755,
+              "ttft_s": 0.12093633521012755,
+              "prefill_complete_s": 0.12093633521012755,
+              "completed_s": 2.4506567692102608
+            },
+            "foreground-2": {
+              "first_s": 0.6877548887529213,
+              "ttft_s": 0.6877548887529213,
+              "prefill_complete_s": 0.6877548887529213,
+              "completed_s": 2.4911823483413706
+            },
+            "foreground-3": {
+              "first_s": 1.1696100852604947,
+              "ttft_s": 1.1696100852604947,
+              "prefill_complete_s": 1.1696100852604947,
+              "completed_s": 2.530440520669132
+            },
+            "sentinel": {
+              "first_s": 1.1696100852604947,
+              "ttft_s": 0.7696100852604947,
+              "prefill_complete_s": 1.1696100852604947,
+              "completed_s": 2.530440520669132
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.530440520669132
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.530440520669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12353494001012755,
+              "ttft_s": 0.12353494001012755,
+              "prefill_complete_s": 0.12353494001012755,
+              "completed_s": 2.6466241804102615
+            },
+            "foreground-1": {
+              "first_s": 0.12353494001012755,
+              "ttft_s": 0.12353494001012755,
+              "prefill_complete_s": 0.12353494001012755,
+              "completed_s": 2.6466241804102615
+            },
+            "foreground-2": {
+              "first_s": 0.7898102003529214,
+              "ttft_s": 0.7898102003529214,
+              "prefill_complete_s": 0.7898102003529214,
+              "completed_s": 2.6871497595413714
+            },
+            "foreground-3": {
+              "first_s": 1.3655774964604952,
+              "ttft_s": 1.3655774964604952,
+              "prefill_complete_s": 1.3655774964604952,
+              "completed_s": 2.7264079318691326
+            },
+            "sentinel": {
+              "first_s": 1.3655774964604952,
+              "ttft_s": 0.9655774964604952,
+              "prefill_complete_s": 1.3655774964604952,
+              "completed_s": 2.7264079318691326
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.7264079318691326
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.7264079318691326,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.2680686533985415
+            },
+            "foreground-1": {
+              "first_s": 0.11857396721012754,
+              "ttft_s": 0.11857396721012754,
+              "prefill_complete_s": 0.11857396721012754,
+              "completed_s": 2.2680686533985415
+            },
+            "foreground-2": {
+              "first_s": 1.051612558555486,
+              "ttft_s": 1.051612558555486,
+              "prefill_complete_s": 1.051612558555486,
+              "completed_s": 2.4073733667507287
+            },
+            "foreground-3": {
+              "first_s": 1.051612558555486,
+              "ttft_s": 1.051612558555486,
+              "prefill_complete_s": 1.051612558555486,
+              "completed_s": 2.4073733667507287
+            },
+            "sentinel": {
+              "first_s": 0.5329888901738199,
+              "ttft_s": 0.13298889017381987,
+              "prefill_complete_s": 0.5329888901738199,
+              "completed_s": 2.3288570220952063
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.4073733667507287
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4073733667507287,
+          "release_s": 0.0,
+          "steps": 142,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.9316200796663405,
+            "old_empirical_corrected_ttft_s": 0.9247541127203562
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.5316200796663405,
+            "old_empirical_corrected_ttft_s": 0.5247541127203562
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.11857396721012754,
+            "raw_ttft_s": 0.11857396721012754,
+            "old_empirical_corrected_ttft_s": 0.11170800026414324
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.5949773327529214,
+            "raw_ttft_s": 0.5949773327529214,
+            "old_empirical_corrected_ttft_s": 0.5881113658069371
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9914578932604946,
+            "raw_ttft_s": 0.9914578932604946,
+            "old_empirical_corrected_ttft_s": 0.9845919263145103
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9914578932604946,
+            "raw_ttft_s": 0.5914578932604946,
+            "old_empirical_corrected_ttft_s": 0.5845919263145103
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at800-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.277257352722818
+            },
+            "foreground-1": {
+              "first_s": 0.4467533497997117,
+              "ttft_s": 0.4467533497997117,
+              "prefill_complete_s": 0.4467533497997117,
+              "completed_s": 2.277257352722818
+            },
+            "foreground-2": {
+              "first_s": 0.8940335737749943,
+              "ttft_s": 0.8940335737749943,
+              "prefill_complete_s": 0.8940335737749943,
+              "completed_s": 2.2873887475055956
+            },
+            "foreground-3": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.9316200796663405,
+              "prefill_complete_s": 0.9316200796663405,
+              "completed_s": 2.297203290587536
+            },
+            "sentinel": {
+              "first_s": 0.9316200796663405,
+              "ttft_s": 0.13162007966634048,
+              "prefill_complete_s": 0.9316200796663405,
+              "completed_s": 2.297203290587536
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.297203290587536
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.297203290587536,
+          "release_s": 0.0,
+          "steps": 130,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.23714793442025509,
+              "ttft_s": 0.23714793442025509,
+              "prefill_complete_s": 0.23714793442025509,
+              "completed_s": 2.2810517134888526
+            },
+            "foreground-1": {
+              "first_s": 0.5936601473139941,
+              "ttft_s": 0.5936601473139941,
+              "prefill_complete_s": 0.5936601473139941,
+              "completed_s": 2.3123964529396965
+            },
+            "foreground-2": {
+              "first_s": 0.8318618300853909,
+              "ttft_s": 0.8318618300853909,
+              "prefill_complete_s": 0.8318618300853909,
+              "completed_s": 2.3326592425052515
+            },
+            "foreground-3": {
+              "first_s": 0.9892399313546346,
+              "ttft_s": 0.9892399313546346,
+              "prefill_complete_s": 0.9892399313546346,
+              "completed_s": 2.352288328669132
+            },
+            "sentinel": {
+              "first_s": 0.9892399313546346,
+              "ttft_s": 0.18923993135463457,
+              "prefill_complete_s": 0.9892399313546346,
+              "completed_s": 2.352288328669132
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.352288328669132
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.352288328669132,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2623199024202551,
+              "ttft_s": 0.2623199024202551,
+              "prefill_complete_s": 0.2623199024202551,
+              "completed_s": 2.382133569488853
+            },
+            "foreground-1": {
+              "first_s": 0.650280188313994,
+              "ttft_s": 0.650280188313994,
+              "prefill_complete_s": 0.650280188313994,
+              "completed_s": 2.413478308939697
+            },
+            "foreground-2": {
+              "first_s": 0.9136293170853909,
+              "ttft_s": 0.9136293170853909,
+              "prefill_complete_s": 0.9136293170853909,
+              "completed_s": 2.433741098505252
+            },
+            "foreground-3": {
+              "first_s": 1.090321787354635,
+              "ttft_s": 1.090321787354635,
+              "prefill_complete_s": 1.090321787354635,
+              "completed_s": 2.4533701846691325
+            },
+            "sentinel": {
+              "first_s": 1.090321787354635,
+              "ttft_s": 0.2903217873546349,
+              "prefill_complete_s": 1.090321787354635,
+              "completed_s": 2.4533701846691325
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.4533701846691325
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.4533701846691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.29000906722025516,
+              "ttft_s": 0.29000906722025516,
+              "prefill_complete_s": 0.29000906722025516,
+              "completed_s": 2.493323611088853
+            },
+            "foreground-1": {
+              "first_s": 0.7125622334139942,
+              "ttft_s": 0.7125622334139942,
+              "prefill_complete_s": 0.7125622334139942,
+              "completed_s": 2.524668350539697
+            },
+            "foreground-2": {
+              "first_s": 1.003573552785391,
+              "ttft_s": 1.003573552785391,
+              "prefill_complete_s": 1.003573552785391,
+              "completed_s": 2.544931140105252
+            },
+            "foreground-3": {
+              "first_s": 1.2015118289546352,
+              "ttft_s": 1.2015118289546352,
+              "prefill_complete_s": 1.2015118289546352,
+              "completed_s": 2.5645602262691325
+            },
+            "sentinel": {
+              "first_s": 1.2015118289546352,
+              "ttft_s": 0.4015118289546351,
+              "prefill_complete_s": 1.2015118289546352,
+              "completed_s": 2.5645602262691325
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.5645602262691325
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.5645602262691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206,
+              "completed_s": 2.3427906372880294
+            },
+            "foreground-1": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206,
+              "completed_s": 2.3427906372880294
+            },
+            "foreground-2": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206,
+              "completed_s": 2.3427906372880294
+            },
+            "foreground-3": {
+              "first_s": 0.9485917376810206,
+              "ttft_s": 0.9485917376810206,
+              "prefill_complete_s": 0.9485917376810206,
+              "completed_s": 2.3427906372880294
+            },
+            "sentinel": {
+              "first_s": 0.9863882660471006,
+              "ttft_s": 0.18638826604710057,
+              "prefill_complete_s": 0.9863882660471006,
+              "completed_s": 2.3522883286691325
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 2.3522883286691325
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 2.3522883286691325,
+          "release_s": 0.0,
+          "steps": 136,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.4467533497997117,
+            "raw_ttft_s": 0.4467533497997117,
+            "old_empirical_corrected_ttft_s": 0.4398873828537274
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8940335737749943,
+            "raw_ttft_s": 0.8940335737749943,
+            "old_empirical_corrected_ttft_s": 0.88716760682901
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.9316200796663405,
+            "old_empirical_corrected_ttft_s": 0.9247541127203562
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9316200796663405,
+            "raw_ttft_s": 0.13162007966634048,
+            "old_empirical_corrected_ttft_s": 0.12475411272035618
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23714793442025509,
+            "raw_ttft_s": 0.23714793442025509,
+            "old_empirical_corrected_ttft_s": 0.23028196747427077
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.5936601473139941,
+            "raw_ttft_s": 0.5936601473139941,
+            "old_empirical_corrected_ttft_s": 0.5867941803680098
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8318618300853909,
+            "raw_ttft_s": 0.8318618300853909,
+            "old_empirical_corrected_ttft_s": 0.8249958631394066
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9892399313546346,
+            "raw_ttft_s": 0.9892399313546346,
+            "old_empirical_corrected_ttft_s": 0.9823739644086503
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9892399313546346,
+            "raw_ttft_s": 0.18923993135463457,
+            "old_empirical_corrected_ttft_s": 0.18237396440865025
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-one-at200-D0",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.41940506791724635,
+              "ttft_s": 0.41940506791724635,
+              "prefill_complete_s": 0.41940506791724635,
+              "completed_s": 1.6928834695053143
+            },
+            "sentinel": {
+              "first_s": 0.456251041180815,
+              "ttft_s": 0.256251041180815,
+              "prefill_complete_s": 0.456251041180815,
+              "completed_s": 1.7023811608864177
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.7023811608864177
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.7023811608864177,
+          "release_s": 0.0,
+          "steps": 129,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4742958688405102,
+              "ttft_s": 0.4742958688405102,
+              "prefill_complete_s": 0.4742958688405102,
+              "completed_s": 1.7207428402469502
+            },
+            "sentinel": {
+              "first_s": 0.4742958688405102,
+              "ttft_s": 0.2742958688405102,
+              "prefill_complete_s": 0.4742958688405102,
+              "completed_s": 1.7207428402469502
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.7207428402469502
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.7207428402469502,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5631749728405102,
+              "ttft_s": 0.5631749728405102,
+              "prefill_complete_s": 0.5631749728405102,
+              "completed_s": 1.8096219442469512
+            },
+            "sentinel": {
+              "first_s": 0.5631749728405102,
+              "ttft_s": 0.3631749728405102,
+              "prefill_complete_s": 0.5631749728405102,
+              "completed_s": 1.8096219442469512
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.8096219442469512
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.8096219442469512,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.6609419872405102,
+              "ttft_s": 0.6609419872405102,
+              "prefill_complete_s": 0.6609419872405102,
+              "completed_s": 1.9073889586469523
+            },
+            "sentinel": {
+              "first_s": 0.6609419872405102,
+              "ttft_s": 0.4609419872405102,
+              "prefill_complete_s": 0.6609419872405102,
+              "completed_s": 1.9073889586469523
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.9073889586469523
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.9073889586469523,
+          "release_s": 0.0,
+          "steps": 131,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 0,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5778199189301351,
+              "ttft_s": 0.5778199189301351,
+              "prefill_complete_s": 0.5778199189301351,
+              "completed_s": 1.8217320767298788
+            },
+            "sentinel": {
+              "first_s": 0.2830521328215859,
+              "ttft_s": 0.08305213282158591,
+              "prefill_complete_s": 0.2830521328215859,
+              "completed_s": 1.745750545681052
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.0,
+            "end_s": 1.8217320767298788
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 1.8217320767298788,
+          "release_s": 0.0,
+          "steps": 142,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.41940506791724635,
+            "raw_ttft_s": 0.41940506791724635,
+            "old_empirical_corrected_ttft_s": 0.41253910097126206
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.456251041180815,
+            "raw_ttft_s": 0.256251041180815,
+            "old_empirical_corrected_ttft_s": 0.24938507423483067
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4742958688405102,
+            "raw_ttft_s": 0.4742958688405102,
+            "old_empirical_corrected_ttft_s": 0.46742990189452593
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.4742958688405102,
+            "raw_ttft_s": 0.2742958688405102,
+            "old_empirical_corrected_ttft_s": 0.2674299018945259
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L1024-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06894703065859109,
+              "ttft_s": 0.06894703065859109,
+              "prefill_complete_s": 0.06894703065859109,
+              "completed_s": 1.9189964921597669
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 2.8289716205587108
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.6314933269343115,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.06894703065859109,
+              "ttft_s": 0.06894703065859109,
+              "prefill_complete_s": 0.06894703065859109,
+              "completed_s": 1.9189964921597669
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 2.8973644300754677
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.686578365015909,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.07052143065859107,
+              "ttft_s": 0.07052143065859107,
+              "prefill_complete_s": 0.07052143065859107,
+              "completed_s": 1.9205708921597668
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 2.9241292300754678
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.713343165015909,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.072253270658591,
+              "ttft_s": 0.072253270658591,
+              "prefill_complete_s": 0.072253270658591,
+              "completed_s": 1.922302732159767
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 2.9535705100754677
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.742784445015909,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.08319749755225148,
+              "ttft_s": 0.08319749755225148,
+              "prefill_complete_s": 0.08319749755225148,
+              "completed_s": 1.9332469590534274
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 2.901792494243177
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.68657836501591,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.06894703065859109,
+            "raw_ttft_s": 0.06894703065859109,
+            "old_empirical_corrected_ttft_s": 0.159225873857318
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.06894703065859109,
+            "raw_ttft_s": 0.06894703065859109,
+            "old_empirical_corrected_ttft_s": 0.159225873857318
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L2048-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12364359442352169,
+              "ttft_s": 0.12364359442352169,
+              "prefill_complete_s": 0.12364359442352169,
+              "completed_s": 1.9736930559246975
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 2.8836681843236414
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.686189890699242,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1378940613171824,
+              "ttft_s": 0.1378940613171824,
+              "prefill_complete_s": 0.1378940613171824,
+              "completed_s": 1.9879435228183582
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 2.966311460734059
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.7412749287808404,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.14418858931718237,
+              "ttft_s": 0.14418858931718237,
+              "prefill_complete_s": 0.14418858931718237,
+              "completed_s": 1.9942380508183584
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 2.9977963887340593
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.772759856780841,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1511125701171825,
+              "ttft_s": 0.1511125701171825,
+              "prefill_complete_s": 0.1511125701171825,
+              "completed_s": 2.0011620316183585
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 3.032429809534059
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.80739327758084,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.16639499510450306,
+              "ttft_s": 0.16639499510450306,
+              "prefill_complete_s": 0.16639499510450306,
+              "completed_s": 2.016444456605679
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 2.9849899917954286
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.741274928780841,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.1236435944235218,
+            "raw_ttft_s": 0.1236435944235218,
+            "old_empirical_corrected_ttft_s": 0.21392243762224872
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.1378940613171822,
+            "raw_ttft_s": 0.1378940613171822,
+            "old_empirical_corrected_ttft_s": 0.22817290451590913
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L4096-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2330367219533831,
+              "ttft_s": 0.2330367219533831,
+              "prefill_complete_s": 0.2330367219533831,
+              "completed_s": 2.083086183454559
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 2.993061311853503
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.795583018229104,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2615376557407041,
+              "ttft_s": 0.2615376557407041,
+              "prefill_complete_s": 0.2615376557407041,
+              "completed_s": 2.1115871172418803
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 3.089955055157581
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.850668056310702,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.2867096237407041,
+              "ttft_s": 0.2867096237407041,
+              "prefill_complete_s": 0.2867096237407041,
+              "completed_s": 2.13675908524188
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 3.140317423157581
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.901030424310702,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.314398788540704,
+              "ttft_s": 0.314398788540704,
+              "prefill_complete_s": 0.314398788540704,
+              "completed_s": 2.16444825004188
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 3.1957160279575807
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.956429029110701,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.33278999020900624,
+              "ttft_s": 0.33278999020900624,
+              "prefill_complete_s": 0.33278999020900624,
+              "completed_s": 2.182839451710182
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 3.1513849868999317
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.850668056310703,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.23303672195338318,
+            "raw_ttft_s": 0.23303672195338318,
+            "old_empirical_corrected_ttft_s": 0.32331556515211013
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.26153765574070403,
+            "raw_ttft_s": 0.26153765574070403,
+            "old_empirical_corrected_ttft_s": 0.35181649893943095
+          }
+        }
+      }
+    },
+    {
+      "case": "single-L7168-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.3971264132481751,
+              "ttft_s": 0.3971264132481751,
+              "prefill_complete_s": 0.3971264132481751,
+              "completed_s": 2.2471758747493507
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 3.1571510031482948
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 4.959672709523896,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4398778139291568,
+              "ttft_s": 0.4398778139291568,
+              "prefill_complete_s": 0.4398778139291568,
+              "completed_s": 2.2899272754303324
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 3.2682952133460335
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.014757747605494,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.5169589019291567,
+              "ttft_s": 0.5169589019291567,
+              "prefill_complete_s": 0.5169589019291567,
+              "completed_s": 2.3670083634303323
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 3.3705667013460334
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.117029235605494,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.6017480987291568,
+              "ttft_s": 0.6017480987291568,
+              "prefill_complete_s": 0.6017480987291568,
+              "completed_s": 2.4517975602303324
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 3.4830653381460333
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.229527872405494,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.582382482865761,
+              "ttft_s": 0.582382482865761,
+              "prefill_complete_s": 0.582382482865761,
+              "completed_s": 2.432431944366937
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 3.4009774795566865
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.014757747605496,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.3971264132481752,
+            "raw_ttft_s": 0.3971264132481752,
+            "old_empirical_corrected_ttft_s": 0.48740525644690214
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.43987781392915654,
+            "raw_ttft_s": 0.43987781392915654,
+            "old_empirical_corrected_ttft_s": 0.5301566571278835
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-uniform-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.8588980398493415
+            },
+            "foreground-1": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433,
+              "completed_s": 2.874099061845514
+            },
+            "foreground-2": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433,
+              "completed_s": 2.874099061845514
+            },
+            "foreground-3": {
+              "first_s": 0.9191638277232208,
+              "ttft_s": 0.9191638277232208,
+              "prefill_complete_s": 0.9191638277232208,
+              "completed_s": 2.888666380440011
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 3.798641508838955
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.5726622814272355,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.3683668818440844,
+              "ttft_s": 0.3683668818440844,
+              "prefill_complete_s": 0.3683668818440844,
+              "completed_s": 2.8848641600299656
+            },
+            "foreground-1": {
+              "first_s": 0.6144716772490448,
+              "ttft_s": 0.6144716772490448,
+              "prefill_complete_s": 0.6144716772490448,
+              "completed_s": 2.915266204022309
+            },
+            "foreground-2": {
+              "first_s": 0.8611033468295761,
+              "ttft_s": 0.8611033468295761,
+              "prefill_complete_s": 0.8611033468295761,
+              "completed_s": 2.9450345446129784
+            },
+            "foreground-3": {
+              "first_s": 1.0072014426918805,
+              "ttft_s": 1.0072014426918805,
+              "prefill_complete_s": 1.0072014426918805,
+              "completed_s": 2.9741691818019733
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 3.952537119717674
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508833,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.39954184984408436,
+              "ttft_s": 0.39954184984408436,
+              "prefill_complete_s": 0.39954184984408436,
+              "completed_s": 2.9855520320299647
+            },
+            "foreground-1": {
+              "first_s": 0.6706162962490445,
+              "ttft_s": 0.6706162962490445,
+              "prefill_complete_s": 0.6706162962490445,
+              "completed_s": 3.015954076022309
+            },
+            "foreground-2": {
+              "first_s": 0.9422094958295757,
+              "ttft_s": 0.9422094958295757,
+              "prefill_complete_s": 0.9422094958295757,
+              "completed_s": 3.0457224166129784
+            },
+            "foreground-3": {
+              "first_s": 1.10788931469188,
+              "ttft_s": 1.10788931469188,
+              "prefill_complete_s": 1.10788931469188,
+              "completed_s": 3.074857053801974
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 4.078415391717675
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.753625591508834,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4338343146440844,
+              "ttft_s": 0.4338343146440844,
+              "prefill_complete_s": 0.4338343146440844,
+              "completed_s": 3.0963086912299653
+            },
+            "foreground-1": {
+              "first_s": 0.7323753771490444,
+              "ttft_s": 0.7323753771490444,
+              "prefill_complete_s": 0.7323753771490444,
+              "completed_s": 3.12671073522231
+            },
+            "foreground-2": {
+              "first_s": 1.0314262597295756,
+              "ttft_s": 1.0314262597295756,
+              "prefill_complete_s": 1.0314262597295756,
+              "completed_s": 3.156479075812979
+            },
+            "foreground-3": {
+              "first_s": 1.2186459738918802,
+              "ttft_s": 1.2186459738918802,
+              "prefill_complete_s": 1.2186459738918802,
+              "completed_s": 3.185613713001975
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 4.216881490917675
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.892091690708835,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583,
+              "completed_s": 2.9596018632074763
+            },
+            "foreground-1": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583,
+              "completed_s": 2.9596018632074763
+            },
+            "foreground-2": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583,
+              "completed_s": 2.9596018632074763
+            },
+            "foreground-3": {
+              "first_s": 1.0043497773843466,
+              "ttft_s": 1.0043497773843466,
+              "prefill_complete_s": 1.0043497773843466,
+              "completed_s": 2.9741691818019738
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 3.9427147169917234
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508835,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9191638277232208,
+            "raw_ttft_s": 0.9191638277232208,
+            "old_empirical_corrected_ttft_s": 1.0094426709219477
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.3683668818440843,
+            "raw_ttft_s": 0.3683668818440843,
+            "old_empirical_corrected_ttft_s": 0.4586457250428112
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.6144716772490447,
+            "raw_ttft_s": 0.6144716772490447,
+            "old_empirical_corrected_ttft_s": 0.7047505204477716
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8611033468295761,
+            "raw_ttft_s": 0.8611033468295761,
+            "old_empirical_corrected_ttft_s": 0.951382190028303
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0072014426918805,
+            "raw_ttft_s": 1.0072014426918805,
+            "old_empirical_corrected_ttft_s": 1.0974802858906074
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-mixed-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.8592148915501783
+            },
+            "foreground-1": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.8592148915501783
+            },
+            "foreground-2": {
+              "first_s": 0.9024635605841285,
+              "ttft_s": 0.9024635605841285,
+              "prefill_complete_s": 0.9024635605841285,
+              "completed_s": 2.874099061845513
+            },
+            "foreground-3": {
+              "first_s": 0.9194806794240578,
+              "ttft_s": 0.9194806794240578,
+              "prefill_complete_s": 0.9194806794240578,
+              "completed_s": 2.888666380440011
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 3.7986415088389545
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.572662281427235,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1227889606146948,
+              "ttft_s": 0.1227889606146948,
+              "prefill_complete_s": 0.1227889606146948,
+              "completed_s": 2.8560463745418074
+            },
+            "foreground-1": {
+              "first_s": 0.24584135831717502,
+              "ttft_s": 0.24584135831717502,
+              "prefill_complete_s": 0.24584135831717502,
+              "completed_s": 2.871247396537979
+            },
+            "foreground-2": {
+              "first_s": 0.615788862687972,
+              "ttft_s": 0.615788862687972,
+              "prefill_complete_s": 0.615788862687972,
+              "completed_s": 2.9158999074239826
+            },
+            "foreground-3": {
+              "first_s": 1.0094194045977403,
+              "ttft_s": 1.0094194045977403,
+              "prefill_complete_s": 1.0094194045977403,
+              "completed_s": 2.9741691818019724
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 3.9525371197176735
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508833,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1258889686146949,
+              "ttft_s": 0.1258889686146949,
+              "prefill_complete_s": 0.1258889686146949,
+              "completed_s": 3.013357350541808
+            },
+            "foreground-1": {
+              "first_s": 0.25508351831717513,
+              "ttft_s": 0.25508351831717513,
+              "prefill_complete_s": 0.25508351831717513,
+              "completed_s": 3.0285583725379803
+            },
+            "foreground-2": {
+              "first_s": 0.6973371096879721,
+              "ttft_s": 0.6973371096879721,
+              "prefill_complete_s": 0.6973371096879721,
+              "completed_s": 3.073210883423984
+            },
+            "foreground-3": {
+              "first_s": 1.166730380597741,
+              "ttft_s": 1.166730380597741,
+              "prefill_complete_s": 1.166730380597741,
+              "completed_s": 3.1314801578019757
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 4.1350384957176765
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.810248695508836,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12929897741469487,
+              "ttft_s": 0.12929897741469487,
+              "prefill_complete_s": 0.12929897741469487,
+              "completed_s": 3.1863994241418077
+            },
+            "foreground-1": {
+              "first_s": 0.26524989431717505,
+              "ttft_s": 0.26524989431717505,
+              "prefill_complete_s": 0.26524989431717505,
+              "completed_s": 3.20160044613798
+            },
+            "foreground-2": {
+              "first_s": 0.7870401813879719,
+              "ttft_s": 0.7870401813879719,
+              "prefill_complete_s": 0.7870401813879719,
+              "completed_s": 3.2462529570239838
+            },
+            "foreground-3": {
+              "first_s": 1.3397724541977405,
+              "ttft_s": 1.3397724541977405,
+              "prefill_complete_s": 1.3397724541977405,
+              "completed_s": 3.3045222314019753
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 4.335790009317676
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 6.011000209108835,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.24557792122938948,
+              "ttft_s": 0.24557792122938948,
+              "prefill_complete_s": 0.24557792122938948,
+              "completed_s": 2.8664946210254203
+            },
+            "foreground-1": {
+              "first_s": 0.24557792122938948,
+              "ttft_s": 0.24557792122938948,
+              "prefill_complete_s": 0.24557792122938948,
+              "completed_s": 2.8664946210254203
+            },
+            "foreground-2": {
+              "first_s": 1.0805467299525722,
+              "ttft_s": 1.0805467299525722,
+              "prefill_complete_s": 1.0805467299525722,
+              "completed_s": 3.0451046645694357
+            },
+            "foreground-3": {
+              "first_s": 1.0974570195663982,
+              "ttft_s": 1.0974570195663982,
+              "prefill_complete_s": 1.0974570195663982,
+              "completed_s": 3.0596719831639336
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 4.028217518353683
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508833,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9024635605841287,
+            "raw_ttft_s": 0.9024635605841287,
+            "old_empirical_corrected_ttft_s": 0.9927424037828556
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.919480679424058,
+            "raw_ttft_s": 0.919480679424058,
+            "old_empirical_corrected_ttft_s": 1.009759522622785
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.12278896061469474,
+            "raw_ttft_s": 0.12278896061469474,
+            "old_empirical_corrected_ttft_s": 0.21306780381342166
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.24584135831717496,
+            "raw_ttft_s": 0.24584135831717496,
+            "old_empirical_corrected_ttft_s": 0.3361202015159019
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.615788862687972,
+            "raw_ttft_s": 0.615788862687972,
+            "old_empirical_corrected_ttft_s": 0.7060677058866989
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0094194045977403,
+            "raw_ttft_s": 1.0094194045977403,
+            "old_empirical_corrected_ttft_s": 1.0996982477964672
+          }
+        }
+      }
+    },
+    {
+      "case": "composition-reverse-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.8588980398493415
+            },
+            "foreground-1": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433,
+              "completed_s": 2.874099061845514
+            },
+            "foreground-2": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433,
+              "completed_s": 2.874099061845514
+            },
+            "foreground-3": {
+              "first_s": 0.9191638277232208,
+              "ttft_s": 0.9191638277232208,
+              "prefill_complete_s": 0.9191638277232208,
+              "completed_s": 2.888666380440011
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 3.798641508838955
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.5726622814272355,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4911558424587792,
+              "ttft_s": 0.4911558424587792,
+              "prefill_complete_s": 0.4911558424587792,
+              "completed_s": 2.898797775222789
+            },
+            "foreground-1": {
+              "first_s": 0.9833654332687001,
+              "ttft_s": 0.9833654332687001,
+              "prefill_complete_s": 0.9833654332687001,
+              "completed_s": 2.9596018632074763
+            },
+            "foreground-2": {
+              "first_s": 0.9833654332687001,
+              "ttft_s": 0.9833654332687001,
+              "prefill_complete_s": 0.9833654332687001,
+              "completed_s": 2.9596018632074763
+            },
+            "foreground-3": {
+              "first_s": 1.0056171841876949,
+              "ttft_s": 1.0056171841876949,
+              "prefill_complete_s": 1.0056171841876949,
+              "completed_s": 2.9741691818019733
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 3.9525371197176744
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508834,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.569620770458779,
+              "ttft_s": 0.569620770458779,
+              "prefill_complete_s": 0.569620770458779,
+              "completed_s": 3.056108751222788
+            },
+            "foreground-1": {
+              "first_s": 1.1402968432686997,
+              "ttft_s": 1.1402968432686997,
+              "prefill_complete_s": 1.1402968432686997,
+              "completed_s": 3.116912839207477
+            },
+            "foreground-2": {
+              "first_s": 1.1402968432686997,
+              "ttft_s": 1.1402968432686997,
+              "prefill_complete_s": 1.1402968432686997,
+              "completed_s": 3.116912839207477
+            },
+            "foreground-3": {
+              "first_s": 1.1629281601876944,
+              "ttft_s": 1.1629281601876944,
+              "prefill_complete_s": 1.1629281601876944,
+              "completed_s": 3.131480157801975
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 4.135038495717676
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.810248695508835,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.6559321912587792,
+              "ttft_s": 0.6559321912587792,
+              "prefill_complete_s": 0.6559321912587792,
+              "completed_s": 3.2291508248227885
+            },
+            "foreground-1": {
+              "first_s": 1.3129213942686995,
+              "ttft_s": 1.3129213942686995,
+              "prefill_complete_s": 1.3129213942686995,
+              "completed_s": 3.2899549128074774
+            },
+            "foreground-2": {
+              "first_s": 1.3129213942686995,
+              "ttft_s": 1.3129213942686995,
+              "prefill_complete_s": 1.3129213942686995,
+              "completed_s": 3.2899549128074774
+            },
+            "foreground-3": {
+              "first_s": 1.3359702337876944,
+              "ttft_s": 1.3359702337876944,
+              "prefill_complete_s": 1.3359702337876944,
+              "completed_s": 3.3045222314019753
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 4.335790009317676
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 6.011000209108835,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 1.0819391458693892,
+              "ttft_s": 1.0819391458693892,
+              "prefill_complete_s": 1.0819391458693892,
+              "completed_s": 3.0454215162702725
+            },
+            "foreground-1": {
+              "first_s": 1.0819391458693892,
+              "ttft_s": 1.0819391458693892,
+              "prefill_complete_s": 1.0819391458693892,
+              "completed_s": 3.0454215162702725
+            },
+            "foreground-2": {
+              "first_s": 0.24557792122938948,
+              "ttft_s": 0.24557792122938948,
+              "prefill_complete_s": 0.24557792122938948,
+              "completed_s": 2.8664946210254203
+            },
+            "foreground-3": {
+              "first_s": 0.31655107120647197,
+              "ttft_s": 0.31655107120647197,
+              "prefill_complete_s": 0.31655107120647197,
+              "completed_s": 2.881695643021592
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 4.013967051460022
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.627747319508832,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9191638277232208,
+            "raw_ttft_s": 0.9191638277232208,
+            "old_empirical_corrected_ttft_s": 1.0094426709219477
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4911558424587791,
+            "raw_ttft_s": 0.4911558424587791,
+            "old_empirical_corrected_ttft_s": 0.581434685657506
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9833654332687,
+            "raw_ttft_s": 0.9833654332687,
+            "old_empirical_corrected_ttft_s": 1.073644276467427
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9833654332687,
+            "raw_ttft_s": 0.9833654332687,
+            "old_empirical_corrected_ttft_s": 1.073644276467427
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0056171841876949,
+            "raw_ttft_s": 1.0056171841876949,
+            "old_empirical_corrected_ttft_s": 1.0958960273864218
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at50-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.9261696360372387
+            },
+            "foreground-1": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.9261696360372387
+            },
+            "foreground-2": {
+              "first_s": 0.9024635605841285,
+              "ttft_s": 0.9024635605841285,
+              "prefill_complete_s": 0.9024635605841285,
+              "completed_s": 2.941370658033411
+            },
+            "foreground-3": {
+              "first_s": 0.946828961306523,
+              "ttft_s": 0.946828961306523,
+              "prefill_complete_s": 0.946828961306523,
+              "completed_s": 2.9562548283287455
+            },
+            "sentinel": {
+              "first_s": 0.946828961306523,
+              "ttft_s": 0.896828961306523,
+              "prefill_complete_s": 0.946828961306523,
+              "completed_s": 2.9562548283287455
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 3.866229956727689
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.640250729315969,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1227889606146948,
+              "ttft_s": 0.1227889606146948,
+              "prefill_complete_s": 0.1227889606146948,
+              "completed_s": 2.9214168605246806
+            },
+            "foreground-1": {
+              "first_s": 0.1227889606146948,
+              "ttft_s": 0.1227889606146948,
+              "prefill_complete_s": 0.1227889606146948,
+              "completed_s": 2.9214168605246806
+            },
+            "foreground-2": {
+              "first_s": 0.6160522997757574,
+              "ttft_s": 0.6160522997757574,
+              "prefill_complete_s": 0.6160522997757574,
+              "completed_s": 2.982220948509368
+            },
+            "foreground-3": {
+              "first_s": 1.0370845381810427,
+              "ttft_s": 1.0370845381810427,
+              "prefill_complete_s": 1.0370845381810427,
+              "completed_s": 3.0417576296907054
+            },
+            "sentinel": {
+              "first_s": 1.0370845381810427,
+              "ttft_s": 0.9870845381810427,
+              "prefill_complete_s": 1.0370845381810427,
+              "completed_s": 3.0417576296907054
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 4.0201255676064065
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397566,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12510253661469473,
+              "ttft_s": 0.12510253661469473,
+              "prefill_complete_s": 0.12510253661469473,
+              "completed_s": 3.0995690525246866
+            },
+            "foreground-1": {
+              "first_s": 0.12510253661469473,
+              "ttft_s": 0.12510253661469473,
+              "prefill_complete_s": 0.12510253661469473,
+              "completed_s": 3.0995690525246866
+            },
+            "foreground-2": {
+              "first_s": 0.7084726157757573,
+              "ttft_s": 0.7084726157757573,
+              "prefill_complete_s": 0.7084726157757573,
+              "completed_s": 3.1603731405093756
+            },
+            "foreground-3": {
+              "first_s": 1.215236730181043,
+              "ttft_s": 1.215236730181043,
+              "prefill_complete_s": 1.215236730181043,
+              "completed_s": 3.219909821690714
+            },
+            "sentinel": {
+              "first_s": 1.215236730181043,
+              "ttft_s": 1.165236730181043,
+              "prefill_complete_s": 1.215236730181043,
+              "completed_s": 3.219909821690714
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 4.223468159606415
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.898678359397574,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1276474702146948,
+              "ttft_s": 0.1276474702146948,
+              "prefill_complete_s": 0.1276474702146948,
+              "completed_s": 3.2955364637246998
+            },
+            "foreground-1": {
+              "first_s": 0.1276474702146948,
+              "ttft_s": 0.1276474702146948,
+              "prefill_complete_s": 0.1276474702146948,
+              "completed_s": 3.2955364637246998
+            },
+            "foreground-2": {
+              "first_s": 0.8101349633757573,
+              "ttft_s": 0.8101349633757573,
+              "prefill_complete_s": 0.8101349633757573,
+              "completed_s": 3.3563405517093887
+            },
+            "foreground-3": {
+              "first_s": 1.4112041413810432,
+              "ttft_s": 1.4112041413810432,
+              "prefill_complete_s": 1.4112041413810432,
+              "completed_s": 3.415877232890727
+            },
+            "sentinel": {
+              "first_s": 1.4112041413810432,
+              "ttft_s": 1.3612041413810432,
+              "prefill_complete_s": 1.4112041413810432,
+              "completed_s": 3.415877232890727
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 4.447145010806428
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 6.122355210597587,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12278896061469469,
+              "ttft_s": 0.12278896061469469,
+              "prefill_complete_s": 0.12278896061469469,
+              "completed_s": 2.9182483435163102
+            },
+            "foreground-1": {
+              "first_s": 0.12278896061469469,
+              "ttft_s": 0.12278896061469469,
+              "prefill_complete_s": 0.12278896061469469,
+              "completed_s": 2.9182483435163102
+            },
+            "foreground-2": {
+              "first_s": 1.1283865914517563,
+              "ttft_s": 1.1283865914517563,
+              "prefill_complete_s": 1.1283865914517563,
+              "completed_s": 3.1269435793518316
+            },
+            "foreground-3": {
+              "first_s": 1.1447590989575924,
+              "ttft_s": 1.1447590989575924,
+              "prefill_complete_s": 1.1447590989575924,
+              "completed_s": 3.1415108979463295
+            },
+            "sentinel": {
+              "first_s": 0.21971797655742542,
+              "ttft_s": 0.1697179765574255,
+              "prefill_complete_s": 0.21971797655742542,
+              "completed_s": 2.933449365512482
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 4.110056433136079
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397569,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9024635605841287,
+            "raw_ttft_s": 0.9024635605841287,
+            "old_empirical_corrected_ttft_s": 0.9927424037828556
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9468289613065233,
+            "raw_ttft_s": 0.9468289613065233,
+            "old_empirical_corrected_ttft_s": 1.0371078045052502
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9468289613065233,
+            "raw_ttft_s": 0.8968289613065232,
+            "old_empirical_corrected_ttft_s": 0.9871078045052502
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.12278896061469474,
+            "raw_ttft_s": 0.12278896061469474,
+            "old_empirical_corrected_ttft_s": 0.21306780381342166
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.12278896061469474,
+            "raw_ttft_s": 0.12278896061469474,
+            "old_empirical_corrected_ttft_s": 0.21306780381342166
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.6160522997757574,
+            "raw_ttft_s": 0.6160522997757574,
+            "old_empirical_corrected_ttft_s": 0.7063311429744843
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0370845381810427,
+            "raw_ttft_s": 1.0370845381810427,
+            "old_empirical_corrected_ttft_s": 1.1273633813797697
+          },
+          "sentinel": {
+            "raw_engine_first_s": 1.0370845381810427,
+            "raw_ttft_s": 0.9870845381810427,
+            "old_empirical_corrected_ttft_s": 1.0773633813797696
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at400-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.9261696360372387
+            },
+            "foreground-1": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.9261696360372387
+            },
+            "foreground-2": {
+              "first_s": 0.9024635605841285,
+              "ttft_s": 0.9024635605841285,
+              "prefill_complete_s": 0.9024635605841285,
+              "completed_s": 2.941370658033411
+            },
+            "foreground-3": {
+              "first_s": 0.946828961306523,
+              "ttft_s": 0.946828961306523,
+              "prefill_complete_s": 0.946828961306523,
+              "completed_s": 2.9562548283287455
+            },
+            "sentinel": {
+              "first_s": 0.946828961306523,
+              "ttft_s": 0.5468289613065229,
+              "prefill_complete_s": 0.946828961306523,
+              "completed_s": 2.9562548283287455
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 3.866229956727689
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.640250729315969,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1227889606146948,
+              "ttft_s": 0.1227889606146948,
+              "prefill_complete_s": 0.1227889606146948,
+              "completed_s": 2.9214168605246806
+            },
+            "foreground-1": {
+              "first_s": 0.1227889606146948,
+              "ttft_s": 0.1227889606146948,
+              "prefill_complete_s": 0.1227889606146948,
+              "completed_s": 2.9214168605246806
+            },
+            "foreground-2": {
+              "first_s": 0.6160522997757574,
+              "ttft_s": 0.6160522997757574,
+              "prefill_complete_s": 0.6160522997757574,
+              "completed_s": 2.982220948509368
+            },
+            "foreground-3": {
+              "first_s": 1.0370845381810427,
+              "ttft_s": 1.0370845381810427,
+              "prefill_complete_s": 1.0370845381810427,
+              "completed_s": 3.0417576296907054
+            },
+            "sentinel": {
+              "first_s": 1.0370845381810427,
+              "ttft_s": 0.6370845381810426,
+              "prefill_complete_s": 1.0370845381810427,
+              "completed_s": 3.0417576296907054
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 4.0201255676064065
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397566,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12510253661469473,
+              "ttft_s": 0.12510253661469473,
+              "prefill_complete_s": 0.12510253661469473,
+              "completed_s": 3.0995690525246866
+            },
+            "foreground-1": {
+              "first_s": 0.12510253661469473,
+              "ttft_s": 0.12510253661469473,
+              "prefill_complete_s": 0.12510253661469473,
+              "completed_s": 3.0995690525246866
+            },
+            "foreground-2": {
+              "first_s": 0.7084726157757573,
+              "ttft_s": 0.7084726157757573,
+              "prefill_complete_s": 0.7084726157757573,
+              "completed_s": 3.1603731405093756
+            },
+            "foreground-3": {
+              "first_s": 1.215236730181043,
+              "ttft_s": 1.215236730181043,
+              "prefill_complete_s": 1.215236730181043,
+              "completed_s": 3.219909821690714
+            },
+            "sentinel": {
+              "first_s": 1.215236730181043,
+              "ttft_s": 0.8152367301810428,
+              "prefill_complete_s": 1.215236730181043,
+              "completed_s": 3.219909821690714
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 4.223468159606415
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.898678359397574,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.1276474702146948,
+              "ttft_s": 0.1276474702146948,
+              "prefill_complete_s": 0.1276474702146948,
+              "completed_s": 3.2955364637246998
+            },
+            "foreground-1": {
+              "first_s": 0.1276474702146948,
+              "ttft_s": 0.1276474702146948,
+              "prefill_complete_s": 0.1276474702146948,
+              "completed_s": 3.2955364637246998
+            },
+            "foreground-2": {
+              "first_s": 0.8101349633757573,
+              "ttft_s": 0.8101349633757573,
+              "prefill_complete_s": 0.8101349633757573,
+              "completed_s": 3.3563405517093887
+            },
+            "foreground-3": {
+              "first_s": 1.4112041413810432,
+              "ttft_s": 1.4112041413810432,
+              "prefill_complete_s": 1.4112041413810432,
+              "completed_s": 3.415877232890727
+            },
+            "sentinel": {
+              "first_s": 1.4112041413810432,
+              "ttft_s": 1.011204141381043,
+              "prefill_complete_s": 1.4112041413810432,
+              "completed_s": 3.415877232890727
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 4.447145010806428
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 6.122355210597587,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.12278896061469469,
+              "ttft_s": 0.12278896061469469,
+              "prefill_complete_s": 0.12278896061469469,
+              "completed_s": 2.9169809367129615
+            },
+            "foreground-1": {
+              "first_s": 0.12278896061469469,
+              "ttft_s": 0.12278896061469469,
+              "prefill_complete_s": 0.12278896061469469,
+              "completed_s": 2.9169809367129615
+            },
+            "foreground-2": {
+              "first_s": 1.1271191846484077,
+              "ttft_s": 1.1271191846484077,
+              "prefill_complete_s": 1.1271191846484077,
+              "completed_s": 3.1269435793518316
+            },
+            "foreground-3": {
+              "first_s": 1.1434916921542437,
+              "ttft_s": 1.1434916921542437,
+              "prefill_complete_s": 1.1434916921542437,
+              "completed_s": 3.1415108979463295
+            },
+            "sentinel": {
+              "first_s": 0.4980409127984863,
+              "ttft_s": 0.09804091279848626,
+              "prefill_complete_s": 0.4980409127984863,
+              "completed_s": 2.9929860466938205
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 4.110056433136079
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397569,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9024635605841287,
+            "raw_ttft_s": 0.9024635605841287,
+            "old_empirical_corrected_ttft_s": 0.9927424037828556
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9468289613065233,
+            "raw_ttft_s": 0.9468289613065233,
+            "old_empirical_corrected_ttft_s": 1.0371078045052502
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9468289613065233,
+            "raw_ttft_s": 0.5468289613065233,
+            "old_empirical_corrected_ttft_s": 0.6371078045052502
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.12278896061469474,
+            "raw_ttft_s": 0.12278896061469474,
+            "old_empirical_corrected_ttft_s": 0.21306780381342166
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.12278896061469474,
+            "raw_ttft_s": 0.12278896061469474,
+            "old_empirical_corrected_ttft_s": 0.21306780381342166
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.6160522997757574,
+            "raw_ttft_s": 0.6160522997757574,
+            "old_empirical_corrected_ttft_s": 0.7063311429744843
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0370845381810427,
+            "raw_ttft_s": 1.0370845381810427,
+            "old_empirical_corrected_ttft_s": 1.1273633813797697
+          },
+          "sentinel": {
+            "raw_engine_first_s": 1.0370845381810427,
+            "raw_ttft_s": 0.6370845381810427,
+            "old_empirical_corrected_ttft_s": 0.7525299750930106
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-four-at800-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4509683432042788,
+              "ttft_s": 0.4509683432042788,
+              "prefill_complete_s": 0.4509683432042788,
+              "completed_s": 2.925852784336402
+            },
+            "foreground-1": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433,
+              "completed_s": 2.941370658033411
+            },
+            "foreground-2": {
+              "first_s": 0.9022001234963433,
+              "ttft_s": 0.9022001234963433,
+              "prefill_complete_s": 0.9022001234963433,
+              "completed_s": 2.941370658033411
+            },
+            "foreground-3": {
+              "first_s": 0.9465121096056861,
+              "ttft_s": 0.9465121096056861,
+              "prefill_complete_s": 0.9465121096056861,
+              "completed_s": 2.9562548283287455
+            },
+            "sentinel": {
+              "first_s": 0.9465121096056861,
+              "ttft_s": 0.14651210960568606,
+              "prefill_complete_s": 0.9465121096056861,
+              "completed_s": 2.9562548283287455
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 3.8662299567276897
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.64025072931597,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.3683668818440844,
+              "ttft_s": 0.3683668818440844,
+              "prefill_complete_s": 0.3683668818440844,
+              "completed_s": 2.9505514977136746
+            },
+            "foreground-1": {
+              "first_s": 0.6144716772490448,
+              "ttft_s": 0.6144716772490448,
+              "prefill_complete_s": 0.6144716772490448,
+              "completed_s": 2.9815872451076926
+            },
+            "foreground-2": {
+              "first_s": 0.8611033468295761,
+              "ttft_s": 0.8611033468295761,
+              "prefill_complete_s": 0.8611033468295761,
+              "completed_s": 3.011989289100036
+            },
+            "foreground-3": {
+              "first_s": 1.0345497245743458,
+              "ttft_s": 1.0345497245743458,
+              "prefill_complete_s": 1.0345497245743458,
+              "completed_s": 3.0417576296907054
+            },
+            "sentinel": {
+              "first_s": 1.0345497245743458,
+              "ttft_s": 0.23454972457434575,
+              "prefill_complete_s": 1.0345497245743458,
+              "completed_s": 3.0417576296907054
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 4.0201255676064065
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397566,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.39954184984408436,
+              "ttft_s": 0.39954184984408436,
+              "prefill_complete_s": 0.39954184984408436,
+              "completed_s": 3.0516333537136777
+            },
+            "foreground-1": {
+              "first_s": 0.6706162962490445,
+              "ttft_s": 0.6706162962490445,
+              "prefill_complete_s": 0.6706162962490445,
+              "completed_s": 3.0826691011076957
+            },
+            "foreground-2": {
+              "first_s": 0.9422094958295757,
+              "ttft_s": 0.9422094958295757,
+              "prefill_complete_s": 0.9422094958295757,
+              "completed_s": 3.11307114510004
+            },
+            "foreground-3": {
+              "first_s": 1.1356315805743453,
+              "ttft_s": 1.1356315805743453,
+              "prefill_complete_s": 1.1356315805743453,
+              "completed_s": 3.1428394856907094
+            },
+            "sentinel": {
+              "first_s": 1.1356315805743453,
+              "ttft_s": 0.3356315805743453,
+              "prefill_complete_s": 1.1356315805743453,
+              "completed_s": 3.1428394856907094
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 4.14639782360641
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.8216080233975696,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4338343146440844,
+              "ttft_s": 0.4338343146440844,
+              "prefill_complete_s": 0.4338343146440844,
+              "completed_s": 3.162823395313686
+            },
+            "foreground-1": {
+              "first_s": 0.7323753771490444,
+              "ttft_s": 0.7323753771490444,
+              "prefill_complete_s": 0.7323753771490444,
+              "completed_s": 3.193859142707704
+            },
+            "foreground-2": {
+              "first_s": 1.0314262597295756,
+              "ttft_s": 1.0314262597295756,
+              "prefill_complete_s": 1.0314262597295756,
+              "completed_s": 3.2242611867000486
+            },
+            "foreground-3": {
+              "first_s": 1.2468216221743458,
+              "ttft_s": 1.2468216221743458,
+              "prefill_complete_s": 1.2468216221743458,
+              "completed_s": 3.254029527290718
+            },
+            "sentinel": {
+              "first_s": 1.2468216221743458,
+              "ttft_s": 0.44682162217434573,
+              "prefill_complete_s": 1.2468216221743458,
+              "completed_s": 3.254029527290718
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 4.285297305206418
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.960507504997578,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583,
+              "completed_s": 3.026873459395369
+            },
+            "foreground-1": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583,
+              "completed_s": 3.026873459395369
+            },
+            "foreground-2": {
+              "first_s": 0.9823116849175583,
+              "ttft_s": 0.9823116849175583,
+              "prefill_complete_s": 0.9823116849175583,
+              "completed_s": 3.026873459395369
+            },
+            "foreground-3": {
+              "first_s": 1.0316980592668115,
+              "ttft_s": 1.0316980592668115,
+              "prefill_complete_s": 1.0316980592668115,
+              "completed_s": 3.041757629690703
+            },
+            "sentinel": {
+              "first_s": 1.0316980592668115,
+              "ttft_s": 0.23169805926681164,
+              "prefill_complete_s": 1.0316980592668115,
+              "completed_s": 3.041757629690703
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 4.010303164880453
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.695335767397564,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.45096834320427887,
+            "raw_ttft_s": 0.45096834320427887,
+            "old_empirical_corrected_ttft_s": 0.5412471864030057
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.9022001234963433,
+            "raw_ttft_s": 0.9022001234963433,
+            "old_empirical_corrected_ttft_s": 0.9924789666950702
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 0.9465121096056862,
+            "raw_ttft_s": 0.9465121096056862,
+            "old_empirical_corrected_ttft_s": 1.036790952804413
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.9465121096056862,
+            "raw_ttft_s": 0.14651210960568617,
+            "old_empirical_corrected_ttft_s": 0.23834653514069098
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.3683668818440843,
+            "raw_ttft_s": 0.3683668818440843,
+            "old_empirical_corrected_ttft_s": 0.4586457250428112
+          },
+          "foreground-1": {
+            "raw_engine_first_s": 0.6144716772490447,
+            "raw_ttft_s": 0.6144716772490447,
+            "old_empirical_corrected_ttft_s": 0.7047505204477716
+          },
+          "foreground-2": {
+            "raw_engine_first_s": 0.8611033468295761,
+            "raw_ttft_s": 0.8611033468295761,
+            "old_empirical_corrected_ttft_s": 0.951382190028303
+          },
+          "foreground-3": {
+            "raw_engine_first_s": 1.0345497245743458,
+            "raw_ttft_s": 1.0345497245743458,
+            "old_empirical_corrected_ttft_s": 1.1248285677730727
+          },
+          "sentinel": {
+            "raw_engine_first_s": 1.0345497245743458,
+            "raw_ttft_s": 0.23454972457434575,
+            "old_empirical_corrected_ttft_s": 0.34999516148631354
+          }
+        }
+      }
+    },
+    {
+      "case": "sentinel-one-at200-D16",
+      "scenarios": {
+        "B8192-fifo-q0.0": {
+          "budget": 8192,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4244746951306406,
+              "ttft_s": 0.4244746951306406,
+              "prefill_complete_s": 0.4244746951306406,
+              "completed_s": 2.341795752819766
+            },
+            "sentinel": {
+              "first_s": 0.4663902956076036,
+              "ttft_s": 0.26639029560760363,
+              "prefill_complete_s": 0.4663902956076036,
+              "completed_s": 2.356363071414263
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9099751283989439,
+            "end_s": 3.266338199813207
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.054609439295148,
+          "release_s": 0.9099751283989439,
+          "steps": 258,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q0.0": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.4911558424587792,
+              "ttft_s": 0.4911558424587792,
+              "prefill_complete_s": 0.4911558424587792,
+              "completed_s": 2.3845471535007476
+            },
+            "sentinel": {
+              "first_s": 0.5091416962885851,
+              "ttft_s": 0.3091416962885851,
+              "prefill_complete_s": 0.5091416962885851,
+              "completed_s": 2.3991144720952446
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9783679379157009,
+            "end_s": 3.3774824100109457
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.109694477376746,
+          "release_s": 0.9783679379157009,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q1.5e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 1.5e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.579942690458779,
+              "ttft_s": 0.579942690458779,
+              "prefill_complete_s": 0.579942690458779,
+              "completed_s": 2.473426257500747
+            },
+            "sentinel": {
+              "first_s": 0.598020800288585,
+              "ttft_s": 0.398020800288585,
+              "prefill_complete_s": 0.598020800288585,
+              "completed_s": 2.4879935760952447
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.003558337915701,
+            "end_s": 3.4915519140109454
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.223763981376746,
+          "release_s": 1.003558337915701,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-fifo-q3.15e-09": {
+          "budget": 2048,
+          "policy": "fifo",
+          "quadratic": 3.15e-09,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.677608223258779,
+              "ttft_s": 0.677608223258779,
+              "prefill_complete_s": 0.677608223258779,
+              "completed_s": 2.5711932719007473
+            },
+            "sentinel": {
+              "first_s": 0.6957878146885847,
+              "ttft_s": 0.4957878146885848,
+              "prefill_complete_s": 0.6957878146885847,
+              "completed_s": 2.5857605904952443
+            }
+          },
+          "scored_step_window": {
+            "start_s": 1.0312677779157007,
+            "end_s": 3.617028368410945
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.349240435776745,
+          "release_s": 1.0312677779157007,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        },
+        "B2048-round_robin_512-q0.0": {
+          "budget": 2048,
+          "policy": "round_robin_512",
+          "quadratic": 0.0,
+          "backgrounds": 16,
+          "foreground": {
+            "foreground-0": {
+              "first_s": 0.6541811788318849,
+              "ttft_s": 0.6541811788318849,
+              "prefill_complete_s": 0.6541811788318849,
+              "completed_s": 2.541619141031847
+            },
+            "sentinel": {
+              "first_s": 0.27694077453921995,
+              "ttft_s": 0.07694077453921988,
+              "prefill_complete_s": 0.27694077453921995,
+              "completed_s": 2.41051327368137
+            }
+          },
+          "scored_step_window": {
+            "start_s": 0.9685455351897495,
+            "end_s": 3.5101646762215966
+          },
+          "itl": null,
+          "background_output": 256,
+          "wall_s": 5.109694477376746,
+          "release_s": 0.9685455351897495,
+          "steps": 264,
+          "assumptions": "serial running-first toy engine; first token at prefill completion; no frontend or fitted residual correction"
+        }
+      },
+      "frozen_barrier_predictions": {
+        "8192": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.42447469513064057,
+            "raw_ttft_s": 0.42447469513064057,
+            "old_empirical_corrected_ttft_s": 0.5147535383293675
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.4663902956076035,
+            "raw_ttft_s": 0.26639029560760347,
+            "old_empirical_corrected_ttft_s": 0.3566691388063304
+          }
+        },
+        "2048": {
+          "foreground-0": {
+            "raw_engine_first_s": 0.4911558424587791,
+            "raw_ttft_s": 0.4911558424587791,
+            "old_empirical_corrected_ttft_s": 0.581434685657506
+          },
+          "sentinel": {
+            "raw_engine_first_s": 0.5091416962885849,
+            "raw_ttft_s": 0.30914169628858484,
+            "old_empirical_corrected_ttft_s": 0.39942053948731177
+          }
+        }
+      }
+    }
+  ]
+}

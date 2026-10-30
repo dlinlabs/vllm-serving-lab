@@ -1,0 +1,24 @@
+{
+  "captured_commit": "2ebb18566b0e4c4751bded54ab6f18fab73abcbb",
+  "archive_library_file_id": "libfile_2d4de011e12c81919e1e90b3815ea674",
+  "raw_files_modified": false,
+  "native_cpu_proof_modified": false,
+  "local_gpu_used": false,
+  "local_full_native_acceptance_run": false,
+  "local_platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "local_python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "numerical_versions": {
+    "numpy": "2.3.5",
+    "scipy": "1.18.1"
+  },
+  "strict_replay_passed": true,
+  "initial_local_replay": {
+    "passed": false,
+    "reason": "TRAIN refit/freeze differs",
+    "local_scipy": "1.17.0",
+    "captured_scipy": "1.18.1",
+    "resolution": "isolated local dependency matched to captured SciPy; no source/threshold/data changes"
+  },
+  "seal_after_last_train_s": 25.49792914604768,
+  "first_held_after_seal_s": 0.12688287592027336
+}

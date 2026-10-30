@@ -1,0 +1,31 @@
+{
+  "scope": "Offline uploaded-native evidence audit plus selected local CPU tests; no GPU execution here",
+  "tests": {
+    "tests": 224,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_leaf_attribution_cases": 10,
+  "command": "python -m pytest -q tests/test_prefill_pipeline.py tests/test_prefill_deep.py tests/test_prefill_collector.py tests/test_prefill_host.py tests/test_prefill_round7.py tests/test_prefill_round8.py tests/test_prefill_design.py tests/test_prefill_diagnostic_analysis.py tests/test_prefill_review_gates.py tests/test_prefill_transfer.py tests/test_setup_v1.py",
+  "captured_commit": "ab24416334174f31c0c8b686ff4d0e496f86a969",
+  "native_cpu_tests_recorded": 927,
+  "original_native_junit_in_archive": false,
+  "source_files_verified": 130,
+  "installed_source_files_verified": 38,
+  "pipeline_steps": 1056,
+  "cpu_stage_spans": 7392,
+  "cuda_stage_spans": 5280,
+  "profiled_gpu_activities": 4421,
+  "unmatched_gpu_launches": 0,
+  "cuda_scope_qualified": false,
+  "model_accepted": false,
+  "full_experiment_accepted": false,
+  "predictive_model_implemented": false,
+  "local_gpu_execution": false,
+  "raw_archive_modified": false,
+  "initial_test_invocation": "pytest unavailable; installed declared CPU dependencies before running tests",
+  "analyzer_sha256": "434258cb9fa59f948237bd742d8d99c32d156c44469b4dd4c2e8ea6306feb85b",
+  "archive_sha256": "a5a446a27f0a991f8ee715ee4f0010ab32a5c9cdc3e3188ec97e54525c10571e",
+  "figure_inspected": true
+}
