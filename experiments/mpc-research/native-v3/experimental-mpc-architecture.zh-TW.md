@@ -4,6 +4,11 @@
 依據是已封存 v5 在 development181004–181007 的可重現預測結果，
 不是四模型投票。Direct headroom IO 的負面結果保留。
 
+R9實際solver的complete cases尚無first-action區別，且數值conditioning與
+CPU pipeline qualification有新問題；此candidate維持gated。
+詳見[solver與qualification evidence](mean-optimizer-qualification.zh-TW.md)，
+不可因預測MAE改善直接部署為已有效的多步controller。
+
 ## 控制範圍與可觀測 state
 
 目前 actuator 控制 Gateway 的 reservation-cost budget。
@@ -35,7 +40,7 @@ v5尚未完整使用這些新fields。不同engine／Gateway IDs不能猜測join
 
 每個candidate使用相同scenario的arrival／payload draw \(w^{(s)}\)，
 不得讀已實現future tape、EOS、ACK或future snapshots。
-v5用past2s估计的固定Poisson rate及past payload mix；
+v5用past2s估計的固定Poisson rate及past payload mix；
 latent service／completion以Train marked empirical kernels近似，
 由payload與Gateway-owned-load bin條件化。
 

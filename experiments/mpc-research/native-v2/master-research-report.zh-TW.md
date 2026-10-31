@@ -13,6 +13,19 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**R9真正optimizer與未通過的CPU gate：** Mayor實際重現全部1111個
+frozen-v5 cuts；與Worker共同完成的29,300個plan means精確一致，
+但100ms deadline依環境分別造成303／354次未完成。
+完整family為808／757，first-action differences均為0，不能將deadline actions算相同；
+不是Native MPC改善。Mayor一次cooperative callback實測262ms，沒有hard100ms保證。
+四module CPUqualification5failed／258passed／165subtests，foreign-ABI
+pipeline path正另版修正，不skip或重裝救分數。
+Sol／Mayor獨立重現cyclic survivor kernel bias，原始v5結果保留，
+新repair先preregister再用未使用Train10／11；同時四模型獨立檢查
+future batching interference是否能影響已存在cohort的service。
+截至12:12Z續跑8040秒、舊完整3600秒另列；十小時未完成，live729未替換。
+詳見[真正solver重現與qualification](../native-v3/mean-optimizer-qualification.zh-TW.md)。
+
 **新Train6／7未改動v5 replication：** 先以517f928預註冊，再freeze20episodes，
 同Train1–3 fit／同source，1111origins的G5 MAE4.4234／4.2260，
 分別低於最強同-mask5.9191／5.6450；paired4.3661／4.0481也低於zero。
