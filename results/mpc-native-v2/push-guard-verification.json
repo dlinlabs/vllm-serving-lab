@@ -1,0 +1,95 @@
+{
+  "experiment_id": "native-v2-safety-preflight",
+  "checked_utc": "2026-10-31T00:23:21.657316+00:00",
+  "checks": [
+    {
+      "common_git_dir": "/home/daniel_lin/gt/pr32/.repo.git",
+      "git_exit": 1,
+      "guard_marker_seen": true,
+      "destination": "local-only receiver"
+    },
+    {
+      "common_git_dir": "/home/daniel_lin/gt/pr32/mayor/rig/.git",
+      "git_exit": 1,
+      "guard_marker_seen": true,
+      "destination": "local-only receiver"
+    },
+    {
+      "wrapper": "gt",
+      "exit": 86,
+      "underlying_command_not_called": true
+    },
+    {
+      "wrapper": "git",
+      "exit": 86,
+      "underlying_command_not_called": true
+    }
+  ],
+  "receiver_has_no_refs": true,
+  "scope": "Protects normal native completion,not a hostile same-UID agent intentionally bypassing hooks/wrappers. No gt done implementation executed;no public remote contacted.",
+  "installed_sha256": {
+    "/home/daniel_lin/gt/pr32/.repo.git/hooks/pre-push": "5e9dd500cfffe9dfe6866ee8d4beea32b7f090ee1529b8f70bc93f968e3e85f3",
+    "/home/daniel_lin/gt/pr32/mayor/rig/.git/hooks/pre-push": "5e9dd500cfffe9dfe6866ee8d4beea32b7f090ee1529b8f70bc93f968e3e85f3",
+    "/home/daniel_lin/gt/pr32/settings/worker-guard/launch": "d1fcac39a526c7ae5decf78e3a2b820bc5969c8fcae0890cf2924bd4970223d6",
+    "/home/daniel_lin/gt/pr32/settings/worker-guard/bin/git": "bf5f685f6e3c5352504acb6290cfe5cea8f05c2363360dba6bc81fb39ec900ef",
+    "/home/daniel_lin/gt/pr32/settings/worker-guard/bin/gt": "55f15a82a5044174e89c6e329030e215aae1219748fef07f3f04e7d403d033a2",
+    "/home/daniel_lin/gt/pr32/settings/config.json": "b3cfc460f9a80ff3cc6304ff504ceff6ad1f69a6ea7629e1566cca571760f617"
+  },
+  "pr32_agent_settings": {
+    "type": "rig-settings",
+    "version": 1,
+    "namepool": {
+      "style": "minerals"
+    },
+    "agents": {
+      "copilot-opus": {
+        "provider": "copilot",
+        "command": "copilot",
+        "args": [
+          "--model",
+          "claude-opus-5.5",
+          "--yolo"
+        ],
+        "exec_wrapper": [
+          "/home/daniel_lin/gt/pr32/settings/worker-guard/launch"
+        ]
+      },
+      "copilot-astra": {
+        "provider": "copilot",
+        "command": "copilot",
+        "args": [
+          "--model",
+          "gpt-6-astra",
+          "--yolo"
+        ],
+        "exec_wrapper": [
+          "/home/daniel_lin/gt/pr32/settings/worker-guard/launch"
+        ]
+      },
+      "copilot-gemini": {
+        "provider": "copilot",
+        "command": "copilot",
+        "args": [
+          "--model",
+          "gemini-3.8-flash",
+          "--yolo"
+        ],
+        "exec_wrapper": [
+          "/home/daniel_lin/gt/pr32/settings/worker-guard/launch"
+        ]
+      },
+      "copilot-gpt": {
+        "provider": "copilot",
+        "command": "copilot",
+        "args": [
+          "--model",
+          "gpt-6.1-sol",
+          "--yolo"
+        ],
+        "exec_wrapper": [
+          "/home/daniel_lin/gt/pr32/settings/worker-guard/launch"
+        ]
+      }
+    }
+  }
+}
