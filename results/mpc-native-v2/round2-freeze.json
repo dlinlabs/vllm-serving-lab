@@ -1,0 +1,32 @@
+{
+  "schema": "native-v2-round2-freeze-v1",
+  "shared_round1_commit": "bc217acf9db3f6222026c0dd345db77a379d6151",
+  "mayor_measurement_candidate_commit": "1cbe251",
+  "scientific_status": "Unaccepted critiques and executed CPU counterexamples; no new native GPU evidence or accepted MPC performance claim.",
+  "sources": {
+    "opus": "0ebc02f87e22ece60c507891ee270b5e4d5ac87f",
+    "astra": "222f1a54d95c604645e94ba8b7bc053c20b6eb62",
+    "gemini": "f0198d0608dd7cfbf929b0385ab90ae59dd6c947",
+    "sol": "974923bde924b524ccdc37196f87d22d2169993a"
+  },
+  "integration_scope": "Only each model's round2 critique, counterexample module and focused test file. No auto-checkpoint infrastructure or workflow instructions.",
+  "normalization": "Gemini Markdown trailing whitespace removed in the integration copy only; the original remains at its source commit.",
+  "validation": {
+    "runner": "Existing Python 3.12 CPU environment",
+    "command": "python -m pytest -q experiments/mpc-research/native-v2/round2 --junitxml=results/mpc-native-v2/round2-cpu-junit.xml",
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "Counterexample reproducibility, not acceptance of every report statement or physical/statistical claim."
+  },
+  "mayor_rejections_for_round3": [
+    "Gemini's claimed measured 4.5us facade / 450us CUPTI overhead and zero active-serving jitter are unsupported constants, not measurements.",
+    "Falsifying one decode-progress coefficient interpretation does not prove a unique roofline model or refute every fluid or linear model.",
+    "A fitted mean batch law is not a certified native lower envelope or capacity ceiling.",
+    "Output-progress ratios are effective commit-rate observations unless actual batch participation and sampling boundaries are qualified.",
+    "Equal whole-episode Fixed16/Fixed32 scores do not prove that a switching budget policy cannot improve.",
+    "Rare first-action disagreements do not by frequency alone bound their goodput impact.",
+    "Retrospective unresolved-tail score intervals are not an online admission policy."
+  ],
+  "held_out": "160021-160024 untouched; no final-test selection or evaluation authorized by this freeze."
+}

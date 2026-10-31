@@ -154,6 +154,25 @@ CompletionRequest 測試，原因是 CPU 環境未裝 vLLM；
 下一步為四模型批判後的 installed-source／真 HTTP／drain 資格，
 再進行未開 profiler 的 batch-law Train 實驗。
 
+### Round2：四模型互審已凍結，32項反例可重現
+
+原始四份報告與各自反例／測試已依
+`results/mpc-native-v2/round2-freeze.json` 保存，Mayor 的共同 Python3.12
+環境執行 **32 passed**。這代表反例可執行，不代表報告的每一句都成立。
+已確認的核心問題包括：降 cap 不會即時釋放舊 reservation；
+「settling time 大於 slot 就必然有 multi-step 優勢」不成立；
+Gemini 的統計原型會接受重複 seed blocks、錯誤 solver 分母及缺失 rejection
+guard，不能用來認證性能。Opus 的 knee 選擇先看過外層 held-cell，
+warmup 則曾刪去仍影響後續請求的歷史，必須限縮原結論。
+
+**Mayor 明確駁回未量測數字：** Gemini Round2 宣稱 facade 約4.5µs、
+CUPTI 約450µs，以及零 serving jitter，實際只是 CPU fixture 的常數；
+本輪 GPU 尚未啟動，這些不是測量結果，已要求 Round3 撤回。
+其餘新批判也仍須限縮：fitted mean 不是 capacity lower envelope；
+output increment 不是自動具資格的 GPU iteration clock；
+兩個固定 cap 的整段分數相同，不能推出所有切換策略都無價值。
+下一輪以逐條回應及修訂設計裁決，不以三對一表決或共識取代證據。
+
 研究用共同 SLO 沿用 TTFT500ms＋request-mean TPOT50ms；
 真正逐 token tail 若沒有 timestamps 資格，明確標為不可測，
 不能把 SSE chunk gaps 改名為 token TPOT P99。
