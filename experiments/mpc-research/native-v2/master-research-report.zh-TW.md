@@ -173,6 +173,34 @@ output increment 不是自動具資格的 GPU iteration clock；
 兩個固定 cap 的整段分數相同，不能推出所有切換策略都無價值。
 下一輪以逐條回應及修訂設計裁決，不以三對一表決或共識取代證據。
 
+### 可執行的第一個 Native 資格關卡
+
+新增獨立 opt-in plugin wheel、loopback-only launcher 與
+`collect_batch_qualification.py`，重用標準 Chat collector、source38 guard、
+drain 與 natural-output work audit。凍結方案為 TRAIN170001／170002、
+p128／4096、cohort1／4、capture OFF／light，共16個短 arm，固定 cost
+budget32；完整保留 startup、`stop`／`length`、HTTP失敗與無效 capture。
+它只驗 request／scheduler／worker／commit joins、正常 graphs／async、
+pending events 與 drain，不做服務係數、observer equivalence 或 MPC 性能驗收。
+
+collector 先將原始 utility 回覆與 capture 寫入／fsync、重新核對 SHA，
+才送 ACK；digest／epoch 錯誤不 ACK。四項新增測試（含無效 raw 的保留）
+與18項 facade cases 合計 **22 passed**。Plugin wheel 已用宣告的 isolated
+build backend 建置；無隔離建置曾因 CPU 環境缺 setuptools 失敗，沒有將
+那次失敗記為通過。實際 GPU 安裝／HTTP 執行仍待後續證據。
+
+**OFF 的範圍限制：** capture OFF 仍載入 wrappers／GIL 設定，不是 literal
+disabled baseline。後續 observer-effect pilot 必須使用乾淨重啟的 disabled
+部署，不能拿這16個 arm 宣稱零擾動或已定位 roofline knee。
+
+資源記錄截至 `2026-10-31T01:03:12.570024+00:00` 的已完成 accounting prefix：
+Mayor 加四 fresh workers 累計 **2323.653925 AI Credits**，實際 backend
+分別仍為 Opus5.5／GPT-6 Astra／Gemini3.8 Flash／GPT-6.1 Sol；
+原始 usage IDs 不輸出，prefix bytes／SHA 留在 round2 execution ledger。
+這個 snapshot 含已入帳的少量 Round3，不是最終總額或精確單輪費用，
+也不能換算為美元。01:07:49 provider 再確認 Pod EXITED／runtime=null；
+本輪尚未新增 Native GPU 實驗時間，單卡報價 US$0.89/hr，實際 invoice 未知。
+
 研究用共同 SLO 沿用 TTFT500ms＋request-mean TPOT50ms；
 真正逐 token tail 若沒有 timestamps 資格，明確標為不可測，
 不能把 SSE chunk gaps 改名為 token TPOT P99。

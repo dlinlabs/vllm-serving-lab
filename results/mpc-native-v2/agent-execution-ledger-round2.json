@@ -1,0 +1,100 @@
+{
+  "schema": "native-v2-model-execution-v1",
+  "snapshot_utc": "2026-10-31T01:03:12.570024+00:00",
+  "mission_start_utc": "2026-10-31T00:15:20.032Z",
+  "scope": "Mission-to-date immutable prefix snapshot at R2/R3 transition;includes Mayor since mission start and all four fresh workers. Includes initial R3 calls already recorded,not final mission spend.",
+  "credits_definition": "Deduplicated accounting usageId;sum(copilotUsage.totalNanoAiu)/1e9. Legacy usage.cost is not credits or USD. Opaque usage IDs are not exported.",
+  "agents": [
+    {
+      "name": "opal",
+      "bead": "pr-nv2-opus",
+      "session_id": "ab448162-5c78-43ab-9f76-75f5c5600cd7",
+      "source_path": "/home/daniel_lin/.copilot/session-state/ab448162-5c78-43ab-9f76-75f5c5600cd7/events.jsonl",
+      "prefix_bytes": 3165901,
+      "prefix_sha256": "7eea7f93191052bf309a4261b3aeac57f68e0653649d6d038117d441d21f3173",
+      "actual_usage_models": [
+        "claude-opus-5.5"
+      ],
+      "usage_records": 101,
+      "input_tokens": 10071680,
+      "output_tokens": 139943,
+      "cache_read_tokens": 9548290,
+      "total_nano_aiu": 732525800000,
+      "ai_credits": 732.5258,
+      "credit_records_complete": true
+    },
+    {
+      "name": "topaz",
+      "bead": "pr-nv2-astra",
+      "session_id": "3a24c7c1-9347-40ff-8389-4ad4e56525ed",
+      "source_path": "/home/daniel_lin/.copilot/session-state/3a24c7c1-9347-40ff-8389-4ad4e56525ed/events.jsonl",
+      "prefix_bytes": 3162552,
+      "prefix_sha256": "da88e7cd1974be18e36bb9506f833126c59fceb896eb0b7a08588f6c9e6606a2",
+      "actual_usage_models": [
+        "gpt-6-astra"
+      ],
+      "usage_records": 42,
+      "input_tokens": 4438502,
+      "output_tokens": 48476,
+      "cache_read_tokens": 4227385,
+      "total_nano_aiu": 928983250000,
+      "ai_credits": 928.98325,
+      "credit_records_complete": true
+    },
+    {
+      "name": "garnet",
+      "bead": "pr-nv2-gemini",
+      "session_id": "2e9de96f-2d7f-41a7-aafe-9a66e24256e8",
+      "source_path": "/home/daniel_lin/.copilot/session-state/2e9de96f-2d7f-41a7-aafe-9a66e24256e8/events.jsonl",
+      "prefix_bytes": 1880244,
+      "prefix_sha256": "130b32c356f5154cae9097a527cb19fba71390c706ba065caec46113d653623a",
+      "actual_usage_models": [
+        "gemini-3.8-flash"
+      ],
+      "usage_records": 96,
+      "input_tokens": 8243976,
+      "output_tokens": 30962,
+      "cache_read_tokens": 7244602,
+      "total_nano_aiu": 140898315000,
+      "ai_credits": 140.898315,
+      "credit_records_complete": true
+    },
+    {
+      "name": "ruby",
+      "bead": "pr-nv2-sol",
+      "session_id": "28a61dc7-ff18-4d1b-8d15-873d146236e7",
+      "source_path": "/home/daniel_lin/.copilot/session-state/28a61dc7-ff18-4d1b-8d15-873d146236e7/events.jsonl",
+      "prefix_bytes": 3289615,
+      "prefix_sha256": "74608dbdd0c25122d2a4992e475cc5eb9097d11aaf18e98cb536cd6549c44f39",
+      "actual_usage_models": [
+        "gpt-6.1-sol"
+      ],
+      "usage_records": 37,
+      "input_tokens": 3925694,
+      "output_tokens": 49296,
+      "cache_read_tokens": 3709207,
+      "total_nano_aiu": 140504270000,
+      "ai_credits": 140.50427,
+      "credit_records_complete": true
+    },
+    {
+      "name": "mayor",
+      "bead": "pr-native-v2",
+      "session_id": "73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d",
+      "source_path": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/events.jsonl",
+      "prefix_bytes": 62355349,
+      "prefix_sha256": "c05b7a2ce02cb08050b58141802109e1a97a2b402ea2fd96f10a4a432f0652fb",
+      "actual_usage_models": [
+        "gpt-6.1-sol"
+      ],
+      "usage_records": 90,
+      "input_tokens": 11840179,
+      "output_tokens": 140914,
+      "cache_read_tokens": 11334179,
+      "total_nano_aiu": 380742290000,
+      "ai_credits": 380.74229,
+      "credit_records_complete": true
+    }
+  ],
+  "total_ai_credits": 2323.653925
+}
