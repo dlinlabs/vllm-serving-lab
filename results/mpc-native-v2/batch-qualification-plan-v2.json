@@ -1,0 +1,230 @@
+{
+  "schema": "native-v2-batch-capture-plan-v1",
+  "partition": "train",
+  "source_commit": "9820231228f6859cd75abbf8a1d04d770490ab28",
+  "trials": [
+    {
+      "trial_id": "nv2-qual-170001-p4096-n1-light",
+      "seed": 170001,
+      "observer": "light",
+      "prompt_tokens": 4096,
+      "cohort": 1,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "8092ea3fd8bb073a360228f5c2a0e660"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170001-p128-n4-light",
+      "seed": 170001,
+      "observer": "light",
+      "prompt_tokens": 128,
+      "cohort": 4,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "56b6a94df9c6eda705638ea87717aedb",
+        "ca65e3116f26c6c44b2732e7708ef79c",
+        "eb99f23438f61b0d97e57e9fd96bf838",
+        "cf90cc0fbb763855a7f2e8726db6847c"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170001-p4096-n1-off",
+      "seed": 170001,
+      "observer": "off",
+      "prompt_tokens": 4096,
+      "cohort": 1,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "ba7610448c4af538008c1f8b958a183f"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170001-p128-n4-off",
+      "seed": 170001,
+      "observer": "off",
+      "prompt_tokens": 128,
+      "cohort": 4,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "30c5d72760e6d2fdffde71e70f3817c6",
+        "c9a9f29cd19735150375da70025b8f61",
+        "0299e3adbf09bc25ca2b9a6f91d6f7c2",
+        "a3fb0603e2a0257965da005ad06d8839"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170001-p128-n1-light",
+      "seed": 170001,
+      "observer": "light",
+      "prompt_tokens": 128,
+      "cohort": 1,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "dc5ec1129e6228f0deed431ae0984f79"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170001-p4096-n4-light",
+      "seed": 170001,
+      "observer": "light",
+      "prompt_tokens": 4096,
+      "cohort": 4,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "1fd54b24f3c3144861acfb1b20e43c0e",
+        "9533ea2f509865bed8cad8145918fea8",
+        "396422606b8288d77f0aed971a4606a4",
+        "1e81616511b1de5953025452d3580545"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170001-p128-n1-off",
+      "seed": 170001,
+      "observer": "off",
+      "prompt_tokens": 128,
+      "cohort": 1,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "09e15dac81372e8b269d5063075178c1"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170001-p4096-n4-off",
+      "seed": 170001,
+      "observer": "off",
+      "prompt_tokens": 4096,
+      "cohort": 4,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "bfa3f9e7663d0f1826ef7a415d52def1",
+        "99117d8119ee3b7428d7142f84b21e58",
+        "0e4e30fa98bf04bb780be7b80bc4f6ff",
+        "6013614960a7c239bea35eb12ec44eb0"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170002-p128-n1-light",
+      "seed": 170002,
+      "observer": "light",
+      "prompt_tokens": 128,
+      "cohort": 1,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "d6dc760f16d41ef4ef3e2093616ca464"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170002-p4096-n1-light",
+      "seed": 170002,
+      "observer": "light",
+      "prompt_tokens": 4096,
+      "cohort": 1,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "953a7e0f40dd57a77f902a2209806103"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170002-p4096-n4-off",
+      "seed": 170002,
+      "observer": "off",
+      "prompt_tokens": 4096,
+      "cohort": 4,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "32f02fb3382b7f44a819260e68de0076",
+        "68c5afef12548817cbb7ed2a7a510132",
+        "8c68595598e8d815c23ffe3e298c3f7d",
+        "e38d17e1e7dfee2e49595454a88ea953"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170002-p128-n1-off",
+      "seed": 170002,
+      "observer": "off",
+      "prompt_tokens": 128,
+      "cohort": 1,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "51565843c475958aa5053b073b5aa007"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170002-p4096-n4-light",
+      "seed": 170002,
+      "observer": "light",
+      "prompt_tokens": 4096,
+      "cohort": 4,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "0c0c7563bd3e532401a1073c3f41de31",
+        "42ebdd2ca8d24e3033fdffb675579ef6",
+        "41786b225ef71300be2e62f3f15b508e",
+        "5c28720c04e7b24d5ca17c3275cef778"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170002-p128-n4-off",
+      "seed": 170002,
+      "observer": "off",
+      "prompt_tokens": 128,
+      "cohort": 4,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "9343899ef2838a7fdba453aeb50a2f34",
+        "b52d148115035acddffd0404930735dd",
+        "de1ab4c52438717d3a7ffb3d4c1442dc",
+        "8dbfe542285bf521b1c87bd9f63a5331"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170002-p4096-n1-off",
+      "seed": 170002,
+      "observer": "off",
+      "prompt_tokens": 4096,
+      "cohort": 1,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "14c5124c211f0bb2bbf0bccab6c714ba"
+      ]
+    },
+    {
+      "trial_id": "nv2-qual-170002-p128-n4-light",
+      "seed": 170002,
+      "observer": "light",
+      "prompt_tokens": 128,
+      "cohort": 4,
+      "max_tokens": 128,
+      "words": 28,
+      "request_ids": [
+        "96d19e5b32d60e6bc69d50170f002c7e",
+        "37278f777ea08532b9f8572b52873b18",
+        "7a3df9d529f39fb08c401c3bef8a111e",
+        "cb1fb5917edeb7a6ac1c739e4b853c50"
+      ]
+    }
+  ],
+  "experiment_id": "native-v2-batch-qualification",
+  "pod_id": "i243ycb94oaxy2",
+  "static_cost_budget": 32,
+  "hypothesis": "Existing PR32 passive capture can join normal Gateway Chat requests,scheduler work,worker spans and host commits on graph/async vLLM0.30.",
+  "workload": "16 short drained arms;2 TRAIN seeds;p128/4096;cohort1/4;OFF/light;natural EOS with max128,not forced outputs. Startup/first-cell effects retained.",
+  "completion_rule": "Stop on first invalid identity,failed outcome,overflow,source/clock change or drain failure. Timeout20s/request,20s/drain,10s/event resolution. No performance equivalence,service calibration or MPC acceptance.",
+  "artifact_directory": "native-v2-batch-qualification"
+}

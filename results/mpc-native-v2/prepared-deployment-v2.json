@@ -1,0 +1,34 @@
+{
+  "schema": "native-v2-prepared-deployment-v1",
+  "recorded_utc": "2026-10-31T01:41:55.539949+00:00",
+  "source_commit": "9820231228f6859cd75abbf8a1d04d770490ab28",
+  "plan_file": "results/mpc-native-v2/batch-qualification-plan-v2.json",
+  "plan_file_sha256": "8402bb127a278987bd61f89909bb46692628b24513c94643fc27fc9601aab302",
+  "product_implementation_sha256": "b4f234020105f69f608da45dba7317a8bb632ecd84aeb0e310362740e5fa083a",
+  "artifacts": [
+    {
+      "file": "pr33_native_batch_capture-0.1.1-py3-none-any.whl",
+      "bytes": 5275,
+      "sha256": "1567a6fb269a1791e75191ade0dc76a44b860315b8225b030372f02138d35c35",
+      "source_module": "batch_capture_bridge.py",
+      "exact_committed_source_match": true
+    },
+    {
+      "file": "pr33_native_observer-0.1.0-py3-none-any.whl",
+      "bytes": 2953,
+      "sha256": "bb7eb2ec8548ba35e7c1aa54fabf707678af39eff864288470c49d070bbfc8fa",
+      "source_module": "pr33_native_observer.py",
+      "exact_committed_source_match": true
+    },
+    {
+      "file": "pr33-native-v2-9820231.tar.gz",
+      "bytes": 370943564,
+      "sha256": "3bf39163e3d0d9a24f01dcaccfcf1dda995def726981bbd9a560ab27ef9d8cf2",
+      "git_archive_source": "9820231228f6859cd75abbf8a1d04d770490ab28"
+    }
+  ],
+  "storage": "Mayor persistent session files;source archive reproducible from committed Git source. No private control configuration in Git archive.",
+  "status": "Prepared,not deployed or native qualified. Prior plan-v1 preserved and never executed.",
+  "native_arms_executed": 0,
+  "cpu_evidence": "Source commit contains repository-cpu-junit.xml:2206passed,1skip,24subtests;CPU is not native acceptance."
+}

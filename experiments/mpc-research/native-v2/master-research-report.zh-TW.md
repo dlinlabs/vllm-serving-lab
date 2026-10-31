@@ -309,7 +309,12 @@ Mayor543.26563。逐筆去重、實際 backend 及 complete accounting
 的公平比較；不繼續盲調 horizon 或 cost weights。
 
 原 plan-v1 未執行且保留。metadata 修正後的 source 必須另凍結新版計畫，
-不能假裝舊計畫已測過新 source。Final held-out 未查看；最小有意義改善、
+不能假裝舊計畫已測過新 source。現在已另外凍結 plan-v2，對應完整 CPU
+驗證的 source `9820231228f6859cd75abbf8a1d04d770490ab28`，仍未執行。
+`prepared-deployment-v2.json` 保存 archive／兩個 wheels 的 SHA，
+且逐一確認 wheel module 與 committed source 完全相同；
+產品 implementation hash 也實際重算確認仍為上述 `b4f234…`。
+Final held-out 未查看；最小有意義改善、
 獨立 block 數／power、CI 與共同 rejection／safety guards 尚待 development
 資料後預先註冊，不能由目前 pilot 宣稱穩定 superiority 或 equivalence。
 
@@ -326,3 +331,6 @@ force push、Merge、Rebase、remote 變更或 main。實際發布以獨立 rece
 三輪成果與 usage 可逐一核對。Mayor 直接記錄各研究交付的本機完成，
 epic／Native 資格仍被 GPU 阻塞；不為這個 metadata 異常修改其他 Rig、
 global routing 或 Gas Town 程式，也不呼叫有 Push 風險的 completion。
+普通 `bd close` 因 Mayor actor 與 Worker assignee 不符而拒絕；
+Mayor 以行政 `--force` 結案僅限已核實的研究交付，保留原 assignee，
+沒有解除 Native／MPC 驗收 gate。詳見 `local-completion-receipt.json`。
