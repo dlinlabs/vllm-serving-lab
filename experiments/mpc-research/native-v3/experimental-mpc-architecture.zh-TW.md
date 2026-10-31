@@ -9,6 +9,12 @@ CPU pipeline qualification有新問題；此candidate維持gated。
 詳見[solver與qualification evidence](mean-optimizer-qualification.zh-TW.md)，
 不可因預測MAE改善直接部署為已有效的多步controller。
 
+R10修正後CPU資格與exact prefix加速已完成，但完整offline rankings仍無
+first-action區別，且fixed-mark service缺少future admission對existing cohort的回饋。
+目前將marked model保留為descriptive baseline，batch-aware evolving architecture
+仍待獨立實作／互審與Native證據；詳見
+[R10因果與solver證據](fixed-mark-causality-and-exact-prefix.zh-TW.md)。
+
 ## 控制範圍與可觀測 state
 
 目前 actuator 控制 Gateway 的 reservation-cost budget。

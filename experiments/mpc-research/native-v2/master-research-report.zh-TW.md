@@ -13,6 +13,18 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**R10因果缺口與精確加速：** 原R9 release sensitivity raw已byte-for-byte
+重現；兩個endpoint預測較強baseline好，但G5 bands只有.595／.656，
+不選有利endpoint或宣稱risk。修正ABI／mixed-schema後Mayor286tests／165subtests
+全部通過。Actual prefix benchmark在1111cuts、1,137,664scenario comparisons
+完全等價，paired median加速1.28–1.31倍；deadline350→285，短高rate仍全超時。
+全部offline first-action differences仍0，不是GPU改善。
+Fixed-mark模型無法更新future admission對既有cohort／earlier births服務的影響，
+已由source與fixed-CRN witnesses證明；physical effect magnitude仍待因果驗證。
+已轉向四模型獨立batch-aware evolving prototypes；早期leaked／fabricated
+diagnostic已拒絕，fresh12／13與Final未曝光。詳見
+[固定marked因果缺口與exact prefix](../native-v3/fixed-mark-causality-and-exact-prefix.zh-TW.md)。
+
 **R9真正optimizer與未通過的CPU gate：** Mayor實際重現全部1111個
 frozen-v5 cuts；與Worker共同完成的29,300個plan means精確一致，
 但100ms deadline依環境分別造成303／354次未完成。
