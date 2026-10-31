@@ -323,7 +323,7 @@ R13 四模型十二個 owned files 的 byte-exact archive SHA256 為
 fixtures、四 frozen modules＋current capture／observer 執行：
 **398 passed、196 subtests passed、零 skip，39.87秒**。
 第一次保存命令誤拼 test filename，零測試執行，未算通過；
-訂正命令後的完整 output 另存，不覆寫已发布 R12 真實 regression failures。
+訂正命令後的完整 output 另存，不覆寫已發布 R12 真實 regression failures。
 
 Mayor 另以同 frozen R13 source、PYTHONHASHSEED=7、Train1–3 fit 與
 USED8／9，獨立執行 `--replica-stable-crn ... 181008,181009`。
@@ -428,3 +428,69 @@ Sol1,396.08977，合14,564.7298625 credits；
 - `native-v3-r13-r14-native-worker-usage-snapshot.json`
 
 原始 R12 regression、失敗 Native14、此前負面 model／deadline 證據全部保留。
+
+## NV3-017：Source 邊界、split 與完成流程隔離
+
+Train15／16 的20完整 episodes／40 raw-events files 已全部 off-Pod
+checksum 驗證並封存，加 index／checksum ledger 共42個 members。
+Tar SHA256 `8f228207c3e2af28973e727e6e630e8d0ae29c0e910b23b991d658e8136f0c16`，
+index SHA256
+`a7e088fb410ef29a032b2bcd4e8a0dd3d59bd7b1d33a38b7bc2e8146950ca54b`。
+Preregistered R13 math source 與 gates 在資料前封存，
+但 original `bind_source()` 僅支援6c11／729、共同 coreb4f234。
+對 Source144／coreed8 的實際呼叫正確返回
+`ValueError: replica_source_binding`，沒有計算任何 fresh forecast。
+這是 consumer identity boundary，不是模型失準或可以忽略的錯誤。
+另版 Source144 strict input adapter 必須先封存並驗證實際 core／collector／
+protocol／cost／support／domain／all assignments／raw-events hashes，
+再重用 frozen `episode_from_replica`／`bind_assignments`／model math。
+不得 monkeypatch frozen registry、假造729 identity、改 gates 或刪除失敗。
+本次前瞻性 input qualification 同時保留 instrumentation epoch 差異。
+
+Mayor 對 frozen R12 v9 另行執行同 PYTHONHASHSEED7、Train1–3／USED8–9，
+JSON SHA256
+`804edf3341bd8a0885bd1b93780a1b8de541110e54d1349f1eef1120ab65def0`
+與原 Worker raw byte-exact 相同；v10 b5703 的獨立重現另列 NV3-016。
+二者仍是 development prediction 證據，不是 GPU／MPC 勝利。
+
+**兩項重要語義：** Source144 `gateway.py:239–246` 的 first-content
+只更新 first_at／sequence，cost reservation 持有至
+cleanup `529–533`／`finish_request:439–453` 的 HTTP terminal；
+不能把三個 aggregate rows 當成三次 lease changes 或提前 release。
+Decode anchors 仍會占 full request cost，但真實 max512 survival 尚未測。
+Cost budget16／32 也不等於 FixedConcurrency16／32；目前 runtime maxseq32
+固定、cost-limited長 prompt 的 state coverage 未必支持16 running requests。
+因此 current budget-policy identification 不能冒充公平的 FixedCap16 比較。
+四模型已被要求獨立檢查真正 cap actuation／strong baseline／instrumentation
+所需介面，不以改名或調權重解決。
+
+Source144 protocol 已固定 Train15／16、Cal17–36、Val37–40。
+R14 先前「fresh Train17／18」提案與這個 split 不符，已要求保留為
+不適用提案並修訂 prospective gate：新 Train41／42 或未曝光的正式
+Validation protocol，不能將 Cal 重新命名為 Train／candidate selection。
+Original H11／H12／H13 全規則保持；R14 新模型不得把15／16再稱 unexposed。
+
+**完成流程的實際隔離：** Host 狀態檢查發現 pr32 Witness／Refinery
+均仍在運作，Refinery queue0；Sol 再呼叫 `gt done` 被 unconditional
+wrapper 返回86，其 Witness escalation 沒有授權研究完成流程。
+Mayor 先驗證 pr-witness／pr-refinery pane PIDs、cwd／startticks，
+只 SIGSTOP／SIGKILL 這兩個 owned supervisor process，沒有調用會
+「完成 in-progress merge」的 graceful refinery stop。
+再 `gt rig park pr32` 設 local/ephemeral parked status，daemon 不自動重啟；
+兩 supervisor 已 stopped，四 Polecat sessions 仍在，GPU experiments 未停。
+沒有修改 Git remote／history、沒有 main merge，兩 unconditional
+pre-push hook SHA2565e9dd500… 不變。Park 可在未來本機 wisp cleanup 消失，
+所以 unconditional Git／gt-done barriers 仍是必要防線，不能只靠口頭提醒。
+
+15:13:54Z snapshot：21完整 episodes／2,520新秒＋舊15,960秒，
+共18,480秒＝5h8m；十小時仍未完成。四 current native sessions credits
+15,235.053575，排除 Mayor／舊 sessions／invoice；USD 未知。
+Cal／Val／Final raw 沒有在本次 evidence bundle 或本機分析中開放。
+Native03 仍執行，失敗／結束的 owned GPU shutdown monitor 不變。
+
+新增可追溯檔案位於 `results/mpc-native-v3/review-evidence/`：
+
+- `native-v3-source144-train1516-frozen.tar.gz`／member manifest
+- `native-v3-r13-source144-original-loader-refusal.json`
+- `native-v3-r12-within-step-release-mayor-replica.json.gz`
+- `native-v3-completion-supervisors-stopped.json`

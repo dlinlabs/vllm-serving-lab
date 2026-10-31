@@ -1,0 +1,47 @@
+{
+  "stopped_at": "2026-10-31T15:21:50.623507+00:00",
+  "scope": "pr32 Witness/Refinery only; no graceful merge completion invoked; all four research workers and GPU experiments preserved",
+  "roles": {
+    "witness": {
+      "root": {
+        "pid": 1069465,
+        "ppid": 17663,
+        "startticks": 53786115,
+        "state": "S",
+        "cwd": "/home/daniel_lin/gt/pr32/witness",
+        "command_sha256": "89ce0984eda7ca7b03b9c4105e79776b92abcba9e2b14690d62e0efade1b14c0"
+      },
+      "processes": [
+        {
+          "pid": 1069465,
+          "ppid": 17663,
+          "startticks": 53786115,
+          "state": "R",
+          "cwd": "/home/daniel_lin/gt/pr32/witness",
+          "command_sha256": "89ce0984eda7ca7b03b9c4105e79776b92abcba9e2b14690d62e0efade1b14c0"
+        }
+      ]
+    },
+    "refinery": {
+      "root": {
+        "pid": 309085,
+        "ppid": 17663,
+        "startticks": 26223163,
+        "state": "S",
+        "cwd": "/home/daniel_lin/gt/pr32/refinery/rig",
+        "command_sha256": "80e6d35e291b703d888a9722db2aade9e0b284bc1b6caa814a9fcb598952a9b2"
+      },
+      "processes": [
+        {
+          "pid": 309085,
+          "ppid": 17663,
+          "startticks": 26223163,
+          "state": "D",
+          "cwd": "/home/daniel_lin/gt/pr32/refinery/rig",
+          "command_sha256": "80e6d35e291b703d888a9722db2aade9e0b284bc1b6caa814a9fcb598952a9b2"
+        }
+      ]
+    }
+  },
+  "owned_processes_stopped_without_merge": true
+}

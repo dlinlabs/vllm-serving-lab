@@ -13,6 +13,20 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**新 Source boundary 與完成流程隔離：** Train15／16 已完整封存
+20 episodes／40 raw-events files、2,400秒；原 R13 loader 正確拒絕
+新 Source144／coreed8，尚未算任何 fresh forecast outcome。
+另版 strict input bridge 由 Sol 實作，不能改 frozen model、alias729、
+放寬 source checks 或將 parser refusal 當成 model failure。
+R12 v9 raw804edf 也已 Mayor byte-exact 重現。
+發現 pr32 Witness／Refinery 仍在運作且 Sol completion guard再次返回86；
+已依精確 owned PIDs 停止兩 supervisor，沒有要求 graceful merge completion，
+再以 `gt rig park pr32` 阻止 daemon 自動重啟。
+四個原生 Polecat sessions／GPU driver／monitor 全保留，queue0，
+兩份 unconditional pre-push hooks 不變。這是本機 caller-owned 完成方式，
+不是停研究或操作其他 Rig。完整證據與 split／action 語義
+詳見 [Source與流程邊界](../native-v3/evolving-model-negative-and-observation-support.zh-TW.md#nv3-017source-邊界split-與完成流程隔離)。
+
 **R13 實際量測資格與 R14 新反證（2026-10-31）：** 四個不同模型
 R13 source 在新 Train15／16 開始前封存；Mayor 對 Source144 API 的
 CPU 重跑實際為 **398 tests／196 subtests 全通過、零 skip**。
