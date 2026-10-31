@@ -13,6 +13,17 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**最新R6訊號與邊界：** 四模型真正完成獨立提案後已凍結，
+Mayor204 tests／139 subtests通過。Mayor另外重現Native Trace progress
+診斷：1／3／5秒Good-count MAE約1.07／3.45／5.90，
+history約2.70／5.69／8.76；五秒相對history改善約32.6%，
+但相對更強aggregate hybrid約1.7%，不能歸因全部於progress。
+這仍是已使用Train development資料的預測，不是MPC Goodput提升；
+完整candidate-plan response、uncertainty與Native閉環仍缺。
+四模型已開始R7比較causal hybrid kernel與尚未裁定的full-plan direct model，
+不看Final或搜索horizon/weights。
+詳見[progress預測與plan-response缺口](../native-v3/progress-prediction-and-plan-response.zh-TW.md)。
+
 **最新模型反證與介面進展：** Mayor已byte-for-byte重現Opus R5第三個
 Train development block：外生arrival修訂的5秒Good-count MAE9.84，
 仍輸history mean8.76；oracle未來offers也只有8.78，不能只怪arrival。
