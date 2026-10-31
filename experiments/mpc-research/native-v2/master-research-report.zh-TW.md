@@ -20,12 +20,16 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 四個 fresh native Polecat 已完成獨立 R1，Mayor 重現 65 項測試與
 68 個 subtests，並已交付 R2 交叉批判。
 
-下一個 collector 凍結 1 秒 cap16／32 互補隨機干預、四種純 workload
+`6c11fe7` collector 已啟動，凍結 1 秒 cap16／32 互補隨機干預、四種純 workload
 及混合 workload，分離 16 train、20 calibration、4 validation arrival
 seed blocks，不使用 final held-out。正式計畫的 offered windows 合計
 48,000 秒，不以 max drain、setup 或 idle 補成十小時。
-這是計畫，**尚未宣稱完成十小時或 MPC 優勢**；先執行 bounded interface
-smoke，通過 source／cost／clock／CAS／HTTP／drain 才能擴大收集。
+**尚未宣稱完成十小時或 MPC 優勢**。已執行兩個 bounded interface
+smoke；後一個跨兩個 planned Gateway epochs，922 offered／650 自然完成／
+272 拒絕、48 秒，source／cost／clock／CAS／HTTP／drain／owned-process
+cleanup 均驗證。既有 1,024-operation ceiling 保留；每個完整配對、
+drain 後切換 Gateway epoch，不重啟 native vLLM，也不忘記本 epoch 的
+operation outcomes。長時資料逐個 completed episode 封存到 Mayor。
 
 ## 任務權限與分支
 

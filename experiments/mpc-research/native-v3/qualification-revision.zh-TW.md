@@ -63,7 +63,9 @@ Astra、Sol 的錯誤 `gt done --status=ESCALATED` 嘗試已被 exit86 防線攔
 確認 `claude-opus-5.5`、`gpt-6-astra`、`gemini-3.8-flash`、`gpt-6.1-sol`。
 四份獨立 R1 原始報告、程式及測試已從各自提交 byte-verify 凍結；
 Mayor 單一 runner 獨立重現 65 passed、68 subtests，第二輪交叉審查已實際派出。
-Gemini R1 的兩個模組誤放 repo root，原始提交已保留，另要求 owned-path 修訂；
+重新讀取原 Bead 發現 Mayor 原派工只為報告加上 native-v3 前綴，兩個
+Python 檔列為 root 路徑；Gemini 的 R1 位置符合字面派工，這是 Mayor
+造成的路徑歧義，不是 worker 違規。原始提交已保留，R2 明確要求搬移；
 測試通過不代表其 duration、OOD、GPU clock 或統計論點已獲認可。
 
 GPU lifecycle credential 仍不存在；只能停止自身服務，不能宣稱 SSH
@@ -99,3 +101,60 @@ arm 執行順序隨機化；smoke 的原順序資料保留，不拿來做顯著�
 原定動作，pending／fence retry 仍記錄。原 production ceiling 保留。
 所有 episode 帶各自 Gateway run ID；這是 bounded research 操作方式，
 **不是已解決 production 長期 controller outcome-retention 問題**。
+
+## NV3-002：epoch rollover 資格與長時辨識
+
+`6c11fe7` 已實際完成四個 12 秒、兩個獨立 Gateway epochs 的 paired
+smoke：922 offered、650 自然完成、272 拒絕。每個配對內 epoch 不變，
+配對之間 epoch 確實更新；source／clock／CAS／完整 drain 驗證有效，
+兩個自己建立的 Gateway 子程序皆確實停止，native vLLM 保持同一 epoch。
+封存本機／Pod SHA256：
+`e583df68b0daf48df4ad35885437897342411db9c91c47d75e81840246a9d87a`。
+
+同版本的正式 native state-response identification 於
+`2026-10-31T08:24:32.981344+00:00` 啟動。400 個 120 秒 offered windows
+合計 **48,000 秒／13.33 小時，尚未全部執行完畢**，不是 drain 上限。
+五個 workload cells、16 Train／20 Calibration／4 Validation seed blocks，
+配對內 shared offered tapes、獨立 randomized arm order 與 1 秒 cap 干預；
+final held-out 沒有使用。完成的 episode 正由獨立 bounded replication
+程序逐檔比對 SHA256 保存到 Mayor，不只留在 Pod。
+
+四個模型 R2 皆已交付並從各自提交 byte-verify 凍結，Mayor 單一 runner
+重現 **98 passed、75 subtests**。R3 已實際派給全部四個模型，尚未
+宣稱 R3 共識。R2 可追溯來源：
+
+| Worker／實際 backend | R2 local commit |
+|---|---|
+| amber／Claude Opus 5.5 | `fb7e517904bc001802010271972954198a8532f2` |
+| jade／GPT-6 Astra | `d0ad27503f1b7a59bffaadebcffcafa0ceff7715` |
+| pearl／Gemini 3.8 Flash | `c04cd0ab1265fc97930d63e8692a30a3504bf0e8` |
+| flint／GPT-6.1 Sol | `3e47f07501109723bed3e245bd9a88925fd21e8d` |
+
+目前較強的候選方向是
+marked reservation ledger 加 history-conditioned batch response；
+平均 cap 的順序 alias、origin-pooled calibration、joint-support 與
+observer epoch 檢查均已出現可重播 CPU 反例，不能直接升格為有效模型。
+
+### 新原生辨識資料的已確認觀測邊界
+
+首個 120 秒 Train episode：3,925 offered／2,681 自然完成／1,244 拒絕；
+cohort-good=2,540。這不是 Fixed／MPC comparison。765 個原點可通過
+既有 `state_sample.join_observations` 的完整 clock／identity／receipt
+檢查，但 13,280 個 mark observations 中有 3,034 個暫時尚未 native-visible。
+所以「完整觀測 API」不等於「所有工作階段已觀測」，後續模型必須處理
+未知工作，而不能捏造 stage 或以未來 first-content 替補。
+
+Native request ID 是 `chatcmpl-<32hex>-<8hex>`，Gateway 使用 `<32hex>`；
+必須完整匹配再關聯。直接字串相等造成的 100% missing 是分析方法錯誤，
+已修正，不能當成原生結果。scheduled_at 在 Gateway mark 中仍為 None；
+client SLO 與 Gateway ingress timing 不可混同。
+
+另已從 sealed raw 重新核對：**只有 20 個 LIGHT requests 有 physical
+forward labels，這 20 個都量到 1 個 overhang；20 個 OFF requests 未量測
+physical tail**。20/40 不能聲稱 tail probability=0.5、其餘為零，或已證明
+隨機 0／1 分佈。這個分母反例也已交付四模型 R3。
+
+三份已核對且不含 private control configuration／credential 的原始封存，
+以及明確限定驗收範圍的 JSON manifest，保存在
+`results/mpc-native-v3/qualified-evidence/`。尚未完成的長時資料不混入
+這三份 bounded qualification，也不合併成獨立 efficacy repetitions。
