@@ -22,6 +22,7 @@ def main():
     with (args.evidence/f"{args.service}.pid").open("x") as stream:
         stream.write(str(os.getpid()) + "\n")
     os.chdir(root)
+    os.environ["PATH"] = str(args.python.parent) + os.pathsep + os.environ.get("PATH", "")
     os.environ.update(HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1",
                       VLLM_NO_USAGE_STATS="1")
     os.environ["PYTHONPATH"] = str(root) + ":" + str(root/"experiments/mpc-research/native_observer")

@@ -1,11 +1,35 @@
 import asyncio
 import hashlib
 import json
+import os
+import shutil
+import sys
 
 import httpx
 import pytest
 
 import collect_batch_qualification as collector
+import launch_batch_service as launcher
+
+
+def test_launcher_exposes_selected_interpreter_tools_to_native_subprocesses(tmp_path, monkeypatch):
+    binary = tmp_path / "venv" / "bin"
+    binary.mkdir(parents=True)
+    ninja = binary / "ninja"
+    ninja.write_text("#!/bin/sh\nexit 0\n")
+    ninja.chmod(0o755)
+    config, plan = tmp_path / "config.json", tmp_path / "plan.json"
+    config.write_text(json.dumps({"MODEL_NAME": "test-model", "ADMIN_API_KEY": "test-key"}))
+    plan.write_text(json.dumps(collector.qualification_plan("a" * 40)))
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(os, "environ", {**os.environ, "PATH": "/missing-system-tools"})
+    monkeypatch.setattr(sys, "argv", ["launch", "vllm", "--config", str(config),
+        "--plan", str(plan), "--python", str(binary / "python"),
+        "--evidence", str(tmp_path / "evidence")])
+    observed = []
+    monkeypatch.setattr(os, "execv", lambda *args: observed.append(shutil.which("ninja")))
+    launcher.main()
+    assert observed == [str(ninja)]
 
 
 @pytest.mark.parametrize("valid", [True, False])
