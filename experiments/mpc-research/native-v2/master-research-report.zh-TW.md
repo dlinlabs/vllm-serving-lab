@@ -13,6 +13,22 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**R12 封存與 Native 停止：** Continuation02 在13:28Z因一次 pre-header
+HTTP failure停止，失敗raw/events/index完整保存；只確認約3.85ms無headers，
+exception class當時遺失，不假定keep-alive或GPU root cause。
+累積有效15,960秒＝4h26m，十小時仍未完成。Owned GPU processes／ports
+停止已驗證，Pod保留且provider billing stop／USD未知。
+R12 v9 event-order修復大部分v8預測偏差，但development仍未達5%；
+fresh superiority gate尚未執行，
+尚非MPC candidate。Astra另找stable-per-birth CRN correctness缺口。
+新sampling lineage／typed transport error／exact ledger準備的Parent137tests通過；
+舊R12 seals對新source的7base／9subtest failures保留並由R13修正，
+不將歷史377tests當作新版本通過。Mayor已曝光Train12／13 summary，
+下一fresh pair改15／16；Cal／Val／Final未開放。
+四個原生R13模型任務／caller-owned localconvoy已啟動；GPU恢復與
+真正closed-loop仍待source-qualified preflight。
+詳見 [失敗與觀測資格](../native-v3/evolving-model-negative-and-observation-support.zh-TW.md#nv3-015r12-封存native-失敗與下一版資格)。
+
 **R11 evolving model 與支援邊界：** 四模型先獨立封存，再開放互審；
 Mayor 實際 323 tests／177 subtests 全部通過、沒有 skip。
 Opus batch-aware v8 在 USED8／9 的 full G5 MAE7.67／7.70，

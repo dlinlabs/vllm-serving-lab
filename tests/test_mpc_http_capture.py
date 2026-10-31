@@ -99,6 +99,39 @@ def test_disabled_capture_and_cancelled_capture_do_not_lose_offered_identity():
     asyncio.run(run())
 
 
+@pytest.mark.parametrize("ignore_eos", [False, True])
+def test_capture_preserves_ignore_eos_intent_in_body_and_online_receipts(ignore_eos):
+    def serve(request):
+        assert json.loads(request.content)["ignore_eos"] is ignore_eos
+        return httpx.Response(200, content=event("answer") + event(finish="stop")
+            + b"data: [DONE]\n\n",
+            headers={"content-type": "text/event-stream", "x-request-id": RID})
+
+    async def run():
+        receipts = []
+        async with httpx.AsyncClient(transport=httpx.MockTransport(serve)) as client:
+            row = await capture_chat(client, "http://test",
+                {"messages": [], "ignore_eos": ignore_eos}, RID, 0, enabled=True,
+                clock=lambda: 1, observe=lambda kind, receipt: receipts.append(receipt))
+            assert row["status"] == "complete"
+            assert row["requested_ignore_eos"] is ignore_eos
+            assert all(r["requested_ignore_eos"] is ignore_eos for r in receipts)
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("ignore_eos", [None, 1, "true"])
+def test_capture_rejects_ambiguous_ignore_eos_before_offering(ignore_eos):
+    def serve(request):
+        pytest.fail("Invalid sampling intent must not become an offered request")
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(serve)) as client:
+            with pytest.raises(ValueError, match="invalid_ignore_eos"):
+                await capture_chat(client, "http://test",
+                    {"messages": [], "ignore_eos": ignore_eos}, RID, 0, enabled=True)
+    asyncio.run(run())
+
+
 def test_transport_timeout_is_censored_and_receive_clock_regression_is_invalid():
     transcript = ChatTranscript()
     transcript.feed(event("first"), 2)
@@ -111,6 +144,28 @@ def test_transport_timeout_is_censored_and_receive_clock_regression_is_invalid()
             row = await capture_chat(client, "http://test", {"messages": []}, RID, 0,
                                      enabled=True, clock=lambda: 1)
             assert row["status"] == "timeout" and row["stream_done"] is False
+            assert row["capture_error_type"] == "ReadTimeout"
+            assert row["capture_error_stage"] == "response_headers"
+    asyncio.run(run())
+
+
+def test_preheader_transport_failure_retains_class_without_retry_or_sensitive_message():
+    calls = []
+
+    def fail(request):
+        calls.append(request)
+        raise httpx.RemoteProtocolError("sensitive connection and credential context")
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(fail)) as client:
+            row = await capture_chat(client, "http://test", {"messages": []}, RID, 0,
+                                     enabled=True, clock=lambda: 1)
+            assert row["status"] == "failed" and row["http_status"] is None
+            assert row["sent_at"] is not None
+            assert row["capture_error_type"] == "RemoteProtocolError"
+            assert row["capture_error_stage"] == "response_headers"
+            assert len(calls) == 1
+            assert "sensitive" not in json.dumps(row)
     asyncio.run(run())
 
 

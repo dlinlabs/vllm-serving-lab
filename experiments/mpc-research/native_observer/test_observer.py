@@ -45,6 +45,53 @@ def test_invalid_kv_measurement_fails_closed(monkeypatch):
         observer.observe(c)
 
 
+@pytest.mark.parametrize("sampling, expected", [
+    (None, None),
+    (SimpleNamespace(ignore_eos=True), True),
+    (SimpleNamespace(ignore_eos=False), False),
+    (SimpleNamespace(ignore_eos=1), None),
+])
+def test_running_request_sampling_intent_is_observed_without_inventing_missing_values(
+        monkeypatch, sampling, expected):
+    monkeypatch.setattr(importlib.metadata, "version", lambda name: "0.30.0")
+    request = SimpleNamespace(request_id="r", num_prompt_tokens=128,
+        num_computed_tokens=130, num_output_tokens=2, max_tokens=256,
+        sampling_params=sampling)
+    result = observer.observe(core((request,)))
+    assert result["requests"][0]["ignore_eos"] is expected
+    assert request.sampling_params is sampling
+
+
+@pytest.mark.parametrize("extra, expected", [
+    (None, None),
+    ({}, None),
+    ({"pr33_cohort_id": "a" * 32}, "a" * 32),
+    ({"pr33_cohort_id": "not-an-opaque-cohort-id"}, None),
+    ({"pr33_cohort_id": True}, None),
+])
+def test_cohort_membership_is_read_from_sampling_metadata_not_native_id_suffix(
+        monkeypatch, extra, expected):
+    monkeypatch.setattr(importlib.metadata, "version", lambda name: "0.30.0")
+    request = SimpleNamespace(request_id="unrelated-native-id", num_prompt_tokens=128,
+        num_computed_tokens=130, num_output_tokens=2, max_tokens=512,
+        sampling_params=SimpleNamespace(extra_args=extra))
+    result = observer.observe(core((request,)))
+    assert result["requests"][0]["cohort_id"] == expected
+    assert request.sampling_params.extra_args is extra
+
+
+def test_gateway_lineage_is_an_explicit_sampling_tag_not_an_opaque_native_id(monkeypatch):
+    monkeypatch.setattr(importlib.metadata, "version", lambda name: "0.30.0")
+    request = SimpleNamespace(request_id="opaque-native-identity", num_prompt_tokens=128,
+        num_computed_tokens=130, num_output_tokens=2, max_tokens=512,
+        sampling_params=SimpleNamespace(
+            extra_args={"pr33_gateway_request_id": "d" * 32, "pr33_cohort_id": "e" * 32}))
+    result = observer.observe(core((request,)))["requests"][0]
+    assert result["request_id"] == "opaque-native-identity"
+    assert result["gateway_request_id"] == "d" * 32
+    assert result["cohort_id"] == "e" * 32
+
+
 def test_disabled_registration_does_not_require_or_modify_native_runtime(monkeypatch):
     monkeypatch.delenv("PR33_NATIVE_OBSERVER_ENABLED", raising=False)
     assert observer.register() is None

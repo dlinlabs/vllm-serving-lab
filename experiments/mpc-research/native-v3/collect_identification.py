@@ -23,16 +23,22 @@ CELLS = {
 }
 
 
-def protocol_for(source, cost_spec, smoke=False, completed_blocks=0):
+def protocol_for(source, cost_spec, smoke=False, completed_blocks=0,
+                 first_train_block=0, gateway_ledger=False):
     if len(source) != 40 or any(c not in "0123456789abcdef" for c in source):
         raise ValueError("exact source commit required")
     count, duration = (1, 12) if smoke else (40, 120)
     if type(completed_blocks) is not int or not 0 <= completed_blocks < 16 or (
             smoke and completed_blocks):
         raise ValueError("continuation may skip only complete Train seed blocks")
+    if (type(first_train_block) is not int or not 0 <= first_train_block < 16
+            or first_train_block and (smoke or completed_blocks)):
+        raise ValueError("fresh Train start cannot assert completed blocks or skip calibration")
+    if type(gateway_ledger) is not bool:
+        raise ValueError("gateway ledger capture must be boolean")
     cells = ("p128-m128", "mixed") if smoke else tuple(CELLS)
     episodes = []
-    for block in range(completed_blocks, count):
+    for block in range(first_train_block or completed_blocks, count):
         seed = (180001 if smoke else 181001) + block
         split = "train" if smoke or block < 16 else "calibration" if block < 36 else "validation"
         for cell in cells:
@@ -45,7 +51,7 @@ def protocol_for(source, cost_spec, smoke=False, completed_blocks=0):
                     seed_block=seed, split=split, cell=cell, duration_s=duration, arm=arm,
                     schedule=[dict(at_s=t, budget=48-a if arm else a)
                               for t, a in enumerate(actions)]))
-    return dict(schema=SCHEMA, source_commit=source, cost_spec=cost_spec,
+    protocol = dict(schema=SCHEMA, source_commit=source, cost_spec=cost_spec,
         scope="Open-loop identification only; no native calibration or MPC acceptance",
         identity_scope="Legacy ModelParameters used ONLY for actuator identity; "
                        "default serial service coefficients are never evaluated.",
@@ -61,6 +67,13 @@ def protocol_for(source, cost_spec, smoke=False, completed_blocks=0):
         observer_scope="Native observer samples; no CUDA timing or pristine-hook claim",
         final_test_used=False, planned_offered_window_s=sum(e["duration_s"] for e in episodes),
         minimum_requested_experiment_s=36000 if not smoke else None, episodes=episodes)
+    if first_train_block:
+        protocol.update(first_train_block=first_train_block,
+            resumption_scope="Fresh source experiment; skipped blocks are NOT asserted complete. "
+                             "Prior distinct valid exposure is retained and accounted separately.")
+    if gateway_ledger:
+        protocol["gateway_ledger_capture"] = True
+    return protocol
 
 
 def continuation_evidence(protocol, previous):
@@ -458,6 +471,8 @@ def main():
     parser.add_argument("--source-commit")
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--completed-blocks", type=int, default=0)
+    parser.add_argument("--first-train-block", type=int, default=0)
+    parser.add_argument("--gateway-ledger", action="store_true")
     parser.add_argument("--previous-index", type=Path)
     args = parser.parse_args()
     if args.prepare:
@@ -469,14 +484,17 @@ def main():
                 headers={"x-admin-api-key":config["ADMIN_API_KEY"]})
             response.raise_for_status()
         protocol = protocol_for(args.source_commit, response.json()["cost_spec"],
-                                args.smoke, args.completed_blocks)
+                                args.smoke, args.completed_blocks,
+                                args.first_train_block, args.gateway_ledger)
         with args.protocol.open("x") as stream:
             json.dump(protocol, stream, indent=2, allow_nan=False)
     else:
         protocol = json.loads(args.protocol.read_text())
         smoke = protocol["minimum_requested_experiment_s"] is None
         if protocol != protocol_for(protocol["source_commit"], protocol["cost_spec"], smoke,
-                                    protocol["completed_seed_blocks"]):
+                                    protocol["completed_seed_blocks"],
+                                    protocol.get("first_train_block", 0),
+                                    protocol.get("gateway_ledger_capture", False)):
             raise ValueError("protocol not identical to prespecified factory")
         if args.gateway_plan is None:
             raise ValueError("campaign requires prespecified drained gateway epoch rollover")

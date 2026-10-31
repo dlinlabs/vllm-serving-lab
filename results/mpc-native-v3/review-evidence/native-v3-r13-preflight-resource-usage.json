@@ -1,0 +1,53 @@
+{
+  "observed_at": "2026-10-31T14:07:12.321224+00:00",
+  "base_commit": "8570371923824a63981c07760327c715686f23ed",
+  "scope": "Only four current native-worker sessions; excludes Mayor/old sessions/invoice",
+  "workers": {
+    "amber": {
+      "session": "c45ddf1e-21f3-405a-aaca-30a6c8c5ffd6",
+      "models": [
+        "claude-opus-5.5"
+      ],
+      "records": 371,
+      "ai_credits": 3181.64416
+    },
+    "jade": {
+      "session": "5c06c422-dd16-4d7f-ad55-2c4def93c799",
+      "models": [
+        "gpt-6-astra"
+      ],
+      "records": 324,
+      "ai_credits": 7808.58015
+    },
+    "pearl": {
+      "session": "2a180def-21ed-4865-8c0e-162fc464823b",
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "records": 1389,
+      "ai_credits": 1694.8832325
+    },
+    "flint": {
+      "session": "07476363-7305-4348-9025-fe40a2f35de9",
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "records": 348,
+      "ai_credits": 1297.92487
+    }
+  },
+  "total_current_worker_ai_credits": 13983.0324125,
+  "valid_native_offered_window_s": 15960,
+  "gpu_serving_stopped_verified": true,
+  "pod_retained": true,
+  "provider_billing_stop_verified": false,
+  "gpu_usd_rate": null,
+  "gpu_usd_cost": null,
+  "source_hashes": {
+    "gateway.py": "a4a8229b0f636b64c945881d062c3ee925ef5fccc5ba2e6fc7629657d3575ea7",
+    "mpc_lab/http_capture.py": "0648738704771f80470849b0c0beb671d0f17c9dbc75e4095cff155b20d04be7",
+    "experiments/mpc-research/native_observer/pr33_native_observer.py": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+    "experiments/mpc-research/native-v3/collect_identification.py": "78e2c8b91f6b4a582feb69293adff5aa34d4fbd332dfa93b92735bcd0275a069",
+    "experiments/mpc-research/native-v2/launch_batch_service.py": "cce5f87c37b5d0a6009d68b6311d8e20f61f066630d7039ea46ebd75a0563d59"
+  }
+}

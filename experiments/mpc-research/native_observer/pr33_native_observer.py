@@ -6,10 +6,22 @@ import inspect
 import math
 import os
 from pathlib import Path
+import re
 import time
 import uuid
 
 from prefill_lab.live_http import clock_domain
+
+
+def sampling_ignore_eos(request):
+    value = getattr(getattr(request, "sampling_params", None), "ignore_eos", None)
+    return value if type(value) is bool else None
+
+
+def sampling_identifier(request, key):
+    extra = getattr(getattr(request, "sampling_params", None), "extra_args", None)
+    value = extra.get(key) if isinstance(extra, dict) else None
+    return value if isinstance(value, str) and re.fullmatch("[0-9a-f]{32}", value) else None
 
 
 def observe(core):
@@ -37,7 +49,9 @@ def observe(core):
         "requests": [
             {"request_id": r.request_id, "prompt_tokens": r.num_prompt_tokens,
              "computed_tokens": r.num_computed_tokens, "output_tokens": r.num_output_tokens,
-             "maximum_output_tokens": r.max_tokens}
+             "maximum_output_tokens": r.max_tokens, "ignore_eos": sampling_ignore_eos(r),
+             "cohort_id": sampling_identifier(r, "pr33_cohort_id"),
+             "gateway_request_id": sampling_identifier(r, "pr33_gateway_request_id")}
             for r in requests[:512]
         ],
         "vllm_version": importlib.metadata.version("vllm"),

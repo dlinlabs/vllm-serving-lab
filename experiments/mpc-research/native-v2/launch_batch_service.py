@@ -69,6 +69,11 @@ def main():
             os.environ.update(MPC_MODEL_VERSION=parameters.model_version,
                 MPC_CALIBRATION_VERSION=parameters.calibration_version,
                 MPC_SUPPORT_HASH=parameters.identity.support_hash)
+            if protocol.get("gateway_ledger_capture") is True:
+                os.environ.update(
+                    TELEMETRY_JSONL=str(args.evidence.resolve()/"gateway-telemetry.jsonl"),
+                    TELEMETRY_STATUS_JSON=str(args.evidence.resolve()/"gateway-telemetry-status.json"),
+                )
         command = ["-m", "uvicorn", "gateway:app", "--host", "127.0.0.1",
                    "--port", "8080", "--workers", "1"]
     with (args.evidence/f"{args.service}-launch.json").open("x") as stream:

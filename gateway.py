@@ -574,6 +574,14 @@ async def _proxy_completions(request, upstream_path):
         except (ValueError, UnicodeDecodeError):
             payload = {}
 
+        if MPC_LAB_ENABLED and upstream_path == "/v1/chat/completions" and isinstance(payload, dict):
+            extra = payload.get("vllm_xargs")
+            if extra is None or isinstance(extra, dict):
+                payload = {**payload, "vllm_xargs": {
+                    **(extra or {}), "pr33_gateway_request_id": request_id,
+                }}
+                body = json.dumps(payload).encode()
+
         estimated_input_tokens = estimated_output_tokens = 0
         used_tokenizer_fallback = False
         if ADMISSION_MODE == "cost_aware":

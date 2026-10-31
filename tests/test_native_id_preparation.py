@@ -37,6 +37,33 @@ def test_v2_protocol_uses_independent_seed_blocks_and_no_heldout_arrival_generat
         assert "arrivals" not in a and "arrivals" not in b
 
 
+def test_fresh_source_train_start_preserves_failed_history_without_claiming_completion():
+    source = path.parent/"native-v3"/"collect_identification.py"
+    module_spec = importlib.util.spec_from_file_location("fresh_native_identification", source)
+    collector = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(collector)
+    cost = ModelParameters().cost_spec.__dict__
+    legacy = collector.protocol_for("a" * 40, cost)
+    fresh = collector.protocol_for("b" * 40, cost, first_train_block=14, gateway_ledger=True)
+    assert fresh["completed_seed_blocks"] == 0
+    assert fresh["first_train_block"] == 14
+    assert fresh["episodes"] == collector.protocol_for("b" * 40, cost)["episodes"][140:]
+    assert fresh["episodes"][0]["seed_block"] == 181015
+    assert {e["seed_block"] for e in fresh["episodes"] if e["split"] == "train"} == {
+        181015, 181016,
+    }
+    assert fresh["planned_offered_window_s"] == 31200
+    assert fresh["gateway_ledger_capture"] is True and not fresh["final_test_used"]
+    assert "first_train_block" not in legacy and "gateway_ledger_capture" not in legacy
+    assert legacy["planned_offered_window_s"] == 48000
+    for invalid in ({"first_train_block": 16}, {"first_train_block": True},
+                    {"first_train_block": 14, "completed_blocks": 13},
+                    {"first_train_block": 14, "smoke": True},
+                    {"gateway_ledger": 1}):
+        with pytest.raises(ValueError):
+            collector.protocol_for("b" * 40, cost, **invalid)
+
+
 def row(rid="r", **changes):
     return dict(
         request_id=rid, response_request_id=rid, clock_domain="boot",

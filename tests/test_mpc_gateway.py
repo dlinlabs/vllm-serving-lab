@@ -122,6 +122,39 @@ def test_default_off_preserves_legacy(load_gateway):
     asyncio.run(scenario())
 
 
+@pytest.mark.parametrize("enabled", ["true", "false"])
+def test_chat_lineage_metadata_is_gateway_assigned_only_in_lab_mode(
+        load_gateway, monkeypatch, enabled):
+    gateway = load_gateway(enabled, {"BENCHMARK_REQUEST_IDS": "1"})
+    real_client = httpx.AsyncClient
+    sent_bodies = []
+
+    async def upstream(sent):
+        sent_bodies.append(json.loads(sent.content))
+        return httpx.Response(200, content=CONTENT + DONE,
+                              headers={"content-type": "text/event-stream"})
+
+    async def scenario():
+        async with client_for(gateway) as client:
+            monkeypatch.setattr(gateway.httpx, "AsyncClient", lambda: real_client(
+                transport=httpx.MockTransport(upstream),
+            ))
+            payload = {"messages": [{"role": "user", "content": "hello"}],
+                "max_tokens": 64, "ignore_eos": True,
+                "vllm_xargs": {"pr33_gateway_request_id": "b" * 32,
+                               "pr33_cohort_id": "c" * 32}}
+            response = await client.post("/v1/chat/completions", json=payload,
+                                         headers={"x-benchmark-request-id": "a" * 32})
+            assert response.status_code == 200
+            assert sent_bodies[0]["ignore_eos"] is True
+            extra = sent_bodies[0]["vllm_xargs"]
+            assert extra["pr33_gateway_request_id"] == ("a" * 32 if enabled == "true"
+                                                        else "b" * 32)
+            assert extra["pr33_cohort_id"] == "c" * 32
+            assert payload["vllm_xargs"]["pr33_gateway_request_id"] == "b" * 32
+    asyncio.run(scenario())
+
+
 def test_configured_identity_seals_actual_cost_parameters(load_gateway):
     gateway = load_gateway(settings={
         "MPC_MODEL_VERSION": "test-model", "MPC_CALIBRATION_VERSION": "test-cal",

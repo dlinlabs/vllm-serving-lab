@@ -109,10 +109,14 @@ async def capture_chat(client, url, payload, request_id, scheduled_at, *,
         raise ValueError("standard_chat_required")
     if type(payload.get("n", 1)) is not int or payload.get("n", 1) != 1 or payload.get("tools"):
         raise ValueError("unsupported_chat_mode")
+    ignore_eos = payload.get("ignore_eos", False)
+    if type(ignore_eos) is not bool:
+        raise ValueError("invalid_ignore_eos")
     body = json.dumps({**payload, "n": 1, "stream": True,
                        "stream_options": {"include_usage": True}}, allow_nan=False).encode()
     row = dict(request_id=request_id, clock_domain=domain or local_clock_domain(),
                request_model=payload.get("model"), requested_max_tokens=payload.get("max_tokens"),
+               requested_ignore_eos=ignore_eos,
                scheduled_at=scheduled_at, sent_at=None, first_content_at=None,
                last_content_at=None, terminal_at=None, status="attempted",
                http_status=None, stream_done=False, stream_error=False,
@@ -182,10 +186,14 @@ async def capture_chat(client, url, payload, request_id, scheduled_at, *,
     except asyncio.CancelledError:
         row["status"] = "cancelled"
         raise
-    except (TimeoutError, httpx.TimeoutException):
-        row["status"] = "timeout"
-    except (httpx.HTTPError, ValueError):
-        row["status"] = "failed"
+    except (TimeoutError, httpx.TimeoutException) as exc:
+        row.update(status="timeout", capture_error_type=type(exc).__name__,
+                   capture_error_stage="response_headers" if row["http_status"] is None
+                   else "response_body")
+    except (httpx.HTTPError, ValueError) as exc:
+        row.update(status="failed", capture_error_type=type(exc).__name__,
+                   capture_error_stage="response_headers" if row["http_status"] is None
+                   else "response_body")
     finally:
         row.update(first_content_at=observer.first_at, last_content_at=observer.last_at,
                    terminal_at=clock(), stream_done=observer.done, stream_error=observer.error,

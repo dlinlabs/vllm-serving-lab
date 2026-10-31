@@ -1,4 +1,4 @@
-# NV3-013：Evolving batch model 的負面結果與觀測支援邊界
+# NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
 ## 實驗與裁定
 
@@ -121,6 +121,7 @@ AI Credits，合計 11,867.81634；不含 Mayor、舊 sessions 或 final invoice
 Hourly USD 不明，費用為 unknown，沒有捏造估值。Pod 保留且 lifecycle credential
 不可用；停止 vLLM 不能稱為停止計費，最終 owned-service shutdown 尚未完成。
 
+以下是 13:06Z 歷史狀態，並非本文件末尾的最新 runtime 狀態。
 R12 已開放四模型讀取所有 R11 frozen proposals，獨立互審相同核心問題：
 joint dynamics 的可辨識性、grid ledger failure、short-step survivor signal、
 控制作用與真正 controlled-cohort runner。每個模型另留 owned report/tests/raw，
@@ -138,3 +139,167 @@ joint dynamics 的可辨識性、grid ledger failure、short-step survivor signa
 
 Archive 中四份 `.md` 保留逐輪勘誤、原結果與各自 source/raw hashes；
 不得將後續修訂 retroactively 當成初版通過。
+
+## R12 Parent 實作：探針 sampling intent 與觀測
+
+Experiment ID：`NV3-014-sampling-intent-observation-qualification`。
+在本機研究分支新增：
+
+- `capture_chat` 明確記錄 `requested_ignore_eos`，保留在 offered、first-content、
+  terminal 與取消記錄；非 boolean intent 在 offering 前拒絕。
+  已有 body pass-through 保持不變；HTTP complete 不等於自然 Goodput。
+- Read-only observer 回報每個 running request 的
+  `sampling_params.ignore_eos`；缺少或非 boolean 回報 null，不捏造 false。
+  這是 sampling 設定觀測，不是物理 EOS 或 executed GPU work。
+
+Mayor targeted CPU regression **36 passed**、diff check 通過。新增測試涵蓋
+強制 intent 的 HTTP body／online receipts、一致取消前驗證、missing sampling
+與非 boolean unknown；未變更 scheduler 或 sampling 行為。
+
+以下是當時 sampling-only、尚未部署的 bytes，後續版本另列，不覆寫舊證據。
+Offline observer SHA256：
+`cbb3ef42bca65cac4c045b02f8d940d5e4c3a3c54caa96b317b575dd0ae9d9b2`；
+capture SHA256：
+`f961e75ba54b63f478e5d970c0c4c5aeaed5f2cb5ebb35ba9c450454810de958`。
+**沒有部署此 observer**，live observer 仍為 `29fc1ebd…`／Native source729。
+新 gate 必須在 Mayor 完成安全、source-qualified handoff 後才能取得新欄位，
+不能把 client intent、磁碟 source hash 或 CPU mock 當成實際 request 證據。
+
+只讀檢查同一 Pod 的 installed vLLM source，沒有 import／啟動新 GPU process：
+`sampling_params.py` SHA `f21efc98…024bea` line277 為 boolean ignore-EOS；
+`v1/request.py` SHA `da610d52…9c25d` line85 保存 sampling_params；
+`entrypoints/openai/chat_completion/protocol.py` SHA `51fb06a9…451b2`
+line274 接受該欄位、lines658/743 傳入 SamplingParams。
+這證明所檢查版本的介面可用，尚不構成每個 live request 的設定證明。
+
+13:25:39Z 續跑已完成 12,240 新 offered seconds，舊3,600秒另列，
+合計4h24m；十小時未達，RTX4090仍持續運算。R12四模型互審／實作未完，
+Native controlled-cohort 與真正 MPC benchmark 仍待執行。
+
+## NV3-015：R12 封存、Native 失敗與下一版資格
+
+Experiment ID：`NV3-015-exact-lease-and-native-lineage-preflight`。
+Parent base：`8570371923824a63981c07760327c715686f23ed`；
+本節最初寫入時實作位於本機研究分支，尚未部署。
+GPU／模型／vLLM 設定同前，沒有新 Pod、scheduler 調參或成本權重搜尋。
+Controller 仍是 identification assignment，不是已驗收 MPC。
+
+| Worker | 實際模型 | R12 local commit |
+|---|---|---|
+| amber | Claude Opus 5.5 | `82318ece0717c33b90be4ae3e1af848fd38c2533` |
+| jade | GPT-6 Astra | `cccfc3d6e7573fa28670e07f6a85c8e2275e6818` |
+| pearl | Gemini 3.8 Flash | `75d4f1964e5f0e1cfa3f0215ff9a231df2f1d1bd` |
+| flint | GPT-6.1 Sol | `cc43cf268a991728fc227a9d05fb216aa4ec4740` |
+
+十二個 owned files 封存 archive SHA256：
+`020e10c9e8e853d3261c7d7437e406d935c9e8ca4441dc11c89921add50e465f`。
+R12 舊資格工具結果為 377 tests／186 subtests；**不將此數字套用到後續
+變更的 capture／Gateway bytes**。新 source 的合併重跑保留
+376 passed／177 subtests passed，以及 7 base tests／9 subtests failure：
+舊 source seal 在 producer／capture binding 拒絕，部分 capture integration
+亦未通過。R13 Sol 正處理新版本相容與實際失敗原因，不刪測試或弱化 hash gate。
+新 Parent API／protocol／capture／observer／legacy forwarding 的獨立資格
+實際為 **137 passed**；這仍只是 CPU，不是 GPU 或控制效能驗收。
+
+### R12 模型裁定：機制修正不是 MPC 勝利
+
+Opus v9 將期間 whole-cost release 按事件順序納入 admission；
+Worker 在 USED8／9 的 upper G5 MAE 為 4.239／4.336、
+lower 為 3.844／3.845，顯著修復 v8 的 7.67／7.70。
+但同 endpoint v7 upper 為 4.105／4.204，lower 為 3.995／3.998；
+Development 沒有達到雙 endpoint 至少 5% 的候選改善幅度；
+原 fresh 雙 block gate 尚未執行。
+這是 Worker development 結果，Mayor v9 byte-identical 重現仍待執行。
+80% inclusion 約 .62–.72，不能宣稱校準的 chance constraint。
+
+Astra 找到獨立 correctness issue：future birth 的 random uniform 索引
+依賴 initial cohort 長度，因此不同 stock／action 下並非 stable per-birth CRN。
+不能據此直接斷言 marginal mean 有 bias。另版以穩定 arrival identity 修復，
+無論分數好壞都按 correctness 採用，保留 v8／v9 原 raw。
+Gemini 的 R12 peer critique 使用過時 Opus 數字，必須明確勘誤；
+mock −58 tokens 仍不是 GPU 證據。四模型共識不能取代重現。
+
+### Native failure：只確認 pre-header，不假定 keep-alive root cause
+
+Continuation02 在 2026-10-31T13:28:15Z 停止。
+103 個新完整 episodes＝12,360 offered seconds，舊 3,600 秒另列，
+合计 **15,960 秒＝4 小時 26 分鐘有效 windows**。十小時尚未完成；
+failed episode、planned windows、CPU 與 idle 時間不計入。
+
+失敗 `nv3-181014-p128-m256-arm1`：
+1,259 offered＝878 complete＋380 rejected＋1 failed。
+Raw SHA256：
+`5887fb84a0862fbc7e9db6e8683c72ce5069c279c5adacc01c8657189adfc9dd`。
+唯一失敗在 sent 後約 3.85ms terminal，HTTP status／echo／content／usage
+皆 null：只足以確認收到 response headers 前失敗，server acceptance 未知。
+舊 capture 沒有保存 exception class，無法事後確認 ConnectError、
+RemoteProtocolError 或其他原因；不是已確認的零內容 EOS，也不將
+keep-alive／Gateway epoch race 寫成已證實 root cause。
+
+新 capture 僅保存 `capture_error_type` 與 `capture_error_stage`；
+不保存可能含秘密的 exception message，**不 retry acceptance 未知的 request**。
+原 `other` hard failure gate 保持不變，failed raw／events／index 不改成 valid。
+
+Owned shutdown proof 已確認原 PID 9408／9663／9664 全退出，
+8000／8080 closed，GPU compute inventory 為空。後續同一 Pod 再驗
+RTX4090 memory 1MiB／utilization0／compute inventory 空。
+Pod 保留；provider billing stop **未驗證**、hourly USD／估計費用為 unknown，
+不將停止 inference 進程稱為停止計費。
+
+### 精確量測：先解除 ledger 與 opaque ID 缺口
+
+新 Source：
+Gateway `a4a8229b0f636b64c945881d062c3ee925ef5fccc5ba2e6fc7629657d3575ea7`；
+capture `0648738704771f80470849b0c0beb671d0f17c9dbc75e4095cff155b20d04be7`；
+observer `77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4`。
+
+僅既有 `MPC_LAB_ENABLED` Chat 路徑，Gateway 將自己的 received UUID
+寫入 `vllm_xargs.pr33_gateway_request_id`，覆寫 caller 的同名值，
+保留其他 sampling metadata。Default-off body forwarding 不變。
+Observer 只讀 actual `SamplingParams.extra_args`，回報明確
+`gateway_request_id`／`cohort_id`，不從 opaque native ID suffix 猜關聯。
+32-hex 以外值回報 null；sampling metadata 不構成全域 ingress 認證。
+同一 installed Chat SDK 的 `vllm_xargs → extra_args → SamplingParams`
+介面已只讀確認，真正 GPU forwarding 尚需 fresh restart 與 probe。
+
+新 factory 可從尚未生成的 Train181015 開始，明確
+`completed_seed_blocks=0`，**不偽造已完成 Train14 或跨 source continuation**。
+舊全部失敗／partial 留在原 experiment，distinct valid exposure 分開加總。
+`gateway_ledger_capture` 啟用既有每次 state transition 的 `mpc_ledger`
+JSONL，逐 epoch 保存 shutdown status／drops／write errors。
+如此才能以實際 admission／whole-cost release 事件檢查 stock-flow；
+lease release 仍不是 exclusive GPU service。此量測對所有後續控制器一致啟用。
+
+**Exposure 更正：** Mayor 為調查失敗看到了 Train12／13 summary counts。
+它們不能再稱 pristine fresh confirmation；Workers 未獲其 raw。
+v9／修正版的下一個未曝光完整 pair 是 15／16 或更後，
+必須先封存 source／spec；Cal、Val 與 Final 仍未開放。
+
+R13 四個原生 child Beads `pr-native-v3.1`–`.4` 已派給同四個實際模型：
+stable-birth CRN、exact multi-plan／strong one-move、actual HTTP cohort runner、
+producer／ledger／all-assigned audit。Caller-owned、`merge=local` convoy
+`hq-cv-f37vl` 的四個 persisted tracks edges 已驗證；
+`gt convoy status` 的跨資料庫 reader 仍顯示 0/0，不冒充任務已完成。
+Worker exit86 guards 保留，不使用 `gt done`／Witness／Refinery 收工。
+
+**下一個高資訊價值實驗：** 在 frozen new source 上先驗 actual sampling
+lineage／ignore-EOS、完整 ledger／drain 與 transport fates，再恢復同一 GPU
+的 fresh-block identification 和原始 cohort intervention。
+只有模型／runtime 資格齊全才做共同 SLO 的 Fixed／Adaptive／One-move／MPC
+closed-loop；目前沒有 Native MPC 勝利、性能優勢或十小時完成宣告。
+
+14:07Z 四個 current sessions 的去重實際 usage：
+Opus 3,181.64416／Astra 7,808.58015／Gemini 1,694.8832325／Sol 1,297.92487，
+合計 **13,983.0324125 AI Credits**；不含 Mayor、舊 sessions 或 final invoice。
+本輪 GPU inference 已停止；Pod retained 的 wall-time／費用無法由已知資料推算。
+
+本輪新增 off-Pod／可發布證據：
+
+- `round12-frozen-source.tar.gz`／`round12-frozen-source-manifest.json`
+- `nv3-181014-p128-m256-arm1-failed.json.gz`／`.events.jsonl.gz`
+- `continuation02-final-index.json.gz`／owned identity 與 shutdown JSON
+- `r12-current-source-qualification-failures.txt.gz`
+- `native-v3-r12-failure-evidence-manifest.json`
+- `native-v3-r13-preflight-resource-usage.json`
+
+所有 gzip 皆驗證解壓後與來源 bytes 完全相同；原始失敗與 R12 source 不覆寫。
