@@ -13,6 +13,17 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**新Train6／7未改動v5 replication：** 先以517f928預註冊，再freeze20episodes，
+同Train1–3 fit／同source，1111origins的G5 MAE4.4234／4.2260，
+分別低於最強同-mask5.9191／5.6450；paired4.3661／4.0481也低於zero。
+但80%bands inclusion仍只有0.577／0.614，不能宣稱risk／MPC成功。
+發現v5 descriptive mean_truth只保留每episode最後origin；primaryMAE／bias／
+paired calculations不受影響，原始source／raw保留，另存corrected origin audit。
+已選定mean-only admission/birth研究candidate，開始solver／真正HTTP-control
+pipeline／online-input工程，沒有部署liveGPU。
+詳見[replication](../native-v3/frozen-model-replication.zh-TW.md)
+及[architecture ADR](../native-v3/experimental-mpc-architecture.zh-TW.md)。
+
 **最新R8 fitted model：** Mayor241tests／152subtests通過，
 admission／birth hybrid的五秒Good MAE4.08／同-mask additive5.93，
 paired factual delta4.17／零差異5.91，raw byte-for-byte重現。
