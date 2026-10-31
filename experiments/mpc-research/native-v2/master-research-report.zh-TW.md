@@ -13,6 +13,39 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-019：找出 stale-stock 缺口，轉向可核對的狀態觀測。**
+四個 R15 independent handoffs 已封存，Mayor 在原 Source144 parent、
+全部歷史與實際 source fixtures 上 **438 tests／237 subtests、零 skip**。
+Opus 的 USED15／16 readout 顯示 pending proxy 漏掉27.2%／27.8%
+的後續 owners、低估 pending owner cost23.1%／21.7%；其中約70%的
+後續 owners 在 cut 時其實已 admitted。這是 snapshot stock 過期與
+未觀測 release 的缺口，不可用 arrival law／cost weights 的重縮放掩蓋，
+也不能直接歸因到不同模型的舊 CPU MPC20.7%落差。
+48秒 smoke 的 aggregate journal 能核對全部303個 snapshot stocks、
+辨識643個 release 的時間，但只有12.8%可唯一辨識 owner；
+沒有 final watermark，不能冒充 full per-UUID lifecycle。
+
+Astra 對既存32張計分表的分解修正一個容易誤讀的敘述：
+16個 cuts 中 **4個兩策略都選16、12個都選32**，不是全部選16；
+規劃 tail bonus 改變 margin，但沒有翻轉 first-action 排序。
+Budget32 也只容納 measured long-cell 的7／6個 owners，不能冒充
+FixedConcurrency16。Gemini R15 supplied-client／CAS／concurrent burst／
+apply+1秒 window 修復有 CPU 資格，真正 Native 因果 pilot 仍未執行。
+
+Mayor 已在**另一個本機分支** `research/pr33-native-v3-owner-journal`
+提交 `a4ec4e386e68f6ea20b68a8557785fc5813c7b16`：opt-in owner-ID／
+whole-cost／change-kind journal，以及關閉後的 sequence／remaining owners／
+file bytes／SHA seal，**116項 CPU regression 通過**。
+原 default-off contract 保留，沒有 hotpatch Source144；
+不是 fsync、authentication、risk calibration 或 MPC performance 保證。
+新 source 曾被 frozen R15 producer checks 正確拒絕，已隔離至不同
+worktree，沒有 override identity。四模型的 R16 caller-owned local convoy
+`hq-cv-opi13` 正交叉審查新 source／state／causal HTTP contract，
+不把 Mayor 的實作當成四模型共識。
+16:25:23Z 累積 **22,440有效秒＝6h14m**；十小時與 Native MPC
+superiority 仍未完成。完整結果與範圍見
+[R15 measured-state 與 R16 觀測修復](../native-v3/evolving-model-negative-and-observation-support.zh-TW.md#nv3-019r15-measured-state-缺口與-r16-觀測修復)。
+
 **NV3-018：原規則確認完成，沒有選端點製造成功。** R14 四模型
 封存 source 已由 Mayor 實際重跑 **419 tests／219 subtests、零 skip**。
 Strict Source144 bridge 資格通過；原 H11／H12／H13 只用 Train1–3 fit，

@@ -622,3 +622,157 @@ H11 raw SHA256 `a81c6c8c…426fade`，elapsed70.52秒／RSS810,032KB；
 H12 `1cfc71f8…6c0be3`，132.23秒／RSS896,996KB；
 H13 `12291743…d32d91`，218.37秒／RSS897,588KB。
 完整 SHA 在 adjudication；compressed files 解壓後逐一重算確認。
+
+## NV3-019：R15 measured-state 缺口與 R16 觀測修復
+
+Experiment ID：`NV3-019-R15-state-stock-and-causal-HTTP-qualification`。
+Parent publication commit：`c38495b7be1cdeea56370c40fe0d8fcb20a870b2`。
+Live source／GPU／model／software 與 NV3-018 相同，Source144 沒有 hotpatch，
+`mpc_active=false`、`calibrated=false`。
+
+### 四模型獨立成果與完整 CPU 資格
+
+| Worker／實際模型 | R15 sealed local commit | 本輪證據範圍 |
+|---|---|---|
+| amber／claude-opus-5.5 | `9fdfe5770ccfc4ea9db0488486a834bdcde78c90` | USED15／16 owner／native tags、pending stock；48秒 public smoke journal |
+| jade／gpt-6-astra | `c4f4844d48bf40d09e0306a2cac0489c54b365c4` | 既存32張 R14 tables 的 action-value 分解；2個預定 native prefixes；actual Gateway CPU witness |
+| pearl／gemini-3.8-flash | `f9d5ad48fbc32ae6302f37bc4c84895c7300f91d` | Genuine supplied-client runner 的 provenance／gate／CAS／dispatch／window／censor 修復 |
+| flint／gpt-6.1-sol | `6f861efa85ac46a9e74acff74d1b576cdaef91d3` | Frozen R14 actual-shaped HTTP 反例、all-assigned bounds、source bridge 不變 |
+
+十二個 committed owned files 逐一核對，archive SHA256
+`08fedfbc364a392c1efed9d84b721f7db3140e8b0f2db48d1a0d1a5ac9a4be1e`。
+Mayor 完整 fixtures／actual Source144 Git source／capture／observer：
+**438 tests／237 subtests passed、0 skipped，115.45秒**。
+其中 Sol 先單獨實測100 tests／165 subtests／零 skip，11.23秒。
+Astra Worker121 collected／94 pass／27 historical optional skips 保留；
+Mayor 正確補 fixtures 後的零 skip 是另一次 qualification。
+這些都是 CPU contract tests，不是 Native controlled-cohort 或 MPC 驗收。
+
+### Measured stock／pending 缺口，不以參數補償
+
+Opus raw used1516 SHA256
+`27e416dba59469e440842b22ad8c08d611a9ef5bddd1637addd789fc5bbe8b51`；
+smoke raw
+`6804a05b35ff39075a652f6d8a3db87bfb91e47719dae508a4ab4d0fc8f642ee`，
+Mayor 已取得完整 bytes 並重算確認。這是 Worker 的可重現 descriptive
+readout，沒有新 forecast／fit／Native action execution。
+
+| USED block | Pending later-owner proxy 漏掉 | Pending owner cost 低估 | 後續 owner 已在 cut admitted |
+|---|---:|---:|---:|
+| 181015 | 27.2% | 23.1% | 70.3% |
+| 181016 | 27.8% | 21.7% | 68.3% |
+
+Proxy 用過期 snapshot stock 篩 pending offers；snapshot 後已 release 的
+owners 仍把 stock 膨脹，因此錯誤地 drop 真正後續 owners。
+Rejection side 幾乎精確，兩 block 合計只有3個 rejections 被當作 Q。
+這支持 stale stock／unseen releases 是此 proxy 的主要缺口，
+不能乘一個 correction factor 或改 arrival law 當成已識別的修復。
+Ground-truth future fates 只能做 retrospective audit，不得回灌 online state。
+這也**不能**直接證明它造成另版 synthetic CPU MPC 與 Fixed16 的舊20.7%
+goodput差距；資料與模型不是同一條因果鏈。
+
+Tagged join：兩 block 無 rejected IDs 後來變 owner／native-visible，
+約94% HTTP terminals 在 owner release snapshot interval 內；
+沒有 HTTP terminal 早於最後 owner snapshot。Producer list 與 running+waiting
+不完全一致的 frames 為1178／8933與1145／8917，unknown visibility 仍保留。
+
+48秒 public smoke aggregate journal 與303／303 snapshot stocks 一致，
+299／299 snapshot intervals 的 release multisets 一致；
+643／643 releases 的時間可辨識，但只有82個（12.8%）能唯一辨識 owner。
+相同 cost 的多個 departures 不能按 FIFO／adjacency 指派 per-owner lifetime。
+Release position 在 interval 中近似均勻，median u=.512；
+不能以較幸運 lower endpoint 救回 H12／H13。
+以相鄰 completed event 對齊的 HTTP／Gateway lag median3.7ms，
+不是已認證的 per-UUID lease pairing；所有 whole-cost decision checks 零違規。
+兩 epochs sequences 無 gaps，但 status 沒有 final sequence／count／digest，
+所以仍不能證明 retained suffix 完整。
+USED1–16 sealed subsets 都沒有 journal，**H12未辨識／H13非候選維持原判，
+沒有 rescore、midpoint choice 或拿 smoke 當 calibration**。
+
+### 多步動作價值與真正 count-policy 的條件
+
+Astra 完整18340-byte raw SHA256
+`5c47a79b2b83e9e0134537771144d75a81cb54fce1b482554f67550de852f101`。
+只分解既有32張 R14 tables，沒有新 forecast／profile／refit。
+每 endpoint 的16 cuts 中，**4個兩 family 都選16、12個都選32**；
+先前 disputed cut 的 conditional margin：
+upper −.4375→−.1875，lower −.4375→−.25，tail bonus 沒有翻轉 ranking。
+因此「model 的多步項完全沒有作用」太強；正確結論是目前 saved cuts
+沒有 first-action 額外價值。原32768 exact、20→11 deadline failures、
+兩個 One-move deadline-incomplete cuts 都保留，不能把這些 unknown 當成
+100ms 可執行的相同動作。
+
+Actual Gateway CPU witness：first content 持有完整 cost，downshift 不 eviction，
+超 budget 立即503而沒有 real budget waiting queue，latent Q re-offer 尚未識別。
+兩個預定 mixed-arm0 start+10s prefixes 的2／2與5／5 native tags 可對 owners，
+各有 asynchronous pending_batches1，不能宣稱 full lifecycle／strict loader permit。
+以 measured long-cell costs，從空狀態 budget32 最多只有7／6 long owners；
+16個 long owners 至少需 budget64.48695／75.15362，或真正 count-policy16。
+不能將 budget16／32 重新命名為 FixedConcurrency16／32。
+Future action-value experiment 需真實 `16 < R+c <= 32` admission contrast、
+actual CAS/apply 與 ITT clock，不能只比較 virtual plan。
+v11 有 lag pool／stream／reordering／clipping，非 v10 exact ABI；
+沒有盲目接入 prefix solver 或重新 fit。
+
+### Genuine HTTP 修復與 independent negative reference
+
+Sol canonical witness SHA256
+`6465bcbb112bca0a39ae07716ea96d50375145e6571e55082994529dd9802b0b`，
+535 bytes，Mayor exact SHA 核對。Frozen R14 在 real-shaped client 下仍能
+failed drain／empty gate 後13POST，unknown／failed CAS 後4bursts，
+serial full-SSE 把 end 改成 last-HTTP+1秒，九個 disappearances 被 zero-impute
+卻宣稱 survival。**Actual capture 本身會遵守 future scheduled_at**；
+問題是 serial await 破壞 common arrival/window，不是 capture 忽略排程。
+Positive CPU reference 是4個 concurrent attempts、apply+1秒 sample 在
+HTTP completion 前、all-assigned censor intervals，仍非物理／causal permit。
+
+Gemini R15 已修 dynamic server provenance、source／drain／gate／CAS fail-closed、
+concurrent burst at apply+offset、apply+1秒 sampling 不等待 HTTP finish，
+end-survival／censor intervals 與 geometry action contrast preflight。
+Mayor438全套包含這些 contracts，但**尚未在現有 GPU backend 執行 pilot**；
+Native03 仍獨占 backend，不能注入外來 True ignore-EOS cohort。
+
+### R16：隔離本機 owner journal，先取得 source-qualified 觀測
+
+Mayor 在另一個 pr32 worktree
+`/home/daniel_lin/gt/pr32/mayor/mpc-native-owner-journal`，
+branch `research/pr33-native-v3-owner-journal`，提交
+`a4ec4e386e68f6ea20b68a8557785fc5813c7b16`。
+`MPC_OWNER_LEDGER_ENABLED=1` 為 default-off opt-in，需 MPC lab／cost_aware／
+telemetry log+shutdown status。Schema-v2 rows 含 explicit owner ID／whole cost／
+admission-first_content-terminal kind；control rows 不捏造 owner。
+First-content 不 release；writer 停止與 final flush 後，status 綁 final sequence、
+remaining owners、完整 file bytes／SHA；不一致或 leftover owners 標 failed。
+**116項既有與新 CPU cases 全通過，0 skip，0.80秒**，包含 actual mock-HTTP
+lineage、non-FIFO release／downshift、短 session final flush／closed epoch／
+leftover owner failures／startup refusal，既有 snapshot strict contract 不變。
+這不是 fsync／durability、external authentication、calibrated risk 或 MPC permit。
+新 source code 仍只在本機隔離分支，沒有部署、Push 或改 active Source144。
+
+先前把新 Gateway bytes 放在 historical R15 parent 時，5項 producer-source
+checks 正確拒絕、2個 fixtures 未提供；原輸出完整保留，沒有說成 pass。
+已將**僅 Mayor 自己的變更**移到獨立 worktree，原 parent恢復原 bytes，
+補 actual Source144 fixture 後438／237／零 skip。沒有 override SHA／identity、
+刪失敗、重寫 Git history 或拿 new-tag／old-data 作 source qualification。
+四模型的新 caller-owned／merge-local convoy `hq-cv-opi13`、Beads `.14`–`.17`
+正對相同 state／stock／lease／watermark／count-v-cost／clock／ITT／horizon
+核心問題交叉批判；不是把 Mayor 實作當成四模型同意。
+Prospective Train41／42仍需先凍結 source、包含完整 epoch journal／watermark，
+重新設定可判讀的 primary metric、split、ITT 與停止規則，不用15／16重調。
+
+16:25:23Z verified prefix：54完整 episodes／108 raw-events files，
+6,480新秒＋15,960舊秒＝**22,440有效秒＝6h14m**；smoke不計，
+十小時／真實 MPC closed-loop superiority 尚未完成，native acquisition 持續。
+16:22:09Z actual four-session usage：Opus3942.79084／Astra9016.96195／
+Gemini2221.8787725／Sol1612.34939，合計16,793.9809525 credits，
+排除 Mayor／舊 sessions／invoice；GPU hourlyUSD／provider billing-stop 未驗證，
+不將 service stop 冒充停止 Pod 計費。
+
+新增 publication evidence：R15 source archive／manifest、完整438／237 output、
+changed-parent-source refusals、兩份完整 Opus raw gzip、完整 Astra raw gzip、
+Sol canonical witness JSON。重要負面結果、所有 endpoint／fates／deadlines
+均保留；本輪發布的是辨識與觀測資格，**不是 MPC 性能勝利**。
+另附 `native-v3-r16-owner-ledger-local.patch.gz` 與116項 qualification output，
+僅為本機 prototype 的可讀 source／CPU 證據，不是產品 HEAD 整合或 Native 部署。
+原始 refusal log／patch 的空白不改寫，以 gzip byte-exact 保留；
+uncompressed SHA256 分別為45e0a33c…68662／d2a6b703…9862e。
