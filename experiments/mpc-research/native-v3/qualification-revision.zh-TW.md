@@ -69,3 +69,24 @@ Gemini R1 的兩個模組誤放 repo root，原始提交已保留，另要求 ow
 GPU lifecycle credential 仍不存在；只能停止自身服務，不能宣稱 SSH
 stop 等同停止 Pod 計費。使用者已明確允許在此限制下繼續，但使用時間、
 計費未知狀態及任何實驗停止都必須如實記錄。
+
+## NV3-001：受控 cap／HTTP 介面資格，已執行
+
+`87f7e56` 在原 RTX4090 上實際執行四個 12 秒 measurement windows，
+1 秒 reservation cap16／32 干預：922 offered、648 complete／自然 EOS、
+274 admission rejection，沒有其他或截斷結果。48 個 assignment 最後
+均得到 guarded applied ACK；另兩個 pending attempt 完整保留，不能說
+每一次嘗試都成功。386 個原生 state samples 的 source／clock／freshness
+availability 均有效，所有 trial 最後都有兩次完整 drain 證据。
+
+封存原始 HTTP／state／action／GPU monitor，本機／Pod SHA256 相同：
+`2f00e9217800d36c9a62a659a0567ed7b6c00ac07a50d5571ef21bae2e177467`。
+Native vLLM epoch 仍為 `2587d2b`，gateway／collector 為 `87f7e56`；
+產品 core implementation hash 沒改，native-launch metadata 分別記錄，
+不把 collector revision 冒充已載入的 vLLM revision。
+
+這是介面 smoke，不是 MPC benchmark、獨立重複或原生模型驗收。
+兩個短 workload arm 的 cohort-good 分別 265／280，mixed 為 41／36；
+只支持「值得研究 workload 與作用序列交互作用」，不能相減後宣稱
+同狀態 cap causal effect 或 MPC 改善。正式辨識另加入獨立、可重播的
+arm 執行順序隨機化；smoke 的原順序資料保留，不拿來做顯著性結論。

@@ -1,6 +1,7 @@
 """Prespecified native interventions, not fitted MPC or a superiority benchmark."""
 import argparse
 import asyncio
+from datetime import datetime, timezone
 import hashlib
 import json
 import math
@@ -34,7 +35,9 @@ def protocol_for(source, cost_spec, smoke=False):
         for cell in cells:
             rng = random.Random(f"action-sequence:{seed}:{cell}")
             actions = [rng.choice((16, 32)) for _ in range(duration)]
-            for arm in (0, 1):
+            order = [0, 1]
+            random.Random(f"arm-order:{seed}:{cell}").shuffle(order)
+            for arm in order:
                 episodes.append(dict(episode_id=f"nv3-{seed}-{cell}-arm{arm}",
                     seed_block=seed, split=split, cell=cell, duration_s=duration, arm=arm,
                     schedule=[dict(at_s=t, budget=48-a if arm else a)
@@ -45,6 +48,7 @@ def protocol_for(source, cost_spec, smoke=False):
                        "default serial service coefficients are never evaluated.",
         split_unit="Independent arrival/action seed block; cells and arms are correlated",
         contrasts="Whole assigned sequences, not same-state pointwise causal differences",
+        assignment_order="Independent prespecified randomized arm order per block/cell",
         observer_scope="Native observer samples; no CUDA timing or pristine-hook claim",
         final_test_used=False, planned_offered_window_s=sum(e["duration_s"] for e in episodes),
         minimum_requested_experiment_s=36000 if not smoke else None, episodes=episodes)
@@ -125,6 +129,7 @@ async def run(args, protocol):
         model_version=parameters.model_version, controller_version="prespecified-cap-sequence-v1",
         model_identity=parameters.identity.__dict__, clock_domain=domain,
         actual_offered_window_s=0, experiment_started_at=time.monotonic(),
+        started_at_utc=datetime.now(timezone.utc).isoformat(),
         gpu_cost_per_hour=None, gpu_cost_reason="Lifecycle credential unavailable; price not verified",
         gpu_environment=dict(model_snapshot=config["MODEL_NAME"],
             software={p:importlib.metadata.version(p) for p in ("vllm", "torch", "transformers")},
@@ -303,6 +308,7 @@ async def run(args, protocol):
             raise
         finally:
             index["experiment_finished_at"] = time.monotonic()
+            index["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
             persist(output/"index.json", index)
 
 

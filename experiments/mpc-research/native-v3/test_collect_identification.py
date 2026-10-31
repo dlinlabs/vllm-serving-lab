@@ -30,6 +30,9 @@ def test_actual_ten_hours_not_maximum_drain_or_setup_is_preregistered():
     assert all(not blocks[a] & blocks[b] for a, b in (("train", "calibration"),
         ("train", "validation"), ("calibration", "validation")))
     assert protocol["final_test_used"] is False
+    assert {protocol["episodes"][i]["arm"]
+            for i in range(0, len(protocol["episodes"]), 2)} == {0, 1}
+    assert protocol == module.protocol_for("a"*40, {})
 
 
 @pytest.mark.parametrize("duration", [0, -1, float("nan"), float("inf")])
