@@ -114,6 +114,106 @@ def test_transport_timeout_is_censored_and_receive_clock_regression_is_invalid()
     asyncio.run(run())
 
 
+def test_online_receipts_are_published_at_send_first_content_and_terminal():
+    receipts = []
+    ticks = iter(range(1, 30))
+
+    class Stream(httpx.AsyncByteStream):
+        async def __aiter__(self):
+            assert [kind for kind, _ in receipts] == ["offered"]
+            yield event("answer")
+            assert [kind for kind, _ in receipts] == ["offered", "first_content"]
+            assert receipts[-1][1]["terminal_at"] is None
+            assert receipts[-1][1]["usage"] is None
+            assert receipts[-1][1]["content_events"] == 1
+            yield event(finish="stop") + event(
+                usage={"prompt_tokens": 7, "completion_tokens": 2},
+            ) + b"data: [DONE]\n\n"
+
+    def serve(request):
+        assert [kind for kind, _ in receipts] == ["offered"]
+        assert receipts[0][1]["sent_at"] < receipts[0][1]["published_at"]
+        return httpx.Response(200, stream=Stream(),
+            headers={"content-type": "text/event-stream", "x-request-id": RID})
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(serve)) as client:
+            row = await capture_chat(client, "http://test", {"messages": []}, RID, 0,
+                enabled=True, domain="test", clock=lambda: next(ticks),
+                observe=lambda kind, receipt: receipts.append((kind, receipt)))
+            assert row["status"] == "complete"
+            assert [kind for kind, _ in receipts] == ["offered", "first_content", "terminal"]
+            assert receipts[0][1]["first_content_at"] is None
+            assert receipts[-1][1]["usage"] == row["usage"]
+            receipts[-1][1]["usage"]["completion_tokens"] = 999
+            assert row["usage"]["completion_tokens"] == 2
+            assert all(r["clock_domain"] == "test" and r["request_id"] == RID for _, r in receipts)
+            assert all(r["sent_at"] <= r["published_at"] for _, r in receipts)
+            assert receipts[0][1]["published_at"] < receipts[1][1]["published_at"] < receipts[2][1]["published_at"]
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("cancel_before_send", [False, True])
+def test_online_cancellation_distinguishes_sent_offer_from_unsent_plan(cancel_before_send):
+    receipts = []
+
+    async def serve(request):
+        raise asyncio.CancelledError
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(serve)) as client:
+            async def capture():
+                return await capture_chat(client, "http://test", {"messages": []}, RID,
+                    10**12 if cancel_before_send else 0, enabled=True,
+                    observe=lambda kind, receipt: receipts.append((kind, receipt)))
+            task = asyncio.create_task(capture())
+            if cancel_before_send:
+                await asyncio.sleep(0)
+                task.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+            assert [kind for kind, _ in receipts] == (
+                ["terminal"] if cancel_before_send else ["offered", "terminal"])
+            assert receipts[-1][1]["status"] == "cancelled"
+            assert (receipts[-1][1]["sent_at"] is None) == cancel_before_send
+    asyncio.run(run())
+
+
+def test_online_observation_failure_does_not_change_http_completion_or_echo_error_message():
+    def fail(kind, receipt):
+        raise RuntimeError("sensitive callback context")
+
+    def serve(request):
+        return httpx.Response(200, content=event("answer") + event(finish="stop")
+            + b"data: [DONE]\n\n", headers={"content-type": "text/event-stream", "x-request-id": RID})
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(serve)) as client:
+            captured = []
+            row = await capture_chat(client, "http://test", {"messages": []}, RID, 0,
+                enabled=True, clock=lambda: 1, record=captured.append, observe=fail)
+            assert row["status"] == "complete" and captured == [row]
+            assert row["observation_error"] == "RuntimeError"
+            assert "sensitive callback context" not in json.dumps(row)
+    asyncio.run(run())
+
+
+def test_async_publication_callback_is_not_silently_treated_as_receipt_delivery():
+    async def observe(kind, receipt):
+        pytest.fail("An asynchronous callback must not execute as a synchronous receipt")
+
+    def serve(request):
+        return httpx.Response(503, json={"detail": "upstream overloaded"})
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(serve)) as client:
+            row = await capture_chat(client, "http://test", {"messages": []}, RID, 0,
+                enabled=True, clock=lambda: 1, observe=observe)
+            assert row["status"] == "failed"
+            assert row["observation_error"] == "TypeError"
+    asyncio.run(run())
+
+
 def test_gateway_empty_is_not_drain_and_foreign_clock_precedes_time_comparison():
     params = ModelParameters()
     snapshot = Snapshot("gateway", "test", 100, 16, 0, (), params.identity)

@@ -2,6 +2,8 @@
 
 import asyncio
 import codecs
+from copy import deepcopy
+import inspect
 import json
 import re
 import time
@@ -95,7 +97,8 @@ class ChatTranscript:
 
 async def capture_chat(client, url, payload, request_id, scheduled_at, *,
                        enabled=False, domain=None, clock=time.monotonic, timeout_s=45,
-                       record=None):
+                       record=None, observe=None):
+    """Capture HTTP outcomes with an optional synchronous publication callback."""
     if enabled is not True:
         return {"request_id": request_id, "status": "disabled"}
     if not isinstance(request_id, str) or not re.fullmatch("[0-9a-f]{32}", request_id):
@@ -116,9 +119,29 @@ async def capture_chat(client, url, payload, request_id, scheduled_at, *,
                finish_reason=None, response_request_id=None, usage=None,
                content_events=0, token_timestamps_qualified=False, admission_rejection=False)
     observer = ChatTranscript()
+
+    def publish(kind):
+        if observe is None:
+            return
+        receipt = {**row, "first_content_at": observer.first_at,
+                   "last_content_at": observer.last_at,
+                   "content_events": observer.content_events,
+                   "stream_error": observer.error,
+                   "published_at": clock()}
+        try:
+            result = observe(kind, deepcopy(receipt))
+            if inspect.isawaitable(result):
+                if inspect.iscoroutine(result):
+                    result.close()
+                raise TypeError("synchronous observation callback required")
+        except Exception as exc:
+            # Observation failure must not change the offered HTTP traffic.
+            row["observation_error"] = type(exc).__name__
+
     try:
         await asyncio.sleep(max(0, scheduled_at - clock()))
         row["sent_at"] = clock()
+        publish("offered")
         async with asyncio.timeout(timeout_s):
             async with client.stream("POST", url, content=body, headers={
                 "content-type": "application/json", "x-benchmark-request-id": request_id,
@@ -150,7 +173,10 @@ async def capture_chat(client, url, payload, request_id, scheduled_at, *,
                         size += len(chunk)
                         if size > 8 * 1024 * 1024:
                             raise ValueError("body_limit")
+                        first_before = observer.first_at
                         observer.feed(chunk, clock())
+                        if first_before is None and observer.first_at is not None:
+                            publish("first_content")
                     row["status"] = ("complete" if observer.complete()
                                      and row["response_request_id"] == request_id else "failed")
     except asyncio.CancelledError:
@@ -165,6 +191,7 @@ async def capture_chat(client, url, payload, request_id, scheduled_at, *,
                    terminal_at=clock(), stream_done=observer.done, stream_error=observer.error,
                    finish_reason=observer.finish_reason, usage=observer.usage,
                    content_events=observer.content_events)
+        publish("terminal")
         if record is not None:
             record(dict(row))
     return row
