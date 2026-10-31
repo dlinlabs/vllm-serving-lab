@@ -93,10 +93,10 @@ profile 名稱與 argv 不是實際模型證明；必須逐一讀 usage records 
 
 | Polecat | Native Bead | 實際 usage model | 狀態 |
 |---|---|---|---|
-| opal | pr-nv2-opus | claude-opus-5.5 | 獨立 Round1 研究中 |
-| topaz | pr-nv2-astra | gpt-6-astra | 獨立 Round1 研究中 |
-| garnet | pr-nv2-gemini | gemini-3.8-flash | 獨立 Round1 研究中 |
-| ruby | pr-nv2-sol | gpt-6.1-sol | 獨立 Round1 研究中 |
+| opal | pr-nv2-opus | claude-opus-5.5 | 獨立 Round1 已凍結 |
+| topaz | pr-nv2-astra | gpt-6-astra | 獨立 Round1 已凍結 |
+| garnet | pr-nv2-gemini | gemini-3.8-flash | 獨立 Round1 已凍結 |
+| ruby | pr-nv2-sol | gpt-6.1-sol | 獨立 Round1 已凍結 |
 
 Gas Town 強制將 `--base-branch` 當作 origin ref，未發布的本機分支不能直接用；
 因此每個 worker 改以不同新建本機 branch 的 `--branch` 原生派工，
@@ -107,6 +107,27 @@ Gas Town 強制將 `--base-branch` 當作 origin ref，未發布的本機分支�
 不因此更改 global sandbox 或其他 Rig。
 至少 Opus／Astra 在 startup 預設流程曾嘗試 `gt done`，均被 wrapper 拒絕；
 這是技術屏障實際生效的紀錄，不能說只靠指令成功防止嘗試。
+
+### Round NV2-001：四模型獨立提案與 CPU 診斷，已執行
+
+四份提案及各自 source commit／逐檔 SHA 已凍結於
+`results/mpc-native-v2/round1-freeze.json`；全部報告 ready 後才釋出互審。
+整合只擷取各自三份研究檔案，排除 auto-checkpoint 混入的
+CLAUDE／Gas Town hooks／slash-command 設定，保留原 Worker 分支與提交。
+Gemini 原稿的十五處行末 Markdown 空白在整合時正規化，
+不更動科學內容；原稿仍可由 freeze manifest 的 source commit 取得。
+
+Mayor 使用既有 Python3.12 環境獨立執行四個新診斷的組合測試：
+Opus17、Astra9、Gemini18、Sol8，共 **52 tests passed**。
+這證明這些 CPU 範例在共同環境可執行，**不認證所有報告中的數學、
+物理或統計主張**；尤其不是 Native MPC 性能勝利。
+模型假設、claimed theorem、clock decomposition、成本降額約束、
+survivor coefficients 的物理解讀仍須 Round2 反例審查。
+目前沒有因四模型高層次用詞相似就直接裁定「共識已成立」。
+
+下一輪同一批原生 Workers 各自審查其他三份 frozen report／prototype，
+保留原 Round1，不回寫刪除錯誤主張，將反例與修訂另外保存。
+GPU 繼續維持 provider EXITED，直到可執行的量測方案與資格檢查就緒。
 
 研究用共同 SLO 沿用 TTFT500ms＋request-mean TPOT50ms；
 真正逐 token tail 若沒有 timestamps 資格，明確標為不可測，
