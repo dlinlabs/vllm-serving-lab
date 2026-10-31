@@ -87,6 +87,11 @@ Sol已交付獨立receipt consumer介面，local commit
 全部實際執行通過，沒有刪除或更改檢查。
 R5 archive SHA256：
 `2af0d40ddd98672ab4a823a254aab49c66e1dcbe6a2a6df322e3c766b1d1c5d5`。
+可重現所需的R1／R2舊fixture source也已補封存於
+`results/mpc-native-v3/review-evidence/round1-fixture-source.tar.gz`、
+`round2-fixture-source.tar.gz`，逐檔hash見`historical-fixture-manifest.json`；
+R4使用既有`round4-frozen-source.tar.gz`。解壓後把三個環境變數指向
+各自archive root即可；保留R1原有mixed layout，不修改SHA-pinned checks。
 
 ## 推論與下一個可反證假設
 
