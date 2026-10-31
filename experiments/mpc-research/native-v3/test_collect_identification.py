@@ -33,6 +33,12 @@ def test_actual_ten_hours_not_maximum_drain_or_setup_is_preregistered():
     assert {protocol["episodes"][i]["arm"]
             for i in range(0, len(protocol["episodes"]), 2)} == {0, 1}
     assert protocol == module.protocol_for("a"*40, {})
+    limit = protocol["gateway_epoch_episode_limit"]
+    assert limit == 2
+    for position in range(0, len(protocol["episodes"]), limit):
+        pair = protocol["episodes"][position:position+limit]
+        assert len({(e["seed_block"], e["cell"]) for e in pair}) == 1
+        assert sum(len(e["schedule"]) for e in pair) < 1024
 
 
 @pytest.mark.parametrize("duration", [0, -1, float("nan"), float("inf")])

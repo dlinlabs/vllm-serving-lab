@@ -77,7 +77,7 @@ stop 等同停止 Pod 計費。使用者已明確允許在此限制下繼續，�
 274 admission rejection，沒有其他或截斷結果。48 個 assignment 最後
 均得到 guarded applied ACK；另兩個 pending attempt 完整保留，不能說
 每一次嘗試都成功。386 個原生 state samples 的 source／clock／freshness
-availability 均有效，所有 trial 最後都有兩次完整 drain 證据。
+availability 均有效，所有 trial 最後都有兩次完整 drain 證據。
 
 封存原始 HTTP／state／action／GPU monitor，本機／Pod SHA256 相同：
 `2f00e9217800d36c9a62a659a0567ed7b6c00ac07a50d5571ef21bae2e177467`。
@@ -90,3 +90,12 @@ Native vLLM epoch 仍為 `2587d2b`，gateway／collector 為 `87f7e56`；
 只支持「值得研究 workload 與作用序列交互作用」，不能相減後宣稱
 同狀態 cap causal effect 或 MPC 改善。正式辨識另加入獨立、可重播的
 arm 執行順序隨機化；smoke 的原順序資料保留，不拿來做顯著性結論。
+
+長時工程檢查發現 `gateway.py:809` 的 1,024-operation outcome ceiling。
+這是避免忘記 idempotency 的既有安全設計，不任意放寬、清空 cache 或
+刪除舊 operation。辨識 protocol 明示在每兩個完整 paired episodes、
+已 verified drain、沒有 pending operation 後，停止自己擁有的 Gateway
+子程序並建立新 epoch；native vLLM 不重啟。每個 epoch 只有 240 個
+原定動作，pending／fence retry 仍記錄。原 production ceiling 保留。
+所有 episode 帶各自 Gateway run ID；這是 bounded research 操作方式，
+**不是已解決 production 長期 controller outcome-retention 問題**。

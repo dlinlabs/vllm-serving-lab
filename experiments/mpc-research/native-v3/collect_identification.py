@@ -49,6 +49,9 @@ def protocol_for(source, cost_spec, smoke=False):
         split_unit="Independent arrival/action seed block; cells and arms are correlated",
         contrasts="Whole assigned sequences, not same-state pointwise causal differences",
         assignment_order="Independent prespecified randomized arm order per block/cell",
+        gateway_epoch_episode_limit=2,
+        epoch_scope="Drained paired-episode rollover; retain the production 1024-operation "
+                    "idempotency ceiling; do not evict outcomes or restart native vLLM",
         observer_scope="Native observer samples; no CUDA timing or pristine-hook claim",
         final_test_used=False, planned_offered_window_s=sum(e["duration_s"] for e in episodes),
         minimum_requested_experiment_s=36000 if not smoke else None, episodes=episodes)
@@ -137,18 +140,62 @@ async def run(args, protocol):
         calibrated=False, mpc_active=False, episodes=[])
     persist(output/"index.json", index)
     tokenizer = AutoTokenizer.from_pretrained(config["MODEL_NAME"], local_files_only=True)
+    managed_gateway = None
+    async def start_gateway():
+        epoch = len(index.setdefault("gateway_epochs", []))+1
+        evidence = output/f"gateway-epoch-{epoch:04d}"
+        evidence.mkdir()
+        with (evidence/"process.log").open("x") as stream:
+            process = await asyncio.create_subprocess_exec(sys.executable,
+                str(ROOT/"experiments/mpc-research/native-v2/launch_batch_service.py"),
+                "gateway", "--config", str(args.config.resolve()), "--plan",
+                str(args.gateway_plan.resolve()), "--python", sys.executable,
+                "--evidence", str(evidence), "--identification-protocol",
+                str(args.protocol.resolve()), stdout=stream, stderr=asyncio.subprocess.STDOUT)
+        index["gateway_epochs"].append(dict(epoch=epoch, pid=process.pid,
+            source_commit=protocol["source_commit"], evidence=evidence.name))
+        persist(output/"index.json", index)
+        return process
+    async def stop_gateway():
+        if managed_gateway is not None and managed_gateway.returncode is None:
+            managed_gateway.terminate()
+            try:
+                await asyncio.wait_for(managed_gateway.wait(), 15)
+            except TimeoutError:
+                managed_gateway.kill()
+                await managed_gateway.wait()
+    if args.gateway_plan:
+        managed_gateway = await start_gateway()
     async with httpx.AsyncClient(base_url="http://127.0.0.1:8080", timeout=30,
         headers={"x-admin-api-key":config["ADMIN_API_KEY"]}) as client, \
         httpx.AsyncClient(base_url="http://127.0.0.1:8000", timeout=5) as native:
-        reply = await client.get("/admin/mpc/state")
-        reply.raise_for_status()
-        initial = snapshot_from_dict(reply.json())
-        if initial.identity != parameters.identity or initial.clock_domain != domain:
-            raise ValueError("gateway identity or clock mismatch")
-        driver = GuardedActuator(client, parameters, output/"actuator-pending.json",
-            permit=IdentificationPermit(parameters.identity, approved=True, run_id=initial.run_id,
-                clock_domain=domain, expires_at=time.monotonic()+protocol["planned_offered_window_s"]+14400),
-            enabled=True, max_age_s=.5)
+        async def ready_gateway():
+            for attempt in range(90):
+                if managed_gateway is not None and managed_gateway.returncode is not None:
+                    raise ValueError("owned gateway exited during startup")
+                try:
+                    reply = await client.get("/admin/mpc/state")
+                    reply.raise_for_status()
+                    snapshot = snapshot_from_dict(reply.json())
+                    if snapshot.identity != parameters.identity or snapshot.clock_domain != domain:
+                        raise ValueError("gateway identity or clock mismatch")
+                    return snapshot
+                except httpx.HTTPError:
+                    if attempt == 89:
+                        raise
+                    await asyncio.sleep(1)
+            raise ValueError("gateway readiness not established")
+        expires_at = time.monotonic()+protocol["planned_offered_window_s"]+14400
+        def actuator(snapshot):
+            return GuardedActuator(client, parameters, output/"actuator-pending.json",
+                permit=IdentificationPermit(parameters.identity, approved=True, run_id=snapshot.run_id,
+                    clock_domain=domain, expires_at=expires_at), enabled=True, max_age_s=.5)
+        try:
+            initial = await ready_gateway()
+            driver = actuator(initial)
+        except BaseException:
+            await stop_gateway()
+            raise
         engine_run = None
         payload_cache = {}
         async def sample():
@@ -202,8 +249,16 @@ async def run(args, protocol):
                 await asyncio.sleep(.11)
             raise ValueError("bounded assignment failed; no unacknowledged action accepted")
         try:
-            for specification in protocol["episodes"]:
-                episode = {**specification, "rows":[], "native_frames":[], "actions":[]}
+            for position, specification in enumerate(protocol["episodes"]):
+                limit = protocol["gateway_epoch_episode_limit"]
+                if args.gateway_plan and position and position % limit == 0:
+                    await drain()
+                    await stop_gateway()
+                    managed_gateway = await start_gateway()
+                    initial = await ready_gateway()
+                    driver = actuator(initial)
+                episode = {**specification, "rows":[], "native_frames":[], "actions":[],
+                           "gateway_run_id":initial.run_id}
                 episode_path = output/(specification["episode_id"]+".json")
                 episode["initial_drain"] = await drain()
                 episode["preassignment"] = []
@@ -307,6 +362,7 @@ async def run(args, protocol):
             index["error"] = type(exc).__name__+": "+str(exc)
             raise
         finally:
+            await stop_gateway()
             index["experiment_finished_at"] = time.monotonic()
             index["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
             persist(output/"index.json", index)
@@ -318,6 +374,7 @@ def main():
     parser.add_argument("--config", type=Path)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--vllm-launch", type=Path)
+    parser.add_argument("--gateway-plan", type=Path)
     parser.add_argument("--prepare", action="store_true")
     parser.add_argument("--source-commit")
     parser.add_argument("--smoke", action="store_true")
@@ -338,6 +395,8 @@ def main():
         smoke = protocol["minimum_requested_experiment_s"] is None
         if protocol != protocol_for(protocol["source_commit"], protocol["cost_spec"], smoke):
             raise ValueError("protocol not identical to prespecified factory")
+        if args.gateway_plan is None:
+            raise ValueError("campaign requires prespecified drained gateway epoch rollover")
         asyncio.run(run(args, protocol))
 
 
