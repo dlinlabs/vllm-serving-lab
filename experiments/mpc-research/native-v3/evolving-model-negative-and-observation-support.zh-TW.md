@@ -1,5 +1,51 @@
 # NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
+## NV3-025：實際 acquisition進行中與獨立H16 layout資格
+
+full04於`2026-10-31T19:10:30.794309Z`，在已核對 remote/API的
+before-exposure evidence commit`8a162e896eb0d174b800d86faed96b9258bb40f7`
+之後啟動。進度 snapshot核對6個 completed/closed episodes，
+新720秒＋原26,880秒＝**27,600秒／7h40m**，96秒smoke與原失敗
+qualification秒數全部排除。只報已checksum核對、same-domain不重疊
+offered-window時數，沒有解析 partial outcome或挑 favorable arm評分。
+source_completed=false／error=null，80episode實驗仍運行，
+owned61440／engine8fd13 inference仍active；provider billing stop=false。
+actual完整矩陣與 MPC superiority仍未完成，不能呼叫整體task_complete。
+
+在不操作當前 GPU／SSH／source或資料的獨立CPU工作中，新增 staged
+deployment bundle`7357358d9801102f82c1aff61ca6f5aa88b3a1c0`：
+serving-base`104e65a69df73997b977bce2588b655ae714f45d`的完整產品檔案
+不改，唯一新增檔案為原a577 prospective extension，SHA7bed，
+放在 legacy collector78e旁。Source104e／Gateway0b1／implementation552
+與 public costcf、capture0648／runtimef04／observer776仍byte-identical。
+在actual bundle ROOT，原 protocolab883 factory精確重建，
+execution_preflight對occupied backend／unqualified epoch／wrong owner mode
+拒絕；正例flag是SYNTHETIC CPU ONLY，actual backend_free=false。
+
+Opus`0599ffd25dbe1c95de3f8710ed243d79ef2324bc` source-read確認diff只有
+新增ext，原unchanged h16_source_binding以base＋bundle ROOT＋in-tree ext
+接受原trusted tuple、獨立a577 factory20episodes／epoch-limit2。
+CPU layout gap CLOSED；來源／模型／test三SHA已核對，沒有重跑84項
+歷史suite，沒有live／Q1–Q5／authentication／fsync或43/44資料資格。
+CPU receipt SHA
+`65ace5ba17f2dba4f527f68c5ba5debfd4d2e7521dadbf4c24e3d8b90adea0a6`
+保留worker實際讀取的原bytes，後續provenance gate另立新manifest，
+不重寫已接受receipt。
+
+bundle735不是整體歷史104e，source_commit的serving-base label不能
+偷換為整個部署樹。43/44收集前，public vllm-launch metadata須同時封存
+serving_base_commit104e與deployment_bundle_commit735；原immutable78e
+run把完整launch JSON複製進index.gpu_environment.native_launch，
+實際run index還必須核對兩個identity。這項live-index資格仍未知，
+不能僅憑CPU source綁定令epoch-qualified=true。
+H14 original input receipts成立但完整learned checkpoint仍未找到，
+41/42不曝露、不refit。
+
+進度與 source-layout archive：
+`results/mpc-native-v3/review-evidence/nv3-025-live-baseline-and-h16-cpu-layout-progress.json`，
+配套archive SHA
+`17daabc87bb649b16bc3e7693920d4eb705e9a57bf15c33ab2155be1773f5ec4`。
+
 ## NV3-024：公平 observer、實際 baseline 資格與未曝露完整 cohort
 
 Opus4c017a 的 raw SHA

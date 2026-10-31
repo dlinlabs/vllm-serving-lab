@@ -13,6 +13,21 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-025：完整 baseline 已實際啟動，時數仍未滿十小時。**
+full04於2026-10-31T19:10:30.794309Z啟動；本次 immutable進度 snapshot
+已核對6個 closed episodes／720新 distinct秒，累計
+**27,600秒＝7h40m**。這只報時數，不分析未完成 cohort的效能；
+80episode完整實驗仍運行，owned61440 inference尚未停止。
+十小時通知／source checksum／不重疊 windows／Pod-local owned cleanup
+均在監控流程中，不能把預計36,480秒當結果或提前宣稱 MPC勝出。
+
+H16另以CPU-only staged bundle`7357358d9801102f82c1aff61ca6f5aa88b3a1c0`
+整合 serving-base104e＋原a577/7bed extension；產品／legacy78e不改，
+實際ROOT factory重建原ab883完全相同。Opus0599ffd的限定確認
+接受既有trusted tuple，CPU layout gap關閉；**不是43/44 runtime Q1–Q5
+資格**。新bundle不能整體冒稱歷史104e，實際 run index必須另記
+deployment_bundle_commit。H14完整 fitted-state仍未恢復，41/42仍blocked。
+
 **NV3-024：baseline 實際 runtime 資格通過；完整45–48仍未曝露。**
 180005 smoke04 的8個真實 HTTP episodes全部完成；41份 index／raw／events／
 closed Gateway artifacts核對 SHA。每個 count policy有真實 null-budget503

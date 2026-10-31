@@ -1,0 +1,68 @@
+{
+  "schema": "nv3-025-live-baseline-and-h16-cpu-layout-progress-v1",
+  "observed_at_utc": "2026-10-31T19:24:46.607476+00:00",
+  "acquisition_ledger": {
+    "verified_episode_ids": [
+      "nv3-baseline-181045-p128-m128-fixed-cost32",
+      "nv3-baseline-181045-p128-m128-fixed-count16",
+      "nv3-baseline-181045-p128-m128-fixed-count32",
+      "nv3-baseline-181045-p128-m128-fixed-cost16",
+      "nv3-baseline-181045-p128-m256-fixed-count32",
+      "nv3-baseline-181045-p128-m256-fixed-cost32"
+    ],
+    "prior_distinct_seconds": 26880,
+    "new_distinct_seconds": 720,
+    "cumulative_distinct_seconds": 27600,
+    "smoke_seconds_included": 0,
+    "windows": [
+      [
+        1035644.178171973,
+        1035764.178171973
+      ],
+      [
+        1035771.729047663,
+        1035891.729047663
+      ],
+      [
+        1035899.17575885,
+        1036019.17575885
+      ],
+      [
+        1036026.612958085,
+        1036146.612958085
+      ],
+      [
+        1036153.972859413,
+        1036273.972859413
+      ],
+      [
+        1036281.489832622,
+        1036401.489832622
+      ]
+    ],
+    "clock_domain": "linux-monotonic:64589d75-974d-436e-80e4-fc734d7195d8:time:[4026534406]",
+    "error": null,
+    "source_completed": false,
+    "mpc_superiority": false
+  },
+  "acquisition_ledger_sha256": "a0cb2c701575f9d98eb39e8cf45eba7c9db1f6c3e6c17d39eba95169baf4468c",
+  "duration_only_not_performance_analysis": true,
+  "full_baseline_running": true,
+  "owned_backend_pid": 61440,
+  "owned_backend_not_yet_stopped": true,
+  "provider_billing_stop_verified": false,
+  "h16_cpu_receipt_sha256": "65ace5ba17f2dba4f527f68c5ba5debfd4d2e7521dadbf4c24e3d8b90adea0a6",
+  "h16_deployment_bundle_commit": "7357358d9801102f82c1aff61ca6f5aa88b3a1c0",
+  "h16_serving_base_commit": "104e65a69df73997b977bce2588b655ae714f45d",
+  "h16_independent_layout_confirmation_commit": "0599ffd25dbe1c95de3f8710ed243d79ef2324bc",
+  "h16_cpu_layout_gap_closed": true,
+  "h16_run_index_bundle_manifest_sha256": "1009ccf4f7e2b5f6bd08cc7d06f31b1b37e59e54a1d55d29735b9d4b1793d3c0",
+  "h16_43_44_exposed": false,
+  "h16_runtime_q1_q5_qualified": false,
+  "h14_complete_learned_weights_recovered": false,
+  "h14_41_42_exposed": false,
+  "native_mpc_permit": false,
+  "superiority_claim": false,
+  "archive": "nv3-025-live-duration-and-h16-layout-source-evidence.tar.gz",
+  "archive_sha256": "17daabc87bb649b16bc3e7693920d4eb705e9a57bf15c33ab2155be1773f5ec4"
+}
