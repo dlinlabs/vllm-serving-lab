@@ -13,6 +13,16 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**最新模型反證與介面進展：** Mayor已byte-for-byte重現Opus R5第三個
+Train development block：外生arrival修訂的5秒Good-count MAE9.84，
+仍輸history mean8.76；oracle未來offers也只有8.78，不能只怪arrival。
+本機`734d459`新增真正client attempt／first-content／terminal publication hook，
+102項coupled tests通過；沒有倒填舊row或部署至正在GPU執行的729。
+新的source／consumer／Native資格與joint kernel仍待驗證。
+R6正在保留獨立性的token-progress／batch-dynamics研究階段，
+尚非四模型共識或MPC勝出。
+詳見[線上receipt與第三個Train反證](../native-v3/online-receipts-and-third-train-falsification.zh-TW.md)。
+
 **最新長時結果：long01在30個完整episodes／3,600秒後因三次guarded
 assignment未獲ACK而中止；十小時尚未完成。** 失敗partial與pending
 證據已off-Pod保留；owned Gateway與vLLM已停止，Pod保留且billing停止
