@@ -49,16 +49,19 @@ def qualification_plan(commit):
                 request_ids=[hashlib.sha256(f"{tid}-{i}".encode()).hexdigest()[:32]
                              for i in range(cohort)]))
     plan = dict(schema="native-v2-batch-capture-plan-v1", partition="train",
-        source_commit=commit, trials=trials, experiment_id="native-v2-batch-qualification",
+        source_commit=commit, trials=trials, experiment_id="native-v3-async-batch-qualification",
+        capture_audit_version="native-v3-async-terminal-accounting-v1",
         pod_id="24nm6zrh2sej8c", static_cost_budget=32,
         hypothesis="Existing PR32 passive capture can join normal Gateway Chat requests,"
-            "scheduler work,worker spans and host commits on graph/async vLLM0.30.",
+            "scheduler work,worker spans and host commits on graph/async vLLM0.30."
+            " Preserve strict v2 results;account separately for an independently proved"
+            " pre-terminal one-placeholder executed suffix beyond delivered-token minimum.",
         workload="16 short drained arms;2 TRAIN seeds;p128/4096;cohort1/4;OFF/light;"
             "natural EOS with max128,not forced outputs. Startup/first-cell effects retained.",
         completion_rule="Stop on first invalid identity,failed outcome,overflow,source/"
             "clock change or drain failure. Timeout20s/request,20s/drain,10s/event resolution."
             " No performance equivalence,service calibration or MPC acceptance.",
-        artifact_directory="native-v2-batch-qualification")
+        artifact_directory="native-v3-async-batch-qualification")
     validate_plan(plan)
     return plan
 
@@ -127,7 +130,8 @@ async def collect(plan, config_path, directory):
     sys.path.insert(0, str(ROOT/"experiments/mpc-research/native_observer"))
     from collect_interventions import messages
     from native_prediction import NATIVE_ID
-    from prefill_lab.contracts import audit_capture
+    sys.path.insert(0, str(ROOT/"experiments/mpc-research/native-v3"))
+    from audit_async_capture import audit_async_capture
     observer_sha = hashlib.sha256(Path(pr33_native_observer.__file__).read_bytes()).hexdigest()
     tokenizer = AutoTokenizer.from_pretrained(cfg["MODEL_NAME"], local_files_only=True)
     write_new(directory/"manifest.json", dict(plan=plan, clock_domain=domain,
@@ -200,14 +204,16 @@ async def collect(plan, config_path, directory):
             if (any(m is None for m in matches) or len(actual) != len(expected)
                     or {m[1] for m in matches} != expected):
                 raise ValueError("Gateway-to-native request identity requires qualification")
-            audit = audit_capture(result["capture"], result["capture"]["workers"][0]["rows"],
-                                  require_steps=trial["observer"] == "light", forced_outputs=False)
+            audit = audit_async_capture(result["capture"], result["capture"]["workers"][0]["rows"],
+                                       require_steps=trial["observer"] == "light")
             write_new(directory/f"{trial['trial_id']}-audit.json", audit)
             if audit["valid"] is not True:
                 raise ValueError("Work/progress parity unqualified;raw capture retained")
         write_new(directory/"completed.json", dict(completed=True, experiment_id=plan["experiment_id"],
             source_commit=plan["source_commit"], trials=len(plan["trials"]),
-            scope="Native join/HTTP/drain qualification only;not performance or MPC acceptance."))
+            capture_audit_version=plan["capture_audit_version"],
+            scope="V3 observed physical/delivered async work accounting,join/HTTP/drain only."
+                  " Strict v2 results remain recorded;not performance or MPC acceptance."))
 
 
 def main():
