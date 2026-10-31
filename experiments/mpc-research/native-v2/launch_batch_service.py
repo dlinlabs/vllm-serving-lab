@@ -51,7 +51,7 @@ def main():
             if key in config:
                 os.environ[key] = str(config[key])
         os.environ.update(VLLM_URL="http://127.0.0.1:8000", ADMISSION_MODE="cost_aware",
-            MAX_ADMITTED_COST="32", MPC_LAB_ENABLED="true",
+            MAX_ADMITTED_COST="32", MPC_LAB_ENABLED="true", BENCHMARK_REQUEST_IDS="1",
             MPC_MODEL_VERSION="native-v2-unfitted", MPC_CALIBRATION_VERSION="unfitted-not-validated",
             MPC_SUPPORT_HASH="qualification-only-no-control")
         command = ["-m", "uvicorn", "gateway:app", "--host", "127.0.0.1",

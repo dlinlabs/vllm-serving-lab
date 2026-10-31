@@ -12,7 +12,8 @@ import collect_batch_qualification as collector
 import launch_batch_service as launcher
 
 
-def test_launcher_exposes_selected_interpreter_tools_to_native_subprocesses(tmp_path, monkeypatch):
+@pytest.mark.parametrize("service", ["vllm", "gateway"])
+def test_launcher_exposes_selected_tools_and_preserves_benchmark_identity(tmp_path, monkeypatch, service):
     binary = tmp_path / "venv" / "bin"
     binary.mkdir(parents=True)
     ninja = binary / "ninja"
@@ -22,14 +23,16 @@ def test_launcher_exposes_selected_interpreter_tools_to_native_subprocesses(tmp_
     config.write_text(json.dumps({"MODEL_NAME": "test-model", "ADMIN_API_KEY": "test-key"}))
     plan.write_text(json.dumps(collector.qualification_plan("a" * 40)))
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(os, "environ", {**os.environ, "PATH": "/missing-system-tools"})
-    monkeypatch.setattr(sys, "argv", ["launch", "vllm", "--config", str(config),
+    monkeypatch.setattr(os, "environ", {**os.environ, "PATH": "/missing-system-tools",
+                                      "BENCHMARK_REQUEST_IDS": "0"})
+    monkeypatch.setattr(sys, "argv", ["launch", service, "--config", str(config),
         "--plan", str(plan), "--python", str(binary / "python"),
         "--evidence", str(tmp_path / "evidence")])
     observed = []
-    monkeypatch.setattr(os, "execv", lambda *args: observed.append(shutil.which("ninja")))
+    monkeypatch.setattr(os, "execv", lambda *args: observed.append(
+        (shutil.which("ninja"), os.environ["BENCHMARK_REQUEST_IDS"])))
     launcher.main()
-    assert observed == [str(ninja)]
+    assert observed == [(str(ninja), "1" if service == "gateway" else "0")]
 
 
 @pytest.mark.parametrize("valid", [True, False])
