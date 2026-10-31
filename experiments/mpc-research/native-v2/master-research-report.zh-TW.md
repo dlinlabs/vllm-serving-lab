@@ -40,6 +40,13 @@ Astra same-first-action 保守政策的機會成本保留為未決設計問題�
 詳見 [第三輪證據裁定與下一輪模型](../native-v3/round3-adjudication.zh-TW.md)。
 十小時與原生 MPC 效能比較仍未完成，不把正在運行的計畫當結果。
 
+Mayor 已另外執行兩個完整 Train block 的凍結 R3 cross-fit。
+batch-aware original-release normalized error bounds約0.033–0.052，
+train-fraction baseline約0.090–0.111、fluid-history約0.150–0.181。
+這是原生 traces 的初步預測訊號，不是信賴區間、完整 joint state rollout
+或 MPC效能改善；5秒 original-release labels仍degenerate。
+詳見 [固定兩個Train block的完整診斷](../native-v3/train-crossfit-diagnostic.zh-TW.md)。
+
 ## 任務權限與分支
 
 使用者已取消固定 AI Credits／GPU 時數上限，允許同一個既有 Pod 的自主實驗、
