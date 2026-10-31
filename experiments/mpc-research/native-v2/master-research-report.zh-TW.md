@@ -129,6 +129,31 @@ survivor coefficients 的物理解讀仍須 Round2 反例審查。
 保留原 Round1，不回寫刪除錯誤主張，將反例與修訂另外保存。
 GPU 繼續維持 provider EXITED，直到可執行的量測方案與資格檢查就緒。
 
+### Mayor 並行工作：重用 PR32 的 passive batch capture
+
+`pr-nv2-batch-bridge` 正在進行資格準備；沒有重建另一套 CPU MPC。
+新 `batch_capture_bridge.py` 只包覆既有 `ExternalCapture`、
+`scheduled_work`／`step_key`、`WorkerRecorder` 與38檔 installed-source guard。
+預設不載入 GPU hooks；專用 opt-in 啟動才允許 frozen TRAIN170001–170012
+的 off／light capture，沒有 synthetic request、live predictor、actuation、
+scheduler replacement、profiler 或同步 GPU 等待。
+
+量測為同一 batch identity 的 engine schedule／host commit 與
+worker current-stream preparation／forward CUDA span；
+**不把 forward span 認證成 kernel busy 或整條 GPU pipeline 完成時間**。
+Worker clock／source／process epoch 在開始與結束核對；
+pending CUDA events、overflow、missing terminal／batch IDs 均標 invalid，
+原始回覆仍保留。結束回覆在 EngineCore 記憶體可重讀，須由 collector
+先寫入／fsync 並核對 SHA，再 ACK 才可開始下一 trial；
+這不是 process-crash durability 的保證。
+
+CPU 組合驗證為 **80 passed、1 skipped**，包含新 facade18項及既有
+pipeline／HTTP wire contracts。被 skip 的是實際 installed-vLLM
+CompletionRequest 測試，原因是 CPU 環境未裝 vLLM；
+不能將它計為通過或以此宣稱 Native HTTP 已資格化。
+下一步為四模型批判後的 installed-source／真 HTTP／drain 資格，
+再進行未開 profiler 的 batch-law Train 實驗。
+
 研究用共同 SLO 沿用 TTFT500ms＋request-mean TPOT50ms；
 真正逐 token tail 若沒有 timestamps 資格，明確標為不可測，
 不能把 SSE chunk gaps 改名為 token TPOT P99。
