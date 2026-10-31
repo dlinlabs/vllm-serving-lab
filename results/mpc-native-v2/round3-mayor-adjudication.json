@@ -1,0 +1,43 @@
+{
+  "schema": "native-v2-round3-mayor-adjudication-v1",
+  "source_commit": "78b3c46ef7b4dda728ce0618f934442445f5b338",
+  "source_path": "experiments/mpc-research/native-v2/round3/gemini_revision.py",
+  "source_sha256": "2aed7dda01e317b3eacf0a4f158fe6ac74169c88fb62bfb2b959aa8691db9aeb",
+  "scope": "Executed synthetic CPU inputs against the frozen revised evaluator;not native outcomes or alleged failures in historical GPU data.",
+  "inputs": {
+    "duplicate_block": {
+      "block_id": "same",
+      "seed": 170001,
+      "duration_s": 10,
+      "control_decisions": 10,
+      "offered_requests": 100,
+      "policy_a_good_completions": 10,
+      "policy_a_rejections": 5,
+      "policy_a_solver_overruns": 0,
+      "policy_b_good_completions": 20,
+      "policy_b_rejections": 5,
+      "policy_b_solver_overruns": 0
+    },
+    "replications": 6,
+    "outcome_cases": "validate_request_outcome(0,.1,.2,0,stop,False) and (float(nan),.1,.2,1,stop,False)"
+  },
+  "results": {
+    "duplicated_six_times": {
+      "n_blocks": 6,
+      "mean_goodput_difference_req_s": 1.0,
+      "std_goodput_difference": 0.0,
+      "pre_registered_margin_req_s": 0.5,
+      "margin_satisfied": true,
+      "two_sided_permutation_p_value": 0.03125,
+      "statistically_significant": true,
+      "decision_overrun_rate": 0.0,
+      "overrun_guard_passed": true,
+      "rel_rejection_increase": 0.0,
+      "rejection_guard_passed": true,
+      "verdict": "CONFIRMED_SUPERIOR"
+    },
+    "zero_completion_token_scored_good": true,
+    "nonfinite_origin_scored_good": true
+  },
+  "ruling": "Revised evaluator and outcome validator remain unaccepted;do not use for superiority or goodput certification."
+}

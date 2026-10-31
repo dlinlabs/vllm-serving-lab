@@ -1,4 +1,4 @@
-"""Small frozen-peer counterexamples, not a simulator or controller benchmark."""
+"""Small Round2 frozen-peer witnesses, not a simulator or controller benchmark."""
 
 import functools
 import hashlib

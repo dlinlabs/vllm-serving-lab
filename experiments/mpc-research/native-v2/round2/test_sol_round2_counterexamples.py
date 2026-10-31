@@ -2,7 +2,7 @@
 
 import unittest
 
-from sol_counterexamples import (
+from sol_round2_counterexamples import (
     decomposition_witness, opus_metric_witness, persistent_but_no_multistep_gain,
     reservation_witness, statistical_witness, tail_witness,
 )

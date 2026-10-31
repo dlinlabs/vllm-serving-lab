@@ -1,5 +1,10 @@
 # Sol Round2: adversarial review of the frozen independent proposals
 
+Integration-only namespace note: diagnostic/test copies are named
+`sol_round2_counterexamples.py` / `test_sol_round2_counterexamples.py` to avoid
+colliding with Round1 during repository-wide discovery. Logic is unchanged;
+original names/bytes remain at `974923bde924b524ccdc37196f87d22d2169993a`.
+
 Assignment `pr-nv2-sol`; review target commit
 `bc217acf9db3f6222026c0dd345db77a379d6151`.
 In citations, `R1/` means the exact repository prefix
@@ -600,9 +605,9 @@ All numeric counterexamples are constructed and explicitly not native data.
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
   -s experiments/mpc-research/native-v2/round2 \
-  -p test_sol_counterexamples.py -v
+  -p test_sol_round2_counterexamples.py -v
 PYTHONDONTWRITEBYTECODE=1 python3 \
-  experiments/mpc-research/native-v2/round2/sol_counterexamples.py
+  experiments/mpc-research/native-v2/round2/sol_round2_counterexamples.py
 git diff --check
 ```
 

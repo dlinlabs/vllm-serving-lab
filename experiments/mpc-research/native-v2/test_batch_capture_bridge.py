@@ -87,6 +87,21 @@ class CaptureTests(unittest.TestCase):
         self.assertIn("Not kernel busy", result["measurement_scope"])
         self.assertEqual(result["clock_domain"], "boot-A:namespace-A")
 
+    def test_metadata_cannot_run_expensive_probes_during_or_before_ack_of_capture(self):
+        self.begin()
+        calls = len(self.calls)
+        with self.assertRaises(ValueError):
+            self.bridge.invoke({"operation": "metadata"})
+        self.assertEqual(len(self.calls), calls)
+        result = self.bridge.invoke({"operation": "end"})
+        calls = len(self.calls)
+        with self.assertRaises(ValueError):
+            self.bridge.invoke({"operation": "metadata"})
+        self.assertEqual(len(self.calls), calls)
+        self.bridge.invoke(dict(operation="ack", trial_id=result["trial_id"],
+                                capture_sha256=result["capture_sha256"]))
+        self.bridge.invoke({"operation": "metadata"})
+
     def test_pending_gpu_events_do_not_clear_or_complete_the_trial(self):
         self.begin()
         self.reply = {"status": "gpu_events_pending"}

@@ -10,7 +10,7 @@
     "sol": "974923bde924b524ccdc37196f87d22d2169993a"
   },
   "integration_scope": "Only each model's round2 critique, counterexample module and focused test file. No auto-checkpoint infrastructure or workflow instructions.",
-  "normalization": "Gemini Markdown trailing whitespace removed in the integration copy only; the original remains at its source commit.",
+  "normalization": "Gemini Markdown trailing whitespace removed. Sol's integration-only module/test copies renamed to sol_round2_counterexamples.py and test_sol_round2_counterexamples.py,with matching import and reproduction commands,to prevent a demonstrated repository-wide Round1/Round2 import collision. Scientific logic unchanged;original names/bytes remain at the recorded source commits.",
   "validation": {
     "runner": "Existing Python 3.12 CPU environment",
     "command": "python -m pytest -q experiments/mpc-research/native-v2/round2 --junitxml=results/mpc-native-v2/round2-cpu-junit.xml",

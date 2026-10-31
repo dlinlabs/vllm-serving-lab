@@ -93,10 +93,10 @@ profile 名稱與 argv 不是實際模型證明；必須逐一讀 usage records 
 
 | Polecat | Native Bead | 實際 usage model | 狀態 |
 |---|---|---|---|
-| opal | pr-nv2-opus | claude-opus-5.5 | 獨立 Round1 已凍結 |
-| topaz | pr-nv2-astra | gpt-6-astra | 獨立 Round1 已凍結 |
-| garnet | pr-nv2-gemini | gemini-3.8-flash | 獨立 Round1 已凍結 |
-| ruby | pr-nv2-sol | gpt-6.1-sol | 獨立 Round1 已凍結 |
+| opal | pr-nv2-opus | claude-opus-5.5 | Round1–3 研究交付完成；未認證 Native 控制器 |
+| topaz | pr-nv2-astra | gpt-6-astra | Round1–3 研究交付完成；未認證 Native 控制器 |
+| garnet | pr-nv2-gemini | gemini-3.8-flash | Round1–3 研究交付完成；新版 evaluator 仍被駁回 |
+| ruby | pr-nv2-sol | gpt-6.1-sol | Round1–3 與 collector source review 完成；Native 待跑 |
 
 Gas Town 強制將 `--base-branch` 當作 origin ref，未發布的本機分支不能直接用；
 因此每個 worker 改以不同新建本機 branch 的 `--branch` 原生派工，
@@ -225,4 +225,104 @@ Mutation intent 先 fsync，模糊回覆不盲目重送；
 EXITED acknowledgement 不等於釋放，必須再確認 runtime=null。
 九個失效案例單元測試通過；實際 status 再次確認 EXITED／runtime=null。
 官方 `podResume(input:{podId,gpuCount:1})` schema 已核對，
-但本輪尚未 resume，不能將 mock resume 描述為已重啟 GPU。
+上述資格完成時尚未嘗試 resume；後續一次實際恢復被拒，見下節。
+不能將 mock resume 或實際被拒的 mutation 描述為已重啟 GPU。
+
+## Round NV2-003：修訂、獨立裁定與整合驗證
+
+四模型已各自完成三輪，而不是 Mayor 假冒四份分析。Round3 原始提交、
+報告／原型／測試凍結於 `round3-freeze.json`；Mayor 重現 **26 passed、
+2 subtests passed**。Sol 另外檢查 `ab8c392` collector 的完整
+`audit_capture(..., forced_outputs=False)` 與 exact request-ID joins，
+沒有發現必須先判資格 smoke 無效的 critical defect；這仍不是 Native 驗證。
+
+Mayor 不接受「測試通過＝設計正確」。新版 Gemini evaluator 仍能把同一
+block 複製六次認定 superior，且把0 output token／NaN origin 計為 good；
+三個反例實際執行並存入 `round3-mayor-adjudication.json`。原稿保留，
+不以投票、刪除反例或放寬指標取得表面共識。
+
+目前暫選 history-conditioned marked-reservation release／good-count 模型，
+以 batch-aware labels 解釋誤差，並與 fluid、hybrid、learned、piecewise、
+probabilistic 結構比較；它只是辨識候選，**不是已校準或已勝出的 MPC**。
+完整數學邊界、固定主要 forecast metric、強 One-move 對照及下一組高資訊
+實驗見 `decision-and-next-native-protocol.zh-TW.md`。
+
+兩個舊 P2 在目前 source 與 regression cases 中均已有修正：
+`prefill_lab/state_envelope.py:31–80` 將 specification、features、
+dependency hashes 和 generated cost hashes 綁入 support，PreparedEnvelope
+保留驗過的規格；`:126–136` 先判 clock-domain mismatch，再比較 uptime。
+`tests/test_prefill_state_envelope.py:157–224` 包含跨 boot fallback、
+相同 clock 的倒退拒絕、cost semantics／dependency 變動及 prepared-cost
+測試。本輪沒有為這兩項重複修改產品程式。
+
+### 資格工具的精確修正與完整 CPU 結果
+
+新增 guard 禁止 active／未 ACK capture 期間執行重型 metadata 探測；
+獨立 opt-in plugin 版本為0.1.1，wheel 可建置。
+初次 root collection 暴露 Round1／Round2 Sol 模組同名衝突；
+只正規化整合副本的 Round2 module／test 名稱與 import，原 Worker blobs
+與科學邏輯保留，不以忽略整個研究目錄解決問題。
+
+| 實際執行範圍 | 結果 |
+|---|---|
+| 修訂 bridge／collector 與既有 pipeline／wire | 85 passed、1 skipped |
+| 正常 repository root CPU suite | **2206 passed、1 skipped、24 subtests passed，256.16秒** |
+
+範圍互有包含，不能相加當作獨立樣本。唯一 skip 是 CPU 環境未安裝 vLLM
+的 installed-vLLM protocol test；不是通過。完整 suite 有一項既有
+Starlette/httpx deprecation warning。JUnit 原檔均保存在
+`results/mpc-native-v2/`。沒有將 CPU suite 說成 GPU、HTTP 或 MPC 驗收。
+
+## Round NV2-004：實際恢復被拒與資源安全阻塞
+
+已先凍結 source `ab8c392` 與16-arm TRAIN plan-v1、備妥 source archive、
+plugin wheels 和 fail-stop collector，才對唯一既有 Pod 發送一次 resume。
+供應商回覆 business error；lifecycle helper 先保留 intent／unverified
+receipt，沒有盲重送。01:13:34 再確認 EXITED／runtime=null；
+01:18:13 及 **01:32:31 UTC** read-only 查得原 RTX4090 machine
+`gpuAvailable=0`，Pod 仍 EXITED、GPU release 已確認。
+
+因此**本輪新增 Native arms=0**，沒有新模型 prediction／closed-loop
+goodput、GPU latency、solver-overhead 或 MPC 勝率結果。
+容量為0與拒絕相容，但不足以認定它是唯一拒絕原因。沒有另租機器、
+修改 key／remote、嘗試舊 SSH endpoint 或讓 GPU 等待 CPU 討論。
+根因及後續 reconciliation 保存於 provider receipts／lifecycle JSONL。
+
+任務開始至安全 preflight 約5分4秒，當時沿用已在運行的 Pod；以
+US$0.89/hr quote 粗估此準備區間約US$0.075，**不是實際帳單**。
+之後 provider EXITED，沒有新 GPU 實驗運行時間；不能說整項歷史任務
+GPU 花費為0。未取得 provider invoice，也未把規格報價當成仍在計費。
+
+截至 **2026-10-31T01:33:28.744429+00:00**，新的 immutable accounting
+prefix snapshot 為 **3135.1236375 AI Credits**：
+Opus942.8696、Astra1260.9647、Gemini172.8993975、Sol215.12431、
+Mayor543.26563。逐筆去重、實際 backend 及 complete accounting
+均見 `agent-execution-ledger-round3.json`。這是 mission-to-date，
+不是單獨 Round3、美元或最終帳單；後續整理／發布／回覆不在該 snapshot。
+
+### 下一個可驗證動作與發布範圍
+
+既有資源可恢復後先跑 Gate A 的標準 Chat／source／join／drain 資格，
+再跑 Gate B 的 disabled/OFF/LIGHT、LL/LH/HL/HH 與 same-action repeats。
+先辨識 release／good-count、observer effect、EOS repeatability，
+再進入新模型與 Fixed16／best-supported-fixed／reactive／強 One-move／MPC
+的公平比較；不繼續盲調 horizon 或 cost weights。
+
+原 plan-v1 未執行且保留。metadata 修正後的 source 必須另凍結新版計畫，
+不能假裝舊計畫已測過新 source。Final held-out 未查看；最小有意義改善、
+獨立 block 數／power、CI 與共同 rejection／safety guards 尚待 development
+資料後預先註冊，不能由目前 pilot 宣稱穩定 superiority 或 equivalence。
+
+可發布成果是四模型證據、反例、數學／實驗裁定、資格工具及真實 CPU 結果，
+**不是 Native MPC 性能勝利**。只由 Mayor 核對遠端 ancestry 後，
+以明確 PR33 ref fast-forward 發布；worker guards 保留，不使用 `gt done`、
+force push、Merge、Rebase、remote 變更或 main。實際發布以獨立 receipt
+與 GitHub HEAD 核對為準。
+
+**原生追蹤限制：** caller-owned／merge-local convoy `hq-cv-3977g` 確實存在，
+但本次結案核對時 `gt convoy status --json` 回報 `tracked=null`、0/0。
+`gt convoy add` 雖回覆加入四項成功，重新查詢仍是0/0；不可把它寫成
+「convoy 已驗證4/4完成」。四個實際 Beads、派工、Worker source commits、
+三輪成果與 usage 可逐一核對。Mayor 直接記錄各研究交付的本機完成，
+epic／Native 資格仍被 GPU 阻塞；不為這個 metadata 異常修改其他 Rig、
+global routing 或 Gas Town 程式，也不呼叫有 Push 風險的 completion。

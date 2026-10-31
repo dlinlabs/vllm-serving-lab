@@ -98,6 +98,8 @@ class BatchCapture:
                       measurement_scope="Current-stream preparation/forward CUDA span;"
                         "engine/worker host timestamps. Not kernel busy or whole-pipeline GPU service.")
         if op == "metadata":
+            if self.active is not None or self.completed is not None:
+                raise ValueError("Metadata qualification requires idle acknowledged capture state")
             self.qualified = False
             result = self.command(self.core, {"operation": "meta"})
             clocks = self.core.model_executor.collective_rpc("pr33_native_capture_clock")
