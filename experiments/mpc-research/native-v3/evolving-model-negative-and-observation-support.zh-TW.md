@@ -1,5 +1,65 @@
 # NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
+## NV3-024：公平 observer、實際 baseline 資格與未曝露完整 cohort
+
+Opus4c017a 的 raw SHA
+`6794482c70ea3a4cf9956dafbc52a5eebaa96717345c7d0e25f4a9d71c441581`
+核對來源三 SHA。它接受 complete／empty canonical drain對
+`4.440892098500626e-16` scalar的處理，拒絕1e-8／5.0 mismatch，但指出
+cost arm每個 offered observation都額外 GET admin state、count arm沒有：
+這是新增 collector的可避免 policy-dependent observer負擔，必須在
+45–48曝露前修復，不能當作公平 baseline效能。
+另指出初始 failed drain probes未持久保存。
+
+isolated collector commit`c4ace2e5efd3c479c5433424af8998510cacc561`，
+driver SHA`16e4b406a600baf2e3236b0cfc25f4c4a2a7339223f972c89b9d649ce3e71ff2`；
+classifier18d與 testddeb、Gateway4a8／coreed8／capture0648保持原樣。
+`sample(for_drain=False)` 的兩個 callsites限定：
+observe使用default，四 policies offered windows只讀 metrics＋native；
+drain才傳true，cost snapshot只在 initial/final drain讀取。
+初始 episode先落盤，每個 probe透過原 persist的 atomic/fsync流程保存，
+即使後續 drain失敗也保留；sample本身 raise不補造不存在的 row。
+Mayor39項相關 CPU測試通過0.27秒，Opus
+`b4ab477cba01f571af61da8eab46a80b352c7ba8` source-read限定確認
+G1/G2 CLOSED，模型／測試未改、未重跑84項歷史測試。
+
+新的180005 smoke04 protocol SHA
+`72d40e6eeb2b531b0accc7dcfcb27e3a132c2d5e71d99af9501affa42607ffde`。
+既有唯一授權 GPU／Qwen／軟體／Source144／CLI fingerprint不變，
+backend新owned61440／start103462966／engine8fd13，成功完成8episodes96秒。
+41份 artifacts remote/local SHA核對；每個 count policy皆有真實
+Source503、original failed→mode rejected且 body SHA保留；每個 episode
+有非空 assigned/admitted Native UUID witness、Gateway closed loss-free
+狀態及 all-assigned HTTP/Gateway parity。initial/final drain probes保存，
+offered samples皆沒有 cost snapshot。這是 baseline runtime資格，
+不是 final owner seal／authentication／fsync、physical1s causal pilot、
+calibrated MPC、statistical superiority或新 forecast。
+96秒全部排除長時時數；原180004失敗的60秒同樣排除。
+
+full04 protocol SHA
+`f5e6ef6fbc90bca5b48de8c21bff9fdefb320167581f6897b141ae5bb1ca514d`：
+四個獨立 typed policies（true count16/32與static cost16/32）、
+四 Train seeds45–48、原五 cells／自然 tapes與payloads／120s、
+MAX_WAITING2、TTFT.5／TPOT.05、HTTP30s deadline。
+noCAS／noController、forced-ignore-EOS=false；length/timeout不算自然 good，
+任一 incomplete／source／telemetry／HTTP failure burn并停止，不能 resume、
+挑 favorable replacement或在 incomplete paired matrix下比較。
+80episodes9600秒**尚未曝露**；原26,880秒不變，完整成功後才是
+36,480秒＝10h08m，也不會自動證明 MPC勝出。
+Pod-local12600s bounded driver／owned cleanup在成功、資格拒絕及失敗
+執行；原 backend另有14400s hard lifetime。cleanup要求8080已關、
+PID/start/command與children start相符、8000關閉/GPUcompute空；
+不殺 foreign process，不將 inference shutdown當作 provider billing stop。
+
+8episode／41artifact runtime receipt、原 G1/G2反例與 b4獨立 source-read、
+三個 c4 collector files及 Pod-local cleanup／replication／notifier：
+`results/mpc-native-v3/review-evidence/nv3-024-qualified-baseline04-before-full-exposure-receipt.json`。
+配套 archive SHA
+`5bbc1eb34d4886ffb8348440498bd8a9f89543b32084b48f325e55c684281ec2`。
+此封存時間點 full04尚未曝露；backend61440仍運行，不把舊59289
+shutdown proof偷換成新服務已停。helper的四個 success／refusal／failure／
+abort-before-exposure focused tests使用 fake process、沒有呼叫真實 GPU。
+
 ## NV3-023：限定 consumer 修復、真實 baseline smoke 失敗與 fitted-state 缺口
 
 Gemini `06ac63380d525d7c292475a3869714e7b2882737` 原樣120項 CPU測試

@@ -13,6 +13,24 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-024：baseline 實際 runtime 資格通過；完整45–48仍未曝露。**
+180005 smoke04 的8個真實 HTTP episodes全部完成；41份 index／raw／events／
+closed Gateway artifacts核對 SHA。每個 count policy有真實 null-budget503
+及非空 Native UUID witness，cost arm以未改的0648 canonical drain契約清空。
+Opus獨立發現的 policy-dependent observer load與初始 failed-probe遺失
+已於 isolated `c4ace2e5efd3c479c5433424af8998510cacc561` 修復：
+offered windows四個 policies皆只讀 metrics＋native，cost snapshot只在
+前後 drain讀取，所有 initial/final probes持久保存。Mayor39項相關測試
+通過0.27秒；Opus b4ab477 source-read確認兩缺口關閉，沒有重跑歷史 suite。
+原180004失敗保留，新96秒 smoke不計十小時；有效長時仍26,880秒。
+既有唯一 Pod 的 Source144 backend目前為 owned61440／engine8fd13，
+**inference仍在運行**；只有 baseline runtime qualified，沒有 physical
+pilot、calibrated MPC或 superiority permit。已封存 full04四個 typed
+policies×四個 Train45–48 seeds×五個 cells×120秒＝80 episodes／9600秒；
+尚未曝露。完整成功後可達36,480秒＝10h08m，不得把計畫當結果。
+獨立 Pod-local12600秒 safety deadline及 fingerprinted owned cleanup
+在成功／拒絕／失敗時執行，保留 Pod、不宣稱 billing stop。
+
 **NV3-023：paired consumer 的限定矩陣修復完成；baseline runtime 資格仍未通過。**
 Gemini `06ac63380d525d7c292475a3869714e7b2882737` 的原樣 CPU suite
 由 Mayor 執行120項通過（98.40秒）；Sol
