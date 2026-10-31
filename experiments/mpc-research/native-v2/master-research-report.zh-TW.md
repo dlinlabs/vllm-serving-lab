@@ -13,6 +13,30 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-022：Native03 失敗已保存；owned GPU inference 已自動停止。**
+Source144 辨識在 Cal24／`p128-m128` arm1 的40秒 budget16 assignment
+先得到 pending，下一輪以 expiry fence 觀察到 budget32／version77，
+再有兩次 `stale_snapshot` 拒絕，最後 bounded assignment fail-closed。
+初次 HTTP status／拒絕原因未寫入 receipt，網路、server 或 event-loop
+延遲的根因仍未識別；沒有放寬 TTL／freshness，也沒有接受 unknown ACK。
+91個新完整 episodes 的182份 raw／events 均重新核對保存的 SHA，
+新增10,920有效秒；累計 **26,880秒＝7h28m**，失敗 partial 不計入。
+Monitor 核對 owned PID／start／command，停止26392及其 owned children，
+确认8000關閉、owned processes退出、GPU compute processes為空。
+**Pod仍保留，provider billing stop 未驗證；十小時及 MPC 勝出尚未完成。**
+
+Gemini paired 修補 `7936836` 原樣封存，Mayor 執行119項 CPU測試通過。
+None／explicit permit／interval overlap 的修補保留；另執行完整 paired
+function AST 的六個 stub-arm probes，仍發現 missing burst fate、
+missing assigned anchor ID、lost all-assigned flag或1/5 censor，
+在 contrast `[-11,-9]` 下仍可標記 falsified；不是實際 Native反證。
+`.19`／`.20` 保持同任務修補與獨立審查，未開放 pilot。
+H14／H16 使用公開實際 CostSpec生成並驗證 prospective protocols，
+未收集新資料；Astra `.25` 做獨立 versioned H14 input bridge，
+Opus `.26` 做 serialized owner binding與 true count baseline預註冊。
+完整 receipt與 byte-exact failure／source archive位於
+`results/mpc-native-v3/review-evidence/nv3-022-native03-failure-and-gemini793-receipt.json`。
+
 **NV3-021：R17 真實 clock／received-prefix 資格，不等於完成 Native adapter。**
 四模型 R17 sealed sources 的主命令484 passed／282 subtests，
 只有一個 frozen `git show 5aec…` witness 因 Mayor cwd 不是 Git repo 而失敗；

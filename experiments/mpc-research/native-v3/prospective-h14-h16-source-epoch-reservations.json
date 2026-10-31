@@ -18,6 +18,8 @@
     "future_collection_extension_sha256": "7bedff0aa2097a30938cb4e19744e86da86c7999cb7bab950ba2d93fe2f1a1ac",
     "legacy_collector_sha256": "78e2c8b91f6b4a582feb69293adff5aa34d4fbd332dfa93b92735bcd0275a069",
     "forced_ignore_eos_cohort_may_replace_natural_data": false,
+    "prepared_protocol_sha256": "b24f882a0d59c20a272a4449eda63ba8505580b2e2f2d0c45ef58eb3b5032029",
+    "prepared_protocol_status": "Factory validated only; actual versioned input bridge and live runtime still unqualified. Bead pr-native-v3.25.",
     "bridge_requirement": "Separate versioned input-bridge qualification for the actual future protocol hash is still required before exposure; serving Source144 and unchanged kernels do not qualify a changed collection protocol. No refit, registry alias or old-data/new-tag qualification."
   },
   "H16": {
@@ -27,6 +29,8 @@
     "candidate_gateway_sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570",
     "candidate_revision_before_collection": "R17 actual-body closing and foreign-nonledger-row CPU failures prevented d1bd live qualification. Serialize closing/mutation and seal every-row run identity in a distinct source, with122 CPU regressions passed. No claim of native reachability or source authentication.",
     "prior_unqualified_candidate_commit": "d1bd1e5f6262eda1ee29867689a810a475797c73",
+    "prepared_protocol_sha256": "ab883c90e85b9ec61967499841ce9de5942f11d916372f1b40824866750608da",
+    "prepared_protocol_status": "Factory validated only; separate owner source/bridge/live runtime still unqualified. Bead pr-native-v3.26.",
     "future_collection_extension_commit": "a577de3fa8b11c2954765fad176fdb4047b7d4c5",
     "future_collection_extension_sha256": "7bedff0aa2097a30938cb4e19744e86da86c7999cb7bab950ba2d93fe2f1a1ac",
     "collection_blocked_until": [
@@ -62,6 +66,16 @@
     "Any count-axis actuation or new controller benchmark",
     "Any forced-ignore-EOS causal cohort pilot"
   ],
+  "prospective_count_baseline_development_reservation": {
+    "train_blocks": [181045, 181046],
+    "status": "DRAFT_NOT_EXECUTED_NOT_NATIVE_QUALIFIED",
+    "bead": "pr-native-v3.26",
+    "actual_count_policies": [16, 32],
+    "max_waiting": 2,
+    "common_natural_tapes_and_uncapped_all_offered_slo_required": true,
+    "legacy_launcher_collector_executable_unchanged": false,
+    "mpc_or_superiority_claim_allowed": false
+  },
   "permits": {
     "native_dispatch": false,
     "physical_eos": false,

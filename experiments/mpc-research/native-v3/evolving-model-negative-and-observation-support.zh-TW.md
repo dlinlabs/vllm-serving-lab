@@ -1,5 +1,48 @@
 # NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
+## NV3-022：Native03 fail-closed與 paired eligibility仍未完成
+
+辨識在 `nv3-181024-p128-m128-arm1` 的40秒 assignment失敗：
+第一輪 pending command的100ms deadline到期，下一輪 fence觀察到
+budget32／version77，後兩輪為 `blocked: stale_snapshot`。
+初次 pending沒有 HTTP status／reason；不能斷言是 CAS rejection、
+fsync、網路或 server starvation，沒有以更長 TTL或更舊 snapshot救跑。
+失敗 partial／events與原 index全部 byte-exact保存，不計有效 acquisition，
+也不將 Cal24改成 Train或重新選 favorable episode。
+91個完整 episodes／182份 raw-events SHA重新核對，新增10,920秒，
+加上原15,960 distinct秒是 **26,880秒＝7h28m**，尚未達十小時。
+Monitor完成 fingerprinted owned shutdown：PID26392／26647／26648退出、
+serving port關閉、GPU compute空；Pod保留，沒有 provider billing停止證據。
+
+Gemini完整 commit `79368366908f6525d6cbbf236ce380ca95887b2b`，
+module SHA`44179f8d50e0f5aaead1d9cd77436cb6f90f10686a1992ccbfd3c2d28bd89142`，
+Mayor原樣執行119項 CPU測試通過，98.14秒。
+完整 paired AST六個 CPU stub-arm probes承認 overlap `[-30,15]` 已拒絕，
+但 identified-looking `[-11,-9]` 在 missing burst fate（ITT=false）、
+missing anchor inventory、all-assigned=false或1/5 censor仍會 falsify。
+這是 caller eligibility反例，不是 hardware／statistical結論；
+stub bounds不宣稱來自實際 counter bracketing。沒有重寫 c4e歷史失敗。
+新的 `.19`／`.20` 同任務 follow-up要求 exact assigned inventory、
+burst與anchor fates、counter／lineage／censor gates進入同一 strict upper gate。
+
+未收集的 H14 protocol SHA
+`b24f882a0d59c20a272a4449eda63ba8505580b2e2f2d0c45ef58eb3b5032029`；
+H16 protocol SHA
+`ab883c90e85b9ec61967499841ce9de5942f11d916372f1b40824866750608da`。
+二者由已封存的 a577／7bed factory與公開實際 CostSpec生成、validate通過，
+不代表 versioned input bridge或實際 runtime資格通過。
+Astra `.25`／Opus `.26` 原生 CPU工作只接受三個 owned files，
+不允許 fresh forecast／refit／CalVal grading／GPU／SSH／push／gt done。
+True FixedConcurrency16/32 baseline的45／46是未執行的 development預留，
+MAX_WAITING=2與共同自然 SLO／arrival tape要求仍須完整封存及獨立資格，
+不能將 cost budgets改名或宣称 legacy pipeline已可直接執行。
+
+完整六-case JSON、119測試輸出、失敗 partial／events、shutdown、
+protocols與來源archive：
+`results/mpc-native-v3/review-evidence/nv3-022-native03-failure-and-gemini793-receipt.json`。
+H11c FAIL／H12 UNIDENTIFIED_INTERVAL／H13 NOT_CANDIDATE保持不變；
+沒有 Native pilot、calibrated MPC或 superiority permit。
+
 ## NV3-021：R17 received-state與 paired caller 邊界
 
 | Worker | R17 source seal | 本輪接受的 CPU scope |
