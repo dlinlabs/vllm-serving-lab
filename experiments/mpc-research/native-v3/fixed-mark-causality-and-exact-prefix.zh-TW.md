@@ -111,7 +111,27 @@ float progress及真正forecast protocol後，才可曝光新Train12／13。
 修正採用依conditional-uniform correctness，不看MAE決定是否修bug。
 完整20episodes／40checksums已封存，index SHA
 `616f7ab9a62f50d387156498612a94cc37b0507c4a0a77ae03062fb8df75d4c6`；
-此時才交Opus執行原始R10source，結果尚未宣稱完成。
+此時才交Opus執行原始R10source；該handoff當下尚未聲稱完成評分。
+Mayor已另外完成原始 `e2709d96...` 的四版本comparison，
+raw SHA `4c26cfb4334e2cbd715ca2568376a5c8c80b100861e19f35c2baec767716b433`，
+1109個scored origins。所有origin／truth／no-pending invariance gates通過。
+
+| Endpoint／block | Cyclic G5 MAE | Eligible-uniform G5 MAE | 修正後G5 band inclusion |
+|---|---:|---:|---:|
+| UPPER／181010 | 4.154619 | 4.154555 | .614699 |
+| UPPER／181011 | 4.226372 | 4.225157 | .586507 |
+| LOWER／181010 | 3.660621 | 3.660685 | .664502 |
+| LOWER／181011 | 3.996773 | 3.993942 | .642637 |
+
+分數影響很小且不是全部方向改善；bands inclusion完全未改變。
+修正依conditional-uniform correctness採用，不靠分數決定是否修bug；
+不選LOWER、不更改其他back-off／horizon／seed，也沒有MPC／risk成功。
+這進一步排除「僅修draw bug就會解決整個控制缺口」的說法。
+
+新的closed-cohort／future-prefill識別harness正在CPU準備；
+ignoreEOS／forced-length anchors僅用來識別，所有capped fates保留，不作Goodput勝利。
+其mock-generated動態差異不能稱為真實GPU觀察或物理falsification；
+actual Native intervention仍須等待owned服務安全handoff，不污染目前辨識。
 12／13、Calibration／Validation／Final均沒有提前交給新model評分。
 沒有hot-replace live729。2026-10-31T12:35:47Z續跑78episodes／9360 offered秒，
 原完整3600秒另列，合計3小時36分；**十小時尚未完成**。
