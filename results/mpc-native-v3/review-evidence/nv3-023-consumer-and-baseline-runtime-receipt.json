@@ -1,0 +1,177 @@
+{
+  "schema": "nv3-023-bounded-cpu-and-failed-baseline-runtime-v1",
+  "archive": "nv3-023-consumer-and-baseline-runtime-source-evidence.tar.gz",
+  "archive_sha256": "3530c030e7934a155e57ebd2aa3a2d6ef3462459b78e224fc7b206ece75b8978",
+  "verified_smoke_artifacts": [
+    {
+      "artifact": "index.json",
+      "sha256": "4ea6e0a60df205ff7ab11c35aada1f123f565236c2ef7634968617110361ac1d"
+    },
+    {
+      "artifact": "nv3-baseline-180004-p128-m128-fixed-cost32.json",
+      "sha256": "566cf906bdfc65dc60d5493ade61a5d380737ddf7f961cf5d42c6ea833b78c7b"
+    },
+    {
+      "artifact": "nv3-baseline-180004-p128-m128-fixed-cost32.events.jsonl",
+      "sha256": "bb87a333b3e7a3de8b2e5fe18399c70ab8c35b7a401fdb8646e1e4ddd38df804"
+    },
+    {
+      "artifact": "nv3-baseline-180004-p128-m128-fixed-count16.json",
+      "sha256": "c6bc493a276914099932c2867d088a90861e703c988cb67ca52abb319c00f9be"
+    },
+    {
+      "artifact": "nv3-baseline-180004-p128-m128-fixed-count16.events.jsonl",
+      "sha256": "98690eca0e86f50c0f083463ddfcbafd9cd0304f38ba472ac3bb0c81b1f86c2d"
+    },
+    {
+      "artifact": "nv3-baseline-180004-p128-m128-fixed-count32.json",
+      "sha256": "390cdff646c68d8a2d28fb745cd855e901828f94d61563a478ecd7ed45695b51"
+    },
+    {
+      "artifact": "nv3-baseline-180004-p128-m128-fixed-count32.events.jsonl",
+      "sha256": "549beac308b95508a7be78e984463a8246e52b6e2ad3450aef517b17bf123c33"
+    },
+    {
+      "artifact": "nv3-baseline-180004-p128-m128-fixed-cost16.json",
+      "sha256": "956f506bf6ccbda8c7a1e904120d0b600ecec301dd1e89ec6e1785fc1c240fef"
+    },
+    {
+      "artifact": "nv3-baseline-180004-p128-m128-fixed-cost16.events.jsonl",
+      "sha256": "c755f459c20f081adc173b578ee5e8f5d72a00504b2fd2d783f274c6330504ca"
+    },
+    {
+      "artifact": "nv3-baseline-180004-mixed-fixed-count16.json",
+      "sha256": "5b431ce2ec312007b8ebb8422aa5087963c4a2413d58f132ba45f04127374917"
+    },
+    {
+      "artifact": "nv3-baseline-180004-mixed-fixed-count16.events.jsonl",
+      "sha256": "5a8bfd47dd24dc4efc1ff3b63f6510bdf1cf8b9472d96cf85b84c13d3f405d75"
+    },
+    {
+      "artifact": "nv3-baseline-180004-mixed-fixed-cost16.json",
+      "sha256": "2165ac4b7106963f40eb9d7c2cc1e832d7e183ed1051ec5d363efa05fe0ce3c1"
+    },
+    {
+      "artifact": "nv3-baseline-180004-mixed-fixed-cost16.events.jsonl",
+      "sha256": "86868b88d850878c56d56dc73163cecdb1e83c5b9c449885276a368aeb0a6ebb"
+    },
+    {
+      "artifact": "gateway-epoch-0001/gateway-telemetry.jsonl",
+      "sha256": "dc102d2b99cc5f74196a8fcb3d8151b83e22e713a350b4733ebf7ec30bd53768"
+    },
+    {
+      "artifact": "gateway-epoch-0001/gateway-telemetry-status.json",
+      "sha256": "5076dc5326aa19671ade34f1486aca68067de3cadfc6abc32bf6d084cb91f274"
+    },
+    {
+      "artifact": "gateway-epoch-0001/process.log",
+      "sha256": "26028ec30ad9d1c9a0775f795684a14ec66c8add2de9de905519a5be41ceb8d0"
+    },
+    {
+      "artifact": "gateway-epoch-0002/gateway-telemetry.jsonl",
+      "sha256": "66283c8be656d5604bc378266ed484e3ec61f72fc3878e90d3f4980b94c40cb3"
+    },
+    {
+      "artifact": "gateway-epoch-0002/gateway-telemetry-status.json",
+      "sha256": "ed60af98fcfca95969e1b2a53028ddf650a2c6b2d854f2f39cc96738bc027c86"
+    },
+    {
+      "artifact": "gateway-epoch-0002/process.log",
+      "sha256": "0bc3ad101e4e809035ed74f190bd0e70323ed291efa53f0219eebef61edaaa3f"
+    },
+    {
+      "artifact": "gateway-epoch-0003/gateway-telemetry.jsonl",
+      "sha256": "e6c9311cdc373604b1e843a06f7c89f26c29bebb956a9de514ff978a44c72f88"
+    },
+    {
+      "artifact": "gateway-epoch-0003/gateway-telemetry-status.json",
+      "sha256": "c6a824b8e778afd95b679b8d1db70e9278e265b0d180527b794fabc05e80d95b"
+    },
+    {
+      "artifact": "gateway-epoch-0003/process.log",
+      "sha256": "cc0664247328ac915bf426972a83068d99658fe0ed61b7718e3c77ad1d60e13c"
+    },
+    {
+      "artifact": "gateway-epoch-0004/gateway-telemetry.jsonl",
+      "sha256": "b8e6ec80d28536419aec27731e056fe35823abc0ce076f40124442012c365435"
+    },
+    {
+      "artifact": "gateway-epoch-0004/gateway-telemetry-status.json",
+      "sha256": "f547e8e2bc0bb786ab777db351bb30b9997e741ff94e7b5d0f8696c7d50e747e"
+    },
+    {
+      "artifact": "gateway-epoch-0004/process.log",
+      "sha256": "347e1ddb6ed5f11e0fd5bb7cb6daf7d18905fe32ce83bc0a6fd11c1a28a8a690"
+    },
+    {
+      "artifact": "gateway-epoch-0005/gateway-telemetry.jsonl",
+      "sha256": "ae62b6d85b6948a61150ab24f0bdcee6d288823fd256616a723bd38ec05b9a4e"
+    },
+    {
+      "artifact": "gateway-epoch-0005/gateway-telemetry-status.json",
+      "sha256": "febe4cdfb3015600b70902fa1451e7bd2829673df3bef655f724a8b977dbce35"
+    },
+    {
+      "artifact": "gateway-epoch-0005/process.log",
+      "sha256": "68a55bb072861023a25ad031ded2d60799dbc7e5d1fdf7dca3d5ecba809eda39"
+    },
+    {
+      "artifact": "gateway-epoch-0006/gateway-telemetry.jsonl",
+      "sha256": "b520c7547e774d86c47a9771611b70851ad5815e22e76b61cc78ed10790dced0"
+    },
+    {
+      "artifact": "gateway-epoch-0006/gateway-telemetry-status.json",
+      "sha256": "934e3f8e39c986e9b36f4601a8d1c4e02497ed723b9116c307f59a64ab552894"
+    },
+    {
+      "artifact": "gateway-epoch-0006/process.log",
+      "sha256": "03f3e4c6ad26fbc82b956e62fb37cc34bd270eaf90bf2407caf4ec1c2985b6d7"
+    }
+  ],
+  "whole_smoke_runtime_qualified": false,
+  "failed_episode": "nv3-baseline-180004-mixed-fixed-cost16",
+  "complete_smoke_episodes": 5,
+  "smoke_seconds_excluded_from_ten_hour": 60,
+  "native_final_drain_probes_persisted": false,
+  "physical_final_clear_identified": false,
+  "owned_shutdown": {
+    "owned_vllm_pid": 59289,
+    "serving_port_closed": true,
+    "owned_processes_exited": true,
+    "gpu_compute_processes_empty": true,
+    "owned_process_ids": [
+      59289,
+      59544,
+      59545
+    ],
+    "pod_retained": true,
+    "provider_billing_stop_verified": false
+  },
+  "long_run_seconds_unchanged": 26880,
+  "baseline45_48_exposed": false,
+  "corrected_collector": "7e129defc2db69637499e493c49627609101d9cc",
+  "corrected_collector_related_cpu_tests": {
+    "passed": 39,
+    "seconds": 0.3,
+    "original_serving_source_unchanged": true
+  },
+  "corrected_runtime_qualified": false,
+  "gemini06ac_mayor_tests": {
+    "passed": 120,
+    "seconds": 98.4
+  },
+  "sol_e727_independent_tests": {
+    "passed": 2,
+    "subtests": 12,
+    "seconds": 0.82,
+    "canonical_sha256": "59dc30cd6b7d874670a830cc7133613e7a22459f9747e47db268c5b448b6f536"
+  },
+  "opus_2c12_commit_and_three_sources_and_raw_verified": true,
+  "opus_2c12_raw_sha256": "247e3c2e6a635ffe4ab65196441ac619d1cec39bdb778eeff830a73a788e3b92",
+  "h14_original_complete_learned_state_recovered": false,
+  "h14_41_42_exposed": false,
+  "h16_43_44_exposed": false,
+  "native_cohort_permit": false,
+  "calibrated_mpc_permit": false,
+  "controller_superiority_claim": false
+}

@@ -13,6 +13,43 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-023：paired consumer 的限定矩陣修復完成；baseline runtime 資格仍未通過。**
+Gemini `06ac63380d525d7c292475a3869714e7b2882737` 的原樣 CPU suite
+由 Mayor 執行120項通過（98.40秒）；Sol
+`e7276233df2c082cc1a888d42ab7e4dd31c77939` 的三個來源 SHA
+及完整 canonical receipt 已核對，獨立2項／12 subtests通過（0.82秒）。
+原 overlap／eligibility 與後續故意不一致的 counter／tag／bounds cases
+均匹配限定 strict reference；這不是實際 Leaf reachability、Native pilot、
+統計或 calibrated MPC 資格。
+
+獨立 true count16／32 與 static cost16／32 collector 的 protected503
+分類缺陷 B1 已以實際 Source144 body→原0648 capture→mode-keyed classifier
+重現及修復；原 capture/body 不改，source failed 狀態與 body SHA 保留。
+但既有唯一授權 Pod 上的 `180004` qualification smoke02 在五個已完成
+episodes／60秒後，`mixed/fixed-cost16` 的 final physical/Gateway drain
+失敗。**不得從 CPU source qualification 推論 runtime 通過。**
+失敗停止了 fingerprinted owned PID59289／59544／59545，確認 serving port
+關閉、owned processes退出、GPU compute為空；Pod仍保留，billing stop未驗證。
+smoke 不計入十小時；45–48 的完整 baseline 尚未曝露，累計仍為
+**26,880秒＝7h28m**，MPC 勝出仍未證明。
+
+byte-exact replication核對31份 artifacts，失敗 index確認第六個 policy
+是 cost16（修正 Mayor 初次按順序推測的 cost32）。最後 Gateway telemetry
+為 in-flight／waiting／active皆0，scalar cost殘留
+`4.440892098500626e-16`；新 collector 的精確 scalar==0要求會拒絕它。
+原 Source144以 complete request-mark snapshot／empty reserved0定義 drain，
+並以既有 arithmetic一致性契約檢查 scalar。新版 isolated collector已
+改用原0648 `drain_evidence`，不改產品、不放寬500ms／run／domain／identity
+gates，新增 actual Gateway quote/release回歸與失敗 probe保存。
+39項相關 CPU測試通過不代表新版 runtime已通過；舊失敗的 final Native
+probes未持久保存，仍未知，不能事後補成 clear。
+
+Astra 獨立查得原 Train1–3 資料／fit-run receipts，核對30份 JSON與
+60檔完整 manifest；但 bounded archive 未找到完整 learned-state checkpoint。
+counts／quantiles不是完整 transition table、release/decision lag pools
+及 comparator state。H14 41/42 在原始 fitted-state identity恢復前仍
+**BLOCKED**；不以 source AST或 CPU bridge 通過替代，不授權新 refit。
+
 **NV3-022：Native03 失敗已保存；owned GPU inference 已自動停止。**
 Source144 辨識在 Cal24／`p128-m128` arm1 的40秒 budget16 assignment
 先得到 pending，下一輪以 expiry fence 觀察到 budget32／version77，

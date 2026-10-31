@@ -1,5 +1,84 @@
 # NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
+## NV3-023：限定 consumer 修復、真實 baseline smoke 失敗與 fitted-state 缺口
+
+Gemini `06ac63380d525d7c292475a3869714e7b2882737` 原樣120項 CPU測試
+Mayor通過98.40秒；Sol `e7276233df2c082cc1a888d42ab7e4dd31c77939`
+三 SHA及完整12-case canonical receipt SHA
+`59dc30cd6b7d874670a830cc7133613e7a22459f9747e47db268c5b448b6f536`
+核對，獨立2 tests／12 subtests通過0.82秒。原 eligibility cases與後續
+故意錯誤的 counter replay、tag、lineage、application及 bounds receipts
+全部匹配 conditional strict reference。舊 c4／793／5fc failures與初次
+import/setup errors保留；不合成單次零失敗歷史。資格僅為限定 caller
+矩陣，不是實際 Leaf／HTTP reachability、physical cohort或統計效果。
+
+Opus 對9ad baseline的實際端到端 B1反證成立：Source144 protected
+`AdmissionDecision(False)` 產生 null-budget/version 的503，原0648 capture
+將它列 failed，summary other=1，collector abort。獨立8477版本加入
+`baseline_http_capture.py`，只在預註冊 protected mode、精確六-key
+Source144 body及 matching request ID時分類 rejected；不改原 body、
+status或0648 capture，保留原 source_capture_status及 body SHA。
+Mayor targeted/legacy20項通過；Opus2c12b89af6aed2c772f3aa72049e2bdbbf6f8ad9回報 actual Starlette body
+透過0648＋18d classifier的独立83項／0 skips資格，僅 network stubbed。
+Mayor已核對三個 source SHA／Git commit／live bytes與 raw247e，
+封存 byte-exact receipt；這不是已通過 Native。
+
+唯一既有 Source144／RTX4090 backend重啟後，執行精確
+`026b30a51ae91d2c53a924d3634638cab3ec67335921ab52d47dcba4524ccc31`
+的180004 smoke02 protocol。前五個 closed/QC episodes累計60秒，
+第六個 `mixed/fixed-cost16` 在 final drain失敗，whole qualification未通過。
+Mayor最初按順序推測為 cost32，31份 byte-exact artifact replication及
+實際 index確認是 cost16；原 nudge錯誤與更正保留在 bead notes。
+錯誤為 `physical/Gateway drain not established`。最後 Gateway telemetry
+in-flight／waiting／active皆0，scalar cost為`4.440892098500626e-16`，
+原 collector要求精確 scalar==0，因此即使 Nativeclear也會拒絕 drain。
+但失敗的 final Native探測未保存，不能斷言其實已清空或補造測量。
+原 Source144 request-mark snapshot以 fsum、原 arithmetic一致性
+`rel_tol=1e-12, abs_tol=1e-9`及 complete檢查決定 stock資格。
+新版 isolated collector只在 cost mode讀原 `/admin/mpc/state`，
+用未改的0648 `drain_evidence`要求完整 snapshot、exact empty requests／
+reserved0、common run/domain/identity及500ms freshness；count mode不讀
+該409 endpoint。scalar raw metric不歸零、不改產品。
+新增 actual Source144 public quotes/release次序回歸，重現相同
+`4.440892098500626e-16`；unknown／stale／foreign／pending／active Native
+及超過原一致性契約的 mismatch仍拒絕。每個 final drain probe即時保存，
+每 epoch重新核對來源 SHA，smoke要求非空 actual Native UUID witness，
+不將空 subset宣稱成功。相关39項 CPU測試通過；新版 runtime仍未通過。
+沒有放寬500ms freshness／100ms control TTL，沒有接受未知 stock或 ACK。
+failure path確認 owned59289／59544／59545退出、serving port關閉、
+GPU compute為空；Pod保留，provider billing stop=false。
+smoke60秒不計有效長時 acquisition；既有26,880秒不變。
+完整45–48 baseline尚未曝露，8477/full02的 planned9600秒不能算已取得，
+也不能把 count16/32 與 cost16/32 的不同單位混稱同一 baseline。
+
+Astra .25 read-only audit發現原 Opus R14三個 lag score artifacts的共同
+Train1–3 receipt SHA
+`69fff2162ee4e47261e61d2f3c7364bb6a60c01f23835bf985be2465c08cf5e3`
+且30份實際 JSON bytes相符；60檔／318,238,876 bytes manifest SHA
+`35cd61c86f91d1fab716d84c9e2276a5340dd0569f54d6b9015528319253f467`
+及 index SHA
+`3039c306b962365eb9830f95b43d733d231a01c4793bf7e9530250d70e2e2eeb`
+已由 worker核對。歷史 training source6c11／native2587／coreb4／public
+costcf8162不 alias為Source144；b0ed source及AST保持原樣。
+但 original source3194–3210在 memory fit，3333–3350只輸出 table counts，
+4205–4232的 closure只輸出 lag counts/quantiles，不能恢復完整 parameters。
+bounded原 R14 tree/tar及b0ed archive未找到完整 transition/categories、
+upper/lower release-offset與decision-lag pools、v7/comparator coefficients。
+因此 input/score-artifact identity成立不等於 learned-weight identity：
+H14 41/42仍BLOCKED，沒有新 weights、fit、forecast或 fresh grading。
+
+本輪來源／測試輸出、原9ad反例版本、8477 classifier修復、新7e129de
+canonical drain版本、31份實際 smoke artifacts與 shutdown proof：
+`results/mpc-native-v3/review-evidence/nv3-023-consumer-and-baseline-runtime-receipt.json`。
+配套 archive SHA
+`3530c030e7934a155e57ebd2aa3a2d6ef3462459b78e224fc7b206ece75b8978`。
+180004保留且 burned；新的180005 smoke03 protocol SHA
+`6bdc3d633b2f7fde9e07a39baaf7306bb133956cf51ae97d7c3b386cdc193b08`，
+full03 SHA
+`3807e0ad8fd16dde73d7c65a3c82cdc2644ff52d9b383fdf833b1bafb7e4c421`，
+二者均未曝露。獨立來源 follow-up及實際 smoke資格通過前不得啟動
+完整 baseline，不能把 planned80 episodes／9600秒計入十小時。
+
 ## NV3-022：Native03 fail-closed與 paired eligibility仍未完成
 
 辨識在 `nv3-181024-p128-m128-arm1` 的40秒 assignment失敗：
