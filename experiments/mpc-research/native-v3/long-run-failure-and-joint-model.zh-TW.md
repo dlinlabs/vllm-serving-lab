@@ -44,8 +44,50 @@ client scheduling、transport與server延遲；目前不能只靠總elapsed推�
 恢復使用fresh experiment output與new source，只略過經原始index驗證的
 前三個完整Train blocks；從181004完整配對重跑，失敗 partial保留於long01。
 剩餘370個120秒windows計畫44,400秒／12.33小時，**仍須實際執行驗收**。
-23項 coupled CPU regression已通過；Native hold smoke／恢復長時尚未
-驗收，CPU不能代替GPU執行。
+23項 coupled CPU regression已通過，Native hold smoke亦已實際通過；
+恢復長時已啟動並確認 live Gateway，但十小時尚未驗收。
+
+### NV3-005：真實 confirmed-hold qualification
+
+凍結source `729b144a0c5885d702a6a49c655f61c62513ed30`，
+實際4個12秒windows，共48秒，922 offered：
+636自然API-stop完成、286 rejected，無capped或其他結果。
+兩次完整配對各自drain，所有native frames available。
+這是控制介面資格，不是MPC與任何baseline的效能比較。
+
+Mayor逐slot核對全部48次預定指派：
+**16次真正applied ACK、32次fresh confirmed holds**，兩者分開記錄。
+每個hold保留既有operation ID、run、clock、version與budget，
+state observation位於既有ACK的applied time與本次confirmation之間，
+且age不超過原0.5秒限制；沒有捏造新ACK或漏掉未改cap的slot。
+真正POST的journal最長14.261ms；這不是long01失敗時fsync成因的證據。
+
+原生vLLM重啟後run為`43b53bb3fa0d4fd2960aaa5b1ce8b2a0`，
+Pod boot／clock domain未改，硬體、模型、SLO、sampling／graphs、
+100ms TTL及成本規格未改。
+封存SHA256：
+`114afd4027437fe60fa019f3b9ca983d0bc4034bf3a3ed223d102f6cbe65e072`。
+16個封存檔案已在Pod內以實際private key值掃描，無credential；
+off-Pod archive SHA相符。
+
+Fresh `state-response-identification-continuation02`保留原Train／Calibration／
+Validation順序，以舊index SHA
+`3039c306b962365eb9830f95b43d733d231a01c4793bf7e9530250d70e2e2eeb`
+核對前三個完整blocks的3,600秒，再從181004完整重跑。
+既有failed partial不搬成有效episode、不刪除；Final未使用。
+370×120秒是**計畫**，不列為完成時數。
+
+新增獨立off-Pod evidence／resource monitor。完成或安全失敗後，只在
+Gateway停止且PID、process start ticks、cmdline SHA與啟動指紋全部一致時
+停止owned vLLM，並核對8000關閉；不殺其他程序。
+**這不會暫停Pod計費**：現有Pod保留，lifecycle credential缺失，
+目前GPU單價與累計實支未知，不借用舊Pod的US$0.89/hour。
+
+四個fresh native worker usage snapshot為4,235.659655 AI Credits，
+分別Opus1,200.7761、Astra2,204.3525、Gemini457.432215、
+Sol373.09884；由backend usage records去重計算。
+這只是該次snapshot的四個session，不含Mayor、歷史session或最終帳單，
+也不是GPU美元支出。
 
 ## 四模型 R4 的實際交付
 

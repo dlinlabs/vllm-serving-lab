@@ -16,7 +16,13 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 **最新長時結果：long01在30個完整episodes／3,600秒後因三次guarded
 assignment未獲ACK而中止；十小時尚未完成。** 失敗partial與pending
 證據已off-Pod保留；owned Gateway與vLLM已停止，Pod保留且billing停止
-未驗證。正在準備不放寬TTL的confirmed-hold修訂及完整block恢復。
+未驗證。其後`729b144`不放寬TTL的confirmed-hold修訂已通過真實
+4 episodes／48秒／922 offered資格：16次applied ACK、32次fresh holds，
+636自然API-stop完成、286拒絕；不是MPC效能比較。
+Fresh continuation02已啟動，planned370 episodes／44,400秒，live Gateway
+與原生服務已驗證；十小時實際完成尚未驗收。原失敗資料完整保留，
+新增off-Pod／resource monitor及指紋核對後owned-service shutdown。
+停止vLLM仍不等於暫停Pod計費，現有Pod保留、lifecycle credential缺失。
 四模型R4已凍結，Mayor171 tests／128 subtests通過；原生Trace recursive
 joint forecast在1秒有訊號、5秒Good仍輸history baseline，沒有MPC勝出。
 詳見 [長時失敗、實際joint反證與受控恢復](../native-v3/long-run-failure-and-joint-model.zh-TW.md)。
