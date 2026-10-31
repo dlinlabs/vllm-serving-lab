@@ -1,0 +1,38 @@
+{
+  "opus": {
+    "worker": "amber",
+    "commit": "aca391eb61c177f684f64b955b067c29f960661a",
+    "files": {
+      "experiments/mpc-research/native-v3/opus.md": "e9e76e58c2ba45607c4d3f36eeba319b2456f55c17d0a70ec9f20171c940b8c7",
+      "experiments/mpc-research/native-v3/native_release_model.py": "aa927973f4cf6a6ba96a10c09bb77eb9fdef63dda80ad70b78c87b768dab12c7",
+      "experiments/mpc-research/native-v3/test_native_release_model.py": "a0653d5495d614f4ce46b726081340b10e7fbc04d5d47275035bb917954d64aa"
+    }
+  },
+  "astra": {
+    "worker": "jade",
+    "commit": "f719256063258f122fd2c31e83daf1258647d9bc",
+    "files": {
+      "experiments/mpc-research/native-v3/astra.md": "e77b234c3657e93b0de469771ea804613d8227fd1015503d8b49d1721ec1ae31",
+      "experiments/mpc-research/native-v3/native_response_planner.py": "a64b58d98bcd50d96b11061ffd25d6a218d1b34a94399f60824145da27f6c564",
+      "experiments/mpc-research/native-v3/test_native_response_planner.py": "a3b86eeb5eb77ef49c0118f05684d2c0e13ede3675a33bf83b3f5300d8d5180d"
+    }
+  },
+  "gemini": {
+    "worker": "pearl",
+    "commit": "31ac3678f60fc157e5ee9304ba2e8568f4ad01a9",
+    "files": {
+      "experiments/mpc-research/native-v3/gemini.md": "0551f7a779d78d1721ab77a7370c6ed39c1793456147decf0c34958262960512",
+      "experiments/mpc-research/native-v3/native_campaign_protocol.py": "ade3dfcea281f811ecfe989c8c03e1c48980b4e4ff2b4052cd62120493c290ca",
+      "experiments/mpc-research/native-v3/test_native_campaign_protocol.py": "660e8b80b83d040701cbeaa00e8fc12c8914304bbf849704bca7ddf326d6b588"
+    }
+  },
+  "sol": {
+    "worker": "flint",
+    "commit": "319b4957bc8b2edbad488bd33e9bd11e67542ef3",
+    "files": {
+      "experiments/mpc-research/native-v3/sol.md": "fbd988b1832ffb34cec0720539e04329b852fac1e13aa763d06fe01a8515ad01",
+      "experiments/mpc-research/native-v3/native_experiment_audit.py": "7f305e54ec321cdced698064898b8e008d6f46d16e0add103c47c6302c5f75da",
+      "experiments/mpc-research/native-v3/test_native_experiment_audit.py": "7666c86c518a3da06545128e4cdd451c96485f64610bcf06e89a0f71ca19875a"
+    }
+  }
+}

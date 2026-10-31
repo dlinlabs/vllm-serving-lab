@@ -13,6 +13,18 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**R11 evolving model 與支援邊界：** 四模型先獨立封存，再開放互審；
+Mayor 實際 323 tests／177 subtests 全部通過、沒有 skip。
+Opus batch-aware v8 在 USED8／9 的 full G5 MAE7.67／7.70，
+明顯劣於 fixed-mark v7 的4.11／4.20，Mayor raw byte-for-byte 重現。
+Aware 比 blind 好，不能抵銷完整預測、rejection bias 與 coverage 的失敗。
+Astra／Sol 的短期 stayer counter gains 不能補足三／五秒完整 cohort support；
+Gemini mock −58tokens 不是 GPU 物理效應。新 hypothesis 集中於
+intra-step release ordering 與真正穩定 cohort intervention，不盲調 MPC 權重。
+13:06Z 已完成新11,160秒＋舊3,600秒，共4h6m有效offered windows，
+十小時尚未完成，Native MPC 未啟用。
+詳見 [evolving負面結果與觀測支援](../native-v3/evolving-model-negative-and-observation-support.zh-TW.md)。
+
 **R10因果缺口與精確加速：** 原R9 release sensitivity raw已byte-for-byte
 重現；兩個endpoint預測較強baseline好，但G5 bands只有.595／.656，
 不選有利endpoint或宣稱risk。修正ABI／mixed-schema後Mayor286tests／165subtests

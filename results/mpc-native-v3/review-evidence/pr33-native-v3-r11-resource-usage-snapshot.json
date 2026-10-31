@@ -1,0 +1,31 @@
+{
+  "schema": "native-v3-mayor-milestone-resource-snapshot-v1",
+  "resource_observed_at": "2026-10-31T13:06:41.731075+00:00",
+  "completed_new_episodes": 93,
+  "completed_new_offered_window_s": 11160,
+  "completed_old_offered_window_s_separate": 3600,
+  "total_completed_offered_window_s": 14760,
+  "ten_hour_requirement_complete": false,
+  "active_mpc": false,
+  "gpu": {
+    "model": "NVIDIA GeForce RTX 4090",
+    "utilization_percent": 87,
+    "memory_used_mib": 19804,
+    "temperature_celsius": 53,
+    "power_watts": 259.45,
+    "disk_used_percent": 44
+  },
+  "hourly_usd": null,
+  "estimated_usd": null,
+  "billing_status": "Pod retained; lifecycle credential unavailable",
+  "owned_service_shutdown_verified": false,
+  "worker_usage_scope": "Only four current native worker sessions; excludes Mayor, older sessions, GPU USD and final invoice",
+  "worker_usage": {
+    "amber": {"model": "claude-opus-5.5", "deduplicated_records": 308, "ai_credits": 2720.75856},
+    "jade": {"model": "gpt-6-astra", "deduplicated_records": 276, "ai_credits": 6626.1703},
+    "pearl": {"model": "gemini-3.8-flash", "deduplicated_records": 1166, "ai_credits": 1434.14769},
+    "flint": {"model": "gpt-6.1-sol", "deduplicated_records": 281, "ai_credits": 1086.73979}
+  },
+  "worker_ai_credits_total": 11867.81634,
+  "source": "Mayor read of replicated latest-index, resource-usage ledger and four-worker-usage files at NV3-013 milestone"
+}
