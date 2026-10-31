@@ -1,5 +1,36 @@
 # NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
+## NV3-026：完整 80 個 baseline 與安全停止已核對
+
+full04 實際於 `2026-10-31T19:10:30.794309Z` 開始、
+`2026-10-31T22:01:12.795786Z` 完成，source_completed=true／error=null。
+80 個正式 Train181045–181048 episodes 全部完成，400 份原始 HTTP／
+events／Gateway telemetry、status、process log 再次逐檔核對原 mirror SHA。
+protocol f5e6、collector16e4、classifier18d、Source144/coreed8 保持綁定；
+完整 factory 順序、all-assigned inventory parity、closed loss-free epochs、
+initial/final drain、同 clock 不重疊 offered windows 均核對。
+每 seed 20 個 episodes／100 個 artifacts 分別封存，沒有 partial 選績效。
+
+新有效時數 **9,600 秒**，加原 **26,880 秒**，實得
+**36,480 秒＝10h08m**；smoke 仍全部排除。使用者要求完整做完
+80 個實驗，十小時累計門檻僅通知，不是停止條件。
+Pod-local owned shutdown receipt 確認 61440／61596／61597 已退出、
+serving port 關閉與 GPU compute processes 空；兩個原背景 shell 均 exit0。
+Pod 保留，provider_billing_stop_verified=false，不能稱已停止供應商計費。
+
+完整 receipt：
+`results/mpc-native-v3/review-evidence/nv3-026-complete-native-baseline04-receipt.json`
+SHA `00fb93ff8e5d8afd3eb06e23b2e4e1b77ffb7917e31a52e11072ca9159155694`。
+配套四個 `nv3-026-complete-baseline04-train-181045` 至 `181048.tar.gz`
+archives 各含該 seed 完整 100 artifacts 與全矩陣 completion metadata；
+各 SHA、bytes 與完整 400 檔 manifest 在 receipt 中封存。
+
+這是固定 count／cost 策略的完整原生對照，不是 closed-loop MPC run。
+performance_analysis_pending=true；所有 native MPC／calibration／superiority
+claims 仍 false。H14 原始完整 fitted-state 未恢復，H16 僅 CPU layout
+已資格，actual runtime Q1–Q5 仍未資格。以下 NV3-025 等 snapshot 保留
+原當時事實，不改寫為最終結果。
+
 ## NV3-025：實際 acquisition進行中與獨立H16 layout資格
 
 full04於`2026-10-31T19:10:30.794309Z`，在已核對 remote/API的

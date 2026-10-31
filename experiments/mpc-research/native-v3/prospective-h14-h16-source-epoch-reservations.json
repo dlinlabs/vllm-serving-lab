@@ -192,5 +192,27 @@
     "native_mpc_permit": false,
     "superiority_claim": false,
     "provider_billing_stop_verified": false
+  },
+  "R18_complete_baseline04": {
+    "receipt": "results/mpc-native-v3/review-evidence/nv3-026-complete-native-baseline04-receipt.json",
+    "receipt_sha256": "00fb93ff8e5d8afd3eb06e23b2e4e1b77ffb7917e31a52e11072ca9159155694",
+    "full04_status": "COMPLETE_VERIFIED_80_OF_80",
+    "finished_at_utc": "2026-10-31T22:01:12.795786Z",
+    "verified_artifacts": 400,
+    "new_distinct_seconds": 9600,
+    "cumulative_distinct_seconds": 36480,
+    "smoke_seconds_included": 0,
+    "ten_hour_milestone_not_a_stop_condition": true,
+    "owned_backend61440_inference_stopped": true,
+    "owned_process_ids_exited": [61440, 61596, 61597],
+    "serving_port_closed": true,
+    "gpu_compute_processes_empty": true,
+    "pod_retained": true,
+    "provider_billing_stop_verified": false,
+    "performance_analysis_pending": true,
+    "native_mpc_active": false,
+    "superiority_claim": false,
+    "h14_complete_original_learned_checkpoint_recovered": false,
+    "h16_q1_q5_runtime_qualified": false
   }
 }

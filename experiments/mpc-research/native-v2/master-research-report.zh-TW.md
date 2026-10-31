@@ -13,6 +13,24 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-026：80／80 個正式 baseline 全數完成並封存。**
+full04 於 `2026-10-31T22:01:12.795786Z` 完成。400 份 raw／events／
+closed Gateway artifacts 再次逐檔核對 SHA；完整四 seeds × 五 cells ×
+四固定策略矩陣、all-assigned HTTP/Gateway parity、closed loss-free epochs
+及同 clock 不重疊 120 秒 windows 均成立。新有效時數 9,600 秒，加原
+26,880 秒，實得 **36,480 秒＝10h08m**；所有 smoke 時數排除。
+依使用者指示，十小時只是通知門檻，未在達標時停止或截斷 80 個實驗。
+
+owned vLLM 61440 與 children 61596／61597 已退出，serving port 關閉，
+GPU compute processes 為空；Pod 保留，**未驗證 provider billing 停止**。
+這批僅執行 fixed-count16／32、fixed-cost16／32，沒有 MPC 控制器。
+完整比較分析尚待四模型獨立審查與交叉批判；不因完成時數宣稱 MPC
+勝出、統計負面結論或所有 batch-aware MPC 不可行。H14 完整原始
+fitted-state 缺口與 H16 runtime Q1–Q5 未資格的限制仍保留。
+完整 receipt 與四個每 seed 100 artifacts 的 archives：
+`results/mpc-native-v3/review-evidence/nv3-026-complete-native-baseline04-receipt.json`。
+原 NV3-025 以下進度 snapshot 保留為歷史記錄，不是目前運行狀態。
+
 **NV3-025：完整 baseline 已實際啟動，時數仍未滿十小時。**
 full04於2026-10-31T19:10:30.794309Z啟動；本次 immutable進度 snapshot
 已核對6個 closed episodes／720新 distinct秒，累計
