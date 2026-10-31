@@ -78,7 +78,7 @@ piecewise nonlinear 與 probabilistic service 結構。
 
 ## 四模型研究與公平性規則
 
-將建立四個 fresh native Polecats，模型分別為 Claude Opus5.5、GPT-6 Astra、
+已建立四個 fresh native Polecats，模型分別為 Claude Opus5.5、GPT-6 Astra、
 Gemini3.8 Flash、GPT-6.1 Sol。A/B/C/D 是主責重點，不取消共同核心問題：
 每個模型都須獨立提出完整 state／action／disturbance、dynamics、observability、
 identifiability、MPC objective／horizon、安全機制及判別實驗。
@@ -87,7 +87,26 @@ Round1 完成之前不交換設計。Round2 互審，Round3 依實驗或可重�
 
 profile 名稱與 argv 不是實際模型證明；必須逐一讀 usage records 的 model，
 記錄 session、token／credits 可得欄位與各自報告 hash。
-本輪尚未啟動的 worker 不計為已執行的四模型結果。
+本輪已從各 session 的 `session.usage_record.data.usage.model`
+確認四個實際 backend 模型，非僅 profile／argv。
+原生 epic 為 `pr-native-v2`，caller-owned、merge-local convoy 為 `hq-cv-3977g`。
+
+| Polecat | Native Bead | 實際 usage model | 狀態 |
+|---|---|---|---|
+| opal | pr-nv2-opus | claude-opus-5.5 | 獨立 Round1 研究中 |
+| topaz | pr-nv2-astra | gpt-6-astra | 獨立 Round1 研究中 |
+| garnet | pr-nv2-gemini | gemini-3.8-flash | 獨立 Round1 研究中 |
+| ruby | pr-nv2-sol | gpt-6.1-sol | 獨立 Round1 研究中 |
+
+Gas Town 強制將 `--base-branch` 當作 origin ref，未發布的本機分支不能直接用；
+因此每個 worker 改以不同新建本機 branch 的 `--branch` 原生派工，
+不建立假 origin ref、不改 remote，也不重用舊事故 identities。
+其 startup sandbox 擋住 localhost3307，導致 `gt hook` 誤判沒有工作，
+不代表 Host Dolt 或 Beads 遺失。Mayor 在 Host 驗證四個 Beads／hook，
+再用原生 nudge 直接交付完整任務；metadata 由 Mayor 寫入。
+不因此更改 global sandbox 或其他 Rig。
+至少 Opus／Astra 在 startup 預設流程曾嘗試 `gt done`，均被 wrapper 拒絕；
+這是技術屏障實際生效的紀錄，不能說只靠指令成功防止嘗試。
 
 研究用共同 SLO 沿用 TTFT500ms＋request-mean TPOT50ms；
 真正逐 token tail 若沒有 timestamps 資格，明確標為不可測，
@@ -104,3 +123,13 @@ next action 與資源記錄。資料位於 `results/mpc-native-v2/`。
 GPU 時間以 provider RUNNING／EXITED receipts 與 UTC 記錄估計，
 報價估算與 provider 實際帳單區分；AI Credits 以 runtime usage 提供的量計，
 若只提供 tokens／billing multipliers，就不杜撰成美元或任意 credits。
+
+新增 Mayor-only `pod_lifecycle.py`，只有既有 Pod 的 status／stop／resume，
+不提供 create、terminate、多 GPU 或任意 Pod 參數。
+Resume 要求具 Commit／假設／workload／停止條件的實驗計畫；
+Stop 要求近期 remote-to-local sealing receipt 與未變更的本機 artifact SHA。
+Mutation intent 先 fsync，模糊回覆不盲目重送；
+EXITED acknowledgement 不等於釋放，必須再確認 runtime=null。
+九個失效案例單元測試通過；實際 status 再次確認 EXITED／runtime=null。
+官方 `podResume(input:{podId,gpuCount:1})` schema 已核對，
+但本輪尚未 resume，不能將 mock resume 描述為已重啟 GPU。
