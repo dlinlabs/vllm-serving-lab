@@ -1,5 +1,102 @@
 # NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
+## NV3-020：R16 written seals與實際 HTTP 邊界
+
+四個實際原生模型 R16 base sources 封存為12檔；Gemini actual-schema
+follow-up `5aecb10c2bd2af543a3e0ad19ceec9cac4f5cc77` 另封存3檔，
+沒有覆寫原 R15／R16 negative fixtures。Mayor 的主資格命令實際為
+457 passed／252 subtests passed／4 skipped，134.78秒。
+4 skipped 全是缺少 `NV3_R15_FREEZE`／`NV3_JOURNAL_REPO` 的
+`R16JournalTests`；補足 exact R15 與 historical a4ec 後，僅執行該4項，
+4 passed、0 skipped、0.27秒。故461項必要測試均已執行通過；
+保留兩份原輸出，不將它們改寫成另一個「單次零 skip」receipt。
+
+| Model | R16 local seal | Mayor scope |
+|---|---|---|
+| Opus／amber | `90b852058598f247a74fcaa53edfdfa3c8779b5f` | J1／J2、owner support、H16 Q1–Q5 |
+| Astra／jade | `454c374a3b379fc2d9b59aedfc5d8eb52979d5a9` | offline labels ≠ precut state、actual observer gate |
+| Sol／flint | `719d79a20c8f30230e5603145cbb00086c66de92` | actual a4ec journal、actual eight-field/max512 reference |
+| Gemini／pearl | base `7212b3828c34cdf477a240dc38534694468cfdd8`; follow-up `5aecb10c2bd2af543a3e0ad19ceec9cac4f5cc77` | historical source refusal、no-phase／UUID／actual charged geometry repair |
+
+### 接受新 owner label，但拒絕 online-state 升級
+
+Opus 的 J1 是真實 source hole：telemetry disabled 仍會增加
+`mpc_sequence`；final flush swap 後抵達的 cleanup rows 可能留在新 buffer，
+原 status 卻能 closed／remaining0／SHA 對應短檔。J2 是 `mpc_mark=None`
+仍可能接受 ID-less admission。Verifier 能拒絕缺失，不等於 producer 已修復。
+Mayor 在另一個 source candidate 本機修正，commit
+`d1bd1e5f6262eda1ee29867689a810a475797c73`，Gateway SHA256
+`23aef8b8b903eda99ea325fd8ece09d998c174df39f2d1230ed5b9cc37e4ce3a`，
+119項 CPU regression 通過，0.87秒。關閉時阻止新 admissions／control，
+再次 flush late rows；seal 記錄 written final sequence／row count、
+producer final sequence／unflushed count，對 gap／未寫入／残留 fail closed，
+拒絕 NoneMark／writer-off admission。Feature 仍 default-off。
+
+新候選位於 `mpc-native-owner-written-journal`。Historical
+`mpc-native-owner-journal` 是 detached a4ec，Gateway SHA
+`21e3b335450a141e0c9c84d15a5f6c46850f9bb219b296a1f7b9929c6caa81f7`，
+供 frozen R16 tests 使用；不是新 source alias，沒有修改 sealed tests
+或 Source144 parent bytes。119項是新候選 CPU receipt，不取代舊116項、
+J1 failure 或原 source refusal。沒有 product deployment／hotpatch。
+
+Astra 以相同完美 offline seal，重現 producer cut 的 owner cost20、
+consumer 在較早 received watermark 卻仍為 empty；final seal 不能
+回溯證明 pre-cut 已收到 rows。Sol 的自洽 forged UUID＋reseal 也能
+通過 conditional offline integrity，但 authentication／fsync／online-cut
+flags 保持 false。精確 owner lifetime label 與可用於線上 MPC 的狀態
+是不同命題；尚無任何 Native／MPC permit。
+
+### 真實 observer schema修復，不是因果窗口資格
+
+Source144 observer 只有實際8個 request fields，沒有 `phase`。
+原 R15 gate 依賴 fictitious phase，所以有效實際 frames 會被拒絕；
+mock 加 phase 才會通過。Gemini follow-up 移除此條件，使用
+actual prompt／computed／positive output／qualified max512／True EOS、
+來源與 domain／freshness／exact client↔Gateway UUID bijection，
+並按實際 tokenized Gateway charges 預檢 geometry；112項 owned CPU tests
+也已納入 Mayor qualification。保留原 frozen failure witness，
+不將舊 R14 serial-dispatch numerical faults說成 R16 hardware execution。
+
+5aec follow-up 仍用 consumer `self.clock()` 作 `t_apply`，
+gate counters 作窗口起點、survivor mean 作效果點估計、自動 approved
+一小時 permit、receipt-relative sleep 作 burst offset。Server apply10、
+receipt10.2 會把目標推到11.2而非11；missing owners 的 survivor mean
+不能代替 all-assigned interval。R17 四模型正在 bounded CPU 實作／
+反證 genuine ACK／domain／explicit permit／immutable apply+1秒、
+counter brackets／received-prefix uncertainty／強 count16 baseline。
+CPU schema 與來源修復不等於已執行 Native causal pilot。
+
+### 分開 fresh reservations與資源
+
+正式 reservation JSON：
+`prospective-h14-h16-source-epoch-reservations.json`。
+H14 保留 Source144 natural-workload Train181041／181042；
+H16 Q1–Q5 measurement-only 用不同的 Train181043／181044，
+只在新 owner source／core／protocol 完整 qualification 與來源封存後
+才可開始。原 driver 仍獨占 backend，不注入 cohort；forced ignoreEOS
+pilot 不代替 natural H14。USED15／16、Cal17–36、Val37–40 不重標、
+不回灌 forecast 或挑有利端點。H11c fail／H12 unidentified interval／
+H13 NOT_CANDIDATE 仍保留，下一個 exact-release forecast 要另預註冊。
+
+16:58:49Z finalized ledger 核對新70完整 episodes／140 artifacts，
+8,400秒＋舊15,960秒＝24,360有效秒（6h46m）。僅檢查 metadata／
+artifact ledger，沒有讀取 Cal／Val outcomes。Ten-hour notifier／
+acquisition／owned shutdown monitor 持續；十小時與 Native MPC
+superiority 未完成。GPU USD hourly price／provider billing stop 未核實，
+不把停止 owned inference 說成停止 Pod 計費。
+
+17:00:01Z 四個 current native sessions 的 deduplicated usage：
+Opus4,257.4581、Astra9,720.1067、Gemini2,458.62366、Sol1,744.91716，
+合計18,181.10562 AI credits；不含 Mayor／舊 sessions／帳單，不能當作
+整體費用或 USD。實際 usage models 仍分別是 `claude-opus-5.5`、
+`gpt-6-astra`、`gemini-3.8-flash`、`gpt-6.1-sol`。
+完整 source archive、兩份資格輸出、三份 canonical raw、119項 receipt、
+local-only J1／J2 patch 與資源 snapshots 由
+`results/mpc-native-v3/review-evidence/round16-mayor-required-coverage-and-evidence-manifest.json`
+列出 bytes／SHA；gzip evidence 解壓後保持原 bytes，不 strip failure logs。
+R17 caller-owned／merge-local convoy 是 `hq-cv-ll4h5`；R16 local handoffs
+已 close，但不代表 Native acceptance、`gt done`、Refinery merge 或 GPU shutdown。
+
 ## 實驗與裁定
 
 Experiment ID：`NV3-013-R11-independent-evolving-model-qualification`。

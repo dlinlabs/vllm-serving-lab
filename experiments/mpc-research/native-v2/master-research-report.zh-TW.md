@@ -13,6 +13,33 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-020：written seal 與真實 apply clock 分開核對。**
+四模型 R16 sealed sources，以及 Gemini `5aecb10` 的實際 observer
+schema／UUID 修復，已由 Mayor 重現：主命令457 passed／252 subtests、
+4個缺 fixture 的 Astra probes 原樣記錄為 skipped；補足原 R15／a4ec
+fixtures 後，僅重跑該4項，全部通過。合計 **461項必要測試均已執行通過**，
+不是捏造一份461／零 skip 的單次輸出。
+實際 Source144 observer 沒有 `phase`；新 gate 改用其8個真實欄位、
+actual prompt/output/max/EOS 與 exact UUID bijection。這修復 source
+schema，不代表 Native pilot、physical survival 或 MPC 勝出。
+Consumer-clock `t_apply`、gate-origin counters、survivor-only mean、
+receipt-relative burst timing、automatic approved permit 仍阻擋因果實驗；
+R17 四原生模型改做 bounded source／receipt／window／強 baseline 工作。
+
+Opus 找出的 J1 late-flush／unwritten-sequence 與 J2 ID-less admission
+已在隔離分支本機提交 `d1bd1e5f6262eda1ee29867689a810a475797c73`，
+**119項 CPU regression 通過**；seal 使用真正寫入的 sequence／row count，
+另保留 producer sequence，gap／unflushed rows／未記錄 admission 拒絕。
+新候選 worktree 是 `mpc-native-owner-written-journal`；原 a4ec
+在 `mpc-native-owner-journal` 保持 detached、byte-exact historical source，
+沒有將新 bytes 偽裝成旧 epoch，產品 Source144／GPU 均未 hotpatch。
+正式預留 **H14 natural Source144 Train41／42**、**H16 新 owner epoch
+measurement-only Train43／44**，不互換、不重標 Cal／Val；尚未收集。
+16:58:49Z 經 finalized-artifact ledger 核對70個新完整 episodes／140檔，
+加舊15,960秒共 **24,360有效秒＝6h46m**。十小時與真正 MPC 勝利仍未完成，
+USD hourly price／provider billing stop 仍未核實。完整版本與範圍見
+[R16 written seals 與實際 HTTP 邊界](../native-v3/evolving-model-negative-and-observation-support.zh-TW.md#nv3-020r16-written-seals與實際-http-邊界)。
+
 **NV3-019：找出 stale-stock 缺口，轉向可核對的狀態觀測。**
 四個 R15 independent handoffs 已封存，Mayor 在原 Source144 parent、
 全部歷史與實際 source fixtures 上 **438 tests／237 subtests、零 skip**。

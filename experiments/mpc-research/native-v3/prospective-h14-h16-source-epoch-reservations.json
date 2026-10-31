@@ -1,0 +1,65 @@
+{
+  "schema": "native-v3-prospective-source-epoch-reservations-v1",
+  "decision_at_utc": "2026-10-31T16:58:49Z",
+  "decision_owner": "mayor/",
+  "collection_status": "NOT_EXECUTED",
+  "historical_negatives_unchanged": {
+    "H11c": "FAIL",
+    "H12": "UNIDENTIFIED_INTERVAL",
+    "H13": "NOT_CANDIDATE"
+  },
+  "H14": {
+    "purpose": "Original prospective v11 natural-workload confirmation; original targets, kernels, comparators, masks and stop rules remain unchanged.",
+    "train_blocks": [181041, 181042],
+    "source_commit": "144cef32a9b51c3a74355ff67f5eafdfac6e075f",
+    "gateway_sha256": "a4a8229b0f636b64c945881d062c3ee925ef5fccc5ba2e6fc7629657d3575ea7",
+    "owner_journal": false,
+    "forced_ignore_eos_cohort_may_replace_natural_data": false,
+    "bridge_requirement": "Strict registered Source144 input bridge; no refit, registry alias or old-data/new-tag qualification."
+  },
+  "H16": {
+    "purpose": "Measurement identification only; no forecast score or controller-performance claim.",
+    "train_blocks": [181043, 181044],
+    "candidate_source_commit": "d1bd1e5f6262eda1ee29867689a810a475797c73",
+    "candidate_gateway_sha256": "23aef8b8b903eda99ea325fd8ece09d998c174df39f2d1230ed5b9cc37e4ce3a",
+    "collection_blocked_until": [
+      "Exact new source/core/cost/observer/capture/protocol identity is sealed and independently qualified before exposure.",
+      "The existing identification03 backend ownership has ended; no cohort or source injection into its ongoing runs.",
+      "Owner-journal opt-in, actual written-row closure, ID-less refusal, common source/receipt clock domains and complete assigned-client inventory are qualified.",
+      "Any source/configuration/protocol change is separately sealed before collection; it cannot inherit this candidate binding silently."
+    ],
+    "Q1": "Every epoch passes the strict owner-journal verifier, including written-versus-producer sequence, complete suffix, bytes/SHA, drops/errors/unflushed rows and remaining-owner checks; any failure stops with UNIDENTIFIED and retains its reason.",
+    "Q2": "At every same-run/domain Gateway snapshot, replayed owner UUID set equals the snapshot set and reserved stocks agree to 1e-6.",
+    "Q3": "For every offered client UUID, Gateway accept iff journal admission; 503 iff no admission; journal terminal <= client HTTP terminal in the qualified common domain. Report lags without selecting a favorable threshold.",
+    "Q4": "Every native-visible gateway_request_id has an earlier journal admission; rejected-and-native-visible count is zero.",
+    "Q5": "Every assigned budget slot has a matching control row with actual apply lag, or remains noncompliant in the assigned ITT denominator. Every admission decision satisfies R(d-)+c <= B(d); violations must be zero.",
+    "outputs": [
+      "Offline per-owner admission/first-content/whole-cost release intervals",
+      "Release positions within snapshot intervals",
+      "Producer-event stock and independently labeled received-prefix/watermark state",
+      "Carry-over, action-contrast and actual count-support tables"
+    ],
+    "online_state_boundary": "Final seals do not certify precut reception. A received prefix describes its source watermark, not exact current stock at a later cut; unknown suffix/owners/fates remain unknown.",
+    "stop_rule": "Run once on the first complete sealed pair. Any Q1-Q5 failure is UNIDENTIFIED; no replacement by favorable epochs or held-out relabels."
+  },
+  "split_guards": {
+    "used_train_blocks": [181015, 181016],
+    "calibration_blocks": [181017, 181036],
+    "validation_blocks": [181037, 181040],
+    "calibration_or_validation_relabel_allowed": false,
+    "used_data_rescore_as_fresh_allowed": false,
+    "H14_and_H16_data_interchange_allowed": false
+  },
+  "separate_future_preregistration_required": [
+    "Any exact-release v12 forecast",
+    "Any count-axis actuation or new controller benchmark",
+    "Any forced-ignore-EOS causal cohort pilot"
+  ],
+  "permits": {
+    "native_dispatch": false,
+    "physical_eos": false,
+    "calibrated_mpc": false,
+    "controller_superiority": false,
+    "provider_billing_stop_verified": false
+  }
+}
