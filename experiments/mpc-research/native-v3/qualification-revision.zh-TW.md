@@ -41,7 +41,13 @@ prompt+delivered_output−1」這項驗收假設。它符合 async placeholder
 一 token 末端 suffix 才能另列為 terminal overhang。沒有 placeholder、
 worker mismatch、兩 token 差異、零 output、非有限 clock 都仍拒絕。
 這是可反證的物理工作分類修訂，不是修改 Goodput／SLO 或放寬時間門檻。
-新版本尚待完整 16-arm Native qualification；舊版本不能宣稱通過。
+`2587d2b` 的 fresh `qualification-retry03` 已完成完整 16-arm Native
+qualification：40 HTTP 請求皆完整、40 自然 EOS，16 個 v3 audit 全部有效；
+8 個舊 v2 audit 仍為 false，20 個末端額外 physical token 獨立列帳。
+舊版本不能宣稱通過，這也不是 MPC、預測模型或 controller overhead 驗收。
+
+第三份原始證據已封存並下載到 Mayor，遠端／本機 SHA256 相同：
+`cbbb88639bae23a9b4fe9a5aa3f8b39d7716506d09ee40710561e649a28ca800`。
 
 原始失敗紀錄保留於 Pod 的
 `/root/pr33-native-v3-src/results/mpc-native-v3/qualification-retry01`、
@@ -53,6 +59,12 @@ Dolt denial 曾阻止實際研究。Mayor 只確認四個 pr32 workspace 的當�
 trust，不取消 sandbox；以 native immediate nudge 提供完整離線任務。
 必須另以 backend usage／成果證明模型確實研究，不能只引用 tmux 存活。
 Astra、Sol 的錯誤 `gt done --status=ESCALATED` 嘗試已被 exit86 防線攔截。
+四個 active research session 的 backend `session.usage_record` 已分別
+確認 `claude-opus-5.5`、`gpt-6-astra`、`gemini-3.8-flash`、`gpt-6.1-sol`。
+四份獨立 R1 原始報告、程式及測試已從各自提交 byte-verify 凍結；
+Mayor 單一 runner 獨立重現 65 passed、68 subtests，第二輪交叉審查已實際派出。
+Gemini R1 的兩個模組誤放 repo root，原始提交已保留，另要求 owned-path 修訂；
+測試通過不代表其 duration、OOD、GPU clock 或統計論點已獲認可。
 
 GPU lifecycle credential 仍不存在；只能停止自身服務，不能宣稱 SSH
 stop 等同停止 Pod 計費。使用者已明確允許在此限制下繼續，但使用時間、

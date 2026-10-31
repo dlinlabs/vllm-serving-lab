@@ -11,6 +11,22 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 本報告持續更新，不將研究提案、模型口頭共識、CPU 測試或 profiler smoke
 混稱為真實閉環效能成功。
 
+### Native v3 最新里程碑
+
+目前本機工作分支為 `research/pr33-native-v3-ten-hour`。新 Pod 的 vLLM
+0.30.0／Qwen3-4B／RTX4090 已完成 16-arm、40 自然 EOS HTTP qualification。
+新版 physical／delivered accounting 有效，8 個原 strict-v2 失敗完整保留；
+詳見 [可追溯修訂與封存 SHA](../native-v3/qualification-revision.zh-TW.md)。
+四個 fresh native Polecat 已完成獨立 R1，Mayor 重現 65 項測試與
+68 個 subtests，並已交付 R2 交叉批判。
+
+下一個 collector 凍結 1 秒 cap16／32 互補隨機干預、四種純 workload
+及混合 workload，分離 16 train、20 calibration、4 validation arrival
+seed blocks，不使用 final held-out。正式計畫的 offered windows 合計
+48,000 秒，不以 max drain、setup 或 idle 補成十小時。
+這是計畫，**尚未宣稱完成十小時或 MPC 優勢**；先執行 bounded interface
+smoke，通過 source／cost／clock／CAS／HTTP／drain 才能擴大收集。
+
 ## 任務權限與分支
 
 使用者已取消固定 AI Credits／GPU 時數上限，允許同一個既有 Pod 的自主實驗、

@@ -35,6 +35,28 @@ def test_launcher_exposes_selected_tools_and_preserves_benchmark_identity(tmp_pa
     assert observed == [(str(ninja), "1" if service == "gateway" else "0")]
 
 
+def test_identification_launcher_binds_exact_native_cost_and_unfitted_support(tmp_path, monkeypatch):
+    from mpc_lab.contracts import CostSpec, ModelParameters
+    cost = CostSpec()
+    protocol = tmp_path / "identification.json"
+    protocol.write_text(json.dumps(dict(schema="native-v3-state-response-id-v1",
+        source_commit="a"*40, cost_spec=cost.__dict__)))
+    config, plan = tmp_path / "config.json", tmp_path / "plan.json"
+    config.write_text(json.dumps({"MODEL_NAME":"test", "ADMIN_API_KEY":"test"}))
+    plan.write_text(json.dumps(collector.qualification_plan("a"*40)))
+    monkeypatch.setattr(os, "environ", dict(os.environ))
+    monkeypatch.setattr(sys, "argv", ["launch", "gateway", "--config", str(config),
+        "--plan", str(plan), "--python", str(tmp_path/"python"),
+        "--evidence", str(tmp_path/"evidence"), "--identification-protocol", str(protocol)])
+    observed = []
+    monkeypatch.setattr(os, "execv", lambda *args: observed.append(
+        (os.environ["MPC_MODEL_VERSION"], os.environ["MPC_SUPPORT_HASH"])))
+    launcher.main()
+    expected = ModelParameters(cost_spec=cost, model_version="native-id-unfitted-v1",
+        calibration_version="unfitted-not-validated")
+    assert observed == [(expected.model_version, expected.identity.support_hash)]
+
+
 @pytest.mark.parametrize("valid", [True, False])
 def test_capture_is_on_disk_before_ack_even_when_invalid(tmp_path, valid):
     plan = collector.qualification_plan("a" * 40)

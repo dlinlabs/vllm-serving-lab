@@ -12,6 +12,7 @@ def main():
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--python", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
+    parser.add_argument("--identification-protocol", type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[3]
     config = json.loads(args.config.read_text())
@@ -54,11 +55,26 @@ def main():
             MAX_ADMITTED_COST="32", MPC_LAB_ENABLED="true", BENCHMARK_REQUEST_IDS="1",
             MPC_MODEL_VERSION="native-v2-unfitted", MPC_CALIBRATION_VERSION="unfitted-not-validated",
             MPC_SUPPORT_HASH="qualification-only-no-control")
+        if args.identification_protocol:
+            import sys
+            sys.path.insert(0, str(root))
+            from mpc_lab.contracts import CostSpec, ModelParameters
+            protocol = json.loads(args.identification_protocol.read_text())
+            if (protocol["schema"] != "native-v3-state-response-id-v1"
+                    or protocol["source_commit"] != plan["source_commit"]):
+                raise ValueError("identification protocol source or schema mismatch")
+            parameters = ModelParameters(cost_spec=CostSpec(**protocol["cost_spec"]),
+                model_version="native-id-unfitted-v1",
+                calibration_version="unfitted-not-validated")
+            os.environ.update(MPC_MODEL_VERSION=parameters.model_version,
+                MPC_CALIBRATION_VERSION=parameters.calibration_version,
+                MPC_SUPPORT_HASH=parameters.identity.support_hash)
         command = ["-m", "uvicorn", "gateway:app", "--host", "127.0.0.1",
                    "--port", "8080", "--workers", "1"]
     with (args.evidence/f"{args.service}-launch.json").open("x") as stream:
         json.dump(dict(source_commit=plan["source_commit"], arguments=command,
-            scope="Qualification only;loopback;no profiler or calibrated MPC."
+            scope=("Prespecified identification only;" if args.identification_protocol
+                   else "Qualification only;") + "loopback;no calibrated MPC."
                   " Batch hooks enabled;capture OFF is not pristine disabled."), stream, indent=2)
     os.execv(str(executable), [str(executable), *command])
 
