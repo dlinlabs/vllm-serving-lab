@@ -1,0 +1,41 @@
+{
+  "schema": "native-state-adapter-retrospective-v1",
+  "adapter_sha256": "835df8ebaa58c773074e65cedba4627b468d14b560233a7655bf9cd2240b83d6",
+  "measured_source_commit": "729b144a0c5885d702a6a49c655f61c62513ed30",
+  "identity": {
+    "model_version": "native-id-unfitted-v1",
+    "calibration_version": "unfitted-not-validated",
+    "support_hash": "7e6d49ca4a15ab8630fed9a7fa150eb3ab8f2e1a7b0d9585cc8a6c48f666498d",
+    "cost_hash": "cf8162ea687a697d698f26d0bd663fdb9a2f172dce71add05d267ac3dfb43833",
+    "implementation_hash": "b4f234020105f69f608da45dba7317a8bb632ecd84aeb0e310362740e5fa083a"
+  },
+  "episodes": 20,
+  "frames": 17909,
+  "usable": 17909,
+  "refusal_reasons": {},
+  "usable_frames_with_waiting": 2364,
+  "reported_computed_above_prompt_observations": 108971,
+  "input_sha256": {
+    "nv3-181004-p128-m128-arm1.json": "20a4a16856c00a6639b34ce89db4e8c0ee802a62648f291e2f6068870192fa7b",
+    "nv3-181004-p128-m128-arm0.json": "711b3707f2e92cb83731197e8f9a6bde7f035e7b517fd07363d3d6582c7afed3",
+    "nv3-181004-p128-m256-arm1.json": "79c40c86d58bae414a15c2e460368c4101886338cd42bd6d8516e1691d3769f9",
+    "nv3-181004-p128-m256-arm0.json": "63be003b80b7cf17ce2454c901548606c0b0179d099c57978958d708963eac75",
+    "nv3-181004-p4096-m128-arm1.json": "d3c8d5a685ba67f505c64598fe211f0492e2e6acb66ef0b2f7706493ba20c93c",
+    "nv3-181004-p4096-m128-arm0.json": "4532f3743b1519235a95f9d811f12ec0afca881e7fef483c91059254566faea0",
+    "nv3-181004-p4096-m256-arm1.json": "682e6b5ad0fe29bfdc2ec4101f3042cc23d7911bd8153c62906f90a6fa3c5ef3",
+    "nv3-181004-p4096-m256-arm0.json": "29bbeeca85024ba2b50fc03ad51226dae1e1a1f4dd6b9eee3a000e2c1b08b380",
+    "nv3-181004-mixed-arm0.json": "6e38203e5d0a49c2adc87d83edf5b1f9ec970fc2948a58fbd89a14ece7a87c0b",
+    "nv3-181004-mixed-arm1.json": "1d687312b0167cc1919f46fb939dd8e523d31181d2662d9bc1d5365f543e9c67",
+    "nv3-181005-p128-m128-arm1.json": "7bd1e21f8c997260b4956025ff301d7b2220df45ff8ba9f904ee5a7e4df62fa4",
+    "nv3-181005-p128-m128-arm0.json": "299b12a27c742aecd70669b21d9d018ff64d57b0540e1a123990fcaab9b2db93",
+    "nv3-181005-p128-m256-arm1.json": "c09f7991f614325334b28e2fc3de71ed61f1459d1dddee8ce09ae744fc1b76ee",
+    "nv3-181005-p128-m256-arm0.json": "e14b3ce00a030f42cefe37a1ef1ec062d79e217df80820f7d87a1af5aaedcced",
+    "nv3-181005-p4096-m128-arm0.json": "8a6bd55901cc86a397b7a0a318d1958a19f9deb892fb16384541b4977965ed99",
+    "nv3-181005-p4096-m128-arm1.json": "1ed1ffa3143497775893711c45cd358c4a4fc2c9c29cc4bcfa1dd6c9cfbbea84",
+    "nv3-181005-p4096-m256-arm1.json": "801bbffa27723e8d1ec9528b5896905d8741af91c02c56ae94d1d252ec0fff36",
+    "nv3-181005-p4096-m256-arm0.json": "b632d7de256a414d87e34eaa5c65b94294dce5a4a03fb9afa8bf2940f24896e6",
+    "nv3-181005-mixed-arm0.json": "5d27b28b05e9cdfcc8c6eba2708f96bcb10dffbe11a51ecbb454af17ca475ee9",
+    "nv3-181005-mixed-arm1.json": "97503ace62e94f0451d2b3e3f7ecf6ad8b3e863b0339fbdc91aeb8a119f38b9e"
+  },
+  "scope": "Retrospective recorded-receive cuts on complete Train181004/5; no online deployment, latency measurement, EOS work estimate, calibration or active MPC permit"
+}

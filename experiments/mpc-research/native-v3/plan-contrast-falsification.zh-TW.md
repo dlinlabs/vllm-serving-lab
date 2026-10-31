@@ -88,6 +88,31 @@ Sol 實作真正 `capture_chat.observe` 到 causal receipt history 的 bridge，
 
 ## 長時實驗與資源
 
+### CPU Native state adapter：已實作，未部署
+
+`mpc_lab/native_state.py` 新增 source-bound adapter，67 項 native-state／
+runtime／actuator coupled tests 通過。先檢查兩邊 clock domain／run／observer／
+vLLM version，再檢查 timestamps、完整性與有限數值；跨 boot 返回可觀測
+refusal，不先解析或比較不相容時間。
+
+Gateway 原始 whole-cost owners 與 raw engine request IDs 分開保留，
+不猜 UUID aliases，不把 token progress 當成 reservation release。
+`visible_prefill_remaining` 只涵蓋 running 列表；
+waiting requests 沒有逐筆 token inventory，不能補成零工作量。
+`visible_output_headroom` 是 max-output cap headroom，不是已辨識的剩餘 EOS 工作。
+
+以已封存 Train181004／181005 的 recorded receive time 回放：
+20 complete episodes／17,909 frames 均通過這個 adapter 的資料格式與時效檢查；
+其中2,364 frames 有 waiting。這是 retrospective replay，
+不是 online publication／latency／source-auth／MPC qualification。
+computed counter 超過 prompt 的108,971個 request-observations 包括正常 decode，
+不是108,971個獨立請求或 physical overhang 錯誤。
+Raw evidence 保留20個 input SHA、measured source729與 adapter SHA
+`835df8ebaa58c773074e65cedba4627b468d14b560233a7655bf9cd2240b83d6`。
+
+新增這個 package module 會改變本機 implementation hash；
+不能拿本機新 hash 冒充正在量測的729／b4 core，沒有 hot-patch GPU。
+
 截至 `2026-10-31T10:55:50Z`，continuation02 已 off-Pod 核對
 30 complete episodes／3,600 offered-window 秒；原 long01 的 3,600 秒另列，
 合計約兩小時，**十小時尚未完成**。本輪 planned44,400 秒不是完成數。

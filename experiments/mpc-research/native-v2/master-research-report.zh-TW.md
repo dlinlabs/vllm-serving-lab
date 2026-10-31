@@ -24,6 +24,12 @@ bridge與公平benchmark harness，不看Final、不搜索weights/horizon。
 最新已核對 continuation3,600秒與原long01的3,600秒分列，十小時未完成。
 詳見[plan contrast反證與實作裁定](../native-v3/plan-contrast-falsification.zh-TW.md)。
 
+**Native state adapter 已實作：** source／clock-first、running-only token
+progress、unknown waiting work 與 Gateway whole-cost owners 分開保留。
+67項 coupled tests 及17,909個 recorded-receive frames replay 通過；
+沒有部署至 GPU，沒有把 output headroom 當成 EOS 剩餘工作或授予 MPC permit。
+新 package module 改變本機 implementation hash，live729仍不變。
+
 **最新R6訊號與邊界：** 四模型真正完成獨立提案後已凍結，
 Mayor204 tests／139 subtests通過。Mayor另外重現Native Trace progress
 診斷：1／3／5秒Good-count MAE約1.07／3.45／5.90，
