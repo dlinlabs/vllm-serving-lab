@@ -13,6 +13,33 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**R13 實際量測資格與 R14 新反證（2026-10-31）：** 四個不同模型
+R13 source 在新 Train15／16 開始前封存；Mayor 對 Source144 API 的
+CPU 重跑實際為 **398 tests／196 subtests 全通過、零 skip**。
+同一 RTX4090／Qwen3-4B／vLLM0.30.0 的真實 HTTP smoke 有
+48秒、922 offered＝649 complete＋273 rejected、零 other。
+3,346筆 Native observations 的 explicit sampling Gateway UUID 全部
+可對上649個 accepted client IDs，actual ignore_eos 全為 False。
+True ignore-EOS、controlled cohort 與 Native MPC superiority 仍未驗證。
+兩個 Gateway epochs 的 retained aggregate ledger 共1,963筆；
+status 回報 closed／零 dropped／零 write_errors，但不保證完整 suffix、
+per-UUID lease ownership、認證或 fsync durability。
+Mayor 另確認 Gemini 的「RealNativeCohortRunner」仍使用 virtual clock、
+toy plant 與非實際 Gateway contract，不能部署或當成 Native 因果證據；
+ignore_eos 不應令 request 越過 max_tokens 永不結束，Gateway sampling
+UUID 也應等於 validated benchmark UUID，而不是要求兩者不同。
+四模型已由新原生 Beads／caller-owned local convoy
+`hq-cv-pkmce` 針對 birth-time model、stable-CRN exact solver、
+真正 HTTP adapter 與 ledger closure 繼續獨立實作／互審。
+Source144 的 identification03 正在執行，沒有 hotpatch 或外來 cohort traffic。
+此版 progress snapshot 為11完整 episodes／1,320新秒，加舊15,960秒，
+共 **17,280秒＝4h48m**；不計48秒 smoke，十小時仍未完成。
+監控每120秒 off-Pod checksum replica／GPU resources／四 Worker usage，
+結束／失敗後依新 PID fingerprint 停 owned inference，Pod billing stop
+仍不可驗證，USD 未知；四 current sessions 在14:51:55Z 為
+14,564.7298625 credits，排除 Mayor／舊 sessions／invoice。
+詳見 [R13量測與R14反證](../native-v3/evolving-model-negative-and-observation-support.zh-TW.md#nv3-016r13-實際-native-量測與-r14-資格反證)。
+
 **R12 封存與 Native 停止：** Continuation02 在13:28Z因一次 pre-header
 HTTP failure停止，失敗raw/events/index完整保存；只確認約3.85ms無headers，
 exception class當時遺失，不假定keep-alive或GPU root cause。

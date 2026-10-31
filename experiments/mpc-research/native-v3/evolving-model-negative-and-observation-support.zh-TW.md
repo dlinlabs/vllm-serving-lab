@@ -303,3 +303,128 @@ Opus 3,181.64416／Astra 7,808.58015／Gemini 1,694.8832325／Sol 1,297.92487，
 - `native-v3-r13-preflight-resource-usage.json`
 
 所有 gzip 皆驗證解壓後與來源 bytes 完全相同；原始失敗與 R12 source 不覆寫。
+
+## NV3-016：R13 實際 Native 量測與 R14 資格反證
+
+### 假設、版本與已確認結果
+
+本輪檢查 explicit sampling metadata 能否在真正 vLLM／Gateway 接上
+client receipt，並確認舊 CPU qualifiers 不會被誤認為可部署的 Native
+intervention。Serving source 保持
+`144cef32a9b51c3a74355ff67f5eafdfac6e075f`，implementation
+`ed8a6a537b7b663f44f4d6ed42d9679fe88048b4077c25dd778b6e8cf418a014`，
+model `native-id-unfitted-v1`／calibration `unfitted-not-validated`，
+controller `prespecified-cap-sequence-v2-confirmed-holds`；
+calibrated=False、mpc_active=False。沒有修改正在執行的 source。
+
+R13 四模型十二個 owned files 的 byte-exact archive SHA256 為
+`2d4307670e627730784f607cff2c72c7ba168aff1f07fd61c9b1f798ad9dace2`，
+在 identification03 開始前封存。Mayor 以 Python3.12、完整歷史
+fixtures、四 frozen modules＋current capture／observer 執行：
+**398 passed、196 subtests passed、零 skip，39.87秒**。
+第一次保存命令誤拼 test filename，零測試執行，未算通過；
+訂正命令後的完整 output 另存，不覆寫已发布 R12 真實 regression failures。
+
+Mayor 另以同 frozen R13 source、PYTHONHASHSEED=7、Train1–3 fit 與
+USED8／9，獨立執行 `--replica-stable-crn ... 181008,181009`。
+完整81,045bytes JSON SHA256
+`b5703b1a652090271ad327fafc73a3e80cb899cc22f528739221b28f71cfd779`
+與 Opus 原報告 **byte-for-byte 一致**，不是只比摘要數字。
+Stable per-birth CRN 是 correctness 修正，development full-cohort
+預測仍未通過共同門檻，不能當成 MPC victory；fresh15／16 尚待完整。
+
+真實 GPU／HTTP smoke 的硬體與設定沒有變更：同一 RTX4090，
+Qwen/Qwen3-4B-Instruct-2507 revision
+`cdbee75f17c01a7cc42f958dc650907174af0554`，vLLM0.30.0，
+BF16／TP1／maxseq32／batchtokens2048／memory0.8／prefix cache OFF，
+既有 batch hooks enabled、observer capture OFF，並非 pristine hooks-disabled。
+
+| 實際觀測 | 結果 | 能支持的結論 |
+|---|---:|---|
+| offered window | 48秒／四 episodes | observation qualification，不是公平控制器 benchmark |
+| HTTP fates | 922＝649 complete＋273 rejected，零 other | 所有 offered fates 有紀錄 |
+| Native observations | 3,346 explicit Gateway tag matches | 649 unique accepted IDs 全部觀測到，沒有猜 opaque native ID suffix |
+| actual SamplingParams.ignore_eos | 3,346筆皆 False | False 路徑已驗證；True 仍未測 |
+| aggregate MPC ledger | 1,696＋267＝1,963 rows | retained bytes 可重現；不能推出 per-UUID lease ownership |
+| Gateway reported status | 兩 epochs closed／dropped0／write_errors0 | reported clean closure，不是 authenticated complete suffix 或 durable ACK |
+
+四 episodes 的 initial／final drain 皆通過；smoke 全649 complete
+為 natural API-stop labels，但未做 MPC／Fixed16／One-move 比較。
+21個 public smoke files 以 tar SHA256
+`cdcb249b397c9bab2c11a8beeb05dc360eaa9444cc1db872319f824dc4a8eafa`
+off-Pod 保存，每個 member SHA256 獨立重驗。Private control 未封存。
+
+### Source 與實驗資格反證
+
+Sol 的 R13 截 suffix counterexample 仍成立：closed status 沒有 final
+sequence／row count／JSONL digest binding。Generic aggregate ledger 沒有
+event UUID，不能以 adjacency／FIFO 宣稱 exact owner；flush 不是 fsync。
+1,963＝3×649＋16 applied commands 的 count agreement 是待檢查 witness，
+不是本文已證明的 full-run closure。R14 將檢查獨立 final Snapshot.sequence
+與 all-assigned fates；若 raw 沒有 final watermark，保留 prefix-only，
+下一 source 才加入相應 producer contract，絕不 hotpatch Source144。
+
+Mayor 直接查 R13 Gemini source 發現仍有部署阻礙：
+`RealNativeCohortRunner` 使用 transport.advance_clock／virtual contention
+plant、非實際 `/native/state` API、sequential client.post，
+以 content="prompt" 加 fictitious prompt_tokens 代替實際 tokenizer
+qualification，並未接真正 GuardedActuator／standard Chat model payload。
+Plant 更令 ignore_eos=True request 超過 max_tokens 後不終止；
+**ignore_eos 只忽略 EOS，不能忽略 max_tokens**。
+它要求 sampling Gateway UUID 不在 client IDs 也不符 Source144：
+Gateway 覆寫 body spoof tag，但使用 validated received benchmark UUID，
+實測 join 應相等。Pipeline unconditional provenance／ITT／censor flags
+和 hardcoded「四 burst 全拒／全收」也不能用作 live proof。
+這些是 CPU mock／部署資格錯誤；原報告 CPU-only scope 與原 source
+保留，沒有把 mock −58tokens 當成 GPU performance。
+
+R13 revised5×128/max512 與舊9×128/max256 anchor geometry 尚未取得
+實際 lifetime／survival 證據，也沒有四模型共識。Source arithmetic
+不能證明4.69秒存活；forced samples 不作自然 Goodput。
+
+### 下一個有資訊價值的實驗與資源
+
+新原生 Beads `pr-native-v3.5`～`.8` 與 caller-owned／merge=local convoy
+`hq-cv-pkmce` 已派給 amber／jade／pearl／flint，實際模型依序為
+claude-opus-5.5／gpt-6-astra／gemini-3.8-flash／gpt-6.1-sol。
+四者都獨立檢查同一 birth／lease／batch interference 問題，再分別實作：
+event-resolved birth lifetime competitor、stable-identity exact prefix＋
+強 One-move、真正 supplied-client streaming HTTP adapter、
+full-run ledger witness／all-assigned protocol audit。
+不增加 MPC weights，不從單一 legacy first-action difference 宣稱 causal value。
+
+Source144 identification03 為 fresh-source continuation，Train15／16
+接 Cal17–36／Val37–40，planned31,200秒。Original H11／H12／H13 sources
+及 gates 先封存；15／16 完整後只執行原 gates，失敗不改5%規則或挑 endpoint。
+Mayor 已在封存後看過部分 Train15 summaries，R14 新模型不得再把
+15／16 稱作 pristine unexposed testing。Cal／Val／Final 不供調參。
+本次 GPU process／driver／120秒 replica monitor 已實際啟動；
+11 complete episodes／1,320新秒＋舊15,960秒＝17,280秒＝4h48m
+是此版 snapshot，不是最終總時數。48秒 smoke 保守不計主 campaign。
+
+Native03 擁有 backend，cohort traffic 不可平行注入；真正 True
+ignore-EOS／controlled cohort 在安全完整 boundary 或本次 driver 完成後
+執行，不能停掉 partial 後當作 valid。12h driver／13h service timeout
+獨立於 local monitor；結束／失敗後依 PID26392／startticks101822168
+及 command hash 精確停止 owned inference，禁止 reuse 舊 PID。
+這不等於停止 Pod billing：provider lifecycle／hourly USD 未取得，
+保留 Pod 的既有授權不代表免費。
+
+14:51:55Z 四 current native sessions deduplicated usage 為
+Opus3,346.58492、Astra8,029.45735、Gemini1,792.5978225、
+Sol1,396.08977，合14,564.7298625 credits；
+排除 Mayor／舊 sessions／provider invoice，不用 generic cost 當 credits。
+十小時主 campaign、fresh gates、真正閉環 superiority 仍未完成。
+
+### 可追溯證據
+
+`results/mpc-native-v3/review-evidence/`：
+
+- `native-v3-r13-frozen-source.tar.gz`／`native-v3-r13-source-manifest.json`
+- `native-v3-r13-mayor-current-source-qualification.txt`
+- `observation-smoke-144cef3-public.tar.gz`／對應 member manifest
+- `native-v3-r13-actual-observation-qualification.json`
+- `native-v3-r13-stable-crn-mayor-replica.json.gz`
+- `native-v3-r13-r14-native-worker-usage-snapshot.json`
+
+原始 R12 regression、失敗 Native14、此前負面 model／deadline 證據全部保留。
