@@ -14,14 +14,21 @@
     "source_commit": "144cef32a9b51c3a74355ff67f5eafdfac6e075f",
     "gateway_sha256": "a4a8229b0f636b64c945881d062c3ee925ef5fccc5ba2e6fc7629657d3575ea7",
     "owner_journal": false,
+    "future_collection_extension_commit": "a577de3fa8b11c2954765fad176fdb4047b7d4c5",
+    "future_collection_extension_sha256": "7bedff0aa2097a30938cb4e19744e86da86c7999cb7bab950ba2d93fe2f1a1ac",
+    "legacy_collector_sha256": "78e2c8b91f6b4a582feb69293adff5aa34d4fbd332dfa93b92735bcd0275a069",
     "forced_ignore_eos_cohort_may_replace_natural_data": false,
-    "bridge_requirement": "Strict registered Source144 input bridge; no refit, registry alias or old-data/new-tag qualification."
+    "bridge_requirement": "Separate versioned input-bridge qualification for the actual future protocol hash is still required before exposure; serving Source144 and unchanged kernels do not qualify a changed collection protocol. No refit, registry alias or old-data/new-tag qualification."
   },
   "H16": {
     "purpose": "Measurement identification only; no forecast score or controller-performance claim.",
     "train_blocks": [181043, 181044],
-    "candidate_source_commit": "d1bd1e5f6262eda1ee29867689a810a475797c73",
-    "candidate_gateway_sha256": "23aef8b8b903eda99ea325fd8ece09d998c174df39f2d1230ed5b9cc37e4ce3a",
+    "candidate_source_commit": "104e65a69df73997b977bce2588b655ae714f45d",
+    "candidate_gateway_sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570",
+    "candidate_revision_before_collection": "R17 actual-body closing and foreign-nonledger-row CPU failures prevented d1bd live qualification. Serialize closing/mutation and seal every-row run identity in a distinct source, with122 CPU regressions passed. No claim of native reachability or source authentication.",
+    "prior_unqualified_candidate_commit": "d1bd1e5f6262eda1ee29867689a810a475797c73",
+    "future_collection_extension_commit": "a577de3fa8b11c2954765fad176fdb4047b7d4c5",
+    "future_collection_extension_sha256": "7bedff0aa2097a30938cb4e19744e86da86c7999cb7bab950ba2d93fe2f1a1ac",
     "collection_blocked_until": [
       "Exact new source/core/cost/observer/capture/protocol identity is sealed and independently qualified before exposure.",
       "The existing identification03 backend ownership has ended; no cohort or source injection into its ongoing runs.",

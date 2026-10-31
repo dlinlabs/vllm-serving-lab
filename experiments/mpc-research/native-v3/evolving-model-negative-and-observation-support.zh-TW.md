@@ -1,5 +1,114 @@
 # NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
+## NV3-021：R17 received-state與 paired caller 邊界
+
+| Worker | R17 source seal | 本輪接受的 CPU scope |
+|---|---|---|
+| Opus／amber | `322624762ad2aa97ea0e74cd9b1dd1d8b864fe2e` | actual d1bd lifespan／written seal／count16 pipeline proof |
+| Astra／jade | `30e8e8900068731be24f102a23ba61898abf49ac` | received prefix／unknown suffix／server-window all-assigned bounds |
+| Gemini／pearl | `c4e70903fae3cf5d9d59710af76a7e5ab749794b` | genuine leaf explicit permit／server ACK／absolute timing／counter brackets |
+| Sol／flint | base `f2ad1fddc8edc2a8df84abe8a597583f22459e5d`; confirmation `d41aaf1e32f9f63af9c1190e25a14f8d8757a521` | actual closing-body／foreign-row failures與104e conditional confirmation |
+
+Mayor 的 complete-fixture主命令實際是484 passed／282 subtests、
+1 failed，136.55秒。唯一 failure 是 unchanged Sol witness 呼叫
+`git show 5aec…`，繼承非 Git 的 Mayor cwd；改在 primary repo，
+又因該 Git context 沒有 canonical Gemini path 而拒絕。最後在保存
+byte-verified5aec source 的 Gemini repo 僅跑該1項，1 passed、0.24秒。
+合計485項必要測試均已執行通過；保留兩份 failure輸出與真正 pass，
+不捏造單次485／零 failure，不修改 sealed test／source binding。
+
+### Owner closing與整檔 epoch，不是 blanket closure
+
+Sol 用 actual request-body receive 重現：d1bd兩個 budget endpoints
+在 `await request.json()` 前檢查 closing；若在 await 中 closing＋
+disable writer，後面仍能200、version1／producer1／buffer0。
+這是 CPU actual-body race，不是已证明 production reachability。
+Opus 另執行 actual lifespan／final_drain／persist_status，重現 foreign
+non-ledger rows 留在 append-mode檔案仍可能 closed；owner schema不能
+只核對 ledger rows 而忽略其他 epoch rows。
+
+新的本機候選 `104e65a69df73997b977bce2588b655ae714f45d`，
+Gateway SHA`0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570`，
+位於 `mpc-native-owner-serialized-journal`。Closing marker和兩個
+budget handlers 的 post-body check／mutation 共用 `state_lock`，
+seal 要求每一行同 run；122項 focused regression pass、0.89秒。
+Sol 兩個新 methods／四個 subtests 在 exact104e CPU body/file 上
+確認503、不變 budget／version／producer／buffer，以及 foreign
+non-ledger row completeness=false；同 run control仍 closed。
+他的 module bytes保持與f2ad相同，沒有增加 production binding。
+Original a4ec／d1bd分别在 original owner／written paths維持 detached、
+byte-exact，旧 failure仍有效，不把新code當作旧epoch。
+No auth／fsync／online-cut／physical／Native MPC permit。
+
+### Received prefix與 genuine window，不選 survivor point
+
+Astra 的 exact d1bd source probe用 server applied_at10、ACK receive10.2，
+target是11而非11.2。Cut.6仍只有 watermark3／cost20／budget16；
+missing release／gap／final seal都不能讓 received prefix變成 current
+cut truth。兩 assigned counter brackets 的mean是[36,48]，
+disappearance／reset擴成[18,152]，dropped frame是[0,48]；
+unknown application保留[0,256]、targetunknown，不產生 pointmean或permit。
+R14／R15／R16 complete raw全部byte-identical，4cuts兩策略都16、
+12cuts都32，unknown／deadline failures與 H11–H14裁定不變。
+
+Gemini c4e leaf修復 missingpermit noPOST、server ACK applied_at、
+absolute apply+offset／apply+1秒、四點monotone counter brackets、
+censored時丟棄 survivor mean並保留 assigned N=5。
+但 Mayor檢查 directly dependent paired caller後仍找到：
+Optional mean／delta用`.2f`會在 censor／missingpermit crash；
+transport path仍自動建立 approved一小時permit；
+nondegenerate brackets的point差不能當已辨識的 causal-effect差。
+修復需以[B.lower−A.upper, B.upper−A.lower]判定，
+unknown不能偽裝成精確point，negative margin需 proper ITT／censor gates。
+Gemini與 Sol正做 bounded same-task caller修復／獨立反證，
+c4e CPU全過不代表整個 adapter可以上 GPU。
+
+Sol後續 `bf28816d92b256802a72c8c757f933db1ddce2e4` 執行完整c4e
+paired-function AST，僅stub Runner／receipt／permit constructor：
+missingpermit／censor在兩armcalls後TypeError；A[10,30]／B[0,25]
+的lower-point delta−10會错误falsify，實際contrast interval卻是[-30,15]；
+transport無explicitoperator仍建2個approvedpermits，
+ITT／allassigned=false也能falsification=true。這是新c4e直接caller反證，
+不是舊5aec故障重貼。Worker僅3 focused tests／2 subtests；
+Mayor也只重跑這3項，3 passed／2 subtests、0.51秒。
+115／191歷史suite沒有因這次follow-up重跑或併成另一份full receipt，
+所有statistical／Native／MPC permits仍false。
+
+### Fresh factory與真正 count16 pipeline分開封存
+
+實際舊 collector factory只允许 first_train_block<16、
+共40 blocks；CLI會拒絕不等於factory的protocol，因此不能把預留的
+41–44寫進旧header或重標Cal。另一個本機分支
+`research/pr33-native-v3-prospective-driver`，commit
+`a577de3fa8b11c2954765fad176fdb4047b7d4c5`，加入 separate opt-in
+factory／CLI；13項future／legacy tests pass、0.37秒。
+原 collector SHA78e2完全不變；只允许 exact H14 Source14441／42，
+以及 H16 serialized-owner104e43／44，20 episodes／2,400秒、
+common natural tapes／complementary schedules／drained paired epochs，
+tampered source／split／scope拒絕。CLI operator attestations
+`--backend-free`／`--epoch-qualified`不是 verifier、authentication或permit；
+不在 existing identification03 backend上執行，不發動GPU。
+Actual future protocol hash和新 versioned input bridge仍須在曝光前資格，
+不能用「serving Source144不變」冒充「新 collection protocol已資格」。
+H16在任何collection之前改為104e候選；d1bd只留下historical CPU proof，
+Gemini receipt的「43／44qualified」不得解讀為 Native資格。
+
+Opus actual protected path可得到16 in-flight／2waiting／2rejected，
+cost被忽略、UUID tags仍有效；這是真count policy，不是budget32。
+但 launcher allow-list之後強制 cost_aware，旧 collector要求
+`/admin/mpc/state`（protected回409），旧actions只有cost16／32，
+owner journal也要求cost_aware。故整條unchangedpipeline不支持
+真正 FixedConcurrency16；需要另封存 count protocol／collector、
+MAX_WAITING與公平自然 SLO指标，不把不存在的baseline称作已比較。
+
+17:30:41Z 新85完整episodes／170 artifacts經finalized ledger核對，
+10,200秒＋旧15,960秒＝26,160有效秒（7h16m）。未讀Cal／Val outcomes，
+acquisition／ten-hour notifier／owned shutdown monitor持續。
+十小時、fair native baseline與MPCsuperiority未完成；USD／provider
+billing stop未核實。完整source／canonicalraw／所有資格輸出／local-only
+104e與a577 patches／資源在
+`results/mpc-native-v3/review-evidence/round17-required-coverage-source-and-evidence-manifest.json`。
+
 ## NV3-020：R16 written seals與實際 HTTP 邊界
 
 四個實際原生模型 R16 base sources 封存為12檔；Gemini actual-schema

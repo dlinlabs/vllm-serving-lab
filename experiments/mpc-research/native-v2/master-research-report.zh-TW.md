@@ -13,6 +13,36 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-021：R17 真實 clock／received-prefix 資格，不等於完成 Native adapter。**
+四模型 R17 sealed sources 的主命令484 passed／282 subtests，
+只有一個 frozen `git show 5aec…` witness 因 Mayor cwd 不是 Git repo 而失敗；
+改在 primary repo 又因 canonical Gemini path 不存在而拒絕。
+在實際保存該 Git source 的 Gemini repo，僅重跑這一項，1 passed。
+合計 **485項必要測試已執行通過**，全部來源／cwd 失敗輸出保留，
+沒有宣稱單次485／零 failure。Gemini leaf 已改用 server apply10、
+receipt10.2仍 target11、explicit permit／absolute timing／all-assigned brackets；
+Mayor 再找到 paired caller 的 Optional `.2f` crash、transport auto-approval
+與 point-delta 解讀問題，正在修正，沒有開放 Native pilot。
+
+Sol／Opus 以 actual body／file CPU execution 找出 d1bd closing race
+與 foreign non-ledger row seal hole。新的本機候選 `104e65a` 將 closing
+和 post-body budget mutation 放在同一 state lock、所有 rows 需同 run，
+**122項 CPU regression 通過**；Sol 另以 bounded actual-source cases 確認。
+原 a4ec／d1bd 在原 paths 保持 detached、byte-exact，不重新貼 source tag。
+另一個隔離本機 `a577de3` 支援原 factory 無法合法生成的 H14 natural
+Train41／42與 H16新 owner Train43／44，**13項 factory／legacy測試通過**，
+原 collector78e2 bytes 不變；新 protocol／input bridge 仍須另資格。
+H16候選已在收集前改為104e，d1bd不能稱作 Native-qualified。
+
+強 FixedConcurrency16 在 Gateway 的 protected path 是真實 count policy，
+但現有 launcher 強制 cost_aware，collector 也要求該模式的 admin state；
+整條 pipeline 不能不改 protocol／collector便假稱 Fixed16。
+要另封存 count baseline與 MAX_WAITING，不能將 cost budget32改名。
+17:30:41Z ledger 核對85個新完整 episodes／170 artifacts，
+**26,160有效秒＝7h16m**；十小時、強 baseline 實驗與 MPC勝出仍未完成。
+完整 source、raw、local-only patches與限制見
+[R17 received-state與 paired caller 邊界](../native-v3/evolving-model-negative-and-observation-support.zh-TW.md#nv3-021r17-received-state與-paired-caller-邊界)。
+
 **NV3-020：written seal 與真實 apply clock 分開核對。**
 四模型 R16 sealed sources，以及 Gemini `5aecb10` 的實際 observer
 schema／UUID 修復，已由 Mayor 重現：主命令457 passed／252 subtests、
