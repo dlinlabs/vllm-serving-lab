@@ -13,6 +13,16 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**最新R8 fitted model：** Mayor241tests／152subtests通過，
+admission／birth hybrid的五秒Good MAE4.08／同-mask additive5.93，
+paired factual delta4.17／零差異5.91，raw byte-for-byte重現。
+但一秒較差、Good bias−1.26、rejection bias+3，scenario bands under-cover；
+不是MPC Goodput提升、GPU service law或plan-ranking保證。
+另一個direct IO fit的負面結果也已重現；兩模型aggregate masks不同，不能直接投票。
+真正callback bridge與公平CPUharness完成，Native整合／risk／MPC permit仍缺。
+未改動v5的Train6／7 replication先預註冊，Final仍未曝光。
+詳見[fitted birth-response與runtime工程](../native-v3/fitted-birth-response-and-runtime-components.zh-TW.md)。
+
 **最新R7反證：** 四模型完整互審 source 已凍結，Mayor217 tests／146 subtests
 通過，Native Trace plan-response raw JSON 與 Worker byte-for-byte 相同。
 五秒完整 additive plan 的 Good paired-difference MAE8.15，
