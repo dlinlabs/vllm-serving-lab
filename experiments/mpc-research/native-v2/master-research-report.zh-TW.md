@@ -13,6 +13,14 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**最新長時結果：long01在30個完整episodes／3,600秒後因三次guarded
+assignment未獲ACK而中止；十小時尚未完成。** 失敗partial與pending
+證據已off-Pod保留；owned Gateway與vLLM已停止，Pod保留且billing停止
+未驗證。正在準備不放寬TTL的confirmed-hold修訂及完整block恢復。
+四模型R4已凍結，Mayor171 tests／128 subtests通過；原生Trace recursive
+joint forecast在1秒有訊號、5秒Good仍輸history baseline，沒有MPC勝出。
+詳見 [長時失敗、實際joint反證與受控恢復](../native-v3/long-run-failure-and-joint-model.zh-TW.md)。
+
 目前本機工作分支為 `research/pr33-native-v3-ten-hour`。新 Pod 的 vLLM
 0.30.0／Qwen3-4B／RTX4090 已完成 16-arm、40 自然 EOS HTTP qualification。
 新版 physical／delivered accounting 有效，8 個原 strict-v2 失敗完整保留；

@@ -1,4 +1,5 @@
 import importlib.util
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -59,3 +60,42 @@ def test_native_wire_usage_and_capped_outcomes_do_not_invent_goodput():
     assert result["natural_cohort_good"] == 1
     assert result["natural_in_window_good"] == 0
     assert result["capped"] == result["rejected"] == 1
+
+
+def test_continuation_skips_only_verified_complete_train_blocks():
+    full = module.protocol_for("a"*40, {})
+    resumed = module.protocol_for("b"*40, {}, completed_blocks=3)
+    assert resumed["episodes"] == full["episodes"][30:]
+    assert resumed["planned_offered_window_s"] == 44400
+    previous = dict(schema=module.SCHEMA, source_commit="a"*40,
+        actual_offered_window_s=3600, episodes=full["episodes"][:30])
+    assert module.continuation_evidence(resumed, previous)["complete_seed_blocks"] == 3
+    for invalid in ({**previous, "actual_offered_window_s":3599},
+                    {**previous, "episodes":previous["episodes"][:-1]}):
+        with pytest.raises(ValueError):
+            module.continuation_evidence(resumed, invalid)
+    for count in (True, -1, 16):
+        with pytest.raises(ValueError):
+            module.protocol_for("a"*40, {}, completed_blocks=count)
+
+
+def test_confirmed_hold_requires_fresh_unchanged_applied_provenance():
+    from mpc_lab.contracts import ModelParameters, Snapshot
+
+    parameters = ModelParameters()
+    snapshot = Snapshot("run", "clock", 10.0, 32, 7, (), parameters.identity)
+    acknowledgment = dict(run_id="run", clock_domain="clock", budget=32,
+        budget_version=7, applied_at=9.9, operation_id="old-operation")
+    result = module.held_budget_evidence(snapshot, acknowledgment, parameters, "clock", 10.1)
+    assert result["status"] == "confirmed_hold"
+    assert result["reference_operation_id"] == "old-operation"
+    assert "command" not in result and "acknowledgment" not in result
+    for invalid in (replace(snapshot, budget=16), replace(snapshot, budget_version=8),
+                    replace(snapshot, run_id="other"), replace(snapshot, complete=False)):
+        with pytest.raises(ValueError):
+            module.held_budget_evidence(invalid, acknowledgment, parameters, "clock", 10.1)
+    with pytest.raises(ValueError, match="stale"):
+        module.held_budget_evidence(snapshot, acknowledgment, parameters, "clock", 10.6)
+    with pytest.raises(ValueError, match="clock_domain"):
+        module.held_budget_evidence(replace(snapshot, clock_domain="foreign", sampled_at=float("nan")),
+            acknowledgment, parameters, "clock", 10.1)

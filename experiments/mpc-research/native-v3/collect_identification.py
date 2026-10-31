@@ -23,13 +23,16 @@ CELLS = {
 }
 
 
-def protocol_for(source, cost_spec, smoke=False):
+def protocol_for(source, cost_spec, smoke=False, completed_blocks=0):
     if len(source) != 40 or any(c not in "0123456789abcdef" for c in source):
         raise ValueError("exact source commit required")
     count, duration = (1, 12) if smoke else (40, 120)
+    if type(completed_blocks) is not int or not 0 <= completed_blocks < 16 or (
+            smoke and completed_blocks):
+        raise ValueError("continuation may skip only complete Train seed blocks")
     cells = ("p128-m128", "mixed") if smoke else tuple(CELLS)
     episodes = []
-    for block in range(count):
+    for block in range(completed_blocks, count):
         seed = (180001 if smoke else 181001) + block
         split = "train" if smoke or block < 16 else "calibration" if block < 36 else "validation"
         for cell in cells:
@@ -49,12 +52,55 @@ def protocol_for(source, cost_spec, smoke=False):
         split_unit="Independent arrival/action seed block; cells and arms are correlated",
         contrasts="Whole assigned sequences, not same-state pointwise causal differences",
         assignment_order="Independent prespecified randomized arm order per block/cell",
+        completed_seed_blocks=completed_blocks,
+        assignment_execution="Changed budgets require guarded applied ACK; unchanged budgets "
+                             "require a fresh same-version observation of the prior applied ACK",
         gateway_epoch_episode_limit=2,
         epoch_scope="Drained paired-episode rollover; retain the production 1024-operation "
                     "idempotency ceiling; do not evict outcomes or restart native vLLM",
         observer_scope="Native observer samples; no CUDA timing or pristine-hook claim",
         final_test_used=False, planned_offered_window_s=sum(e["duration_s"] for e in episodes),
         minimum_requested_experiment_s=36000 if not smoke else None, episodes=episodes)
+
+
+def continuation_evidence(protocol, previous):
+    count = protocol["completed_seed_blocks"]
+    if not count or not isinstance(previous, dict):
+        raise ValueError("continuation requires a prior complete-block index")
+    expected = protocol_for(protocol["source_commit"], protocol["cost_spec"])["episodes"][:count*10]
+    if (previous.get("schema") != SCHEMA
+            or previous.get("actual_offered_window_s") != count*1200
+            or [e.get("episode_id") for e in previous.get("episodes", [])]
+            != [e["episode_id"] for e in expected]):
+        raise ValueError("previous index does not establish the complete prescribed blocks")
+    return dict(previous_source_commit=previous["source_commit"],
+                complete_seed_blocks=count, completed_offered_window_s=count*1200,
+                scope="Only complete blocks skipped; failed partial evidence remains in prior run")
+
+
+def held_budget_evidence(snapshot, acknowledgment, parameters, domain, now):
+    from mpc_lab.controller import validate_snapshot
+
+    reason = validate_snapshot(snapshot, now=now, clock_domain=domain,
+        expected_identity=parameters.identity, max_age_s=.5)
+    if reason:
+        raise ValueError(reason)
+    if (snapshot.run_id != acknowledgment["run_id"]
+            or snapshot.clock_domain != acknowledgment["clock_domain"]
+            or snapshot.budget_version != acknowledgment["budget_version"]
+            or snapshot.budget != acknowledgment["budget"]
+            or snapshot.budget not in parameters.supported_budgets):
+        raise ValueError("held budget changed or lost its applied provenance")
+    if any(mark.cost != parameters.cost_spec.estimate(mark.prompt_tokens, mark.max_tokens)
+           for mark in snapshot.requests):
+        raise ValueError("cost_spec_mismatch")
+    if not acknowledgment["applied_at"] <= snapshot.sampled_at <= now:
+        raise ValueError("held budget chronology differs")
+    return dict(status="confirmed_hold", budget=snapshot.budget,
+                run_id=snapshot.run_id, clock_domain=snapshot.clock_domain,
+                budget_version=snapshot.budget_version, confirmed_at=now,
+                reference_operation_id=acknowledgment["operation_id"],
+                scope="Existing applied budget observed; no new command or ACK manufactured")
 
 
 def tape_for(seed, cell, duration):
@@ -126,10 +172,20 @@ async def run(args, protocol):
     observer_hash = hashlib.sha256(Path(pr33_native_observer.__file__).read_bytes()).hexdigest()
     parameters = ModelParameters(cost_spec=CostSpec(**protocol["cost_spec"]),
         model_version="native-id-unfitted-v1", calibration_version="unfitted-not-validated")
+    continuation = None
+    if protocol["completed_seed_blocks"]:
+        if args.previous_index is None:
+            raise ValueError("continuation requires the preserved previous index")
+        raw_previous = args.previous_index.read_bytes()
+        previous = json.loads(raw_previous)
+        continuation = continuation_evidence(protocol, previous)
+        if previous.get("model_identity") != parameters.identity.__dict__:
+            raise ValueError("continuation cost/core/model identity differs")
+        continuation["previous_index_sha256"] = hashlib.sha256(raw_previous).hexdigest()
     index = dict(schema=SCHEMA, source_commit=protocol["source_commit"],
         implementation_hash=implementation_hash(), protocol_sha256=hashlib.sha256(args.protocol.read_bytes()).hexdigest(),
         collector_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        model_version=parameters.model_version, controller_version="prespecified-cap-sequence-v1",
+        model_version=parameters.model_version, controller_version="prespecified-cap-sequence-v2-confirmed-holds",
         model_identity=parameters.identity.__dict__, clock_domain=domain,
         actual_offered_window_s=0, experiment_started_at=time.monotonic(),
         started_at_utc=datetime.now(timezone.utc).isoformat(),
@@ -137,7 +193,7 @@ async def run(args, protocol):
         gpu_environment=dict(model_snapshot=config["MODEL_NAME"],
             software={p:importlib.metadata.version(p) for p in ("vllm", "torch", "transformers")},
             native_launch=json.loads(args.vllm_launch.read_text())),
-        calibrated=False, mpc_active=False, episodes=[])
+        calibrated=False, mpc_active=False, continuation=continuation, episodes=[])
     persist(output/"index.json", index)
     tokenizer = AutoTokenizer.from_pretrained(config["MODEL_NAME"], local_files_only=True)
     managed_gateway = None
@@ -186,8 +242,14 @@ async def run(args, protocol):
                     await asyncio.sleep(1)
             raise ValueError("gateway readiness not established")
         expires_at = time.monotonic()+protocol["planned_offered_window_s"]+14400
+        class MeasuredActuator(GuardedActuator):
+            def _save(self, command):
+                started = time.monotonic()
+                super()._save(command)
+                self.last_journal_timing = dict(started_at=started,
+                    finished_at=time.monotonic(), not_after=command["not_after"])
         def actuator(snapshot):
-            return GuardedActuator(client, parameters, output/"actuator-pending.json",
+            return MeasuredActuator(client, parameters, output/"actuator-pending.json",
                 permit=IdentificationPermit(parameters.identity, approved=True, run_id=snapshot.run_id,
                     clock_domain=domain, expires_at=expires_at), enabled=True, max_age_s=.5)
         try:
@@ -241,11 +303,16 @@ async def run(args, protocol):
                 response = await client.get("/admin/mpc/state")
                 response.raise_for_status()
                 snapshot = snapshot_from_dict(response.json())
+                driver.last_journal_timing = None
                 result = await driver.submit(snapshot, Decision(budget, None, "identification_assignment",
                     False, None, None, 0, 0, 0, parameters.identity))
-                attempts.append(dict(fence=fence, reply=result, received_at=time.monotonic()))
+                attempt = dict(fence=fence, reply=result, received_at=time.monotonic(),
+                               journal_timing=driver.last_journal_timing)
+                if result["status"] == "pending" and driver.path.exists():
+                    attempt["retained_pending_command"] = json.loads(driver.path.read_text())
+                attempts.append(attempt)
                 if result["status"] == "applied":
-                    return
+                    return result["acknowledgment"]
                 await asyncio.sleep(.11)
             raise ValueError("bounded assignment failed; no unacknowledged action accepted")
         try:
@@ -258,11 +325,12 @@ async def run(args, protocol):
                     initial = await ready_gateway()
                     driver = actuator(initial)
                 episode = {**specification, "rows":[], "native_frames":[], "actions":[],
+                           "held_assignments":[],
                            "gateway_run_id":initial.run_id}
                 episode_path = output/(specification["episode_id"]+".json")
                 episode["initial_drain"] = await drain()
                 episode["preassignment"] = []
-                await assign(specification["schedule"][0]["budget"], episode["preassignment"])
+                first_ack = await assign(specification["schedule"][0]["budget"], episode["preassignment"])
                 tape = tape_for(specification["seed_block"], specification["cell"], specification["duration_s"])
                 rng = random.Random(f"payloads:{specification['seed_block']}:{specification['cell']}")
                 payloads = []
@@ -302,11 +370,22 @@ async def run(args, protocol):
                         event("native_frame", frame)
                         await asyncio.sleep(.1)
                 async def controls():
+                    last_ack = first_ack
                     for action in specification["schedule"][1:]:
                         await asyncio.sleep(max(0, episode["start"]+action["at_s"]-time.monotonic()))
+                        if action["budget"] == last_ack["budget"]:
+                            if driver.path.exists():
+                                raise ValueError("pending command cannot establish a held budget")
+                            snapshot = await driver._state()
+                            hold = {**action, **held_budget_evidence(snapshot, last_ack,
+                                parameters, domain, time.monotonic()),
+                                "state_observation":driver.last_state_observation}
+                            episode["held_assignments"].append(hold)
+                            event("held_assignment", hold)
+                            continue
                         receipt = {**action, "attempts":[]}
                         episode["actions"].append(receipt)
-                        await assign(action["budget"], receipt["attempts"])
+                        last_ack = await assign(action["budget"], receipt["attempts"])
                         event("action", receipt)
                 async def offers():
                     await asyncio.gather(*(capture_chat(client, "/v1/chat/completions", payload, rid,
@@ -378,6 +457,8 @@ def main():
     parser.add_argument("--prepare", action="store_true")
     parser.add_argument("--source-commit")
     parser.add_argument("--smoke", action="store_true")
+    parser.add_argument("--completed-blocks", type=int, default=0)
+    parser.add_argument("--previous-index", type=Path)
     args = parser.parse_args()
     if args.prepare:
         sys.path.insert(0, str(ROOT))
@@ -387,13 +468,15 @@ def main():
             response = client.get("http://127.0.0.1:8080/admin/mpc/state",
                 headers={"x-admin-api-key":config["ADMIN_API_KEY"]})
             response.raise_for_status()
-        protocol = protocol_for(args.source_commit, response.json()["cost_spec"], args.smoke)
+        protocol = protocol_for(args.source_commit, response.json()["cost_spec"],
+                                args.smoke, args.completed_blocks)
         with args.protocol.open("x") as stream:
             json.dump(protocol, stream, indent=2, allow_nan=False)
     else:
         protocol = json.loads(args.protocol.read_text())
         smoke = protocol["minimum_requested_experiment_s"] is None
-        if protocol != protocol_for(protocol["source_commit"], protocol["cost_spec"], smoke):
+        if protocol != protocol_for(protocol["source_commit"], protocol["cost_spec"], smoke,
+                                    protocol["completed_seed_blocks"]):
             raise ValueError("protocol not identical to prespecified factory")
         if args.gateway_plan is None:
             raise ValueError("campaign requires prespecified drained gateway epoch rollover")
