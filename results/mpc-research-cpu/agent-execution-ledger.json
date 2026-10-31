@@ -1,0 +1,176 @@
+{
+  "phase": "cpu_complete_native_blocked",
+  "implementation_source_commit": "de36581f16fc39784297aadcd6186883aaf1d35a",
+  "implementation_hash": "b297a58010cc33c9b577de530c9fcba5db968338d21b0b575382bf94b1a52a7c",
+  "final_cpu_validation": {
+    "python": "3.12.16",
+    "passed": 1976,
+    "failed": 0,
+    "skipped": 1,
+    "warnings": 1,
+    "duration_s": 304.02,
+    "junit": "results/mpc-research-cpu/final-full-junit.xml",
+    "native_skip": "Native vLLM is not installed in this CPU-only environment"
+  },
+  "benchmark_result": "Synthetic MPC loses to development-selected fixed16; no native superiority claim",
+  "benchmark_artifact": "results/mpc-research-cpu/policy-benchmark.json",
+  "research_source": "8e92371f342be98a50682bf4e2ddbb014665498b",
+  "convoy": "hq-cv-8tdlf",
+  "research_independence": "Round1 reports all existed before peer release; Round2 adversarial; Round3 revision and draft review",
+  "agents": [
+    {
+      "polecat": "obsidian",
+      "profile": "copilot-opus",
+      "expected_model": "claude-opus-5.5",
+      "actual_models": [
+        "claude-opus-5.5"
+      ],
+      "usage_records": 116,
+      "first_usage": "2026-10-30T01:22:38.899Z",
+      "last_usage": "2026-10-30T02:17:03.699Z",
+      "events_sha256": "efaab02131465efeff06b3dd2c612415dffc82c13e8c5c69fef69a9ab2a91a85",
+      "worker_status": "terminated_by_mayor_after_push_incident",
+      "session_id": "7cb63bd9-0008-4311-bbc0-583d866fe44c",
+      "events_path": "/home/daniel_lin/.copilot/session-state/7cb63bd9-0008-4311-bbc0-583d866fe44c/events.jsonl",
+      "native_branch": "polecat/obsidian/pr-mpc-opus@mvuabvov",
+      "research_rounds_complete": 3,
+      "reports": [
+        {
+          "round": 1,
+          "path": "experiments/mpc-research/proposals/opus-round1.md",
+          "sha256": "b1d7ca68a2ec38fd6bf8052b566641370ee15967125804ad7b577435d2d25c67",
+          "bytes": 41038
+        },
+        {
+          "round": 2,
+          "path": "experiments/mpc-research/proposals/opus-round2.md",
+          "sha256": "e0aa63f3435ecc99df94f9ee2482c35d4bdd90dc3dadca0a6ee2ebd120d577d7",
+          "bytes": 26740
+        },
+        {
+          "round": 3,
+          "path": "experiments/mpc-research/proposals/opus-round3.md",
+          "sha256": "f156fdaf7222c1d0b6d5495b6d0ecbc63b7e3b8bede3c67bbe95f8f9514a0334",
+          "bytes": 48899
+        }
+      ]
+    },
+    {
+      "polecat": "quartz",
+      "profile": "copilot-astra",
+      "expected_model": "gpt-6-astra",
+      "actual_models": [
+        "gpt-6-astra"
+      ],
+      "usage_records": 54,
+      "first_usage": "2026-10-30T01:22:40.518Z",
+      "last_usage": "2026-10-30T02:14:36.329Z",
+      "events_sha256": "fc2c37049c87c111db595105c46dcdb31c2e2fb6a95e397ddcde207a9076b9b9",
+      "worker_status": "terminated_by_mayor_after_push_incident",
+      "session_id": "4408b6a4-9597-4d9c-9852-7ef0e1463943",
+      "events_path": "/home/daniel_lin/.copilot/session-state/4408b6a4-9597-4d9c-9852-7ef0e1463943/events.jsonl",
+      "native_branch": "polecat/quartz/pr-mpc-astra@mvuacm2e",
+      "research_rounds_complete": 3,
+      "reports": [
+        {
+          "round": 1,
+          "path": "experiments/mpc-research/proposals/astra-round1.md",
+          "sha256": "dbc98841590575cf7d2bbeceb7aa04a09cf79871b309580b0930503bf30754d0",
+          "bytes": 54397
+        },
+        {
+          "round": 2,
+          "path": "experiments/mpc-research/proposals/astra-round2.md",
+          "sha256": "af7814d3cb372b9c2c9baa897380ed45c1bf3de649a794438e717eec6918e939",
+          "bytes": 43861
+        },
+        {
+          "round": 3,
+          "path": "experiments/mpc-research/proposals/astra-round3.md",
+          "sha256": "9e8257e3cb51c5cc4ef108be29dbb96a003baac1b5613e3b2ebbd19eb6a7a24b",
+          "bytes": 54058
+        }
+      ]
+    },
+    {
+      "polecat": "jasper",
+      "profile": "copilot-gemini",
+      "expected_model": "gemini-3.8-flash",
+      "actual_models": [
+        "gemini-3.8-flash"
+      ],
+      "usage_records": 97,
+      "first_usage": "2026-10-30T01:22:39.970Z",
+      "last_usage": "2026-10-30T02:14:00.260Z",
+      "events_sha256": "83808aae968288c156e36a945a5befde83680a489edb4f93f8000598839116b5",
+      "worker_status": "terminated_by_mayor_after_push_incident",
+      "session_id": "e11dddcb-155e-4326-ac42-ee1d7baaf993",
+      "events_path": "/home/daniel_lin/.copilot/session-state/e11dddcb-155e-4326-ac42-ee1d7baaf993/events.jsonl",
+      "native_branch": "polecat/jasper/pr-mpc-gemini@mvuadcnu",
+      "research_rounds_complete": 3,
+      "reports": [
+        {
+          "round": 1,
+          "path": "experiments/mpc-research/proposals/gemini-round1.md",
+          "sha256": "4f6992a165c6710994b25916a8649d8434315038a1114fc7afb60264fb6598ca",
+          "bytes": 32485
+        },
+        {
+          "round": 2,
+          "path": "experiments/mpc-research/proposals/gemini-round2.md",
+          "sha256": "424aff6784ad5d7573db5f63f578aadf5b15750db75620a72a1cc817230bf3bc",
+          "bytes": 23533
+        },
+        {
+          "round": 3,
+          "path": "experiments/mpc-research/proposals/gemini-round3.md",
+          "sha256": "5ea9bcd36c677a74ad846ee832dd33a0ce8cf0b14c4ffa96a3ba9a48bc800775",
+          "bytes": 30897
+        }
+      ]
+    },
+    {
+      "polecat": "onyx",
+      "profile": "copilot-gpt",
+      "expected_model": "gpt-6.1-sol",
+      "actual_models": [
+        "gpt-6.1-sol"
+      ],
+      "usage_records": 67,
+      "first_usage": "2026-10-30T01:22:41.450Z",
+      "last_usage": "2026-10-30T02:23:32.344Z",
+      "events_sha256": "2982212c9f21ac9b3b76cffffd9e2b7e0974f65c7020a393fe2314b4c9f46fae",
+      "worker_status": "terminated_by_mayor_after_push_incident",
+      "session_id": "e64f7ee5-cfd9-4a49-b21e-1619d651662e",
+      "events_path": "/home/daniel_lin/.copilot/session-state/e64f7ee5-cfd9-4a49-b21e-1619d651662e/events.jsonl",
+      "native_branch": "polecat/onyx/pr-mpc-gpt@mvuae3uv",
+      "research_rounds_complete": 3,
+      "reports": [
+        {
+          "round": 1,
+          "path": "experiments/mpc-research/proposals/gpt-round1.md",
+          "sha256": "84a0eb0ad207ae4cb3d42133c54786f784f9da846c6d3a00bf1bf281d959be97",
+          "bytes": 63986
+        },
+        {
+          "round": 2,
+          "path": "experiments/mpc-research/proposals/gpt-round2.md",
+          "sha256": "092f7441fe0fae4fd5e2191ac62a23af7f515d36cb52f4355ebf57015a4c3bf4",
+          "bytes": 39921
+        },
+        {
+          "round": 3,
+          "path": "experiments/mpc-research/proposals/gpt-round3.md",
+          "sha256": "c1f68964249dbb8da136153d8e30a1a23cc417c3a5ea44d68b205723d5f31302",
+          "bytes": 45207
+        }
+      ]
+    }
+  ],
+  "native_qualified": false,
+  "execution_boundary_breached": true,
+  "incident_report": "experiments/mpc-research/execution-incident.md",
+  "remote_incident_branch": "polecat/onyx/pr-mpc-gpt@mvuae3uv",
+  "remote_incident_head": "2b231dd56f3766fc966ad3f1e97a56bdef8ac315",
+  "remote_cleanup_performed": false
+}

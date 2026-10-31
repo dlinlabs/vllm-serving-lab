@@ -1,0 +1,23 @@
+{
+  "schema": "native-v3-round3-research-evidence-v1",
+  "archive": "round3-frozen-source.tar.gz",
+  "archive_sha256": "8ce96cb02fbc55819904cba13c3ad283c60593af6874dae8c748ad1cba38f4b1",
+  "scope": "Immutable independent research deliveries and CPU regression witnesses, not promoted runtime modules",
+  "source_byte_verified": true,
+  "mayor_reproduction": {
+    "tests_passed": 142,
+    "subtests_passed": 107,
+    "runner": "pytest with existing default sibling-module import convention",
+    "first_importlib_attempt": "Two collection errors; no tests modified, default convention then passed"
+  },
+  "adjudication": "../../../experiments/mpc-research/native-v3/round3-adjudication.zh-TW.md",
+  "unresolved_r3_counterexamples": [
+    "Gemini absolute sign-flip tolerance changes p under positive rescaling",
+    "Gemini duration helper qualifies NaN and infinity",
+    "Gemini One-move and MPC aliases still reference heuristics"
+  ],
+  "native_calibration_accepted": false,
+  "native_mpc_performance_accepted": false,
+  "ten_hour_milestone_accepted": false,
+  "joint_release_good_tail_kernel_accepted": false
+}

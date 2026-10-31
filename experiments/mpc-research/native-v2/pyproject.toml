@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pr33-native-batch-capture"
+version = "0.1.1"
+requires-python = ">=3.12"
+
+[project.entry-points."vllm.general_plugins"]
+pr33_native_batch = "batch_capture_bridge:register"
+
+[project.entry-points."vllm.endpoint_plugins"]
+pr33_native_batch = "batch_capture_bridge:Endpoint"
+
+[tool.setuptools]
+py-modules = ["batch_capture_bridge"]

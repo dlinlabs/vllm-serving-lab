@@ -7,7 +7,7 @@ import time
 import re
 from contextlib import asynccontextmanager, nullcontext
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, replace
 from http.cookiejar import CookieJar
 from typing import Any, Dict, Optional
 
@@ -35,6 +35,7 @@ OUTPUT_TOKEN_COST = float(os.getenv("OUTPUT_TOKEN_COST", "0.0052083333"))
 MAX_ADMITTED_COST = float(os.getenv("MAX_ADMITTED_COST", "64.0"))
 MIN_REQUEST_COST = float(os.getenv("MIN_REQUEST_COST", "0.1"))
 DEFAULT_MAX_TOKENS = int(os.getenv("DEFAULT_MAX_TOKENS", "128"))
+MPC_LAB_ENABLED = os.getenv("MPC_LAB_ENABLED", "false").strip().lower() in {"true", "1"}
 
 if ADMISSION_MODE not in {"baseline", "protected", "cost_aware"}:
     raise RuntimeError(
@@ -178,6 +179,71 @@ state: Dict[str, Any] = {
     "tokenizer_fallback_requests": 0,
 }
 
+mpc_requests = {}
+mpc_operations = {}
+mpc_sequence = 0
+MPC_OPERATION_LIMIT = 1024
+if MPC_LAB_ENABLED:
+    from mpc_lab.contracts import (
+        SCHEMA, GUARDED_CAPABILITY, CostSpec, Identity, RequestMark, Snapshot,
+        digest, implementation_hash,
+    )
+    from mpc_lab.runtime import snapshot_to_dict
+
+    from prefill_lab.live_http import clock_domain as mpc_local_clock_domain
+
+    mpc_clock_domain = mpc_local_clock_domain()
+    mpc_cost_spec = CostSpec(
+        intercept=COST_INTERCEPT,
+        input_per_token=INPUT_TOKEN_COST,
+        output_per_token=OUTPUT_TOKEN_COST,
+        minimum=MIN_REQUEST_COST,
+        default_max_tokens=DEFAULT_MAX_TOKENS,
+        tokenizer_identity=(
+            os.getenv("MPC_TOKENIZER_IDENTITY", "unqualified")
+            + f";model={MODEL_NAME};available={tokenizer is not None};fallback=chars4-chat-v1"
+        ),
+    )
+    mpc_identity = Identity(
+        os.getenv("MPC_MODEL_VERSION", "unqualified"),
+        os.getenv("MPC_CALIBRATION_VERSION", "unqualified"),
+        os.getenv("MPC_SUPPORT_HASH", "unqualified"),
+        mpc_cost_spec.fingerprint,
+        implementation_hash(),
+    )
+
+
+def mpc_now():
+    return time.monotonic()
+
+
+def mpc_changed():
+    global mpc_sequence
+    mpc_sequence += 1
+    if MPC_LAB_ENABLED and telemetry.enabled:
+        marks = tuple(mpc_requests.values())
+        reserved = math.fsum(mark.cost for mark in marks)
+        telemetry.emit(
+            "mpc_ledger", clock_domain=mpc_clock_domain, identity=asdict(mpc_identity),
+            sequence=mpc_sequence, effective_at=mpc_now(), reserved_cost=reserved,
+            running=len(marks),
+            complete=(
+                len(marks) == state["current_in_flight"]
+                and math.isclose(reserved, state["current_admitted_cost"],
+                                 rel_tol=1e-12, abs_tol=1e-9)
+            ),
+            budget=state["admission_budget"], budget_version=state["budget_version"],
+        )
+
+
+async def mpc_first_content(request_id):
+    observed_at = mpc_now()
+    async with state_lock:
+        mark = mpc_requests.get(request_id)
+        if mark is not None and mark.first_at is None:
+            mpc_requests[request_id] = replace(mark, first_at=observed_at)
+            mpc_changed()
+
 
 def _message_text(messages: Any) -> str:
     if not isinstance(messages, list):
@@ -298,7 +364,7 @@ class AdmissionDecision:
 
 
 async def begin_request(
-    request_cost: float, used_tokenizer_fallback: bool, phases=None
+    request_cost: float, used_tokenizer_fallback: bool, phases=None, *, mpc_mark=None
 ) -> AdmissionDecision:
     if phases is not None:
         phases.begin('admission_lock_wait')
@@ -332,6 +398,14 @@ async def begin_request(
                 state["peak_admitted_cost"],
                 projected_cost,
             )
+            if MPC_LAB_ENABLED:
+                if mpc_mark is not None:
+                    identifier, received_at, prompt_tokens, max_tokens = mpc_mark
+                    mpc_requests[identifier] = RequestMark(
+                        identifier, request_cost, prompt_tokens, max_tokens,
+                        received_at, mpc_now(),
+                    )
+                mpc_changed()
         return AdmissionDecision(True, budget, version)
 
     async with state_lock:
@@ -362,7 +436,7 @@ async def begin_request(
         raise
 
 
-async def finish_request(request_cost: float) -> None:
+async def finish_request(request_cost: float, *, request_id=None) -> None:
     if ADMISSION_MODE == "baseline":
         return
 
@@ -373,6 +447,9 @@ async def finish_request(request_cost: float) -> None:
                 0.0,
                 state["current_admitted_cost"] - request_cost,
             )
+            if MPC_LAB_ENABLED:
+                mpc_requests.pop(request_id, None)
+                mpc_changed()
         return
 
     async with state_lock:
@@ -419,6 +496,7 @@ async def _proxy_completions(request, upstream_path):
                 return JSONResponse({'detail': 'benchmark ID capacity exceeded'}, status_code=503)
             benchmark_ids.add(request_id)
     request_id = telemetry.received(request_id)
+    mpc_received_at = mpc_now() if MPC_LAB_ENABLED else None
     if upstream_path=='/v1/completions':
         from prefill_lab.live_http import clock_domain
         telemetry.emit('bridge_clock',request_id,clock_domain=clock_domain())
@@ -449,7 +527,10 @@ async def _proxy_completions(request, upstream_path):
                 finally:
                     if reserved:
                         with phases.phase('reservation_release') if phases else NO_PHASE:
-                            await finish_request(request_cost)
+                            if MPC_LAB_ENABLED:
+                                await finish_request(request_cost, request_id=request_id)
+                            else:
+                                await finish_request(request_cost)
                     telemetry.terminal(request_id, outcome)
                     terminal_recorded = True
                     if outcome == "failed":
@@ -493,6 +574,14 @@ async def _proxy_completions(request, upstream_path):
         except (ValueError, UnicodeDecodeError):
             payload = {}
 
+        if MPC_LAB_ENABLED and upstream_path == "/v1/chat/completions" and isinstance(payload, dict):
+            extra = payload.get("vllm_xargs")
+            if extra is None or isinstance(extra, dict):
+                payload = {**payload, "vllm_xargs": {
+                    **(extra or {}), "pr33_gateway_request_id": request_id,
+                }}
+                body = json.dumps(payload).encode()
+
         estimated_input_tokens = estimated_output_tokens = 0
         used_tokenizer_fallback = False
         if ADMISSION_MODE == "cost_aware":
@@ -500,7 +589,13 @@ async def _proxy_completions(request, upstream_path):
                 (request_cost, estimated_input_tokens, estimated_output_tokens,
                  used_tokenizer_fallback) = estimate_request_cost(payload)
 
-        decision = await begin_request(request_cost, used_tokenizer_fallback, phases)
+        if MPC_LAB_ENABLED:
+            decision = await begin_request(
+                request_cost, used_tokenizer_fallback, phases,
+                mpc_mark=(request_id, mpc_received_at, estimated_input_tokens, estimated_output_tokens),
+            )
+        else:
+            decision = await begin_request(request_cost, used_tokenizer_fallback, phases)
         if not decision.accepted:
             telemetry.terminal(request_id, "rejected", budget=decision.budget,
                                budget_version=decision.budget_version,
@@ -551,6 +646,7 @@ async def _proxy_completions(request, upstream_path):
 
     async def stream_upstream():
         observer = SSEObserver(completions=upstream_path=='/v1/completions')
+        mpc_first_marked = False
         is_sse = "text/event-stream" in upstream.headers.get("content-type", "")
         streaming_expected = bool(payload.get("stream")) or is_sse
         outcome = "cancelled"
@@ -561,6 +657,9 @@ async def _proxy_completions(request, upstream_path):
                 if is_sse and upstream.is_success:
                     observer.feed(chunk)
                     if observer.has_content:
+                        if MPC_LAB_ENABLED and not mpc_first_marked:
+                            await mpc_first_content(request_id)
+                            mpc_first_marked = True
                         if phases is not None:
                             phases.mark('first_content')
                         telemetry.first_content(request_id)
@@ -616,6 +715,8 @@ async def update_budget(request: Request):
         previous_budget = state["admission_budget"]
         state["admission_budget"] = budget
         state["budget_version"] += 1
+        if MPC_LAB_ENABLED:
+            mpc_changed()
         applied_at = time.monotonic()
         result = {
             "previous_budget": previous_budget,
@@ -626,6 +727,113 @@ async def update_budget(request: Request):
         }
     telemetry.emit("budget_updated", **result)
     # Existing requests retain their reservations, even after a budget reduction.
+    return result
+
+
+def mpc_access(request):
+    if not MPC_LAB_ENABLED:
+        return JSONResponse({"detail": "not found"}, status_code=404)
+    if not ADMIN_API_KEY:
+        return JSONResponse({"detail": "MPC admin disabled"}, status_code=503)
+    supplied = request.headers.get("x-admin-api-key", "")
+    if not secrets.compare_digest(supplied.encode(), ADMIN_API_KEY.encode()):
+        return JSONResponse({"detail": "invalid admin API key"}, status_code=401)
+    if ADMISSION_MODE != "cost_aware":
+        return JSONResponse({"detail": "MPC requires cost_aware mode"}, status_code=409)
+    if any(os.getenv(name, "1") != "1" for name in ("WEB_CONCURRENCY", "UVICORN_WORKERS")):
+        return JSONResponse({"detail": "MPC requires a single worker"}, status_code=409)
+    return None
+
+
+@app.get("/admin/mpc/state")
+async def mpc_snapshot(request: Request):
+    if (failure := mpc_access(request)) is not None:
+        return failure
+    async with state_lock:
+        marks = tuple(mpc_requests.values())
+        complete = (
+            len(marks) == state["current_in_flight"]
+            and math.isclose(
+                math.fsum(mark.cost for mark in marks),
+                state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9,
+            )
+        )
+        snapshot = Snapshot(
+            telemetry.run_id, mpc_clock_domain, mpc_now(),
+            state["admission_budget"], state["budget_version"],
+            marks, mpc_identity, mpc_sequence, complete,
+        )
+        result = snapshot_to_dict(snapshot)
+        result["capabilities"] = [GUARDED_CAPABILITY]
+        result["cost_spec"] = asdict(mpc_cost_spec)
+        return result
+
+
+@app.post("/admin/mpc/budget")
+async def mpc_update_budget(request: Request):
+    if (failure := mpc_access(request)) is not None:
+        return failure
+    try:
+        payload = await request.json()
+        if not isinstance(payload, dict) or set(payload) != {
+            "schema", "run_id", "clock_domain", "identity", "expected_version",
+            "not_after", "operation_id", "budget",
+        }:
+            raise ValueError("command_fields")
+        if (
+            any(not isinstance(payload[key], str) or not 0 < len(payload[key]) <= 1024
+                for key in ("schema", "run_id", "clock_domain", "operation_id"))
+            or type(payload["expected_version"]) is not int
+            or payload["expected_version"] < 0
+            or type(payload["budget"]) not in (int, float)
+            or not math.isfinite(payload["budget"])
+            or payload["budget"] <= 0
+            or type(payload["not_after"]) not in (int, float)
+            or not math.isfinite(payload["not_after"])
+            or not isinstance(payload["identity"], dict)
+        ):
+            raise ValueError("command_values")
+        command_hash = digest(payload)
+    except (ValueError, TypeError, OverflowError, UnicodeDecodeError):
+        return JSONResponse({"detail": "invalid guarded command"}, status_code=422)
+
+    async with state_lock:
+        # Identity precedes any comparison of server-clock uptime.
+        if (
+            payload["schema"] != SCHEMA
+            or payload["run_id"] != telemetry.run_id
+            or payload["clock_domain"] != mpc_clock_domain
+            or payload["identity"] != asdict(mpc_identity)
+        ):
+            return JSONResponse({"detail": "command identity mismatch"}, status_code=409)
+        previous = mpc_operations.get(payload["operation_id"])
+        if previous is not None:
+            if previous[0] != command_hash:
+                return JSONResponse({"detail": "operation ID reused"}, status_code=409)
+            return dict(previous[1])
+        if payload["expected_version"] != state["budget_version"]:
+            return JSONResponse({"detail": "stale budget version"}, status_code=409)
+        # Refuse new operations when full; do not silently forget idempotency.
+        if len(mpc_operations) >= MPC_OPERATION_LIMIT:
+            return JSONResponse({"detail": "operation outcome capacity"}, status_code=503)
+        applied_at = mpc_now()
+        if applied_at >= payload["not_after"]:
+            return JSONResponse({"detail": "command expired"}, status_code=409)
+        result = {
+            "schema": SCHEMA, "run_id": telemetry.run_id, "clock_domain": mpc_clock_domain,
+            "operation_id": payload["operation_id"], "status": "applied",
+            "previous_budget": state["admission_budget"], "budget": payload["budget"],
+            "budget_version": state["budget_version"] + 1, "applied_at": applied_at,
+        }
+        state["admission_budget"] = payload["budget"]
+        state["budget_version"] += 1
+        mpc_changed()
+        mpc_operations[payload["operation_id"]] = (command_hash, dict(result))
+    telemetry.emit(
+        "budget_updated", operation_id=result["operation_id"],
+        previous_budget=result["previous_budget"], budget=result["budget"],
+        budget_version=result["budget_version"], applied_at=result["applied_at"],
+    )
     return result
 
 

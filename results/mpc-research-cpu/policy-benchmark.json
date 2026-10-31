@@ -1,0 +1,5417 @@
+{
+  "schema": "mpc-exploratory-cpu-benchmark-v1",
+  "scope": "synthetic CPU only; different truth/forecast models; not GPU/HTTP acceptance",
+  "duration_s": 12.0,
+  "dt_s": 0.025,
+  "drain_limit_s": 20,
+  "warmup": "identical empty plant; no separate warmup",
+  "development_seeds": [
+    1,
+    2
+  ],
+  "heldout_seeds": [
+    10001,
+    10002,
+    10003,
+    10004,
+    10005
+  ],
+  "protocol_amendment": "reviewer used a mock prefix of original seed101; fresh seeds frozen before real comparison",
+  "selected_fixed": "fixed-16",
+  "selected_feedback_thresholds": [
+    512,
+    2048
+  ],
+  "planning_config": {
+    "actions": [
+      16.0,
+      32.0
+    ],
+    "control_steps": 3,
+    "slot_s": 1.0,
+    "evaluation_window_s": 5.0,
+    "tail_s": 10.0,
+    "fallback_budget": 16.0,
+    "slo_s": 0.5,
+    "max_wall_s": 0.1,
+    "max_events": 20000,
+    "max_active_requests": 512,
+    "max_plans": 32,
+    "max_scenarios": 32,
+    "max_snapshot_age_s": 2.0
+  },
+  "forecast_scenarios": 4,
+  "identity": {
+    "model_version": "cpu-lifecycle-v1",
+    "calibration_version": "synthetic-unqualified-v1",
+    "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95",
+    "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+    "implementation_hash": "b297a58010cc33c9b577de530c9fcba5db968338d21b0b575382bf94b1a52a7c"
+  },
+  "statistical_limit": "five seed blocks; exploratory intervals, no multiplicity/superiority claim",
+  "development": [
+    {
+      "offered": 162,
+      "accepted": 75,
+      "successful": 74,
+      "good": 71,
+      "accepted_throughput_rps": 6.25,
+      "successful_goodput_rps": 5.916666666666667,
+      "rejection_rate": 0.5370370370370371,
+      "failure_rate": 0.006172839506172839,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5617283950617284,
+      "ttft_s": {
+        "samples": 75,
+        "p50": 0.1200405460645726,
+        "p95": 0.3884317569443088,
+        "p99": 0.6122192431419112,
+        "maximum": 0.7665470652670341
+      },
+      "e2e_success_s": {
+        "samples": 74,
+        "p50": 1.1351411766439925,
+        "p95": 3.087068655045124,
+        "p99": 3.3389924383551675,
+        "maximum": 3.390232739733445
+      },
+      "policy": "fixed-16",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 75,
+        "p50": 0.013257575757575758,
+        "p95": 0.013940972222222223,
+        "p99": 0.014502192982456152,
+        "maximum": 0.014583333333333318
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.9500148482620716e-06,
+        "p95": 3.6350276786833986e-06,
+        "p99": 4.647035384550692e-06,
+        "maximum": 4.900037311017513e-06
+      },
+      "controller_cpu_total_s": 1.76000000000065e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 162,
+      "accepted": 103,
+      "successful": 102,
+      "good": 40,
+      "accepted_throughput_rps": 8.583333333333334,
+      "successful_goodput_rps": 3.3333333333333335,
+      "rejection_rate": 0.36419753086419754,
+      "failure_rate": 0.006172839506172839,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7530864197530864,
+      "ttft_s": {
+        "samples": 103,
+        "p50": 0.58986406472029,
+        "p95": 1.3322122319959697,
+        "p99": 1.395912379701336,
+        "maximum": 1.3966647899286857
+      },
+      "e2e_success_s": {
+        "samples": 102,
+        "p50": 1.7724669811824425,
+        "p95": 4.131393528869699,
+        "p99": 4.439753490364617,
+        "maximum": 4.462493990866825
+      },
+      "policy": "fixed-32",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 103,
+        "p50": 0.015291262135922324,
+        "p95": 0.016666666666666677,
+        "p99": 0.017099892588614357,
+        "maximum": 0.018055555555555516
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.500011421740055e-06,
+        "p95": 2.589961513876915e-06,
+        "p99": 2.6779621839523316e-06,
+        "maximum": 2.6999623514711857e-06
+      },
+      "controller_cpu_total_s": 1.630000000001075e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 162,
+      "accepted": 80,
+      "successful": 80,
+      "good": 45,
+      "accepted_throughput_rps": 6.666666666666667,
+      "successful_goodput_rps": 3.75,
+      "rejection_rate": 0.5061728395061729,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7222222222222222,
+      "ttft_s": {
+        "samples": 80,
+        "p50": 0.41885495185893795,
+        "p95": 0.8978083520696667,
+        "p99": 0.9481927357906792,
+        "maximum": 0.9948053640086276
+      },
+      "e2e_success_s": {
+        "samples": 80,
+        "p50": 1.5736819863968736,
+        "p95": 3.5577454021749686,
+        "p99": 3.8937926448703752,
+        "maximum": 4.047199185874179
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 80,
+        "p50": 0.014006242740998842,
+        "p95": 0.015629464285714285,
+        "p99": 0.015973684210526317,
+        "maximum": 0.01666666666666668
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.9050028640776873e-05,
+        "p95": 3.177500911988317e-05,
+        "p99": 3.419502754695714e-05,
+        "maximum": 3.4800032153725624e-05
+      },
+      "controller_cpu_total_s": 0.00025680000000000147,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 9,
+      "budget_total_variation": 144.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary",
+      "thresholds": [
+        512,
+        2048
+      ]
+    },
+    {
+      "offered": 162,
+      "accepted": 99,
+      "successful": 99,
+      "good": 48,
+      "accepted_throughput_rps": 8.25,
+      "successful_goodput_rps": 4.0,
+      "rejection_rate": 0.3888888888888889,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7037037037037037,
+      "ttft_s": {
+        "samples": 99,
+        "p50": 0.5056688436736003,
+        "p95": 0.8463038494693059,
+        "p99": 0.9953650733885822,
+        "maximum": 1.0227908330063595
+      },
+      "e2e_success_s": {
+        "samples": 99,
+        "p50": 1.6635228202976702,
+        "p95": 3.8208099157866044,
+        "p99": 4.292017419146602,
+        "maximum": 4.379466710391305
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 99,
+        "p50": 0.015086206896551716,
+        "p95": 0.016261363636363643,
+        "p99": 0.01667543859649124,
+        "maximum": 0.0171052631578947
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.155001857317984e-05,
+        "p95": 2.670500252861529e-05,
+        "p99": 2.9741000034846368e-05,
+        "maximum": 3.0499999411404133e-05
+      },
+      "controller_cpu_total_s": 0.00025970000000002935,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 4,
+      "budget_total_variation": 64.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary",
+      "thresholds": [
+        2000,
+        6000
+      ]
+    },
+    {
+      "offered": 162,
+      "accepted": 103,
+      "successful": 102,
+      "good": 40,
+      "accepted_throughput_rps": 8.583333333333334,
+      "successful_goodput_rps": 3.3333333333333335,
+      "rejection_rate": 0.36419753086419754,
+      "failure_rate": 0.006172839506172839,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7530864197530864,
+      "ttft_s": {
+        "samples": 103,
+        "p50": 0.58986406472029,
+        "p95": 1.3322122319959697,
+        "p99": 1.395912379701336,
+        "maximum": 1.3966647899286857
+      },
+      "e2e_success_s": {
+        "samples": 102,
+        "p50": 1.7724669811824425,
+        "p95": 4.131393528869699,
+        "p99": 4.439753490364617,
+        "maximum": 4.462493990866825
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 103,
+        "p50": 0.015291262135922324,
+        "p95": 0.016666666666666677,
+        "p99": 0.017099892588614357,
+        "maximum": 0.018055555555555516
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.2849999368190765e-05,
+        "p95": 3.294499183539301e-05,
+        "p99": 3.298896655905992e-05,
+        "maximum": 3.2999960239976645e-05
+      },
+      "controller_cpu_total_s": 0.0002956999999999821,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary",
+      "thresholds": [
+        4000,
+        10000
+      ]
+    },
+    {
+      "offered": 186,
+      "accepted": 76,
+      "successful": 75,
+      "good": 70,
+      "accepted_throughput_rps": 6.333333333333333,
+      "successful_goodput_rps": 5.833333333333333,
+      "rejection_rate": 0.5913978494623656,
+      "failure_rate": 0.005376344086021506,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6236559139784946,
+      "ttft_s": {
+        "samples": 76,
+        "p50": 0.1739352414198485,
+        "p95": 0.509977378142229,
+        "p99": 0.6027454820545187,
+        "maximum": 0.6417838581277606
+      },
+      "e2e_success_s": {
+        "samples": 75,
+        "p50": 1.0407289250400087,
+        "p95": 2.7431910912819486,
+        "p99": 3.475765993735498,
+        "maximum": 3.791783858127761
+      },
+      "policy": "fixed-16",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 76,
+        "p50": 0.013161203203576072,
+        "p95": 0.014722593582887702,
+        "p99": 0.014927718416090509,
+        "maximum": 0.01511627906976745
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 9.00006853044033e-07,
+        "p95": 2.535019302740693e-06,
+        "p99": 2.6670203078538182e-06,
+        "maximum": 2.700020559132099e-06
+      },
+      "controller_cpu_total_s": 1.2800000000035006e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 186,
+      "accepted": 95,
+      "successful": 92,
+      "good": 13,
+      "accepted_throughput_rps": 7.916666666666667,
+      "successful_goodput_rps": 1.0833333333333333,
+      "rejection_rate": 0.489247311827957,
+      "failure_rate": 0.016129032258064516,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.9301075268817204,
+      "ttft_s": {
+        "samples": 95,
+        "p50": 0.9366810129257415,
+        "p95": 1.4954538893814149,
+        "p99": 1.6458637338402882,
+        "maximum": 1.6792274540048746
+      },
+      "e2e_success_s": {
+        "samples": 92,
+        "p50": 1.864641625294062,
+        "p95": 3.7435476400226846,
+        "p99": 4.374938666868788,
+        "maximum": 4.4573928441391715
+      },
+      "policy": "fixed-32",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 95,
+        "p50": 0.014540816326530601,
+        "p95": 0.01572222222222222,
+        "p99": 0.016185474189675874,
+        "maximum": 0.016326530612244896
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.049986505880952e-06,
+        "p95": 2.924990258179605e-06,
+        "p99": 3.1450175447389487e-06,
+        "maximum": 3.200024366378784e-06
+      },
+      "controller_cpu_total_s": 1.8199999999995997e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 1.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 186,
+      "accepted": 78,
+      "successful": 76,
+      "good": 62,
+      "accepted_throughput_rps": 6.5,
+      "successful_goodput_rps": 5.166666666666667,
+      "rejection_rate": 0.5806451612903226,
+      "failure_rate": 0.010752688172043012,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6666666666666666,
+      "ttft_s": {
+        "samples": 78,
+        "p50": 0.2196597171551251,
+        "p95": 0.7616119893012864,
+        "p99": 0.8234610486048993,
+        "maximum": 0.8667838581277607
+      },
+      "e2e_success_s": {
+        "samples": 76,
+        "p50": 1.2351506264358325,
+        "p95": 3.2614281658127693,
+        "p99": 3.6214954820545184,
+        "maximum": 4.09178385812776
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 78,
+        "p50": 0.013397459499263627,
+        "p95": 0.014601715686274495,
+        "p99": 0.014999999999999982,
+        "maximum": 0.015
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.3899989426136017e-05,
+        "p95": 1.699001295492053e-05,
+        "p99": 1.7078013624995946e-05,
+        "maximum": 1.71000137925148e-05
+      },
+      "controller_cpu_total_s": 0.0001673000000000091,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 4,
+      "budget_total_variation": 64.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst",
+      "thresholds": [
+        512,
+        2048
+      ]
+    },
+    {
+      "offered": 186,
+      "accepted": 91,
+      "successful": 88,
+      "good": 23,
+      "accepted_throughput_rps": 7.583333333333333,
+      "successful_goodput_rps": 1.9166666666666667,
+      "rejection_rate": 0.510752688172043,
+      "failure_rate": 0.016129032258064516,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8763440860215054,
+      "ttft_s": {
+        "samples": 91,
+        "p50": 0.7586738471738488,
+        "p95": 1.2724625849904716,
+        "p99": 1.3305865538941661,
+        "maximum": 1.3676057231274976
+      },
+      "e2e_success_s": {
+        "samples": 88,
+        "p50": 1.7248283435577454,
+        "p95": 3.6560765066860528,
+        "p99": 4.278486736422235,
+        "maximum": 4.3568059988544885
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 91,
+        "p50": 0.014375000000000004,
+        "p95": 0.015533088235294111,
+        "p99": 0.015828173374612987,
+        "maximum": 0.016176470588235264
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.915002940222621e-05,
+        "p95": 2.9924995033070445e-05,
+        "p99": 3.102500340901315e-05,
+        "maximum": 3.130000550299883e-05
+      },
+      "controller_cpu_total_s": 0.00023920000000000885,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 4,
+      "budget_total_variation": 64.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst",
+      "thresholds": [
+        2000,
+        6000
+      ]
+    },
+    {
+      "offered": 186,
+      "accepted": 87,
+      "successful": 84,
+      "good": 28,
+      "accepted_throughput_rps": 7.25,
+      "successful_goodput_rps": 2.3333333333333335,
+      "rejection_rate": 0.532258064516129,
+      "failure_rate": 0.016129032258064516,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8494623655913979,
+      "ttft_s": {
+        "samples": 87,
+        "p50": 0.7747068453949915,
+        "p95": 1.315479377718676,
+        "p99": 1.4051106635863952,
+        "maximum": 1.4179345701033403
+      },
+      "e2e_success_s": {
+        "samples": 84,
+        "p50": 1.749893270980043,
+        "p95": 3.5565712544174763,
+        "p99": 4.0135103172470465,
+        "maximum": 4.366783858127761
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 87,
+        "p50": 0.014285714285714287,
+        "p95": 0.015732804232804234,
+        "p99": 0.016197478991596643,
+        "maximum": 0.016326530612244896
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.2099993657320738e-05,
+        "p95": 3.711499157361686e-05,
+        "p99": 3.830300061963499e-05,
+        "maximum": 3.860000288113952e-05
+      },
+      "controller_cpu_total_s": 0.0002752000000000032,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 2,
+      "budget_total_variation": 32.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst",
+      "thresholds": [
+        4000,
+        10000
+      ]
+    },
+    {
+      "offered": 162,
+      "accepted": 56,
+      "successful": 56,
+      "good": 50,
+      "accepted_throughput_rps": 4.666666666666667,
+      "successful_goodput_rps": 4.166666666666667,
+      "rejection_rate": 0.654320987654321,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.691358024691358,
+      "ttft_s": {
+        "samples": 56,
+        "p50": 0.19403366120090393,
+        "p95": 0.5666870780481362,
+        "p99": 0.6926328104053334,
+        "maximum": 0.7665470652670341
+      },
+      "e2e_success_s": {
+        "samples": 56,
+        "p50": 1.1047893353863996,
+        "p95": 3.0411485489852566,
+        "p99": 3.2878770332155653,
+        "maximum": 3.340232739733445
+      },
+      "policy": "fixed-16",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 56,
+        "p50": 0.01265636918382914,
+        "p95": 0.013803854875283444,
+        "p99": 0.014247532894736854,
+        "maximum": 0.014473684210526335
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.00006091594696e-07,
+        "p95": 1.7800135537981984e-06,
+        "p99": 1.956014893949032e-06,
+        "maximum": 2.00001522898674e-06
+      },
+      "controller_cpu_total_s": 1.0999999999983245e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 162,
+      "accepted": 76,
+      "successful": 76,
+      "good": 13,
+      "accepted_throughput_rps": 6.333333333333333,
+      "successful_goodput_rps": 1.0833333333333333,
+      "rejection_rate": 0.5308641975308642,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.9197530864197531,
+      "ttft_s": {
+        "samples": 76,
+        "p50": 0.7731893349703384,
+        "p95": 1.6003066476801742,
+        "p99": 1.8489732085969122,
+        "maximum": 1.8627711466657022
+      },
+      "e2e_success_s": {
+        "samples": 76,
+        "p50": 1.9455058877978466,
+        "p95": 4.252101216644574,
+        "p99": 4.35829805251679,
+        "maximum": 4.412493990866825
+      },
+      "policy": "fixed-32",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 76,
+        "p50": 0.013975694444444447,
+        "p95": 0.016666666666666663,
+        "p99": 0.017342836257309903,
+        "maximum": 0.018055555555555516
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.4999823179095984e-06,
+        "p95": 1.8449820345267653e-06,
+        "p99": 1.8890079809352755e-06,
+        "maximum": 1.9000144675374031e-06
+      },
+      "controller_cpu_total_s": 1.3800000000091517e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 162,
+      "accepted": 52,
+      "successful": 52,
+      "good": 26,
+      "accepted_throughput_rps": 4.333333333333333,
+      "successful_goodput_rps": 2.1666666666666665,
+      "rejection_rate": 0.6790123456790124,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8395061728395061,
+      "ttft_s": {
+        "samples": 52,
+        "p50": 0.4999626110840327,
+        "p95": 1.5140523767966136,
+        "p99": 1.8234473870499344,
+        "maximum": 1.8530136909326567
+      },
+      "e2e_success_s": {
+        "samples": 52,
+        "p50": 1.7388917438894294,
+        "p95": 3.4759623255562144,
+        "p99": 4.6608568499472955,
+        "maximum": 4.695040546064572
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 52,
+        "p50": 0.013358608385370207,
+        "p95": 0.015368842364532015,
+        "p99": 0.015751127819548877,
+        "maximum": 0.01578947368421053
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.6499980119988322e-05,
+        "p95": 3.224501269869506e-05,
+        "p99": 3.404902643524111e-05,
+        "maximum": 3.450002986937761e-05
+      },
+      "controller_cpu_total_s": 0.00023140000000002048,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 9,
+      "budget_total_variation": 144.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift",
+      "thresholds": [
+        512,
+        2048
+      ]
+    },
+    {
+      "offered": 162,
+      "accepted": 67,
+      "successful": 67,
+      "good": 31,
+      "accepted_throughput_rps": 5.583333333333333,
+      "successful_goodput_rps": 2.5833333333333335,
+      "rejection_rate": 0.5864197530864198,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.808641975308642,
+      "ttft_s": {
+        "samples": 67,
+        "p50": 0.5417414428488447,
+        "p95": 1.0553545346255184,
+        "p99": 1.7197696197557695,
+        "maximum": 1.7721991858741788
+      },
+      "e2e_success_s": {
+        "samples": 67,
+        "p50": 1.6086835184585744,
+        "p95": 3.9927825004812547,
+        "p99": 4.266139831369092,
+        "maximum": 4.37219918587418
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 67,
+        "p50": 0.014583333333333334,
+        "p95": 0.01590909090909093,
+        "p99": 0.016815789473684194,
+        "maximum": 0.0171052631578947
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.0750012481585145e-05,
+        "p95": 3.284499107394367e-05,
+        "p99": 3.640899260062725e-05,
+        "maximum": 3.7299992982298136e-05
+      },
+      "controller_cpu_total_s": 0.0002681999999999962,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 5,
+      "budget_total_variation": 80.0,
+      "backlog_recovery_s": 2.0,
+      "gpu_utilization": null,
+      "workload": "shift",
+      "thresholds": [
+        2000,
+        6000
+      ]
+    },
+    {
+      "offered": 162,
+      "accepted": 72,
+      "successful": 72,
+      "good": 16,
+      "accepted_throughput_rps": 6.0,
+      "successful_goodput_rps": 1.3333333333333333,
+      "rejection_rate": 0.5555555555555556,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.9012345679012346,
+      "ttft_s": {
+        "samples": 72,
+        "p50": 0.6948571634344058,
+        "p95": 1.392127431090157,
+        "p99": 1.7464203406808456,
+        "maximum": 1.8443738959073155
+      },
+      "e2e_success_s": {
+        "samples": 72,
+        "p50": 1.6874174139609321,
+        "p95": 4.016075277992526,
+        "p99": 4.3611885025621255,
+        "maximum": 4.412493990866825
+      },
+      "policy": "feedback",
+      "seed": 1,
+      "request_tpot_s": {
+        "samples": 72,
+        "p50": 0.01420221374487024,
+        "p95": 0.016666666666666663,
+        "p99": 0.017380847953216344,
+        "maximum": 0.018055555555555516
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.59499647654593e-05,
+        "p95": 3.854000242426991e-05,
+        "p99": 3.9068006444722413e-05,
+        "maximum": 3.920000744983554e-05
+      },
+      "controller_cpu_total_s": 0.00031199999999997896,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 1,
+      "budget_total_variation": 16.0,
+      "backlog_recovery_s": 2.0,
+      "gpu_utilization": null,
+      "workload": "shift",
+      "thresholds": [
+        4000,
+        10000
+      ]
+    },
+    {
+      "offered": 177,
+      "accepted": 66,
+      "successful": 65,
+      "good": 61,
+      "accepted_throughput_rps": 5.5,
+      "successful_goodput_rps": 5.083333333333333,
+      "rejection_rate": 0.6271186440677966,
+      "failure_rate": 0.005649717514124294,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.655367231638418,
+      "ttft_s": {
+        "samples": 66,
+        "p50": 0.12557176482190124,
+        "p95": 0.5082701305808053,
+        "p99": 0.5674022146074327,
+        "maximum": 0.5796612017301388
+      },
+      "e2e_success_s": {
+        "samples": 65,
+        "p50": 1.3087204273139683,
+        "p95": 3.0321205734745527,
+        "p99": 3.506310964568353,
+        "maximum": 3.524354481485691
+      },
+      "policy": "fixed-16",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 66,
+        "p50": 0.013156986377025035,
+        "p95": 0.013950163398692803,
+        "p99": 0.01433184143222504,
+        "maximum": 0.014705882352941176
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.949985744431615e-06,
+        "p95": 3.2450247090309845e-06,
+        "p99": 4.1690317448228605e-06,
+        "maximum": 4.400033503770828e-06
+      },
+      "controller_cpu_total_s": 1.8500000000004624e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 177,
+      "accepted": 99,
+      "successful": 98,
+      "good": 31,
+      "accepted_throughput_rps": 8.25,
+      "successful_goodput_rps": 2.5833333333333335,
+      "rejection_rate": 0.4406779661016949,
+      "failure_rate": 0.005649717514124294,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8248587570621468,
+      "ttft_s": {
+        "samples": 99,
+        "p50": 0.6447723872289046,
+        "p95": 1.196505166224144,
+        "p99": 1.377624074634776,
+        "maximum": 1.4267067984903221
+      },
+      "e2e_success_s": {
+        "samples": 98,
+        "p50": 1.8815016000246625,
+        "p95": 3.8387226285815945,
+        "p99": 4.680407912802915,
+        "maximum": 4.887247316004779
+      },
+      "policy": "fixed-32",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 99,
+        "p50": 0.01527777777777778,
+        "p95": 0.016964285714285706,
+        "p99": 0.01749999999999998,
+        "maximum": 0.01749999999999998
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.249958924949169e-06,
+        "p95": 2.744988887570798e-06,
+        "p99": 2.789014833979309e-06,
+        "maximum": 2.800021320581436e-06
+      },
+      "controller_cpu_total_s": 1.9900000000044882e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 177,
+      "accepted": 81,
+      "successful": 79,
+      "good": 48,
+      "accepted_throughput_rps": 6.75,
+      "successful_goodput_rps": 4.0,
+      "rejection_rate": 0.5423728813559322,
+      "failure_rate": 0.011299435028248588,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7288135593220338,
+      "ttft_s": {
+        "samples": 81,
+        "p50": 0.4140896970061778,
+        "p95": 1.0145435077163087,
+        "p99": 1.2694864320479946,
+        "maximum": 1.316461879504768
+      },
+      "e2e_success_s": {
+        "samples": 79,
+        "p50": 1.671252327712681,
+        "p95": 3.3116164439577025,
+        "p99": 3.5959259955120064,
+        "maximum": 3.829648641958963
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 81,
+        "p50": 0.013888888888888888,
+        "p95": 0.015131578947368449,
+        "p99": 0.015347295864262997,
+        "maximum": 0.015760869565217394
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.715001417323947e-05,
+        "p95": 2.6314973365515463e-05,
+        "p99": 3.102295799180866e-05,
+        "maximum": 3.219995414838195e-05
+      },
+      "controller_cpu_total_s": 0.0002162999999999471,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 8,
+      "budget_total_variation": 128.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary",
+      "thresholds": [
+        512,
+        2048
+      ]
+    },
+    {
+      "offered": 177,
+      "accepted": 88,
+      "successful": 86,
+      "good": 37,
+      "accepted_throughput_rps": 7.333333333333333,
+      "successful_goodput_rps": 3.0833333333333335,
+      "rejection_rate": 0.5028248587570622,
+      "failure_rate": 0.011299435028248588,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7909604519774012,
+      "ttft_s": {
+        "samples": 88,
+        "p50": 0.5262634686962269,
+        "p95": 1.004248890987551,
+        "p99": 1.2653760803955265,
+        "maximum": 1.316461879504768
+      },
+      "e2e_success_s": {
+        "samples": 86,
+        "p50": 1.923405947005882,
+        "p95": 3.665792544727924,
+        "p99": 3.94111385851192,
+        "maximum": 4.004648641958964
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 88,
+        "p50": 0.014456018518518523,
+        "p95": 0.016315789473684197,
+        "p99": 0.016698529411764713,
+        "maximum": 0.01691176470588233
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.344997483305633e-05,
+        "p95": 3.740499960258602e-05,
+        "p99": 4.484100500121713e-05,
+        "maximum": 4.67000063508749e-05
+      },
+      "controller_cpu_total_s": 0.0002984000000000042,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 8,
+      "budget_total_variation": 128.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary",
+      "thresholds": [
+        2000,
+        6000
+      ]
+    },
+    {
+      "offered": 177,
+      "accepted": 99,
+      "successful": 98,
+      "good": 31,
+      "accepted_throughput_rps": 8.25,
+      "successful_goodput_rps": 2.5833333333333335,
+      "rejection_rate": 0.4406779661016949,
+      "failure_rate": 0.005649717514124294,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8248587570621468,
+      "ttft_s": {
+        "samples": 99,
+        "p50": 0.6447723872289046,
+        "p95": 1.196505166224144,
+        "p99": 1.377624074634776,
+        "maximum": 1.4267067984903221
+      },
+      "e2e_success_s": {
+        "samples": 98,
+        "p50": 1.8815016000246625,
+        "p95": 3.8387226285815945,
+        "p99": 4.680407912802915,
+        "maximum": 4.887247316004779
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 99,
+        "p50": 0.01527777777777778,
+        "p95": 0.016964285714285706,
+        "p99": 0.01749999999999998,
+        "maximum": 0.01749999999999998
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.4899985874071717e-05,
+        "p95": 3.8350000977516174e-05,
+        "p99": 3.967001102864742e-05,
+        "maximum": 4.0000013541430235e-05
+      },
+      "controller_cpu_total_s": 0.00030230000000006085,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary",
+      "thresholds": [
+        4000,
+        10000
+      ]
+    },
+    {
+      "offered": 199,
+      "accepted": 70,
+      "successful": 67,
+      "good": 63,
+      "accepted_throughput_rps": 5.833333333333333,
+      "successful_goodput_rps": 5.25,
+      "rejection_rate": 0.6482412060301508,
+      "failure_rate": 0.01507537688442211,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6834170854271356,
+      "ttft_s": {
+        "samples": 70,
+        "p50": 0.19355791891298768,
+        "p95": 0.507455520186743,
+        "p99": 0.5997014340727577,
+        "maximum": 0.6287701460719739
+      },
+      "e2e_success_s": {
+        "samples": 67,
+        "p50": 1.194769211572062,
+        "p95": 2.909392741364297,
+        "p99": 3.077920022550938,
+        "maximum": 3.135745976324131
+      },
+      "policy": "fixed-16",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 70,
+        "p50": 0.013226842461122372,
+        "p95": 0.01460096153846154,
+        "p99": 0.015121022031823753,
+        "maximum": 0.015131578947368426
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.700012944638729e-06,
+        "p95": 2.724994556047022e-06,
+        "p99": 2.944970619864762e-06,
+        "maximum": 2.9999646358191967e-06
+      },
+      "controller_cpu_total_s": 1.6499999999974868e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 199,
+      "accepted": 97,
+      "successful": 93,
+      "good": 47,
+      "accepted_throughput_rps": 8.083333333333334,
+      "successful_goodput_rps": 3.9166666666666665,
+      "rejection_rate": 0.5125628140703518,
+      "failure_rate": 0.020100502512562814,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7638190954773869,
+      "ttft_s": {
+        "samples": 97,
+        "p50": 0.49700385053600904,
+        "p95": 1.005469052826712,
+        "p99": 1.1611336012340823,
+        "maximum": 1.1998252229943969
+      },
+      "e2e_success_s": {
+        "samples": 93,
+        "p50": 1.575914084971627,
+        "p95": 3.5093895660257313,
+        "p99": 4.434704934632686,
+        "maximum": 4.769661195674538
+      },
+      "policy": "fixed-32",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 97,
+        "p50": 0.014772727272727241,
+        "p95": 0.017620320855614977,
+        "p99": 0.017790804597701142,
+        "maximum": 0.01810344827586208
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.0999577827751637e-06,
+        "p95": 2.9450224246829747e-06,
+        "p99": 2.9890227597206833e-06,
+        "maximum": 3.00002284348011e-06
+      },
+      "controller_cpu_total_s": 1.8399999999973993e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 199,
+      "accepted": 66,
+      "successful": 63,
+      "good": 39,
+      "accepted_throughput_rps": 5.5,
+      "successful_goodput_rps": 3.25,
+      "rejection_rate": 0.6683417085427136,
+      "failure_rate": 0.01507537688442211,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8040201005025126,
+      "ttft_s": {
+        "samples": 66,
+        "p50": 0.3999183440138805,
+        "p95": 1.425584434348424,
+        "p99": 1.512318874584733,
+        "maximum": 1.5334753618979349
+      },
+      "e2e_success_s": {
+        "samples": 63,
+        "p50": 1.6208175312212791,
+        "p95": 3.227923303464422,
+        "p99": 3.7694063556759394,
+        "maximum": 4.191431185144675
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 66,
+        "p50": 0.013804446460980042,
+        "p95": 0.014637212643678182,
+        "p99": 0.014852272727272737,
+        "maximum": 0.015000000000000015
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.815002178773284e-05,
+        "p95": 2.7490008505992588e-05,
+        "p99": 2.933799696620554e-05,
+        "maximum": 2.9799994081258774e-05
+      },
+      "controller_cpu_total_s": 0.00022660000000002123,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 9,
+      "budget_total_variation": 144.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "burst",
+      "thresholds": [
+        512,
+        2048
+      ]
+    },
+    {
+      "offered": 199,
+      "accepted": 91,
+      "successful": 87,
+      "good": 47,
+      "accepted_throughput_rps": 7.583333333333333,
+      "successful_goodput_rps": 3.9166666666666665,
+      "rejection_rate": 0.542713567839196,
+      "failure_rate": 0.020100502512562814,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7638190954773869,
+      "ttft_s": {
+        "samples": 91,
+        "p50": 0.4932689025278183,
+        "p95": 0.9885185560914578,
+        "p99": 1.163551827594102,
+        "maximum": 1.1998252229943969
+      },
+      "e2e_success_s": {
+        "samples": 87,
+        "p50": 1.587397437105433,
+        "p95": 3.525772788203421,
+        "p99": 4.456549908178895,
+        "maximum": 4.769661195674538
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 91,
+        "p50": 0.015079365079365067,
+        "p95": 0.01763034759358289,
+        "p99": 0.017810344827586203,
+        "maximum": 0.01810344827586208
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.1150015527382493e-05,
+        "p95": 3.355002263560891e-05,
+        "p99": 3.487003268674016e-05,
+        "maximum": 3.520003519952297e-05
+      },
+      "controller_cpu_total_s": 0.00025179999999994096,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 1,
+      "budget_total_variation": 16.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "burst",
+      "thresholds": [
+        2000,
+        6000
+      ]
+    },
+    {
+      "offered": 199,
+      "accepted": 97,
+      "successful": 93,
+      "good": 47,
+      "accepted_throughput_rps": 8.083333333333334,
+      "successful_goodput_rps": 3.9166666666666665,
+      "rejection_rate": 0.5125628140703518,
+      "failure_rate": 0.020100502512562814,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7638190954773869,
+      "ttft_s": {
+        "samples": 97,
+        "p50": 0.49700385053600904,
+        "p95": 1.005469052826712,
+        "p99": 1.1611336012340823,
+        "maximum": 1.1998252229943969
+      },
+      "e2e_success_s": {
+        "samples": 93,
+        "p50": 1.575914084971627,
+        "p95": 3.5093895660257313,
+        "p99": 4.434704934632686,
+        "maximum": 4.769661195674538
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 97,
+        "p50": 0.014772727272727241,
+        "p95": 0.017620320855614977,
+        "p99": 0.017790804597701142,
+        "maximum": 0.01810344827586208
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.2599997464567423e-05,
+        "p95": 3.0840002000331876e-05,
+        "p99": 3.136800602078438e-05,
+        "maximum": 3.15000070258975e-05
+      },
+      "controller_cpu_total_s": 0.0002560000000000062,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "burst",
+      "thresholds": [
+        4000,
+        10000
+      ]
+    },
+    {
+      "offered": 177,
+      "accepted": 50,
+      "successful": 49,
+      "good": 39,
+      "accepted_throughput_rps": 4.166666666666667,
+      "successful_goodput_rps": 3.25,
+      "rejection_rate": 0.7175141242937854,
+      "failure_rate": 0.005649717514124294,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7796610169491526,
+      "ttft_s": {
+        "samples": 50,
+        "p50": 0.290398563611848,
+        "p95": 0.5874173270998444,
+        "p99": 0.6617946226650484,
+        "maximum": 0.7179672027104207
+      },
+      "e2e_success_s": {
+        "samples": 49,
+        "p50": 1.3087204273139683,
+        "p95": 3.0470529810271336,
+        "p99": 3.366895678512861,
+        "maximum": 3.4243544814856914
+      },
+      "policy": "fixed-16",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 50,
+        "p50": 0.012500000000000025,
+        "p95": 0.01375102796052632,
+        "p99": 0.014012077294685973,
+        "maximum": 0.014130434782608664
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.600012183189392e-06,
+        "p95": 2.5700195692479605e-06,
+        "p99": 2.8340215794742113e-06,
+        "maximum": 2.900022082030773e-06
+      },
+      "controller_cpu_total_s": 1.539999999991548e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 177,
+      "accepted": 69,
+      "successful": 69,
+      "good": 12,
+      "accepted_throughput_rps": 5.75,
+      "successful_goodput_rps": 1.0,
+      "rejection_rate": 0.6101694915254238,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.9322033898305084,
+      "ttft_s": {
+        "samples": 69,
+        "p50": 0.8106563857374915,
+        "p95": 1.7510067283293766,
+        "p99": 1.9396670500330857,
+        "maximum": 1.9601381013608101
+      },
+      "e2e_success_s": {
+        "samples": 69,
+        "p50": 2.1755585603977154,
+        "p95": 3.375205140614534,
+        "p99": 3.9818410101595236,
+        "maximum": 4.374010817858526
+      },
+      "policy": "fixed-32",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 69,
+        "p50": 0.01480582524271845,
+        "p95": 0.015861244019138757,
+        "p99": 0.016116796967543236,
+        "maximum": 0.016269841269841268
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.300017513334751e-06,
+        "p95": 3.545000799931586e-06,
+        "p99": 3.5889755235984924e-06,
+        "maximum": 3.5999692045152187e-06
+      },
+      "controller_cpu_total_s": 2.060000000006501e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 177,
+      "accepted": 53,
+      "successful": 51,
+      "good": 21,
+      "accepted_throughput_rps": 4.416666666666667,
+      "successful_goodput_rps": 1.75,
+      "rejection_rate": 0.7005649717514124,
+      "failure_rate": 0.011299435028248588,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8813559322033898,
+      "ttft_s": {
+        "samples": 53,
+        "p50": 0.5601381013608098,
+        "p95": 1.7698881221088456,
+        "p99": 2.455301437172294,
+        "maximum": 2.4937912412776324
+      },
+      "e2e_success_s": {
+        "samples": 51,
+        "p50": 1.9525671756248562,
+        "p95": 3.385422997089332,
+        "p99": 4.186812702226942,
+        "maximum": 4.844772387228904
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 53,
+        "p50": 0.013636363636363629,
+        "p95": 0.014939415538132583,
+        "p99": 0.015492046659597032,
+        "maximum": 0.015760869565217394
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.300000051036477e-05,
+        "p95": 3.6774988984689116e-05,
+        "p99": 3.7434994010254743e-05,
+        "maximum": 3.759999526664615e-05
+      },
+      "controller_cpu_total_s": 0.0002834999999999366,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 7,
+      "budget_total_variation": 112.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift",
+      "thresholds": [
+        512,
+        2048
+      ]
+    },
+    {
+      "offered": 177,
+      "accepted": 57,
+      "successful": 56,
+      "good": 25,
+      "accepted_throughput_rps": 4.75,
+      "successful_goodput_rps": 2.0833333333333335,
+      "rejection_rate": 0.6779661016949152,
+      "failure_rate": 0.005649717514124294,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8587570621468926,
+      "ttft_s": {
+        "samples": 57,
+        "p50": 0.5522854227048404,
+        "p95": 1.541229893413322,
+        "p99": 1.7842102942713711,
+        "maximum": 1.8822300303482162
+      },
+      "e2e_success_s": {
+        "samples": 56,
+        "p50": 1.9480590280671999,
+        "p95": 3.302319274105481,
+        "p99": 3.7597439769407255,
+        "maximum": 3.9557755824968766
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 57,
+        "p50": 0.013690476190476194,
+        "p95": 0.015222693531283159,
+        "p99": 0.015506211180124223,
+        "maximum": 0.015760869565217394
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.8300022929906845e-05,
+        "p95": 4.578501102514563e-05,
+        "p99": 5.8677006745710985e-05,
+        "maximum": 6.19000056758523e-05
+      },
+      "controller_cpu_total_s": 0.00028290000000003035,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 9,
+      "budget_total_variation": 144.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "shift",
+      "thresholds": [
+        2000,
+        6000
+      ]
+    },
+    {
+      "offered": 177,
+      "accepted": 65,
+      "successful": 65,
+      "good": 15,
+      "accepted_throughput_rps": 5.416666666666667,
+      "successful_goodput_rps": 1.25,
+      "rejection_rate": 0.632768361581921,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.9152542372881356,
+      "ttft_s": {
+        "samples": 65,
+        "p50": 0.7550624165152824,
+        "p95": 1.2350851142105475,
+        "p99": 1.8263111108157661,
+        "maximum": 1.9300336141141567
+      },
+      "e2e_success_s": {
+        "samples": 65,
+        "p50": 1.9180627258202838,
+        "p95": 3.39819993297721,
+        "p99": 4.023619025282805,
+        "maximum": 4.324010817858525
+      },
+      "policy": "feedback",
+      "seed": 2,
+      "request_tpot_s": {
+        "samples": 65,
+        "p50": 0.014855072463768122,
+        "p95": 0.015885167464114832,
+        "p99": 0.016125799573560768,
+        "maximum": 0.016269841269841268
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.1100015146657825e-05,
+        "p95": 5.16849977429956e-05,
+        "p99": 6.36969867628068e-05,
+        "maximum": 6.669998401775956e-05
+      },
+      "controller_cpu_total_s": 0.00029789999999990657,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift",
+      "thresholds": [
+        4000,
+        10000
+      ]
+    }
+  ],
+  "episodes": [
+    {
+      "offered": 157,
+      "accepted": 82,
+      "successful": 79,
+      "good": 65,
+      "accepted_throughput_rps": 6.833333333333333,
+      "successful_goodput_rps": 5.416666666666667,
+      "rejection_rate": 0.47770700636942676,
+      "failure_rate": 0.01910828025477707,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5859872611464968,
+      "ttft_s": {
+        "samples": 82,
+        "p50": 0.26614305458802434,
+        "p95": 0.9338640674243754,
+        "p99": 1.0222623702824836,
+        "maximum": 1.0652074876706514
+      },
+      "e2e_success_s": {
+        "samples": 79,
+        "p50": 1.22076284064247,
+        "p95": 2.773298766464036,
+        "p99": 3.353956373813455,
+        "maximum": 3.5839920635409257
+      },
+      "policy": "mpc",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 82,
+        "p50": 0.013396428571428575,
+        "p95": 0.01457785087719297,
+        "p99": 0.015492753623188428,
+        "maximum": 0.016666666666666705
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.04957815000670962,
+        "p95": 0.05581736498279497,
+        "p99": 0.057020192972850055,
+        "maximum": 0.057320899970363826
+      },
+      "controller_cpu_total_s": 0.5750038000000002,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 157,
+      "accepted": 105,
+      "successful": 102,
+      "good": 16,
+      "accepted_throughput_rps": 8.75,
+      "successful_goodput_rps": 1.3333333333333333,
+      "rejection_rate": 0.33121019108280253,
+      "failure_rate": 0.01910828025477707,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8980891719745223,
+      "ttft_s": {
+        "samples": 105,
+        "p50": 1.012188824228469,
+        "p95": 1.48430044501948,
+        "p99": 1.5832544064310017,
+        "maximum": 1.5894350970820188
+      },
+      "e2e_success_s": {
+        "samples": 102,
+        "p50": 2.011486962771623,
+        "p95": 3.3715560578359445,
+        "p99": 4.292632749811195,
+        "maximum": 4.834227968258751
+      },
+      "policy": "fixed-32",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 105,
+        "p50": 0.014705882352941176,
+        "p95": 0.015828431372549013,
+        "p99": 0.01599793103448277,
+        "maximum": 0.016666666666666705
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.6499834600836039e-06,
+        "p95": 2.9999646358191954e-06,
+        "p99": 3.879971336573364e-06,
+        "maximum": 4.099973011761904e-06
+      },
+      "controller_cpu_total_s": 1.7299999999664806e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 1.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 157,
+      "accepted": 85,
+      "successful": 81,
+      "good": 80,
+      "accepted_throughput_rps": 7.083333333333333,
+      "successful_goodput_rps": 6.666666666666667,
+      "rejection_rate": 0.4585987261146497,
+      "failure_rate": 0.025477707006369428,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.49044585987261147,
+      "ttft_s": {
+        "samples": 85,
+        "p50": 0.14643081461741037,
+        "p95": 0.4170908919472216,
+        "p99": 0.5170634647438691,
+        "maximum": 0.6692734021459454
+      },
+      "e2e_success_s": {
+        "samples": 81,
+        "p50": 1.009613819790582,
+        "p95": 2.649042114197606,
+        "p99": 3.203624909900761,
+        "maximum": 3.3339920635409257
+      },
+      "policy": "fixed-16",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 85,
+        "p50": 0.013372093023255816,
+        "p95": 0.01410434782608696,
+        "p99": 0.014370370370370379,
+        "maximum": 0.014814814814814812
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.500011421740055e-06,
+        "p95": 1.8899881979450581e-06,
+        "p99": 1.977963256649673e-06,
+        "maximum": 1.9999570213258266e-06
+      },
+      "controller_cpu_total_s": 1.4499999999695312e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 157,
+      "accepted": 83,
+      "successful": 81,
+      "good": 50,
+      "accepted_throughput_rps": 6.916666666666667,
+      "successful_goodput_rps": 4.166666666666667,
+      "rejection_rate": 0.4713375796178344,
+      "failure_rate": 0.012738853503184714,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6815286624203821,
+      "ttft_s": {
+        "samples": 83,
+        "p50": 0.35289275467941295,
+        "p95": 0.9189360260457539,
+        "p99": 1.065923718625779,
+        "maximum": 1.0691865485324712
+      },
+      "e2e_success_s": {
+        "samples": 81,
+        "p50": 1.305616577785257,
+        "p95": 3.098716970260986,
+        "p99": 3.653532188555268,
+        "maximum": 3.9342279682587504
+      },
+      "policy": "feedback",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 83,
+        "p50": 0.013377192982456144,
+        "p95": 0.014515133412982904,
+        "p99": 0.014893159806295391,
+        "maximum": 0.01517857142857139
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.6399979358538985e-05,
+        "p95": 2.7495008544065056e-05,
+        "p99": 2.8858993318863215e-05,
+        "maximum": 2.9199989512562752e-05
+      },
+      "controller_cpu_total_s": 0.0002140000000001585,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 9,
+      "budget_total_variation": 144.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 157,
+      "accepted": 82,
+      "successful": 79,
+      "good": 65,
+      "accepted_throughput_rps": 6.833333333333333,
+      "successful_goodput_rps": 5.416666666666667,
+      "rejection_rate": 0.47770700636942676,
+      "failure_rate": 0.01910828025477707,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5859872611464968,
+      "ttft_s": {
+        "samples": 82,
+        "p50": 0.26614305458802434,
+        "p95": 0.9338640674243754,
+        "p99": 1.0222623702824836,
+        "maximum": 1.0652074876706514
+      },
+      "e2e_success_s": {
+        "samples": 79,
+        "p50": 1.22076284064247,
+        "p95": 2.773298766464036,
+        "p99": 3.353956373813455,
+        "maximum": 3.5839920635409257
+      },
+      "policy": "one-move",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 82,
+        "p50": 0.013396428571428575,
+        "p95": 0.01457785087719297,
+        "p99": 0.015492753623188428,
+        "maximum": 0.016666666666666705
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.014000849972944707,
+        "p95": 0.016844515004777346,
+        "p99": 0.01799146300472785,
+        "maximum": 0.018278200004715472
+      },
+      "controller_cpu_total_s": 0.16423599999999994,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 213,
+      "accepted": 100,
+      "successful": 97,
+      "good": 30,
+      "accepted_throughput_rps": 8.333333333333334,
+      "successful_goodput_rps": 2.5,
+      "rejection_rate": 0.5305164319248826,
+      "failure_rate": 0.014084507042253521,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8591549295774648,
+      "ttft_s": {
+        "samples": 100,
+        "p50": 0.776798154719613,
+        "p95": 1.3239618496818475,
+        "p99": 1.4699537024154041,
+        "maximum": 1.5671569089318211
+      },
+      "e2e_success_s": {
+        "samples": 97,
+        "p50": 1.7770441291042922,
+        "p95": 3.528405549640107,
+        "p99": 4.342281053600552,
+        "maximum": 4.506313466732397
+      },
+      "policy": "fixed-32",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 100,
+        "p50": 0.014999999999999961,
+        "p95": 0.016249999999999994,
+        "p99": 0.016671052631578916,
+        "maximum": 0.017105263157894745
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.5500118024647236e-06,
+        "p95": 2.4999870220199226e-06,
+        "p99": 2.5000126333907246e-06,
+        "maximum": 2.500019036233425e-06
+      },
+      "controller_cpu_total_s": 1.430000000013365e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 213,
+      "accepted": 76,
+      "successful": 75,
+      "good": 66,
+      "accepted_throughput_rps": 6.333333333333333,
+      "successful_goodput_rps": 5.5,
+      "rejection_rate": 0.6431924882629108,
+      "failure_rate": 0.004694835680751174,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6901408450704225,
+      "ttft_s": {
+        "samples": 76,
+        "p50": 0.21163699523346136,
+        "p95": 1.2036307075710864,
+        "p99": 1.2666564101784612,
+        "maximum": 1.29306072301513
+      },
+      "e2e_success_s": {
+        "samples": 75,
+        "p50": 1.1913849830533472,
+        "p95": 3.2328172806742694,
+        "p99": 3.8715931751221553,
+        "maximum": 3.9854463697200604
+      },
+      "policy": "mpc",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 76,
+        "p50": 0.013373983739837395,
+        "p95": 0.01474621689785623,
+        "p99": 0.01505434782608698,
+        "maximum": 0.015217391304347811
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.04055374997551553,
+        "p95": 0.10279630952572916,
+        "p99": 0.10280150107864756,
+        "maximum": 0.10280279896687716
+      },
+      "controller_cpu_total_s": 0.6424650999999997,
+      "decisions": 12,
+      "fallback_reasons": {
+        "deadline_exceeded": 2
+      },
+      "budget_switches": 2,
+      "budget_total_variation": 32.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 213,
+      "accepted": 79,
+      "successful": 76,
+      "good": 40,
+      "accepted_throughput_rps": 6.583333333333333,
+      "successful_goodput_rps": 3.3333333333333335,
+      "rejection_rate": 0.6291079812206573,
+      "failure_rate": 0.014084507042253521,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.812206572769953,
+      "ttft_s": {
+        "samples": 79,
+        "p50": 0.41715376154322037,
+        "p95": 1.3424949143045692,
+        "p99": 1.3809476294787633,
+        "maximum": 1.3992108614349617
+      },
+      "e2e_success_s": {
+        "samples": 76,
+        "p50": 1.7908856936086308,
+        "p95": 2.9832189294209615,
+        "p99": 3.3396582956732095,
+        "maximum": 3.4197848561400193
+      },
+      "policy": "feedback",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 79,
+        "p50": 0.013750000000000017,
+        "p95": 0.015309601113172543,
+        "p99": 0.015654891304347825,
+        "maximum": 0.015760869565217384
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.6499980119988322e-05,
+        "p95": 3.0420004623010745e-05,
+        "p99": 3.728400566615165e-05,
+        "maximum": 3.9000005926936865e-05
+      },
+      "controller_cpu_total_s": 0.00021130000000013638,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 9,
+      "budget_total_variation": 144.0,
+      "backlog_recovery_s": 1.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 213,
+      "accepted": 76,
+      "successful": 75,
+      "good": 66,
+      "accepted_throughput_rps": 6.333333333333333,
+      "successful_goodput_rps": 5.5,
+      "rejection_rate": 0.6431924882629108,
+      "failure_rate": 0.004694835680751174,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6901408450704225,
+      "ttft_s": {
+        "samples": 76,
+        "p50": 0.21163699523346136,
+        "p95": 1.2036307075710864,
+        "p99": 1.2666564101784612,
+        "maximum": 1.29306072301513
+      },
+      "e2e_success_s": {
+        "samples": 75,
+        "p50": 1.1913849830533472,
+        "p95": 3.2328172806742694,
+        "p99": 3.8715931751221553,
+        "maximum": 3.9854463697200604
+      },
+      "policy": "one-move",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 76,
+        "p50": 0.013373983739837395,
+        "p95": 0.01474621689785623,
+        "p99": 0.01505434782608698,
+        "maximum": 0.015217391304347811
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.011861400009365752,
+        "p95": 0.029689554998185486,
+        "p99": 0.029762550990562887,
+        "maximum": 0.029780799988657236
+      },
+      "controller_cpu_total_s": 0.18540410000000018,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 2,
+      "budget_total_variation": 32.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 213,
+      "accepted": 83,
+      "successful": 82,
+      "good": 82,
+      "accepted_throughput_rps": 6.916666666666667,
+      "successful_goodput_rps": 6.833333333333333,
+      "rejection_rate": 0.6103286384976526,
+      "failure_rate": 0.004694835680751174,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6150234741784038,
+      "ttft_s": {
+        "samples": 83,
+        "p50": 0.14679206457718497,
+        "p95": 0.3605159153515447,
+        "p99": 0.4114817264829951,
+        "maximum": 0.4995465926004412
+      },
+      "e2e_success_s": {
+        "samples": 82,
+        "p50": 1.0341409872593514,
+        "p95": 2.5020279214259453,
+        "p99": 3.3242385266844643,
+        "maximum": 3.4197848561400193
+      },
+      "policy": "fixed-16",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 83,
+        "p50": 0.013297872340425532,
+        "p95": 0.014465709728867638,
+        "p99": 0.015039130434782633,
+        "maximum": 0.015217391304347811
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.00006091594696e-07,
+        "p95": 2.320017665624617e-06,
+        "p99": 3.024023026227952e-06,
+        "maximum": 3.200024366378784e-06
+      },
+      "controller_cpu_total_s": 1.3000000000040757e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 157,
+      "accepted": 60,
+      "successful": 58,
+      "good": 49,
+      "accepted_throughput_rps": 5.0,
+      "successful_goodput_rps": 4.083333333333333,
+      "rejection_rate": 0.6178343949044586,
+      "failure_rate": 0.012738853503184714,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6878980891719745,
+      "ttft_s": {
+        "samples": 60,
+        "p50": 0.23805919907578,
+        "p95": 0.8037159006386357,
+        "p99": 1.0339264762397635,
+        "maximum": 1.0652074876706514
+      },
+      "e2e_success_s": {
+        "samples": 58,
+        "p50": 1.087875213328787,
+        "p95": 2.6302169202185626,
+        "p99": 2.8978737545622772,
+        "maximum": 3.197618513807295
+      },
+      "policy": "one-move",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 60,
+        "p50": 0.013314722660517052,
+        "p95": 0.014028298936835526,
+        "p99": 0.01436278195488722,
+        "maximum": 0.014473684210526335
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.012102800013963133,
+        "p95": 0.014228740020189434,
+        "p99": 0.014500308039132506,
+        "maximum": 0.014568200043868273
+      },
+      "controller_cpu_total_s": 0.13709309999999975,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 1,
+      "budget_total_variation": 16.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 157,
+      "accepted": 60,
+      "successful": 58,
+      "good": 49,
+      "accepted_throughput_rps": 5.0,
+      "successful_goodput_rps": 4.083333333333333,
+      "rejection_rate": 0.6178343949044586,
+      "failure_rate": 0.012738853503184714,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6878980891719745,
+      "ttft_s": {
+        "samples": 60,
+        "p50": 0.23805919907578,
+        "p95": 0.8037159006386357,
+        "p99": 1.0339264762397635,
+        "maximum": 1.0652074876706514
+      },
+      "e2e_success_s": {
+        "samples": 58,
+        "p50": 1.087875213328787,
+        "p95": 2.6302169202185626,
+        "p99": 2.8978737545622772,
+        "maximum": 3.197618513807295
+      },
+      "policy": "mpc",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 60,
+        "p50": 0.013314722660517052,
+        "p95": 0.014028298936835526,
+        "p99": 0.01436278195488722,
+        "maximum": 0.014473684210526335
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.042003650014521554,
+        "p95": 0.05014034999185242,
+        "p99": 0.05038542996277101,
+        "maximum": 0.05044669995550066
+      },
+      "controller_cpu_total_s": 0.4741635000000004,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 1,
+      "budget_total_variation": 16.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 157,
+      "accepted": 78,
+      "successful": 76,
+      "good": 10,
+      "accepted_throughput_rps": 6.5,
+      "successful_goodput_rps": 0.8333333333333334,
+      "rejection_rate": 0.5031847133757962,
+      "failure_rate": 0.012738853503184714,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.9363057324840764,
+      "ttft_s": {
+        "samples": 78,
+        "p50": 1.1468606724634827,
+        "p95": 1.8533236879868977,
+        "p99": 1.9705505712839582,
+        "maximum": 2.094437520544007
+      },
+      "e2e_success_s": {
+        "samples": 76,
+        "p50": 2.2603324255158155,
+        "p95": 3.1325161358002296,
+        "p99": 3.7535809042776322,
+        "maximum": 3.774042114197606
+      },
+      "policy": "fixed-32",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 78,
+        "p50": 0.014525506376594131,
+        "p95": 0.015478705566733723,
+        "p99": 0.015789473684210516,
+        "maximum": 0.015789473684210516
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.500011421740055e-06,
+        "p95": 2.550019416958093e-06,
+        "p99": 2.990022767335177e-06,
+        "maximum": 3.100023604929447e-06
+      },
+      "controller_cpu_total_s": 1.4500000000250424e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 157,
+      "accepted": 63,
+      "successful": 61,
+      "good": 37,
+      "accepted_throughput_rps": 5.25,
+      "successful_goodput_rps": 3.0833333333333335,
+      "rejection_rate": 0.5987261146496815,
+      "failure_rate": 0.012738853503184714,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7643312101910829,
+      "ttft_s": {
+        "samples": 63,
+        "p50": 0.35289275467941295,
+        "p95": 1.7894505143679122,
+        "p99": 2.176187372924813,
+        "maximum": 2.1874680620903337
+      },
+      "e2e_success_s": {
+        "samples": 61,
+        "p50": 1.2654383732951953,
+        "p95": 3.4226185138072944,
+        "p99": 4.167607097730565,
+        "maximum": 4.312468062090334
+      },
+      "policy": "feedback",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 63,
+        "p50": 0.013235294117647064,
+        "p95": 0.013947028423772611,
+        "p99": 0.014189440993788821,
+        "maximum": 0.014285714285714277
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.2750009773299098e-05,
+        "p95": 1.8044988973997533e-05,
+        "p99": 1.896902162116021e-05,
+        "maximum": 1.9200029782950878e-05
+      },
+      "controller_cpu_total_s": 0.0001517999999998132,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 8,
+      "budget_total_variation": 128.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 157,
+      "accepted": 62,
+      "successful": 59,
+      "good": 58,
+      "accepted_throughput_rps": 5.166666666666667,
+      "successful_goodput_rps": 4.833333333333333,
+      "rejection_rate": 0.6050955414012739,
+      "failure_rate": 0.01910828025477707,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6305732484076433,
+      "ttft_s": {
+        "samples": 62,
+        "p50": 0.21476422793247796,
+        "p95": 0.4863497013413569,
+        "p99": 0.6235382328031323,
+        "maximum": 0.7476185138072946
+      },
+      "e2e_success_s": {
+        "samples": 59,
+        "p50": 1.0767936158198723,
+        "p95": 2.423749484654647,
+        "p99": 2.886115074575523,
+        "maximum": 3.147618513807294
+      },
+      "policy": "fixed-16",
+      "seed": 10001,
+      "request_tpot_s": {
+        "samples": 62,
+        "p50": 0.013480769230769232,
+        "p95": 0.013999999999999999,
+        "p99": 0.014492063492063485,
+        "maximum": 0.014814814814814812
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.00006091594696e-07,
+        "p95": 1.6999809304252267e-06,
+        "p99": 1.7000065417960286e-06,
+        "maximum": 1.700012944638729e-06
+      },
+      "controller_cpu_total_s": 1.1099999999597543e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 2.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 161,
+      "accepted": 82,
+      "successful": 78,
+      "good": 59,
+      "accepted_throughput_rps": 6.833333333333333,
+      "successful_goodput_rps": 4.916666666666667,
+      "rejection_rate": 0.4906832298136646,
+      "failure_rate": 0.024844720496894408,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6335403726708074,
+      "ttft_s": {
+        "samples": 82,
+        "p50": 0.2597203564980499,
+        "p95": 1.1434655162064102,
+        "p99": 1.257033536982472,
+        "maximum": 1.3224925653440416
+      },
+      "e2e_success_s": {
+        "samples": 78,
+        "p50": 1.3076501513138332,
+        "p95": 3.341695653171343,
+        "p99": 4.03651441438318,
+        "maximum": 4.13182953497577
+      },
+      "policy": "one-move",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 82,
+        "p50": 0.013214285714285718,
+        "p95": 0.014166666666666676,
+        "p99": 0.014814542483660128,
+        "maximum": 0.015277777777777772
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.01280399999814108,
+        "p95": 0.015861219991347753,
+        "p99": 0.0160229639679892,
+        "maximum": 0.01606339996214956
+      },
+      "controller_cpu_total_s": 0.15344400000000036,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 161,
+      "accepted": 82,
+      "successful": 78,
+      "good": 59,
+      "accepted_throughput_rps": 6.833333333333333,
+      "successful_goodput_rps": 4.916666666666667,
+      "rejection_rate": 0.4906832298136646,
+      "failure_rate": 0.024844720496894408,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6335403726708074,
+      "ttft_s": {
+        "samples": 82,
+        "p50": 0.2597203564980499,
+        "p95": 1.1434655162064102,
+        "p99": 1.257033536982472,
+        "maximum": 1.3224925653440416
+      },
+      "e2e_success_s": {
+        "samples": 78,
+        "p50": 1.3076501513138332,
+        "p95": 3.341695653171343,
+        "p99": 4.03651441438318,
+        "maximum": 4.13182953497577
+      },
+      "policy": "mpc",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 82,
+        "p50": 0.013214285714285718,
+        "p95": 0.014166666666666676,
+        "p99": 0.014814542483660128,
+        "maximum": 0.015277777777777772
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.044742850004695356,
+        "p95": 0.054943374983849935,
+        "p99": 0.05533211499860045,
+        "maximum": 0.05542930000228807
+      },
+      "controller_cpu_total_s": 0.5283677999999994,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 161,
+      "accepted": 83,
+      "successful": 80,
+      "good": 73,
+      "accepted_throughput_rps": 6.916666666666667,
+      "successful_goodput_rps": 6.083333333333333,
+      "rejection_rate": 0.484472049689441,
+      "failure_rate": 0.018633540372670808,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.546583850931677,
+      "ttft_s": {
+        "samples": 83,
+        "p50": 0.2038522825701956,
+        "p95": 0.5389454435603974,
+        "p99": 0.5958661473002399,
+        "maximum": 0.6224787220554635
+      },
+      "e2e_success_s": {
+        "samples": 80,
+        "p50": 1.065957881547916,
+        "p95": 2.7868297351157385,
+        "p99": 3.403510095282082,
+        "maximum": 3.4930995347986147
+      },
+      "policy": "fixed-16",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 83,
+        "p50": 0.01302521008403362,
+        "p95": 0.014098557692307685,
+        "p99": 0.01480882352941176,
+        "maximum": 0.015277777777777772
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.4999823179095984e-06,
+        "p95": 1.6800127923488614e-06,
+        "p99": 1.856014132499695e-06,
+        "maximum": 1.9000144675374031e-06
+      },
+      "controller_cpu_total_s": 1.2900000000204415e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 161,
+      "accepted": 95,
+      "successful": 92,
+      "good": 8,
+      "accepted_throughput_rps": 7.916666666666667,
+      "successful_goodput_rps": 0.6666666666666666,
+      "rejection_rate": 0.40993788819875776,
+      "failure_rate": 0.018633540372670808,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.9503105590062112,
+      "ttft_s": {
+        "samples": 95,
+        "p50": 1.011586682774551,
+        "p95": 1.4540769821661832,
+        "p99": 1.5645934128141952,
+        "maximum": 1.6040824806030898
+      },
+      "e2e_success_s": {
+        "samples": 92,
+        "p50": 1.9587710724124743,
+        "p95": 4.253923318432724,
+        "p99": 4.66978031405078,
+        "maximum": 4.822307770653116
+      },
+      "policy": "fixed-32",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 95,
+        "p50": 0.014516129032258041,
+        "p95": 0.015625,
+        "p99": 0.01579665071770334,
+        "maximum": 0.015909090909090894
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.500011421740055e-06,
+        "p95": 2.0900159142911432e-06,
+        "p99": 2.17801658436656e-06,
+        "maximum": 2.200016751885414e-06
+      },
+      "controller_cpu_total_s": 1.430000000057774e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 161,
+      "accepted": 79,
+      "successful": 76,
+      "good": 48,
+      "accepted_throughput_rps": 6.583333333333333,
+      "successful_goodput_rps": 4.0,
+      "rejection_rate": 0.5093167701863354,
+      "failure_rate": 0.018633540372670808,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7018633540372671,
+      "ttft_s": {
+        "samples": 79,
+        "p50": 0.3105902650580692,
+        "p95": 1.1240649411625596,
+        "p99": 1.3151632529926651,
+        "maximum": 1.3303778390183236
+      },
+      "e2e_success_s": {
+        "samples": 76,
+        "p50": 1.4262404610142114,
+        "p95": 3.921365211298691,
+        "p99": 4.419751405443138,
+        "maximum": 4.680377839018323
+      },
+      "policy": "feedback",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 79,
+        "p50": 0.013541666666666674,
+        "p95": 0.014585674157303358,
+        "p99": 0.015437499999999956,
+        "maximum": 0.015625
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.5700003132224083e-05,
+        "p95": 1.9839976448565722e-05,
+        "p99": 2.036798046901822e-05,
+        "maximum": 2.0499981474131346e-05
+      },
+      "controller_cpu_total_s": 0.00017840000000068912,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 10,
+      "budget_total_variation": 160.0,
+      "backlog_recovery_s": 1.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 219,
+      "accepted": 68,
+      "successful": 67,
+      "good": 52,
+      "accepted_throughput_rps": 5.666666666666667,
+      "successful_goodput_rps": 4.333333333333333,
+      "rejection_rate": 0.6894977168949772,
+      "failure_rate": 0.0045662100456621,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7625570776255708,
+      "ttft_s": {
+        "samples": 68,
+        "p50": 0.26893914825889553,
+        "p95": 1.1251677282493864,
+        "p99": 1.3612844431926434,
+        "maximum": 1.4122254169536372
+      },
+      "e2e_success_s": {
+        "samples": 67,
+        "p50": 1.360880139716385,
+        "p95": 3.452516419262091,
+        "p99": 3.9030219462040647,
+        "maximum": 4.437225416953638
+      },
+      "policy": "one-move",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 68,
+        "p50": 0.013125173659349822,
+        "p95": 0.014353488735919896,
+        "p99": 0.01476365546218489,
+        "maximum": 0.01488095238095238
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.011022499995306134,
+        "p95": 0.03133659997547511,
+        "p99": 0.03212595996737946,
+        "maximum": 0.032323299965355545
+      },
+      "controller_cpu_total_s": 0.18963409999999925,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 219,
+      "accepted": 78,
+      "successful": 77,
+      "good": 46,
+      "accepted_throughput_rps": 6.5,
+      "successful_goodput_rps": 3.8333333333333335,
+      "rejection_rate": 0.6438356164383562,
+      "failure_rate": 0.0045662100456621,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7899543378995434,
+      "ttft_s": {
+        "samples": 78,
+        "p50": 0.3528636587531152,
+        "p95": 0.9596488965941191,
+        "p99": 1.393812966698473,
+        "maximum": 1.414170914530029
+      },
+      "e2e_success_s": {
+        "samples": 77,
+        "p50": 1.4543499131334556,
+        "p95": 3.350016371156857,
+        "p99": 3.7801930606836733,
+        "maximum": 4.073444222615005
+      },
+      "policy": "feedback",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 78,
+        "p50": 0.013888888888888888,
+        "p95": 0.015217391304347834,
+        "p99": 0.015690340909090914,
+        "maximum": 0.01590909090909092
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.6700010746717453e-05,
+        "p95": 2.3599978885613378e-05,
+        "p99": 2.623997337650508e-05,
+        "maximum": 2.6899971999228e-05
+      },
+      "controller_cpu_total_s": 0.00020180000000014076,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 7,
+      "budget_total_variation": 112.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 219,
+      "accepted": 97,
+      "successful": 96,
+      "good": 33,
+      "accepted_throughput_rps": 8.083333333333334,
+      "successful_goodput_rps": 2.75,
+      "rejection_rate": 0.5570776255707762,
+      "failure_rate": 0.0045662100456621,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8493150684931506,
+      "ttft_s": {
+        "samples": 97,
+        "p50": 0.5888855671694389,
+        "p95": 1.086167279331101,
+        "p99": 1.3392353649975859,
+        "maximum": 1.4122254169536372
+      },
+      "e2e_success_s": {
+        "samples": 96,
+        "p50": 1.5824020495589248,
+        "p95": 4.01819889863161,
+        "p99": 4.566559152955028,
+        "maximum": 5.062225416953638
+      },
+      "policy": "fixed-32",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 97,
+        "p50": 0.014682539682539679,
+        "p95": 0.01666666666666667,
+        "p99": 0.017113360323886644,
+        "maximum": 0.01730769230769228
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.4999823179095984e-06,
+        "p95": 1.7350132111459968e-06,
+        "p99": 1.8670142162591222e-06,
+        "maximum": 1.9000144675374031e-06
+      },
+      "controller_cpu_total_s": 1.3200000001045709e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 219,
+      "accepted": 70,
+      "successful": 69,
+      "good": 54,
+      "accepted_throughput_rps": 5.833333333333333,
+      "successful_goodput_rps": 4.5,
+      "rejection_rate": 0.680365296803653,
+      "failure_rate": 0.0045662100456621,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7534246575342466,
+      "ttft_s": {
+        "samples": 70,
+        "p50": 0.2734269207153881,
+        "p95": 1.1187542235745982,
+        "p99": 1.359763817110226,
+        "maximum": 1.4122254169536372
+      },
+      "e2e_success_s": {
+        "samples": 69,
+        "p50": 1.360880139716385,
+        "p95": 3.444218577397779,
+        "p99": 3.886833962241948,
+        "maximum": 4.437225416953638
+      },
+      "policy": "mpc",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 70,
+        "p50": 0.013198345817727844,
+        "p95": 0.014351142052565703,
+        "p99": 0.014760154061624668,
+        "maximum": 0.01488095238095238
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.03946230001747608,
+        "p95": 0.10319270998879801,
+        "p99": 0.10326038196624722,
+        "maximum": 0.10327729996060953
+      },
+      "controller_cpu_total_s": 0.6660057999999998,
+      "decisions": 12,
+      "fallback_reasons": {
+        "deadline_exceeded": 3
+      },
+      "budget_switches": 4,
+      "budget_total_variation": 64.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 219,
+      "accepted": 66,
+      "successful": 65,
+      "good": 64,
+      "accepted_throughput_rps": 5.5,
+      "successful_goodput_rps": 5.333333333333333,
+      "rejection_rate": 0.6986301369863014,
+      "failure_rate": 0.0045662100456621,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7077625570776256,
+      "ttft_s": {
+        "samples": 66,
+        "p50": 0.19010569263777283,
+        "p95": 0.3871002409212012,
+        "p99": 0.47602305981018805,
+        "maximum": 0.5645170869323155
+      },
+      "e2e_success_s": {
+        "samples": 65,
+        "p50": 1.1188941803909582,
+        "p95": 3.147021573967736,
+        "p99": 3.314453615560981,
+        "maximum": 3.5278262188482206
+      },
+      "policy": "fixed-16",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 66,
+        "p50": 0.013015245623941279,
+        "p95": 0.014113451086956549,
+        "p99": 0.014994612068965508,
+        "maximum": 0.015625
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.00006091594696e-07,
+        "p95": 1.6900128684937952e-06,
+        "p99": 1.778013538569212e-06,
+        "maximum": 1.800013706088066e-06
+      },
+      "controller_cpu_total_s": 1.0900000001257126e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 161,
+      "accepted": 59,
+      "successful": 55,
+      "good": 35,
+      "accepted_throughput_rps": 4.916666666666667,
+      "successful_goodput_rps": 2.9166666666666665,
+      "rejection_rate": 0.6335403726708074,
+      "failure_rate": 0.024844720496894408,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.782608695652174,
+      "ttft_s": {
+        "samples": 59,
+        "p50": 0.323217766360373,
+        "p95": 1.1635151599510767,
+        "p99": 1.2756206684925477,
+        "maximum": 1.3224925653440416
+      },
+      "e2e_success_s": {
+        "samples": 55,
+        "p50": 1.3624825108979592,
+        "p95": 3.3312164871257375,
+        "p99": 4.064985164690057,
+        "maximum": 4.13182953497577
+      },
+      "policy": "one-move",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 59,
+        "p50": 0.012954545454545456,
+        "p95": 0.014590517241379313,
+        "p99": 0.014946078431372547,
+        "maximum": 0.015277777777777772
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.011506600014399737,
+        "p95": 0.0166974149789894,
+        "p99": 0.017290842964430342,
+        "maximum": 0.017439199960790575
+      },
+      "controller_cpu_total_s": 0.1427461999999995,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 1,
+      "budget_total_variation": 16.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 161,
+      "accepted": 59,
+      "successful": 57,
+      "good": 33,
+      "accepted_throughput_rps": 4.916666666666667,
+      "successful_goodput_rps": 2.75,
+      "rejection_rate": 0.6335403726708074,
+      "failure_rate": 0.012422360248447204,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7950310559006211,
+      "ttft_s": {
+        "samples": 59,
+        "p50": 0.40620536557028153,
+        "p95": 1.1564971278443446,
+        "p99": 1.8168383278105098,
+        "maximum": 1.8194446223323695
+      },
+      "e2e_success_s": {
+        "samples": 57,
+        "p50": 1.3286209869829646,
+        "p95": 3.1780653813474005,
+        "p99": 3.4125930966603133,
+        "maximum": 3.518099534798614
+      },
+      "policy": "feedback",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 59,
+        "p50": 0.012650602409638554,
+        "p95": 0.01391509433962264,
+        "p99": 0.014364661654135337,
+        "maximum": 0.014473684210526323
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.575000351294875e-05,
+        "p95": 2.8230014140717683e-05,
+        "p99": 2.9725999920628967e-05,
+        "maximum": 3.0099996365606785e-05
+      },
+      "controller_cpu_total_s": 0.00021769999999854406,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 7,
+      "budget_total_variation": 112.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 161,
+      "accepted": 68,
+      "successful": 66,
+      "good": 7,
+      "accepted_throughput_rps": 5.666666666666667,
+      "successful_goodput_rps": 0.5833333333333334,
+      "rejection_rate": 0.577639751552795,
+      "failure_rate": 0.012422360248447204,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.9565217391304348,
+      "ttft_s": {
+        "samples": 68,
+        "p50": 1.2729378379192415,
+        "p95": 1.8093998474627135,
+        "p99": 1.9805436934306921,
+        "maximum": 2.025532946495362
+      },
+      "e2e_success_s": {
+        "samples": 66,
+        "p50": 2.135565220878724,
+        "p95": 4.2589616619398205,
+        "p99": 4.489832511077328,
+        "maximum": 4.504695180980219
+      },
+      "policy": "fixed-32",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 68,
+        "p50": 0.014166666666666668,
+        "p95": 0.015203804347826075,
+        "p99": 0.015398117839607199,
+        "maximum": 0.015425531914893629
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 2.649991074576974e-06,
+        "p95": 3.8450030842795965e-06,
+        "p99": 3.8889778079465034e-06,
+        "maximum": 3.89997148886323e-06
+      },
+      "controller_cpu_total_s": 2.139999999961617e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 161,
+      "accepted": 54,
+      "successful": 52,
+      "good": 44,
+      "accepted_throughput_rps": 4.5,
+      "successful_goodput_rps": 3.6666666666666665,
+      "rejection_rate": 0.6645962732919255,
+      "failure_rate": 0.012422360248447204,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7267080745341615,
+      "ttft_s": {
+        "samples": 54,
+        "p50": 0.2440742914655223,
+        "p95": 0.6354862318077527,
+        "p99": 0.8789434449636144,
+        "maximum": 0.9055174261359653
+      },
+      "e2e_success_s": {
+        "samples": 52,
+        "p50": 1.0746224994531275,
+        "p95": 3.2024165010394867,
+        "p99": 3.5848659038662722,
+        "maximum": 3.6803778390183233
+      },
+      "policy": "fixed-16",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 54,
+        "p50": 0.01292738164815897,
+        "p95": 0.01414311594202899,
+        "p99": 0.014974673202614376,
+        "maximum": 0.015277777777777772
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.999486453831196e-07,
+        "p95": 1.924988464452326e-06,
+        "p99": 2.144964528270066e-06,
+        "maximum": 2.1999585442245007e-06
+      },
+      "controller_cpu_total_s": 1.970000000017791e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 161,
+      "accepted": 59,
+      "successful": 55,
+      "good": 35,
+      "accepted_throughput_rps": 4.916666666666667,
+      "successful_goodput_rps": 2.9166666666666665,
+      "rejection_rate": 0.6335403726708074,
+      "failure_rate": 0.024844720496894408,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.782608695652174,
+      "ttft_s": {
+        "samples": 59,
+        "p50": 0.323217766360373,
+        "p95": 1.1635151599510767,
+        "p99": 1.2756206684925477,
+        "maximum": 1.3224925653440416
+      },
+      "e2e_success_s": {
+        "samples": 55,
+        "p50": 1.3624825108979592,
+        "p95": 3.3312164871257375,
+        "p99": 4.064985164690057,
+        "maximum": 4.13182953497577
+      },
+      "policy": "mpc",
+      "seed": 10002,
+      "request_tpot_s": {
+        "samples": 59,
+        "p50": 0.012954545454545456,
+        "p95": 0.014590517241379313,
+        "p99": 0.014946078431372547,
+        "maximum": 0.015277777777777772
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.03907150001032278,
+        "p95": 0.05487389500194695,
+        "p99": 0.05569101900036912,
+        "maximum": 0.05589529999997467
+      },
+      "controller_cpu_total_s": 0.4663163999999984,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 1,
+      "budget_total_variation": 16.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 154,
+      "accepted": 85,
+      "successful": 84,
+      "good": 66,
+      "accepted_throughput_rps": 7.083333333333333,
+      "successful_goodput_rps": 5.5,
+      "rejection_rate": 0.44805194805194803,
+      "failure_rate": 0.006493506493506494,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5714285714285714,
+      "ttft_s": {
+        "samples": 85,
+        "p50": 0.3274259803445547,
+        "p95": 1.1020082209974842,
+        "p99": 1.3300382279013205,
+        "maximum": 1.3448527514797899
+      },
+      "e2e_success_s": {
+        "samples": 84,
+        "p50": 1.5880584827437207,
+        "p95": 3.7107193275337633,
+        "p99": 4.148535275308636,
+        "maximum": 4.194852751479791
+      },
+      "policy": "one-move",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 85,
+        "p50": 0.0142857142857143,
+        "p95": 0.01666666666666667,
+        "p99": 0.01706818181818182,
+        "maximum": 0.017187500000000022
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.012093350000213832,
+        "p95": 0.01589248502859846,
+        "p99": 0.01646505703451112,
+        "maximum": 0.016608200035989285
+      },
+      "controller_cpu_total_s": 0.1459691999999988,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 6,
+      "budget_total_variation": 96.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 154,
+      "accepted": 88,
+      "successful": 88,
+      "good": 86,
+      "accepted_throughput_rps": 7.333333333333333,
+      "successful_goodput_rps": 7.166666666666667,
+      "rejection_rate": 0.42857142857142855,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.44155844155844154,
+      "ttft_s": {
+        "samples": 88,
+        "p50": 0.1467275229249787,
+        "p95": 0.4843756158451186,
+        "p99": 0.5399647308081638,
+        "maximum": 0.5974983806128851
+      },
+      "e2e_success_s": {
+        "samples": 88,
+        "p50": 0.9984105680549731,
+        "p95": 2.5252470439775445,
+        "p99": 2.926522657464936,
+        "maximum": 3.514048563321772
+      },
+      "policy": "fixed-16",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 88,
+        "p50": 0.01323979591836735,
+        "p95": 0.014207589285714299,
+        "p99": 0.014705882352941176,
+        "maximum": 0.014705882352941176
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.4999532140791416e-06,
+        "p95": 2.479986869730055e-06,
+        "p99": 2.6560138212516905e-06,
+        "maximum": 2.700020559132099e-06
+      },
+      "controller_cpu_total_s": 1.440000000130226e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 154,
+      "accepted": 85,
+      "successful": 84,
+      "good": 66,
+      "accepted_throughput_rps": 7.083333333333333,
+      "successful_goodput_rps": 5.5,
+      "rejection_rate": 0.44805194805194803,
+      "failure_rate": 0.006493506493506494,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5714285714285714,
+      "ttft_s": {
+        "samples": 85,
+        "p50": 0.3274259803445547,
+        "p95": 1.1020082209974842,
+        "p99": 1.3300382279013205,
+        "maximum": 1.3448527514797899
+      },
+      "e2e_success_s": {
+        "samples": 84,
+        "p50": 1.5880584827437207,
+        "p95": 3.7107193275337633,
+        "p99": 4.148535275308636,
+        "maximum": 4.194852751479791
+      },
+      "policy": "mpc",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 85,
+        "p50": 0.0142857142857143,
+        "p95": 0.01666666666666667,
+        "p99": 0.01706818181818182,
+        "maximum": 0.017187500000000022
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.04122389998519793,
+        "p95": 0.05635326501505915,
+        "p99": 0.05654761303507257,
+        "maximum": 0.05659620004007593
+      },
+      "controller_cpu_total_s": 0.5055004000000007,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 7,
+      "budget_total_variation": 112.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 154,
+      "accepted": 101,
+      "successful": 100,
+      "good": 51,
+      "accepted_throughput_rps": 8.416666666666666,
+      "successful_goodput_rps": 4.25,
+      "rejection_rate": 0.34415584415584416,
+      "failure_rate": 0.006493506493506494,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6688311688311688,
+      "ttft_s": {
+        "samples": 101,
+        "p50": 0.49820119620942105,
+        "p95": 1.1149911961816734,
+        "p99": 1.4070890753364473,
+        "maximum": 1.426309528989556
+      },
+      "e2e_success_s": {
+        "samples": 100,
+        "p50": 1.7525434222234408,
+        "p95": 3.9902143833350916,
+        "p99": 4.314586912493645,
+        "maximum": 4.319852751479791
+      },
+      "policy": "fixed-32",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 101,
+        "p50": 0.014830508474576272,
+        "p95": 0.016279069767441885,
+        "p99": 0.01700000000000003,
+        "maximum": 0.017045454545454544
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.5500118024647236e-06,
+        "p95": 2.550019416958093e-06,
+        "p99": 2.990022767335177e-06,
+        "maximum": 3.100023604929447e-06
+      },
+      "controller_cpu_total_s": 1.6200000001020953e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 154,
+      "accepted": 95,
+      "successful": 94,
+      "good": 64,
+      "accepted_throughput_rps": 7.916666666666667,
+      "successful_goodput_rps": 5.333333333333333,
+      "rejection_rate": 0.38311688311688313,
+      "failure_rate": 0.006493506493506494,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5844155844155844,
+      "ttft_s": {
+        "samples": 95,
+        "p50": 0.3100845948749855,
+        "p95": 1.0566653125138288,
+        "p99": 1.159831964685619,
+        "maximum": 1.1772164138863737
+      },
+      "e2e_success_s": {
+        "samples": 94,
+        "p50": 1.3914993316651962,
+        "p95": 3.4905046340112276,
+        "p99": 3.8400704600109634,
+        "maximum": 3.9749574376048726
+      },
+      "policy": "feedback",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 95,
+        "p50": 0.01424581005586592,
+        "p95": 0.015387968613775052,
+        "p99": 0.015925133689839555,
+        "maximum": 0.01617647058823521
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.6000005416572094e-05,
+        "p95": 1.9779975991696117e-05,
+        "p99": 2.083598403260112e-05,
+        "maximum": 2.1099986042827368e-05
+      },
+      "controller_cpu_total_s": 0.00018889999999860407,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 8,
+      "budget_total_variation": 128.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 216,
+      "accepted": 89,
+      "successful": 87,
+      "good": 67,
+      "accepted_throughput_rps": 7.416666666666667,
+      "successful_goodput_rps": 5.583333333333333,
+      "rejection_rate": 0.5879629629629629,
+      "failure_rate": 0.009259259259259259,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6898148148148148,
+      "ttft_s": {
+        "samples": 89,
+        "p50": 0.21274378847912168,
+        "p95": 1.1726448738139208,
+        "p99": 1.1854610985752478,
+        "maximum": 1.205911806226954
+      },
+      "e2e_success_s": {
+        "samples": 87,
+        "p50": 1.2241118127374904,
+        "p95": 2.8235455704382444,
+        "p99": 3.4397113040817238,
+        "maximum": 3.6777669300211553
+      },
+      "policy": "one-move",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 89,
+        "p50": 0.013492063492063486,
+        "p95": 0.01575573549257759,
+        "p99": 0.01670666666666667,
+        "maximum": 0.016999999999999994
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.010760850011138245,
+        "p95": 0.02972454001428559,
+        "p99": 0.031256267998833215,
+        "maximum": 0.03163919999497011
+      },
+      "controller_cpu_total_s": 0.18437000000000037,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 5,
+      "budget_total_variation": 80.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 216,
+      "accepted": 97,
+      "successful": 96,
+      "good": 74,
+      "accepted_throughput_rps": 8.083333333333334,
+      "successful_goodput_rps": 6.166666666666667,
+      "rejection_rate": 0.5509259259259259,
+      "failure_rate": 0.004629629629629629,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6574074074074074,
+      "ttft_s": {
+        "samples": 97,
+        "p50": 0.2248833662085179,
+        "p95": 1.3925511056587476,
+        "p99": 1.468355126562227,
+        "maximum": 1.4764972155898404
+      },
+      "e2e_success_s": {
+        "samples": 96,
+        "p50": 1.107901873026091,
+        "p95": 2.8811300046396155,
+        "p99": 3.170655905802985,
+        "maximum": 3.5105464456577593
+      },
+      "policy": "feedback",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 97,
+        "p50": 0.013775510204081647,
+        "p95": 0.01540293040293041,
+        "p99": 0.015887500000000006,
+        "maximum": 0.017187499999999967
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.3650016626343131e-05,
+        "p95": 3.461001615505663e-05,
+        "p99": 4.86019946401939e-05,
+        "maximum": 5.2099989261478186e-05
+      },
+      "controller_cpu_total_s": 0.00019950000000079626,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 6,
+      "budget_total_variation": 96.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 216,
+      "accepted": 104,
+      "successful": 102,
+      "good": 49,
+      "accepted_throughput_rps": 8.666666666666666,
+      "successful_goodput_rps": 4.083333333333333,
+      "rejection_rate": 0.5185185185185185,
+      "failure_rate": 0.009259259259259259,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7731481481481481,
+      "ttft_s": {
+        "samples": 104,
+        "p50": 0.5079976739547576,
+        "p95": 1.1136731073376067,
+        "p99": 1.2552539183262514,
+        "maximum": 1.2616804443418541
+      },
+      "e2e_success_s": {
+        "samples": 102,
+        "p50": 1.4949362046303372,
+        "p95": 3.376006428374983,
+        "p99": 3.8260141457883927,
+        "maximum": 4.0027669300211555
+      },
+      "policy": "fixed-32",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 104,
+        "p50": 0.015308563616834293,
+        "p95": 0.01651659366576819,
+        "p99": 0.01717187499999997,
+        "maximum": 0.017708333333333326
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.500011421740055e-06,
+        "p95": 1.6900128684937952e-06,
+        "p99": 1.778013538569212e-06,
+        "maximum": 1.800013706088066e-06
+      },
+      "controller_cpu_total_s": 1.3499999998778378e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 216,
+      "accepted": 92,
+      "successful": 91,
+      "good": 91,
+      "accepted_throughput_rps": 7.666666666666667,
+      "successful_goodput_rps": 7.583333333333333,
+      "rejection_rate": 0.5740740740740741,
+      "failure_rate": 0.004629629629629629,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5787037037037037,
+      "ttft_s": {
+        "samples": 92,
+        "p50": 0.1061222353899609,
+        "p95": 0.3589560026673304,
+        "p99": 0.38894293577686023,
+        "maximum": 0.49361580146149264
+      },
+      "e2e_success_s": {
+        "samples": 91,
+        "p50": 0.8858365714491137,
+        "p95": 2.82674356435689,
+        "p99": 3.1812775780316356,
+        "maximum": 3.4105464456577597
+      },
+      "policy": "fixed-16",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 92,
+        "p50": 0.013735566552467972,
+        "p95": 0.01520566922421142,
+        "p99": 0.015635416666666666,
+        "maximum": 0.015740740740740736
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.500064723193645e-07,
+        "p95": 1.7350132111459968e-06,
+        "p99": 1.8670142162591222e-06,
+        "maximum": 1.9000144675374031e-06
+      },
+      "controller_cpu_total_s": 1.1399999997330212e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 216,
+      "accepted": 89,
+      "successful": 87,
+      "good": 67,
+      "accepted_throughput_rps": 7.416666666666667,
+      "successful_goodput_rps": 5.583333333333333,
+      "rejection_rate": 0.5879629629629629,
+      "failure_rate": 0.009259259259259259,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6898148148148148,
+      "ttft_s": {
+        "samples": 89,
+        "p50": 0.21274378847912168,
+        "p95": 1.1726448738139208,
+        "p99": 1.1854610985752478,
+        "maximum": 1.205911806226954
+      },
+      "e2e_success_s": {
+        "samples": 87,
+        "p50": 1.2241118127374904,
+        "p95": 2.8235455704382444,
+        "p99": 3.4397113040817238,
+        "maximum": 3.6777669300211553
+      },
+      "policy": "mpc",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 89,
+        "p50": 0.013492063492063486,
+        "p95": 0.01575573549257759,
+        "p99": 0.01670666666666667,
+        "maximum": 0.016999999999999994
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.03752635000273585,
+        "p95": 0.10077953003055881,
+        "p99": 0.1023553460178664,
+        "maximum": 0.10274930001469329
+      },
+      "controller_cpu_total_s": 0.6327691,
+      "decisions": 12,
+      "fallback_reasons": {
+        "deadline_exceeded": 1
+      },
+      "budget_switches": 4,
+      "budget_total_variation": 64.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 154,
+      "accepted": 69,
+      "successful": 68,
+      "good": 56,
+      "accepted_throughput_rps": 5.75,
+      "successful_goodput_rps": 4.666666666666667,
+      "rejection_rate": 0.551948051948052,
+      "failure_rate": 0.006493506493506494,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6363636363636364,
+      "ttft_s": {
+        "samples": 69,
+        "p50": 0.3572433592796789,
+        "p95": 0.6147186504779912,
+        "p99": 0.7103242844792041,
+        "maximum": 0.7175722570135274
+      },
+      "e2e_success_s": {
+        "samples": 68,
+        "p50": 1.5332704068349547,
+        "p95": 3.5888650570830247,
+        "p99": 3.982907100793529,
+        "maximum": 4.014048563321773
+      },
+      "policy": "mpc",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 69,
+        "p50": 0.01411637931034483,
+        "p95": 0.016666666666666677,
+        "p99": 0.017090909090909098,
+        "maximum": 0.017187500000000022
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.03559399998630397,
+        "p95": 0.04379008500254713,
+        "p99": 0.04396577700856142,
+        "maximum": 0.04400970001006499
+      },
+      "controller_cpu_total_s": 0.42481960000000285,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 154,
+      "accepted": 73,
+      "successful": 72,
+      "good": 28,
+      "accepted_throughput_rps": 6.083333333333333,
+      "successful_goodput_rps": 2.3333333333333335,
+      "rejection_rate": 0.525974025974026,
+      "failure_rate": 0.006493506493506494,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8181818181818182,
+      "ttft_s": {
+        "samples": 73,
+        "p50": 0.5526959228402357,
+        "p95": 1.9234844548000312,
+        "p99": 2.1909476945205224,
+        "maximum": 2.349684824979761
+      },
+      "e2e_success_s": {
+        "samples": 72,
+        "p50": 1.8188154440743145,
+        "p95": 4.051854259758327,
+        "p99": 4.4894724507394494,
+        "maximum": 4.819852751479791
+      },
+      "policy": "fixed-32",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 73,
+        "p50": 0.014166666666666668,
+        "p95": 0.01590909090909092,
+        "p99": 0.016585227272727262,
+        "maximum": 0.017045454545454544
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.6499834600836039e-06,
+        "p95": 2.079957630485296e-06,
+        "p99": 2.2559589706361295e-06,
+        "maximum": 2.2999593056738377e-06
+      },
+      "controller_cpu_total_s": 1.4600000000086766e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 154,
+      "accepted": 65,
+      "successful": 64,
+      "good": 43,
+      "accepted_throughput_rps": 5.416666666666667,
+      "successful_goodput_rps": 3.5833333333333335,
+      "rejection_rate": 0.577922077922078,
+      "failure_rate": 0.006493506493506494,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7207792207792207,
+      "ttft_s": {
+        "samples": 65,
+        "p50": 0.33118629284581413,
+        "p95": 1.436084882928884,
+        "p99": 2.307500298694423,
+        "maximum": 2.345418956974669
+      },
+      "e2e_success_s": {
+        "samples": 64,
+        "p50": 1.3997459831770367,
+        "p95": 3.1568879414948876,
+        "p99": 3.704730385375262,
+        "maximum": 3.9749574376048726
+      },
+      "policy": "feedback",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 65,
+        "p50": 0.013214285714285711,
+        "p95": 0.014759358288770048,
+        "p99": 0.015327272727272714,
+        "maximum": 0.015909090909090894
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.610000617802143e-05,
+        "p95": 5.154997052159158e-05,
+        "p99": 6.958997983019802e-05,
+        "maximum": 7.409998215734959e-05
+      },
+      "controller_cpu_total_s": 0.0002632000000035717,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 8,
+      "budget_total_variation": 128.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 154,
+      "accepted": 69,
+      "successful": 68,
+      "good": 56,
+      "accepted_throughput_rps": 5.75,
+      "successful_goodput_rps": 4.666666666666667,
+      "rejection_rate": 0.551948051948052,
+      "failure_rate": 0.006493506493506494,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6363636363636364,
+      "ttft_s": {
+        "samples": 69,
+        "p50": 0.3572433592796789,
+        "p95": 0.6147186504779912,
+        "p99": 0.7103242844792041,
+        "maximum": 0.7175722570135274
+      },
+      "e2e_success_s": {
+        "samples": 68,
+        "p50": 1.5332704068349547,
+        "p95": 3.5888650570830247,
+        "p99": 3.982907100793529,
+        "maximum": 4.014048563321773
+      },
+      "policy": "one-move",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 69,
+        "p50": 0.01411637931034483,
+        "p95": 0.016666666666666677,
+        "p99": 0.017090909090909098,
+        "maximum": 0.017187500000000022
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.010618900036206469,
+        "p95": 0.012465515005169436,
+        "p99": 0.012628623017808423,
+        "maximum": 0.012669400020968169
+      },
+      "controller_cpu_total_s": 0.12569820000000131,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 2,
+      "budget_total_variation": 32.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 154,
+      "accepted": 57,
+      "successful": 57,
+      "good": 47,
+      "accepted_throughput_rps": 4.75,
+      "successful_goodput_rps": 3.9166666666666665,
+      "rejection_rate": 0.6298701298701299,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6948051948051948,
+      "ttft_s": {
+        "samples": 57,
+        "p50": 0.28904856332177253,
+        "p95": 0.7103080706255085,
+        "p99": 0.8035384978472611,
+        "maximum": 0.820226614340493
+      },
+      "e2e_success_s": {
+        "samples": 57,
+        "p50": 1.0378716365091885,
+        "p95": 2.7598186606915815,
+        "p99": 3.4386024061113,
+        "maximum": 3.46985275147979
+      },
+      "policy": "fixed-16",
+      "seed": 10003,
+      "request_tpot_s": {
+        "samples": 57,
+        "p50": 0.012703252032520325,
+        "p95": 0.013407046476761617,
+        "p99": 0.01378853046594982,
+        "maximum": 0.013888888888888888
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 7.500057108700275e-07,
+        "p95": 1.8350139725953338e-06,
+        "p99": 1.967014977708459e-06,
+        "maximum": 2.00001522898674e-06
+      },
+      "controller_cpu_total_s": 1.120000000209842e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 162,
+      "accepted": 103,
+      "successful": 99,
+      "good": 45,
+      "accepted_throughput_rps": 8.583333333333334,
+      "successful_goodput_rps": 3.75,
+      "rejection_rate": 0.36419753086419754,
+      "failure_rate": 0.024691358024691357,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7222222222222222,
+      "ttft_s": {
+        "samples": 103,
+        "p50": 0.5370863004692668,
+        "p95": 1.154278810902178,
+        "p99": 1.3853743762846267,
+        "maximum": 1.5306296800546484
+      },
+      "e2e_success_s": {
+        "samples": 99,
+        "p50": 1.7822745686860166,
+        "p95": 4.086508550628642,
+        "p99": 4.433309737133785,
+        "maximum": 4.510144245249862
+      },
+      "policy": "fixed-32",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 103,
+        "p50": 0.0153688524590164,
+        "p95": 0.016647058823529404,
+        "p99": 0.01702047370533922,
+        "maximum": 0.017361111111111112
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.5500118024647236e-06,
+        "p95": 2.5049928808584803e-06,
+        "p99": 2.900970284827054e-06,
+        "maximum": 2.9999646358191967e-06
+      },
+      "controller_cpu_total_s": 1.550000000172247e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 162,
+      "accepted": 75,
+      "successful": 73,
+      "good": 42,
+      "accepted_throughput_rps": 6.25,
+      "successful_goodput_rps": 3.5,
+      "rejection_rate": 0.5370370370370371,
+      "failure_rate": 0.012345679012345678,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7407407407407407,
+      "ttft_s": {
+        "samples": 75,
+        "p50": 0.44216685752108775,
+        "p95": 1.0537380444632898,
+        "p99": 1.3704820410148073,
+        "maximum": 1.5160416943851782
+      },
+      "e2e_success_s": {
+        "samples": 73,
+        "p50": 1.6232757351342109,
+        "p95": 3.6444338383960395,
+        "p99": 4.1616749469858,
+        "maximum": 4.181741685947743
+      },
+      "policy": "feedback",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 75,
+        "p50": 0.014062500000000014,
+        "p95": 0.015586622807017544,
+        "p99": 0.016109073359073363,
+        "maximum": 0.016216216216216217
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.7000013031065464e-05,
+        "p95": 2.1480020950548348e-05,
+        "p99": 2.253600338008255e-05,
+        "maximum": 2.2799998987466097e-05
+      },
+      "controller_cpu_total_s": 0.0001996999999978044,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 7,
+      "budget_total_variation": 112.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 162,
+      "accepted": 78,
+      "successful": 75,
+      "good": 47,
+      "accepted_throughput_rps": 6.5,
+      "successful_goodput_rps": 3.9166666666666665,
+      "rejection_rate": 0.5185185185185185,
+      "failure_rate": 0.018518518518518517,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7098765432098766,
+      "ttft_s": {
+        "samples": 78,
+        "p50": 0.2907463372486705,
+        "p95": 0.9686503059675112,
+        "p99": 1.222538004499416,
+        "maximum": 1.2339717844970295
+      },
+      "e2e_success_s": {
+        "samples": 75,
+        "p50": 1.6439717102590228,
+        "p95": 3.423903162604446,
+        "p99": 3.94158342059887,
+        "maximum": 4.040748357682844
+      },
+      "policy": "one-move",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 78,
+        "p50": 0.013544366899302086,
+        "p95": 0.015182291666666656,
+        "p99": 0.015760979729729733,
+        "maximum": 0.016216216216216217
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.013148099998943508,
+        "p95": 0.016712850000476464,
+        "p99": 0.01709344997885637,
+        "maximum": 0.017188599973451346
+      },
+      "controller_cpu_total_s": 0.15954570000000245,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 6,
+      "budget_total_variation": 96.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 162,
+      "accepted": 78,
+      "successful": 75,
+      "good": 47,
+      "accepted_throughput_rps": 6.5,
+      "successful_goodput_rps": 3.9166666666666665,
+      "rejection_rate": 0.5185185185185185,
+      "failure_rate": 0.018518518518518517,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7098765432098766,
+      "ttft_s": {
+        "samples": 78,
+        "p50": 0.2907463372486705,
+        "p95": 0.9686503059675112,
+        "p99": 1.222538004499416,
+        "maximum": 1.2339717844970295
+      },
+      "e2e_success_s": {
+        "samples": 75,
+        "p50": 1.6439717102590228,
+        "p95": 3.423903162604446,
+        "p99": 3.94158342059887,
+        "maximum": 4.040748357682844
+      },
+      "policy": "mpc",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 78,
+        "p50": 0.013544366899302086,
+        "p95": 0.015182291666666656,
+        "p99": 0.015760979729729733,
+        "maximum": 0.016216216216216217
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.04272015002788976,
+        "p95": 0.053242384988698176,
+        "p99": 0.054343837000778876,
+        "maximum": 0.05461920000379905
+      },
+      "controller_cpu_total_s": 0.5130685999999995,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 6,
+      "budget_total_variation": 96.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 162,
+      "accepted": 76,
+      "successful": 72,
+      "good": 71,
+      "accepted_throughput_rps": 6.333333333333333,
+      "successful_goodput_rps": 5.916666666666667,
+      "rejection_rate": 0.5308641975308642,
+      "failure_rate": 0.024691358024691357,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5617283950617284,
+      "ttft_s": {
+        "samples": 76,
+        "p50": 0.20096994536868007,
+        "p95": 0.4058130158239579,
+        "p99": 0.5251768162372319,
+        "maximum": 0.568220751826502
+      },
+      "e2e_success_s": {
+        "samples": 72,
+        "p50": 1.0412548490243063,
+        "p95": 2.9612132273643197,
+        "p99": 3.2211370693340955,
+        "maximum": 3.3567439151009477
+      },
+      "policy": "fixed-16",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 76,
+        "p50": 0.013142153413089375,
+        "p95": 0.014079483695652189,
+        "p99": 0.01433270676691729,
+        "maximum": 0.014473684210526335
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.1999800335615873e-06,
+        "p95": 2.829995355568825e-06,
+        "p99": 3.445974434725941e-06,
+        "maximum": 3.5999692045152187e-06
+      },
+      "controller_cpu_total_s": 1.3700000000227419e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 196,
+      "accepted": 98,
+      "successful": 95,
+      "good": 41,
+      "accepted_throughput_rps": 8.166666666666666,
+      "successful_goodput_rps": 3.4166666666666665,
+      "rejection_rate": 0.5,
+      "failure_rate": 0.015306122448979591,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7908163265306123,
+      "ttft_s": {
+        "samples": 98,
+        "p50": 0.6598322744787639,
+        "p95": 1.1787138881619963,
+        "p99": 1.3465048310363352,
+        "maximum": 1.3872567448090196
+      },
+      "e2e_success_s": {
+        "samples": 95,
+        "p50": 1.7290397350093185,
+        "p95": 3.6125146150803804,
+        "p99": 4.223304587895659,
+        "maximum": 4.365320764956864
+      },
+      "policy": "fixed-32",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 98,
+        "p50": 0.014683144599303161,
+        "p95": 0.016666666666666666,
+        "p99": 0.017132105263157903,
+        "maximum": 0.018000000000000006
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.500011421740055e-06,
+        "p95": 3.124997601844369e-06,
+        "p99": 4.224980366416276e-06,
+        "maximum": 4.499976057559252e-06
+      },
+      "controller_cpu_total_s": 1.5800000000787406e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 1.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 196,
+      "accepted": 71,
+      "successful": 68,
+      "good": 64,
+      "accepted_throughput_rps": 5.916666666666667,
+      "successful_goodput_rps": 5.333333333333333,
+      "rejection_rate": 0.6377551020408163,
+      "failure_rate": 0.015306122448979591,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.673469387755102,
+      "ttft_s": {
+        "samples": 71,
+        "p50": 0.21560269912368213,
+        "p95": 0.5001269601813423,
+        "p99": 0.5536563147998497,
+        "maximum": 0.5747297787619834
+      },
+      "e2e_success_s": {
+        "samples": 68,
+        "p50": 1.2229938035792096,
+        "p95": 2.8754750024259437,
+        "p99": 3.1996439972871618,
+        "maximum": 3.2177049311135706
+      },
+      "policy": "mpc",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 71,
+        "p50": 0.013202247191011233,
+        "p95": 0.01450320512820513,
+        "p99": 0.014725935828877008,
+        "maximum": 0.014772727272727281
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.03668094999738969,
+        "p95": 0.099702760000946,
+        "p99": 0.10228063201182522,
+        "maximum": 0.10292510001454502
+      },
+      "controller_cpu_total_s": 0.5655380999999995,
+      "decisions": 12,
+      "fallback_reasons": {
+        "deadline_exceeded": 1
+      },
+      "budget_switches": 1,
+      "budget_total_variation": 16.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 196,
+      "accepted": 71,
+      "successful": 68,
+      "good": 64,
+      "accepted_throughput_rps": 5.916666666666667,
+      "successful_goodput_rps": 5.333333333333333,
+      "rejection_rate": 0.6377551020408163,
+      "failure_rate": 0.015306122448979591,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.673469387755102,
+      "ttft_s": {
+        "samples": 71,
+        "p50": 0.21560269912368213,
+        "p95": 0.5001269601813423,
+        "p99": 0.5536563147998497,
+        "maximum": 0.5747297787619834
+      },
+      "e2e_success_s": {
+        "samples": 68,
+        "p50": 1.2229938035792096,
+        "p95": 2.8754750024259437,
+        "p99": 3.1996439972871618,
+        "maximum": 3.2177049311135706
+      },
+      "policy": "fixed-16",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 71,
+        "p50": 0.013202247191011233,
+        "p95": 0.01450320512820513,
+        "p99": 0.014725935828877008,
+        "maximum": 0.014772727272727281
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.00006091594696e-07,
+        "p95": 1.7349550034850833e-06,
+        "p99": 1.8669560085982087e-06,
+        "maximum": 1.8999562598764896e-06
+      },
+      "controller_cpu_total_s": 1.1500000001163357e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 196,
+      "accepted": 71,
+      "successful": 68,
+      "good": 64,
+      "accepted_throughput_rps": 5.916666666666667,
+      "successful_goodput_rps": 5.333333333333333,
+      "rejection_rate": 0.6377551020408163,
+      "failure_rate": 0.015306122448979591,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.673469387755102,
+      "ttft_s": {
+        "samples": 71,
+        "p50": 0.21560269912368213,
+        "p95": 0.5001269601813423,
+        "p99": 0.5536563147998497,
+        "maximum": 0.5747297787619834
+      },
+      "e2e_success_s": {
+        "samples": 68,
+        "p50": 1.2229938035792096,
+        "p95": 2.8754750024259437,
+        "p99": 3.1996439972871618,
+        "maximum": 3.2177049311135706
+      },
+      "policy": "one-move",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 71,
+        "p50": 0.013202247191011233,
+        "p95": 0.01450320512820513,
+        "p99": 0.014725935828877008,
+        "maximum": 0.014772727272727281
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.010565200005657971,
+        "p95": 0.03541181003092787,
+        "p99": 0.039858362030936414,
+        "maximum": 0.040970000030938536
+      },
+      "controller_cpu_total_s": 0.17743929999999786,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 1,
+      "budget_total_variation": 16.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 196,
+      "accepted": 74,
+      "successful": 70,
+      "good": 47,
+      "accepted_throughput_rps": 6.166666666666667,
+      "successful_goodput_rps": 3.9166666666666665,
+      "rejection_rate": 0.6224489795918368,
+      "failure_rate": 0.02040816326530612,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7602040816326531,
+      "ttft_s": {
+        "samples": 74,
+        "p50": 0.34283244501010907,
+        "p95": 1.0819612375981142,
+        "p99": 1.2021989293325515,
+        "maximum": 1.2072473579182104
+      },
+      "e2e_success_s": {
+        "samples": 70,
+        "p50": 1.4584258608360865,
+        "p95": 3.3625924229505118,
+        "p99": 4.299876279980989,
+        "maximum": 4.766306297292747
+      },
+      "policy": "feedback",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 74,
+        "p50": 0.013819444444444443,
+        "p95": 0.015453431372549013,
+        "p99": 0.015753898635477576,
+        "maximum": 0.015789473684210516
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.3400043826550245e-05,
+        "p95": 2.2209994494915008e-05,
+        "p99": 2.300200052559376e-05,
+        "maximum": 2.3200002033263445e-05
+      },
+      "controller_cpu_total_s": 0.0001725000000032395,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 9,
+      "budget_total_variation": 144.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 162,
+      "accepted": 72,
+      "successful": 69,
+      "good": 32,
+      "accepted_throughput_rps": 6.0,
+      "successful_goodput_rps": 2.6666666666666665,
+      "rejection_rate": 0.5555555555555556,
+      "failure_rate": 0.018518518518518517,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8024691358024691,
+      "ttft_s": {
+        "samples": 72,
+        "p50": 0.5299532491122463,
+        "p95": 1.6251646855427415,
+        "p99": 1.9813804916218583,
+        "maximum": 2.010053199386178
+      },
+      "e2e_success_s": {
+        "samples": 69,
+        "p50": 2.1346757795836977,
+        "p95": 4.241582355375269,
+        "p99": 4.543742399276765,
+        "maximum": 4.781743915100947
+      },
+      "policy": "fixed-32",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 72,
+        "p50": 0.015111910787725405,
+        "p95": 0.016731321839080455,
+        "p99": 0.017119828605200945,
+        "maximum": 0.017361111111111112
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.3999815564602613e-06,
+        "p95": 1.8449558410793542e-06,
+        "p99": 1.8889561761170626e-06,
+        "maximum": 1.8999562598764896e-06
+      },
+      "controller_cpu_total_s": 1.3200000001489798e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 162,
+      "accepted": 59,
+      "successful": 57,
+      "good": 37,
+      "accepted_throughput_rps": 4.916666666666667,
+      "successful_goodput_rps": 3.0833333333333335,
+      "rejection_rate": 0.6358024691358025,
+      "failure_rate": 0.012345679012345678,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7716049382716049,
+      "ttft_s": {
+        "samples": 59,
+        "p50": 0.4373253085690365,
+        "p95": 1.1629055815724627,
+        "p99": 1.5187743216322978,
+        "maximum": 1.6189717102590242
+      },
+      "e2e_success_s": {
+        "samples": 57,
+        "p50": 1.572423694723243,
+        "p95": 3.7667813932263847,
+        "p99": 4.166134222310676,
+        "maximum": 4.181741685947743
+      },
+      "policy": "feedback",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 59,
+        "p50": 0.014285714285714289,
+        "p95": 0.015625,
+        "p99": 0.016132239382239386,
+        "maximum": 0.016216216216216217
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.3499986380338669e-05,
+        "p95": 2.045998116955161e-05,
+        "p99": 2.1691990550607446e-05,
+        "maximum": 2.19999928958714e-05
+      },
+      "controller_cpu_total_s": 0.000173200000002538,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 5,
+      "budget_total_variation": 80.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 162,
+      "accepted": 54,
+      "successful": 51,
+      "good": 31,
+      "accepted_throughput_rps": 4.5,
+      "successful_goodput_rps": 2.5833333333333335,
+      "rejection_rate": 0.6666666666666666,
+      "failure_rate": 0.018518518518518517,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.808641975308642,
+      "ttft_s": {
+        "samples": 54,
+        "p50": 0.3715068745353474,
+        "p95": 1.7393122676200934,
+        "p99": 1.914609037079109,
+        "maximum": 1.9462175919370814
+      },
+      "e2e_success_s": {
+        "samples": 51,
+        "p50": 1.6572560645425392,
+        "p95": 3.902262310885795,
+        "p99": 4.094404063333556,
+        "maximum": 4.098059768984267
+      },
+      "policy": "one-move",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 54,
+        "p50": 0.013774509803921569,
+        "p95": 0.015625,
+        "p99": 0.01590287162162162,
+        "maximum": 0.016216216216216217
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.009857400000328198,
+        "p95": 0.014793134978390297,
+        "p99": 0.01552718695893418,
+        "maximum": 0.01571069995407015
+      },
+      "controller_cpu_total_s": 0.1278851999999997,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 5,
+      "budget_total_variation": 80.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 162,
+      "accepted": 56,
+      "successful": 53,
+      "good": 47,
+      "accepted_throughput_rps": 4.666666666666667,
+      "successful_goodput_rps": 3.9166666666666665,
+      "rejection_rate": 0.654320987654321,
+      "failure_rate": 0.018518518518518517,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7098765432098766,
+      "ttft_s": {
+        "samples": 56,
+        "p50": 0.2211560060627326,
+        "p95": 0.7166816098352882,
+        "p99": 0.9447959561069987,
+        "maximum": 0.9799005821326308
+      },
+      "e2e_success_s": {
+        "samples": 53,
+        "p50": 0.9458484060822823,
+        "p95": 2.960767639463732,
+        "p99": 3.27390466088728,
+        "maximum": 3.3910739893587536
+      },
+      "policy": "fixed-16",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 56,
+        "p50": 0.013058035714285716,
+        "p95": 0.014062500000000006,
+        "p99": 0.014317211948790903,
+        "maximum": 0.014473684210526335
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.2999807950109243e-06,
+        "p95": 2.7899950509890914e-06,
+        "p99": 2.877970109693706e-06,
+        "maximum": 2.8999638743698597e-06
+      },
+      "controller_cpu_total_s": 1.4299999996580937e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 162,
+      "accepted": 54,
+      "successful": 51,
+      "good": 31,
+      "accepted_throughput_rps": 4.5,
+      "successful_goodput_rps": 2.5833333333333335,
+      "rejection_rate": 0.6666666666666666,
+      "failure_rate": 0.018518518518518517,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.808641975308642,
+      "ttft_s": {
+        "samples": 54,
+        "p50": 0.3715068745353474,
+        "p95": 1.7393122676200934,
+        "p99": 1.914609037079109,
+        "maximum": 1.9462175919370814
+      },
+      "e2e_success_s": {
+        "samples": 51,
+        "p50": 1.6572560645425392,
+        "p95": 3.902262310885795,
+        "p99": 4.094404063333556,
+        "maximum": 4.098059768984267
+      },
+      "policy": "mpc",
+      "seed": 10004,
+      "request_tpot_s": {
+        "samples": 54,
+        "p50": 0.013774509803921569,
+        "p95": 0.015625,
+        "p99": 0.01590287162162162,
+        "maximum": 0.016216216216216217
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.03662615001667291,
+        "p95": 0.05275863496644888,
+        "p99": 0.054927966965478844,
+        "maximum": 0.055470299965236336
+      },
+      "controller_cpu_total_s": 0.4531554999999994,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 5,
+      "budget_total_variation": 80.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 148,
+      "accepted": 84,
+      "successful": 81,
+      "good": 80,
+      "accepted_throughput_rps": 7.0,
+      "successful_goodput_rps": 6.666666666666667,
+      "rejection_rate": 0.43243243243243246,
+      "failure_rate": 0.02027027027027027,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.4594594594594595,
+      "ttft_s": {
+        "samples": 84,
+        "p50": 0.2220802309024521,
+        "p95": 0.4189453836336253,
+        "p99": 0.5232540221090553,
+        "maximum": 0.6527328041462697
+      },
+      "e2e_success_s": {
+        "samples": 81,
+        "p50": 1.0554525561208088,
+        "p95": 3.0345837940897376,
+        "p99": 3.4569840660937605,
+        "maximum": 3.60273280414627
+      },
+      "policy": "fixed-16",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 84,
+        "p50": 0.013261440940012373,
+        "p95": 0.013888888888888888,
+        "p99": 0.014221875000000012,
+        "maximum": 0.015000000000000036
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.200009137392044e-06,
+        "p95": 2.7349888114258647e-06,
+        "p99": 2.8670154279097917e-06,
+        "maximum": 2.900022082030773e-06
+      },
+      "controller_cpu_total_s": 1.350000000321927e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 148,
+      "accepted": 107,
+      "successful": 104,
+      "good": 34,
+      "accepted_throughput_rps": 8.916666666666666,
+      "successful_goodput_rps": 2.8333333333333335,
+      "rejection_rate": 0.27702702702702703,
+      "failure_rate": 0.02027027027027027,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7702702702702703,
+      "ttft_s": {
+        "samples": 107,
+        "p50": 0.5933854295600218,
+        "p95": 1.327681999572876,
+        "p99": 1.4520501960405223,
+        "maximum": 1.4580284011053775
+      },
+      "e2e_success_s": {
+        "samples": 104,
+        "p50": 1.7086985297365107,
+        "p95": 4.322464503623712,
+        "p99": 4.443831845327484,
+        "maximum": 4.627953655775823
+      },
+      "policy": "fixed-32",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 107,
+        "p50": 0.015306122448979591,
+        "p95": 0.016666666666666677,
+        "p99": 0.017211616161616133,
+        "maximum": 0.01764705882352935
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.600012183189392e-06,
+        "p95": 2.7999631129205227e-06,
+        "p99": 2.7999631129205227e-06,
+        "maximum": 2.7999631129205227e-06
+      },
+      "controller_cpu_total_s": 1.739999999905706e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 148,
+      "accepted": 81,
+      "successful": 79,
+      "good": 67,
+      "accepted_throughput_rps": 6.75,
+      "successful_goodput_rps": 5.583333333333333,
+      "rejection_rate": 0.4527027027027027,
+      "failure_rate": 0.013513513513513514,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.5472972972972973,
+      "ttft_s": {
+        "samples": 81,
+        "p50": 0.25034556122614315,
+        "p95": 0.9657276115706785,
+        "p99": 1.3955912167775164,
+        "maximum": 1.4281425251007667
+      },
+      "e2e_success_s": {
+        "samples": 79,
+        "p50": 1.421728835917745,
+        "p95": 3.553388552318423,
+        "p99": 3.7582760082956064,
+        "maximum": 3.9544188945021164
+      },
+      "policy": "one-move",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 81,
+        "p50": 0.013541666666666669,
+        "p95": 0.015123456790123474,
+        "p99": 0.015576184379001282,
+        "maximum": 0.015909090909090932
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.012588249985128641,
+        "p95": 0.017191174998879434,
+        "p99": 0.017195354979485274,
+        "maximum": 0.017196399974636734
+      },
+      "controller_cpu_total_s": 0.15829070000000023,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 4,
+      "budget_total_variation": 64.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 148,
+      "accepted": 81,
+      "successful": 79,
+      "good": 46,
+      "accepted_throughput_rps": 6.75,
+      "successful_goodput_rps": 3.8333333333333335,
+      "rejection_rate": 0.4527027027027027,
+      "failure_rate": 0.013513513513513514,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6891891891891891,
+      "ttft_s": {
+        "samples": 81,
+        "p50": 0.43822069029015287,
+        "p95": 0.9657276115706785,
+        "p99": 1.3955912167775164,
+        "maximum": 1.4281425251007667
+      },
+      "e2e_success_s": {
+        "samples": 79,
+        "p50": 1.4241104537158673,
+        "p95": 3.6220143066068475,
+        "p99": 4.03694124456123,
+        "maximum": 4.240884122043541
+      },
+      "policy": "feedback",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 81,
+        "p50": 0.01381578947368422,
+        "p95": 0.01555555555555556,
+        "p99": 0.01575372208436724,
+        "maximum": 0.0158653846153846
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.5900004655122757e-05,
+        "p95": 2.0489981397986413e-05,
+        "p99": 2.0577982068061827e-05,
+        "maximum": 2.0599982235580683e-05
+      },
+      "controller_cpu_total_s": 0.00019020000000047332,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 8,
+      "budget_total_variation": 128.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 148,
+      "accepted": 79,
+      "successful": 76,
+      "good": 58,
+      "accepted_throughput_rps": 6.583333333333333,
+      "successful_goodput_rps": 4.833333333333333,
+      "rejection_rate": 0.46621621621621623,
+      "failure_rate": 0.02027027027027027,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6081081081081081,
+      "ttft_s": {
+        "samples": 79,
+        "p50": 0.2764145473086179,
+        "p95": 1.0891321732572437,
+        "p99": 1.3964049994855974,
+        "maximum": 1.4281425251007667
+      },
+      "e2e_success_s": {
+        "samples": 76,
+        "p50": 1.4387960683264907,
+        "p95": 3.301460477054399,
+        "p99": 3.856313607391602,
+        "maximum": 3.9544188945021164
+      },
+      "policy": "mpc",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 79,
+        "p50": 0.013372093023255817,
+        "p95": 0.0145872641509434,
+        "p99": 0.014822727272727243,
+        "maximum": 0.014999999999999977
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.04221100002177991,
+        "p95": 0.057445700024254615,
+        "p99": 0.06057938001584262,
+        "maximum": 0.061362800013739616
+      },
+      "controller_cpu_total_s": 0.5320029999999978,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 4,
+      "budget_total_variation": 64.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "stationary"
+    },
+    {
+      "offered": 217,
+      "accepted": 69,
+      "successful": 68,
+      "good": 58,
+      "accepted_throughput_rps": 5.75,
+      "successful_goodput_rps": 4.833333333333333,
+      "rejection_rate": 0.6820276497695853,
+      "failure_rate": 0.004608294930875576,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7327188940092166,
+      "ttft_s": {
+        "samples": 69,
+        "p50": 0.19950281256956526,
+        "p95": 0.7686801522516257,
+        "p99": 1.1133697774551885,
+        "maximum": 1.194588869218661
+      },
+      "e2e_success_s": {
+        "samples": 68,
+        "p50": 1.2323668033373485,
+        "p95": 3.3172354977823537,
+        "p99": 3.613676539865211,
+        "maximum": 3.66012562641685
+      },
+      "policy": "one-move",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 69,
+        "p50": 0.013333333333333345,
+        "p95": 0.014788602941176463,
+        "p99": 0.015123076923076925,
+        "maximum": 0.015384615384615398
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.011704449978424236,
+        "p95": 0.034787289978703485,
+        "p99": 0.03592433798010461,
+        "maximum": 0.03620859998045489
+      },
+      "controller_cpu_total_s": 0.20257559999999586,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 217,
+      "accepted": 68,
+      "successful": 67,
+      "good": 67,
+      "accepted_throughput_rps": 5.666666666666667,
+      "successful_goodput_rps": 5.583333333333333,
+      "rejection_rate": 0.6866359447004609,
+      "failure_rate": 0.004608294930875576,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6912442396313364,
+      "ttft_s": {
+        "samples": 68,
+        "p50": 0.17139127525225195,
+        "p95": 0.3628795021599961,
+        "p99": 0.4363738272176694,
+        "maximum": 0.4751490283900264
+      },
+      "e2e_success_s": {
+        "samples": 67,
+        "p50": 1.1329643853160256,
+        "p95": 3.0534429771900626,
+        "p99": 3.3725405596777445,
+        "maximum": 3.4790534646597804
+      },
+      "policy": "fixed-16",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 68,
+        "p50": 0.013379629629629661,
+        "p95": 0.014857954545454544,
+        "p99": 0.015313034188034178,
+        "maximum": 0.015384615384615365
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.00006091594696e-07,
+        "p95": 1.8700142391026015e-06,
+        "p99": 2.1340162493288523e-06,
+        "maximum": 2.200016751885414e-06
+      },
+      "controller_cpu_total_s": 1.1100000001817989e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 217,
+      "accepted": 71,
+      "successful": 70,
+      "good": 51,
+      "accepted_throughput_rps": 5.916666666666667,
+      "successful_goodput_rps": 4.25,
+      "rejection_rate": 0.6728110599078341,
+      "failure_rate": 0.004608294930875576,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7649769585253456,
+      "ttft_s": {
+        "samples": 71,
+        "p50": 0.24957770348444663,
+        "p95": 0.9666415180634294,
+        "p99": 1.293480980638617,
+        "maximum": 1.394588869218662
+      },
+      "e2e_success_s": {
+        "samples": 70,
+        "p50": 1.4605295232682418,
+        "p95": 3.691520693424748,
+        "p99": 3.7906142192399757,
+        "maximum": 3.8101256264168484
+      },
+      "policy": "mpc",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 71,
+        "p50": 0.013636363636363629,
+        "p95": 0.014354395604395609,
+        "p99": 0.014620098039215676,
+        "maximum": 0.014705882352941176
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.040137499978300184,
+        "p95": 0.10362095501332078,
+        "p99": 0.10385499102820177,
+        "maximum": 0.10391350003192201
+      },
+      "controller_cpu_total_s": 0.6484375,
+      "decisions": 12,
+      "fallback_reasons": {
+        "deadline_exceeded": 3
+      },
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 217,
+      "accepted": 79,
+      "successful": 77,
+      "good": 57,
+      "accepted_throughput_rps": 6.583333333333333,
+      "successful_goodput_rps": 4.75,
+      "rejection_rate": 0.6359447004608295,
+      "failure_rate": 0.009216589861751152,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7373271889400922,
+      "ttft_s": {
+        "samples": 79,
+        "p50": 0.2498166709179115,
+        "p95": 0.9534039995093959,
+        "p99": 1.131925793372326,
+        "maximum": 1.2445888692186617
+      },
+      "e2e_success_s": {
+        "samples": 77,
+        "p50": 1.2751059283792587,
+        "p95": 3.6916345561920907,
+        "p99": 3.8639092448869405,
+        "maximum": 3.9568482247112353
+      },
+      "policy": "feedback",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 79,
+        "p50": 0.013775510204081636,
+        "p95": 0.015092737722048067,
+        "p99": 0.015603448275862079,
+        "maximum": 0.015909090909090932
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.6099977074190974e-05,
+        "p95": 1.858999312389642e-05,
+        "p99": 1.8678019405342638e-05,
+        "maximum": 1.8700025975704193e-05
+      },
+      "controller_cpu_total_s": 0.00018489999999893314,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 5,
+      "budget_total_variation": 80.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 217,
+      "accepted": 87,
+      "successful": 85,
+      "good": 28,
+      "accepted_throughput_rps": 7.25,
+      "successful_goodput_rps": 2.3333333333333335,
+      "rejection_rate": 0.5990783410138248,
+      "failure_rate": 0.009216589861751152,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8709677419354839,
+      "ttft_s": {
+        "samples": 87,
+        "p50": 0.7732265009461801,
+        "p95": 1.4560212095789986,
+        "p99": 1.509761105652127,
+        "maximum": 1.5221766156978385
+      },
+      "e2e_success_s": {
+        "samples": 85,
+        "p50": 1.9432577799937123,
+        "p95": 3.6778880719170597,
+        "p99": 3.9380879789715144,
+        "maximum": 4.102096688837982
+      },
+      "policy": "fixed-32",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 87,
+        "p50": 0.014444444444444452,
+        "p95": 0.01635682158920541,
+        "p99": 0.016666666666666656,
+        "maximum": 0.016666666666666666
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.600012183189392e-06,
+        "p95": 3.5399687476456155e-06,
+        "p99": 4.067972768098117e-06,
+        "maximum": 4.199973773211241e-06
+      },
+      "controller_cpu_total_s": 1.7099999997327586e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 0.0,
+      "gpu_utilization": null,
+      "workload": "burst"
+    },
+    {
+      "offered": 148,
+      "accepted": 71,
+      "successful": 70,
+      "good": 17,
+      "accepted_throughput_rps": 5.916666666666667,
+      "successful_goodput_rps": 1.4166666666666667,
+      "rejection_rate": 0.5202702702702703,
+      "failure_rate": 0.006756756756756757,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8851351351351351,
+      "ttft_s": {
+        "samples": 71,
+        "p50": 0.805534258216853,
+        "p95": 1.5209678161187279,
+        "p99": 1.6377373736833516,
+        "maximum": 1.6924104451383517
+      },
+      "e2e_success_s": {
+        "samples": 70,
+        "p50": 2.0094626603709353,
+        "p95": 4.370555722235808,
+        "p99": 4.554503449232088,
+        "maximum": 4.670546881580632
+      },
+      "policy": "fixed-32",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 71,
+        "p50": 0.014690721649484534,
+        "p95": 0.01565563725490196,
+        "p99": 0.016465517241379322,
+        "maximum": 0.016666666666666666
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.500011421740055e-06,
+        "p95": 1.7450132872909307e-06,
+        "p99": 1.789013622328639e-06,
+        "maximum": 1.800013706088066e-06
+      },
+      "controller_cpu_total_s": 1.450000000247087e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 148,
+      "accepted": 52,
+      "successful": 51,
+      "good": 36,
+      "accepted_throughput_rps": 4.333333333333333,
+      "successful_goodput_rps": 3.0,
+      "rejection_rate": 0.6486486486486487,
+      "failure_rate": 0.006756756756756757,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.7567567567567568,
+      "ttft_s": {
+        "samples": 52,
+        "p50": 0.38322000582392945,
+        "p95": 1.295800905072274,
+        "p99": 1.4073910660446947,
+        "maximum": 1.4281425251007667
+      },
+      "e2e_success_s": {
+        "samples": 51,
+        "p50": 1.446734271571312,
+        "p95": 3.547495381506393,
+        "p99": 3.7910758493241934,
+        "maximum": 3.9544188945021164
+      },
+      "policy": "one-move",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 52,
+        "p50": 0.013050100556015612,
+        "p95": 0.01441964285714285,
+        "p99": 0.014787500000000021,
+        "maximum": 0.015000000000000036
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.010454250004841015,
+        "p95": 0.01675212999980431,
+        "p99": 0.017495465999818407,
+        "maximum": 0.01768129999982193
+      },
+      "controller_cpu_total_s": 0.133860600000002,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": null,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 148,
+      "accepted": 54,
+      "successful": 53,
+      "good": 28,
+      "accepted_throughput_rps": 4.5,
+      "successful_goodput_rps": 2.3333333333333335,
+      "rejection_rate": 0.6351351351351351,
+      "failure_rate": 0.006756756756756757,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.8108108108108109,
+      "ttft_s": {
+        "samples": 54,
+        "p50": 0.4851730582963714,
+        "p95": 1.28660490272335,
+        "p99": 1.4065772833366132,
+        "maximum": 1.4281425251007667
+      },
+      "e2e_success_s": {
+        "samples": 53,
+        "p50": 1.470527468167037,
+        "p95": 3.6089204724533213,
+        "p99": 3.821399228772159,
+        "maximum": 3.9544188945021164
+      },
+      "policy": "mpc",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 54,
+        "p50": 0.012891006842619745,
+        "p95": 0.01420833333333334,
+        "p99": 0.014779166666666657,
+        "maximum": 0.014999999999999977
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 0.03358459999435581,
+        "p95": 0.05530049002554733,
+        "p99": 0.05878009801323061,
+        "maximum": 0.059650000010151416
+      },
+      "controller_cpu_total_s": 0.439156800000001,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 3,
+      "budget_total_variation": 48.0,
+      "backlog_recovery_s": 1.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 148,
+      "accepted": 58,
+      "successful": 58,
+      "good": 33,
+      "accepted_throughput_rps": 4.833333333333333,
+      "successful_goodput_rps": 2.75,
+      "rejection_rate": 0.6081081081081081,
+      "failure_rate": 0.0,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.777027027027027,
+      "ttft_s": {
+        "samples": 58,
+        "p50": 0.4218558518976051,
+        "p95": 1.3525400887471584,
+        "p99": 1.4201907652398742,
+        "maximum": 1.4281425251007667
+      },
+      "e2e_success_s": {
+        "samples": 58,
+        "p50": 1.4729030343201672,
+        "p95": 3.6223320009145934,
+        "p99": 3.8134359181012973,
+        "maximum": 3.9794188945021167
+      },
+      "policy": "feedback",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 58,
+        "p50": 0.013219461697722569,
+        "p95": 0.015565972222222226,
+        "p99": 0.015984279918864103,
+        "maximum": 0.016379310344827605
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 1.1750031262636185e-05,
+        "p95": 2.2460028412751852e-05,
+        "p99": 2.3692012182436886e-05,
+        "maximum": 2.400000812485814e-05
+      },
+      "controller_cpu_total_s": 0.0001660999999977264,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 5,
+      "budget_total_variation": 80.0,
+      "backlog_recovery_s": 2.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    },
+    {
+      "offered": 148,
+      "accepted": 59,
+      "successful": 57,
+      "good": 50,
+      "accepted_throughput_rps": 4.916666666666667,
+      "successful_goodput_rps": 4.166666666666667,
+      "rejection_rate": 0.6013513513513513,
+      "failure_rate": 0.013513513513513514,
+      "unresolved": 0,
+      "all_offered_slo_nonattainment": 0.6621621621621622,
+      "ttft_s": {
+        "samples": 59,
+        "p50": 0.2768539261019254,
+        "p95": 0.5814706368835707,
+        "p99": 0.6779612821194653,
+        "maximum": 0.7128006088443541
+      },
+      "e2e_success_s": {
+        "samples": 57,
+        "p50": 1.0623061806204506,
+        "p95": 2.530339209663098,
+        "p99": 3.4420975421687405,
+        "maximum": 3.60273280414627
+      },
+      "policy": "fixed-16",
+      "seed": 10005,
+      "request_tpot_s": {
+        "samples": 59,
+        "p50": 0.012745098039215693,
+        "p95": 0.013504166666666668,
+        "p99": 0.01445625000000002,
+        "maximum": 0.015000000000000036
+      },
+      "controller_wall_s": {
+        "samples": 12,
+        "p50": 8.499773684889078e-07,
+        "p95": 1.8900143913924692e-06,
+        "p99": 1.978015061467886e-06,
+        "maximum": 2.00001522898674e-06
+      },
+      "controller_cpu_total_s": 1.089999999948077e-05,
+      "decisions": 12,
+      "fallback_reasons": {},
+      "budget_switches": 0,
+      "budget_total_variation": 0.0,
+      "backlog_recovery_s": 2.0,
+      "gpu_utilization": null,
+      "workload": "shift"
+    }
+  ],
+  "paired_comparisons": {
+    "fixed-16": {
+      "mean_difference_rps": -1.1555555555555557,
+      "exploratory_seed_block_percentile95": [
+        -1.416666666666667,
+        -0.9666666666666668
+      ],
+      "seed_blocks": 5,
+      "confirmatory": false
+    },
+    "feedback": {
+      "mean_difference_rps": 0.5499999999999998,
+      "exploratory_seed_block_percentile95": [
+        0.17777777777777767,
+        1.0444444444444443
+      ],
+      "seed_blocks": 5,
+      "confirmatory": false
+    },
+    "one-move": {
+      "mean_difference_rps": -0.12222222222222232,
+      "exploratory_seed_block_percentile95": [
+        -0.4000000000000002,
+        0.033333333333333215
+      ],
+      "seed_blocks": 5,
+      "confirmatory": false
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "mpc-research-counterexamples-v1",
+  "role": "executed arithmetic and logical falsification, not GPU evidence",
+  "checks": {
+    "hold_does_not_imply_terminal_feasibility": {
+      "initial_reserved_cost": 60.0,
+      "releases_before_horizon": 0,
+      "reserved_after_holding_fallback": 60.0,
+      "claimed_terminal_limit": 34.0,
+      "feasible": false
+    },
+    "expected_release_is_not_a_pathwise_bound": {
+      "valid_arriving_prompt_tokens": 7354.001764643799,
+      "nominal_prompt_slack_tokens": 98.06508918205796,
+      "mean_release_allowance_tokens": 712.401055408971,
+      "actual_release_cost": 6.0,
+      "new_request_fits": true
+    },
+    "timeout_then_old_state_read_does_not_cancel_command": {
+      "timeline": [
+        "10.1: A(cap16) sent",
+        "10.2: A times out at client",
+        "10.3: metrics still returns version0/cap32",
+        "10.5: B(cap32) applies, version1",
+        "10.9: delayed A applies, version2/cap16"
+      ],
+      "legacy_final": {
+        "version": 2,
+        "budget": 16
+      },
+      "cas_rejects_late_version0_command": true,
+      "server_expiry_would_also_be_required_without_a_later_write": true
+    },
+    "ignoring_existing_cohorts_reverses_action_preference": {
+      "without_new_admission": {
+        "old_hits": 2,
+        "new_hits": 0
+      },
+      "with_new_admission": {
+        "old_hits": 0,
+        "new_hits": 1
+      },
+      "new_only_gain": 1,
+      "actual_total_gain": -1
+    },
+    "first_token_hit_is_not_final_success": {
+      "first_token_hits": 10,
+      "eventual_successful_hits": 8
+    },
+    "rolling_sum_without_expiration_memory_is_not_closed": {
+      "equal_current_totals": 5,
+      "next_totals_with_no_new_events": [
+        0,
+        5
+      ]
+    },
+    "perfect_factual_prediction_does_not_identify_action_effect": {
+      "identical_observed_data": [
+        {
+          "state": 0,
+          "action": 0,
+          "reward": 1
+        },
+        {
+          "state": 1,
+          "action": 1,
+          "reward": 2
+        }
+      ],
+      "perfect_factual_predictor": "1 + state",
+      "action_effect_in_world_one": 1,
+      "action_effect_in_world_two": -1,
+      "missing_condition": "intervention support or valid structural assumptions"
+    },
+    "unobserved_kv_risk_is_not_a_calibrated_chance_constraint": {
+      "risk_range_without_identifying_information": [
+        0.0,
+        1.0
+      ],
+      "proposed_limit": 0.001,
+      "certified": false
+    }
+  }
+}

@@ -1,0 +1,173 @@
+........................................................................ [  4%]
+........................................................................ [  8%]
+........................................................................ [ 12%]
+........................................................................ [ 16%]
+........................................................................ [ 20%]
+.....................................................s.................. [ 25%]
+........................................................................ [ 29%]
+........................................................................ [ 33%]
+........................................................................ [ 37%]
+........................................................................ [ 41%]
+.......................FFF.............................................. [ 45%]
+.............................................s.......................... [ 50%]
+........................................................................ [ 54%]
+........................................................................ [ 58%]
+........................................................................ [ 62%]
+........................................................................ [ 66%]
+........................................................................ [ 70%]
+........................................................................ [ 75%]
+........................................................................ [ 79%]
+........................................................................ [ 83%]
+.......................................................................F [ 87%]
+........................................................................ [ 91%]
+........................................................................ [ 96%]
+....................................................................     [100%]
+=================================== FAILURES ===================================
+_____ test_setup_calibration_uses_declared_pins_and_does_not_collect[None] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d57f693eac0>
+tmp_path = PosixPath('/tmp/pytest-of-daniel_lin/pytest-5/test_setup_calibration_uses_de0')
+timeout = None
+
+    @pytest.mark.parametrize('timeout',[None,2700])
+    def test_setup_calibration_uses_declared_pins_and_does_not_collect(monkeypatch,tmp_path,timeout):
+        from scripts import setup_prefill_calibration as setup
+        monkeypatch.setattr(setup,'ROOT',tmp_path)
+        monkeypatch.setattr(setup.Path,'home',classmethod(lambda cls:tmp_path))
+        monkeypatch.setattr(setup.subprocess,'check_output',lambda *a,**kw:'')
+        calls=[];options=[]
+        venv=tmp_path/'.venv';venv.mkdir();marker=venv/'existing';marker.write_text('keep')
+        def run(args,**kw):calls.append(args);options.append(kw)
+        monkeypatch.setattr(setup.subprocess,'run',run)
+>       setup.main(**({} if timeout is None else dict(install_timeout=timeout)))
+
+tests/test_prefill_host.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+operation = 'calibrate', install_timeout = 7200, support = None
+
+    def main(*,operation='calibrate',install_timeout=INSTALL_TIMEOUT,support=None):
+        if operation not in ('calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation','entry-http','envelope-shadow'):raise ValueError('Invalid next experiment')
+        if type(install_timeout) is not int or install_timeout<=0:raise ValueError('Install timeout must be a positive integer in seconds')
+        if support is not None:
+            if operation!='envelope-shadow':raise ValueError('--support is only for envelope shadow')
+            support=Path(support).expanduser().resolve()
+            if not support.is_file():raise ValueError('Shadow support input must be an existing JSON file')
+        if platform.system()!='Linux' or sys.version_info[:2]!=(3,12):
+>           raise RuntimeError('Use native Linux with Python3.12')
+E           RuntimeError: Use native Linux with Python3.12
+
+scripts/setup_prefill_calibration.py:29: RuntimeError
+_____ test_setup_calibration_uses_declared_pins_and_does_not_collect[2700] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d57f41d8360>
+tmp_path = PosixPath('/tmp/pytest-of-daniel_lin/pytest-5/test_setup_calibration_uses_de1')
+timeout = 2700
+
+    @pytest.mark.parametrize('timeout',[None,2700])
+    def test_setup_calibration_uses_declared_pins_and_does_not_collect(monkeypatch,tmp_path,timeout):
+        from scripts import setup_prefill_calibration as setup
+        monkeypatch.setattr(setup,'ROOT',tmp_path)
+        monkeypatch.setattr(setup.Path,'home',classmethod(lambda cls:tmp_path))
+        monkeypatch.setattr(setup.subprocess,'check_output',lambda *a,**kw:'')
+        calls=[];options=[]
+        venv=tmp_path/'.venv';venv.mkdir();marker=venv/'existing';marker.write_text('keep')
+        def run(args,**kw):calls.append(args);options.append(kw)
+        monkeypatch.setattr(setup.subprocess,'run',run)
+>       setup.main(**({} if timeout is None else dict(install_timeout=timeout)))
+
+tests/test_prefill_host.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+operation = 'calibrate', install_timeout = 2700, support = None
+
+    def main(*,operation='calibrate',install_timeout=INSTALL_TIMEOUT,support=None):
+        if operation not in ('calibrate','arrivals','clock','live-http','queue-probe','queue-confirmation','entry-http','envelope-shadow'):raise ValueError('Invalid next experiment')
+        if type(install_timeout) is not int or install_timeout<=0:raise ValueError('Install timeout must be a positive integer in seconds')
+        if support is not None:
+            if operation!='envelope-shadow':raise ValueError('--support is only for envelope shadow')
+            support=Path(support).expanduser().resolve()
+            if not support.is_file():raise ValueError('Shadow support input must be an existing JSON file')
+        if platform.system()!='Linux' or sys.version_info[:2]!=(3,12):
+>           raise RuntimeError('Use native Linux with Python3.12')
+E           RuntimeError: Use native Linux with Python3.12
+
+scripts/setup_prefill_calibration.py:29: RuntimeError
+_ test_setup_install_timeout_preserves_environment_and_stops_before_acceptance _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d57f41da5f0>
+tmp_path = PosixPath('/tmp/pytest-of-daniel_lin/pytest-5/test_setup_install_timeout_pre0')
+
+    def test_setup_install_timeout_preserves_environment_and_stops_before_acceptance(monkeypatch,tmp_path):
+        import subprocess
+        from scripts import setup_prefill_calibration as setup
+        monkeypatch.setattr(setup,'ROOT',tmp_path)
+        monkeypatch.setattr(setup.subprocess,'check_output',lambda *a,**kw:'')
+        venv=tmp_path/'.venv';venv.mkdir();marker=venv/'existing';marker.write_text('keep');calls=[]
+        def run(args,**kw):
+            calls.append(args)
+            if 'requirements-v1.txt' in args:raise subprocess.TimeoutExpired(args,kw['timeout'])
+        monkeypatch.setattr(setup.subprocess,'run',run)
+>       with pytest.raises(RuntimeError,match='collection has not started') as error:setup.main(install_timeout=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'collection has not started'
+E         Actual message: 'Use native Linux with Python3.12'
+
+tests/test_prefill_host.py:162: AssertionError
+___________ SetupTests.test_setup_passes_venv_environment_to_server ____________
+
+self = <test_setup_v1.SetupTests testMethod=test_setup_passes_venv_environment_to_server>
+
+    def test_setup_passes_venv_environment_to_server(self):
+        import argparse
+        import tempfile
+        from unittest.mock import patch, Mock
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / '.venv/bin').mkdir(parents=True)
+            (root / '.venv/bin/python').touch()
+            proc = Mock()
+            proc.wait.return_value = 0
+            proc.poll.return_value = 0
+            def run_command(argv, **kwargs):
+                if argv[0] == 'nvidia-smi':
+                    return Mock(stdout='NVIDIA mock')
+                self.assertEqual(kwargs['env']['VIRTUAL_ENV'], str(root / '.venv'))
+                self.assertTrue(kwargs['env']['PATH'].startswith(str(root / '.venv/bin')))
+                return Mock(stdout='{}')
+            with patch.object(setup.platform, 'platform', return_value='Linux'), \
+                 patch.object(setup, 'ROOT', root), patch.object(setup, 'check_port'), \
+                 patch.object(setup.shutil, 'which', return_value=str(root / '.venv/bin/ninja')), \
+                 patch.object(setup.subprocess, 'run', side_effect=run_command), \
+                 patch.object(setup.subprocess, 'Popen', return_value=proc) as spawn, \
+                 patch.object(setup, 'wait_ready', return_value={}):
+>               setup.run(argparse.Namespace(skip_install=False, startup_timeout=10))
+
+tests/test_setup_v1.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = Namespace(skip_install=False, startup_timeout=10)
+
+    def run(args):
+        if platform.system() != 'Linux' or platform.machine() not in ('x86_64', 'AMD64'):
+            raise RuntimeError('This setup targets Linux x86_64 NVIDIA rental machines')
+        if sys.version_info[:2] != (3, 12):
+>           raise RuntimeError('Use Python 3.12 (V1 used 3.12.3); set PYTHON_BIN before running')
+E           RuntimeError: Use Python 3.12 (V1 used 3.12.3); set PYTHON_BIN before running
+
+scripts/setup_v1.py:72: RuntimeError
+=============================== warnings summary ===============================
+../../../../.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/pr32-cpu-venv/lib/python3.14/site-packages/fastapi/testclient.py:1
+  /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/pr32-cpu-venv/lib/python3.14/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_prefill_collector.py:496: Native CPU acceptance requires Linux/Python3.12
+SKIPPED [1] tests/test_prefill_live_wire.py:134: Native vLLM is not installed in this CPU-only environment
+FAILED tests/test_prefill_host.py::test_setup_calibration_uses_declared_pins_and_does_not_collect[None]
+FAILED tests/test_prefill_host.py::test_setup_calibration_uses_declared_pins_and_does_not_collect[2700]
+FAILED tests/test_prefill_host.py::test_setup_install_timeout_preserves_environment_and_stops_before_acceptance
+FAILED tests/test_setup_v1.py::SetupTests::test_setup_passes_venv_environment_to_server
+4 failed, 1718 passed, 2 skipped, 1 warning in 222.31s (0:03:42)

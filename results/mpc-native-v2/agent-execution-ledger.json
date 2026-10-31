@@ -1,0 +1,86 @@
+{
+  "schema": "native-v2-model-execution-v1",
+  "snapshot_utc": "2026-10-31T00:36:36.495468+00:00",
+  "convoy": "hq-cv-3977g",
+  "scope": "Four fresh native worker sessions,complete accounting records through stated immutable log prefixes. Excludes Mayor and subsequent calls;not total mission spend.",
+  "credits_definition": "sum(copilotUsage.totalNanoAiu)/1e9;legacy usage.cost is not used as credits or USD",
+  "agents": [
+    {
+      "name": "opal",
+      "bead": "pr-nv2-opus",
+      "session_id": "ab448162-5c78-43ab-9f76-75f5c5600cd7",
+      "actual_usage_models": [
+        "claude-opus-5.5"
+      ],
+      "usage_records": 27,
+      "source_path": "/home/daniel_lin/.copilot/session-state/ab448162-5c78-43ab-9f76-75f5c5600cd7/events.jsonl",
+      "prefix_bytes": 663003,
+      "prefix_sha256": "1c6d144b85ffbbdf11a715a25bebd53d17e4a4ebbaaa95654b819480e4b73389",
+      "input_tokens": 1836982,
+      "output_tokens": 18658,
+      "cache_read_tokens": 1733275,
+      "total_nano_aiu": 123829200000,
+      "ai_credits": 123.8292,
+      "credit_records_complete": true,
+      "phase": "Round1 in progress;no scientific consensus claimed"
+    },
+    {
+      "name": "topaz",
+      "bead": "pr-nv2-astra",
+      "session_id": "3a24c7c1-9347-40ff-8389-4ad4e56525ed",
+      "actual_usage_models": [
+        "gpt-6-astra"
+      ],
+      "usage_records": 15,
+      "source_path": "/home/daniel_lin/.copilot/session-state/3a24c7c1-9347-40ff-8389-4ad4e56525ed/events.jsonl",
+      "prefix_bytes": 979993,
+      "prefix_sha256": "5eb7340ecb72c7dea52ab603c492d26581f070709e3f2eb17fe50525cd22da30",
+      "input_tokens": 650018,
+      "output_tokens": 8830,
+      "cache_read_tokens": 573116,
+      "total_nano_aiu": 197577850000,
+      "ai_credits": 197.57785,
+      "credit_records_complete": true,
+      "phase": "Round1 in progress;no scientific consensus claimed"
+    },
+    {
+      "name": "garnet",
+      "bead": "pr-nv2-gemini",
+      "session_id": "2e9de96f-2d7f-41a7-aafe-9a66e24256e8",
+      "actual_usage_models": [
+        "gemini-3.8-flash"
+      ],
+      "usage_records": 47,
+      "source_path": "/home/daniel_lin/.copilot/session-state/2e9de96f-2d7f-41a7-aafe-9a66e24256e8/events.jsonl",
+      "prefix_bytes": 884097,
+      "prefix_sha256": "67026add6bdf59aa9c980ddc3395e6487f9a9e30d922f566f09852a030d9f2d2",
+      "input_tokens": 2468813,
+      "output_tokens": 10485,
+      "cache_read_tokens": 2180247,
+      "total_nano_aiu": 41926177500,
+      "ai_credits": 41.9261775,
+      "credit_records_complete": true,
+      "phase": "Round1 in progress;no scientific consensus claimed"
+    },
+    {
+      "name": "ruby",
+      "bead": "pr-nv2-sol",
+      "session_id": "28a61dc7-ff18-4d1b-8d15-873d146236e7",
+      "actual_usage_models": [
+        "gpt-6.1-sol"
+      ],
+      "usage_records": 14,
+      "source_path": "/home/daniel_lin/.copilot/session-state/28a61dc7-ff18-4d1b-8d15-873d146236e7/events.jsonl",
+      "prefix_bytes": 905512,
+      "prefix_sha256": "c303d6943b272e1d639ca291f9d84477d81e1a9215d1b87a013ae5ecc100f4b4",
+      "input_tokens": 609782,
+      "output_tokens": 8085,
+      "cache_read_tokens": 535745,
+      "total_nano_aiu": 31949600000,
+      "ai_credits": 31.9496,
+      "credit_records_complete": true,
+      "phase": "Round1 in progress;no scientific consensus claimed"
+    }
+  ],
+  "observed_worker_ai_credits": 395.2828275
+}

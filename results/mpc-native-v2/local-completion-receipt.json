@@ -1,0 +1,48 @@
+{
+  "schema": "native-v2-local-completion-v1",
+  "recorded_utc": "2026-10-31T01:40:14.542969+00:00",
+  "method": "Mayor bd update/administrative force-close of research only;no gt done,no merge/no worker push",
+  "force_scope": "Normal close explicitly refused Mayor vs worker-assignee mismatch. Mayor override preserves original assignee;not a scientific-gate or MPC-success override.",
+  "issues": [
+    {
+      "bead": "pr-nv2-opus",
+      "status": "closed",
+      "round3_source_commit": "7e5df26b8a3a914ff69769cd7dcdbb84157f77b1"
+    },
+    {
+      "bead": "pr-nv2-astra",
+      "status": "closed",
+      "round3_source_commit": "ae600f9707bb4c7d9545db40e71cc87c1578d862"
+    },
+    {
+      "bead": "pr-nv2-gemini",
+      "status": "closed",
+      "round3_source_commit": "78b3c46ef7b4dda728ce0618f934442445f5b338"
+    },
+    {
+      "bead": "pr-nv2-sol",
+      "status": "closed",
+      "round3_source_commit": "c285e1e300cf42db80ed2eb25dd3e0b1d02500c3"
+    },
+    {
+      "bead": "pr-native-v2",
+      "status": "blocked"
+    },
+    {
+      "bead": "pr-nv2-batch-bridge",
+      "status": "blocked"
+    }
+  ],
+  "convoy": {
+    "id": "hq-cv-3977g",
+    "title": "Native batch dynamics: independent identification and MPC value",
+    "status": "open",
+    "owned": true,
+    "lifecycle": "caller-managed",
+    "merge_strategy": "local",
+    "tracked": null,
+    "completed": 0,
+    "total": 0
+  },
+  "convoy_limitation": "Native add accepted four IDs but tracked remains null/0;do not claim a verified4/4 convoy. No global routing/other rig changes."
+}
