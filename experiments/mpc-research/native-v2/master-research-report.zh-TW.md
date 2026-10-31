@@ -13,6 +13,17 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**最新R7反證：** 四模型完整互審 source 已凍結，Mayor217 tests／146 subtests
+通過，Native Trace plan-response raw JSON 與 Worker byte-for-byte 相同。
+五秒完整 additive plan 的 Good paired-difference MAE8.15，
+仍輸零差異6.90，雖 level MAE5.84 較低。這是不同 arm state 的 factual
+diagnostic，不是 same-state action 效果，也不代表 MPC 普遍無效。
+實際 Train 有全部32種五槽 pattern；conditional support／ACK law／
+selected-policy coverage 仍未成立。R8已派工兩個 fitted model、真正receipt
+bridge與公平benchmark harness，不看Final、不搜索weights/horizon。
+最新已核對 continuation3,600秒與原long01的3,600秒分列，十小時未完成。
+詳見[plan contrast反證與實作裁定](../native-v3/plan-contrast-falsification.zh-TW.md)。
+
 **最新R6訊號與邊界：** 四模型真正完成獨立提案後已凍結，
 Mayor204 tests／139 subtests通過。Mayor另外重現Native Trace progress
 診斷：1／3／5秒Good-count MAE約1.07／3.45／5.90，
