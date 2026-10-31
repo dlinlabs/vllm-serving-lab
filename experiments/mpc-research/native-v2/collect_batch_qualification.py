@@ -50,7 +50,7 @@ def qualification_plan(commit):
                              for i in range(cohort)]))
     plan = dict(schema="native-v2-batch-capture-plan-v1", partition="train",
         source_commit=commit, trials=trials, experiment_id="native-v2-batch-qualification",
-        pod_id="i243ycb94oaxy2", static_cost_budget=32,
+        pod_id="24nm6zrh2sej8c", static_cost_budget=32,
         hypothesis="Existing PR32 passive capture can join normal Gateway Chat requests,"
             "scheduler work,worker spans and host commits on graph/async vLLM0.30.",
         workload="16 short drained arms;2 TRAIN seeds;p128/4096;cohort1/4;OFF/light;"
