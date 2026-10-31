@@ -1,5 +1,30 @@
 # NV3-013–015：Evolving batch model、失敗保存與觀測支援邊界
 
+## NV3-028：四模型完整 baseline 共識
+
+80 個 baseline 與四份獨立分析、四份各自三方 crosscritique 已封存。
+完整結果與推論邊界另見
+`baseline04-four-model-technical-consensus.zh-TW.md`。共同計數核對
+112,652 offered／77,064 API-stop complete／35,588 rejected／0 other，
+cohort-good 64,188、in-window-good 63,633。兩個 estimands 的
+cost32−count32 seed 差是 [-19,+25,+62,+74] 與 [-27,+17,+60,+70]，
+不能切換端點、以 completed denominator 取代 assigned denominator，
+或將描述性三正一負升格為 superiority。
+
+NV3-027 receipt 封存四份 canonical raw 的逐位元重現與初始 errata；
+NV3-028 receipt 封存四份各自三方交叉批判。原 source／model／tests
+不因這次報告而更改，沒有 Cal/Val／refit／forecast／profile／SSH/GPU
+或 fresh H14/H16 exposure。Native visibility 缺口、sample gap vs age、
+HTTP tail vs physical release、cost vs memory units、nominal n=4、
+重複 policy order 與 wire payload 未驗證均保留。初始 CPU harness
+失敗、錯標 quantile／SD、Opus 覆寫的初次 untracked critique raw 不
+假稱全已重現，也不混成 hardware fault 或零失敗歷史。
+
+**完成範圍是全 80 baseline 與技術共識，不是 MPC 勝出。**
+H14 原完整 fitted-state 未恢復；H16 只有 CPU layout，不是 actual
+runtime Q1–Q5／authenticated owner／live MPC 許可。GPU owned 推論已
+停止，Pod 保留，provider billing stop 未驗證。以下里程碑保留原當時事實。
+
 ## NV3-026：完整 80 個 baseline 與安全停止已核對
 
 full04 實際於 `2026-10-31T19:10:30.794309Z` 開始、

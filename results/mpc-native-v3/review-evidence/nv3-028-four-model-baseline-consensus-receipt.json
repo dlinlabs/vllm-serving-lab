@@ -1,0 +1,211 @@
+{
+  "schema": "nv3-028-four-model-baseline-consensus-v1",
+  "baseline_complete_80_of_80": true,
+  "baseline_400_artifacts_verified": true,
+  "new_distinct_seconds": 9600,
+  "cumulative_distinct_seconds": 36480,
+  "smoke_seconds_included": 0,
+  "ten_hour_milestone_not_a_stop_condition": true,
+  "all_four_first_independent_seals_complete": true,
+  "all_four_canonical_analysis_raws_reproduced": true,
+  "all_four_three_peer_crosscritiques_complete": true,
+  "crosscritique_seals": [
+    {
+      "peer": "opus",
+      "commit": "5d325819c7ddaceea6721142f0f1e622c9717260",
+      "critique_raw_sha256": "9f84b55d9e94db5b546c54527344a97780bf4fca3192e5c09ede79e65ebd82ff",
+      "report_sha256": "3fcbab29351a02ee2d982cfd8a4b5fdf918b26766684c578dcd1b5fa8d90528e"
+    },
+    {
+      "peer": "astra",
+      "commit": "deb6fc90b7122995bcc19bce642a80418fce7e6c",
+      "critique_raw_sha256": "a8bd83665e23339b7cb6e09dc5e4fe7aad9212fd557043dfecf0b3142c2b940e",
+      "report_sha256": "ab907fcd68228604588a575a49dc8a078a55dd34b7542133dc6f5b217ea4a636"
+    },
+    {
+      "peer": "sol",
+      "commit": "fb8067b07bf45686102a4356aad3bc3fe58b1c87",
+      "critique_raw_sha256": "f943bb9de0f26a12fb83ba7f6ea0a30968ff651e2b41fc9dbcd609ecbb9464e0",
+      "report_sha256": "df5754d4991253e9e291c0f14eb3966f046ec9ff4e65b8e70c56149d418ba331"
+    },
+    {
+      "peer": "gemini",
+      "commit": "5403e05a4cdb9b91abb85f20922b17e807481d82",
+      "critique_raw_sha256": "5b59bbcc0c004c33822fb9b332beba6c8199cc34d8adb1c18fa75034c2968114",
+      "report_sha256": "aa3fe56fd792514d438ad24fda1266186b8a55cbe1ce3c9a2295f8699d8464be"
+    }
+  ],
+  "input_manifest_sha256": "2e3d34ba69d2d0ed0d93978b93dc959c415a280ab9afdfc84365a3be78256596",
+  "crosscritique_scope": "Facts and bounded qualifications, not a majority vote or selected-best policy.",
+  "global_counts": {
+    "offered": 112652,
+    "complete": 77064,
+    "rejected": 35588,
+    "natural_eos": 77064,
+    "capped": 0,
+    "natural_cohort_good": 64188,
+    "natural_in_window_good": 63633
+  },
+  "policy_totals": {
+    "fixed-cost16": {
+      "capped": 0,
+      "complete": 14761,
+      "natural_cohort_good": 14233,
+      "natural_eos": 14761,
+      "natural_in_window_good": 14117,
+      "offered": 28163,
+      "other": 0,
+      "rejected": 13402
+    },
+    "fixed-cost32": {
+      "capped": 0,
+      "complete": 20634,
+      "natural_cohort_good": 17182,
+      "natural_eos": 20634,
+      "natural_in_window_good": 17020,
+      "offered": 28163,
+      "other": 0,
+      "rejected": 7529
+    },
+    "fixed-count16": {
+      "capped": 0,
+      "complete": 18945,
+      "natural_cohort_good": 15733,
+      "natural_eos": 18945,
+      "natural_in_window_good": 15596,
+      "offered": 28163,
+      "other": 0,
+      "rejected": 9218
+    },
+    "fixed-count32": {
+      "capped": 0,
+      "complete": 22724,
+      "natural_cohort_good": 17040,
+      "natural_eos": 22724,
+      "natural_in_window_good": 16900,
+      "offered": 28163,
+      "other": 0,
+      "rejected": 5439
+    }
+  },
+  "estimands": {
+    "cohort_cost32_minus_count32_seed_counts": [
+      -19,
+      25,
+      62,
+      74
+    ],
+    "window_cost32_minus_count32_seed_counts": [
+      -27,
+      17,
+      60,
+      70
+    ],
+    "nominal_seed_units": 4,
+    "ci_or_superiority_claim": false
+  },
+  "gemini_final_accuracy_commit": "30886c55ffe2565d0e35fb6f401495cf5c9b2abd",
+  "gemini_final_report_sha256": "9612fd042d2fe2aace6be6f29a63896a0aaab80af02caf340898c431abdc0802",
+  "gemini_scope": "Summary aggregation and HTTP timing, not an additional independent400 rehash/SLO-count replay.",
+  "technical_report": "experiments/mpc-research/native-v3/baseline04-four-model-technical-consensus.zh-TW.md",
+  "technical_report_sha256": "a4f61fed7081f1cc82c1c0da8f7fcc4a963cf34d2d583e3fae9325c56d7b66f6",
+  "source_archive": "nv3-028-four-model-crosscritique-source-evidence.tar.gz",
+  "source_archive_sha256": "7e89af6e13cc31fc4ca325bff78d364aa0018e4dfe35349e7d1404939a16b876",
+  "source_archive_bytes": 6429790,
+  "source_manifest": [
+    {
+      "file": "pr33-native-v3-round19-astra-crosscritique-frozen/astra-r19-crosscritique.json",
+      "sha256": "a8bd83665e23339b7cb6e09dc5e4fe7aad9212fd557043dfecf0b3142c2b940e",
+      "bytes": 44255
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-crosscritique-frozen/astra.md",
+      "sha256": "ab907fcd68228604588a575a49dc8a078a55dd34b7542133dc6f5b217ea4a636",
+      "bytes": 66621696
+    },
+    {
+      "file": "pr33-native-v3-round19-crosscritique-inputs.json",
+      "sha256": "2e3d34ba69d2d0ed0d93978b93dc959c415a280ab9afdfc84365a3be78256596",
+      "bytes": 5222
+    },
+    {
+      "file": "pr33-native-v3-round19-four-peer-metric-agreement.json",
+      "sha256": "4c821bc8b9ad24bacc714062751f0cd501dca3ed6e041ee3fabdb1a3ad97c2fd",
+      "bytes": 21530
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-crosscritique-frozen/gemini-r19-crosscritique.json",
+      "sha256": "5b59bbcc0c004c33822fb9b332beba6c8199cc34d8adb1c18fa75034c2968114",
+      "bytes": 8531
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-crosscritique-frozen/gemini.md",
+      "sha256": "aa3fe56fd792514d438ad24fda1266186b8a55cbe1ce3c9a2295f8699d8464be",
+      "bytes": 248545
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-final-accuracy-frozen/gemini.md",
+      "sha256": "9612fd042d2fe2aace6be6f29a63896a0aaab80af02caf340898c431abdc0802",
+      "bytes": 250162
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-final-accuracy-frozen/native_campaign_protocol.py",
+      "sha256": "579163c611d2717af8b0a52cd961c7f36eb516dbcd1c3ca42d3b4cc977bde962",
+      "bytes": 352771
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-final-accuracy-frozen/test_native_campaign_protocol.py",
+      "sha256": "f322a301e1faf034076207bee7b8c2a0f29509a45086ffcf0f05e4c94ec2b495",
+      "bytes": 174881
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-crosscritique-frozen/native_release_model.py",
+      "sha256": "e66f3a17550e212f1cdd31f4e4b64dfc8d9dcf5653cb7493d794424031ad9630",
+      "bytes": 330124
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-crosscritique-frozen/opus-r19-crosscritique.json",
+      "sha256": "9f84b55d9e94db5b546c54527344a97780bf4fca3192e5c09ede79e65ebd82ff",
+      "bytes": 9570
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-crosscritique-frozen/opus.md",
+      "sha256": "3fcbab29351a02ee2d982cfd8a4b5fdf918b26766684c578dcd1b5fa8d90528e",
+      "bytes": 267541
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-crosscritique-frozen/r19_crosscritique.py",
+      "sha256": "019e8463dbf9f38ab21929fe1e207444ef469155d03bbc5f5664cb703727c971",
+      "bytes": 6105
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-crosscritique-frozen/test_native_release_model.py",
+      "sha256": "54dc6a4dd85af969d935590d37f4c5deb7f5247df928eaf4cbc6f31f47371b68",
+      "bytes": 109244
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-crosscritique-mayor-reproduced.json",
+      "sha256": "9f84b55d9e94db5b546c54527344a97780bf4fca3192e5c09ede79e65ebd82ff",
+      "bytes": 9570
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-crosscritique-frozen/sol-r19-crosscritique-canonical.json",
+      "sha256": "f943bb9de0f26a12fb83ba7f6ea0a30968ff651e2b41fc9dbcd609ecbb9464e0",
+      "bytes": 8078
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-crosscritique-frozen/sol.md",
+      "sha256": "df5754d4991253e9e291c0f14eb3966f046ec9ff4e65b8e70c56149d418ba331",
+      "bytes": 299074
+    }
+  ],
+  "historical_errors_retained": true,
+  "all_initial_untracked_critique_raws_fully_preserved": false,
+  "missing_historical_raw_note": "Opus explicitly reported initial display-tolerance critique raw3979f08f overwritten; no full-byte reproduction claimed. Errors retained in reports and messages; baseline acquisition bytes untouched.",
+  "native_mpc_permit": false,
+  "mpc_superiority_claim": false,
+  "h14_full_original_fitted_state_recovered": false,
+  "h16_runtime_q1_q5_qualified": false,
+  "pod_retained": true,
+  "provider_billing_stop_verified": false
+}

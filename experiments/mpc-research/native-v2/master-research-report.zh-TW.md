@@ -13,6 +13,23 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-028：80 個 baseline、四模型獨立分析與各自三方交叉批判已封存。**
+112,652 assigned HTTP fates 為 77,064 API-stop complete／35,588 rejected，
+0 other／capped；cohort-good 64,188、in-window-good 63,633。
+三份獨立 80-episode count replay 與第四份聚合相符；四份完整 canonical
+raw 均由 Mayor 逐位元重現。cost32−count32 的 cohort／in-window 平均差
+分別 +0.059167／+0.05 good/s，四 seed 都是三正一負，沒有 general
+superiority 或 MPC 宣告。conditional-completion 百分比不是 all-assigned
+goodput，HTTP closure 不是 physical release；nominal n=4、兩種重複鏡像
+policy orders／完整 wire payload 缺口仍限制推論。
+完整繁中技術共識在
+`experiments/mpc-research/native-v3/baseline04-four-model-technical-consensus.zh-TW.md`。
+NV3-026／027／028 保留全矩陣、獨立來源、critique 與所有已知錯誤；
+不把初始 harness failures 或錯誤敘述改寫為零失敗歷史。
+本次 baseline 與共識完成，不代表更大的 MPC 研究已勝出；
+H14 完整 weights／H16 actual runtime gates 未解除。owned GPU 推論已停，
+Pod 保留，供應商 billing 停止未驗證。
+
 **NV3-026：80／80 個正式 baseline 全數完成並封存。**
 full04 於 `2026-10-31T22:01:12.795786Z` 完成。400 份 raw／events／
 closed Gateway artifacts 再次逐檔核對 SHA；完整四 seeds × 五 cells ×
