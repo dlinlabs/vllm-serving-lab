@@ -494,3 +494,131 @@ Native03 仍執行，失敗／結束的 owned GPU shutdown monitor 不變。
 - `native-v3-r13-source144-original-loader-refusal.json`
 - `native-v3-r12-within-step-release-mayor-replica.json.gz`
 - `native-v3-completion-supervisors-stopped.json`
+
+## NV3-018：R14 資格與原規則 fresh 確認裁定
+
+Experiment ID：`NV3-018-original-H11-H12-H13-source144-confirmation`。
+Parent publication commit：`79fe17f29b000364ce9712987293902dcac8fbab`。
+GPU serving source 仍是
+`144cef32a9b51c3a74355ff67f5eafdfac6e075f`，沒有 hotpatch。
+GPU／模型／software 與 NV3-016／017 相同；controller
+`mpc_active=false`、calibration `unfitted-not-validated`。
+
+### 來源、方法與原規則
+
+四個 R14 native local commits：
+Opus `e01b15a6741b1c40cff87f5f50609a244f7b2530`；
+Astra `473d4a611f88715d75432cde2df75fb7e80ad683`；
+Gemini `585cfb31b3b67162dd34829fa9788ad0c1a793c0`；
+Sol `598ad1584fc778aa87627ddf22778c92bff6b16d`。
+十二個 owned source／test／report files 已封存，archive SHA256
+`856eba1d3987656767941601ba70abf2dda4abe71d3feee39fbf5a928e971a08`。
+Mayor 對四 modules 與目前 capture／observer 的完整 fixtures 實際執行：
+**419 tests／219 subtests passed、零 skip，56.36秒**。
+Astra Worker 自己的90 tests 有27歷史 optional skips；Mayor 補 fixtures
+後的零 skip 是另一次實測，沒有抹去 Worker skips。
+
+原 H11／H12／H13 各自用原 frozen model、原 Train1–3 fit，
+strict Sol Source144 bridge 僅投影完整 Train15／16；九個 helper AST
+一致，model／normalization registry 執行前後相同。
+所有共用的歷史 numeric scores 在 H11→H12→H13 精確相同。
+沒有 alias729、調成本／weights／seed／門檻或新資料 refit。
+確認資料20 episodes／40 raw-events files，共2,400 offered 秒；
+兩個獨立 seed blocks，不把554／552個 overlapping origins 當成獨立重複。
+
+原 R11.4：H11a 為 aware−blind transition log loss 兩 block 都小於0；
+H11b 為 aware G5 MAE 小於 blind；H11c 為 aware G5 MAE 不高於
+0.95×v7，且 rejected5 bias 不差於 v7+0.5。
+原 R12.4／R13.4：每 endpoint 的 rejection bias／G5 MAE 比 aware 好，
+且 G5 MAE 不高於同 endpoint v7 的95%，兩 block 都成立。
+若只有一個 endpoint 通過，原 stop rule 是「interval 內未辨識」、
+**不是 pass**；兩 endpoint 都不完成確認則不是 forecasting／MPC candidate。
+Comparator 是 v7 `r8_admission_birth`／`r8_admission_birth_lower`，
+不是較弱的歷史 `r7_full_plan`。
+
+### 全部 endpoint 結果，沒有挑選
+
+G5 是原 diagnostic 的五秒 good-count prediction MAE，不是 req/s goodput。
+
+| Block | v7 upper | v7 lower | H11 aware | H12 upper | H12 lower | H13 upper | H13 lower |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 181015 | 4.026825 | 3.927614 | 7.605858 | 4.194043 | 3.725346 | 4.164049 | 3.758557 |
+| 181016 | 4.371300 | 4.268089 | 7.624693 | 4.435418 | 4.036251 | 4.421181 | 4.037340 |
+
+H11 transition aware−blind log loss 為−0.059282／−0.052159，
+aware 也優於 blind：a／b pass，但 c 的 MAE 與 rejection bias 都 fail。
+因此「batch key 有資訊」成立，完整 v8 forecaster 不成立。
+
+H12 的 a／b 在所有 endpoint／blocks 成立；lower 相對同 endpoint v7
+改善5.1499%／5.4319%，upper 退步4.1526%／1.4668%。
+只有 lower 完成5% gate，故依原規則 **UNIDENTIFIED_WITHIN_RELEASE_INTERVAL**，
+不是 forecasting pass，更不是 MPC 勝利。
+
+H13 a／b 同樣全成立；lower 改善4.3043%／5.4064%，upper
+退步3.4077%／1.1411%。Upper 兩 block 都 fail，lower 的 block15
+未達5%；兩 endpoint 都未完成全 block gate，裁定 **NOT_CANDIDATE**。
+H12 lower block15 的3.725346與 H13 的3.758557 分處5%門檻兩側，
+是必須保存的 Monte Carlo stream／threshold 敏感性；不能挑較幸運的
+舊非 stable pairing 或 endpoint 當成改善。Stable CRN 修復是 correctness
+要求，不依較有利 forecast score 決定採用。
+
+Nominal80% G5 band inclusion：
+H12 upper .655893／.654564，lower .710213／.687420；
+H13 upper .666722／.663183，lower .706848／.685604。
+這些不是已校準的80%機率保證，不能授權 chance constraint／native MPC。
+完整一／三／五秒與所有其他 metrics 保存在原始 JSON，不只保留表內結果。
+
+### 求解器與真實 HTTP 邊界
+
+Astra R14 在同16 USED8／9 cuts、兩 endpoint 的
+32,768 ten-metric scenario vectors／3,072 means，exhaustive／prefix EXACT。
+強 One-move／MPC first-action differences 全為0；原唯一差異位置兩者
+現在都選16。100ms deadline failures exhaustive20／prefix11，
+兩個 p128-m128 cuts 連 One-move 都未完成，不能將 unknown 當作相同。
+Paired median speedup upper1.723834／lower1.656545，為 Worker
+Python3.14.4 CPU profiling，不是 GPU、hard-deadline guarantee 或 goodput。
+完整 raw SHA256
+`082b18401b8a7668bb03510f848f51106d622354a8a08b5c08659f54868208de`。
+
+Mayor 對 frozen Gemini R14 再次讀碼發現：supplied real client 仍可能
+用 mock binding／transport，failed drain／invalid CAS 後仍 dispatch，
+empty cohort／缺欄位可能 vacuous gate，burst await full completion 而串行，
+horizon 也不是 actual apply+1秒。Remaining>90 token 不是物理 survival bound。
+此版尚不可 Native pilot；CPU419全通過只證明既有測試，沒有把它部署。
+R15 原生 `.9`／`.10` 由 Gemini 修 genuine fail-closed runner，
+Sol 以 actual-shaped client 獨立反例／驗收，不能共用 mock 當 GPU 證據。
+
+### 下一個有資訊價值的工作與安全／資源
+
+Caller-owned／merge-local convoy `hq-cv-w6kc7` 追蹤 `.9`–`.12`；
+Opus／Astra `.11`／`.12` 獨立量測 tagged Native／Gateway owners、
+whole-cost stock、latent pending／re-offer proxy 與真正多步資訊價值。
+Aggregate ledger prefix 可檢查 stock timing，不可假造 per-UUID terminal
+ownership 或 final watermark。Cost budget16／32 仍不等於 FixedConcurrency16／32；
+需要明確且實際套用的 cap interface／state coverage，不能改名冒充 baseline。
+原 H14 用17／18的提案保留為 INVALID；prospective Train41／42 不改。
+15／16 在原 gate 算完後已 USED，R15 不可再稱 pristine；
+Cal17–36／Val37–40／Final 沒有用於本輪模型分析或 selection。
+
+15:55:08Z verified ledger prefix：39完整 episodes／78 raw-events files，
+4,680新秒＋15,960舊有效秒＝**20,640秒＝5h44m**；48秒 smoke 不計。
+十小時尚未完成，Native03 acquisition／off-Pod replica／owned shutdown
+monitor 持續；沒有外來 cohort traffic 或 source hotpatch。
+15:55:24Z 封存的四 current native sessions credits 為16,170.26603：
+Opus3757.1746／Astra8701.983／Gemini2122.54587／Sol1588.56256，
+排除 Mayor／舊 sessions／invoice，不是美元帳單。
+GPU hourly quote／provider lifecycle credential 不可用，估計USD仍未知；
+停止 owned inference 不等於停止 Pod 計費。
+Witness／Refinery 仍 stopped；四 Worker tmux sessions 保留，
+兩 pre-push hooks SHA2565e9dd500…不變，沒有 `gt done`／Merge／其他 Rig 操作。
+
+本次新增 evidence 在 `results/mpc-native-v3/review-evidence/`：
+`native-v3-r14-frozen-source.tar.gz`／manifest、
+`native-v3-r14-mayor-current-source-qualification.txt`、
+三份 `native-v3-h11/h12/h13-original-source144-fresh1516.json.gz`、
+`native-v3-original-fresh1516-adjudication.json` 與
+`native-v3-r14-four-worker-usage.json`。
+H11 raw SHA256 `a81c6c8c…426fade`，elapsed70.52秒／RSS810,032KB；
+H12 `1cfc71f8…6c0be3`，132.23秒／RSS896,996KB；
+H13 `12291743…d32d91`，218.37秒／RSS897,588KB。
+完整 SHA 在 adjudication；compressed files 解壓後逐一重算確認。

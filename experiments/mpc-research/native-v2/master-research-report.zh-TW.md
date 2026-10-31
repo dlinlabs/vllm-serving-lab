@@ -13,6 +13,33 @@ HTTP first-residence 不能直接當作 exclusive serial GPU prefill service；
 
 ### Native v3 最新里程碑
 
+**NV3-018：原規則確認完成，沒有選端點製造成功。** R14 四模型
+封存 source 已由 Mayor 實際重跑 **419 tests／219 subtests、零 skip**。
+Strict Source144 bridge 資格通過；原 H11／H12／H13 只用 Train1–3 fit，
+在完整新 Train15／16 的20 episodes 上各自執行原 frozen kernel，
+沒有改參數、門檻、source identity 或原 model registry。九個 input helper
+AST 相同，各輪共用的歷史數值全部 exact。
+H11 的 batch 資訊與 aware／blind 改善成立，但完整預測仍不合格。
+H12 只有 lower endpoint 在兩 block 達5%：依原 stop rule 是
+「release interval 內未辨識」，不是通過。修正 CRN 的 H13 lower
+改善4.30%／5.41%，upper 反而退步3.41%／1.14%；
+兩 endpoint 都未完成全部 block 的確認，因此不是 forecasting／MPC candidate。
+H12／H13 在 block15 的 lower 門檻分歧暴露 Monte Carlo 敏感性，
+不能挑舊版或有利端點宣稱勝出。
+
+R14 exact prefix 與 exhaustive 在固定16 cuts 的全部計分精確一致，
+強 One-move／MPC 的 first-action differences 全為0，先前差異位置
+現在兩者都選16；deadline 未完成仍保留為未知。這不是 Native cap16
+或 MPC 性能改善。Gemini supplied-client prototype 仍有 fail-open gate、
+sequential burst 與錯誤 horizon 等部署問題；CPU 全過不等於可以上 GPU。
+新 caller-owned／merge-local convoy `hq-cv-w6kc7` 讓四模型研究真實
+tagged-owner state、release timing、因果／多步資訊價值與 fail-closed
+HTTP protocol，不盲調 MPC 權重。15／16 現在是 USED；Cal／Val／Final
+仍未作本輪分析。15:55:08Z 共 **20,640有效秒＝5h44m**，
+十小時與 Native closed-loop 勝利仍未完成；現有 GPU acquisition 持續。
+完整數值、版本、資源與限制見
+[原規則確認裁定](../native-v3/evolving-model-negative-and-observation-support.zh-TW.md#nv3-018r14-資格與原規則-fresh-確認裁定)。
+
 **新 Source boundary 與完成流程隔離：** Train15／16 已完整封存
 20 episodes／40 raw-events files、2,400秒；原 R13 loader 正確拒絕
 新 Source144／coreed8，尚未算任何 fresh forecast outcome。
