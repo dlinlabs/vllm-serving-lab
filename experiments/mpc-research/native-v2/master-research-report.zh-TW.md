@@ -31,6 +31,15 @@ cleanup 均驗證。既有 1,024-operation ceiling 保留；每個完整配對�
 drain 後切換 Gateway epoch，不重啟 native vLLM，也不忘記本 epoch 的
 operation outcomes。長時資料逐個 completed episode 封存到 Mayor。
 
+四個 backend 已完成三輪交叉審查；最新 R3 從各自提交凍結，
+Mayor 重現142 tests／107 subtests。仍有已重現的 Gemini numeric／
+duration／heuristic-alias 缺陷，因此未准作為驗收 authority；
+Astra same-first-action 保守政策的機會成本保留為未決設計問題。
+下一輪集中於短步、batch/history-aware **joint stock-flow** transition，
+不將 marginal original-release 模型直接接成 Goodput MPC。
+詳見 [第三輪證據裁定與下一輪模型](../native-v3/round3-adjudication.zh-TW.md)。
+十小時與原生 MPC 效能比較仍未完成，不把正在運行的計畫當結果。
+
 ## 任務權限與分支
 
 使用者已取消固定 AI Credits／GPU 時數上限，允許同一個既有 Pod 的自主實驗、
