@@ -1,0 +1,123 @@
+{
+  "experiment_id": "NV3-R9-mean-optimizer-independent-reproduction",
+  "source_sha256": "8889f92442485a7a346c3de10ad34d124602777af4273f80fba4fd9a4c51155b",
+  "kernel_id": "02b0376f4534f575bea3a1dca6b70813495ff688571d2e6a383ae3ae22f2878f",
+  "cpu_only": true,
+  "same_origins": 1111,
+  "shared_plan_means": 29300,
+  "shared_plan_mean_differences": 0,
+  "both_complete_same_choices": 757,
+  "mayor_summary": {
+    "181006": {
+      "both_complete": 385,
+      "cpu_s": {
+        "max": 0.26206789999999813,
+        "median": 0.06503824999999974,
+        "min": 0.010385199999994654,
+        "n": 562,
+        "p95": 0.10030850000000058
+      },
+      "exceeds_100ms": 177,
+      "first_action_differences": [],
+      "max_implied_gain": 0.03125,
+      "mean_implied_gain": 8.116883116883117e-05,
+      "one_complete": 549,
+      "statuses": {
+        "deadline": 177,
+        "experimental_candidate": 385
+      },
+      "wall_s": {
+        "max": 0.2620724040316418,
+        "median": 0.06503285048529506,
+        "min": 0.010382400010712445,
+        "n": 562,
+        "p95": 0.10030650102999061
+      }
+    },
+    "181007": {
+      "both_complete": 372,
+      "cpu_s": {
+        "max": 0.10049229999999909,
+        "median": 0.06250260000000196,
+        "min": 0.01268160000000762,
+        "n": 549,
+        "p95": 0.10020670000000109
+      },
+      "exceeds_100ms": 177,
+      "first_action_differences": [],
+      "max_implied_gain": 0.21875,
+      "mean_implied_gain": 0.0010920698924731182,
+      "one_complete": 549,
+      "statuses": {
+        "deadline": 177,
+        "experimental_candidate": 372
+      },
+      "wall_s": {
+        "max": 0.10049600107595325,
+        "median": 0.06249650102108717,
+        "min": 0.012695099925622344,
+        "n": 549,
+        "p95": 0.10020150092896074
+      }
+    }
+  },
+  "worker_summary": {
+    "181006": {
+      "both_complete": 409,
+      "cpu_s": {
+        "max": 0.1004252000000001,
+        "median": 0.05515959999999964,
+        "min": 0.010119400000000667,
+        "n": 562,
+        "p95": 0.10019769999999895
+      },
+      "exceeds_100ms": 153,
+      "first_action_differences": [],
+      "max_implied_gain": 0.0625,
+      "mean_implied_gain": 0.00022921760391198044,
+      "one_complete": 562,
+      "statuses": {
+        "deadline": 153,
+        "experimental_candidate": 409
+      },
+      "wall_s": {
+        "max": 0.10041990003082901,
+        "median": 0.0551588999805972,
+        "min": 0.010116999968886375,
+        "n": 562,
+        "p95": 0.10019839997403324
+      }
+    },
+    "181007": {
+      "both_complete": 399,
+      "cpu_s": {
+        "max": 0.10042920000000066,
+        "median": 0.05482700000000307,
+        "min": 0.011679400000005558,
+        "n": 549,
+        "p95": 0.10017919999999947
+      },
+      "exceeds_100ms": 150,
+      "first_action_differences": [],
+      "max_implied_gain": 0.21875,
+      "mean_implied_gain": 0.0010181704260651629,
+      "one_complete": 549,
+      "statuses": {
+        "deadline": 150,
+        "experimental_candidate": 399
+      },
+      "wall_s": {
+        "max": 0.1004255999578163,
+        "median": 0.054822501027956605,
+        "min": 0.011675600078888237,
+        "n": 549,
+        "p95": 0.10017549991607666
+      }
+    }
+  },
+  "deadline_censoring": "Different CPU/interpreter/load => distinct deadline masks; do not pool masks or impute deadline actions as equal.",
+  "mayor_raw_sha256": "f5af14956fd58731d30b47f95b27ef7a9fd61a516fb462c044130f4f7a53f774",
+  "worker_compact_raw_sha256_without_newline": "ac99ec8214f230e705ed7866cb9eb1de4101fefbf91478fb39228f826f65bd23",
+  "active_mpc": false,
+  "next_action": "Exact semantics-preserving acceleration, new-source kernel repair and causal input qualification; no GPU superiority claim."
+}

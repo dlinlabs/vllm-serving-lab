@@ -1,0 +1,2434 @@
+{
+  "scope": "Development seeds1/2 only. Instrumented timing is not the frozen benchmark.",
+  "implementation_hash": "b297a58010cc33c9b577de530c9fcba5db968338d21b0b575382bf94b1a52a7c",
+  "diagnostic_script_sha256": "e1a08a4eb61f771bfd15a335a7e432fd963e794671a36e0fc47642879ca4bf9c",
+  "policy_parameters_changed": false,
+  "heldout_used": false,
+  "deadline_s": 0.1,
+  "instrumented_decisions": [
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 0,
+      "active": 0,
+      "prompt_backlog": 0,
+      "offers": 871,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04296749999048188,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04110139992553741,
+      "completed_events": 16121
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 1,
+      "active": 8,
+      "prompt_backlog": 2176,
+      "offers": 809,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.039592200017068535,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.03761620010482147,
+      "completed_events": 14638
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 2,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 1043,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.05289360001916066,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.05034599994542077,
+      "completed_events": 17320
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 3,
+      "active": 6,
+      "prompt_backlog": 0,
+      "offers": 1167,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.055184800003189594,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.05273330002091825,
+      "completed_events": 18997
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 4,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 817,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.042755998962093145,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04072099912445992,
+      "completed_events": 15404
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 5,
+      "active": 13,
+      "prompt_backlog": 4352,
+      "offers": 485,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.026139700028579682,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.024709800025448203,
+      "completed_events": 10468
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 6,
+      "active": 17,
+      "prompt_backlog": 5120,
+      "offers": 721,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04057620000094175,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.038840799999888986,
+      "completed_events": 15313
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 7,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 694,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.039402499969583005,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.037637799978256226,
+      "completed_events": 14900
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 8,
+      "active": 10,
+      "prompt_backlog": 640,
+      "offers": 491,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.02785579999908805,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.0263946998747997,
+      "completed_events": 11180
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 9,
+      "active": 18,
+      "prompt_backlog": 5248,
+      "offers": 655,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03863630001433194,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.03693669993663207,
+      "completed_events": 14416
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 10,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 1036,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.052120700012892485,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04988389991922304,
+      "completed_events": 19190
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 11,
+      "active": 7,
+      "prompt_backlog": 0,
+      "offers": 988,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.049124899960588664,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.046904300106689334,
+      "completed_events": 17751
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 0,
+      "active": 0,
+      "prompt_backlog": 0,
+      "offers": 871,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04200869903434068,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04020569892600179,
+      "completed_events": 16121
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 1,
+      "active": 2,
+      "prompt_backlog": 0,
+      "offers": 190,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.010256299981847405,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.009234299999661744,
+      "completed_events": 4600
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 2,
+      "active": 8,
+      "prompt_backlog": 512,
+      "offers": 455,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.025041199987754226,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.023579799744766206,
+      "completed_events": 10130
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 3,
+      "active": 10,
+      "prompt_backlog": 3584,
+      "offers": 621,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03216589998919517,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.030487199779599905,
+      "completed_events": 12600
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 4,
+      "active": 6,
+      "prompt_backlog": 0,
+      "offers": 395,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.020728199975565076,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.019414400099776685,
+      "completed_events": 8956
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 5,
+      "active": 9,
+      "prompt_backlog": 2176,
+      "offers": 996,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.05035249999491498,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04827530006878078,
+      "completed_events": 18517
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 6,
+      "active": 10,
+      "prompt_backlog": 2560,
+      "offers": 2199,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.09677270002430305,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.09301629988476634,
+      "completed_events": 31348
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 7,
+      "active": 12,
+      "prompt_backlog": 2048,
+      "offers": 2066,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.0915794990141876,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.08751599886454642,
+      "completed_events": 29220
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 8,
+      "active": 8,
+      "prompt_backlog": 0,
+      "offers": 1638,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.07963619998190552,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.07661029999144375,
+      "completed_events": 25175
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 9,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 1192,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.06240209995303303,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.05996889981906861,
+      "completed_events": 21477
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 10,
+      "active": 7,
+      "prompt_backlog": 0,
+      "offers": 328,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.019575700047425926,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.018106999981682748,
+      "completed_events": 7704
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 11,
+      "active": 6,
+      "prompt_backlog": 0,
+      "offers": 360,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.02055130002554506,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.019285399990621954,
+      "completed_events": 8260
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 0,
+      "active": 0,
+      "prompt_backlog": 0,
+      "offers": 871,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04329379997216165,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.041224800050258636,
+      "completed_events": 16121
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 1,
+      "active": 8,
+      "prompt_backlog": 2176,
+      "offers": 809,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04344339994713664,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.0414011997054331,
+      "completed_events": 14638
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 2,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 1043,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04892159899463877,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04654349904740229,
+      "completed_events": 17320
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 3,
+      "active": 6,
+      "prompt_backlog": 0,
+      "offers": 1167,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.054039500013459474,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.05163849995005876,
+      "completed_events": 18997
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 4,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 817,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.04262079996988177,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.040657299919985235,
+      "completed_events": 15404
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 5,
+      "active": 13,
+      "prompt_backlog": 4352,
+      "offers": 485,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.026202499982900918,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.024784900015220046,
+      "completed_events": 10468
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 6,
+      "active": 17,
+      "prompt_backlog": 5120,
+      "offers": 721,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.041021800017915666,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.0392858000122942,
+      "completed_events": 15313
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 7,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 694,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03317139996215701,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.031249800056684762,
+      "completed_events": 12674
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 8,
+      "active": 4,
+      "prompt_backlog": 8192,
+      "offers": 491,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.01768589997664094,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.016239500080700964,
+      "completed_events": 7030
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 9,
+      "active": 8,
+      "prompt_backlog": 14336,
+      "offers": 655,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.025872200028970838,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.02417229994898662,
+      "completed_events": 9134
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 10,
+      "active": 5,
+      "prompt_backlog": 4096,
+      "offers": 1036,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.033695500052999705,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.03142019984079525,
+      "completed_events": 12498
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 11,
+      "active": 3,
+      "prompt_backlog": 6144,
+      "offers": 988,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03257339895935729,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.03046489879488945,
+      "completed_events": 12069
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 0,
+      "active": 0,
+      "prompt_backlog": 0,
+      "offers": 880,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.045631299959495664,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.043482799897901714,
+      "completed_events": 16486
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 1,
+      "active": 6,
+      "prompt_backlog": 6144,
+      "offers": 477,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03010479995282367,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.028517700324300677,
+      "completed_events": 10310
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 2,
+      "active": 8,
+      "prompt_backlog": 0,
+      "offers": 623,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03657489997567609,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.033858700073324144,
+      "completed_events": 12868
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 3,
+      "active": 8,
+      "prompt_backlog": 2048,
+      "offers": 748,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.042092899966519326,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04002770013175905,
+      "completed_events": 15154
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 4,
+      "active": 7,
+      "prompt_backlog": 2560,
+      "offers": 755,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03829640004551038,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.036353399977087975,
+      "completed_events": 13888
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 5,
+      "active": 8,
+      "prompt_backlog": 0,
+      "offers": 988,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.046825500030536205,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.044559399771969765,
+      "completed_events": 16792
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 6,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 1027,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.05264750000787899,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.05036939989076927,
+      "completed_events": 18422
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 7,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 1116,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.05240389896789566,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.05015359923709184,
+      "completed_events": 18630
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 8,
+      "active": 8,
+      "prompt_backlog": 2048,
+      "offers": 1129,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.05162370001198724,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04925510007888079,
+      "completed_events": 18531
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 9,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 910,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04630499996710569,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04415750008774921,
+      "completed_events": 16294
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 10,
+      "active": 9,
+      "prompt_backlog": 128,
+      "offers": 873,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.05075239995494485,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.048504699720069766,
+      "completed_events": 17636
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "tick": 11,
+      "active": 16,
+      "prompt_backlog": 384,
+      "offers": 788,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.0495608999626711,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04752909985836595,
+      "completed_events": 17090
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 0,
+      "active": 0,
+      "prompt_backlog": 0,
+      "offers": 880,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.044140700018033385,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.042220299888867885,
+      "completed_events": 16486
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 1,
+      "active": 2,
+      "prompt_backlog": 0,
+      "offers": 173,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.009425099997315556,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.008427300082985312,
+      "completed_events": 4176
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 2,
+      "active": 8,
+      "prompt_backlog": 2304,
+      "offers": 337,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.01906139898346737,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.017937699100002646,
+      "completed_events": 8144
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 3,
+      "active": 10,
+      "prompt_backlog": 0,
+      "offers": 449,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.026518799946643412,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.02510079985950142,
+      "completed_events": 10328
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 4,
+      "active": 10,
+      "prompt_backlog": 5248,
+      "offers": 377,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.022847099986393005,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.021434599766507745,
+      "completed_events": 8852
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 5,
+      "active": 18,
+      "prompt_backlog": 3584,
+      "offers": 1354,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.06530479999491945,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.06270540005061775,
+      "completed_events": 21690
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 6,
+      "active": 10,
+      "prompt_backlog": 0,
+      "offers": 2245,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.09311469999374822,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.08938159991521388,
+      "completed_events": 29673
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 7,
+      "active": 10,
+      "prompt_backlog": 128,
+      "offers": 1927,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.08208540000487119,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.07867860019905493,
+      "completed_events": 27059
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 8,
+      "active": 11,
+      "prompt_backlog": 2560,
+      "offers": 2088,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.08737029897747561,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.08380609902087599,
+      "completed_events": 28994
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 9,
+      "active": 6,
+      "prompt_backlog": 0,
+      "offers": 1240,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.059420400008093566,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.05683589988620952,
+      "completed_events": 20980
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 10,
+      "active": 9,
+      "prompt_backlog": 2432,
+      "offers": 462,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.026256499986629933,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.024693299899809062,
+      "completed_events": 11224
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "tick": 11,
+      "active": 11,
+      "prompt_backlog": 4608,
+      "offers": 526,
+      "decision": {
+        "budget": 32.0,
+        "reason": "selected",
+        "elapsed_s": 0.028890600020531565,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.027344799716956913,
+      "completed_events": 11402
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 0,
+      "active": 0,
+      "prompt_backlog": 0,
+      "offers": 880,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.043410399986896664,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.0413764999830164,
+      "completed_events": 16486
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 1,
+      "active": 6,
+      "prompt_backlog": 6144,
+      "offers": 477,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.026073699991684407,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.024556000251322985,
+      "completed_events": 10310
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 2,
+      "active": 8,
+      "prompt_backlog": 0,
+      "offers": 623,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03358049999224022,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.03192159999161959,
+      "completed_events": 12868
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 3,
+      "active": 8,
+      "prompt_backlog": 2048,
+      "offers": 748,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04032519896281883,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.03850889898603782,
+      "completed_events": 15154
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 4,
+      "active": 7,
+      "prompt_backlog": 2560,
+      "offers": 755,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03743379999650642,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.035597899928689,
+      "completed_events": 13888
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 5,
+      "active": 8,
+      "prompt_backlog": 0,
+      "offers": 988,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04646739998133853,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.04433880012948066,
+      "completed_events": 16792
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 6,
+      "active": 9,
+      "prompt_backlog": 0,
+      "offers": 1027,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.05279669997980818,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.05067529994994402,
+      "completed_events": 18422
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 7,
+      "active": 5,
+      "prompt_backlog": 4096,
+      "offers": 1116,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.04003020003437996,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.03777289990102872,
+      "completed_events": 15030
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 8,
+      "active": 4,
+      "prompt_backlog": 6144,
+      "offers": 1129,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03693969995947555,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.03457920008804649,
+      "completed_events": 12697
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 9,
+      "active": 5,
+      "prompt_backlog": 4096,
+      "offers": 910,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.02926159999333322,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.027278900088276714,
+      "completed_events": 11047
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 10,
+      "active": 6,
+      "prompt_backlog": 6144,
+      "offers": 873,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.03049879998434335,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.028525000088848174,
+      "completed_events": 11765
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "tick": 11,
+      "active": 5,
+      "prompt_backlog": 4096,
+      "offers": 788,
+      "decision": {
+        "budget": 16.0,
+        "reason": "selected",
+        "elapsed_s": 0.027914199978113174,
+        "complete_plans": 8
+      },
+      "rollout_calls": 32,
+      "rollout_wall_s": 0.02615589980268851,
+      "completed_events": 11061
+    }
+  ],
+  "instrumented_reasons": {
+    "selected": 72
+  },
+  "untimed_replay_scope": "Same snapshots/scenarios; model score only, never a deployed action",
+  "untimed_replays": [
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 0,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 48.0,
+          "upper": 48.0,
+          "events": 1999,
+          "changes": 0
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 43.5,
+          "upper": 43.5,
+          "events": 1996,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 49.0,
+          "upper": 49.0,
+          "events": 2016,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 46.75,
+          "upper": 46.75,
+          "events": 2052,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 47.0,
+          "upper": 47.0,
+          "events": 1981,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 42.5,
+          "upper": 42.5,
+          "events": 1998,
+          "changes": 3
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 47.0,
+          "upper": 47.0,
+          "events": 2029,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 45.0,
+          "upper": 45.0,
+          "events": 2050,
+          "changes": 1
+        }
+      ],
+      "best": {
+        "actions": [
+          16.0,
+          32.0,
+          16.0
+        ],
+        "lower": 49.0,
+        "upper": 49.0,
+        "events": 2016,
+        "changes": 2
+      },
+      "one_move_equivalent": {
+        "actions": [
+          16.0,
+          16.0,
+          16.0
+        ],
+        "lower": 48.0,
+        "upper": 48.0,
+        "events": 1999,
+        "changes": 0
+      },
+      "first_action_differs": false,
+      "open_loop_gain": 1.0
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 4,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 55.25,
+          "upper": 55.25,
+          "events": 1914,
+          "changes": 0
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 55.75,
+          "upper": 55.75,
+          "events": 1919,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 54.0,
+          "upper": 54.0,
+          "events": 1916,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 55.0,
+          "upper": 55.0,
+          "events": 1937,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 55.0,
+          "upper": 55.0,
+          "events": 1921,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 55.5,
+          "upper": 55.5,
+          "events": 1913,
+          "changes": 3
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 57.25,
+          "upper": 57.25,
+          "events": 1938,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 60.0,
+          "upper": 60.0,
+          "events": 1946,
+          "changes": 1
+        }
+      ],
+      "best": {
+        "actions": [
+          32.0,
+          32.0,
+          32.0
+        ],
+        "lower": 60.0,
+        "upper": 60.0,
+        "events": 1946,
+        "changes": 1
+      },
+      "one_move_equivalent": {
+        "actions": [
+          16.0,
+          16.0,
+          16.0
+        ],
+        "lower": 55.25,
+        "upper": 55.25,
+        "events": 1914,
+        "changes": 0
+      },
+      "first_action_differs": true,
+      "open_loop_gain": 4.75
+    },
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "tick": 8,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 41.5,
+          "upper": 41.5,
+          "events": 1393,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 42.5,
+          "upper": 42.5,
+          "events": 1401,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 41.5,
+          "upper": 41.5,
+          "events": 1393,
+          "changes": 3
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 42.75,
+          "upper": 42.75,
+          "events": 1403,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 41.5,
+          "upper": 41.5,
+          "events": 1393,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 42.5,
+          "upper": 42.5,
+          "events": 1401,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 41.5,
+          "upper": 41.5,
+          "events": 1393,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 42.75,
+          "upper": 42.75,
+          "events": 1403,
+          "changes": 0
+        }
+      ],
+      "best": {
+        "actions": [
+          32.0,
+          32.0,
+          32.0
+        ],
+        "lower": 42.75,
+        "upper": 42.75,
+        "events": 1403,
+        "changes": 0
+      },
+      "one_move_equivalent": {
+        "actions": [
+          32.0,
+          16.0,
+          16.0
+        ],
+        "lower": 41.5,
+        "upper": 41.5,
+        "events": 1393,
+        "changes": 1
+      },
+      "first_action_differs": false,
+      "open_loop_gain": 1.25
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 0,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 48.0,
+          "upper": 48.0,
+          "events": 1999,
+          "changes": 0
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 43.5,
+          "upper": 43.5,
+          "events": 1996,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 49.0,
+          "upper": 49.0,
+          "events": 2016,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 46.75,
+          "upper": 46.75,
+          "events": 2052,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 47.0,
+          "upper": 47.0,
+          "events": 1981,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 42.5,
+          "upper": 42.5,
+          "events": 1998,
+          "changes": 3
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 47.0,
+          "upper": 47.0,
+          "events": 2029,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 45.0,
+          "upper": 45.0,
+          "events": 2050,
+          "changes": 1
+        }
+      ],
+      "best": {
+        "actions": [
+          16.0,
+          32.0,
+          16.0
+        ],
+        "lower": 49.0,
+        "upper": 49.0,
+        "events": 2016,
+        "changes": 2
+      },
+      "one_move_equivalent": {
+        "actions": [
+          16.0,
+          16.0,
+          16.0
+        ],
+        "lower": 48.0,
+        "upper": 48.0,
+        "events": 1999,
+        "changes": 0
+      },
+      "first_action_differs": false,
+      "open_loop_gain": 1.0
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 4,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 32.75,
+          "upper": 32.75,
+          "events": 1117,
+          "changes": 0
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 33.0,
+          "upper": 33.0,
+          "events": 1119,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 33.0,
+          "upper": 33.0,
+          "events": 1119,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 33.5,
+          "upper": 33.5,
+          "events": 1123,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 32.75,
+          "upper": 32.75,
+          "events": 1117,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 33.0,
+          "upper": 33.0,
+          "events": 1119,
+          "changes": 3
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 33.0,
+          "upper": 33.0,
+          "events": 1119,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 33.5,
+          "upper": 33.5,
+          "events": 1123,
+          "changes": 1
+        }
+      ],
+      "best": {
+        "actions": [
+          16.0,
+          32.0,
+          32.0
+        ],
+        "lower": 33.5,
+        "upper": 33.5,
+        "events": 1123,
+        "changes": 1
+      },
+      "one_move_equivalent": {
+        "actions": [
+          16.0,
+          16.0,
+          16.0
+        ],
+        "lower": 32.75,
+        "upper": 32.75,
+        "events": 1117,
+        "changes": 0
+      },
+      "first_action_differs": false,
+      "open_loop_gain": 0.75
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "tick": 8,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 75.25,
+          "upper": 75.25,
+          "events": 3189,
+          "changes": 0
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 61.25,
+          "upper": 61.25,
+          "events": 3123,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 63.0,
+          "upper": 63.0,
+          "events": 3157,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 52.75,
+          "upper": 52.75,
+          "events": 3179,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 61.75,
+          "upper": 61.75,
+          "events": 3111,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 54.75,
+          "upper": 54.75,
+          "events": 3140,
+          "changes": 3
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 49.75,
+          "upper": 49.75,
+          "events": 3140,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 39.5,
+          "upper": 39.5,
+          "events": 3136,
+          "changes": 1
+        }
+      ],
+      "best": {
+        "actions": [
+          16.0,
+          16.0,
+          16.0
+        ],
+        "lower": 75.25,
+        "upper": 75.25,
+        "events": 3189,
+        "changes": 0
+      },
+      "one_move_equivalent": {
+        "actions": [
+          16.0,
+          16.0,
+          16.0
+        ],
+        "lower": 75.25,
+        "upper": 75.25,
+        "events": 3189,
+        "changes": 0
+      },
+      "first_action_differs": false,
+      "open_loop_gain": 0.0
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 0,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 48.0,
+          "upper": 48.0,
+          "events": 1999,
+          "changes": 0
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 43.5,
+          "upper": 43.5,
+          "events": 1996,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 49.0,
+          "upper": 49.0,
+          "events": 2016,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 46.75,
+          "upper": 46.75,
+          "events": 2052,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 47.0,
+          "upper": 47.0,
+          "events": 1981,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 42.5,
+          "upper": 42.5,
+          "events": 1998,
+          "changes": 3
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 47.0,
+          "upper": 47.0,
+          "events": 2029,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 45.0,
+          "upper": 45.0,
+          "events": 2050,
+          "changes": 1
+        }
+      ],
+      "best": {
+        "actions": [
+          16.0,
+          32.0,
+          16.0
+        ],
+        "lower": 49.0,
+        "upper": 49.0,
+        "events": 2016,
+        "changes": 2
+      },
+      "one_move_equivalent": {
+        "actions": [
+          16.0,
+          16.0,
+          16.0
+        ],
+        "lower": 48.0,
+        "upper": 48.0,
+        "events": 1999,
+        "changes": 0
+      },
+      "first_action_differs": false,
+      "open_loop_gain": 1.0
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 4,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 55.25,
+          "upper": 55.25,
+          "events": 1914,
+          "changes": 0
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 55.75,
+          "upper": 55.75,
+          "events": 1919,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 54.0,
+          "upper": 54.0,
+          "events": 1916,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 55.0,
+          "upper": 55.0,
+          "events": 1937,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 55.0,
+          "upper": 55.0,
+          "events": 1921,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 55.5,
+          "upper": 55.5,
+          "events": 1913,
+          "changes": 3
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 57.25,
+          "upper": 57.25,
+          "events": 1938,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 60.0,
+          "upper": 60.0,
+          "events": 1946,
+          "changes": 1
+        }
+      ],
+      "best": {
+        "actions": [
+          32.0,
+          32.0,
+          32.0
+        ],
+        "lower": 60.0,
+        "upper": 60.0,
+        "events": 1946,
+        "changes": 1
+      },
+      "one_move_equivalent": {
+        "actions": [
+          16.0,
+          16.0,
+          16.0
+        ],
+        "lower": 55.25,
+        "upper": 55.25,
+        "events": 1914,
+        "changes": 0
+      },
+      "first_action_differs": true,
+      "open_loop_gain": 4.75
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "tick": 8,
+      "plans": [
+        {
+          "actions": [
+            16.0,
+            16.0,
+            16.0
+          ],
+          "lower": 11.25,
+          "upper": 11.25,
+          "events": 859,
+          "changes": 0
+        },
+        {
+          "actions": [
+            16.0,
+            16.0,
+            32.0
+          ],
+          "lower": 9.5,
+          "upper": 9.5,
+          "events": 881,
+          "changes": 1
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            16.0
+          ],
+          "lower": 9.75,
+          "upper": 9.75,
+          "events": 871,
+          "changes": 2
+        },
+        {
+          "actions": [
+            16.0,
+            32.0,
+            32.0
+          ],
+          "lower": 6.0,
+          "upper": 6.0,
+          "events": 875,
+          "changes": 1
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            16.0
+          ],
+          "lower": 12.25,
+          "upper": 12.25,
+          "events": 885,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            16.0,
+            32.0
+          ],
+          "lower": 8.25,
+          "upper": 8.25,
+          "events": 891,
+          "changes": 3
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            16.0
+          ],
+          "lower": 8.5,
+          "upper": 8.5,
+          "events": 879,
+          "changes": 2
+        },
+        {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "lower": 6.25,
+          "upper": 6.25,
+          "events": 889,
+          "changes": 1
+        }
+      ],
+      "best": {
+        "actions": [
+          32.0,
+          16.0,
+          16.0
+        ],
+        "lower": 12.25,
+        "upper": 12.25,
+        "events": 885,
+        "changes": 2
+      },
+      "one_move_equivalent": {
+        "actions": [
+          32.0,
+          16.0,
+          16.0
+        ],
+        "lower": 12.25,
+        "upper": 12.25,
+        "events": 885,
+        "changes": 2
+      },
+      "first_action_differs": false,
+      "open_loop_gain": 0.0
+    }
+  ],
+  "known_future_fixed_scope": "Oracle future/EOS for service-law diagnosis only, not a baseline",
+  "known_future_fixed": [
+    {
+      "seed": 1,
+      "workload": "stationary",
+      "arms": [
+        {
+          "budget": 16.0,
+          "truth_good": 71,
+          "predicted_lower": 123.0,
+          "predicted_upper": 123.0
+        },
+        {
+          "budget": 32.0,
+          "truth_good": 40,
+          "predicted_lower": 45.0,
+          "predicted_upper": 45.0
+        }
+      ],
+      "truth_delta_32_minus_16": -31,
+      "model_delta_32_minus_16": -78.0
+    },
+    {
+      "seed": 1,
+      "workload": "burst",
+      "arms": [
+        {
+          "budget": 16.0,
+          "truth_good": 70,
+          "predicted_lower": 107.0,
+          "predicted_upper": 107.0
+        },
+        {
+          "budget": 32.0,
+          "truth_good": 13,
+          "predicted_lower": 59.0,
+          "predicted_upper": 59.0
+        }
+      ],
+      "truth_delta_32_minus_16": -57,
+      "model_delta_32_minus_16": -48.0
+    },
+    {
+      "seed": 1,
+      "workload": "shift",
+      "arms": [
+        {
+          "budget": 16.0,
+          "truth_good": 50,
+          "predicted_lower": 84.0,
+          "predicted_upper": 84.0
+        },
+        {
+          "budget": 32.0,
+          "truth_good": 13,
+          "predicted_lower": 17.0,
+          "predicted_upper": 17.0
+        }
+      ],
+      "truth_delta_32_minus_16": -37,
+      "model_delta_32_minus_16": -67.0
+    },
+    {
+      "seed": 2,
+      "workload": "stationary",
+      "arms": [
+        {
+          "budget": 16.0,
+          "truth_good": 61,
+          "predicted_lower": 133.0,
+          "predicted_upper": 133.0
+        },
+        {
+          "budget": 32.0,
+          "truth_good": 31,
+          "predicted_lower": 58.0,
+          "predicted_upper": 58.0
+        }
+      ],
+      "truth_delta_32_minus_16": -30,
+      "model_delta_32_minus_16": -75.0
+    },
+    {
+      "seed": 2,
+      "workload": "burst",
+      "arms": [
+        {
+          "budget": 16.0,
+          "truth_good": 63,
+          "predicted_lower": 103.0,
+          "predicted_upper": 103.0
+        },
+        {
+          "budget": 32.0,
+          "truth_good": 47,
+          "predicted_lower": 58.0,
+          "predicted_upper": 58.0
+        }
+      ],
+      "truth_delta_32_minus_16": -16,
+      "model_delta_32_minus_16": -45.0
+    },
+    {
+      "seed": 2,
+      "workload": "shift",
+      "arms": [
+        {
+          "budget": 16.0,
+          "truth_good": 39,
+          "predicted_lower": 84.0,
+          "predicted_upper": 84.0
+        },
+        {
+          "budget": 32.0,
+          "truth_good": 12,
+          "predicted_lower": 38.0,
+          "predicted_upper": 38.0
+        }
+      ],
+      "truth_delta_32_minus_16": -27,
+      "model_delta_32_minus_16": -46.0
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+{
+  "schema": "native-v3-nv3-022-failure-and-qualified-caller-receipt-v1",
+  "observed_at_utc": "2026-10-31T17:51:06.156801+00:00",
+  "native03": {
+    "source": "144cef32a9b51c3a74355ff67f5eafdfac6e075f",
+    "protocol_sha256": "ae10b43f321616ad73bc5de3cea4a4f09b990f07299f061f1ca2dce992399743",
+    "error": "ValueError: bounded assignment failed; no unacknowledged action accepted",
+    "complete_episodes": 91,
+    "sha_verified_complete_artifacts": 182,
+    "new_valid_seconds": 10920,
+    "prior_distinct_valid_seconds": 15960,
+    "cumulative_distinct_valid_seconds": 26880,
+    "minimum_requested_seconds": 36000,
+    "ten_hour_complete": false,
+    "failed_partial": "nv3-181024-p128-m128-arm1.json",
+    "partial_counted_valid": false,
+    "last_action_control_only": {
+      "at_s": 40,
+      "budget": 16,
+      "attempts": [
+        {
+          "fence": {
+            "status": "clear"
+          },
+          "reply": {
+            "status": "pending",
+            "operation_id": "2959f924a08d4416ba2d116111e21296"
+          },
+          "received_at": 1030031.189509419,
+          "journal_timing": {
+            "started_at": 1030030.864308676,
+            "finished_at": 1030030.874790287,
+            "not_after": 1030030.964184151
+          },
+          "retained_pending_command": {
+            "budget": 16,
+            "clock_domain": "linux-monotonic:64589d75-974d-436e-80e4-fc734d7195d8:time:[4026534406]",
+            "expected_version": 77,
+            "identity": {
+              "calibration_version": "unfitted-not-validated",
+              "cost_hash": "cf8162ea687a697d698f26d0bd663fdb9a2f172dce71add05d267ac3dfb43833",
+              "implementation_hash": "ed8a6a537b7b663f44f4d6ed42d9679fe88048b4077c25dd778b6e8cf418a014",
+              "model_version": "native-id-unfitted-v1",
+              "support_hash": "7e6d49ca4a15ab8630fed9a7fa150eb3ab8f2e1a7b0d9585cc8a6c48f666498d"
+            },
+            "not_after": 1030030.964184151,
+            "operation_id": "2959f924a08d4416ba2d116111e21296",
+            "run_id": "117bc2cf4b3d4b649d313336ea0495a0",
+            "schema": "mpc-admission-v1"
+          }
+        },
+        {
+          "fence": {
+            "status": "expired",
+            "observed_budget": 32,
+            "observed_version": 77
+          },
+          "reply": {
+            "status": "blocked",
+            "reason": "stale_snapshot"
+          },
+          "received_at": 1030032.652144442,
+          "journal_timing": null
+        },
+        {
+          "fence": {
+            "status": "clear"
+          },
+          "reply": {
+            "status": "blocked",
+            "reason": "stale_snapshot"
+          },
+          "received_at": 1030033.784509276,
+          "journal_timing": null
+        }
+      ]
+    },
+    "observed_fence": "expired; observed budget32/version77; next two blocked stale_snapshot",
+    "initial_pending_http_status_or_reason": "NOT_RECORDED; network/server/event-loop root cause UNIDENTIFIED",
+    "no_ttl_or_freshness_relaxation": true
+  },
+  "owned_shutdown": {
+    "owned_vllm_pid": 26392,
+    "serving_port_closed": true,
+    "owned_processes_exited": true,
+    "gpu_compute_processes_empty": true,
+    "owned_process_ids": [
+      26392,
+      26647,
+      26648
+    ],
+    "pod_retained": true,
+    "provider_billing_stop_verified": false
+  },
+  "gemini793": {
+    "commit": "79368366908f6525d6cbbf236ce380ca95887b2b",
+    "full_tests_passed": 119,
+    "elapsed_s": 98.14,
+    "qualification_scope": "CPU only; not native or statistically identified",
+    "exact_caller_probe": {
+      "cases": [
+        {
+          "all_assigned_retained": true,
+          "caller_falsified": true,
+          "case": "reference",
+          "interval": [
+            -11.0,
+            -9.0
+          ],
+          "itt_preserved": true,
+          "strict_inventory_censor_reference": true
+        },
+        {
+          "all_assigned_retained": true,
+          "caller_falsified": true,
+          "case": "missing_burst_fate",
+          "interval": [
+            -11.0,
+            -9.0
+          ],
+          "itt_preserved": false,
+          "strict_inventory_censor_reference": true
+        },
+        {
+          "all_assigned_retained": true,
+          "caller_falsified": true,
+          "case": "missing_anchor_inventory",
+          "interval": [
+            -11.0,
+            -9.0
+          ],
+          "itt_preserved": true,
+          "strict_inventory_censor_reference": false
+        },
+        {
+          "all_assigned_retained": false,
+          "caller_falsified": true,
+          "case": "lost_assigned_fates",
+          "interval": [
+            -11.0,
+            -9.0
+          ],
+          "itt_preserved": true,
+          "strict_inventory_censor_reference": false
+        },
+        {
+          "all_assigned_retained": true,
+          "caller_falsified": true,
+          "case": "excess_censor",
+          "interval": [
+            -11.0,
+            -9.0
+          ],
+          "itt_preserved": true,
+          "strict_inventory_censor_reference": false
+        },
+        {
+          "all_assigned_retained": true,
+          "caller_falsified": false,
+          "case": "overlap",
+          "interval": [
+            -30.0,
+            15.0
+          ],
+          "itt_preserved": true,
+          "strict_inventory_censor_reference": false
+        }
+      ],
+      "native_permit": false,
+      "scope": "exact paired function; stub arms only; no HTTP or native execution",
+      "source_sha256": "44179f8d50e0f5aaead1d9cd77436cb6f90f10686a1992ccbfd3c2d28bd89142",
+      "statistical_permit": false
+    },
+    "remaining_assignment_inventory_censor_eligibility_blocked": true
+  },
+  "prospective": {
+    "h14_protocol_sha256": "b24f882a0d59c20a272a4449eda63ba8505580b2e2f2d0c45ef58eb3b5032029",
+    "h16_protocol_sha256": "ab883c90e85b9ec61967499841ce9de5942f11d916372f1b40824866750608da",
+    "collection_executed": false,
+    "bridge_and_live_runtime_qualified": false,
+    "jade_bead": "pr-native-v3.25",
+    "amber_bead": "pr-native-v3.26"
+  },
+  "archive": {
+    "path": "nv3-022-native03-failure-and-gemini793-source-evidence.tar.gz",
+    "sha256": "e9deb5c918699d9e6eef2578294333be1d0ed1c96af476a4d86847da2be30e8a",
+    "members": {
+      "gemini793/native_campaign_protocol.py": "44179f8d50e0f5aaead1d9cd77436cb6f90f10686a1992ccbfd3c2d28bd89142",
+      "gemini793/test_native_campaign_protocol.py": "bfc6cc60f37be6edeab7b61f45039106ba7014ff93779d49f229f33ee6a5c885",
+      "gemini793/gemini.md": "6c15043c33625c2c49a8b39d8978ea89032ea484803f52f632f1bc295682ca55",
+      "gemini793/manifest.json": "d87b7409d2c5a2c3f3fec04e239ac0160e927c2d28834408d92196a71f15c9a3",
+      "pr33-native-v3-r17-gemini-paired-caller-mayor-qualification.txt": "30abfd8fb230826de69cb3ca2d02141e873caebbb60d2c7e685c74847d5ea5b6",
+      "pr33_r17_793_paired_actual_caller_probe.py": "ad12b92c1a5e2e0d29eef5b0f82368b41fb20968da723b9189a9aec958633b58",
+      "pr33-native-v3-r17-793-paired-actual-caller-probe.json": "916b8efcf9b80208a4b6256b717abeca65ffc9b3a6d62803ff8c01dc4d527bb0",
+      "pr33-native-v3-identification03-frozen-protocol.json": "ae10b43f321616ad73bc5de3cea4a4f09b990f07299f061f1ca2dce992399743",
+      "pr33-native-v3-h14-prospective-protocol.json": "b24f882a0d59c20a272a4449eda63ba8505580b2e2f2d0c45ef58eb3b5032029",
+      "pr33-native-v3-h16-prospective-protocol.json": "ab883c90e85b9ec61967499841ce9de5942f11d916372f1b40824866750608da",
+      "failure03/latest-index.json": "8a0d075d88da1ec6394f6305786b5f6d8f4a2933e65c48d5fa462f1acb02755f",
+      "failure03/owned-service-shutdown.json": "c1a005ca62da5ee70e312c00b17de3ed98c15eb7e0ce113d735f7e0b527d0761",
+      "failure03/verified-artifact-sha256.jsonl": "8ac50fb429039151ccfea2de61f5862192ff650fbaa44a8669b83b393f3e6288",
+      "failure03/nv3-181024-p128-m128-arm1.json": "bfb7ec679c5940d4c6612f897fb7e2f2b9d96d75facac42ab700e3d291e9b541",
+      "failure03/nv3-181024-p128-m128-arm1.events.jsonl": "a5e2f8ce790a6a1b91d64e7eee50903a0d1388bf524b730cdf42dd79db8269d1"
+    }
+  },
+  "permits": {
+    "native_pilot": false,
+    "calibrated_mpc": false,
+    "controller_superiority": false
+  }
+}

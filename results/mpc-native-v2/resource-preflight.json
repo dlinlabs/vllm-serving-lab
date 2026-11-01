@@ -1,0 +1,30 @@
+{
+  "experiment_id": "native-v2-preflight",
+  "checked_utc": "2026-10-31T00:20:23.727596+00:00",
+  "pre_stop": {
+    "id": "i243ycb94oaxy2",
+    "desiredStatus": "RUNNING",
+    "costPerHr": 0.89,
+    "volumeInGb": 0,
+    "containerDiskInGb": 50,
+    "runtime": {
+      "uptimeInSeconds": 8880
+    }
+  },
+  "sealed_remote_evidence_matches_local": true,
+  "preservation": "All six current raw outcome/telemetry files byte-match local sealed archives. Container disk is ephemeral;runtime dependencies/model caches can be reconstructed. Lifecycle key retained outside repo mode0600.",
+  "action": "podStop",
+  "pod_id": "i243ycb94oaxy2",
+  "stop_reply": {
+    "id": "i243ycb94oaxy2",
+    "desiredStatus": "EXITED"
+  },
+  "post_stop": {
+    "id": "i243ycb94oaxy2",
+    "desiredStatus": "EXITED",
+    "costPerHr": 0.89,
+    "volumeInGb": 0,
+    "containerDiskInGb": 50,
+    "runtime": null
+  }
+}

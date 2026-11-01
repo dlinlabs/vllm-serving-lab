@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pr33-native-observer"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[project.entry-points."vllm.general_plugins"]
+pr33_native_observer = "pr33_native_observer:register"
+
+[project.entry-points."vllm.endpoint_plugins"]
+pr33_native_observer = "pr33_native_observer:Endpoint"
+
+[tool.setuptools]
+py-modules = ["pr33_native_observer"]

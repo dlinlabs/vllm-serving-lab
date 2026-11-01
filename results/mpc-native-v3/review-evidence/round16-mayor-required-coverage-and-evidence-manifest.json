@@ -1,0 +1,84 @@
+{
+  "schema": "native-v3-r16-mayor-two-run-required-coverage-v1",
+  "main_run": {
+    "passed": 457,
+    "subtests_passed": 252,
+    "skipped": 4,
+    "seconds": 134.78,
+    "reason": "Missing NV3_R15_FREEZE/NV3_JOURNAL_REPO for exactly four R16JournalTests; original output retained."
+  },
+  "targeted_missing_fixture_run": {
+    "selector": "R16JournalTests",
+    "passed": 4,
+    "skipped": 0,
+    "seconds": 0.27,
+    "fixtures": "Exact frozen R15 plus detached original a4ec Git source."
+  },
+  "combined_required_tests_executed_and_passed": 461,
+  "remaining_required_unexecuted_tests": 0,
+  "single_461_zero_skip_output_claimed": false,
+  "gemini_selected_commit": "5aecb10c2bd2af543a3e0ad19ceec9cac4f5cc77",
+  "historical_gemini_base_commit": "7212b3828c34cdf477a240dc38534694468cfdd8",
+  "new_owner_candidate_commit": "d1bd1e5f6262eda1ee29867689a810a475797c73",
+  "historical_owner_fixture_commit": "a4ec4e386e68f6ea20b68a8557785fc5813c7b16",
+  "owner_candidate_regression_passed": 119,
+  "source144_gateway_sha256": "a4a8229b0f636b64c945881d062c3ee925ef5fccc5ba2e6fc7629657d3575ea7",
+  "native_hardware_status": "UNTESTED",
+  "mpc_superiority": false,
+  "evidence": {
+    "round16-base-and-gemini-schema-frozen-source.tar.gz": {
+      "sha256": "f6af94811e483a1b85b37bd984903a97b8342ea936142e2fa821915dc85be4b3",
+      "bytes": 6493345
+    },
+    "pr33-native-v3-r16-mayor-source144-historical-owner-complete-qualification.txt.gz": {
+      "sha256": "89e995db81af1f8d73af6c7270aeb077cfc844a27afb23b328a866b7f822cabd",
+      "bytes": 350,
+      "uncompressed_sha256": "15676cac8c2f8f80b97297634a08839e58520dd10abfbea138726d11d571287f",
+      "uncompressed_bytes": 1573
+    },
+    "pr33-native-v3-r16-astra-historical-owner-four-required-probes.txt.gz": {
+      "sha256": "8d3de4ca7452fdb9747af7de8aef8a942928361b5431fb4d5ec3bd7f4ef186c2",
+      "bytes": 52,
+      "uncompressed_sha256": "2038a3dfdca696465e2ddac167fde1b9ffea555e42f99a02c9dc908d34afefb8",
+      "uncompressed_bytes": 98
+    },
+    "opus-r16-support-used1516-smoke.json.gz": {
+      "sha256": "a6ea9c94a61780cb7d152782a68f6d076c1cecfacdb2b017e92363960425ade4",
+      "bytes": 2532,
+      "uncompressed_sha256": "71be97f07d36eecd6792b584771555665b42c7fc5ed5ef14dcd10cf3863f157a",
+      "uncompressed_bytes": 10525
+    },
+    "pr33-native-v3-r16-astra-complete-raw.json.gz": {
+      "sha256": "19b9f1b37414ef1690f47d4a2a20db5fa88ea5c5f70648e1b885125ec0e487e1",
+      "bytes": 1961,
+      "uncompressed_sha256": "b1ee9cffe862107cdec0096ab4803023c770af7ac8c94ee23c867182099f94f9",
+      "uncompressed_bytes": 7402
+    },
+    "pr33-native-v3-r16-sol-canonical-journal-receipt.json.gz": {
+      "sha256": "f8176c3f6c1aa857d922d8244f7940ad1d3965d96c51dd5749f405444cb83dea",
+      "bytes": 178,
+      "uncompressed_sha256": "fa51dcdb981662acba7ac6259747d188c6cb9e841ec0dde17732b186e80960ea",
+      "uncompressed_bytes": 236
+    },
+    "pr33-native-v3-r17-owner-written-seal-qualification.txt.gz": {
+      "sha256": "1a5855b991fb736c22fb00caa36f694461b2b30c12541117dc7c23c85620a3f6",
+      "bytes": 61,
+      "uncompressed_sha256": "020c6eb8f42fe062d9773f9ab2f99d6bf9f631483d0334317ac909d411fe4516",
+      "uncompressed_bytes": 180
+    },
+    "pr33-native-v3-r16-resource-acquisition-receipt.json": {
+      "sha256": "63a8529931d90c800652fb260759ae1373b59cc343266b0ee0a64a432ed5c0bf",
+      "bytes": 702
+    },
+    "native-v3-r17-owner-written-j1-j2-local-only.patch.gz": {
+      "sha256": "54edf5a9cb18954788f86f825278f583274d6f141c33d6b0f43fcde6c9256770",
+      "bytes": 3394,
+      "uncompressed_sha256": "d7cec1f72732daca2ca90dc01f3b929cf359929fb5f8421d88c41d27e336154e",
+      "uncompressed_bytes": 12399
+    },
+    "pr33-native-v3-r16-four-current-worker-usage.json": {
+      "sha256": "9c08a7f8139a0deaa0bd88b49cc0e01cc56d82a5e50b1ccb76773e4cc5e9c3db",
+      "bytes": 654
+    }
+  }
+}

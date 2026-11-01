@@ -1,0 +1,413 @@
+{
+  "schema": "nv3-027-four-independent-baseline-reviews-v1",
+  "baseline_evidence_commit": "fee9f28f69731a4db648597a5a62dbc4f824d8aa",
+  "baseline_80_episodes_complete": true,
+  "all_four_first_independent_reviews_sealed": true,
+  "all_four_canonical_raws_mayor_reproduced_byte_identically": true,
+  "peer_input_manifest": {
+    "schema": "r19-four-independent-baseline-review-crosscritique-inputs-v1",
+    "root": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files",
+    "first_independent_round_complete": true,
+    "crosscritique_complete": false,
+    "baseline_evidence_commit": "fee9f28f69731a4db648597a5a62dbc4f824d8aa",
+    "baseline_receipt_sha256": "00fb93ff8e5d8afd3eb06e23b2e4e1b77ffb7917e31a52e11072ca9159155694",
+    "peers": {
+      "opus": {
+        "profile_model": "claude-opus-5.5",
+        "independent_commit": "404662da11a8e9fa6a5cf86ff666ecd087faee72",
+        "corrected_commit": "f4d9c678ff0937139412be76ded2f2a87ec64872",
+        "report": "pr33-native-v3-round19-opus-corrected-frozen/opus.md",
+        "report_sha256": "de68f70bc89742ef5f085af64414b31a7a3c8235100ffb370010b0297ad67d21",
+        "raw": "pr33-native-v3-round19-opus-independent-frozen/opus-r19-baseline04-analysis.json",
+        "raw_sha256": "7a2666007744396dc47e6ab70245df00b343a9108ee5805f8b19eb2fc8f2716c",
+        "mayor_full_raw_reproduced": true,
+        "retained_error": "Original report and mailbox said 2/2; actual cost32-count32 in-window seed deltas are [-27,+17,+60,+70], three positive and one negative."
+      },
+      "astra": {
+        "profile_model": "gpt-6-astra",
+        "independent_commit": "469c8cbcf79152fd4b12386faf2338f0074d2386",
+        "executor_receipt_commit": "bb5058f69d7e2b8e197b8766c36db78559c57cbc",
+        "report": "pr33-native-v3-round19-astra-executor-frozen/astra.md",
+        "report_sha256": "ffec3796041003a2c58a37c9d53563922584f8bccbf71353d321c88f8e3c610f",
+        "raw": "pr33-native-v3-round19-astra-independent-frozen/astra-r19-baseline04-analysis.json",
+        "raw_sha256": "ca1779eb9fb4fbb4398f226395904cfbaa29c3be3bbe1bd002e8cb145b00a3db",
+        "mayor_full_raw_reproduced": true,
+        "retained_error": "Original embedded code omitted stdin wrapper and no-final-LF extraction convention; faithful exact source and write-intercepted executor receipt supplied, raw unchanged."
+      },
+      "sol": {
+        "profile_model": "gpt-6.1-sol",
+        "independent_commit": "74191ba01ac6849d1becdf2517861f275253fa85",
+        "report": "pr33-native-v3-round19-sol-independent-frozen/sol.md",
+        "report_sha256": "bfe030c875ca8f4d8e065de2c15051abe2af1401d5061362e4917f17295bfc3c",
+        "raw": "pr33-native-v3-round19-sol-independent-frozen/sol-r19-baseline04-canonical.json",
+        "raw_sha256": "83a1a47d38831b0f0de78201916897852bd0b7a9ffbdcb00e9e2b6a2ccb710fc",
+        "mayor_full_raw_reproduced": true,
+        "retained_error": "Initial64 audit assertions failed:40 packaging assumptions and24 literal scalar-zero assumptions. Original failed raw/script retained; canonical empty-mark drain contract unchanged."
+      },
+      "gemini": {
+        "profile_model": "gemini-3.8-flash",
+        "independent_commit": "bea6bfee9f8c2bd9100c950e325c271ab54d4f87",
+        "corrected_commit": "f635027177ddbc347c0699a262260975ff489bdf",
+        "report": "pr33-native-v3-round19-gemini-corrected-frozen/gemini.md",
+        "report_sha256": "5a63e16aac2bbb81d7394cf88903dca1dc8dca3e303f51b37f160ab89a512ebb",
+        "raw": "pr33-native-v3-round19-gemini-corrected-frozen/gemini-r19-analysis.json",
+        "raw_sha256": "9643e5de9f0891d689f644265d1bb204b5f3a91b290b30bb60f3dab1a00c59d3",
+        "mayor_full_raw_reproduced": true,
+        "independent_400_artifact_rehash": false,
+        "independent_slo_count_replay": false,
+        "qualified_scope": "Producer-summary reaggregation and actual HTTP timing analysis; 120 existing CPU protocol tests are not baseline statistical or native qualification.",
+        "retained_error": "Original physical lease/KV memory causal/safety/stable superiority/full engine UUID/API EOS/steady state/body geometry overclaims retained in original reports and corrected with explicit boundaries."
+      }
+    },
+    "shared_estimands": {
+      "cohort_good_cost32_minus_count32_seed_counts": [
+        -19,
+        25,
+        62,
+        74
+      ],
+      "in_window_good_cost32_minus_count32_seed_counts": [
+        -27,
+        17,
+        60,
+        70
+      ],
+      "two_peer_all80_seven_counts_match": true,
+      "reconciliation": "pr33-native-v3-round19-two-peer-metric-reconciliation.json",
+      "independent_units": "Four seed blocks; cells and requests are not independent replications.",
+      "outgoing_payload_full_byte_identity_verified": false,
+      "order_randomization_independent_per_seed": false
+    },
+    "crosscritique_rules": [
+      "Read only each sealed R19 section and canonical raw. Hash inputs first; no need to repeat full400 artifact rehash.",
+      "Report precise agreements/disagreements and qualification boundaries, not a majority vote or selected-best policy.",
+      "Keep cohort versus in-window estimands separate and conditional-completion latency distinct from all-assigned SLO metrics.",
+      "HTTP/Gateway closure is not complete engine visibility, owner journal authentication or physical release proof.",
+      "No Cal/Val, fitting, forecast, profile, product/parent edits, SSH/GPU/new resources, worker push/gt done or Refinery.",
+      "Report-only local commit and full canonical critique receipt, then park for Mayor consensus."
+    ],
+    "h14_complete_original_weights_recovered": false,
+    "h16_runtime_q1_q5_qualified": false,
+    "mpc_active": false,
+    "superiority_claim": false
+  },
+  "global_counts": {
+    "offered": 112652,
+    "complete": 77064,
+    "rejected": 35588,
+    "natural_eos": 77064,
+    "capped": 0,
+    "natural_cohort_good": 64188,
+    "natural_in_window_good": 63633
+  },
+  "policy_totals": {
+    "fixed-cost16": {
+      "capped": 0,
+      "complete": 14761,
+      "natural_cohort_good": 14233,
+      "natural_eos": 14761,
+      "natural_in_window_good": 14117,
+      "offered": 28163,
+      "other": 0,
+      "rejected": 13402
+    },
+    "fixed-cost32": {
+      "capped": 0,
+      "complete": 20634,
+      "natural_cohort_good": 17182,
+      "natural_eos": 20634,
+      "natural_in_window_good": 17020,
+      "offered": 28163,
+      "other": 0,
+      "rejected": 7529
+    },
+    "fixed-count16": {
+      "capped": 0,
+      "complete": 18945,
+      "natural_cohort_good": 15733,
+      "natural_eos": 18945,
+      "natural_in_window_good": 15596,
+      "offered": 28163,
+      "other": 0,
+      "rejected": 9218
+    },
+    "fixed-count32": {
+      "capped": 0,
+      "complete": 22724,
+      "natural_cohort_good": 17040,
+      "natural_eos": 22724,
+      "natural_in_window_good": 16900,
+      "offered": 28163,
+      "other": 0,
+      "rejected": 5439
+    }
+  },
+  "three_independent_full80_count_replays_match": true,
+  "fourth_aggregation_scope": "Gemini aggregates producer summaries and actual HTTP timings; not independent400SHA verification or independentSLO-count replay. Existing120 CPUprotocol tests are not native/statistical baseline qualification.",
+  "independent_seed_units": 4,
+  "cohort_vs_in_window_estimands_separate": true,
+  "cost32_minus_count32_seed_deltas": {
+    "cohort_good": [
+      -19,
+      25,
+      62,
+      74
+    ],
+    "in_window_good": [
+      -27,
+      17,
+      60,
+      70
+    ]
+  },
+  "full_wire_payload_identity_verified": false,
+  "full_engine_uuid_inventory_verified": false,
+  "native_visibility_limits": {
+    "admitted_never_observed": 27,
+    "admitted_not_observed_during_offered_window": 229,
+    "sample_gaps_above500ms": 26,
+    "maximum_sample_gap_s_approx": 0.704
+  },
+  "crosscritique_status": "FOUR_NATIVE_MODELS_DISPATCHED_PENDING_FINAL_SEALS",
+  "crosscritique_complete": false,
+  "h14_original_complete_fitted_state_recovered": false,
+  "h16_runtime_q1_q5_qualified": false,
+  "native_mpc_permit": false,
+  "superiority_claim": false,
+  "provider_billing_stop_verified": false,
+  "source_archive": "nv3-027-independent-four-model-source-evidence.tar.gz",
+  "source_archive_sha256": "37fac7750c9c6957e5e7eba9b084854fb899177eb4e044a85d6f21bd8536f8b9",
+  "source_archive_bytes": 13055987,
+  "source_manifest": [
+    {
+      "file": "pr33-native-v3-round19-astra-executor-frozen/astra-r19-capture-replay.py",
+      "sha256": "6a09a633ebc61f82e473d4a357e88b16bb69c12937610857574b52f97c3bc91b",
+      "bytes": 1626
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-executor-frozen/astra-r19-executed-source.py",
+      "sha256": "cd9644c4512af5c89a836cc4c1d3adf23f8e2ed7fbe2a3318dd14f94bda01ac9",
+      "bytes": 18979
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-executor-frozen/astra-r19-executor-receipt.json",
+      "sha256": "5a4496e20197f8713a923be634a221e0dc4bf8753575bcc36c28b292963a3f44",
+      "bytes": 1315
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-executor-frozen/astra-r19-original-stdin-executor.py",
+      "sha256": "c6df84d829755e8defc32ecc0c0338e22cba44d1ccda92e5616609ff28f09199",
+      "bytes": 327
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-executor-frozen/astra.md",
+      "sha256": "ffec3796041003a2c58a37c9d53563922584f8bccbf71353d321c88f8e3c610f",
+      "bytes": 66552329
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-executor-frozen/mayor-replay-receipt.json",
+      "sha256": "8210dd35b91cb592a47216e0799175c4f2034ecf429c444948f3035618334051",
+      "bytes": 1096
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-independent-frozen/astra-r19-analysis.py",
+      "sha256": "718171ffe5beb225512073061fda2d138636d9d343108570e7a0309d78470ebf",
+      "bytes": 18980
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-independent-frozen/astra-r19-baseline04-analysis.json",
+      "sha256": "ca1779eb9fb4fbb4398f226395904cfbaa29c3be3bbe1bd002e8cb145b00a3db",
+      "bytes": 149913
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-independent-frozen/astra.md",
+      "sha256": "74902dfe1d60a6007fdbdcec240132390851e5ed292faf5ed2b024312d8f75d5",
+      "bytes": 66545885
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-independent-frozen/native_response_planner.py",
+      "sha256": "a97aa0345c8323355fef6780466b656209792c744fa39ed37361e2146b4629d9",
+      "bytes": 242498
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-independent-frozen/test_native_response_planner.py",
+      "sha256": "d5d0a56330457b3fab4197d11e8a3bceacfcea47ed8ae4816af00ca61a7733e5",
+      "bytes": 155352
+    },
+    {
+      "file": "pr33-native-v3-round19-astra-mayor-reproduced.json",
+      "sha256": "ca1779eb9fb4fbb4398f226395904cfbaa29c3be3bbe1bd002e8cb145b00a3db",
+      "bytes": 149913
+    },
+    {
+      "file": "pr33-native-v3-round19-crosscritique-inputs.json",
+      "sha256": "2e3d34ba69d2d0ed0d93978b93dc959c415a280ab9afdfc84365a3be78256596",
+      "bytes": 5222
+    },
+    {
+      "file": "pr33-native-v3-round19-four-peer-metric-agreement.json",
+      "sha256": "4c821bc8b9ad24bacc714062751f0cd501dca3ed6e041ee3fabdb1a3ad97c2fd",
+      "bytes": 21530
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-corrected-frozen/analyze_baseline04_complete.py",
+      "sha256": "5c596008c681c53b48796b0ee1268cca9d9c2d360d26d0521c580f9f5f5f134e",
+      "bytes": 12009
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-corrected-frozen/gemini-r19-analysis.json",
+      "sha256": "9643e5de9f0891d689f644265d1bb204b5f3a91b290b30bb60f3dab1a00c59d3",
+      "bytes": 17676
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-corrected-frozen/gemini-r19-reproducibility-receipt.json",
+      "sha256": "4312eddc4a041db452898eefe99ba1a3fb9c08e210029ab004fadddc8ec7f76e",
+      "bytes": 5210
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-corrected-frozen/gemini.md",
+      "sha256": "5a63e16aac2bbb81d7394cf88903dca1dc8dca3e303f51b37f160ab89a512ebb",
+      "bytes": 236701
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-corrected-frozen/mayor-replay-receipt.json",
+      "sha256": "8578c91b3a27d8bfb18d0ea3ed32796088b387b278865632b74113c35d7a00ed",
+      "bytes": 586
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-corrected-frozen/native_campaign_protocol.py",
+      "sha256": "579163c611d2717af8b0a52cd961c7f36eb516dbcd1c3ca42d3b4cc977bde962",
+      "bytes": 352771
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-corrected-frozen/test_native_campaign_protocol.py",
+      "sha256": "f322a301e1faf034076207bee7b8c2a0f29509a45086ffcf0f05e4c94ec2b495",
+      "bytes": 174881
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-mayor-reproduced.json",
+      "sha256": "9643e5de9f0891d689f644265d1bb204b5f3a91b290b30bb60f3dab1a00c59d3",
+      "bytes": 17676
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-original-unqualified-frozen/http-tail-corrected-gemini.md",
+      "sha256": "ec19291c4abc225eeaf8c98ce667340a9d8f3aa2840d2b6b91eab7c2fa783f03",
+      "bytes": 234230
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-original-unqualified-frozen/native_campaign_protocol.py",
+      "sha256": "579163c611d2717af8b0a52cd961c7f36eb516dbcd1c3ca42d3b4cc977bde962",
+      "bytes": 352771
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-original-unqualified-frozen/original-gemini.md",
+      "sha256": "0124fd165ddcc915fff9ef4ed7ee2d6c067cdc4c226c0e5857bd555cc8da3089",
+      "bytes": 233980
+    },
+    {
+      "file": "pr33-native-v3-round19-gemini-original-unqualified-frozen/test_native_campaign_protocol.py",
+      "sha256": "f322a301e1faf034076207bee7b8c2a0f29509a45086ffcf0f05e4c94ec2b495",
+      "bytes": 174881
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-corrected-frozen/native_release_model.py",
+      "sha256": "e66f3a17550e212f1cdd31f4e4b64dfc8d9dcf5653cb7493d794424031ad9630",
+      "bytes": 330124
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-corrected-frozen/opus-r19-baseline04-analysis.json",
+      "sha256": "7a2666007744396dc47e6ab70245df00b343a9108ee5805f8b19eb2fc8f2716c",
+      "bytes": 144480
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-corrected-frozen/opus.md",
+      "sha256": "de68f70bc89742ef5f085af64414b31a7a3c8235100ffb370010b0297ad67d21",
+      "bytes": 258493
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-corrected-frozen/test_native_release_model.py",
+      "sha256": "54dc6a4dd85af969d935590d37f4c5deb7f5247df928eaf4cbc6f31f47371b68",
+      "bytes": 109244
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-independent-frozen/native_release_model.py",
+      "sha256": "e66f3a17550e212f1cdd31f4e4b64dfc8d9dcf5653cb7493d794424031ad9630",
+      "bytes": 330124
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-independent-frozen/opus-r19-baseline04-analysis.json",
+      "sha256": "7a2666007744396dc47e6ab70245df00b343a9108ee5805f8b19eb2fc8f2716c",
+      "bytes": 144480
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-independent-frozen/opus.md",
+      "sha256": "4987cbe9db9000f4739a1e1f99eda3b1c729cf47071b77630eadad92d56621c6",
+      "bytes": 257232
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-independent-frozen/r19_baseline04_analysis.py",
+      "sha256": "694032bde8ede46aa4b46626b2f60922516f638d43b493a6370bde17deb0a28c",
+      "bytes": 8598
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-independent-frozen/test_native_release_model.py",
+      "sha256": "54dc6a4dd85af969d935590d37f4c5deb7f5247df928eaf4cbc6f31f47371b68",
+      "bytes": 109244
+    },
+    {
+      "file": "pr33-native-v3-round19-opus-mayor-reproduced.json",
+      "sha256": "7a2666007744396dc47e6ab70245df00b343a9108ee5805f8b19eb2fc8f2716c",
+      "bytes": 144480
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-independent-frozen/native_experiment_audit.py",
+      "sha256": "75e559c57b95e3588d5a00617e2faaf57c223906e43b0c3aa06c2a8453001ead",
+      "bytes": 180684
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-independent-frozen/sol-r19-baseline04-audit.py",
+      "sha256": "a6528536902e7130eb1584257e350378c0b3c1f846c7dd4635a003518b893ba8",
+      "bytes": 28000
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-independent-frozen/sol-r19-baseline04-canonical.json",
+      "sha256": "83a1a47d38831b0f0de78201916897852bd0b7a9ffbdcb00e9e2b6a2ccb710fc",
+      "bytes": 256597
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-independent-frozen/sol-r19-baseline04-initial-audit.py",
+      "sha256": "95e93155973490324781436ae7c604b6b3515fb95de77fe0b5d0e560b72bca9b",
+      "bytes": 25470
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-independent-frozen/sol-r19-baseline04-initial-canonical.json",
+      "sha256": "52e6cf601310ca999f2eed54c6968d96b88b62fedf342d4bbe333df73a08002e",
+      "bytes": 247869
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-independent-frozen/sol.md",
+      "sha256": "bfe030c875ca8f4d8e065de2c15051abe2af1401d5061362e4917f17295bfc3c",
+      "bytes": 291444
+    },
+    {
+      "file": "pr33-native-v3-round19-sol-independent-frozen/test_native_experiment_audit.py",
+      "sha256": "270fa208e7662dab08f485f822bdae9ceaee21dd4a1f62e065ae35caec8ab32f",
+      "bytes": 275525
+    },
+    {
+      "file": "pr33-native-v3-round19-two-peer-metric-reconciliation.json",
+      "sha256": "06b0492c4da922f356fc3d4879c465509fc05dee8ed36c351b5761a3ce43e323",
+      "bytes": 20735
+    },
+    {
+      "file": "reconcile_r19_four_peer_metrics.py",
+      "sha256": "700fe2c8334be4fccc5794c956bf01041d09a9d8ef4262bf593c6cfdbf30e17e",
+      "bytes": 3895
+    },
+    {
+      "file": "reconcile_r19_independent_metrics.py",
+      "sha256": "c01e7bbc0aab412bf66cb3ff465edff6d3e501be276568792464e78c32c6dea6",
+      "bytes": 3750
+    }
+  ]
+}

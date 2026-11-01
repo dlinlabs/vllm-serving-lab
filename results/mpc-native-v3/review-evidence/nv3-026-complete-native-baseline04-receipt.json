@@ -1,0 +1,2079 @@
+{
+  "schema": "nv3-026-complete-native-baseline04-v1",
+  "started_at_utc": "2026-10-31T19:10:30.794309+00:00",
+  "finished_at_utc": "2026-10-31T22:01:12.795786+00:00",
+  "protocol_sha256": "f5e6ef6fbc90bca5b48de8c21bff9fdefb320167581f6897b141ae5bb1ca514d",
+  "index_sha256": "b3e0b107608ccfa6fe5ac37d637ef2e766fdb2f6f56a89e4850787d8047aff5c",
+  "collector_sha256": "16e4b406a600baf2e3236b0cfc25f4c4a2a7339223f972c89b9d649ce3e71ff2",
+  "classifier_sha256": "18d75ce6b0176ea603748b752251fc09c63b2a6cdbba56a9c50ef8d733a1b606",
+  "implementation_hash": "ed8a6a537b7b663f44f4d6ed42d9679fe88048b4077c25dd778b6e8cf418a014",
+  "serving_source_commit": "144cef32a9b51c3a74355ff67f5eafdfac6e075f",
+  "verified_episodes": 80,
+  "verified_artifacts": 400,
+  "archives": [
+    {
+      "archive": "nv3-026-complete-baseline04-train-181045.tar.gz",
+      "sha256": "9573c4c27868397e951b5445acfaed92714c2d08741641bd46ec6c654feec0f9",
+      "bytes": 15436653,
+      "artifact_count": 100
+    },
+    {
+      "archive": "nv3-026-complete-baseline04-train-181046.tar.gz",
+      "sha256": "853bbc8624a9510c924a842bf3150275497b2e8728ee8be91c333ff33c7af7c0",
+      "bytes": 15495930,
+      "artifact_count": 100
+    },
+    {
+      "archive": "nv3-026-complete-baseline04-train-181047.tar.gz",
+      "sha256": "59836d57f48ca3df893c976dcbb784f7149e6fd1b278e2793e47bf2934e11834",
+      "bytes": 15356332,
+      "artifact_count": 100
+    },
+    {
+      "archive": "nv3-026-complete-baseline04-train-181048.tar.gz",
+      "sha256": "e841d4e73bbe46fbcc483936c0a002052bb2b869eef8306639d40ab2754e359f",
+      "bytes": 15379206,
+      "artifact_count": 100
+    }
+  ],
+  "artifact_manifest": [
+    {
+      "artifact": "nv3-baseline-181045-p128-m128-fixed-cost32.json",
+      "sha256": "666f56d8f19803777b4abfe498750e312c4581cfb7fdb53a6f73fe929beb2ef4"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m128-fixed-cost32.events.jsonl",
+      "sha256": "0b005902772dbb851daeb6508cdd7aef794aa48df636117cb161606e34e194d1"
+    },
+    {
+      "artifact": "gateway-epoch-0001/gateway-telemetry.jsonl",
+      "sha256": "19e347ac5f0f68eaf1780fb927c5d5058b5b023eeb84bab67d4a851a2d7ddf72"
+    },
+    {
+      "artifact": "gateway-epoch-0001/gateway-telemetry-status.json",
+      "sha256": "9bdc7446a5b4d203a2dc55d2c41ca4cfeff96db54d6e18dbb8816feb867e014c"
+    },
+    {
+      "artifact": "gateway-epoch-0001/process.log",
+      "sha256": "b2b80691196293b8e89e7325660574a40433b89f108d1c24d35cf1adfff13648"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m128-fixed-count16.json",
+      "sha256": "6b96ad889c9d4deb76711f05a52013a6294cf7ca1b8f856219fdfd19548416c3"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m128-fixed-count16.events.jsonl",
+      "sha256": "711b53f55037b14cd31302a4d52990edf3cb5d0221e5dc74fef978cc0128f6eb"
+    },
+    {
+      "artifact": "gateway-epoch-0002/gateway-telemetry.jsonl",
+      "sha256": "5bf78beff927c8b1a3d4aa2e1fcc3ef9b572df394a9cb444ebecb8bc591fee03"
+    },
+    {
+      "artifact": "gateway-epoch-0002/gateway-telemetry-status.json",
+      "sha256": "28a21cb70d47b2235fefd05e2e3cdd42f1968fdbd3f697777bd43aee9042ad6e"
+    },
+    {
+      "artifact": "gateway-epoch-0002/process.log",
+      "sha256": "01b609f93dfab2d7bd68c4875bfc15d5933c11b606015f5792e41b6b30286406"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m128-fixed-count32.json",
+      "sha256": "db4b0dc73433c97cffa3e9d99f3a7e7355244a059921655d265027416cc93938"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m128-fixed-count32.events.jsonl",
+      "sha256": "d20ae1c4d617075565d9df68acbc0b9511d8550391a9d43b19e55fb1f98aa007"
+    },
+    {
+      "artifact": "gateway-epoch-0003/gateway-telemetry.jsonl",
+      "sha256": "02f4b453707bca70db9979379e1f6a51a73e811b382aa0b8ae994c4c19652627"
+    },
+    {
+      "artifact": "gateway-epoch-0003/gateway-telemetry-status.json",
+      "sha256": "653f7fdec2666893ab83c970afe3f437c6e18e666359a18d67cc0a0817875bf5"
+    },
+    {
+      "artifact": "gateway-epoch-0003/process.log",
+      "sha256": "e325b164c9094f6dc35cc22e9cdf700bf73cfe4d5ad7dc86d919dd5cea14e8d5"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m128-fixed-cost16.json",
+      "sha256": "00e68cd82a8be3da3dace8b8271724164e1078d354488a7977d15a7f31cb13c2"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m128-fixed-cost16.events.jsonl",
+      "sha256": "81ae156cb5d0080ff925bfa6ca06ea096f0e0b3cd9eb064fbe415e1f1013a06e"
+    },
+    {
+      "artifact": "gateway-epoch-0004/gateway-telemetry.jsonl",
+      "sha256": "aaf1e90f6d37844a88abefd516db66296cfd8e198d1fcb4f20fde673e194ec1b"
+    },
+    {
+      "artifact": "gateway-epoch-0004/gateway-telemetry-status.json",
+      "sha256": "3c73baeea5bb75b6608b1ba0e4b4edb359a170857e7dae7520b86697a9ba015c"
+    },
+    {
+      "artifact": "gateway-epoch-0004/process.log",
+      "sha256": "a46e1c1ac6b8c1769160bae8d7b4f81a1d448184998c405a112c8a703e802d22"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m256-fixed-count32.json",
+      "sha256": "b50c71ae3371c72660960b10e88995c11f9c23eeb8fc2bdc31aa6de7031113a9"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m256-fixed-count32.events.jsonl",
+      "sha256": "6bf97495584ed0ca744ebf0effb66ac147e023f851f3bec97ec03528283b1880"
+    },
+    {
+      "artifact": "gateway-epoch-0005/gateway-telemetry.jsonl",
+      "sha256": "2ccbe2f057afd54a0213e8ad7f0194b370fd93e404c88915bea796293922fa6c"
+    },
+    {
+      "artifact": "gateway-epoch-0005/gateway-telemetry-status.json",
+      "sha256": "5fb52194cfbea227ad9e35e0f2d31fdd44e7e518bbfbcbffe733806c11022d92"
+    },
+    {
+      "artifact": "gateway-epoch-0005/process.log",
+      "sha256": "e9df9e21d6c99915e419b2710a9a354f9073882b07c4e7b4bf15a089a81f0160"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m256-fixed-cost32.json",
+      "sha256": "1d6513d2c3fb6f2d17457857eb27739b9f13449de77b42e46a01d908403da5d4"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m256-fixed-cost32.events.jsonl",
+      "sha256": "25613506fad1e676e05efe65af361cbd5b96c93b3d1054734c13881c97c104fa"
+    },
+    {
+      "artifact": "gateway-epoch-0006/gateway-telemetry.jsonl",
+      "sha256": "bc742ae84e4ff2887faf1a2a9eba4c83c2901da05f88a460e6949ea23b9cb630"
+    },
+    {
+      "artifact": "gateway-epoch-0006/gateway-telemetry-status.json",
+      "sha256": "f95b18fb6485248c2d6ebf5f2d7c9a8f6919a7f38a03f2accd3f6807b0db0811"
+    },
+    {
+      "artifact": "gateway-epoch-0006/process.log",
+      "sha256": "f442f64b5e98e5f86c6913f7c6cc585634fc71c92b72c0d6201aa4d96898873b"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m256-fixed-count16.json",
+      "sha256": "4be5fab61d305cec24c052d6d68f9e4159c5b1fa3a829f1c0b91abe70ce2b934"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m256-fixed-count16.events.jsonl",
+      "sha256": "0076ffd280d6fe8c071968915ab82403385d0afaa46560bcba33203d44d75094"
+    },
+    {
+      "artifact": "gateway-epoch-0007/gateway-telemetry.jsonl",
+      "sha256": "476657e5cececb1b8d1913cef4b673cc4ff90046f96ed3dc4249bb44774bd7bb"
+    },
+    {
+      "artifact": "gateway-epoch-0007/gateway-telemetry-status.json",
+      "sha256": "77a039306ef873fbee5ef5f5482f46fcd7526adff04ca261fa1dacfb627db20a"
+    },
+    {
+      "artifact": "gateway-epoch-0007/process.log",
+      "sha256": "124eb2489943de8ee040fc135b884407d15db5c8617945370c3bf1db269eac79"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m256-fixed-cost16.json",
+      "sha256": "de0a9e8ddd6d0e531523512c8dedc93786edce54b99b107fc2d9767af7ec5ad4"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p128-m256-fixed-cost16.events.jsonl",
+      "sha256": "c5e1d8c124d286b534da5dcad92933467db51171b061388d0f5f0bb66dc4aec4"
+    },
+    {
+      "artifact": "gateway-epoch-0008/gateway-telemetry.jsonl",
+      "sha256": "11699cf7728d670fa560df75ba0c1ef37c390a0619f116aea717ddd23c6bdb5c"
+    },
+    {
+      "artifact": "gateway-epoch-0008/gateway-telemetry-status.json",
+      "sha256": "34f3af92a8388b80a4b6d547565186d52fd780a2741aca3ec6bc6ec396b42f76"
+    },
+    {
+      "artifact": "gateway-epoch-0008/process.log",
+      "sha256": "1ea8bae474273e703db4ae4c1cfc839171b90db84d8aad1504c26508aff1ce40"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m128-fixed-cost16.json",
+      "sha256": "e7437ef29eeb2b96ea367c48534d7fce8156a5092a6435e3157c580d89ee8cad"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m128-fixed-cost16.events.jsonl",
+      "sha256": "47fcd90ac61f0ea5eaa9d429164f960e5902eafe6c78b7238b3e05303971adf3"
+    },
+    {
+      "artifact": "gateway-epoch-0009/gateway-telemetry.jsonl",
+      "sha256": "143893983b7f26addda62bacf9b8f5f0e2375b9b6ce3215c32412a836aa039ab"
+    },
+    {
+      "artifact": "gateway-epoch-0009/gateway-telemetry-status.json",
+      "sha256": "6aa1f727cea9cc82741606b872ff497bbbfab48c8a7fd8010d8b49684c298262"
+    },
+    {
+      "artifact": "gateway-epoch-0009/process.log",
+      "sha256": "e31599d335ce7fb7ec3cc732765fd6be4ad50e0eb979a1d82793e80ba4e954f3"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m128-fixed-count16.json",
+      "sha256": "2773f978b07fca32e41ba80ba6cf65494f2a0ce19374e85ddae447d1d590c2c1"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m128-fixed-count16.events.jsonl",
+      "sha256": "3d2e4df048857ed60576260bd45a14fca8bee1e7829a02745724ba0436d312b2"
+    },
+    {
+      "artifact": "gateway-epoch-0010/gateway-telemetry.jsonl",
+      "sha256": "aff8bbef96fa346b642b7ddd27369664c2be41635a7cd28d69a71b9e00d15aad"
+    },
+    {
+      "artifact": "gateway-epoch-0010/gateway-telemetry-status.json",
+      "sha256": "30219ed187e34fca12e153bc28c690f9d7daeb936707987989801d15fdb332b6"
+    },
+    {
+      "artifact": "gateway-epoch-0010/process.log",
+      "sha256": "80f74319119be080460377a18127ff2ef94cb82a30a02d420ffaa4ae1d197392"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m128-fixed-cost32.json",
+      "sha256": "d9174b856211f1ced105697ebf60bbd2d7b0111c41416dfccc16e1026aa0806b"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m128-fixed-cost32.events.jsonl",
+      "sha256": "691b0868dd8ab05a2b9be0dc1bde9c55535f2e235561c9c8a4c21419484c1860"
+    },
+    {
+      "artifact": "gateway-epoch-0011/gateway-telemetry.jsonl",
+      "sha256": "49f6714dcb480de845626eff077bec283a16dbf8d9c6f72997626de10f1567aa"
+    },
+    {
+      "artifact": "gateway-epoch-0011/gateway-telemetry-status.json",
+      "sha256": "a15cebb4af02a2a1925cc212e3fd8881e0978a88d8eaf2d283ba96c188894a87"
+    },
+    {
+      "artifact": "gateway-epoch-0011/process.log",
+      "sha256": "06f333404736d4401fa171b165165600449c50375b855e50fa0a2d1c3981d2aa"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m128-fixed-count32.json",
+      "sha256": "0d1ededab71ab1023440e4a3df647b4a543c27425f445ae6d08a28c27c095b50"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m128-fixed-count32.events.jsonl",
+      "sha256": "7e242ea4f6e55ce414474243717b1322b603969667c0c44d5e61112ffa1a68b1"
+    },
+    {
+      "artifact": "gateway-epoch-0012/gateway-telemetry.jsonl",
+      "sha256": "7e412569331dfef2d54747cb732fb84cdef8eec54452d05689a4127db27097b0"
+    },
+    {
+      "artifact": "gateway-epoch-0012/gateway-telemetry-status.json",
+      "sha256": "a1bc66cdb89a5a2192efca0bf89d6005696551c4ba02b36ea87a4c76dd7a3347"
+    },
+    {
+      "artifact": "gateway-epoch-0012/process.log",
+      "sha256": "f77f54cf9100fb6d16e1e164116050c1eb8565c546402721d907176711cb9fc2"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m256-fixed-cost32.json",
+      "sha256": "11844878c83d1a14e5db9945017e3006f874959ae938c1fe419c266675610578"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m256-fixed-cost32.events.jsonl",
+      "sha256": "486a127ee94bf8b44bf8a7c563ea7599cf04cbd3e8f5c1a01d683ec2abf81eff"
+    },
+    {
+      "artifact": "gateway-epoch-0013/gateway-telemetry.jsonl",
+      "sha256": "019f27a4a599561946ffe982d74a280e91dfdb87026b4154bb37c9db6887ab9a"
+    },
+    {
+      "artifact": "gateway-epoch-0013/gateway-telemetry-status.json",
+      "sha256": "f75eda4a84e7add56d7872037e07c5ef3c5725125fa1702d9caca954308eef56"
+    },
+    {
+      "artifact": "gateway-epoch-0013/process.log",
+      "sha256": "848a559407b82b95d53cd442e19e05b0765aff67714d195a46450145764a5387"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m256-fixed-count32.json",
+      "sha256": "e97cbadc5db00a288ad6bbd28f61c1eadbd0b45926dadea002ebfd45cd8bbbc7"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m256-fixed-count32.events.jsonl",
+      "sha256": "d5476a603aa63df05a037ca81d51a3e4f00b0da2b6ccb58dc0eea252e463e377"
+    },
+    {
+      "artifact": "gateway-epoch-0014/gateway-telemetry.jsonl",
+      "sha256": "e373e5c2b7b43d8892a6ed75afcad16e3fb83440b12a7e228e7e8963461ffb22"
+    },
+    {
+      "artifact": "gateway-epoch-0014/gateway-telemetry-status.json",
+      "sha256": "7a943bc8ea5db4e1d0a10689e6a25c43b43fd383022e045aea128ea51a1532d5"
+    },
+    {
+      "artifact": "gateway-epoch-0014/process.log",
+      "sha256": "e203b6b3c8db2b933f658a2db524b281079150fe23e3d9772e77d9975740fe5e"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m256-fixed-count16.json",
+      "sha256": "031ae15ad5b19dac72309acd11450684ea529d83061d533832b82451ef73b3d1"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m256-fixed-count16.events.jsonl",
+      "sha256": "bbba7e4cdba620d3f4365f2ba71b2e23b11c441c60c0b5b20e943d061e7a9978"
+    },
+    {
+      "artifact": "gateway-epoch-0015/gateway-telemetry.jsonl",
+      "sha256": "88bbc63c2a67eb317965814b70ba738d19e7449bd7bd7c2d7e03f82ecb71d665"
+    },
+    {
+      "artifact": "gateway-epoch-0015/gateway-telemetry-status.json",
+      "sha256": "be85f0218437003e4bca741e3cb0fb648a14a52f31216a8d7d6b25689e9c7b05"
+    },
+    {
+      "artifact": "gateway-epoch-0015/process.log",
+      "sha256": "74294016549220af33f48d023a606aaa7f1c24dac95ef503347ba6377e0295b5"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m256-fixed-cost16.json",
+      "sha256": "dcfe2f1b1c8b5966f056f9737ee8d907ee61d2389853a5f57e3ef13b67eb557a"
+    },
+    {
+      "artifact": "nv3-baseline-181045-p4096-m256-fixed-cost16.events.jsonl",
+      "sha256": "cf7d929898e83588a8613cebe469953ba65fa2bf05fd4d406dcfebe584a3318c"
+    },
+    {
+      "artifact": "gateway-epoch-0016/gateway-telemetry.jsonl",
+      "sha256": "ee63ecda5886d157265c17da728a2d81eb10689f9d6d82fe7ae2552b3259e348"
+    },
+    {
+      "artifact": "gateway-epoch-0016/gateway-telemetry-status.json",
+      "sha256": "711bd5dde4373437d719dcd58bfea649c57adced23e6c1c14661f419cb50b589"
+    },
+    {
+      "artifact": "gateway-epoch-0016/process.log",
+      "sha256": "264c3ef4d9d13e6798df309acbbfb02f8deb4fe57707e5668a9cd7b1c4efb12c"
+    },
+    {
+      "artifact": "nv3-baseline-181045-mixed-fixed-count16.json",
+      "sha256": "9572c52c458d80ab6da37fb00a40b1fea0434637e21898c14f0fc052dddf43e1"
+    },
+    {
+      "artifact": "nv3-baseline-181045-mixed-fixed-count16.events.jsonl",
+      "sha256": "3fd646ab0ef601e52abc12aa1ec60a960738c3b4f09e63fbe5cd4086098b5e7c"
+    },
+    {
+      "artifact": "gateway-epoch-0017/gateway-telemetry.jsonl",
+      "sha256": "507c8f634d94c83c0800ff5b9f8be5dfce695e898edfac64f874265af944e54a"
+    },
+    {
+      "artifact": "gateway-epoch-0017/gateway-telemetry-status.json",
+      "sha256": "5deffe4d7c5f47f3352e67d8dc5a5276185484b714aa931410f0338c4d40aceb"
+    },
+    {
+      "artifact": "gateway-epoch-0017/process.log",
+      "sha256": "d780221603d646eb909d8c4f503056d478f67ad6f56f855bc80305b2091bb3ff"
+    },
+    {
+      "artifact": "nv3-baseline-181045-mixed-fixed-cost16.json",
+      "sha256": "c8859d071d92d2102877d4ef1972c8f9b2c0335bfcc8aa4cd781e84538c2b58d"
+    },
+    {
+      "artifact": "nv3-baseline-181045-mixed-fixed-cost16.events.jsonl",
+      "sha256": "778487376dd0ad3cfafd9de151a3adfc254b086668bf1e6cd7a4a5d310e8d074"
+    },
+    {
+      "artifact": "gateway-epoch-0018/gateway-telemetry.jsonl",
+      "sha256": "6cddbd536b4f179f60ba1f04a10463cc274a8b24fc58b11a9f43bd0a6eb7992d"
+    },
+    {
+      "artifact": "gateway-epoch-0018/gateway-telemetry-status.json",
+      "sha256": "96d77f86af2dd8ffbba0930223c1327d0c549fb424149aef9bdfc634888fdf04"
+    },
+    {
+      "artifact": "gateway-epoch-0018/process.log",
+      "sha256": "0bd520f38515bb0761b95c6b9cce8f65a3b35e8e7af57e3510e64e8d0f7f470d"
+    },
+    {
+      "artifact": "nv3-baseline-181045-mixed-fixed-cost32.json",
+      "sha256": "892cbe00bcd967d20be4c7ab8d13271cd5cc1834ee9bfd4a699520bbc02f4d90"
+    },
+    {
+      "artifact": "nv3-baseline-181045-mixed-fixed-cost32.events.jsonl",
+      "sha256": "ef6e73e98df5bf9a90e74ce949c969f999ede57f4aede90114a754025876520a"
+    },
+    {
+      "artifact": "gateway-epoch-0019/gateway-telemetry.jsonl",
+      "sha256": "47d1f562b93fe548ba126f7e1dc579f5761f4b8c7b8021d84ffa5190f39025ce"
+    },
+    {
+      "artifact": "gateway-epoch-0019/gateway-telemetry-status.json",
+      "sha256": "26cf7f29a06e6da7662546cf63b75eb0a3fe28982502f54ec49b939ec5b931dc"
+    },
+    {
+      "artifact": "gateway-epoch-0019/process.log",
+      "sha256": "386420faeb4a19a7051fb1c3b3a93083fd559f81ca2c200ff2b9020c7de5abd5"
+    },
+    {
+      "artifact": "nv3-baseline-181045-mixed-fixed-count32.json",
+      "sha256": "d5cc2bfa1782823e65abd76f47705415e487ed0ff226c5058d405a613e5f14a4"
+    },
+    {
+      "artifact": "nv3-baseline-181045-mixed-fixed-count32.events.jsonl",
+      "sha256": "3506944fd958d7fc61beca745fb7e2920e51eafa604282eb9fd236c31f5a39e3"
+    },
+    {
+      "artifact": "gateway-epoch-0020/gateway-telemetry.jsonl",
+      "sha256": "fe46893ab47afe195697e4a739e0866a5076fca20816a21af6f4320252b9764f"
+    },
+    {
+      "artifact": "gateway-epoch-0020/gateway-telemetry-status.json",
+      "sha256": "60b980e8a562d3dc09ae8f84774119fd6ef1ebfe1983b61ddcffee01c0bc3181"
+    },
+    {
+      "artifact": "gateway-epoch-0020/process.log",
+      "sha256": "54e7f7c3c1e9e7df78d51168cb495bbb9b4f7f266c9ea6f060061f63a4a73dcc"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m128-fixed-cost16.json",
+      "sha256": "183fddeceec3dfd2f666217c2a02b343f0914610d4e198ac000154ef30294937"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m128-fixed-cost16.events.jsonl",
+      "sha256": "dbe09d5f5e83b778a0da7916def31441671fd82d9b566dfb590823f9ec61d7d4"
+    },
+    {
+      "artifact": "gateway-epoch-0021/gateway-telemetry.jsonl",
+      "sha256": "1c1357bdf90f405a46a982bcf6edb4863e195e4e517de9ff49bf732b02667348"
+    },
+    {
+      "artifact": "gateway-epoch-0021/gateway-telemetry-status.json",
+      "sha256": "7fcb86fb049d6b50715e5aabc8a03aedaf10114b7d9b3c0986bc9a5cf40a2f22"
+    },
+    {
+      "artifact": "gateway-epoch-0021/process.log",
+      "sha256": "170f2d9aab4603765c0e2b9fb1ba4284417998938101d3ee1e7e95b40ea83374"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m128-fixed-count32.json",
+      "sha256": "cd2e6b08d67b934be55b4160c8f68624e828a94384f8a0b83ecf9869d63c8176"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m128-fixed-count32.events.jsonl",
+      "sha256": "33f1a4fa48c34ea26ab7aa19e10b4b7fbb6e0c82429e45b1e2512cd1559be1a7"
+    },
+    {
+      "artifact": "gateway-epoch-0022/gateway-telemetry.jsonl",
+      "sha256": "d5829b9817d5b9d4bfe3f9df547d3292b2d5568eca779bc68d87322001605296"
+    },
+    {
+      "artifact": "gateway-epoch-0022/gateway-telemetry-status.json",
+      "sha256": "9277047d290cba980f7710fe50bffc2ded62a127eb41f883b2ae2fba4afd1b7e"
+    },
+    {
+      "artifact": "gateway-epoch-0022/process.log",
+      "sha256": "20058a7d50370bfb44e1a6e6ba34fc269a087d2918f4b753ca7283f0e88fb340"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m128-fixed-count16.json",
+      "sha256": "8484d125247d274e63a719f262b6a08a85ebd057ca207bbaf431833b8c2a8f2f"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m128-fixed-count16.events.jsonl",
+      "sha256": "b1754e799d57552f26071c6a6dd9a6d6beb6ce3e453794f532a7f0c0a71ee1af"
+    },
+    {
+      "artifact": "gateway-epoch-0023/gateway-telemetry.jsonl",
+      "sha256": "917342e46f12ae9e1668fe731af96120064dec4553380e06cc540862f3059b9e"
+    },
+    {
+      "artifact": "gateway-epoch-0023/gateway-telemetry-status.json",
+      "sha256": "1b6ab3890f211cb4a42f77dbdcdd849df5abfcf16ff672b6dacebd93e4dbe484"
+    },
+    {
+      "artifact": "gateway-epoch-0023/process.log",
+      "sha256": "84e7f2f5928659d3ad7f325ec8210f4f1d40b9043928cf88e83bd37c1513211e"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m128-fixed-cost32.json",
+      "sha256": "7c3df867e7ca01e779323efe05251cd8520227f0fbeea7267dd103812445e2e0"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m128-fixed-cost32.events.jsonl",
+      "sha256": "59d6ec1995691dc913cc98e167d0467f8e8b56912e34e7acbd18c22383da368b"
+    },
+    {
+      "artifact": "gateway-epoch-0024/gateway-telemetry.jsonl",
+      "sha256": "66cadc857a5c52d156f01cada6712da96d3061c0823e197ada239f4759a3b134"
+    },
+    {
+      "artifact": "gateway-epoch-0024/gateway-telemetry-status.json",
+      "sha256": "e8929935e4b82fb4f4ffc98820c85cf53b4723c7e761c18621eb08e20eba87a7"
+    },
+    {
+      "artifact": "gateway-epoch-0024/process.log",
+      "sha256": "6529fde4e809f0852fb97f3b768d14edb523aa45a9c88d2733b5d3196c85dbdc"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m256-fixed-cost16.json",
+      "sha256": "a82826c135d2f402d9a51859b0dd1e7e4531323f5e96b04304dcbfc23affc1ac"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m256-fixed-cost16.events.jsonl",
+      "sha256": "3c7cf264092547ed813d662c40f71ce66ac20c480fa327c53f0ed5215358ec8a"
+    },
+    {
+      "artifact": "gateway-epoch-0025/gateway-telemetry.jsonl",
+      "sha256": "afc46fbec7a0f9e61d974b9c77b01217f4adb62beb849a8e1390dd4bef4a19aa"
+    },
+    {
+      "artifact": "gateway-epoch-0025/gateway-telemetry-status.json",
+      "sha256": "1c2ec8052a6c958f8e3ed26b43d16fadff2f385e570429a8fb595e8e68c66f4f"
+    },
+    {
+      "artifact": "gateway-epoch-0025/process.log",
+      "sha256": "46f7f8533e597c3eff1f3580861e7861751d1e5ad88a560f4cde6e99efe8af4a"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m256-fixed-count16.json",
+      "sha256": "573f0a9652cf9b4f8763f66f7078c48ee692c069fdec4e4f647a0a7be3dae167"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m256-fixed-count16.events.jsonl",
+      "sha256": "719821ecf07bec08c260adff16a032e8716c9945e7638c28cf9b78838f66fb25"
+    },
+    {
+      "artifact": "gateway-epoch-0026/gateway-telemetry.jsonl",
+      "sha256": "154e4eb48409612b582ce597aa03946981ecd1d62651d54c636f6d46b4708bd4"
+    },
+    {
+      "artifact": "gateway-epoch-0026/gateway-telemetry-status.json",
+      "sha256": "e0861b115f4e18e3e36c5cc9381f3b17557f7a82dd1670c021607f172656f407"
+    },
+    {
+      "artifact": "gateway-epoch-0026/process.log",
+      "sha256": "ced252f6a16939e0d0330291fdf5ba01d4e9136bc1ae5557eea673d1eb0af774"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m256-fixed-cost32.json",
+      "sha256": "9085da95d5939dfc162cecabffb0d16ff53c9ed9f800e2d533689b8dc31eddde"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m256-fixed-cost32.events.jsonl",
+      "sha256": "1eb8fcd1fe72736c04c2e3a2e9698e2bb75edef56ed735addca091ea71aa42ef"
+    },
+    {
+      "artifact": "gateway-epoch-0027/gateway-telemetry.jsonl",
+      "sha256": "e305ff7f68a8d245e2799c572219ce290780672f3fbd3221d145eac4400d6e83"
+    },
+    {
+      "artifact": "gateway-epoch-0027/gateway-telemetry-status.json",
+      "sha256": "158bef93a990aa7a62f3c3e09a0fbd426bc90b33d3dd3ff2ec73db6b07b84abb"
+    },
+    {
+      "artifact": "gateway-epoch-0027/process.log",
+      "sha256": "22132f392b03cb01cf09a0c4a8d11b4c7753505a35e58710797c4b02728cb34d"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m256-fixed-count32.json",
+      "sha256": "9605723892c0de97d6f88220b0675f2d9f0358354a7cff49431a9d016cc34461"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p128-m256-fixed-count32.events.jsonl",
+      "sha256": "a4d59e45b79bb152ad77263a988c32f90af6008243ed738fe172582a16739c6d"
+    },
+    {
+      "artifact": "gateway-epoch-0028/gateway-telemetry.jsonl",
+      "sha256": "50abe7c30a8e966d0e1889cd3ddb4cab2daadbd844971836c9148ee856988621"
+    },
+    {
+      "artifact": "gateway-epoch-0028/gateway-telemetry-status.json",
+      "sha256": "ca0ae3e648a7f1b2cd63ef5766f2d8e046579b0699b4fd9a7d8e218d668ba27a"
+    },
+    {
+      "artifact": "gateway-epoch-0028/process.log",
+      "sha256": "b34e0a6b6cfb35cd4a359638b201d72696b3616a81cab3435fe25457821128dc"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m128-fixed-count32.json",
+      "sha256": "2365aafeab375f09b77d63d1eadb61bc13cf055ef5d41773667f33ec10b0f8ea"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m128-fixed-count32.events.jsonl",
+      "sha256": "03b42379387737696d9cd0fedeb84e471173e9ef28cf5b327022cda816d2e966"
+    },
+    {
+      "artifact": "gateway-epoch-0029/gateway-telemetry.jsonl",
+      "sha256": "43085b16e32c2f1b43788cce8eaf602dea5aa2d17fd915902a2754f755992f06"
+    },
+    {
+      "artifact": "gateway-epoch-0029/gateway-telemetry-status.json",
+      "sha256": "8073205b3c18e140289f995716d30f8714c37f3bcac57f0e7534067db6a1a58c"
+    },
+    {
+      "artifact": "gateway-epoch-0029/process.log",
+      "sha256": "7168006483673cfab73a64ba3a3d162048a4f79fa3a9fdc54d1b4f8a61d49af7"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m128-fixed-cost32.json",
+      "sha256": "b1e57ea6833ff4763442592ca7baee0362e61268b52c4b216ec01bd709a06a61"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m128-fixed-cost32.events.jsonl",
+      "sha256": "2fe128feadf3b2a8316f2b06de4d1d445b8ae03e8e63fdf6d6a01049b6f2902b"
+    },
+    {
+      "artifact": "gateway-epoch-0030/gateway-telemetry.jsonl",
+      "sha256": "7b832b3b3ced7c191c0f895b88aa5f00a4a26baaf20bc06f6e99d87265fccc40"
+    },
+    {
+      "artifact": "gateway-epoch-0030/gateway-telemetry-status.json",
+      "sha256": "b3282714645f31c2409576db8bd979e6c5aa4ecc1e6246a51874f625ef5c7da5"
+    },
+    {
+      "artifact": "gateway-epoch-0030/process.log",
+      "sha256": "9bbffe9d4359bd33054a76d87e07c7216f6f613096e6b43d46f0d6752157de8f"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m128-fixed-count16.json",
+      "sha256": "ad5decfe0141b48e9b0891af7fa55f7fa591588c5da394b2a2fdb70a913f271f"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m128-fixed-count16.events.jsonl",
+      "sha256": "d81a6267c562d2f538a3a0eaed0dcd123fcce49dd7e0f8650cda8e3f24cb37e9"
+    },
+    {
+      "artifact": "gateway-epoch-0031/gateway-telemetry.jsonl",
+      "sha256": "c41db3110873398b21ba4c188594917a0c0870eba97c7c3c4de443c759791261"
+    },
+    {
+      "artifact": "gateway-epoch-0031/gateway-telemetry-status.json",
+      "sha256": "388a9b661e5be1dc4a1b561683fbb29aa2f8a6c1b229a114612062c348980d53"
+    },
+    {
+      "artifact": "gateway-epoch-0031/process.log",
+      "sha256": "18072e4d815d5680b2fe178eba9e836a6a06334a73cd3f7a4f4b8331cf6b8af7"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m128-fixed-cost16.json",
+      "sha256": "659fe8d9f52d6ee2cbefeff2d58a84659eabf3166ec313b16ccc0342219f4694"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m128-fixed-cost16.events.jsonl",
+      "sha256": "577ee00d3b6cbe6930b2b4efda0760c7907dd64ea8a2eb3cc6c0c2bc21d76f8c"
+    },
+    {
+      "artifact": "gateway-epoch-0032/gateway-telemetry.jsonl",
+      "sha256": "50237504bb7516d386bab545046883a62a5deff21c10ca9558cf25334a824190"
+    },
+    {
+      "artifact": "gateway-epoch-0032/gateway-telemetry-status.json",
+      "sha256": "a2cabbfa887be1c93b8be24dcdd9ce82bec4f66484755a3ae26b32ddf378c0d1"
+    },
+    {
+      "artifact": "gateway-epoch-0032/process.log",
+      "sha256": "03a186f03ede0fbdac90e0c7fd61db59789de91a8a6bf06cb0f324ca183a8040"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m256-fixed-cost16.json",
+      "sha256": "ba35941a2a2bcac0f63fa65f0a3edcf7f9f64ec4e3a337abfa32cee1ba68edda"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m256-fixed-cost16.events.jsonl",
+      "sha256": "0d2de1711989dac8dfcb37535ced433862f7fdf0b7cfb4dd44b10f452302774d"
+    },
+    {
+      "artifact": "gateway-epoch-0033/gateway-telemetry.jsonl",
+      "sha256": "c952e1cca23e9fc07aeebeceb282a7dcba13bddc9c1e7ae400335d9ec7f3fc46"
+    },
+    {
+      "artifact": "gateway-epoch-0033/gateway-telemetry-status.json",
+      "sha256": "0bb9a8d46d1a7daf58d9b7ee6c8fcb61709d59f72fb3c2b35c3a898b7058c3a9"
+    },
+    {
+      "artifact": "gateway-epoch-0033/process.log",
+      "sha256": "23f7ebdf04d6bf4ed3d4e03d40a5e8b78475dc9bb8e2d50b0cc3610c0e33251c"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m256-fixed-count16.json",
+      "sha256": "0313c637b0deed0ffb8df23d4a1b18b3514ae8c786f2e0df027ad8f740d725ef"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m256-fixed-count16.events.jsonl",
+      "sha256": "3c3c69ba954aa00e759a59c30ec97414aeaf1cc9471014b5c3332a0113320a06"
+    },
+    {
+      "artifact": "gateway-epoch-0034/gateway-telemetry.jsonl",
+      "sha256": "7e23f432dde647610b3909099e9d51ce991f96cd6d40a561189ad4dddd47af8b"
+    },
+    {
+      "artifact": "gateway-epoch-0034/gateway-telemetry-status.json",
+      "sha256": "dfb5173dd5140e9db380e74edf642c2f061ba94ca101ce08fb6b45451df0d1ee"
+    },
+    {
+      "artifact": "gateway-epoch-0034/process.log",
+      "sha256": "79149813baa8a8737ca73e21c9200e54dc9c4f1c544c2b3c9b22ec802b707146"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m256-fixed-count32.json",
+      "sha256": "b4e28f06064d2d5df1f998bafabb7851910caf48764650b146d3a3f09f6d3ebd"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m256-fixed-count32.events.jsonl",
+      "sha256": "23644e016c8ff63254c91ca2f93238e8dea8c80fa076e6b1c09d71b1860890c0"
+    },
+    {
+      "artifact": "gateway-epoch-0035/gateway-telemetry.jsonl",
+      "sha256": "12e0fb5af6cb7a17ab9f8470a214169042d60ae480e6b97202572d87eaae6688"
+    },
+    {
+      "artifact": "gateway-epoch-0035/gateway-telemetry-status.json",
+      "sha256": "f1dda2961dd1db1a6762e8a157ce2ade71597c11d87117c72d15a0c01cbb211f"
+    },
+    {
+      "artifact": "gateway-epoch-0035/process.log",
+      "sha256": "b519ecd5868b971da78e77ffbc3e9797ad103b2bc26b47f98db9d96fdfebbbc8"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m256-fixed-cost32.json",
+      "sha256": "36424d95366b317ebd13abb550f172ba39462b52410e0ed74f72b8ce02dc2730"
+    },
+    {
+      "artifact": "nv3-baseline-181046-p4096-m256-fixed-cost32.events.jsonl",
+      "sha256": "530f0240efb42a5470b97791d9092f1b205d49ed130dd17e841cfb0c95069980"
+    },
+    {
+      "artifact": "gateway-epoch-0036/gateway-telemetry.jsonl",
+      "sha256": "f54d6b8585f55ad45fd120d8b300a1b6e07df8b53b8fe13620a746ffdf8dbb81"
+    },
+    {
+      "artifact": "gateway-epoch-0036/gateway-telemetry-status.json",
+      "sha256": "048e2c36d12663650cb00596424a75bffa124829aae84f8c2d0f45593091e5f0"
+    },
+    {
+      "artifact": "gateway-epoch-0036/process.log",
+      "sha256": "c3bcdb9f34ab043431d4ca8ce90ab7edb3f8d72d58c3f218164bacd51d4a11aa"
+    },
+    {
+      "artifact": "nv3-baseline-181046-mixed-fixed-count32.json",
+      "sha256": "944b8cd4dc486e846c1739a9102293fe86a9c9258df8da81869240aaa0e509d5"
+    },
+    {
+      "artifact": "nv3-baseline-181046-mixed-fixed-count32.events.jsonl",
+      "sha256": "7147e2e09a5349de78d1ac422b12bca1643adf02d00c57fca554685184a6391d"
+    },
+    {
+      "artifact": "gateway-epoch-0037/gateway-telemetry.jsonl",
+      "sha256": "07f2fbfac9fd2610146d1dc78db07cd1e6286babfd281745e8b218c8bb2fd726"
+    },
+    {
+      "artifact": "gateway-epoch-0037/gateway-telemetry-status.json",
+      "sha256": "261c6688e974541a1cdb5c1ba1923bcf67193cc95889b81c1b849b8ef2658a14"
+    },
+    {
+      "artifact": "gateway-epoch-0037/process.log",
+      "sha256": "a7da71d1bfbee52d15dfa20b8ef9a466fbfb52053e9753f20027d4a1ab0958af"
+    },
+    {
+      "artifact": "nv3-baseline-181046-mixed-fixed-cost32.json",
+      "sha256": "4842ec8e332d16026cf3b42a21014a848642b9dbf1ab88bc596019185e1da737"
+    },
+    {
+      "artifact": "nv3-baseline-181046-mixed-fixed-cost32.events.jsonl",
+      "sha256": "412db5b81067605ff630c58ea829f0b6a9972ebd87921cb821d9fc1455429441"
+    },
+    {
+      "artifact": "gateway-epoch-0038/gateway-telemetry.jsonl",
+      "sha256": "f9c1e36f4f0d49e636ee74877f3cb361f0cee7577fba0e5f337a9200934c5316"
+    },
+    {
+      "artifact": "gateway-epoch-0038/gateway-telemetry-status.json",
+      "sha256": "6168c28d2f6788c3a6af497ac965c3f50f331acddccd32bd91c4b46308983436"
+    },
+    {
+      "artifact": "gateway-epoch-0038/process.log",
+      "sha256": "1e16f545f3a34e63dfab5fcac6f4385ab127f1421f74509f24aaefa2a7a55e66"
+    },
+    {
+      "artifact": "nv3-baseline-181046-mixed-fixed-cost16.json",
+      "sha256": "e1d69bca700a2936ee8c3f937d4d68808b6761d6190acce6a452d3fd4da7e86b"
+    },
+    {
+      "artifact": "nv3-baseline-181046-mixed-fixed-cost16.events.jsonl",
+      "sha256": "bdf54de4441ba08e890b1b19bf14f1e60dab495b3c619bd125ad3d742cd08aa1"
+    },
+    {
+      "artifact": "gateway-epoch-0039/gateway-telemetry.jsonl",
+      "sha256": "7453cb82db4b6e82554d1a35d5ef04077afc4a1d20a46721ba8b9cd252f90a66"
+    },
+    {
+      "artifact": "gateway-epoch-0039/gateway-telemetry-status.json",
+      "sha256": "232128ff21537f102d36f5b26284a07d9eda5d81ff73c4334bd233b8fdf96682"
+    },
+    {
+      "artifact": "gateway-epoch-0039/process.log",
+      "sha256": "03330433ee4e05cbc182d879ea0c3659202d00693741823604cc879b3dc71e53"
+    },
+    {
+      "artifact": "nv3-baseline-181046-mixed-fixed-count16.json",
+      "sha256": "50fb1891ad01f78998459d7bec7d44c8152e1732ab501dd1d6a46a4c8f3dd926"
+    },
+    {
+      "artifact": "nv3-baseline-181046-mixed-fixed-count16.events.jsonl",
+      "sha256": "535382bfe81cfc022c5c9300ae2289aa077aa0638430456db567ae4a7ebe2c43"
+    },
+    {
+      "artifact": "gateway-epoch-0040/gateway-telemetry.jsonl",
+      "sha256": "3210dcde251fde71bdada7142fec4a59e579724c841a0dcf2248ef8e7bf6b536"
+    },
+    {
+      "artifact": "gateway-epoch-0040/gateway-telemetry-status.json",
+      "sha256": "e251fa613a0d60873bfda3b07af7e1a08d87085a996bdee8f77973ba6bc3b1c6"
+    },
+    {
+      "artifact": "gateway-epoch-0040/process.log",
+      "sha256": "5bb6808115fe2a0ee22321b3277663dabb758d12d6ab425cd1cd551722cb5cfe"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m128-fixed-cost32.json",
+      "sha256": "cd42982a577cf50565aed45a5a74e2b24a73584b0f723019ec5dd5d6b08ec471"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m128-fixed-cost32.events.jsonl",
+      "sha256": "14c73afbb2ff58a60042915f5730272e2db1be3bbdc971435afd1d9e27546c8c"
+    },
+    {
+      "artifact": "gateway-epoch-0041/gateway-telemetry.jsonl",
+      "sha256": "f975cf5a52159c388ece33995e38cb88a07c98d1fa15fb1f150e70226440faa2"
+    },
+    {
+      "artifact": "gateway-epoch-0041/gateway-telemetry-status.json",
+      "sha256": "618ba5d1cceef96c45c2cea7e6aedfe51ee68e0a2acf2b660444b857207eb8c8"
+    },
+    {
+      "artifact": "gateway-epoch-0041/process.log",
+      "sha256": "0356e84b075fb91d2fff8d104c15c0ac97691b2593dfcd444eab6b6b4d57ea86"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m128-fixed-count16.json",
+      "sha256": "ff82166b1fab83597312e2b946131bae423f23cf5750c6652d60efb1a6b2059e"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m128-fixed-count16.events.jsonl",
+      "sha256": "8add3feaa1d8a0af715661b3f4d89b773783ffdc0418ac9f2313a7fc330b8337"
+    },
+    {
+      "artifact": "gateway-epoch-0042/gateway-telemetry.jsonl",
+      "sha256": "425a7cb273966db927f8291dc586caafc18c47dcd8eaa833944741ac144f0482"
+    },
+    {
+      "artifact": "gateway-epoch-0042/gateway-telemetry-status.json",
+      "sha256": "911c14008d7089924918488bee57d5a6a67eefa41d42ac0bbf0d007551f3fb5b"
+    },
+    {
+      "artifact": "gateway-epoch-0042/process.log",
+      "sha256": "1252a2679d4f15eb4fdca3aa335649a967b46e8b3dc1a8d51f24bdc0df33d8bc"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m128-fixed-count32.json",
+      "sha256": "a502350c20ea6d448af90298508c5b6e054e947005caf573c219806e8f96738f"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m128-fixed-count32.events.jsonl",
+      "sha256": "644370f44c5695c007ab3c9d977fbae51ccbe07adabb0aa993171a965b2aa52e"
+    },
+    {
+      "artifact": "gateway-epoch-0043/gateway-telemetry.jsonl",
+      "sha256": "06fad1816c56dbb7f558b9581c7ecf620e8416c6716b50c4d0e60444594c71fe"
+    },
+    {
+      "artifact": "gateway-epoch-0043/gateway-telemetry-status.json",
+      "sha256": "6e69650bc791f0ea37f2c4aa53fc7e0566e4396df31e0e6dab150055ba75ece3"
+    },
+    {
+      "artifact": "gateway-epoch-0043/process.log",
+      "sha256": "d7ff120bfa1d83dcc388eca50a01f29a9d21b21062b601ffa8f719a838f0ad14"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m128-fixed-cost16.json",
+      "sha256": "870d8ebf0b9faed18f6ef1037d376dc887cd32700ab1fd1c20af3884c2c4eb16"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m128-fixed-cost16.events.jsonl",
+      "sha256": "565e3c333722fe855303435f2ce86b4b35b7d53370010be90408fc6a3d64f22f"
+    },
+    {
+      "artifact": "gateway-epoch-0044/gateway-telemetry.jsonl",
+      "sha256": "8fcdcae259c4f361cb8352e4d82f28c585f7832d35d57209d1ddf588cf971847"
+    },
+    {
+      "artifact": "gateway-epoch-0044/gateway-telemetry-status.json",
+      "sha256": "0ca1875fb2017076a4fe83d06a1481e3e58d0df2cd7cbe9de07ab9d1d69b9c22"
+    },
+    {
+      "artifact": "gateway-epoch-0044/process.log",
+      "sha256": "4a940c89c18785cfcd41deb05b54d3177403d6d5c9c720e94849e2b3dc9f551c"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m256-fixed-count32.json",
+      "sha256": "30d8589dd8ee74b422c3b457dfca3bf8bf8386a1095f2c5cb37b3f7a829c46b5"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m256-fixed-count32.events.jsonl",
+      "sha256": "1358f794215410140fff1979bc463674e9952ac9b5e7b3c9899a2e387b5d645a"
+    },
+    {
+      "artifact": "gateway-epoch-0045/gateway-telemetry.jsonl",
+      "sha256": "7076ae8fb3d80bc2a7e09d76e3be7813433d06cfc85948ce8de4010e531dd1b8"
+    },
+    {
+      "artifact": "gateway-epoch-0045/gateway-telemetry-status.json",
+      "sha256": "a34ea51f6ded53ef4dcfc4d3b2295e7f7cb9d30a908447030fd0287ede28bdd2"
+    },
+    {
+      "artifact": "gateway-epoch-0045/process.log",
+      "sha256": "63c99ae77627f07e2c993ff2baf32063faf8fbc05ee870f524a180cfb18a056f"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m256-fixed-cost32.json",
+      "sha256": "9b406808fac27bb06a0cd03af3f49edac6363dfa7c544eae83e757b17e82c829"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m256-fixed-cost32.events.jsonl",
+      "sha256": "898380836a9fe9127d87eb8d76d803b4d06c751f2f9e5b3fb1ee4227cf61a195"
+    },
+    {
+      "artifact": "gateway-epoch-0046/gateway-telemetry.jsonl",
+      "sha256": "51f419ee89fc398d2feaf89bfb22bbcd0d3df18cd87d9561e35d6344cdc6ef05"
+    },
+    {
+      "artifact": "gateway-epoch-0046/gateway-telemetry-status.json",
+      "sha256": "e3227eec2386f36af988a57b0806d5c68a872e36c3aec1c986a2c43d24ab3afd"
+    },
+    {
+      "artifact": "gateway-epoch-0046/process.log",
+      "sha256": "52c4b01351ce66752c11c7de08e9a175279ec712219c2950caf3bd2a71f44da1"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m256-fixed-count16.json",
+      "sha256": "0b0d5ed3bc00369f5a1c508b5e33d490c23022d4ccc3c2e35a778c81cb92295f"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m256-fixed-count16.events.jsonl",
+      "sha256": "e861d51dbcef14b4c5d99d86d2be0cebe69126198b89afd50e49073fe905e080"
+    },
+    {
+      "artifact": "gateway-epoch-0047/gateway-telemetry.jsonl",
+      "sha256": "b5aaa9ad41eff7bc48a5c267b9022157d8354f5d8e1d9abff124027e1750e98e"
+    },
+    {
+      "artifact": "gateway-epoch-0047/gateway-telemetry-status.json",
+      "sha256": "6985db730a8839ed93b923de3c33e927ecdfb6945ada0272cc1fd2697ab7b293"
+    },
+    {
+      "artifact": "gateway-epoch-0047/process.log",
+      "sha256": "2e5175f76948d54ecf37863209db92103e5da903b2290646379a1a1569acaa3a"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m256-fixed-cost16.json",
+      "sha256": "d6ecda4ea75a98be97e66a55d8c0c791c8dc31d05b2bc7c4e0b92543601c22df"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p128-m256-fixed-cost16.events.jsonl",
+      "sha256": "79be2bed5dbc2ab1b4b2004f460173c170d8df28e2d41e69e985df1a27e67b3a"
+    },
+    {
+      "artifact": "gateway-epoch-0048/gateway-telemetry.jsonl",
+      "sha256": "3c965cf135336a0eaa78b5180820bab792b7e686f43da8407ee40d859bf9e865"
+    },
+    {
+      "artifact": "gateway-epoch-0048/gateway-telemetry-status.json",
+      "sha256": "64a1be6a13cfbec95625fc12d789e0474298585534ccb7404b7658777d9fa133"
+    },
+    {
+      "artifact": "gateway-epoch-0048/process.log",
+      "sha256": "29908134772633beae324f55afcc3cfa7d56d0dfbf349d0ae06a2e2da97ca28b"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m128-fixed-cost16.json",
+      "sha256": "253d203d594543b81ca911d9b52a7feecf297d0c60af75e38f246f45a1bf4db8"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m128-fixed-cost16.events.jsonl",
+      "sha256": "c2349eac40c74927f95df9ecbc31129dd710fd29f9b1e8479d731c0b2ef2fe5a"
+    },
+    {
+      "artifact": "gateway-epoch-0049/gateway-telemetry.jsonl",
+      "sha256": "2160072180128f59583e17c0c7fe00ef590509a4908e1f65839741ddb6b090ca"
+    },
+    {
+      "artifact": "gateway-epoch-0049/gateway-telemetry-status.json",
+      "sha256": "3a37cb6df522f393d8551894d99f63eb498a330fe50637117eeb282ffebd25ee"
+    },
+    {
+      "artifact": "gateway-epoch-0049/process.log",
+      "sha256": "082fd0cd59d108934230666c437c115e5079878993226d258e26b132e01fc722"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m128-fixed-count16.json",
+      "sha256": "747a0a773d4c7811503502bc0cf8d90f4dba0b3e0655f6dd0b5d769eccda5e39"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m128-fixed-count16.events.jsonl",
+      "sha256": "9afa0db90158d0479d8bc40723b405f08f206832a0dcf766075bf7a9578d56c4"
+    },
+    {
+      "artifact": "gateway-epoch-0050/gateway-telemetry.jsonl",
+      "sha256": "fa0610a151ca989e99b13ae11ccebe8fb8a00ace8089b0645f09e09d526c968a"
+    },
+    {
+      "artifact": "gateway-epoch-0050/gateway-telemetry-status.json",
+      "sha256": "dacd3c3714f86665b278c269809debfa80c2ba16d2d84d3f944f3a31df0760d5"
+    },
+    {
+      "artifact": "gateway-epoch-0050/process.log",
+      "sha256": "bac139b1b3833f6fcc26a380530bdd5112474279c7fab0f7c982446ccc1cddc1"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m128-fixed-cost32.json",
+      "sha256": "cc6bbd2c26274c42b40698cf07fac5aabc2b7f7605991369bb14bc1a3fc11783"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m128-fixed-cost32.events.jsonl",
+      "sha256": "e7a0be1cb395e28d464c81b8ac696fcf372cf4f9d4c5d38642faa2a567c11ce2"
+    },
+    {
+      "artifact": "gateway-epoch-0051/gateway-telemetry.jsonl",
+      "sha256": "b918df2556a7fccc0313ee3b8a7afde9a20e5954fde6d7afe2cdda6c5766a92f"
+    },
+    {
+      "artifact": "gateway-epoch-0051/gateway-telemetry-status.json",
+      "sha256": "d4852af650cd828b90f0455d2c151fb080a519d76059806806aae6e3ce87de67"
+    },
+    {
+      "artifact": "gateway-epoch-0051/process.log",
+      "sha256": "978ca51562c176d1491442b6a81ec7946d1e083b1e137ba2eff34eb51bd2dd5d"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m128-fixed-count32.json",
+      "sha256": "0926840a91fd48f3fa68e4da23b7e198217c7cd6ecdc19f4be7f696502e1ad13"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m128-fixed-count32.events.jsonl",
+      "sha256": "1b761e464fc18955cf0ee604c73ed89372a14a88bec125dc881887df2383da44"
+    },
+    {
+      "artifact": "gateway-epoch-0052/gateway-telemetry.jsonl",
+      "sha256": "74d2681cf3e1c90363108f4519a368a78029436aa1257c9f78df42054031ef1b"
+    },
+    {
+      "artifact": "gateway-epoch-0052/gateway-telemetry-status.json",
+      "sha256": "37fa3f8c9f1c8891c499c07f51e82b3dea2af6131208a3c759f481340d60e49e"
+    },
+    {
+      "artifact": "gateway-epoch-0052/process.log",
+      "sha256": "2fa0ba2eee7df294ce7f0fe7f00e283d7afcb6f6b2eea6dbce203f9433a682b1"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m256-fixed-cost32.json",
+      "sha256": "3c1b5b1393b34ad83d8c37f22973c488ea69cc4e9fe0209963bba89911edf87e"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m256-fixed-cost32.events.jsonl",
+      "sha256": "17ef3c50104b0844ce364983ea0eac84daa11684bafae6b5da957ca5056ef9f5"
+    },
+    {
+      "artifact": "gateway-epoch-0053/gateway-telemetry.jsonl",
+      "sha256": "b88e6aae61a5a9687b26858b8e8d27d858060b3faaf39b0ba9cf4938b0cf75dc"
+    },
+    {
+      "artifact": "gateway-epoch-0053/gateway-telemetry-status.json",
+      "sha256": "7f2761ca08c88d02090e98b19359ce4b85361d940ab328af0ec3be3c4f0e090e"
+    },
+    {
+      "artifact": "gateway-epoch-0053/process.log",
+      "sha256": "ba0d4e8bd04dd13599bc4b59243995fd78efeac6665a6822e452fee3c2066029"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m256-fixed-count32.json",
+      "sha256": "222ac54afe93b8780f8015ce184b91b36800415b38197fc13813b46276a02c27"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m256-fixed-count32.events.jsonl",
+      "sha256": "29986a0aa9b69228787d0fd8c32b3975bea4946bb837d06ba95966dfc88e53fc"
+    },
+    {
+      "artifact": "gateway-epoch-0054/gateway-telemetry.jsonl",
+      "sha256": "01d5cc4d050b5d2201c1403b82cc648c7ae841d426b4fbc5d96b2478d04e8c8f"
+    },
+    {
+      "artifact": "gateway-epoch-0054/gateway-telemetry-status.json",
+      "sha256": "69ffcfac8c19fd7cd069c67cc14114ad1bf0caf378521e3d3957e6d78ebf4124"
+    },
+    {
+      "artifact": "gateway-epoch-0054/process.log",
+      "sha256": "edef20ac835e57af3849aed5d827f63c7f88913e647fdc12fd49d75ad09b2e08"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m256-fixed-count16.json",
+      "sha256": "447167743fcac219454c07fba44a023fc7444d2ecc2e89f440f765e66359b15d"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m256-fixed-count16.events.jsonl",
+      "sha256": "ee4ed6b356bddf253a714711bd67335f077d238df215ad29f67366013d01bdce"
+    },
+    {
+      "artifact": "gateway-epoch-0055/gateway-telemetry.jsonl",
+      "sha256": "51923f5aa911ac1b62cb7f35d296e2bab58c38763262b5b597d6e264661fd1d1"
+    },
+    {
+      "artifact": "gateway-epoch-0055/gateway-telemetry-status.json",
+      "sha256": "c0c104dd5546bbf748638dbd2b8d844f345bd6ead1875402e865d369ccbc6987"
+    },
+    {
+      "artifact": "gateway-epoch-0055/process.log",
+      "sha256": "f7a68acbf5e605394490998ce39cb77085d9540405876497688607f5f3bad4ee"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m256-fixed-cost16.json",
+      "sha256": "1dd00c8134cbd35bdeeab8e6201b3f5ba857b5ba548cf60d42e39fa1d984d599"
+    },
+    {
+      "artifact": "nv3-baseline-181047-p4096-m256-fixed-cost16.events.jsonl",
+      "sha256": "772ec1489f41e011f36fe1ba5e40e0c26415131215accd36dd7499f7844e41f1"
+    },
+    {
+      "artifact": "gateway-epoch-0056/gateway-telemetry.jsonl",
+      "sha256": "6dc227124284a22ccd552d9a7a53dd58a9c2267c60fe9956567d0272e86e923e"
+    },
+    {
+      "artifact": "gateway-epoch-0056/gateway-telemetry-status.json",
+      "sha256": "80ea792fd477ec647a2bafdbda10e3ea545d5c7b3dc004197a8f38ce35567cc8"
+    },
+    {
+      "artifact": "gateway-epoch-0056/process.log",
+      "sha256": "d1d6e944315fa27e4e2937da10e5ad0ec02c53195cfebb7d7df3dc50721de8cd"
+    },
+    {
+      "artifact": "nv3-baseline-181047-mixed-fixed-count16.json",
+      "sha256": "f8629f383576aee5cf751aeb2f1d728fed9399772f8c710d23c986f17d6dc24d"
+    },
+    {
+      "artifact": "nv3-baseline-181047-mixed-fixed-count16.events.jsonl",
+      "sha256": "ec8f7e24f2904dd06ba7132462c1d535ff9aeb8f7365c50807b248946fbd6ebc"
+    },
+    {
+      "artifact": "gateway-epoch-0057/gateway-telemetry.jsonl",
+      "sha256": "576e75d564afb7ca288302bfc93714874e644350b3db021e681d505599a8af6c"
+    },
+    {
+      "artifact": "gateway-epoch-0057/gateway-telemetry-status.json",
+      "sha256": "5f1907d9de1ccc77696e2e7419a41c37de15ca5e548d81810f59154f45e71b0c"
+    },
+    {
+      "artifact": "gateway-epoch-0057/process.log",
+      "sha256": "dcc9cdcb4ec6130c905dc8fd7192d794f1fbf6d088f7a0b01d2ca139f1bf79a6"
+    },
+    {
+      "artifact": "nv3-baseline-181047-mixed-fixed-cost16.json",
+      "sha256": "06bcf38967fe625eb93932d8e28f08f2db52e12f84a220c957ad667f510df457"
+    },
+    {
+      "artifact": "nv3-baseline-181047-mixed-fixed-cost16.events.jsonl",
+      "sha256": "34fdd1d45e54b8cb8686298e44d1461a4fa9ecaaec3a9109aacf496d4fdf9646"
+    },
+    {
+      "artifact": "gateway-epoch-0058/gateway-telemetry.jsonl",
+      "sha256": "e3dccf9ad70e711b126bd75335a3ed7c818346b31192ca3fa271e4094b10a73b"
+    },
+    {
+      "artifact": "gateway-epoch-0058/gateway-telemetry-status.json",
+      "sha256": "f57cdb7750fb4281d859808ce310620becd3342bfed5d68f8439128c2a0aa2ad"
+    },
+    {
+      "artifact": "gateway-epoch-0058/process.log",
+      "sha256": "d791784ed4d3c1f3acd50fdef50f968e66b939267b6b527707ad52440f04d99d"
+    },
+    {
+      "artifact": "nv3-baseline-181047-mixed-fixed-cost32.json",
+      "sha256": "14e185426ab55361ec43054d826a377a29cd47626ccd39af6c6be069c1b0079d"
+    },
+    {
+      "artifact": "nv3-baseline-181047-mixed-fixed-cost32.events.jsonl",
+      "sha256": "16efd8b8e103fbd3c86f3cf80a334d3700622ff5afb2cd86565a65eecda99da3"
+    },
+    {
+      "artifact": "gateway-epoch-0059/gateway-telemetry.jsonl",
+      "sha256": "24167f60226c09ecfc8cdd1068e64a96e6948f187d87701ac7c807ece712a459"
+    },
+    {
+      "artifact": "gateway-epoch-0059/gateway-telemetry-status.json",
+      "sha256": "f825f32cc7fd1e405514b0338f73abb6eeb8f28708bb83a7f5398d87ccfb6ae8"
+    },
+    {
+      "artifact": "gateway-epoch-0059/process.log",
+      "sha256": "900b8357bd117bfd08819900fd28436e275cc765c7f92cd43eec7de402388ed7"
+    },
+    {
+      "artifact": "nv3-baseline-181047-mixed-fixed-count32.json",
+      "sha256": "a8099ab69f671d1497c31783b84eed3dd8b7fca6ee202e53e7968425ddd61694"
+    },
+    {
+      "artifact": "nv3-baseline-181047-mixed-fixed-count32.events.jsonl",
+      "sha256": "d83e88a53cde026c76d20a1bc2bb4a7c63eef6a7e9314abe9c30f2719ca8c79b"
+    },
+    {
+      "artifact": "gateway-epoch-0060/gateway-telemetry.jsonl",
+      "sha256": "bba89590e8642e054b2393d6a21b706e9d98121d3be9837a7048ca0a0d4e11c3"
+    },
+    {
+      "artifact": "gateway-epoch-0060/gateway-telemetry-status.json",
+      "sha256": "69813cf2d468d927c75323f3705d3aeec2a4c3a7aa703676016633a8bcbefd23"
+    },
+    {
+      "artifact": "gateway-epoch-0060/process.log",
+      "sha256": "911a09eaf45b889816f86e0685048771f08baea62219090582152cf3730f96b0"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m128-fixed-cost16.json",
+      "sha256": "6d0f6e8fdf5a9ae1e1acee349c9547077e2f64fc904c710ae1c8e45170f5cb23"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m128-fixed-cost16.events.jsonl",
+      "sha256": "fa3dc166fae32b484bee72ba599da804ab5dcd94563c85fc3ecc480555c1d00a"
+    },
+    {
+      "artifact": "gateway-epoch-0061/gateway-telemetry.jsonl",
+      "sha256": "117b06d2f8b20505b1ee8fc3ba579593395836f2c1f15301e935d15572db0c76"
+    },
+    {
+      "artifact": "gateway-epoch-0061/gateway-telemetry-status.json",
+      "sha256": "c03b567df8b69f83913d1d96d5907d7945fb448beab6def9f1f08f6cd5a4380f"
+    },
+    {
+      "artifact": "gateway-epoch-0061/process.log",
+      "sha256": "eed14d12bf4f0f5754f1cd94fc1878468c492a60805104e55347e751b4bf5c81"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m128-fixed-count32.json",
+      "sha256": "35583b0fe01e82a5d6ff2ec58663456d068c678527df1426f5d36c1515991e2e"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m128-fixed-count32.events.jsonl",
+      "sha256": "af9d20980cc20bae7ceba24afafcade1176ba82f4c3245fc8351f27323da7ec6"
+    },
+    {
+      "artifact": "gateway-epoch-0062/gateway-telemetry.jsonl",
+      "sha256": "762c32cd26bebea240e96984f9aa27394a5ef99c757fb65663444821987dbdf7"
+    },
+    {
+      "artifact": "gateway-epoch-0062/gateway-telemetry-status.json",
+      "sha256": "3e0c2f304baebbd878597b4e192c7a1914d005fbb75e7f60a406d6dff1a2136c"
+    },
+    {
+      "artifact": "gateway-epoch-0062/process.log",
+      "sha256": "1884313df18550974bd3df3225476dd4b5f01f104bba77b7ab582b2c66e63df3"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m128-fixed-count16.json",
+      "sha256": "3df77e3cf9282f430b5c8ebe555b452d4e4b62ff0aa2ced47787698979341c47"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m128-fixed-count16.events.jsonl",
+      "sha256": "1d48fc692b8b8078414534e529948f344041833d0d5d8b88e7a69cb71f73e06a"
+    },
+    {
+      "artifact": "gateway-epoch-0063/gateway-telemetry.jsonl",
+      "sha256": "17d20f8353e20927f21e05e952e800c074d19ac4f717ee8ac5915693bfef91a3"
+    },
+    {
+      "artifact": "gateway-epoch-0063/gateway-telemetry-status.json",
+      "sha256": "929a74d0c46069e75d22bb36154093b305a47569ee7ba2c583106261da2ce5da"
+    },
+    {
+      "artifact": "gateway-epoch-0063/process.log",
+      "sha256": "ab63c2c4f0144b78186c96da629e7c461404986a60c79bf102d4fd0eb0d19f41"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m128-fixed-cost32.json",
+      "sha256": "a84d8248afc1c19cee84b092cedd0071749ca3ad70516e9266decbdd5b714114"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m128-fixed-cost32.events.jsonl",
+      "sha256": "1f21fe7ffb99f8844f5ec36b24b26890b636ca1e3b86cbeee04ff466eb5194d8"
+    },
+    {
+      "artifact": "gateway-epoch-0064/gateway-telemetry.jsonl",
+      "sha256": "fcec3d143f100c5968d5d754a46d551b93a392c53fcbbc4cd55228a1fd19d7ef"
+    },
+    {
+      "artifact": "gateway-epoch-0064/gateway-telemetry-status.json",
+      "sha256": "43870d87d7036d61fa8077be096baeb99ceadb6dbe1a8c7c0d41a5f30480079d"
+    },
+    {
+      "artifact": "gateway-epoch-0064/process.log",
+      "sha256": "1c84cf74f910908e6af6cb748cba9b6762a82e88d0ef7a94fa35c5fd94810528"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m256-fixed-cost16.json",
+      "sha256": "25f6f994159f17774f273936f48db83b969bf08692f88cf7c629696e06bdd50a"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m256-fixed-cost16.events.jsonl",
+      "sha256": "29f1a5bc1bac5fc120c465843f1d4417d4f783996dbb44256003bdbe200a588c"
+    },
+    {
+      "artifact": "gateway-epoch-0065/gateway-telemetry.jsonl",
+      "sha256": "d0eaa7a65e7514abbfd5aa7173ccd6d73a75c4cb9c58b3214c126c17d0322ab2"
+    },
+    {
+      "artifact": "gateway-epoch-0065/gateway-telemetry-status.json",
+      "sha256": "debce986cf66495068a493c3664601961dff549af602f80048b475569c4b9d58"
+    },
+    {
+      "artifact": "gateway-epoch-0065/process.log",
+      "sha256": "ade2985078c1ffeeed488207e376eceef37799426c5bb82226a13b2e7a5e6941"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m256-fixed-count16.json",
+      "sha256": "aac9cf0d7fa9ac4fbe51cbbafe8c94da71b7b7b772f330c1a32c33dbcf9c4ce6"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m256-fixed-count16.events.jsonl",
+      "sha256": "ea3b49db571533f50ab7323d32e2748d3a500669979cda002490bf167c7ac89f"
+    },
+    {
+      "artifact": "gateway-epoch-0066/gateway-telemetry.jsonl",
+      "sha256": "eda08dc84368728e426a9f909fccc516bee7467c4f63a6c036c8ac862808c2a8"
+    },
+    {
+      "artifact": "gateway-epoch-0066/gateway-telemetry-status.json",
+      "sha256": "e6283cd4ad896a8a8e57f88f88bad13ee5f2dccaaea1934d355adfd2386e4d3c"
+    },
+    {
+      "artifact": "gateway-epoch-0066/process.log",
+      "sha256": "d5f4dd720dde666e4056734461fa72b05e7d4ac3beb19124d0caaca5cf48312b"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m256-fixed-cost32.json",
+      "sha256": "c93be634bd9b2c95f61cc7a3ff1deaf7f8d94cf4cdf8555cf601998c7e390eca"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m256-fixed-cost32.events.jsonl",
+      "sha256": "6e638fbab8f979a992c42f7c3277d49679cc99a586686af13f5ef49a9488be09"
+    },
+    {
+      "artifact": "gateway-epoch-0067/gateway-telemetry.jsonl",
+      "sha256": "6d5b05ceb0d42c38b60123293f4e5be2a730c68fb936f751d83f2fb9e3f522ca"
+    },
+    {
+      "artifact": "gateway-epoch-0067/gateway-telemetry-status.json",
+      "sha256": "59e5b83d476b5754319b7b4b7f7c032a1d23e8d1ee8a80cac4c4b3e711e88ad6"
+    },
+    {
+      "artifact": "gateway-epoch-0067/process.log",
+      "sha256": "dd4186ad50af77c24fe916b1a0d53fca8b8a975a6eb7134301789d913a5c5d17"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m256-fixed-count32.json",
+      "sha256": "bffd30078f01ddb8f96ff3376ae8447e0761d6f4db8af5c310b0653de1b1371d"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p128-m256-fixed-count32.events.jsonl",
+      "sha256": "c18f0f49a44d5b9f436e7af1edff1c10b2976e700ee62d622e0b31adfbcd047d"
+    },
+    {
+      "artifact": "gateway-epoch-0068/gateway-telemetry.jsonl",
+      "sha256": "9381344d8854729f37db7f9dab15132d7e8d89d6e6aea32c5b0c786d665f9b5c"
+    },
+    {
+      "artifact": "gateway-epoch-0068/gateway-telemetry-status.json",
+      "sha256": "d5f626767a17d0c649974ea4fb684dba063616424f27986407d02c043269a62e"
+    },
+    {
+      "artifact": "gateway-epoch-0068/process.log",
+      "sha256": "9ec8e24ba41a5baa5259378fa883b07ced8e0dd78392abf6e2a8a5cf7a132535"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m128-fixed-count32.json",
+      "sha256": "20ff2a6eedc0ecc51e73df645e828f5395167728d86c4186b2e19efa230f4ae7"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m128-fixed-count32.events.jsonl",
+      "sha256": "e1bd25c398e88ee4328ad4e8a60e40c32b50fc4d4deec2104d43deb47aa03763"
+    },
+    {
+      "artifact": "gateway-epoch-0069/gateway-telemetry.jsonl",
+      "sha256": "8f0276eae2179b05cb03e89c3d0449e1c8d1518f93c1d13f95892bfa8166e2d4"
+    },
+    {
+      "artifact": "gateway-epoch-0069/gateway-telemetry-status.json",
+      "sha256": "0a527b8c756f5e933b64fbb665c7159813457022e8817b9164138923d7293d8d"
+    },
+    {
+      "artifact": "gateway-epoch-0069/process.log",
+      "sha256": "e5ece019eb1044346aae6d43e5ca7de87882688de405d7262fca258800e650ea"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m128-fixed-cost32.json",
+      "sha256": "9dc5039234ca73e4d78d586309c5a21801cda60f1ee8c1009511442c1b93457c"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m128-fixed-cost32.events.jsonl",
+      "sha256": "400c7310bd9052fb5c0e5323a7e563dbc9e24673f388eb0045a50431874f81ec"
+    },
+    {
+      "artifact": "gateway-epoch-0070/gateway-telemetry.jsonl",
+      "sha256": "1a1e041d4c6123770409a2b17bee88306631a25db34674166b0505cc6746401c"
+    },
+    {
+      "artifact": "gateway-epoch-0070/gateway-telemetry-status.json",
+      "sha256": "82de2728f73d12876b4cd86382ec7bf458f1c8baf5c40957c9323895e25358a0"
+    },
+    {
+      "artifact": "gateway-epoch-0070/process.log",
+      "sha256": "22aa716c6e34d5850999fb9b8f53ec7f4f84898fef41c92daead1cf9617064e9"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m128-fixed-count16.json",
+      "sha256": "dc21a58b6ec5f91c6dadd85f35d438bd4b53ffd98ddcb96d6f13136669c9974f"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m128-fixed-count16.events.jsonl",
+      "sha256": "adb44859d33bc02941a3fbd9008dd2f500a39c20e8cb1139a5f80b4cd9cd18be"
+    },
+    {
+      "artifact": "gateway-epoch-0071/gateway-telemetry.jsonl",
+      "sha256": "df824f0f4d443b1b86fce707067f85063decd6717b955e8c31f9ee63b695958b"
+    },
+    {
+      "artifact": "gateway-epoch-0071/gateway-telemetry-status.json",
+      "sha256": "ad5a67d90ee1febe6223b802db25074aaf9513ac5c882fbb003a39c0d0abf580"
+    },
+    {
+      "artifact": "gateway-epoch-0071/process.log",
+      "sha256": "3a4acb16f531b7af9cde0f95077596d91ab97f852429530d9cc7ff95ba0421fe"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m128-fixed-cost16.json",
+      "sha256": "ffcaa41d8420d1a1a9fb30ce406c8da9bbde0b066212fe52660667a1d8857ad8"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m128-fixed-cost16.events.jsonl",
+      "sha256": "56569c26ab3f91761fba91083cc87013895c69248f00a4b3da08516d5419538e"
+    },
+    {
+      "artifact": "gateway-epoch-0072/gateway-telemetry.jsonl",
+      "sha256": "19852a3e74283198496bee5e134451a62b30914d641ae629e34d24aa911f211a"
+    },
+    {
+      "artifact": "gateway-epoch-0072/gateway-telemetry-status.json",
+      "sha256": "34474df2a931cae064964c26ee181aaa223d1434cf198dfc1baf76b5a02c74c6"
+    },
+    {
+      "artifact": "gateway-epoch-0072/process.log",
+      "sha256": "1c54b3318ebf6cb6efdddc14bf88a0cde6157fb16ec4a6d7175a66647fe2dff0"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m256-fixed-cost16.json",
+      "sha256": "881f3257a94197dfae0fdd0e42b7a7ad441fd4812b0d4d499416a03e9901b0f4"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m256-fixed-cost16.events.jsonl",
+      "sha256": "d9d82703be71ff3a40b2077c2b171ce90783882f186ff449baa5eaa0a8b7f1e6"
+    },
+    {
+      "artifact": "gateway-epoch-0073/gateway-telemetry.jsonl",
+      "sha256": "9fe5b43af4420059b7c7fee06ad1f51161cde911c24ea98ad6224f5b0ea12c7b"
+    },
+    {
+      "artifact": "gateway-epoch-0073/gateway-telemetry-status.json",
+      "sha256": "f58e3bc021c352bc12eafbddf042841d3e4fdb5a9bf5678481bbafe1f0c8e88a"
+    },
+    {
+      "artifact": "gateway-epoch-0073/process.log",
+      "sha256": "7a40681884c0db14b7440e1b4feec9793cd1df33e8e2827f98283b0d7d885d58"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m256-fixed-count16.json",
+      "sha256": "a476bc8987320b0acd0f4ad416a35c0547026b1f194a24f15531841a9262a470"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m256-fixed-count16.events.jsonl",
+      "sha256": "88cba5ec687cc5c42711fd1911ce06ed564f3e2509b387222840d11396c83d69"
+    },
+    {
+      "artifact": "gateway-epoch-0074/gateway-telemetry.jsonl",
+      "sha256": "1ae0c3dfbdc05645e769385b1c711e32d74625a9f0ed4cf3a5cb6c0e45e6a665"
+    },
+    {
+      "artifact": "gateway-epoch-0074/gateway-telemetry-status.json",
+      "sha256": "1e3311507caa08de8015b8d435c67b868173b1510082a3044c31a2940dce2e91"
+    },
+    {
+      "artifact": "gateway-epoch-0074/process.log",
+      "sha256": "1a845afc23f6eb658016f3c6e1b2d3c958ed8366d32254b304cc9f6942e4db6c"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m256-fixed-count32.json",
+      "sha256": "36d84ba16d256358692cfe841fff479f44e20f6d461d6af846437a356bcb4072"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m256-fixed-count32.events.jsonl",
+      "sha256": "cafc0eec33f8652c666c079141a5b7cdbf54c62557618ba83d1472025c41636d"
+    },
+    {
+      "artifact": "gateway-epoch-0075/gateway-telemetry.jsonl",
+      "sha256": "92b3010593b7339ef78b64a870320775c98b2f4839f6b6ed6e4a6823bb9fed10"
+    },
+    {
+      "artifact": "gateway-epoch-0075/gateway-telemetry-status.json",
+      "sha256": "35794edbb8bcb9750f2ec626d0d3c4d86afb55163315ac543a970067ac2fbe4b"
+    },
+    {
+      "artifact": "gateway-epoch-0075/process.log",
+      "sha256": "2ad67e69f3294043d318ca6bea98ae71c081058aca6ab94ef421c030cfb90984"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m256-fixed-cost32.json",
+      "sha256": "6901df9e615c3314d8b9e1364fdf532b6036819d9a2e49d4456ce329993f7baa"
+    },
+    {
+      "artifact": "nv3-baseline-181048-p4096-m256-fixed-cost32.events.jsonl",
+      "sha256": "ae82ff6697db2c5922f0f60cbb2971c5e4613507eb6ce0255dd788f87da9079d"
+    },
+    {
+      "artifact": "gateway-epoch-0076/gateway-telemetry.jsonl",
+      "sha256": "fff9c35d6480487f230ba5ed2d4c00af0c872fde3b4a61cf3ec8e43266e33bf0"
+    },
+    {
+      "artifact": "gateway-epoch-0076/gateway-telemetry-status.json",
+      "sha256": "155059f88ed544cc414993ecffd8fcd3162b45be689c8be23e2159aca9d4f3a5"
+    },
+    {
+      "artifact": "gateway-epoch-0076/process.log",
+      "sha256": "7c91543990c030ce5f6564c8392cec31e66c9b093fb73b22154d45e081e4626c"
+    },
+    {
+      "artifact": "nv3-baseline-181048-mixed-fixed-count32.json",
+      "sha256": "badbd1b34c7d1d1b7f0e893bd597b5c76dd7d800470e3507226493e33bdf51b7"
+    },
+    {
+      "artifact": "nv3-baseline-181048-mixed-fixed-count32.events.jsonl",
+      "sha256": "bf70010e8b997b565158c5bbb3ef2a0a80435ebfd2518c50ba4183c847fb8282"
+    },
+    {
+      "artifact": "gateway-epoch-0077/gateway-telemetry.jsonl",
+      "sha256": "34142c74bbf706ad820ead876b5a44f5c96623d3cc1fa0fead9d8607fd7538a2"
+    },
+    {
+      "artifact": "gateway-epoch-0077/gateway-telemetry-status.json",
+      "sha256": "9637e367df9d78552ec20200080bc2e56a4f278d829c5ea0ea5be24d18ea7617"
+    },
+    {
+      "artifact": "gateway-epoch-0077/process.log",
+      "sha256": "ef6f04e44cd23c9d6f9e8dc9fffa379c7f6b6852e3eb45a1cf410422ac2ddd52"
+    },
+    {
+      "artifact": "nv3-baseline-181048-mixed-fixed-cost32.json",
+      "sha256": "3eff5a3d0f3436b8a248caf72f896487f22d346c6cf80b6012b19cdb993fe7ae"
+    },
+    {
+      "artifact": "nv3-baseline-181048-mixed-fixed-cost32.events.jsonl",
+      "sha256": "923fbb6094de462b2f4ebf46346836c161d0d4813d42c2049129790ce03b1712"
+    },
+    {
+      "artifact": "gateway-epoch-0078/gateway-telemetry.jsonl",
+      "sha256": "c08ac8e0bbe4b3cd4f62e511f4da1d55e322d6a0cf56eb69c51e2425954c3b04"
+    },
+    {
+      "artifact": "gateway-epoch-0078/gateway-telemetry-status.json",
+      "sha256": "74fe81c7bcb43ce8b553f9d55f7ec15e98f7bb424f10cbbe89350ea955b61e29"
+    },
+    {
+      "artifact": "gateway-epoch-0078/process.log",
+      "sha256": "4ee29c77412fb979194b150cc45d0648a44c49f9523ec9d34bf749e184595b2d"
+    },
+    {
+      "artifact": "nv3-baseline-181048-mixed-fixed-cost16.json",
+      "sha256": "77056e52b1876ea9bb6e1ebbc373e14773579a7f01b156edf155c83e737ba7d8"
+    },
+    {
+      "artifact": "nv3-baseline-181048-mixed-fixed-cost16.events.jsonl",
+      "sha256": "23555f3744c1ace3b346d59d707917fa8087a6e20955e2855502ec7cdb1ba30a"
+    },
+    {
+      "artifact": "gateway-epoch-0079/gateway-telemetry.jsonl",
+      "sha256": "4499e9e587bde09c95004f4e9b053c1949611dc9a0ea5ddd6ab77e64b166beae"
+    },
+    {
+      "artifact": "gateway-epoch-0079/gateway-telemetry-status.json",
+      "sha256": "f3213806682e6a6224e95e0293bc60ca50c036b4523b3895957272f44c228008"
+    },
+    {
+      "artifact": "gateway-epoch-0079/process.log",
+      "sha256": "ff46df55f0cf5521ca1ea7f420a3ff036e1984dcf65b2e571ff38fbc9af8e9e2"
+    },
+    {
+      "artifact": "nv3-baseline-181048-mixed-fixed-count16.json",
+      "sha256": "aaedf26ec274dde0ef9fc9492513251936012d0d259f1a766e576928278adea5"
+    },
+    {
+      "artifact": "nv3-baseline-181048-mixed-fixed-count16.events.jsonl",
+      "sha256": "1e015422ea5e7497d321a60b68ee7c4acc83f1f340c8aeeb59111326dea93da8"
+    },
+    {
+      "artifact": "gateway-epoch-0080/gateway-telemetry.jsonl",
+      "sha256": "cf96179c9d78f63519a31379b8838aae3ec2484e86b11503884606c737ce052c"
+    },
+    {
+      "artifact": "gateway-epoch-0080/gateway-telemetry-status.json",
+      "sha256": "c9e39430ffb49d50d7a4fef8161b13da4d18efcbc4ea5dbcc380fc27599639cb"
+    },
+    {
+      "artifact": "gateway-epoch-0080/process.log",
+      "sha256": "0ae8d6fc4d7e990c5eed0d5f3e7c8e7aff04512c9f1c0a2bbb107280a340b2ae"
+    }
+  ],
+  "acquisition_ledger": {
+    "verified_episode_ids": [
+      "nv3-baseline-181045-p128-m128-fixed-cost32",
+      "nv3-baseline-181045-p128-m128-fixed-count16",
+      "nv3-baseline-181045-p128-m128-fixed-count32",
+      "nv3-baseline-181045-p128-m128-fixed-cost16",
+      "nv3-baseline-181045-p128-m256-fixed-count32",
+      "nv3-baseline-181045-p128-m256-fixed-cost32",
+      "nv3-baseline-181045-p128-m256-fixed-count16",
+      "nv3-baseline-181045-p128-m256-fixed-cost16",
+      "nv3-baseline-181045-p4096-m128-fixed-cost16",
+      "nv3-baseline-181045-p4096-m128-fixed-count16",
+      "nv3-baseline-181045-p4096-m128-fixed-cost32",
+      "nv3-baseline-181045-p4096-m128-fixed-count32",
+      "nv3-baseline-181045-p4096-m256-fixed-cost32",
+      "nv3-baseline-181045-p4096-m256-fixed-count32",
+      "nv3-baseline-181045-p4096-m256-fixed-count16",
+      "nv3-baseline-181045-p4096-m256-fixed-cost16",
+      "nv3-baseline-181045-mixed-fixed-count16",
+      "nv3-baseline-181045-mixed-fixed-cost16",
+      "nv3-baseline-181045-mixed-fixed-cost32",
+      "nv3-baseline-181045-mixed-fixed-count32",
+      "nv3-baseline-181046-p128-m128-fixed-cost16",
+      "nv3-baseline-181046-p128-m128-fixed-count32",
+      "nv3-baseline-181046-p128-m128-fixed-count16",
+      "nv3-baseline-181046-p128-m128-fixed-cost32",
+      "nv3-baseline-181046-p128-m256-fixed-cost16",
+      "nv3-baseline-181046-p128-m256-fixed-count16",
+      "nv3-baseline-181046-p128-m256-fixed-cost32",
+      "nv3-baseline-181046-p128-m256-fixed-count32",
+      "nv3-baseline-181046-p4096-m128-fixed-count32",
+      "nv3-baseline-181046-p4096-m128-fixed-cost32",
+      "nv3-baseline-181046-p4096-m128-fixed-count16",
+      "nv3-baseline-181046-p4096-m128-fixed-cost16",
+      "nv3-baseline-181046-p4096-m256-fixed-cost16",
+      "nv3-baseline-181046-p4096-m256-fixed-count16",
+      "nv3-baseline-181046-p4096-m256-fixed-count32",
+      "nv3-baseline-181046-p4096-m256-fixed-cost32",
+      "nv3-baseline-181046-mixed-fixed-count32",
+      "nv3-baseline-181046-mixed-fixed-cost32",
+      "nv3-baseline-181046-mixed-fixed-cost16",
+      "nv3-baseline-181046-mixed-fixed-count16",
+      "nv3-baseline-181047-p128-m128-fixed-cost32",
+      "nv3-baseline-181047-p128-m128-fixed-count16",
+      "nv3-baseline-181047-p128-m128-fixed-count32",
+      "nv3-baseline-181047-p128-m128-fixed-cost16",
+      "nv3-baseline-181047-p128-m256-fixed-count32",
+      "nv3-baseline-181047-p128-m256-fixed-cost32",
+      "nv3-baseline-181047-p128-m256-fixed-count16",
+      "nv3-baseline-181047-p128-m256-fixed-cost16",
+      "nv3-baseline-181047-p4096-m128-fixed-cost16",
+      "nv3-baseline-181047-p4096-m128-fixed-count16",
+      "nv3-baseline-181047-p4096-m128-fixed-cost32",
+      "nv3-baseline-181047-p4096-m128-fixed-count32",
+      "nv3-baseline-181047-p4096-m256-fixed-cost32",
+      "nv3-baseline-181047-p4096-m256-fixed-count32",
+      "nv3-baseline-181047-p4096-m256-fixed-count16",
+      "nv3-baseline-181047-p4096-m256-fixed-cost16",
+      "nv3-baseline-181047-mixed-fixed-count16",
+      "nv3-baseline-181047-mixed-fixed-cost16",
+      "nv3-baseline-181047-mixed-fixed-cost32",
+      "nv3-baseline-181047-mixed-fixed-count32",
+      "nv3-baseline-181048-p128-m128-fixed-cost16",
+      "nv3-baseline-181048-p128-m128-fixed-count32",
+      "nv3-baseline-181048-p128-m128-fixed-count16",
+      "nv3-baseline-181048-p128-m128-fixed-cost32",
+      "nv3-baseline-181048-p128-m256-fixed-cost16",
+      "nv3-baseline-181048-p128-m256-fixed-count16",
+      "nv3-baseline-181048-p128-m256-fixed-cost32",
+      "nv3-baseline-181048-p128-m256-fixed-count32",
+      "nv3-baseline-181048-p4096-m128-fixed-count32",
+      "nv3-baseline-181048-p4096-m128-fixed-cost32",
+      "nv3-baseline-181048-p4096-m128-fixed-count16",
+      "nv3-baseline-181048-p4096-m128-fixed-cost16",
+      "nv3-baseline-181048-p4096-m256-fixed-cost16",
+      "nv3-baseline-181048-p4096-m256-fixed-count16",
+      "nv3-baseline-181048-p4096-m256-fixed-count32",
+      "nv3-baseline-181048-p4096-m256-fixed-cost32",
+      "nv3-baseline-181048-mixed-fixed-count32",
+      "nv3-baseline-181048-mixed-fixed-cost32",
+      "nv3-baseline-181048-mixed-fixed-cost16",
+      "nv3-baseline-181048-mixed-fixed-count16"
+    ],
+    "prior_distinct_seconds": 26880,
+    "new_distinct_seconds": 9600,
+    "cumulative_distinct_seconds": 36480,
+    "smoke_seconds_included": 0,
+    "windows": [
+      [
+        1035644.178171973,
+        1035764.178171973
+      ],
+      [
+        1035771.729047663,
+        1035891.729047663
+      ],
+      [
+        1035899.17575885,
+        1036019.17575885
+      ],
+      [
+        1036026.612958085,
+        1036146.612958085
+      ],
+      [
+        1036153.972859413,
+        1036273.972859413
+      ],
+      [
+        1036281.489832622,
+        1036401.489832622
+      ],
+      [
+        1036409.033113493,
+        1036529.033113493
+      ],
+      [
+        1036536.575918849,
+        1036656.575918849
+      ],
+      [
+        1036664.06921276,
+        1036784.06921276
+      ],
+      [
+        1036791.255210739,
+        1036911.255210739
+      ],
+      [
+        1036920.188337378,
+        1037040.188337378
+      ],
+      [
+        1037047.82635317,
+        1037167.82635317
+      ],
+      [
+        1037181.116943103,
+        1037301.116943103
+      ],
+      [
+        1037309.28554097,
+        1037429.28554097
+      ],
+      [
+        1037439.918018365,
+        1037559.918018365
+      ],
+      [
+        1037568.882195347,
+        1037688.882195347
+      ],
+      [
+        1037696.745927097,
+        1037816.745927097
+      ],
+      [
+        1037824.761005617,
+        1037944.761005617
+      ],
+      [
+        1037951.934661179,
+        1038071.934661179
+      ],
+      [
+        1038079.984696708,
+        1038199.984696708
+      ],
+      [
+        1038208.053449511,
+        1038328.053449511
+      ],
+      [
+        1038335.629386707,
+        1038455.629386707
+      ],
+      [
+        1038463.188053318,
+        1038583.188053318
+      ],
+      [
+        1038590.680485913,
+        1038710.680485913
+      ],
+      [
+        1038718.320676345,
+        1038838.320676345
+      ],
+      [
+        1038845.992236438,
+        1038965.992236438
+      ],
+      [
+        1038973.674099476,
+        1039093.674099476
+      ],
+      [
+        1039101.400382533,
+        1039221.400382533
+      ],
+      [
+        1039229.213269449,
+        1039349.213269449
+      ],
+      [
+        1039362.674903924,
+        1039482.674903924
+      ],
+      [
+        1039490.255806727,
+        1039610.255806727
+      ],
+      [
+        1039618.693680443,
+        1039738.693680443
+      ],
+      [
+        1039745.870171543,
+        1039865.870171543
+      ],
+      [
+        1039873.202413555,
+        1039993.202413555
+      ],
+      [
+        1040001.87445699,
+        1040121.87445699
+      ],
+      [
+        1040130.686881961,
+        1040250.686881961
+      ],
+      [
+        1040258.236260772,
+        1040378.236260772
+      ],
+      [
+        1040386.485235212,
+        1040506.485235212
+      ],
+      [
+        1040514.036198675,
+        1040634.036198675
+      ],
+      [
+        1040641.236402483,
+        1040761.236402483
+      ],
+      [
+        1040769.270877669,
+        1040889.270877669
+      ],
+      [
+        1040896.883059711,
+        1041016.883059711
+      ],
+      [
+        1041024.355364874,
+        1041144.355364874
+      ],
+      [
+        1041151.836960905,
+        1041271.836960905
+      ],
+      [
+        1041279.485472168,
+        1041399.485472168
+      ],
+      [
+        1041407.101994264,
+        1041527.101994264
+      ],
+      [
+        1041534.776688869,
+        1041654.776688869
+      ],
+      [
+        1041662.421286971,
+        1041782.421286971
+      ],
+      [
+        1041790.169084699,
+        1041910.169084699
+      ],
+      [
+        1041917.301142508,
+        1042037.301142508
+      ],
+      [
+        1042045.869964726,
+        1042165.869964726
+      ],
+      [
+        1042173.091854012,
+        1042293.091854012
+      ],
+      [
+        1042306.005268264,
+        1042426.005268264
+      ],
+      [
+        1042433.315158158,
+        1042553.315158158
+      ],
+      [
+        1042561.282768829,
+        1042681.282768829
+      ],
+      [
+        1042689.087034822,
+        1042809.087034822
+      ],
+      [
+        1042816.358506595,
+        1042936.358506595
+      ],
+      [
+        1042943.791054858,
+        1043063.791054858
+      ],
+      [
+        1043071.116777858,
+        1043191.116777858
+      ],
+      [
+        1043198.469913382,
+        1043318.469913382
+      ],
+      [
+        1043325.858293839,
+        1043445.858293839
+      ],
+      [
+        1043453.232154198,
+        1043573.232154198
+      ],
+      [
+        1043580.775803866,
+        1043700.775803866
+      ],
+      [
+        1043708.205855993,
+        1043828.205855993
+      ],
+      [
+        1043835.788069628,
+        1043955.788069628
+      ],
+      [
+        1043963.473570723,
+        1044083.473570723
+      ],
+      [
+        1044091.198659209,
+        1044211.198659209
+      ],
+      [
+        1044218.981766111,
+        1044338.981766111
+      ],
+      [
+        1044346.811558531,
+        1044466.811558531
+      ],
+      [
+        1044479.905503956,
+        1044599.905503956
+      ],
+      [
+        1044607.117809569,
+        1044727.117809569
+      ],
+      [
+        1044735.637941014,
+        1044855.637941014
+      ],
+      [
+        1044862.947399091,
+        1044982.947399091
+      ],
+      [
+        1044990.881337175,
+        1045110.881337175
+      ],
+      [
+        1045119.059646472,
+        1045239.059646472
+      ],
+      [
+        1045247.347565861,
+        1045367.347565861
+      ],
+      [
+        1045374.490673031,
+        1045494.490673031
+      ],
+      [
+        1045502.687174015,
+        1045622.687174015
+      ],
+      [
+        1045630.707724666,
+        1045750.707724666
+      ],
+      [
+        1045758.107826945,
+        1045878.107826945
+      ]
+    ],
+    "clock_domain": "linux-monotonic:64589d75-974d-436e-80e4-fc734d7195d8:time:[4026534406]",
+    "error": null,
+    "source_completed": true,
+    "mpc_superiority": false
+  },
+  "owned_shutdown": {
+    "owned_vllm_pid": 61440,
+    "serving_port_closed": true,
+    "owned_processes_exited": true,
+    "gpu_compute_processes_empty": true,
+    "owned_process_ids": [
+      61440,
+      61596,
+      61597
+    ],
+    "pod_retained": true,
+    "provider_billing_stop_verified": false
+  },
+  "all_assigned_http_gateway_parity": true,
+  "all_epochs_closed_loss_free": true,
+  "full_cohort_complete": true,
+  "ten_hour_milestone_not_a_stop_condition": true,
+  "no_partial_performance_selection": true,
+  "performance_analysis_pending": true,
+  "native_mpc_active": false,
+  "calibrated_mpc": false,
+  "superiority_claim": false,
+  "h14_original_complete_fitted_state_recovered": false,
+  "h16_runtime_q1_q5_qualified": false
+}

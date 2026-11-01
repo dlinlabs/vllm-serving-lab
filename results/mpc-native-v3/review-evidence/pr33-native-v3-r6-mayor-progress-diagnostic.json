@@ -1,0 +1,311 @@
+{
+  "birth_model_status": "reduced-form ridge on pre-cut Gateway state + common exogenous arrival law; mixes admission and service, so it is NOT an admissible GPU service law",
+  "calibration_result": false,
+  "counts": {
+    "1s_ids_client_terminal": 383,
+    "1s_ids_level0": 3481,
+    "1s_ids_level1": 27,
+    "1s_ids_ttft_impossible": 534,
+    "3s_ids_client_terminal": 383,
+    "3s_ids_level0": 3478,
+    "3s_ids_level1": 30,
+    "3s_ids_ttft_impossible": 534,
+    "5s_ids_client_terminal": 383,
+    "5s_ids_level0": 3478,
+    "5s_ids_level1": 30,
+    "5s_ids_ttft_impossible": 534,
+    "actual_path_unavailable": 5,
+    "origins": 544
+  },
+  "development_block": 181003,
+  "development_status": "already-used Train development block; descriptive only",
+  "hazard_cells": 612,
+  "mpc_result": false,
+  "oracle_status": "ORACLE rows feed realized future cohort or birth good; decomposition diagnostics only, not forecasts",
+  "receipt": {
+    "artifact_sha256": {
+      "nv3-181001-mixed-arm0.json": "c3b5edcc63bb8febaa32744b5a1db45783c1368be56e4539e19c69e1f5879ce1",
+      "nv3-181001-mixed-arm1.json": "fd483ce77832dd52c45390d1d0b6179c3a812b8e92242b5a8c48205de11dfcae",
+      "nv3-181001-p128-m128-arm0.json": "d633b4e402e453238b0d612b3b64c198d61fe572eb9c3b171cbb76a616187c23",
+      "nv3-181001-p128-m128-arm1.json": "467887df4445c5f20aea1376d40ce07b59671c6326a3c8e88b04bd18008a1a7f",
+      "nv3-181001-p128-m256-arm0.json": "f99c6470c478a36e24beffe7f424d4b9d3c42adf2e1e6d17b9ae7737a1ac1ec8",
+      "nv3-181001-p128-m256-arm1.json": "7ad41e1f0faf34ef5d8124ec31bbe2037c9c0b5607522a0cb5078732f8d841b7",
+      "nv3-181001-p4096-m128-arm0.json": "74da77e6bc936d887da0605085695021827851d38736faf62d512e611579a584",
+      "nv3-181001-p4096-m128-arm1.json": "fd61c5abf017d575f16782ae2259537c97a0848864bdca1fe5ebea0c52e27ec9",
+      "nv3-181001-p4096-m256-arm0.json": "f7722058627612b4906eb9a048425b37eefa98df46de3a3c1f3423d4bcc75746",
+      "nv3-181001-p4096-m256-arm1.json": "a62d86171cf18028129774109032ac52eaf4d78a0cb6e9eacdd7be84385c9b00",
+      "nv3-181002-mixed-arm0.json": "f0f1bced9cfb3dde7ef421df6edd14c096449e8a6aeeb3240cfa2fa07ae24f3c",
+      "nv3-181002-mixed-arm1.json": "2751385a70f1309bee9a6c1233e5cb3c33ec97264e9f54a2a81985e89611ca74",
+      "nv3-181002-p128-m128-arm0.json": "1c06c42fa5372c239defd97601ca4661e2fd9bc6912f81818ba54eee7717dae2",
+      "nv3-181002-p128-m128-arm1.json": "8beef76b13d94f7108393e895f8d12386e75867cf1cd4bbfb74282d949c96e0b",
+      "nv3-181002-p128-m256-arm0.json": "2ecd8a652e470eed8be9b94ddb623bffc0c5c9769bf8c655be2480c9710b0054",
+      "nv3-181002-p128-m256-arm1.json": "36f2ea533f261b419cba5ceea0ad7205696e517d8ab1a521a1303f7c5a095ec3",
+      "nv3-181002-p4096-m128-arm0.json": "3d4f681e0ef0a2e6b45d90bba38c59c945ff6cd918767dbf5dfec5bc1bbf04d7",
+      "nv3-181002-p4096-m128-arm1.json": "46c47b2aab4e84567f4401b1b5a9026c60186682f3cf0386bcab22537990f885",
+      "nv3-181002-p4096-m256-arm0.json": "b53502a5e19d45e3ce6ee1bbac5187fac73e373df28f4faeaa6fc5380574b7bd",
+      "nv3-181002-p4096-m256-arm1.json": "a7892fe32a607aa3656f7522d53ad34ff62ba382775952eceeee2a8364b4db7f",
+      "nv3-181003-mixed-arm0.json": "522b51d72724e9e142c2dddfced60e21f5e8a585f626beecf2e082bbe88b83d5",
+      "nv3-181003-mixed-arm1.json": "a9a9760da9dfc3da09ee6769eac9d71f284b2c35bd126224a2f03f9d56e4d5f0",
+      "nv3-181003-p128-m128-arm0.json": "51e3dc336074a5f50da03e9be8c17cef40b582948726393490b2f4bba53fe574",
+      "nv3-181003-p128-m128-arm1.json": "551a36d27d6166e464f09c9e60053310fa74014592fe0539e0cea3855b4e5454",
+      "nv3-181003-p128-m256-arm0.json": "ab1c77b9e6a0d83d535782349d2ce1d3c0dad05daa2640d138b60785a3008683",
+      "nv3-181003-p128-m256-arm1.json": "45a5454ae996bcbd2e3c6c3b29952f03e833d65889aabd25057943d731ba1f82",
+      "nv3-181003-p4096-m128-arm0.json": "0fadab534bd331afb08090bfde1b2d1a6b8599db77483ec5c7f672553c709215",
+      "nv3-181003-p4096-m128-arm1.json": "f5d16166936bbd376de9f9fde1c74158a4dcafaa3f6969f20859da73055dbe97",
+      "nv3-181003-p4096-m256-arm0.json": "f8a6b7629416cebdf65c20b6c7201f484a29fe512622cac8a7071411fc91f4ad",
+      "nv3-181003-p4096-m256-arm1.json": "b67b5b7059fedebfd5ea074376d45152bab5da4b6c038ea3fcbd50cda8a123a9"
+    },
+    "clock_domain": "linux-monotonic:64589d75-974d-436e-80e4-fc734d7195d8:time:[4026534406]",
+    "collector_source_commit": "6c11fe7e683439f379f0dfdbd21b05f5873b2c90",
+    "gateway_runs": {
+      "nv3-181001-mixed-arm0": "9950f2512759478f97f1fb17d155d71e",
+      "nv3-181001-mixed-arm1": "9950f2512759478f97f1fb17d155d71e",
+      "nv3-181001-p128-m128-arm0": "5101fcbe356344c783d5a756f6705ae0",
+      "nv3-181001-p128-m128-arm1": "5101fcbe356344c783d5a756f6705ae0",
+      "nv3-181001-p128-m256-arm0": "d06dbf51c6bd4ea0932cffd51c66d65d",
+      "nv3-181001-p128-m256-arm1": "d06dbf51c6bd4ea0932cffd51c66d65d",
+      "nv3-181001-p4096-m128-arm0": "e87fd1eef5c94cb58950fefd37b0a7cc",
+      "nv3-181001-p4096-m128-arm1": "e87fd1eef5c94cb58950fefd37b0a7cc",
+      "nv3-181001-p4096-m256-arm0": "27a40b2ce2064154a6100da0fa57b617",
+      "nv3-181001-p4096-m256-arm1": "27a40b2ce2064154a6100da0fa57b617",
+      "nv3-181002-mixed-arm0": "eb2cc092dc8d46b09e9cc145af1c898f",
+      "nv3-181002-mixed-arm1": "eb2cc092dc8d46b09e9cc145af1c898f",
+      "nv3-181002-p128-m128-arm0": "5fcca6a0bd1f44f2941dd592ebfd3edd",
+      "nv3-181002-p128-m128-arm1": "5fcca6a0bd1f44f2941dd592ebfd3edd",
+      "nv3-181002-p128-m256-arm0": "808e897935304167b37ba7dbb19423c0",
+      "nv3-181002-p128-m256-arm1": "808e897935304167b37ba7dbb19423c0",
+      "nv3-181002-p4096-m128-arm0": "fb81a77fbcde4d6b969f9ad1df405326",
+      "nv3-181002-p4096-m128-arm1": "fb81a77fbcde4d6b969f9ad1df405326",
+      "nv3-181002-p4096-m256-arm0": "d9169abbb05f4266984bb681ed8b0e71",
+      "nv3-181002-p4096-m256-arm1": "d9169abbb05f4266984bb681ed8b0e71",
+      "nv3-181003-mixed-arm0": "fe9d8a8c437d414bac42d30a80020905",
+      "nv3-181003-mixed-arm1": "fe9d8a8c437d414bac42d30a80020905",
+      "nv3-181003-p128-m128-arm0": "75c221186d074f21ae617ced7a853985",
+      "nv3-181003-p128-m128-arm1": "75c221186d074f21ae617ced7a853985",
+      "nv3-181003-p128-m256-arm0": "a4704bef80ee41dcae95b72e3950bd5b",
+      "nv3-181003-p128-m256-arm1": "a4704bef80ee41dcae95b72e3950bd5b",
+      "nv3-181003-p4096-m128-arm0": "6889bf8a6bf24e52be70e551e648780c",
+      "nv3-181003-p4096-m128-arm1": "6889bf8a6bf24e52be70e551e648780c",
+      "nv3-181003-p4096-m256-arm0": "9f23432785184f4d9c62870359ed7551",
+      "nv3-181003-p4096-m256-arm1": "9f23432785184f4d9c62870359ed7551"
+    },
+    "loaded": [
+      "nv3-181001-mixed-arm0",
+      "nv3-181001-mixed-arm1",
+      "nv3-181001-p128-m128-arm0",
+      "nv3-181001-p128-m128-arm1",
+      "nv3-181001-p128-m256-arm0",
+      "nv3-181001-p128-m256-arm1",
+      "nv3-181001-p4096-m128-arm0",
+      "nv3-181001-p4096-m128-arm1",
+      "nv3-181001-p4096-m256-arm0",
+      "nv3-181001-p4096-m256-arm1",
+      "nv3-181002-mixed-arm0",
+      "nv3-181002-mixed-arm1",
+      "nv3-181002-p128-m128-arm0",
+      "nv3-181002-p128-m128-arm1",
+      "nv3-181002-p128-m256-arm0",
+      "nv3-181002-p128-m256-arm1",
+      "nv3-181002-p4096-m128-arm0",
+      "nv3-181002-p4096-m128-arm1",
+      "nv3-181002-p4096-m256-arm0",
+      "nv3-181002-p4096-m256-arm1",
+      "nv3-181003-mixed-arm0",
+      "nv3-181003-mixed-arm1",
+      "nv3-181003-p128-m128-arm0",
+      "nv3-181003-p128-m128-arm1",
+      "nv3-181003-p128-m256-arm0",
+      "nv3-181003-p128-m256-arm1",
+      "nv3-181003-p4096-m128-arm0",
+      "nv3-181003-p4096-m128-arm1",
+      "nv3-181003-p4096-m256-arm0",
+      "nv3-181003-p4096-m256-arm1"
+    ],
+    "native_runs": [
+      "58777b3950ff44d88c077e1101096cc8"
+    ],
+    "native_source_commit": "2587d2b822dcd3812353ce2ac3369b7192fa7ba7",
+    "skipped_splits": [],
+    "verified_artifacts": 60
+  },
+  "schema": "nv3-opus-progress-hybrid-v3",
+  "statistical_guarantee": false,
+  "summary": {
+    "1s": {
+      "ORACLE_part|birth_given_realized_arrivals": {
+        "bias": 0.24987008500688335,
+        "mae": 0.7713680459672638,
+        "mean_truth": 1.2240756261282577
+      },
+      "ORACLE|oracle_arrivals_progress": {
+        "bias": 0.22633437969064524,
+        "mae": 1.0686737889436277,
+        "mean_truth": 6.714161513924672
+      },
+      "ORACLE|oracle_birth_aggregate": {
+        "bias": -0.04977882294055891,
+        "mae": 1.1695441260481951,
+        "mean_truth": 6.714161513924672
+      },
+      "ORACLE|oracle_birth_progress": {
+        "bias": -0.023535705316238116,
+        "mae": 0.46811374403744493,
+        "mean_truth": 6.714161513924672
+      },
+      "ORACLE|oracle_cohort": {
+        "bias": 0.24728807473685324,
+        "mae": 0.7699831664246181,
+        "mean_truth": 6.714161513924672
+      },
+      "part|birth_reduced_form": {
+        "bias": 0.24728807473685324,
+        "mae": 0.769983166424618,
+        "mean_truth": 1.2240756261282577
+      },
+      "part|cohort_aggregate": {
+        "bias": -0.0497788229405589,
+        "mae": 1.1695441260481951,
+        "mean_truth": 5.490085887796414
+      },
+      "part|cohort_progress": {
+        "bias": -0.02353570531623809,
+        "mae": 0.46811374403744493,
+        "mean_truth": 5.490085887796414
+      },
+      "total|aggregate_hybrid": {
+        "bias": 0.19750925179629436,
+        "mae": 1.4157903891944172,
+        "mean_truth": 6.714161513924672
+      },
+      "total|history_mean": {
+        "bias": -0.13915399950926266,
+        "mae": 2.701400993743099,
+        "mean_truth": 6.714161513924672
+      },
+      "total|progress_hybrid": {
+        "bias": 0.2237523694206151,
+        "mae": 1.0665588693084307,
+        "mean_truth": 6.714161513924672
+      }
+    },
+    "3s": {
+      "ORACLE_part|birth_given_realized_arrivals": {
+        "bias": 0.4578843551484221,
+        "mae": 3.2420163177136154,
+        "mean_truth": 13.62471946474578
+      },
+      "ORACLE|oracle_arrivals_progress": {
+        "bias": 0.4602406419739813,
+        "mae": 3.2815509960649214,
+        "mean_truth": 20.03257853549959
+      },
+      "ORACLE|oracle_birth_aggregate": {
+        "bias": -0.04210387883538537,
+        "mae": 0.9373471736825703,
+        "mean_truth": 20.03257853549959
+      },
+      "ORACLE|oracle_birth_progress": {
+        "bias": 0.0023562868255590725,
+        "mae": 0.1300774780246043,
+        "mean_truth": 20.03257853549959
+      },
+      "ORACLE|oracle_cohort": {
+        "bias": 0.4555702852210569,
+        "mae": 3.4080855043372393,
+        "mean_truth": 20.03257853549959
+      },
+      "part|birth_reduced_form": {
+        "bias": 0.4555702852210568,
+        "mae": 3.4080855043372393,
+        "mean_truth": 13.62471946474578
+      },
+      "part|cohort_aggregate": {
+        "bias": -0.04210387883538538,
+        "mae": 0.9373471736825703,
+        "mean_truth": 6.407859070753807
+      },
+      "part|cohort_progress": {
+        "bias": 0.0023562868255590816,
+        "mae": 0.13007747802460431,
+        "mean_truth": 6.407859070753807
+      },
+      "total|aggregate_hybrid": {
+        "bias": 0.41346640638567145,
+        "mae": 3.7025256311539643,
+        "mean_truth": 20.03257853549959
+      },
+      "total|history_mean": {
+        "bias": -0.30755599225336067,
+        "mae": 5.685754973097078,
+        "mean_truth": 20.03257853549959
+      },
+      "total|progress_hybrid": {
+        "bias": 0.4579265720466159,
+        "mae": 3.4471704369207865,
+        "mean_truth": 20.03257853549959
+      }
+    },
+    "5s": {
+      "ORACLE_part|birth_given_realized_arrivals": {
+        "bias": 0.4962210795071906,
+        "mae": 5.495098287287645,
+        "mean_truth": 26.98853724783988
+      },
+      "ORACLE|oracle_arrivals_progress": {
+        "bias": 0.4923702342569727,
+        "mae": 5.521638344587972,
+        "mean_truth": 33.40707927598717
+      },
+      "ORACLE|oracle_birth_aggregate": {
+        "bias": -0.04858252424760831,
+        "mae": 0.9333233372501963,
+        "mean_truth": 33.40707927598717
+      },
+      "ORACLE|oracle_birth_progress": {
+        "bias": -0.0038508452502178875,
+        "mae": 0.12349028135645043,
+        "mean_truth": 33.40707927598717
+      },
+      "ORACLE|oracle_cohort": {
+        "bias": 0.5015927338747815,
+        "mae": 5.880834778039298,
+        "mean_truth": 33.40707927598717
+      },
+      "part|birth_reduced_form": {
+        "bias": 0.5015927338747816,
+        "mae": 5.880834778039298,
+        "mean_truth": 26.98853724783988
+      },
+      "part|cohort_aggregate": {
+        "bias": -0.04858252424760838,
+        "mae": 0.9333233372501966,
+        "mean_truth": 6.418542028147291
+      },
+      "part|cohort_progress": {
+        "bias": -0.0038508452502178945,
+        "mae": 0.12349028135645043,
+        "mean_truth": 6.418542028147291
+      },
+      "total|aggregate_hybrid": {
+        "bias": 0.45301020962717303,
+        "mae": 6.004292580308115,
+        "mean_truth": 33.40707927598717
+      },
+      "total|history_mean": {
+        "bias": -0.532041703910125,
+        "mae": 8.757281626268469,
+        "mean_truth": 33.40707927598717
+      },
+      "total|progress_hybrid": {
+        "bias": 0.4977418886245636,
+        "mae": 5.902884758071058,
+        "mean_truth": 33.40707927598717
+      }
+    }
+  },
+  "train_blocks": [
+    181001,
+    181002
+  ],
+  "train_steps": 4774
+}

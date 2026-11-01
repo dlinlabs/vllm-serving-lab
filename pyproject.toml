@@ -15,4 +15,5 @@ prefill_lab = "prefill_lab.plugin:register"
 prefill_lab = "prefill_lab.endpoint:Endpoint"
 
 [tool.setuptools]
-packages = ["prefill_lab"]
+packages = ["prefill_lab", "mpc_lab"]
+py-modules = ["telemetry"]

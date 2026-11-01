@@ -1,0 +1,61 @@
+{
+  "schema": "native-v2-iteration-v1",
+  "experiment_id": "native-v2-round3-and-qualification",
+  "recorded_utc": "2026-10-31T01:37:13.107535+00:00",
+  "integration_base_commit": "8742662addb175578f53081bb3c33bda9c4882d0",
+  "worker_source_commits": {
+    "opus": "7e5df26b8a3a914ff69769cd7dcdbb84157f77b1",
+    "astra": "ae600f9707bb4c7d9545db40e71cc87c1578d862",
+    "gemini": "78b3c46ef7b4dda728ce0618f934442445f5b338",
+    "sol": "c285e1e300cf42db80ed2eb25dd3e0b1d02500c3"
+  },
+  "model_version": "history-conditioned-marked-release-candidate-v0;not yet native identified",
+  "controller_version": "No new controller activated;no MPC parameter tuning",
+  "workload_description": "CPU source/counterexample/regression tests;16-arm TRAIN Chat qualification frozen but not executed;final held-out not used",
+  "gpu_environment": {
+    "pod_id": "i243ycb94oaxy2",
+    "historical_gpu": "RTX4090 24564MiB",
+    "historical_model": "Qwen/Qwen3-4B-Instruct-2507 BF16",
+    "historical_vllm": "0.30.0",
+    "current_state": "EXITED;runtime=null;original machine gpuAvailable=0",
+    "new_native_arms": 0
+  },
+  "hypothesis": "Reused PR32 capture can support a bounded,source-bound,natural-EOS Chat qualification without treating HTTP residence as exclusive GPU service. CPU tests cannot confirm native timing or joins.",
+  "source_sha256": {
+    "batch_capture_bridge.py": "5d76d994921bb16088cabf9b8f9ebe8843c17f7bacb4b1dc979bf255ad8ccef8",
+    "collect_batch_qualification.py": "f781dad174e2f48ba35c1290f252009f20413469218d5ea721c6d9464850f6a2",
+    "launch_batch_service.py": "a45aaa5b3a5e04e4ff00de9c5464f3373281d4c2d3e498c894240f8e3cb663c2",
+    "pyproject.toml": "bf575268a3fb70c0a49d89e8c8cad725f5af96b90b0ce480d47a6474cb3a0e22",
+    "test_batch_capture_bridge.py": "be15c90ccde5448b277cb588e454b94dd403eccb15a758b48263449a477e15ad",
+    "test_batch_qualification.py": "d2a6ff085fe57a5a7dc927b2f37e1050a948265f83547db8444bd8386c90d8ae"
+  },
+  "results": {
+    "repository_cpu_passed": 2206,
+    "repository_cpu_skipped": 1,
+    "repository_subtests_passed": 24,
+    "elapsed_s": 256.16,
+    "focused_passed": 85,
+    "focused_skipped": 1,
+    "round3_passed": 26,
+    "round3_subtests_passed": 2,
+    "new_native_performance_result": null,
+    "mpc_advantage": null
+  },
+  "failure_success_analysis": [
+    "Full normal CPU suite passes after an integration-only Round2 Sol namespace repair.",
+    "Revised Gemini evaluator remains rejected:duplicate independent-unit claim,zero output,and NaN chronology counterexamples preserved.",
+    "One actual Pod resume was rejected;no repeat mutation or substitute paid resource.",
+    "Native instrumentation,forecast calibration,OOD and closed-loop success remain unverified."
+  ],
+  "resource_usage": {
+    "gpu_quote_usd_per_hour": 0.89,
+    "new_gpu_experiment_seconds": 0,
+    "initial_running_pod_preparation_interval_s_estimate": 304,
+    "initial_preparation_quote_usd_estimate": 0.075,
+    "invoice_available": false,
+    "ai_credits_mission_to_date": 3135.1236375,
+    "credits_snapshot_utc": "2026-10-31T01:33:28.744429+00:00",
+    "credits_scope": "Cumulative snapshot,not isolated per-round or final invoice"
+  },
+  "next_action": "When the existing authorized Pod can genuinely resume,freeze matching source and run GateA before GateB;then calibrate/validate models before any fair closed-loop comparison."
+}
