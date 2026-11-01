@@ -1,0 +1,1567 @@
+{
+  "schema": "native-observed-isolated-prefill-proxy-v1",
+  "parameters": {
+    "first_overhead_s": 0.037967790465172464,
+    "prefill_s_per_token": 5.423179911128862e-05
+  },
+  "identifiable": true,
+  "serial_interpretation_screen": {
+    "interpretation": "entire HTTP first-residence proxy used as exclusive serial prefill service",
+    "rejected": true,
+    "episodes": [
+      {
+        "episode_id": "train-160001-1",
+        "window_s": 90,
+        "prompt_tokens": 128,
+        "complete_inside_window": 2449,
+        "exclusive_serial_first_service_s": 0.044909460751417406,
+        "serial_complete_upper_bound": 2004,
+        "violates_bound": true
+      },
+      {
+        "episode_id": "train-160001-0",
+        "window_s": 90,
+        "prompt_tokens": 128,
+        "complete_inside_window": 2056,
+        "exclusive_serial_first_service_s": 0.044909460751417406,
+        "serial_complete_upper_bound": 2004,
+        "violates_bound": true
+      },
+      {
+        "episode_id": "train-160002-1",
+        "window_s": 90,
+        "prompt_tokens": 128,
+        "complete_inside_window": 740,
+        "exclusive_serial_first_service_s": 0.044909460751417406,
+        "serial_complete_upper_bound": 2004,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160002-0",
+        "window_s": 90,
+        "prompt_tokens": 128,
+        "complete_inside_window": 661,
+        "exclusive_serial_first_service_s": 0.044909460751417406,
+        "serial_complete_upper_bound": 2004,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160003-0",
+        "window_s": 90,
+        "prompt_tokens": 4096,
+        "complete_inside_window": 152,
+        "exclusive_serial_first_service_s": 0.26010123962501064,
+        "serial_complete_upper_bound": 346,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160003-1",
+        "window_s": 90,
+        "prompt_tokens": 4096,
+        "complete_inside_window": 157,
+        "exclusive_serial_first_service_s": 0.26010123962501064,
+        "serial_complete_upper_bound": 346,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160004-0",
+        "window_s": 90,
+        "prompt_tokens": 4096,
+        "complete_inside_window": 110,
+        "exclusive_serial_first_service_s": 0.26010123962501064,
+        "serial_complete_upper_bound": 346,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160004-1",
+        "window_s": 90,
+        "prompt_tokens": 4096,
+        "complete_inside_window": 112,
+        "exclusive_serial_first_service_s": 0.26010123962501064,
+        "serial_complete_upper_bound": 346,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160005-1",
+        "window_s": 90,
+        "prompt_tokens": 128,
+        "complete_inside_window": 1685,
+        "exclusive_serial_first_service_s": 0.044909460751417406,
+        "serial_complete_upper_bound": 2004,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160005-0",
+        "window_s": 90,
+        "prompt_tokens": 128,
+        "complete_inside_window": 1518,
+        "exclusive_serial_first_service_s": 0.044909460751417406,
+        "serial_complete_upper_bound": 2004,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160006-0",
+        "window_s": 90,
+        "prompt_tokens": 128,
+        "complete_inside_window": 482,
+        "exclusive_serial_first_service_s": 0.044909460751417406,
+        "serial_complete_upper_bound": 2004,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160006-1",
+        "window_s": 90,
+        "prompt_tokens": 128,
+        "complete_inside_window": 481,
+        "exclusive_serial_first_service_s": 0.044909460751417406,
+        "serial_complete_upper_bound": 2004,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160007-1",
+        "window_s": 90,
+        "prompt_tokens": 4096,
+        "complete_inside_window": 120,
+        "exclusive_serial_first_service_s": 0.26010123962501064,
+        "serial_complete_upper_bound": 346,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160007-0",
+        "window_s": 90,
+        "prompt_tokens": 4096,
+        "complete_inside_window": 121,
+        "exclusive_serial_first_service_s": 0.26010123962501064,
+        "serial_complete_upper_bound": 346,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160008-1",
+        "window_s": 90,
+        "prompt_tokens": 4096,
+        "complete_inside_window": 76,
+        "exclusive_serial_first_service_s": 0.26010123962501064,
+        "serial_complete_upper_bound": 346,
+        "violates_bound": false
+      },
+      {
+        "episode_id": "train-160008-0",
+        "window_s": 90,
+        "prompt_tokens": 4096,
+        "complete_inside_window": 74,
+        "exclusive_serial_first_service_s": 0.26010123962501064,
+        "serial_complete_upper_bound": 346,
+        "violates_bound": false
+      }
+    ],
+    "limitation": "Not a rejection of MPC or an estimate of GPU prefill service; HTTP overhead and batching are not separated."
+  },
+  "accounting": {
+    "offered": 16796,
+    "not_admitted_complete": 4499,
+    "warmup_excluded": 220,
+    "shared_reservation_excluded": 11906,
+    "observed_isolated": 168,
+    "shared_native_excluded": 3
+  },
+  "folds": [
+    {
+      "held_seed": 160003,
+      "requests": 36,
+      "mae_s": 0.003928720120995013,
+      "bias_s": -0.0028535782363963147
+    },
+    {
+      "held_seed": 160004,
+      "requests": 16,
+      "mae_s": 0.005645587599139919,
+      "bias_s": 0.003134370643523454
+    },
+    {
+      "held_seed": 160006,
+      "requests": 2,
+      "mae_s": 0.019764761459858463,
+      "bias_s": -0.019764761459858463
+    },
+    {
+      "held_seed": 160007,
+      "requests": 51,
+      "mae_s": 0.005293960092625172,
+      "bias_s": -0.0006147217208504
+    },
+    {
+      "held_seed": 160008,
+      "requests": 39,
+      "mae_s": 0.008034878937821649,
+      "bias_s": -0.008000142308161373
+    },
+    {
+      "held_seed": 160009,
+      "requests": 12,
+      "mae_s": 0.011852363847361796,
+      "bias_s": 0.00653333381031549
+    },
+    {
+      "held_seed": 160010,
+      "requests": 12,
+      "mae_s": 0.014051237493487925,
+      "bias_s": 0.014051237493487925
+    }
+  ],
+  "source_sha256": "be4239568a90e61f52590dc826cfe4fd8a9fa47edec237bf15d517bc51733377",
+  "rows": [
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "7b9820082e4b43078f0bf42f9018ef41",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26396262901835144,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "00a03ac5f1b84efd86200f7d10280140",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26385047705844045,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "98e497391a634c699b94701647435e25",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2616245150566101,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "db19a42f7a304f0eb2091390ce184740",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26156796398572624,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "c5b6dcffae1b47c1b8a50dcf38a2fa89",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2629665290005505,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "1b0c0adeb44e41fabb85fbfb6fa588e0",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26541427394840866,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "4d802738babe4b79bb654fc7c5817404",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2620296289678663,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "f713ecf91b524b31b14622b50c31d965",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2492834069998935,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "a63d70af76414a3386a81cd257ccdb0f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2621625600149855,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "e77ee8d7cfd74e80979556d638a6ea92",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26130139199085534,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "9dfc0988c9954446b67c2ab84a818ae6",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.257086017052643,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "2969c07b7dfa437da38887280c8218c7",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.25462828297168016,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "15e889060a1e4ce8808032da5019dd56",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2612489809980616,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "01a75dea498b423bac2eb09478ef527a",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2650048489449546,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "2b910bec094140e5b90ad92e72196a46",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2628937979461625,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "f401097ec6274f5eb5c80940afc4debd",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26211552997119725,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "68e902321d6f4cac8eaaf8ef9b2a1df7",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2629036579746753,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "f8e58cfeeee345019c345938761c6a76",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26236104196868837,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "423324e4b1af42409bb0028f66b21beb",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26987053896300495,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "d2f885884245426ba17092e30a394481",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2618024160619825,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "344577f6903044e6bc03c48b926f8cea",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26312105008400977,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-0",
+      "request_id": "816d8451072a48c6a369a648447e6c46",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2632783110020682,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "d06519efcd0b411abc178d785d5c1066",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2630738199222833,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "35fc547b5fb446eba04bbd4f3f80fdd0",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2667914779158309,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "87aada75fae349d6bdf7fc079b89384e",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26196027803234756,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "047008d72c3f47d28f1e8afddf9d13f6",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26433484302833676,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "21dad823cc6c487b85f265d1c4cc0b98",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.25777183496393263,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "435034a529a7491c9744f64009c00ded",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26329400192480534,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "b38f0f3c045549dd8e78fe8619ec63fa",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26146908395458013,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "2cae524b50ba40dd85609da31c2124e6",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26237301307264715,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "367a1885060240a78ea37e9538ddac3b",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26173043495509773,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "28924e5200224e1b9eb58c9e812e8439",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26352369505912066,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "6f6c8b1e3b9f4dc68744672557ceef97",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2706416469300166,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "d403b78566234ed6a38422bbcef8229e",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2647042069584131,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "8ba9c4685c304486afeb439f30db850a",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2612463999539614,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160003,
+      "episode_id": "train-160003-1",
+      "request_id": "8972c71f2f97456cb5e1c3895aab8a7a",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26243509305641055,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-0",
+      "request_id": "be372e54134141f9a7e57fd70d6e5868",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2616058239946142,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-0",
+      "request_id": "2a95ca7ab4b64eb9ab0b73c41ab1c6b5",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2611522600054741,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-0",
+      "request_id": "751c8608176d45b099a26eb945650752",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26322091091424227,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-0",
+      "request_id": "894de0003323473fa020905790e979f5",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2620386390481144,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-0",
+      "request_id": "085830eb1a6c4d78beba53c36566daf6",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2633150920737535,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-0",
+      "request_id": "a22a7724b8eb43c88675f7c4492a107f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26336903299670666,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-0",
+      "request_id": "8d289b9f01e540ad960d818548231aac",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26354051497764885,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-0",
+      "request_id": "420fdab846a44bd087a4d0186edc0bd6",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24683505203574896,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-1",
+      "request_id": "f059ac6645624e51bc9fed004948c65a",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2451544349314645,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-1",
+      "request_id": "7cd696002f26488a8440408079cd0075",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2457709009759128,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-1",
+      "request_id": "7199ef34e1984f76a48ad71a1c92bf4d",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24703197495546192,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-1",
+      "request_id": "941d12e421284027bfa30e010d99854b",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24860853992868215,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-1",
+      "request_id": "6187cf83bcfe409da8840772dafaccbe",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26155931397806853,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-1",
+      "request_id": "06c978df915543d0ab6542c388f28fde",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26257470494601876,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-1",
+      "request_id": "7623cd75a33243f78e1172bf16b426f4",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2638542470522225,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160004,
+      "episode_id": "train-160004-1",
+      "request_id": "9a414cb3caf24ae880f91df3c4c18aa1",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26186844694893807,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160006,
+      "episode_id": "train-160006-0",
+      "request_id": "0888960a7ef44a8a99a3bcd76f1ba133",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.05490513297263533,
+      "native_inside_first": 1
+    },
+    {
+      "seed": 160006,
+      "episode_id": "train-160006-1",
+      "request_id": "a0fad05d8030419c9922ee4abb67704f",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.054678549990057945,
+      "native_inside_first": 1
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "11fd19dcbac446c58a3d913cb005c236",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2613376670051366,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "85b4b6d5080442f9857f1d61ad59f0ba",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2525188570143655,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "d2141072a9754c9c8addb2bcdfa4dcf9",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24698974401690066,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "25bd343493b245aab465ca4dd4efc4e4",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24732508801389486,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "12d129e8e09d43b9bd106ffa2bd5c0f5",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2454495270503685,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "b0e6bf3ca3ea470ca589a48082c3803c",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.25131981389131397,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "09334bf44bc646748347fc46f040bc0e",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2512317720102146,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "64e383f867ac4098bd4c67b83d5a9bf7",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.25083844794426113,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "5e99e37891834426b8398f18afddad9b",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24989597697276622,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "1d19828f411d4800b7e9777ce827e838",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2522946340031922,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "4e6e28aada33467c934eb45877227743",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2535333589185029,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "37bd2c6b82c4430e9f58cb121c6f5e41",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24965185404289514,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "10a87f492d574684b4955e9d38c1ed1f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.265722066978924,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "2c748d57ed8d46038399d2f154574bfd",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26606505108065903,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "d065e129e3044666b91fd174c0c34d1b",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26405126799363643,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "cc7bd4d7eb8b43f6b0d37670a07b9fe4",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26525452092755586,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "df1dd0d2368c4b0ebc34ca88da5a8f19",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2625749409198761,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "41f0e601a88e458e9f7df76fb5b5aaab",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2635697019286454,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "4182b3891ebc419dafd0e27dd24acabd",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2605695080710575,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "e770670b14e94ddb81691182132d1199",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2627393030561507,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "ea17bb64657249b49e0a3eab4b6dd306",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26437964104115963,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "1fc57ea633bb43e6883c7177ce5b4ed5",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26305470697116107,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "979cb43dcd5247c9ab4453260c6ff448",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2641781400889158,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "4a4785ff31f74feea37107914c7aa09d",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24936989101115614,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "eb190ed1d9e84f65ae34ca534c98f1cb",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26232928899116814,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "c43b6917f8614edda5d97dc1615bea2f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2627153330249712,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-1",
+      "request_id": "e9d13c7d150d4faab37608a698ea38dd",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2621430059662089,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "9576013c2f3d410d9c1672d2ea7fac90",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.263765414012596,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "e3999bac7f164e9abfcf19c3b21c899e",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26346221193671227,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "31d5c129c73742068a7721968938e10f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26434661098755896,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "d3f9d1b93bb548cf9ac1c3c90e258541",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2651755709666759,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "4cc07b8bbe994a6da6ffaaf9b07fe02b",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26342667103745043,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "b14e6f07e75d4fc58a123dc1b9cef6b2",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26386167597956955,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "bf04d8b49c6946ea92f044d3ea767725",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2629914260469377,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "41592eb1e5ea4f10b05b449188e8073d",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2638987459940836,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "7c469ec663504c5f9efb6d4e7efc0653",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.262463380000554,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "9c3a1f02ef344753ba5498d23b70063f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2625154600245878,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "cd218157da1e4f20941baa3de6f985f6",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26167455106042325,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "b2ddf4aeb23341239cac25af4fde775f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26320393895730376,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "145eb940befb45269042c64c580cb51a",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2671076819533482,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "3b34588a30894f94a8ce2115212829af",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2652142010629177,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "234c087826ff419cbce8ac4e95abac5c",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2633088789880276,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "893537a788f846a3812dfc3bbc746198",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26331027899868786,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "77aadbb5bfdd42e2803fa77fee67218d",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26600686903111637,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "3d38709a714e4904b91bea29069b660b",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26419280900154263,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "712bbfa023734b5dae0008857bc83e16",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2626264620339498,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "b42ada5277c948ad820161ab52a25a6a",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26326713897287846,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "39721d4b35944792ae9102258bef3872",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2616215600864962,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "2c9f4bf5c5074026922736b4e9d23b22",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.27546886703930795,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "cdea1fa3be804b8ca35b8095a52bc9e1",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2634029899490997,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160007,
+      "episode_id": "train-160007-0",
+      "request_id": "3961e8ec098a48d19bfecac74ee7588d",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2628273640293628,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "685d6fb3738344189448e7d51768bb30",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2716124840080738,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "b17823f67a2547b5849cf39ce02d01e7",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2621301260078326,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "f30a1887977a4984aeb38d8a6050ab5d",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.25782384688500315,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "aa752eea1aed4ca8b696cee89911b2ec",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2626185609260574,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "308a99cff14a4833ad9754b67aeb26b6",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2697165720164776,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "6c9736bca10a415097ae82fe531872a1",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2624532689806074,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "75baf51ab56645268ce54d197dcb7f95",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.27477745001669973,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "646092397538411caba0a23dfe2c7bbb",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2755431479308754,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "43c40ab60dd24382867bc74c8215b269",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26108432398177683,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "cbfc2cff2f2649f098a74728b58d1318",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2618118730606511,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "541d1c9f4fd14444a69813d285bf2585",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2640195379499346,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "84e8ed6f4ed34407986b1c07dcd1c746",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26137910794932395,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "4b3585feaf7a4f358ffce0a8839f3885",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26348802202846855,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "72cda445622b42a488b227e4f6caf0e2",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26398240693379194,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "efd0ca7e85124941af6241b888b211be",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2619888640474528,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "2ccac46729a34c90b9f92ca900a6221d",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2771017859922722,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "5a412f196a4d4ba1a5410b8436e7a361",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2646270339610055,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "7fce2ba0d46f474eac7d60b4922508d9",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26341868098825216,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "37280e41176147758f3a2ccfa9806f65",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26232266798615456,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-1",
+      "request_id": "eb2c1187dc2f40048c8ad13f2aa4ad54",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2783587510930374,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "0155628704404ff3a3b0bf0defaaf8d8",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2795223440043628,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "e49ce91a5ebf41f6b899d0114f13cfa3",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26273819291964173,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "8f1c9e43df904e978566fcdff9503594",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26191962300799787,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "5d0c7017885740bba3cafce663a06268",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2762206959305331,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "6085cecf41e045bb80748bb22e60a263",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2630666259210557,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "967034890b684d539ddf04e45fba95af",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2651606999570504,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "cc8113a9c3c44a4c981f61a5234c8af7",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26217699609696865,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "4f62c55fd4dd414482146d4c233f6028",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2747631990350783,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "369b084bdf194a03b28979e629c87d7f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.28040290297940373,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "70241519b96f4fecb04447b1e68073ec",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26467167504597455,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "00bf49ba476944a8a49ef5d9c3d9e2c9",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26255144993774593,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "5e214b165e9e4077967501655f6e5cff",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2625738700153306,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "8228a0cbecc341b8874fddd3651d0fcb",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26426686998456717,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "010f260f4d2d44c29da0906797d07fe1",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2728587680030614,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "e81d3ada5b4342d38f335c105bfc7056",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2632175280014053,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "ef2ac7a13f36495093db8e3b66eb6c62",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2617055809823796,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "a36b19bd4c6b4d6f9fe11028dec9023d",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26216622593346983,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "70e6d655d26b45b5a132f46d15ac7d56",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2621114959474653,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160008,
+      "episode_id": "train-160008-0",
+      "request_id": "03dcc752bf954e5c81e217e5eab2dd65",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.27119952894281596,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-128-128-1",
+      "request_id": "a4122b8787a4425e86614cd140064a5f",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.05355960794258863,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-128-128-2",
+      "request_id": "54f8b4f1f9fb48a2ad488ba9df1340cf",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.056846076040528715,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-128-128-3",
+      "request_id": "90a545c4ebc6499a98812b3a1ed11c43",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.05750304204411805,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-128-256-1",
+      "request_id": "0e2abc27e3514f5d89be568f060adaf7",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.02625851903576404,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-128-256-2",
+      "request_id": "9ef74082af1448c6a0033fe237fddb1f",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.02679999405518174,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-128-256-3",
+      "request_id": "b99ba362af7441439d055ab765911bf0",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.04089254408609122,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-4096-256-1",
+      "request_id": "bcc0dd7a1b7e4ba789a4ef6c49b6d79a",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24828525900375098,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-4096-256-2",
+      "request_id": "94f3584fc05340d5ae98b9046c17aebc",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24768894200678915,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-4096-256-3",
+      "request_id": "1955156ba3ee449da40f4ea8a225d6d4",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24816455808468163,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-4096-128-1",
+      "request_id": "a8b5d21fcb9e44f2853842bad6aa9cda",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24910324800293893,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-4096-128-2",
+      "request_id": "6405f5e41e454df7bd46a225eb48966e",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.24572446011006832,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160009,
+      "episode_id": "isolated-160009-4096-128-3",
+      "request_id": "61354de909524879af7c1af1bfbe4013",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.26019734295550734,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-4096-256-1",
+      "request_id": "41c9960edc134604ba7cf60030be0d0f",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.25693032692652196,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-4096-256-2",
+      "request_id": "83b289e9ea4b4cf5a6dfd21630f79a6b",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.25839921401347965,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-4096-256-3",
+      "request_id": "864a687286634592ab548ef6e905ba80",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2553928690031171,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-4096-128-1",
+      "request_id": "2a6a969f67ab45709fffb107f0028966",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2566285039065406,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-4096-128-2",
+      "request_id": "9bc4d2d8ea244c1abb6faefc6b629163",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2572402509395033,
+      "native_inside_first": 3
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-4096-128-3",
+      "request_id": "ab706381c00340bbb1834c39770070ab",
+      "prompt_tokens": 4096,
+      "first_residence_s": 0.2574528129771352,
+      "native_inside_first": 4
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-128-256-1",
+      "request_id": "ea594ad74e22458ea9571e6597d8bebb",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.02992080000694841,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-128-256-2",
+      "request_id": "d781c54de9604d3f8ec09877bbffafef",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.026028975029475987,
+      "native_inside_first": 1
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-128-256-3",
+      "request_id": "ab450edf5c784e1d8234852c9dc75faf",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.024819810991175473,
+      "native_inside_first": 1
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-128-128-1",
+      "request_id": "364768863b5a4b1e9d2925454e74903f",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.026092996005900204,
+      "native_inside_first": 1
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-128-128-2",
+      "request_id": "c8002c4c286541cda23f25bef24eb9cb",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.025709472014568746,
+      "native_inside_first": 2
+    },
+    {
+      "seed": 160010,
+      "episode_id": "isolated-160010-128-128-3",
+      "request_id": "a8ee33ede5ad4008923c3e1d3f1647a1",
+      "prompt_tokens": 128,
+      "first_residence_s": 0.025893123005516827,
+      "native_inside_first": 1
+    }
+  ],
+  "native_calibration_accepted": false,
+  "performance_accepted": false,
+  "limitations": [
+    "Backend send to client content includes HTTP/front-end overhead, not pure GPU time.",
+    "Isolation is sealed Gateway reservation count plus observed native counts; unsampled hidden work is unproven.",
+    "Intervention first1s and predeclared isolated preludes excluded; no clipping adverse labels.",
+    "Retrospective Train-only proxy; paired-seed holdout, no live prediction or SLO guarantee.",
+    "Two prompt levels; linear interpolation outside exact128/4096 support unvalidated."
+  ]
+}

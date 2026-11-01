@@ -1,0 +1,46 @@
+{
+  "source_commit": "144cef32a9b51c3a74355ff67f5eafdfac6e075f",
+  "experiment": "NV3-015-native-observation-smoke",
+  "actual_offered_window_s": 48,
+  "counts": {
+    "visible_records": 3346,
+    "explicit_gateway_matches": 3346,
+    "actual_ignore_eos_false": 3346,
+    "rejected": 273,
+    "complete": 649
+  },
+  "unique_explicit_gateway_matches": 649,
+  "unmatched_native_ids": [],
+  "clock_domains": [
+    "linux-monotonic:64589d75-974d-436e-80e4-fc734d7195d8:time:[4026534406]"
+  ],
+  "gateway_journals": [
+    {
+      "epoch": 1,
+      "status": {
+        "run_id": "0f3a84e0f96241f892b36baa66922cec",
+        "status": "closed",
+        "closed_at": 1018390.99282094,
+        "dropped": 0,
+        "write_errors": 0
+      },
+      "records": 5019,
+      "ledger_records": 1696,
+      "ledger_sha256": "f08425a18a284af731578d6cdb8e38b0c231b0466c9fa6ea71c5c4b3a6a24837"
+    },
+    {
+      "epoch": 2,
+      "status": {
+        "run_id": "ff221c1eabaf4d0ea3e696b78e81c2d4",
+        "status": "closed",
+        "closed_at": 1018424.218524678,
+        "dropped": 0,
+        "write_errors": 0
+      },
+      "records": 807,
+      "ledger_records": 267,
+      "ledger_sha256": "1b235942e0b92fd3a468e48e1751e7dce3beee277b36bbc4a3dcd61847261995"
+    }
+  ],
+  "scope": "Actual GPU/HTTP lineage and ledger qualification only; not MPC performance or true ignore-EOS probe"
+}

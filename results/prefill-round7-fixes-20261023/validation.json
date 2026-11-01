@@ -1,0 +1,268 @@
+{
+  "schema": "prefill-round7-fix-validation-v1",
+  "parent_commit": "0ea58b9479a3d9d9e6ab330b9c5dc64f5e443623",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "results": {
+    "full-suite": {
+      "tests": 820,
+      "passed": 781,
+      "failed": 13,
+      "errors": 26,
+      "skipped": 0,
+      "unsuccessful": [
+        {
+          "test": "tests.test_budget_pilot.test_full_runner_with_mock_vllm",
+          "outcome": "failure",
+          "message": "subprocess.TimeoutExpired: Command '['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python', 'run_budget_pilot.py', '--output-dir', '/tmp/pytest-of-root/pytest-3/test_full_runner_with_mock_vll0/pilot', '--model', 'mock-model', '--rps', '10', '--step-seconds', '.2', '--warmup-seconds', '.1', '--warmup-rps', '10', '--drain-timeout', '5']' timed out after 30 seconds"
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_collected_protocol_round_trips_read_only",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_managed_sampler_round_trips_with_original_runner_identity[thread]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_managed_sampler_round_trips_with_original_runner_identity[process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[mode-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[collector_pid-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[runner_pid-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[sample_pid-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[missing_pid-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[forced-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[unjoined-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[exitcode-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[start_method-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[late_stop-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[late_ready-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[early_ready-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_sampler_execution_provenance_fails_closed[execution_metadata_removed-process]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[missing_summary]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[duplicate_summary]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[unfinished_phase]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[cpu_thread]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[cpu_coverage]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[gc_loss]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[missing_engine]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[mode]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_diagnostic_failure_does_not_rewrite_client_integrity[counter_epoch]",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_audit.test_missing_core_data_retains_failed_diagnostic_verdict",
+          "outcome": "error",
+          "message": "failed on setup with \"AssertionError: {'valid': False, 'issues': ['External collector persistence/health is incomplete', 'Required current RSS/CPU observations are unavailable'], 'gateway_mode': 'enabled', 'external_mode': 'enabled', ...}\nassert False is not False\""
+        },
+        {
+          "test": "tests.test_diagnostic_sampling.test_external_timing_resources_reset_and_missing_metrics",
+          "outcome": "failure",
+          "message": "assert (False)"
+        },
+        {
+          "test": "tests.test_diagnostic_sampling.test_sample_failure_is_not_zero_engine_activity[transport]",
+          "outcome": "failure",
+          "message": "assert False"
+        },
+        {
+          "test": "tests.test_diagnostic_sampling.test_sample_failure_is_not_zero_engine_activity[parse]",
+          "outcome": "failure",
+          "message": "assert False"
+        },
+        {
+          "test": "tests.test_diagnostic_sampling.test_sample_failure_is_not_zero_engine_activity[http]",
+          "outcome": "failure",
+          "message": "assert False"
+        },
+        {
+          "test": "tests.test_diagnostic_sampling.test_worker_persists_final_sample_and_explicit_status",
+          "outcome": "failure",
+          "message": "assert 2 == 0"
+        },
+        {
+          "test": "tests.test_prefill_design.test_committed_design_metadata_and_generator_outputs_are_current",
+          "outcome": "failure",
+          "message": "AssertionError: assert '837e4ae94e84...4a2cbcd99e119' == 'a85df934a575...a25da0dcb22f2'\n  \n  - a85df934a575d8e6661e591dd487104129eb4e981ec93246baea25da0dcb22f2\n  + 837e4ae94e8479cd596837ff98437b52ca5a864ca4d771f1a994a2cbcd99e119"
+        },
+        {
+          "test": "tests.test_sampler_worker.test_worker_identity_readiness_and_fresh_post_stop_sample[thread]",
+          "outcome": "failure",
+          "message": "assert (3 >= 3 and 3 == 0)"
+        },
+        {
+          "test": "tests.test_sampler_worker.test_worker_identity_readiness_and_fresh_post_stop_sample[process]",
+          "outcome": "failure",
+          "message": "assert (3 >= 3 and 3 == 0)"
+        },
+        {
+          "test": "tests.test_trace_replay.test_full_trace_runner_and_adversarial_analysis[True-True-thread]",
+          "outcome": "failure",
+          "message": "AssertionError: {\n    \"valid\": true,\n    \"issues\": [],\n    \"load_fidelity\": {\n      \"valid\": true,\n      \"issues\": [],\n      \"p99_scheduling_lag\": 0.0021438794800587857,\n      \"max_scheduling_lag\": 0.002148492000060287\n    },\n    \"performance\": {\n      \"attempted\": 3,\n      \"success\": 3,\n      \"rejected\": 0,\n      \"failed\": 0,\n      \"client_p99_ttft\": 0.09142016131996569,\n      \"scheduled_p99_ttft\": 0.09333779766013321,\n      \"client_p99_e2e\": 0.09854317303983408,\n      \"slo_successes\": 3,\n      \"slo_goodput_per_arrival_second\": 10.0,\n      \"slo_success_fraction_of_offered\": 1.0,\n      \"slo_definition\": \"stream completed successfully; first content minus scheduled arrival <= TTFT SLO\"\n    },\n    \"gateway_terminal_counts\": {\n      \"completed\": 4\n    },\n    \"failed_without_gateway_record\": 0,\n    \"state_poll_errors\": 0,\n    \"cache_policy_self_reported\": \"unknown\",\n    \"note\": \"Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.\",\n    \"performance_by_input_size\": {\n      \"short_input\": {\n        \"attempted\": 3,\n        \"success\": 3,\n        \"rejected\": 0,\n        \"failed\": 0,\n        \"client_p99_ttft\": 0.09142016131996569,\n        \"scheduled_p99_ttft\": 0.09333779766013321,\n        \"client_p99_e2e\": 0.09854317303983408,\n        \"slo_successes\": 3,\n        \"slo_goodput_per_arrival_second\": 10.0,\n        \"slo_success_fraction_of_offered\": 1.0,\n        \"slo_definition\": \"stream completed successfully; first content minus scheduled arrival <= TTFT SLO\"\n      }\n    },\n    \"control_fidelity\": {\n      \"valid\": true,\n      \"issues\": [],\n      \"budget_mode\": \"fixed\",\n      \"planned_commands\": 1,\n      \"recorded_commands\": 1,\n      \"gateway_applications\": 1,\n      \"max_budget_lag_limit\": 0.05,\n      \"p99_send_lag\": null,\n      \"max_send_lag\": null,\n      \"p99_application_lag\": null,\n      \"max_application_lag\": null,\n      \"p99_acknowledgement_roundtrip\": 0.00987727000006089,\n      \"note\": \"Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only.\"\n    },\n    \"timing\": {\n      \"p99_state_age\": null,\n      \"max_state_age\": null,\n      \"p99_metrics_roundtrip\": null,\n      \"max_state_poll_gap\": null,\n      \"p99_event_loop_lag\": 0.04627173076009058,\n      \"max_event_loop_lag\": 0.04718261700008952\n    },\n    \"diagnostic_integrity\": {\n      \"valid\": false,\n      \"issues\": [\n        \"External collector persistence/health is incomplete\",\n        \"Required current RSS/CPU observations are unavailable\"\n      ],\n      \"gateway_mode\": \"enabled\",\n      \"external_mode\": \"enabled\",\n      \"gc_coverage_complete\": true,\n      \"request_linked_prefill\": \"unavailable\",\n      \"note\": \"Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.\",\n      \"coverage_start\": 1157.198883932,\n      \"coverage_end\": 1158.531034325,\n      \"gc_spans\": 8,\n      \"cpu_samples\": 4,\n      \"request_summaries\": 4,\n      \"engine_samples\": 3,\n      \"engine_counter_epochs\": 1\n    }\n  }\n  \nassert 1 == 0\n +  where 1 = CompletedProcess(args=['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python', 'run_trace_pilot.py...ples\": 4,\\n    \"request_summaries\": 4,\\n    \"engine_samples\": 3,\\n    \"engine_counter_epochs\": 1\\n  }\\n}\\n', stderr='').returncode"
+        },
+        {
+          "test": "tests.test_trace_replay.test_full_trace_runner_and_adversarial_analysis[True-True-process]",
+          "outcome": "failure",
+          "message": "AssertionError: {\n    \"valid\": true,\n    \"issues\": [],\n    \"load_fidelity\": {\n      \"valid\": true,\n      \"issues\": [],\n      \"p99_scheduling_lag\": 0.0016251199601356348,\n      \"max_scheduling_lag\": 0.0016331670001363818\n    },\n    \"performance\": {\n      \"attempted\": 3,\n      \"success\": 3,\n      \"rejected\": 0,\n      \"failed\": 0,\n      \"client_p99_ttft\": 0.057340033879995644,\n      \"scheduled_p99_ttft\": 0.05851633958008279,\n      \"client_p99_e2e\": 0.05881645131998084,\n      \"slo_successes\": 3,\n      \"slo_goodput_per_arrival_second\": 10.0,\n      \"slo_success_fraction_of_offered\": 1.0,\n      \"slo_definition\": \"stream completed successfully; first content minus scheduled arrival <= TTFT SLO\"\n    },\n    \"gateway_terminal_counts\": {\n      \"completed\": 4\n    },\n    \"failed_without_gateway_record\": 0,\n    \"state_poll_errors\": 0,\n    \"cache_policy_self_reported\": \"unknown\",\n    \"note\": \"Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.\",\n    \"performance_by_input_size\": {\n      \"short_input\": {\n        \"attempted\": 3,\n        \"success\": 3,\n        \"rejected\": 0,\n        \"failed\": 0,\n        \"client_p99_ttft\": 0.057340033879995644,\n        \"scheduled_p99_ttft\": 0.05851633958008279,\n        \"client_p99_e2e\": 0.05881645131998084,\n        \"slo_successes\": 3,\n        \"slo_goodput_per_arrival_second\": 10.0,\n        \"slo_success_fraction_of_offered\": 1.0,\n        \"slo_definition\": \"stream completed successfully; first content minus scheduled arrival <= TTFT SLO\"\n      }\n    },\n    \"control_fidelity\": {\n      \"valid\": true,\n      \"issues\": [],\n      \"budget_mode\": \"fixed\",\n      \"planned_commands\": 1,\n      \"recorded_commands\": 1,\n      \"gateway_applications\": 1,\n      \"max_budget_lag_limit\": 0.05,\n      \"p99_send_lag\": null,\n      \"max_send_lag\": null,\n      \"p99_application_lag\": null,\n      \"max_application_lag\": null,\n      \"p99_acknowledgement_roundtrip\": 0.0032873130001007667,\n      \"note\": \"Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only.\"\n    },\n    \"timing\": {\n      \"p99_state_age\": null,\n      \"max_state_age\": null,\n      \"p99_metrics_roundtrip\": null,\n      \"max_state_poll_gap\": null,\n      \"p99_event_loop_lag\": 0.00132058341996526,\n      \"max_event_loop_lag\": 0.0013304169999628357\n    },\n    \"diagnostic_integrity\": {\n      \"valid\": false,\n      \"issues\": [\n        \"External collector persistence/health is incomplete\",\n        \"Required current RSS/CPU observations are unavailable\"\n      ],\n      \"gateway_mode\": \"enabled\",\n      \"external_mode\": \"enabled\",\n      \"gc_coverage_complete\": true,\n      \"request_linked_prefill\": \"unavailable\",\n      \"note\": \"Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.\",\n      \"coverage_start\": 1165.909440087,\n      \"coverage_end\": 1168.055565283,\n      \"gc_spans\": 8,\n      \"cpu_samples\": 5,\n      \"request_summaries\": 4,\n      \"engine_samples\": 2,\n      \"engine_counter_epochs\": 1\n    }\n  }\n  \nassert 1 == 0\n +  where 1 = CompletedProcess(args=['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python', 'run_trace_pilot.py...ples\": 5,\\n    \"request_summaries\": 4,\\n    \"engine_samples\": 2,\\n    \"engine_counter_epochs\": 1\\n  }\\n}\\n', stderr='').returncode"
+        },
+        {
+          "test": "tests.test_trace_replay.test_full_trace_runner_and_adversarial_analysis[False-True-thread]",
+          "outcome": "failure",
+          "message": "AssertionError: {\n    \"valid\": true,\n    \"issues\": [],\n    \"load_fidelity\": {\n      \"valid\": true,\n      \"issues\": [],\n      \"p99_scheduling_lag\": 0.0028280082802302786,\n      \"max_scheduling_lag\": 0.002872023000236368\n    },\n    \"performance\": {\n      \"attempted\": 3,\n      \"success\": 3,\n      \"rejected\": 0,\n      \"failed\": 0,\n      \"client_p99_ttft\": 0.10025212867998107,\n      \"scheduled_p99_ttft\": 0.10308013696021134,\n      \"client_p99_e2e\": 0.1029094877199759,\n      \"slo_successes\": 3,\n      \"slo_goodput_per_arrival_second\": 10.0,\n      \"slo_success_fraction_of_offered\": 1.0,\n      \"slo_definition\": \"stream completed successfully; first content minus scheduled arrival <= TTFT SLO\"\n    },\n    \"gateway_terminal_counts\": {\n      \"completed\": 4\n    },\n    \"failed_without_gateway_record\": 0,\n    \"state_poll_errors\": 0,\n    \"cache_policy_self_reported\": \"unknown\",\n    \"note\": \"Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.\",\n    \"performance_by_input_size\": {\n      \"short_input\": {\n        \"attempted\": 3,\n        \"success\": 3,\n        \"rejected\": 0,\n        \"failed\": 0,\n        \"client_p99_ttft\": 0.10025212867998107,\n        \"scheduled_p99_ttft\": 0.10308013696021134,\n        \"client_p99_e2e\": 0.1029094877199759,\n        \"slo_successes\": 3,\n        \"slo_goodput_per_arrival_second\": 10.0,\n        \"slo_success_fraction_of_offered\": 1.0,\n        \"slo_definition\": \"stream completed successfully; first content minus scheduled arrival <= TTFT SLO\"\n      }\n    },\n    \"control_fidelity\": {\n      \"valid\": true,\n      \"issues\": [],\n      \"budget_mode\": \"fixed\",\n      \"planned_commands\": 1,\n      \"recorded_commands\": 1,\n      \"gateway_applications\": 1,\n      \"max_budget_lag_limit\": 0.05,\n      \"p99_send_lag\": null,\n      \"max_send_lag\": null,\n      \"p99_application_lag\": null,\n      \"max_application_lag\": null,\n      \"p99_acknowledgement_roundtrip\": 0.00621506499987845,\n      \"note\": \"Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only.\"\n    },\n    \"timing\": {\n      \"p99_state_age\": null,\n      \"max_state_age\": null,\n      \"p99_metrics_roundtrip\": null,\n      \"max_state_poll_gap\": null,\n      \"p99_event_loop_lag\": 0.03421087233007711,\n      \"max_event_loop_lag\": 0.03455019400007586\n    },\n    \"diagnostic_integrity\": {\n      \"valid\": false,\n      \"issues\": [\n        \"External collector persistence/health is incomplete\",\n        \"Required current RSS/CPU observations are unavailable\"\n      ],\n      \"gateway_mode\": \"disabled\",\n      \"external_mode\": \"enabled\",\n      \"gc_coverage_complete\": false,\n      \"request_linked_prefill\": \"unavailable\",\n      \"note\": \"Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.\",\n      \"engine_samples\": 2,\n      \"engine_counter_epochs\": 1\n    }\n  }\n  \nassert 1 == 0\n +  where 1 = CompletedProcess(args=['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python', 'run_trace_pilot.py... CPU or per-request GPU attribution.\",\\n    \"engine_samples\": 2,\\n    \"engine_counter_epochs\": 1\\n  }\\n}\\n', stderr='').returncode"
+        },
+        {
+          "test": "tests.test_trace_replay.test_full_trace_runner_and_adversarial_analysis[False-True-process]",
+          "outcome": "failure",
+          "message": "AssertionError: {\n    \"valid\": true,\n    \"issues\": [],\n    \"load_fidelity\": {\n      \"valid\": true,\n      \"issues\": [],\n      \"p99_scheduling_lag\": 0.0015617665398895042,\n      \"max_scheduling_lag\": 0.0015729679998912616\n    },\n    \"performance\": {\n      \"attempted\": 3,\n      \"success\": 3,\n      \"rejected\": 0,\n      \"failed\": 0,\n      \"client_p99_ttft\": 0.08017323976002444,\n      \"scheduled_p99_ttft\": 0.08116470026003299,\n      \"client_p99_e2e\": 0.08380261186001461,\n      \"slo_successes\": 3,\n      \"slo_goodput_per_arrival_second\": 10.0,\n      \"slo_success_fraction_of_offered\": 1.0,\n      \"slo_definition\": \"stream completed successfully; first content minus scheduled arrival <= TTFT SLO\"\n    },\n    \"gateway_terminal_counts\": {\n      \"completed\": 4\n    },\n    \"failed_without_gateway_record\": 0,\n    \"state_poll_errors\": 0,\n    \"cache_policy_self_reported\": \"unknown\",\n    \"note\": \"Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.\",\n    \"performance_by_input_size\": {\n      \"short_input\": {\n        \"attempted\": 3,\n        \"success\": 3,\n        \"rejected\": 0,\n        \"failed\": 0,\n        \"client_p99_ttft\": 0.08017323976002444,\n        \"scheduled_p99_ttft\": 0.08116470026003299,\n        \"client_p99_e2e\": 0.08380261186001461,\n        \"slo_successes\": 3,\n        \"slo_goodput_per_arrival_second\": 10.0,\n        \"slo_success_fraction_of_offered\": 1.0,\n        \"slo_definition\": \"stream completed successfully; first content minus scheduled arrival <= TTFT SLO\"\n      }\n    },\n    \"control_fidelity\": {\n      \"valid\": true,\n      \"issues\": [],\n      \"budget_mode\": \"fixed\",\n      \"planned_commands\": 1,\n      \"recorded_commands\": 1,\n      \"gateway_applications\": 1,\n      \"max_budget_lag_limit\": 0.05,\n      \"p99_send_lag\": null,\n      \"max_send_lag\": null,\n      \"p99_application_lag\": null,\n      \"max_application_lag\": null,\n      \"p99_acknowledgement_roundtrip\": 0.005499343000110457,\n      \"note\": \"Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only.\"\n    },\n    \"timing\": {\n      \"p99_state_age\": null,\n      \"max_state_age\": null,\n      \"p99_metrics_roundtrip\": null,\n      \"max_state_poll_gap\": null,\n      \"p99_event_loop_lag\": 0.004428873060064689,\n      \"max_event_loop_lag\": 0.004491803000064465\n    },\n    \"diagnostic_integrity\": {\n      \"valid\": false,\n      \"issues\": [\n        \"External collector persistence/health is incomplete\",\n        \"Required current RSS/CPU observations are unavailable\"\n      ],\n      \"gateway_mode\": \"disabled\",\n      \"external_mode\": \"enabled\",\n      \"gc_coverage_complete\": false,\n      \"request_linked_prefill\": \"unavailable\",\n      \"note\": \"Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.\",\n      \"engine_samples\": 2,\n      \"engine_counter_epochs\": 1\n    }\n  }\n  \nassert 1 == 0\n +  where 1 = CompletedProcess(args=['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python', 'run_trace_pilot.py... CPU or per-request GPU attribution.\",\\n    \"engine_samples\": 2,\\n    \"engine_counter_epochs\": 1\\n  }\\n}\\n', stderr='').returncode"
+        }
+      ],
+      "artifact": "results/prefill-round7-fixes-20261023/full-suite-junit.xml",
+      "original_junit_sha256": "7bb68f4d37b62c808dea4d338ab1377ab2493fd621abb1fe9850a7534881fc32",
+      "archived_sha256": "4e768fb3cab08085df3e0ea48d66ceedcb4da7b9b8dcbd62f57f9afc2ca7775b",
+      "normalization": "Trailing whitespace only; all cases, outcomes and tracebacks retained",
+      "scope": "Broad working-tree attempt before final documentation/manifest synchronization. One metadata-hash failure is corrected and checked by the final related run. Eleven failures and26 setup errors involve unavailable resource observations/PID-procfs identity. One legacy budget mock timed out; its separate retry passes. The complete final tree is not native-accepted."
+    },
+    "related-tests": {
+      "tests": 149,
+      "passed": 149,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "Final source and synchronized manifest; every related file, including all Round7 regressions",
+      "artifact": "results/prefill-round7-fixes-20261023/related-tests-junit.xml",
+      "original_junit_sha256": "56d6acd561491b0eb4112231a6481c6da8a453c358e7d01e2fd2160ead1ee778",
+      "archived_sha256": "7d4c97f59776a184b8f6dc2aa616f971367c2045fda70994f2a4e30b1e18f199",
+      "normalization": "Trailing whitespace only; all cases retained"
+    },
+    "legacy-budget-retry": {
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "results/prefill-round7-fixes-20261023/budget-retry-junit.xml",
+      "original_junit_sha256": "95867c1f4afa8adc6d4a496ed3b254994b6ede01d213ce5d5b723ec51607cb5a",
+      "archived_sha256": "45fa51c3006e1b42ee94c772194616d0f21618eb458eb348a70c2567a9a347d0"
+    }
+  },
+  "source_sha256": {
+    "prefill_lab/tokens.py": "c840c49ca4c9c425b0bbec011db13196d2a05e223d2f273b679753d171fcb4d1",
+    "prefill_lab/contracts.py": "cd68ad7d378bff183947d147b197e94e8d84999ee73e89780128c50593aa73dd",
+    "prefill_lab/endpoint.py": "aa94855f05f02c32f6194f13b55f8a2b3156b09af6c4f3a79368780fb683e88b",
+    "prefill_lab/causal.py": "727f2d740a976be8c19b48aaddea05edadf23211af9c2cb7b7b78d602c381f89",
+    "prefill_lab/analysis.py": "5410b6a54b9b6eb8842fd5eb0722839be176d08e883ffcbddbfd0da3ccaea5fe",
+    "prefill_lab/__init__.py": "111e3c479dec680d722b09f57349ba00f909c8bafa562fede7370578b1564c1c",
+    "prefill_lab/scoring.py": "d1ea490d990e6ade1067bede42ab4d9b0e5fae88cb1a61eebb4a3a1b596af43a",
+    "prefill_lab/dispatch.py": "8e6925e4242c6a9f00b9cb2f794900e5aef4dd2b71f24328e5c07af717bed604",
+    "prefill_lab/runtime.py": "d901e8e4affa71cb7a02cd442420703a5317a739f0a551736fdc565e2e265fc7",
+    "prefill_lab/plugin.py": "13e1d0d5fe2aca7dd6cd2558be65d973cbb718a2665b4a5ed6cbd8ed72f333f7",
+    "prefill_lab/suite.py": "e4098936880697e4896d9fdcd766ac94043ff224209d3d14cad2c9d7db8d4d27",
+    "tests/test_prefill_round7.py": "ee345f452d1b68a592430469b552382e4607261ca79f0c9f1203c622520d791a",
+    "tests/test_prefill_collector.py": "18d0328f86db24767d8f5890926488ebcab3f4c3e66a3a9bab45001b6949ba43",
+    "tests/test_prefill_design.py": "4e9b63fa0036ccaca05474604104651a59da3361398761b00196ce148c49ef7a",
+    "scripts/check_prefill_phase_readiness.py": "7d16b4bbe8e416b0084e6dc676a10e43575f6b7776a2d2d4deb8118d114b68c5",
+    "experiments/prefill-vllm-v030-source-map.json": "e4f1d20b87dd4bd0ea4390d8d07eb67a93b982cb6ff59ca216067ee73bd18679"
+  },
+  "process_resources": {
+    "available": false,
+    "pid": 5,
+    "sample_start": 1249.550694581,
+    "sample_end": 1249.550823841,
+    "error_reason": "procfs_pid_namespace_unverified"
+  },
+  "native_cpu_acceptance": false,
+  "gpu_executed": false,
+  "model_accepted": false,
+  "mpc_evaluated": false
+}

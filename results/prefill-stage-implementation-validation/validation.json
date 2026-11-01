@@ -1,0 +1,44 @@
+{
+  "scope": "CPU unit/integration fixtures and offline archive regression; not native acceptance or GPU execution",
+  "tests": {
+    "tests": 214,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "command": "python -m pytest -q tests/test_prefill_pipeline.py tests/test_prefill_deep.py tests/test_prefill_collector.py tests/test_prefill_host.py tests/test_prefill_round7.py tests/test_prefill_round8.py tests/test_prefill_design.py tests/test_prefill_diagnostic_analysis.py tests/test_prefill_review_gates.py tests/test_prefill_transfer.py tests/test_setup_v1.py",
+  "new_pipeline_test_cases": 39,
+  "new_analyzer_tail_test_cases": 1,
+  "reviewed_upstream_source_files": 38,
+  "upstream_added_files": [
+    "v1/worker/gpu/async_utils.py",
+    "v1/worker/gpu/input_batch.py",
+    "v1/worker/gpu/sample/output.py"
+  ],
+  "existing_reviewed_v2_core_executor_hashes_reverified": true,
+  "legacy_uploaded_diagnostic_offline_audit": "passed",
+  "compilation": "passed",
+  "registered_source_fingerprints": "passed",
+  "actual_gpu_execution": false,
+  "native_cpu_acceptance": false,
+  "cuda_scope_qualified": false,
+  "model_accepted": false,
+  "predictive_pipeline_model_implemented": false,
+  "source_sha256": {
+    "prefill_lab/pipeline.py": "0ca2dca01786843f50b49fb4fa7cd2ea5319e843bd2b914b82af7bebecdf88ef",
+    "prefill_lab/plugin.py": "d24e2988da45b237e8317d72f157a8490be7f87efe95eb9a6ee7cf66ec12b80d",
+    "prefill_lab/deep_diagnostic.py": "45002c4c80cba063c60976f6bff95611639e65d0c03a7a9a4ca4581f39c1238c",
+    "scripts/prefill_host.py": "c08a4fcae35c9edf17a2239174ad47dee68b1d1fcb47c31ab7923f6ec1baeafd",
+    "scripts/run_prefill_service.py": "e2153d88c3523ce3eadd8515f7bd3207a7064438b038d41bc26cb99240c2bdb5",
+    "scripts/analyze_prefill_diagnostic.py": "c78647b199ad839c762d502c0a2d907b0fd4c22b80246855b3ba978cfad8c9c8",
+    "tests/test_prefill_pipeline.py": "75ce42455bb66a8f3ee9b6a20e17248fdb395f2b4190ba4cc2550f5a7c1fc4de",
+    "experiments/prefill-stage-diagnostic-v1.json": "0f72e5a3a49bcc889b91cfe514141a45994a892b5036035059aaae2991231457",
+    "experiments/prefill-vllm-v030-source-map.json": "d03f263b50c758b9e02e9e3df929c4c996b96c67d79fa415766bc20c2f80a21c"
+  },
+  "earlier_related_run": {
+    "tests": 212,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

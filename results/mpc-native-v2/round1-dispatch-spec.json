@@ -1,0 +1,30 @@
+{
+  "base_commit": "e75dbdd",
+  "common_instructions": "ROUND1 INDEPENDENT RESEARCH. New user mission,not continuation of the old gt done completion process. Read experiments/mpc-research/native-v2/master-research-report.zh-TW.md, native-identification-and-model-falsification.zh-TW.md, native-gpu-qualification-and-scout.zh-TW.md, original system-model.md/mpc-mathematical-specification.md and relevant source/artifacts. Base commit e75dbdd on research/pr33-batch-dynamics-v2,all data TRAIN/exploratory. The serial HTTP proxy was falsified:2004 bound vs2449 actual in90s. Never reuse that proxy as exclusive GPU service.\nEach model independently answers the SAME core question:what identifiable batch-aware dynamical model and predictive control design can actually improve native vLLM goodput over fixed/one-move/reactive? Include complete state/action/disturbance/observation definitions,continuous batching and async clocks,causal identifiability/observability,comparison of queueing/fluid,batch-state-space,hybrid,learned,piecewise and probabilistic models;one/multistep/OOD evaluation;model uncertainty,EOS,remaining work,KV risk;objective and constraints,horizon/control rate/solver overhead/safe fallback;an experiment that can falsify each major assumption. Gateway budget16/32 is COST,not concurrency;vLLM scheduler-token budgets are not presently Gateway actuators. Explain when multi-step adds value vsOne-move and design a discriminating ablation,not horizon inflation.\nIndependent means do NOT read peers new Round1 reports or discuss conclusions before Mayor releases them. A/B/C/D below are emphasis only,not disjoint designs. Cite exact source/artifacts and distinguish facts from hypotheses. Existing raw archives in results/mpc-native-4090-scout include native-evidence.tar.gz,native-identification-train-evidence.tar.gz,native-profiler-evidence.tar.gz. Keep held-out160021-160024 unopened/unused;do not generate or tune on final held-out.\nBounded execution:produce your own report and ONE small genuinely useful reproducible CPU diagnostic/prototype with focused tests,not another full synthetic MPC benchmark or duplicated generic controller. Use only your allocated prefix/files. No SSH,GPU/API lifecycle calls,Push,Merge,Rebase,main/PRhead edits,remote changes or gt done. Technical guards block normal push/completion. Keep old evidence intact. Commit locally with Copilot coauthor,then mail Mayor with actual report/code hashes,commit,test command and result. Keep bead in_progress forRound2;do not invoke any automatic completion formula. Stop afterRound1 and wait for Mayor peer-review release. Be honest about tests not run and model/runtime unavailable. No broadcast to unrelated workers.\n",
+  "workers": [
+    {
+      "issue": "pr-nv2-opus",
+      "focus": "A GPU Dynamics Identification",
+      "model": "opus",
+      "owned_scope": "Focus on physical batch service,request remaining work and causal identification. Owned paths:experiments/mpc-research/native-v2/round1/opus.md,opus_batch_models.py,test_opus_batch_models.py."
+    },
+    {
+      "issue": "pr-nv2-astra",
+      "focus": "B MPC Mathematical Optimization",
+      "model": "astra",
+      "owned_scope": "Focus on nonmyopic information value,finite-horizon/tail accounting,feasibility and computational scaling. Owned paths:experiments/mpc-research/native-v2/round1/astra.md,astra_horizon_diagnostic.py,test_astra_horizon_diagnostic.py."
+    },
+    {
+      "issue": "pr-nv2-gemini",
+      "focus": "C Runtime Profiling and Benchmark",
+      "model": "gemini",
+      "owned_scope": "Focus on exact request/batch/GPU completion timing qualification,probe overhead,and native fair statistical protocol. Owned paths:experiments/mpc-research/native-v2/round1/gemini.md,gemini_timing_contract.py,test_gemini_timing_contract.py."
+    },
+    {
+      "issue": "pr-nv2-sol",
+      "focus": "D Independent Mathematical Experimental Critique",
+      "model": "sol",
+      "owned_scope": "Focus on independent model design and falsifiable counterexamples,hidden-state nonidentifiability and invalid causal/metric claims. Owned paths:experiments/mpc-research/native-v2/round1/sol.md,sol_counterexamples.py,test_sol_counterexamples.py."
+    }
+  ]
+}

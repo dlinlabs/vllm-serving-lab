@@ -1,0 +1,388 @@
+{
+  "schema": "prefill-service-design-cases-v7",
+  "status": "draft_not_executable",
+  "cases": [
+    {
+      "id": "single-L1024-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L2048-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        2048
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L4096-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L7168-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-uniform-D0",
+      "family": "composition",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-mixed-D0",
+      "family": "composition",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "composition-reverse-D0",
+      "family": "composition",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "sentinel-four-at50-D0",
+      "family": "sentinel",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 50
+      },
+      "split": "held_case"
+    },
+    {
+      "id": "sentinel-four-at400-D0",
+      "family": "sentinel",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 400
+      },
+      "split": "held_case"
+    },
+    {
+      "id": "sentinel-four-at800-D0",
+      "family": "sentinel",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 800
+      },
+      "split": "held_case"
+    },
+    {
+      "id": "sentinel-one-at200-D0",
+      "family": "sentinel",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      },
+      "split": "held_case"
+    },
+    {
+      "id": "single-L1024-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L2048-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        2048
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L4096-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L7168-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-uniform-D16",
+      "family": "composition",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-mixed-D16",
+      "family": "composition",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "composition-reverse-D16",
+      "family": "composition",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "sentinel-four-at50-D16",
+      "family": "sentinel",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 50
+      },
+      "split": "held_case"
+    },
+    {
+      "id": "sentinel-four-at400-D16",
+      "family": "sentinel",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 400
+      },
+      "split": "held_case"
+    },
+    {
+      "id": "sentinel-four-at800-D16",
+      "family": "sentinel",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 800
+      },
+      "split": "held_case"
+    },
+    {
+      "id": "sentinel-one-at200-D16",
+      "family": "sentinel",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": {
+        "input_tokens": 512,
+        "arrival_ms": 200
+      },
+      "split": "held_case"
+    }
+  ]
+}

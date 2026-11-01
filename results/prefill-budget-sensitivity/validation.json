@@ -1,0 +1,28 @@
+{
+  "scope": "CPU design/sensitivity checks, not native collector or GPU acceptance",
+  "related_tests_passed": 72,
+  "new_design_cases": 22,
+  "total_trial_ids": 212,
+  "main_trials": 110,
+  "train_trials": 18,
+  "repeat_check_trials": 12,
+  "held_case_trials": 80,
+  "source_guard_match": true,
+  "frozen_8192_prediction_parity_tolerance": 1e-10,
+  "unchanged_results_match_prior_independent_invocation": true,
+  "reproduction_limit": "Core results are identical; source-provenance metadata changed when the ITL comparison and coefficient guard were added.",
+  "plan_generator_fresh_output_reproduction": "byte-identical in test",
+  "upstream_reference": {
+    "repository": "vllm-project/vllm",
+    "ref": "v0.30.0",
+    "path": "vllm/engine/arg_utils.py",
+    "blob_sha": "b420e84f542b0679d746eb22ffc6ff728d6397f1",
+    "installed_wheel_identity_verified": false
+  },
+  "published_sha256": {
+    "summary.json": "38833eae14327924d85375c0b5ea9ead37e0bd234dd226d9db8ced0bb3885157",
+    "full-report.json.gz": "6aa7a9ecbcea0b7a73425fd22cc2bca2bdfb6bdf7e0ed2773dcd606a242f63c2",
+    "tests.txt": "4d31010cc7dc46221437802d67f4e8253d59f2b432141e24d3ef3939ebfb8b97",
+    "source-evidence-verification.json": "ff7b55eebf57a5dc6d4dbaa7dab0b11f2c351b5204a0f05929455322d19577fc"
+  }
+}

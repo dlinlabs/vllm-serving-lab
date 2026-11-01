@@ -16,6 +16,51 @@ The final result is intentionally nuanced: token-cost-aware admission provides a
 
 ---
 
+## Cap-32 miss diagnosis: reproduction and new-host replication
+
+[Report and reproduction](results/cap-miss-causes-20261021/report.md) ·
+[Numerical summary](results/cap-miss-causes-20261021/summary.json)
+
+The PR #30 follow-up comment's numbers are now reproducible from the #30 frozen
+evaluation and the public old-host bundle.
+On the new host, short prompts at fixed cap 32 miss **0.8% / 3.8% / 15% / 63%** of
+the time by quartile of other prompt tokens accepted in the preceding second.
+The comment's Σ L² step-time gain is matched by a **linear** prompt-timing term,
+because vLLM's prompt counter advances when prefill completes. A super-linear term
+adds only 2–9% out of capture and is not identified per step. These are
+development associations, not causes.
+
+## Proposed next experiment: chunk timing under realistic decode load
+
+[Revised draft](experiments/prefill-service-v1.md) ·
+[Cases/order/predictions](experiments/prefill-service-v1.design.json) ·
+[Completed2048 sensitivity](results/prefill-budget-sensitivity/summary.json)
+
+PR32 revision12 adds the [collection implementation and native-host commands](experiments/prefill-service-v1.runbook.md).
+It includes V1/V2 engine/worker hooks, exact token manifests, paired step audits,
+observer/drift checks, HTTP/Azure stages, mode-aware calibration fitting and held
+scoring. Runtime/source guards preserve graph/async defaults. Native/GPU
+qualification remains pending; the local PID/procfs namespace blocks complete
+native CPU acceptance. The unchanged statistical revision9 keeps22 cells and212 trials, with a1518.29s planning budget.
+[Noise-aware checks](results/prefill-design-round7/report.md) require two distinct
+structural contrasts: mixed512/512/7680/7680 bursts and a single7680 prompt.
+The grouped paired-t screen uses five block means and calibrated comparators,
+plus a frozen5ms minimum mean improvement to reject deterministic epsilon gains;
+all-cell regression guards remain. Explicit held Gaussian noise and1/2/5%
+calibration-label noise are tested, including480 refitted training experiments.
+The10ms single-long eligibility margin is fragile;12–15ms remains inconclusive.
+Correlated-block nulls expose about14% nominal false passes, so unresolved or
+violated block-dependence assumptions cannot pass. A calibration-only dependence
+assessment remains a pre-freeze blocker. These are synthetic sensitivities, not
+measured GPU power, physical fits or actual-vLLM rollout validation.
+Azure development replay remains unchanged; its arrivals/input lengths are trace
+based, prompt content synthetic, and outputs capped128 rather than replaying source
+GeneratedTokens. Controlled identification and real-composition transfer answer
+different questions. [Round4](results/prefill-design-round4/report.md) ITL support,
+shared-floor magnitude and repeat diagnostics remain historical evidence.
+**Collector/hooks are implemented and CPU/mock tested; the executable GPU protocol
+remains unfrozen until native acceptance and actual-host qualification.**
+
 ## State-aware model iteration on the 16/32 captures
 
 [Development report and public reproduction](results/state-model-20261021/report.md) ·

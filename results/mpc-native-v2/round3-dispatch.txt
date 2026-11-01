@@ -1,0 +1,66 @@
+Native pr32 Round3: revised design, concrete instrument review, evidence-based adjudication.
+
+All four independent R1 and adversarial R2 deliverables are frozen. Read the
+common integration commit announced with this packet. R2 originals:
+Opus 0ebc02f87e22ece60c507891ee270b5e4d5ac87f
+Astra 222f1a54d95c604645e94ba8b7bc053c20b6eb62
+Gemini f0198d0608dd7cfbf929b0385ab90ae59dd6c947
+Sol 974923bde924b524ccdc37196f87d22d2169993a
+The common integration contains all peer R1/R2 files; use git show, no checkout,
+fetch from origin, branch rewrite or modification of frozen R1/R2 files.
+Mayor reproduced all 32 R2 CPU cases. Passing tests do not accept report claims.
+
+Each model owns only native-v2/round3/<model>-revision.md, with optional owned
+<model>_revision.py and test_<model>_revision.py. Retain your independent position.
+Do not use other agents. Read all peer R2 reports and respond explicitly to
+criticisms of your own design; accept, reject with evidence, or mark unresolved.
+Deliver a bounded technical revision rather than another long speculative survey.
+
+Mandatory Mayor rulings:
+- No proposal is a qualified native MPC model or performance winner.
+- Gemini R2's 4.5us/450us/1200us and zero serving-jitter claims were not measured.
+  Withdraw them explicitly. A fixture of assumed constants cannot validate GPU
+  overhead. No particular roofline family follows from falsifying another law.
+- Fitted mean busy-time regressions are not certified native lower envelopes.
+  Decoder delta-output is an effective commit-rate proxy unless participation,
+  async boundaries and actual step parity are independently qualified.
+- No theorem that physical memory implies multistep gain. A low disagreement
+  frequency is not an impact bound. Equal Fixed16/32 whole-sequence scores do
+  not exclude gains from switching policies or heterogeneous effects.
+- Astra finite-tail intervals are an accounting diagnostic, not an admission
+  controller. Critique an actual stated policy, not one invented for it.
+- Correct cap reductions preserve old cost. Actual applied/fenced controls,
+  all-offered outcomes, complete success, clock and availability boundaries stay
+  mandatory. Exact counterexample scope is not a native optimal-action proof.
+
+New source for concrete review (not previously supplied during R2):
+Mayor commit 1cbe251, native-v2/batch_capture_bridge.py and focused tests.
+It reuses PR32 ExternalCapture/scheduled_work/step_key/WorkerRecorder. Default
+off; opt-in frozen TRAIN170001-170012; current-stream preparation/forward spans,
+not kernel busy/whole pipeline; installed 38-source guard; core/worker identity;
+pending and invalid/raw retention; memory END replay until exact-SHA ACK.
+CPU pipeline/wire/auth:80 passed,1 installed-vLLM test skipped.
+No new GPU execution. Pod is provider EXITED. Collector is being prepared.
+Review actual source, including metadata/BEGIN epoch checks, replay/ACK lost
+responses, default-off loading, GIL switch-interval change, 8192 buffers, stream
+scope and request identity reconciliation. Do not claim unseen deployment or
+zero observer effect. Propose only a minimal required fix with a concrete case.
+Do not implement speculative microsecond clock mapping or add hot-path sync.
+
+State the smallest support-limited predictive candidate you would now test,
+an identifiable target and online feature cut, same-window strong One-move
+continuation and real multistep discriminator. Coarse policy/progress prediction
+may proceed without perfect GPU decomposition. Unsupported internals stay latent.
+Specify one highest-information bounded TRAIN native pilot: literal disabled
+versus enabled/OFF/light distinction, independent seed blocks, frozen mixed
+short/long tape, randomized budget sequences/replicates, actual assignment,
+all-offered terminal outcomes, scoped batch/commit joins, uncertainty and
+conditions for continuing versus revising. No final held-out access/tuning.
+Do not silently conflate randomized whole-policy effects with mediator causality.
+
+If you revise executable validators/math, add only focused cases that fail under
+the original claim and run them. Never treat a synthetic CPU counterexample as a
+GPU observation. Commit owned files locally and send Mayor the exact SHA,
+commands/results and remaining disagreements via native nudge/final receipt.
+Do NOT gt done/push/merge/rebase. No provider/SSH/GPU/config/remote changes.
+The host Mayor owns Beads/Convoy while local-network sandbox blocks worker DB.

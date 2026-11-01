@@ -1,0 +1,471 @@
+{
+  "calibration_result": false,
+  "cohort_vs_future_good": {
+    "1s": {
+      "from_cut_cohort": 6521,
+      "from_later_births": 1572,
+      "later_share": 0.19424193747683183
+    },
+    "3s": {
+      "from_cut_cohort": 7508,
+      "from_later_births": 16172,
+      "later_share": 0.6829391891891892
+    },
+    "5s": {
+      "from_cut_cohort": 7388,
+      "from_later_births": 31404,
+      "later_share": 0.8095483604866983
+    }
+  },
+  "folds": {
+    "181001": {
+      "counts": {
+        "one_step_abstained": 194,
+        "one_step_no_persistence": 6,
+        "one_step_scored": 2196,
+        "ood_joint_bin": 184,
+        "ood_outstanding_action_at_cut": 11,
+        "ood_range_headroom": 1,
+        "ood_range_hist_released_cost": 1,
+        "ood_range_hist_ttft_miss": 2,
+        "ood_range_unstarted": 2,
+        "rollout_origins": 538,
+        "rollout_unavailable": 23
+      },
+      "free_running_mae": {
+        "1s": {
+          "good|history_mean": 2.7243480078716145,
+          "good|joint_median": 1.8039226275518416,
+          "good|persistence": 3.9826946781861645,
+          "good|train_mean": 6.536888228985125,
+          "offers|history_mean": 2.78043363262984,
+          "offers|joint_median": 3.0594253452733065,
+          "offers|persistence": 4.135829234977842,
+          "offers|train_mean": 8.699848589359192,
+          "rejected|history_mean": 3.3856636114859797,
+          "rejected|joint_median": 3.0752100328831657,
+          "rejected|persistence": 4.157137911394877,
+          "rejected|train_mean": 4.345631198569686,
+          "reserved|history_mean": 10.892937163689073,
+          "reserved|hold": 7.999217845774277,
+          "reserved|joint_median": 5.516983679657323,
+          "reserved|persistence": 12.308070661120421,
+          "reserved|train_mean": 8.012081898964126,
+          "ttft_miss|history_mean": 1.0946819702914905,
+          "ttft_miss|joint_median": 0.9060639669524353,
+          "ttft_miss|persistence": 1.1388331625947725,
+          "ttft_miss|train_mean": 1.0838113676791206
+        },
+        "3s": {
+          "good|history_mean": 5.593065214727367,
+          "good|joint_median": 5.288584533189978,
+          "good|persistence": 10.265561638510555,
+          "good|train_mean": 18.745298960891613,
+          "offers|history_mean": 6.136219039460139,
+          "offers|joint_median": 7.581169320706512,
+          "offers|persistence": 10.994113480974935,
+          "offers|train_mean": 26.00983486372477,
+          "rejected|history_mean": 6.9141800382996195,
+          "rejected|joint_median": 7.424237473486123,
+          "rejected|persistence": 10.587478523798184,
+          "rejected|train_mean": 10.729423147605157,
+          "reserved|history_mean": 15.671814575035432,
+          "reserved|hold": 7.653099589594618,
+          "reserved|joint_median": 5.364349203701466,
+          "reserved|persistence": 21.30063003666181,
+          "reserved|train_mean": 7.697127382377952,
+          "ttft_miss|history_mean": 2.5513843250975605,
+          "ttft_miss|joint_median": 2.0663116282225173,
+          "ttft_miss|persistence": 3.4512673006674555,
+          "ttft_miss|train_mean": 2.4088006003396965
+        },
+        "5s": {
+          "good|history_mean": 8.469114083442644,
+          "good|joint_median": 9.839921412481615,
+          "good|persistence": 16.554360921156587,
+          "good|train_mean": 30.964417447898057,
+          "offers|history_mean": 9.797660822651148,
+          "offers|joint_median": 13.109171810400877,
+          "offers|persistence": 18.37406402507022,
+          "offers|train_mean": 43.41361006075431,
+          "rejected|history_mean": 10.83330828563994,
+          "rejected|joint_median": 11.824378711132308,
+          "rejected|persistence": 17.537091637149686,
+          "rejected|train_mean": 17.389238137146272,
+          "reserved|history_mean": 20.280516610973994,
+          "reserved|hold": 7.96981593564464,
+          "reserved|joint_median": 5.514744774844579,
+          "reserved|persistence": 30.66382474299824,
+          "reserved|train_mean": 8.05030092783371,
+          "ttft_miss|history_mean": 4.120392362410551,
+          "ttft_miss|joint_median": 3.1280382314224795,
+          "ttft_miss|persistence": 5.824332182265619,
+          "ttft_miss|train_mean": 3.6314835681347675
+        }
+      },
+      "one_step_mae": {
+        "batch_ridge": {
+          "admitted": 1.6152784478571376,
+          "born_cost": 2.9170875139585273,
+          "born_n": 1.396638205861898,
+          "good": 1.124235210634236,
+          "offers": 1.8918946816298472,
+          "rejected": 1.6646920374437122,
+          "released_cost": 2.723021485511665,
+          "released_n": 1.1726797124396238,
+          "tpot_miss": 0.004708794255083764,
+          "ttft_miss": 0.40109454839550285
+        },
+        "gateway_ridge": {
+          "admitted": 1.6007989199094752,
+          "born_cost": 2.9500880508868392,
+          "born_n": 1.403989270971554,
+          "good": 1.1720173478850822,
+          "offers": 1.8778452126367189,
+          "rejected": 1.6744707283605547,
+          "released_cost": 2.860255320961194,
+          "released_n": 1.1928559949571853,
+          "tpot_miss": 0.004627513702004806,
+          "ttft_miss": 0.48528636245803713
+        },
+        "history_mean": {
+          "admitted": 1.8823333118792445,
+          "born_cost": 3.8878578120622542,
+          "born_n": 1.7509263658168621,
+          "good": 1.7182555248137956,
+          "offers": 1.9213794412469603,
+          "rejected": 1.8864383632139934,
+          "released_cost": 4.321622895010338,
+          "released_n": 1.938612975896249,
+          "tpot_miss": 0.0016666666666666666,
+          "ttft_miss": 0.5849525706766036
+        },
+        "persistence": {
+          "admitted": 2.4219443159441743,
+          "born_cost": 4.809297339870032,
+          "born_n": 2.290945778593926,
+          "good": 2.187838694588504,
+          "offers": 2.434028790286297,
+          "rejected": 2.0696645105693112,
+          "released_cost": 5.046802294941797,
+          "released_n": 2.4123945435505334,
+          "tpot_miss": 0.0017777777777777779,
+          "ttft_miss": 0.5643211150018892
+        },
+        "train_mean": {
+          "admitted": 3.429558460740547,
+          "born_cost": 4.139350607536688,
+          "born_n": 3.3131724236736892,
+          "good": 3.391674104272616,
+          "offers": 4.5408918329534,
+          "rejected": 2.337712038705803,
+          "released_cost": 4.508388927292259,
+          "released_n": 3.343364821647426,
+          "tpot_miss": 0.0033959350727873123,
+          "ttft_miss": 0.5921075903723353
+        }
+      },
+      "residual_runs": 15,
+      "scenario_band_inclusion": {
+        "1s": {
+          "good": 0.741635687732342,
+          "offers": 0.8271375464684015,
+          "rejected": 0.8420074349442379,
+          "reserved": 0.6486988847583643,
+          "ttft_miss": 0.6617100371747212
+        },
+        "3s": {
+          "good": 0.6858736059479554,
+          "offers": 0.7992565055762082,
+          "rejected": 0.6486988847583643,
+          "reserved": 0.7509293680297398,
+          "ttft_miss": 0.5278810408921933
+        },
+        "5s": {
+          "good": 0.6468401486988847,
+          "offers": 0.7490706319702602,
+          "rejected": 0.5743494423791822,
+          "reserved": 0.6858736059479554,
+          "ttft_miss": 0.5074349442379182
+        }
+      },
+      "train_blocks": [
+        181002
+      ],
+      "train_steps": 2389
+    },
+    "181002": {
+      "counts": {
+        "one_step_abstained": 220,
+        "one_step_no_persistence": 4,
+        "one_step_scored": 2175,
+        "ood_joint_bin": 203,
+        "ood_outstanding_action_at_cut": 10,
+        "ood_range_hist_born_cost": 2,
+        "ood_range_hist_good": 4,
+        "ood_range_hist_offers": 4,
+        "ood_range_hist_rejected": 2,
+        "ood_range_native_waiting": 2,
+        "rollout_origins": 528,
+        "rollout_unavailable": 20
+      },
+      "free_running_mae": {
+        "1s": {
+          "good|history_mean": 2.6226523659341496,
+          "good|joint_median": 1.6540634403462338,
+          "good|persistence": 4.01606786819275,
+          "good|train_mean": 6.590102973781501,
+          "offers|history_mean": 3.0996354890815616,
+          "offers|joint_median": 3.2640523055047375,
+          "offers|persistence": 4.141734914806341,
+          "offers|train_mean": 9.276337278233289,
+          "rejected|history_mean": 3.6095733356689594,
+          "rejected|joint_median": 3.280727104812719,
+          "rejected|persistence": 4.4576567378926475,
+          "rejected|train_mean": 4.404407466340526,
+          "reserved|history_mean": 9.596266920197346,
+          "reserved|hold": 7.159624050708191,
+          "reserved|joint_median": 5.110306084348421,
+          "reserved|persistence": 12.099847944047829,
+          "reserved|train_mean": 7.174360408389707,
+          "ttft_miss|history_mean": 0.9942677136695834,
+          "ttft_miss|joint_median": 0.9103588098425816,
+          "ttft_miss|persistence": 1.166516539923908,
+          "ttft_miss|train_mean": 1.0650609305646994
+        },
+        "3s": {
+          "good|history_mean": 5.700970466731239,
+          "good|joint_median": 5.550294587683821,
+          "good|persistence": 10.613544906440007,
+          "good|train_mean": 18.849281940182838,
+          "offers|history_mean": 7.185718315390851,
+          "offers|joint_median": 8.29733282961936,
+          "offers|persistence": 11.506443279241255,
+          "offers|train_mean": 26.619115446596233,
+          "rejected|history_mean": 6.908764187355996,
+          "rejected|joint_median": 7.201126658021711,
+          "rejected|persistence": 11.011069915535,
+          "rejected|train_mean": 10.510757335496017,
+          "reserved|history_mean": 15.411322628660576,
+          "reserved|hold": 8.090865022752814,
+          "reserved|joint_median": 5.617960960743484,
+          "reserved|persistence": 24.23494931645952,
+          "reserved|train_mean": 8.149465278745842,
+          "ttft_miss|history_mean": 2.3577645285661126,
+          "ttft_miss|joint_median": 2.325155506952153,
+          "ttft_miss|persistence": 3.348972336944338,
+          "ttft_miss|train_mean": 2.4421872379682847
+        },
+        "5s": {
+          "good|history_mean": 8.666181278557692,
+          "good|joint_median": 10.36629597779552,
+          "good|persistence": 17.107063505286433,
+          "good|train_mean": 31.095449473463837,
+          "offers|history_mean": 10.876765799459626,
+          "offers|joint_median": 14.465825792257197,
+          "offers|persistence": 18.80726574241458,
+          "offers|train_mean": 44.29321550473345,
+          "rejected|history_mean": 10.580360964257832,
+          "rejected|joint_median": 11.999151136685931,
+          "rejected|persistence": 18.01193537901194,
+          "rejected|train_mean": 16.930641943769366,
+          "reserved|history_mean": 19.927802678723502,
+          "reserved|hold": 7.964864066543045,
+          "reserved|joint_median": 5.601032670233023,
+          "reserved|persistence": 35.76474967471553,
+          "reserved|train_mean": 8.049845919472173,
+          "ttft_miss|history_mean": 3.7617750547024897,
+          "ttft_miss|joint_median": 3.5367061229282237,
+          "ttft_miss|persistence": 5.365652166786179,
+          "ttft_miss|train_mean": 3.661277080245018
+        }
+      },
+      "one_step_mae": {
+        "batch_ridge": {
+          "admitted": 1.7042614151891626,
+          "born_cost": 3.1236384507134614,
+          "born_n": 1.5215078317127686,
+          "good": 1.103003982458365,
+          "offers": 1.9632491403296186,
+          "rejected": 1.7600597377321214,
+          "released_cost": 2.7808439593938528,
+          "released_n": 1.2197169622639552,
+          "tpot_miss": 0.004119968852709175,
+          "ttft_miss": 0.4028736510927426
+        },
+        "gateway_ridge": {
+          "admitted": 1.7141963004861922,
+          "born_cost": 3.1500751922964714,
+          "born_n": 1.525727771288846,
+          "good": 1.1704770782383633,
+          "offers": 1.9556701166042778,
+          "rejected": 1.7555618369931534,
+          "released_cost": 2.8742897065051283,
+          "released_n": 1.2466769562289015,
+          "tpot_miss": 0.003986883540984024,
+          "ttft_miss": 0.4724414036367611
+        },
+        "history_mean": {
+          "admitted": 1.9040181477711315,
+          "born_cost": 3.9924363811378525,
+          "born_n": 1.8297563608602172,
+          "good": 1.7307730366218421,
+          "offers": 1.9592658822517799,
+          "rejected": 1.8799619628895894,
+          "released_cost": 4.490135880944757,
+          "released_n": 2.074513664002258,
+          "tpot_miss": 0.005193014705882354,
+          "ttft_miss": 0.5313043876487632
+        },
+        "persistence": {
+          "admitted": 2.38582448797635,
+          "born_cost": 5.0022112935516345,
+          "born_n": 2.4333997948027344,
+          "good": 2.164381933788894,
+          "offers": 2.397317077170628,
+          "rejected": 2.145743834263423,
+          "released_cost": 5.066046147003833,
+          "released_n": 2.519361076854066,
+          "tpot_miss": 0.005417744020685197,
+          "ttft_miss": 0.519445761725464
+        },
+        "train_mean": {
+          "admitted": 3.478716732235094,
+          "born_cost": 4.24902293964398,
+          "born_n": 3.357366591585638,
+          "good": 3.4336904237223593,
+          "offers": 4.65013139897027,
+          "rejected": 2.370407050681396,
+          "released_cost": 4.658441532882067,
+          "released_n": 3.475225511885962,
+          "tpot_miss": 0.003542903252253974,
+          "ttft_miss": 0.5772855544724564
+        }
+      },
+      "residual_runs": 16,
+      "scenario_band_inclusion": {
+        "1s": {
+          "good": 0.7140151515151515,
+          "offers": 0.7821969696969697,
+          "rejected": 0.7803030303030303,
+          "reserved": 0.6609848484848485,
+          "ttft_miss": 0.6912878787878788
+        },
+        "3s": {
+          "good": 0.6420454545454546,
+          "offers": 0.6875,
+          "rejected": 0.6382575757575758,
+          "reserved": 0.6704545454545454,
+          "ttft_miss": 0.4583333333333333
+        },
+        "5s": {
+          "good": 0.6117424242424242,
+          "offers": 0.6382575757575758,
+          "rejected": 0.5757575757575758,
+          "reserved": 0.6685606060606061,
+          "ttft_miss": 0.42234848484848486
+        }
+      },
+      "train_blocks": [
+        181001
+      ],
+      "train_steps": 2385
+    }
+  },
+  "history_steps": 4,
+  "marginal_release_model_is_joint": false,
+  "mpc_result": false,
+  "receipt": {
+    "artifact_sha256": {
+      "nv3-181001-mixed-arm0.json": "c3b5edcc63bb8febaa32744b5a1db45783c1368be56e4539e19c69e1f5879ce1",
+      "nv3-181001-mixed-arm1.json": "fd483ce77832dd52c45390d1d0b6179c3a812b8e92242b5a8c48205de11dfcae",
+      "nv3-181001-p128-m128-arm0.json": "d633b4e402e453238b0d612b3b64c198d61fe572eb9c3b171cbb76a616187c23",
+      "nv3-181001-p128-m128-arm1.json": "467887df4445c5f20aea1376d40ce07b59671c6326a3c8e88b04bd18008a1a7f",
+      "nv3-181001-p128-m256-arm0.json": "f99c6470c478a36e24beffe7f424d4b9d3c42adf2e1e6d17b9ae7737a1ac1ec8",
+      "nv3-181001-p128-m256-arm1.json": "7ad41e1f0faf34ef5d8124ec31bbe2037c9c0b5607522a0cb5078732f8d841b7",
+      "nv3-181001-p4096-m128-arm0.json": "74da77e6bc936d887da0605085695021827851d38736faf62d512e611579a584",
+      "nv3-181001-p4096-m128-arm1.json": "fd61c5abf017d575f16782ae2259537c97a0848864bdca1fe5ebea0c52e27ec9",
+      "nv3-181001-p4096-m256-arm0.json": "f7722058627612b4906eb9a048425b37eefa98df46de3a3c1f3423d4bcc75746",
+      "nv3-181001-p4096-m256-arm1.json": "a62d86171cf18028129774109032ac52eaf4d78a0cb6e9eacdd7be84385c9b00",
+      "nv3-181002-mixed-arm0.json": "f0f1bced9cfb3dde7ef421df6edd14c096449e8a6aeeb3240cfa2fa07ae24f3c",
+      "nv3-181002-mixed-arm1.json": "2751385a70f1309bee9a6c1233e5cb3c33ec97264e9f54a2a81985e89611ca74",
+      "nv3-181002-p128-m128-arm0.json": "1c06c42fa5372c239defd97601ca4661e2fd9bc6912f81818ba54eee7717dae2",
+      "nv3-181002-p128-m128-arm1.json": "8beef76b13d94f7108393e895f8d12386e75867cf1cd4bbfb74282d949c96e0b",
+      "nv3-181002-p128-m256-arm0.json": "2ecd8a652e470eed8be9b94ddb623bffc0c5c9769bf8c655be2480c9710b0054",
+      "nv3-181002-p128-m256-arm1.json": "36f2ea533f261b419cba5ceea0ad7205696e517d8ab1a521a1303f7c5a095ec3",
+      "nv3-181002-p4096-m128-arm0.json": "3d4f681e0ef0a2e6b45d90bba38c59c945ff6cd918767dbf5dfec5bc1bbf04d7",
+      "nv3-181002-p4096-m128-arm1.json": "46c47b2aab4e84567f4401b1b5a9026c60186682f3cf0386bcab22537990f885",
+      "nv3-181002-p4096-m256-arm0.json": "b53502a5e19d45e3ce6ee1bbac5187fac73e373df28f4faeaa6fc5380574b7bd",
+      "nv3-181002-p4096-m256-arm1.json": "a7892fe32a607aa3656f7522d53ad34ff62ba382775952eceeee2a8364b4db7f"
+    },
+    "clock_domain": "linux-monotonic:64589d75-974d-436e-80e4-fc734d7195d8:time:[4026534406]",
+    "collector_source_commit": "6c11fe7e683439f379f0dfdbd21b05f5873b2c90",
+    "gateway_runs": {
+      "nv3-181001-mixed-arm0": "9950f2512759478f97f1fb17d155d71e",
+      "nv3-181001-mixed-arm1": "9950f2512759478f97f1fb17d155d71e",
+      "nv3-181001-p128-m128-arm0": "5101fcbe356344c783d5a756f6705ae0",
+      "nv3-181001-p128-m128-arm1": "5101fcbe356344c783d5a756f6705ae0",
+      "nv3-181001-p128-m256-arm0": "d06dbf51c6bd4ea0932cffd51c66d65d",
+      "nv3-181001-p128-m256-arm1": "d06dbf51c6bd4ea0932cffd51c66d65d",
+      "nv3-181001-p4096-m128-arm0": "e87fd1eef5c94cb58950fefd37b0a7cc",
+      "nv3-181001-p4096-m128-arm1": "e87fd1eef5c94cb58950fefd37b0a7cc",
+      "nv3-181001-p4096-m256-arm0": "27a40b2ce2064154a6100da0fa57b617",
+      "nv3-181001-p4096-m256-arm1": "27a40b2ce2064154a6100da0fa57b617",
+      "nv3-181002-mixed-arm0": "eb2cc092dc8d46b09e9cc145af1c898f",
+      "nv3-181002-mixed-arm1": "eb2cc092dc8d46b09e9cc145af1c898f",
+      "nv3-181002-p128-m128-arm0": "5fcca6a0bd1f44f2941dd592ebfd3edd",
+      "nv3-181002-p128-m128-arm1": "5fcca6a0bd1f44f2941dd592ebfd3edd",
+      "nv3-181002-p128-m256-arm0": "808e897935304167b37ba7dbb19423c0",
+      "nv3-181002-p128-m256-arm1": "808e897935304167b37ba7dbb19423c0",
+      "nv3-181002-p4096-m128-arm0": "fb81a77fbcde4d6b969f9ad1df405326",
+      "nv3-181002-p4096-m128-arm1": "fb81a77fbcde4d6b969f9ad1df405326",
+      "nv3-181002-p4096-m256-arm0": "d9169abbb05f4266984bb681ed8b0e71",
+      "nv3-181002-p4096-m256-arm1": "d9169abbb05f4266984bb681ed8b0e71"
+    },
+    "loaded": [
+      "nv3-181001-mixed-arm0",
+      "nv3-181001-mixed-arm1",
+      "nv3-181001-p128-m128-arm0",
+      "nv3-181001-p128-m128-arm1",
+      "nv3-181001-p128-m256-arm0",
+      "nv3-181001-p128-m256-arm1",
+      "nv3-181001-p4096-m128-arm0",
+      "nv3-181001-p4096-m128-arm1",
+      "nv3-181001-p4096-m256-arm0",
+      "nv3-181001-p4096-m256-arm1",
+      "nv3-181002-mixed-arm0",
+      "nv3-181002-mixed-arm1",
+      "nv3-181002-p128-m128-arm0",
+      "nv3-181002-p128-m128-arm1",
+      "nv3-181002-p128-m256-arm0",
+      "nv3-181002-p128-m256-arm1",
+      "nv3-181002-p4096-m128-arm0",
+      "nv3-181002-p4096-m128-arm1",
+      "nv3-181002-p4096-m256-arm0",
+      "nv3-181002-p4096-m256-arm1"
+    ],
+    "native_runs": [
+      "58777b3950ff44d88c077e1101096cc8"
+    ],
+    "native_source_commit": "2587d2b822dcd3812353ce2ac3369b7192fa7ba7",
+    "skipped_splits": [],
+    "verified_artifacts": 40
+  },
+  "scenario_status": "unqualified: contiguous Train residual bootstrap, not state-conditional; no coverage or MPC-risk claim",
+  "schema": "nv3-opus-joint-transition-v1",
+  "statistical_guarantee": false,
+  "step_s": 0.5,
+  "targets": [
+    "released_cost",
+    "born_cost",
+    "released_n",
+    "born_n",
+    "offers",
+    "admitted",
+    "rejected",
+    "good",
+    "ttft_miss",
+    "tpot_miss"
+  ],
+  "train_only": true
+}

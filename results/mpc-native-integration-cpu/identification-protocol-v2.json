@@ -1,0 +1,4394 @@
+{
+  "schema": "native-identification-v2",
+  "approved": false,
+  "execution_enabled": false,
+  "implementation_hash": "b4f234020105f69f608da45dba7317a8bb632ecd84aeb0e310362740e5fa083a",
+  "protocol_source_sha256": "3a78f83b75c88fb2d32ddcfb14408f573de5446a6fd291cfc6294a1ef8a00fa8",
+  "scope": "One exact RTX4090 deployment; exploratory identification, not controller acceptance",
+  "independent_unit": "arrival/prompt seed block; both arms share the same offered tape",
+  "groups": {
+    "160001": {
+      "split": "train",
+      "cell": "p128-m128"
+    },
+    "160002": {
+      "split": "train",
+      "cell": "p128-m256"
+    },
+    "160003": {
+      "split": "train",
+      "cell": "p4096-m128"
+    },
+    "160004": {
+      "split": "train",
+      "cell": "p4096-m256"
+    },
+    "160005": {
+      "split": "train",
+      "cell": "p128-m128"
+    },
+    "160006": {
+      "split": "train",
+      "cell": "p128-m256"
+    },
+    "160007": {
+      "split": "train",
+      "cell": "p4096-m128"
+    },
+    "160008": {
+      "split": "train",
+      "cell": "p4096-m256"
+    },
+    "160009": {
+      "split": "train",
+      "cell": "p128-m128"
+    },
+    "160010": {
+      "split": "train",
+      "cell": "p128-m256"
+    },
+    "160011": {
+      "split": "train",
+      "cell": "p4096-m128"
+    },
+    "160012": {
+      "split": "train",
+      "cell": "p4096-m256"
+    },
+    "160013": {
+      "split": "calibration",
+      "cell": "p128-m128"
+    },
+    "160014": {
+      "split": "calibration",
+      "cell": "p128-m256"
+    },
+    "160015": {
+      "split": "calibration",
+      "cell": "p4096-m128"
+    },
+    "160016": {
+      "split": "calibration",
+      "cell": "p4096-m256"
+    },
+    "160017": {
+      "split": "validation",
+      "cell": "p128-m128"
+    },
+    "160018": {
+      "split": "validation",
+      "cell": "p128-m256"
+    },
+    "160019": {
+      "split": "validation",
+      "cell": "p4096-m128"
+    },
+    "160020": {
+      "split": "validation",
+      "cell": "p4096-m256"
+    },
+    "160021": {
+      "split": "test",
+      "cell": "p128-m128"
+    },
+    "160022": {
+      "split": "test",
+      "cell": "p128-m256"
+    },
+    "160023": {
+      "split": "test",
+      "cell": "p4096-m128"
+    },
+    "160024": {
+      "split": "test",
+      "cell": "p4096-m256"
+    }
+  },
+  "episodes": [
+    {
+      "episode_id": "train-160001-1",
+      "seed_block": 160001,
+      "split": "train",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160001",
+      "prompt_tape_key": "id-v2-prompts:160001",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160001-0",
+      "seed_block": 160001,
+      "split": "train",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160001",
+      "prompt_tape_key": "id-v2-prompts:160001",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160002-1",
+      "seed_block": 160002,
+      "split": "train",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160002",
+      "prompt_tape_key": "id-v2-prompts:160002",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160002-0",
+      "seed_block": 160002,
+      "split": "train",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160002",
+      "prompt_tape_key": "id-v2-prompts:160002",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160003-0",
+      "seed_block": 160003,
+      "split": "train",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160003",
+      "prompt_tape_key": "id-v2-prompts:160003",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160003-1",
+      "seed_block": 160003,
+      "split": "train",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160003",
+      "prompt_tape_key": "id-v2-prompts:160003",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160004-0",
+      "seed_block": 160004,
+      "split": "train",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160004",
+      "prompt_tape_key": "id-v2-prompts:160004",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160004-1",
+      "seed_block": 160004,
+      "split": "train",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160004",
+      "prompt_tape_key": "id-v2-prompts:160004",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160005-1",
+      "seed_block": 160005,
+      "split": "train",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160005",
+      "prompt_tape_key": "id-v2-prompts:160005",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160005-0",
+      "seed_block": 160005,
+      "split": "train",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160005",
+      "prompt_tape_key": "id-v2-prompts:160005",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160006-0",
+      "seed_block": 160006,
+      "split": "train",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160006",
+      "prompt_tape_key": "id-v2-prompts:160006",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160006-1",
+      "seed_block": 160006,
+      "split": "train",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160006",
+      "prompt_tape_key": "id-v2-prompts:160006",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160007-1",
+      "seed_block": 160007,
+      "split": "train",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160007",
+      "prompt_tape_key": "id-v2-prompts:160007",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160007-0",
+      "seed_block": 160007,
+      "split": "train",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160007",
+      "prompt_tape_key": "id-v2-prompts:160007",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160008-1",
+      "seed_block": 160008,
+      "split": "train",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160008",
+      "prompt_tape_key": "id-v2-prompts:160008",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160008-0",
+      "seed_block": 160008,
+      "split": "train",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160008",
+      "prompt_tape_key": "id-v2-prompts:160008",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160009-1",
+      "seed_block": 160009,
+      "split": "train",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160009",
+      "prompt_tape_key": "id-v2-prompts:160009",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160009-0",
+      "seed_block": 160009,
+      "split": "train",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160009",
+      "prompt_tape_key": "id-v2-prompts:160009",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160010-0",
+      "seed_block": 160010,
+      "split": "train",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160010",
+      "prompt_tape_key": "id-v2-prompts:160010",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160010-1",
+      "seed_block": 160010,
+      "split": "train",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160010",
+      "prompt_tape_key": "id-v2-prompts:160010",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160011-1",
+      "seed_block": 160011,
+      "split": "train",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160011",
+      "prompt_tape_key": "id-v2-prompts:160011",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160011-0",
+      "seed_block": 160011,
+      "split": "train",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160011",
+      "prompt_tape_key": "id-v2-prompts:160011",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160012-0",
+      "seed_block": 160012,
+      "split": "train",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160012",
+      "prompt_tape_key": "id-v2-prompts:160012",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "train-160012-1",
+      "seed_block": 160012,
+      "split": "train",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160012",
+      "prompt_tape_key": "id-v2-prompts:160012",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "calibration-160013-0",
+      "seed_block": 160013,
+      "split": "calibration",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160013",
+      "prompt_tape_key": "id-v2-prompts:160013",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "calibration-160013-1",
+      "seed_block": 160013,
+      "split": "calibration",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160013",
+      "prompt_tape_key": "id-v2-prompts:160013",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "calibration-160014-0",
+      "seed_block": 160014,
+      "split": "calibration",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160014",
+      "prompt_tape_key": "id-v2-prompts:160014",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "calibration-160014-1",
+      "seed_block": 160014,
+      "split": "calibration",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160014",
+      "prompt_tape_key": "id-v2-prompts:160014",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "calibration-160015-1",
+      "seed_block": 160015,
+      "split": "calibration",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160015",
+      "prompt_tape_key": "id-v2-prompts:160015",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "calibration-160015-0",
+      "seed_block": 160015,
+      "split": "calibration",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160015",
+      "prompt_tape_key": "id-v2-prompts:160015",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "calibration-160016-0",
+      "seed_block": 160016,
+      "split": "calibration",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160016",
+      "prompt_tape_key": "id-v2-prompts:160016",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "calibration-160016-1",
+      "seed_block": 160016,
+      "split": "calibration",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160016",
+      "prompt_tape_key": "id-v2-prompts:160016",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "validation-160017-1",
+      "seed_block": 160017,
+      "split": "validation",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160017",
+      "prompt_tape_key": "id-v2-prompts:160017",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "validation-160017-0",
+      "seed_block": 160017,
+      "split": "validation",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160017",
+      "prompt_tape_key": "id-v2-prompts:160017",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "validation-160018-0",
+      "seed_block": 160018,
+      "split": "validation",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160018",
+      "prompt_tape_key": "id-v2-prompts:160018",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "validation-160018-1",
+      "seed_block": 160018,
+      "split": "validation",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160018",
+      "prompt_tape_key": "id-v2-prompts:160018",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "validation-160019-1",
+      "seed_block": 160019,
+      "split": "validation",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160019",
+      "prompt_tape_key": "id-v2-prompts:160019",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "validation-160019-0",
+      "seed_block": 160019,
+      "split": "validation",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160019",
+      "prompt_tape_key": "id-v2-prompts:160019",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "validation-160020-0",
+      "seed_block": 160020,
+      "split": "validation",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160020",
+      "prompt_tape_key": "id-v2-prompts:160020",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "validation-160020-1",
+      "seed_block": 160020,
+      "split": "validation",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160020",
+      "prompt_tape_key": "id-v2-prompts:160020",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "test-160021-0",
+      "seed_block": 160021,
+      "split": "test",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160021",
+      "prompt_tape_key": "id-v2-prompts:160021",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "test-160021-1",
+      "seed_block": 160021,
+      "split": "test",
+      "cell": "p128-m128",
+      "prompt_tokens": 128,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160021",
+      "prompt_tape_key": "id-v2-prompts:160021",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "test-160022-1",
+      "seed_block": 160022,
+      "split": "test",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160022",
+      "prompt_tape_key": "id-v2-prompts:160022",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "test-160022-0",
+      "seed_block": 160022,
+      "split": "test",
+      "cell": "p128-m256",
+      "prompt_tokens": 128,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160022",
+      "prompt_tape_key": "id-v2-prompts:160022",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "test-160023-1",
+      "seed_block": 160023,
+      "split": "test",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160023",
+      "prompt_tape_key": "id-v2-prompts:160023",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "test-160023-0",
+      "seed_block": 160023,
+      "split": "test",
+      "cell": "p4096-m128",
+      "prompt_tokens": 4096,
+      "max_tokens": 128,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160023",
+      "prompt_tape_key": "id-v2-prompts:160023",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    },
+    {
+      "episode_id": "test-160024-0",
+      "seed_block": 160024,
+      "split": "test",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 0,
+      "arrival_tape_key": "id-v2-arrivals:160024",
+      "prompt_tape_key": "id-v2-prompts:160024",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 16
+        },
+        {
+          "at_s": 2,
+          "budget": 16
+        },
+        {
+          "at_s": 7,
+          "budget": 32
+        },
+        {
+          "at_s": 17,
+          "budget": 32
+        },
+        {
+          "at_s": 19,
+          "budget": 16
+        },
+        {
+          "at_s": 24,
+          "budget": 16
+        },
+        {
+          "at_s": 34,
+          "budget": 16
+        },
+        {
+          "at_s": 36,
+          "budget": 16
+        },
+        {
+          "at_s": 41,
+          "budget": 32
+        },
+        {
+          "at_s": 51,
+          "budget": 32
+        },
+        {
+          "at_s": 53,
+          "budget": 32
+        },
+        {
+          "at_s": 58,
+          "budget": 16
+        },
+        {
+          "at_s": 68,
+          "budget": 16
+        },
+        {
+          "at_s": 70,
+          "budget": 32
+        },
+        {
+          "at_s": 75,
+          "budget": 16
+        },
+        {
+          "at_s": 85,
+          "budget": 16
+        },
+        {
+          "at_s": 87,
+          "budget": 32
+        }
+      ]
+    },
+    {
+      "episode_id": "test-160024-1",
+      "seed_block": 160024,
+      "split": "test",
+      "cell": "p4096-m256",
+      "prompt_tokens": 4096,
+      "max_tokens": 256,
+      "arm": 1,
+      "arrival_tape_key": "id-v2-arrivals:160024",
+      "prompt_tape_key": "id-v2-prompts:160024",
+      "request_id_rule": "unique 32-hex physical ID per arm/offer; preserve common logical offer ID",
+      "natural_eos": true,
+      "offers_s": 90,
+      "maximum_drain_s": 20,
+      "schedule": [
+        {
+          "at_s": 0,
+          "budget": 32
+        },
+        {
+          "at_s": 2,
+          "budget": 32
+        },
+        {
+          "at_s": 7,
+          "budget": 16
+        },
+        {
+          "at_s": 17,
+          "budget": 16
+        },
+        {
+          "at_s": 19,
+          "budget": 32
+        },
+        {
+          "at_s": 24,
+          "budget": 32
+        },
+        {
+          "at_s": 34,
+          "budget": 32
+        },
+        {
+          "at_s": 36,
+          "budget": 32
+        },
+        {
+          "at_s": 41,
+          "budget": 16
+        },
+        {
+          "at_s": 51,
+          "budget": 16
+        },
+        {
+          "at_s": 53,
+          "budget": 16
+        },
+        {
+          "at_s": 58,
+          "budget": 32
+        },
+        {
+          "at_s": 68,
+          "budget": 32
+        },
+        {
+          "at_s": 70,
+          "budget": 16
+        },
+        {
+          "at_s": 75,
+          "budget": 32
+        },
+        {
+          "at_s": 85,
+          "budget": 32
+        },
+        {
+          "at_s": 87,
+          "budget": 16
+        }
+      ]
+    }
+  ],
+  "pilot_capacity_reference": {
+    "p128-m128": null,
+    "p128-m256": null,
+    "p4096-m128": null,
+    "p4096-m256": null
+  },
+  "rate_phases": [
+    {
+      "start_s": 0,
+      "capacity_multiple": 0.6
+    },
+    {
+      "start_s": 30,
+      "capacity_multiple": 1.1
+    },
+    {
+      "start_s": 60,
+      "capacity_multiple": 0.6
+    }
+  ],
+  "capacity_selection": {
+    "scope": "TRAIN-only per-cell Fixed16 scout",
+    "rates_req_s": [
+      0.5,
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "offers_s": 10,
+    "maximum_drain_s": 10,
+    "reference": "lowest rate maximizing observed successful goodput; abort if all rates have zero goodput",
+    "freeze": "algorithm now; measured per-cell references before calibration/validation/test"
+  },
+  "primary": {
+    "target": "reserved_cost_1s",
+    "normalizer": 32,
+    "forecast_origins_s": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "truth": "contiguous complete gateway ledger and final watermark; no polling interpolation",
+    "aggregation": "mean decisions per episode, mean paired arms per seed, mean seeds",
+    "baseline_selection": "complete leave-one-arrival-seed-out TRAIN folds; freeze hash before validation",
+    "validation_screen": "10% normalized MAE improvement is exploratory only; no statistical pass"
+  },
+  "secondary": [
+    "reserved_cost_3s",
+    "reserved_cost_5s",
+    "first_residence",
+    "terminal_residence",
+    "all-offered successful-goodput Brier bounds",
+    "prediction availability"
+  ],
+  "brier": {
+    "event": "complete matching HTTP response AND scheduled TTFT <= 0.5s",
+    "cohort": "all scheduled offers, including admission rejects and errors",
+    "prediction_time": "no later than client POST; no actual future arrivals/EOS features",
+    "censoring": "unknown timely incomplete outcomes retain both possible losses"
+  },
+  "causal_estimand": "whole-sequence randomized assignment ITT; later divergent states are not matched",
+  "action_gate": {
+    "allowed_cost_budgets": [
+      16,
+      32
+    ],
+    "maximum_snapshot_age_s": 0.5,
+    "maximum_command_ttl_s": 0.1,
+    "model_version": "native-id-unfitted-v1",
+    "calibration_version": "unfitted-not-validated",
+    "mpc_authorized": false,
+    "durable_pending_and_fencing_required": true
+  },
+  "qualification": [
+    "standard Chat framing/DONE/finish/request-ID and full offered cohort",
+    "gateway ledger plus engine running/waiting/orphaned drain, fresh same clock",
+    "exact software/model/tokenizer/cost/hardware/run identities",
+    "assignment schedule versus actual CAS application and posting/state-read lag",
+    "zero lost trace records/write errors; preserve all failed trials",
+    "usage is not token timestamps; native token-event evidence required for TPOT tails"
+  ],
+  "stop_conditions": [
+    "unsupported identity/clock/tokenizer or unresolved pending action",
+    "stale state, failed drain, loss of trace completeness or resource authorization",
+    "scout shows insufficient delivered action variation/state support; return unresolved"
+  ],
+  "budget": {
+    "paid_resource_authorized": false,
+    "maximum_billable_hours_proposal": 2.5,
+    "maximum_all_in_usd_proposal": 5,
+    "active_and_drain_seconds": 5280,
+    "setup_scout_export_contingency_seconds": 3720,
+    "full_completion_guaranteed": false
+  },
+  "confirmation": {
+    "authorized": false,
+    "new_independent_data_required": true,
+    "comparators": [
+      "Fixed16 cost budget",
+      "TRAIN-tuned best fixed cost budget",
+      "simple feedback",
+      "one-move",
+      "MPC"
+    ],
+    "sample_size": "choose once from development/pilot paired variance and power; freeze before Test",
+    "superiority": "positive multiplicity-adjusted paired confidence bound on successful goodput",
+    "equivalence_proposal": "TOST 90% CI inside +/-2% relative goodput, plus frozen safety/rejection bounds",
+    "not_acceptance": [
+      "CI contains zero",
+      "all fallback/unused actions",
+      "retuning on confirmation data",
+      "ignoring solver/GET/POST wall time",
+      "single-run or cross-GPU claims"
+    ]
+  },
+  "protocol_hash": "54816c60572be02e2b7acf539b8d5c52a7953338656fdc0334cdcf36580ca737"
+}

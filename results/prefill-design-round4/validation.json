@@ -1,0 +1,50 @@
+{
+  "scope": "Related offline CPU checks, not native collector/GPU acceptance",
+  "parent_commit": "8a8c86942ac350c71ba266caaedf1e0ef1bdfa2f",
+  "revision": 6,
+  "related_tests_passed": 130,
+  "verified_evidence_files": {
+    "old": 161,
+    "new": 138
+  },
+  "source_guards_match": true,
+  "generated_plan_matches_committed": true,
+  "shared_floor_all_scenarios": true,
+  "zero_support_kept": true,
+  "same_host_replicate_pairs": 1,
+  "replicate_noise_envelope_calibrated": false,
+  "transfer_attempts": 4,
+  "transfer_order": "ABBA",
+  "transfer_seconds": 320,
+  "estimated_active_seconds": 1517.7774448158516,
+  "original_model_sources_unchanged": {
+    "greybox_simulator.py": "c906e606d0dee3ee58bcef8c4d7fd17fb5e1260f2eb69dc78dec1a29bc4a4f2e",
+    "evaluate_greybox.py": "a5fdcf76bb16b9c5415576ed1ed9255b6c77f95ead2f953fbc151e9bc6ee5b3f",
+    "evaluate_low_cap_frozen.py": "0bf919d910f23480db3cc7b3069ac9f12e42f5d67e99c62ce70ceb490842ead7"
+  },
+  "models_refitted": false,
+  "native_collector_acceptance": false,
+  "sha256": {
+    "README.md": "89e07c38ae35296ac32562599fcea447a3417fa5ef5ec7a2ba705e3d6aa07e4d",
+    "experiments/prefill-service-v1.budget.json": "c704a210bd3a6e8d3f50d6c09f1185bf156bda86cdfb9fc0baf488cae471264e",
+    "experiments/prefill-service-v1.cases.json": "25238b662fef35b14e5b4e04b99a741f645dc3fcb4d04cc4f94885d2264fba5a",
+    "experiments/prefill-service-v1.design.json": "f5ba077c6b5eb399e5c18830e7a7e9410225a53a391749076ec39da9ef206e21",
+    "experiments/prefill-service-v1.discrimination.json": "50cb16fc9b023d2b7bf02c593d17e93f10bcf99c04043af2dc3e2fca9bac31e1",
+    "experiments/prefill-service-v1.md": "14d4da3aa92fd4aab30f6e8a9307344639f5d646f32b4b6c10b6bc6bc7ab1d27",
+    "experiments/prefill-service-v1.order.json": "8e3de212375724e02c934f2069c32adafa372f042329e86fe51a0fdfad0f254b",
+    "experiments/prefill-service-v1.predictions.json": "3bfc02158986a0e40edada41aacaf72ac3f1458d2cfc61127be5a4aed5bfda7a",
+    "prefill_histogram.py": "a0721b6163ebd8b4504f5480625335966daeaa469e5056cdb0b42e18f8beff48",
+    "prefill_validation.py": "d1b5006f8f6ee20b85cc697b54125249bfacbcb45699f1ce7a4d503bdf15f075",
+    "results/prefill-design-round4/comparator-counterexample.json": "29b905900b6304d764d92df7611f23c1808f851b494841249211d1f6b7e1fb9f",
+    "results/prefill-design-round4/itl-scenarios.json": "7ee7d2f1c4f9d2f9c75763bcfdf9414667eda21227e076ccfca3f8251d5d38cc",
+    "results/prefill-design-round4/report.md": "030f13bfbb1c52cc2a33adea0e5d5ac218ef168b25927c46c2303ef7ea95088a",
+    "results/prefill-design-round4/tests.txt": "f8a7e258d9ae3fea30316e47227d6d523b6287f7d9e8bef8367a51f00b5f2b06",
+    "results/prefill-design-round4/win-margin-counterexample.json": "07c817ec03f5d20de7ce21e8cd76632876c9fd95c09f9ace6a4245c9687936f7",
+    "scripts/build_prefill_design.py": "372dd18e2bc0338aac9b7941ef73c5d3312ab82ac85daced6de05ac8f7a05802",
+    "scripts/check_prefill_comparators.py": "7c74a122634a0e53ff126e89714e2769de180ca9763a7fc33d31172270c77431",
+    "scripts/check_prefill_itl.py": "fd82c62c3d376ad035a3bb7c242262ffc0124f2fc59d996aacd48f10d3c0c83a",
+    "scripts/check_prefill_win_margin.py": "bdec24e29060200991473c4d081cf665a2aa82ef76cbd70b18b27af2d8392859",
+    "tests/test_prefill_design.py": "79b0740933f2211e8789e1975e1a4707dfb7c00c49df3ff1fb5fb19787db27f9",
+    "tests/test_prefill_review_gates.py": "4fbf141c68a7cb0122224370cb215aa6564fbdab829aa9395d1ef29e6a251211"
+  }
+}

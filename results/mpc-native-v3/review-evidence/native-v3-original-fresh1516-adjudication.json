@@ -1,0 +1,185 @@
+{
+  "all_shared_previous_round_numeric_scores_exact": true,
+  "confirmation_blocks": [
+    181015,
+    181016
+  ],
+  "h12_h13_lower_gate_disagreement": "Monte Carlo seed/stream sensitivity: block181015 v9lower passes5% and stablev10lower doesnot; repair adopted on correctness, not favorable gate outcome",
+  "margin": 0.05,
+  "rounds": {
+    "11": {
+      "blocks": {
+        "181015": {
+          "a": true,
+          "a_trans_logloss_delta": -0.05928238038149525,
+          "aware_g5_mae": 7.605858296913489,
+          "aware_rejected5_bias": 8.769526273001865,
+          "b": true,
+          "c": false,
+          "c_mae": false,
+          "c_rejection_bias": false,
+          "origins": 554,
+          "v7_upper_g5_mae": 4.026824838078794
+        },
+        "181016": {
+          "a": true,
+          "a_trans_logloss_delta": -0.05215853797890809,
+          "aware_g5_mae": 7.624693221515946,
+          "aware_rejected5_bias": 8.919479133350098,
+          "b": true,
+          "c": false,
+          "c_mae": false,
+          "c_rejection_bias": false,
+          "origins": 552,
+          "v7_upper_g5_mae": 4.371300258042189
+        }
+      },
+      "decision": "NOT_CANDIDATE: H11a/b pass, H11c fails",
+      "original_model_sha256": "aa927973f4cf6a6ba96a10c09bb77eb9fdef63dda80ad70b78c87b768dab12c7",
+      "raw_sha256": "a81c6c8c65a2d93d732ba035a50c1414e3f0ff5ff7d5ecbfe926cc78c426fade"
+    },
+    "12": {
+      "blocks": {
+        "181015": {
+          "aware_g5_mae": 7.605858296913489,
+          "aware_rejected5_bias": 8.769526273001865,
+          "endpoints": {
+            "lower": {
+              "a": true,
+              "b": true,
+              "c": true,
+              "candidate_g5_mae": 3.725346266945773,
+              "candidate_rejected5_bias": 0.6399605339732264,
+              "improvement_fraction": 0.051498902932769486,
+              "nominal_0_8_g5_band_inclusion": 0.7102134947144878,
+              "same_endpoint_v7_g5_mae": 3.9276140833833084
+            },
+            "upper": {
+              "a": true,
+              "b": true,
+              "c": false,
+              "candidate_g5_mae": 4.194043083695517,
+              "candidate_rejected5_bias": 2.3449884282022593,
+              "improvement_fraction": -0.04152607881908832,
+              "nominal_0_8_g5_band_inclusion": 0.6558926798127394,
+              "same_endpoint_v7_g5_mae": 4.026824838078794
+            }
+          },
+          "origins": 554,
+          "v7_upper_g5_mae": 4.026824838078794
+        },
+        "181016": {
+          "aware_g5_mae": 7.624693221515946,
+          "aware_rejected5_bias": 8.919479133350098,
+          "endpoints": {
+            "lower": {
+              "a": true,
+              "b": true,
+              "c": true,
+              "candidate_g5_mae": 4.036250630865328,
+              "candidate_rejected5_bias": 0.8166508015993028,
+              "improvement_fraction": 0.05431893565292867,
+              "nominal_0_8_g5_band_inclusion": 0.6874196103466212,
+              "same_endpoint_v7_g5_mae": 4.268088664387169
+            },
+            "upper": {
+              "a": true,
+              "b": true,
+              "c": false,
+              "candidate_g5_mae": 4.435417581528865,
+              "candidate_rejected5_bias": 2.4816731598373076,
+              "improvement_fraction": -0.014667792121741074,
+              "nominal_0_8_g5_band_inclusion": 0.6545635701603925,
+              "same_endpoint_v7_g5_mae": 4.371300258042189
+            }
+          },
+          "origins": 552,
+          "v7_upper_g5_mae": 4.371300258042189
+        }
+      },
+      "decision": "UNIDENTIFIED_WITHIN_RELEASE_INTERVAL: exactly one endpoint passes; not a pass",
+      "endpoint_c_passes_both_blocks": {
+        "lower": true,
+        "upper": false
+      },
+      "original_model_sha256": "ba9963e534de98eaee7402b6efdf99e4d1fe2f1f22562c07bd1900ca6a65b36f",
+      "raw_sha256": "1cfc71f877bceefee5ebaf20eeb04dcd208322db614dbaced3478203436c0be3"
+    },
+    "13": {
+      "blocks": {
+        "181015": {
+          "aware_g5_mae": 7.616702678786375,
+          "aware_rejected5_bias": 8.783177948825216,
+          "endpoints": {
+            "lower": {
+              "a": true,
+              "b": true,
+              "c": false,
+              "candidate_g5_mae": 3.758557394639042,
+              "candidate_rejected5_bias": 0.6430511779421753,
+              "improvement_fraction": 0.043043100761732234,
+              "nominal_0_8_g5_band_inclusion": 0.7068478980470043,
+              "same_endpoint_v7_g5_mae": 3.9276140833833084
+            },
+            "upper": {
+              "a": true,
+              "b": true,
+              "c": false,
+              "candidate_g5_mae": 4.164048686050998,
+              "candidate_rejected5_bias": 2.3264172817469273,
+              "improvement_fraction": -0.03407743159686927,
+              "nominal_0_8_g5_band_inclusion": 0.6667222301035608,
+              "same_endpoint_v7_g5_mae": 4.026824838078794
+            }
+          },
+          "origins": 554,
+          "v7_upper_g5_mae": 4.026824838078794
+        },
+        "181016": {
+          "aware_g5_mae": 7.599721622412055,
+          "aware_rejected5_bias": 8.943448402107864,
+          "endpoints": {
+            "lower": {
+              "a": true,
+              "b": true,
+              "c": true,
+              "candidate_g5_mae": 4.037340278494263,
+              "candidate_rejected5_bias": 0.8087815125694812,
+              "improvement_fraction": 0.054063634576822506,
+              "nominal_0_8_g5_band_inclusion": 0.685603988530503,
+              "same_endpoint_v7_g5_mae": 4.268088664387169
+            },
+            "upper": {
+              "a": true,
+              "b": true,
+              "c": false,
+              "candidate_g5_mae": 4.421180568071659,
+              "candidate_rejected5_bias": 2.4611756370181457,
+              "improvement_fraction": -0.01141086337816799,
+              "nominal_0_8_g5_band_inclusion": 0.6631827317006065,
+              "same_endpoint_v7_g5_mae": 4.371300258042189
+            }
+          },
+          "origins": 552,
+          "v7_upper_g5_mae": 4.371300258042189
+        }
+      },
+      "decision": "NOT_CANDIDATE: both endpoint full-block confirmation gates fail",
+      "endpoint_c_passes_both_blocks": {
+        "lower": false,
+        "upper": false
+      },
+      "original_model_sha256": "3ec5b68364a1e7eb17e38ea47a81c5fd0490365bde1b1045e383ff9b09067bd9",
+      "raw_sha256": "1229174371e5355bb9d1281d9b5546b70793e575561a199db3c48f7e98d32d91"
+    }
+  },
+  "rule_source": "Frozen R13 opus.md R11.4/R12.4/R13.4; no endpoint selection or threshold changes",
+  "schema": "native-v3-original-h11-h12-h13-confirmation-adjudication-v1",
+  "scope": "Two independent seed blocks; overlapping origins are not independent repeats; no calibrated risk/native/MPC permit",
+  "source_commit": "144cef32a9b51c3a74355ff67f5eafdfac6e075f",
+  "train_blocks": [
+    181001,
+    181002,
+    181003
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "local_tests": {
+    "passed": 373,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "elapsed_seconds": 73.58,
+    "junit": "local-cpu-tests.xml"
+  },
+  "added_regression_cases": 8,
+  "archive_unchanged": true,
+  "archive": {
+    "bytes": 9089762,
+    "sha256": "43594328c4d355406ca97a11a55d60f53bc262b39203dc65ba24e50e7f76382b",
+    "file_count": 156,
+    "uncompressed_bytes": 108650106
+  },
+  "library_file_id": "libfile_b58fa8cf060881919cf85c41c561fc28",
+  "native_source_commit": "39d0c7d6aa02e9667a5b67bc94740f5d2148264a",
+  "native_cpu_tests": 1078,
+  "native_collection_complete": true,
+  "candidate_passed": false,
+  "local_gpu_run_performed": false,
+  "native_full_cpu_acceptance_for_analysis_commit": false,
+  "thresholds_changed": false,
+  "frozen_parameters_changed": false,
+  "model_accepted": false,
+  "adaptive_cap_accepted": false,
+  "mpc_accepted": false,
+  "source_sha256": {
+    "scripts/analyze_prefill_arrival_capture.py": "69b2172002bf9e6ab7ae2965fef0bdde520b71a8d2bd1f7159576c22a433b09c",
+    "tests/test_prefill_arrival_diagnosis.py": "6d7706b9539f24b978134169c3bffaeb09d3009627c2372e59e485b7bfd09d1b",
+    "prefill_lab/delayed_calibration.py": "cee8563f505c326358d53fbb43db5283173450123339ded909bd22059d4beabd",
+    "experiments/prefill-service-v1.design.json": "3a7894e8c7db79c4514419e598c0d74ca7f348dd64cb8605dce22a49b03661f9",
+    "experiments/prefill-effective-arrivals-v2.md": "6a33693e512d2f6c6cb341a728cd765b05e6481a9be855d4e1cc8e3a7e44f257",
+    "experiments/prefill-effective-arrivals-v2.proposal.md": "91afca37dd94bea887f3517d9b136e645c17c22c042e11f4dc6518f3e39aac82"
+  }
+}

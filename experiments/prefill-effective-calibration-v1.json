@@ -1,0 +1,1370 @@
+{
+  "schema": "effective-async-calibration-v1",
+  "scope": "pilot: zero-offset controlled arrivals; B2048; no cap/MPC acceptance",
+  "cases": [
+    {
+      "id": "single-L1024-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L2048-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        2048
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L4096-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L7168-D0",
+      "family": "single",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-uniform-D0",
+      "family": "composition",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-mixed-D0",
+      "family": "composition",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "composition-reverse-D0",
+      "family": "composition",
+      "background_decoders": 0,
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L1024-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "single-L2048-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        2048
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L4096-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "single-L7168-D16",
+      "family": "single",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-uniform-D16",
+      "family": "composition",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        4096,
+        4096,
+        4096,
+        4096
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "calibration"
+    },
+    {
+      "id": "composition-mixed-D16",
+      "family": "composition",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        1024,
+        1024,
+        7168,
+        7168
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    },
+    {
+      "id": "composition-reverse-D16",
+      "family": "composition",
+      "background_decoders": 16,
+      "foreground_tokens": [
+        7168,
+        7168,
+        1024,
+        1024
+      ],
+      "foreground_offsets_ms": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sentinel": null,
+      "split": "held_case"
+    }
+  ],
+  "order": [
+    {
+      "trial_id": "ec-001",
+      "case": "single-L2048-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-002",
+      "case": "composition-reverse-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-003",
+      "case": "single-L4096-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-004",
+      "case": "composition-uniform-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-005",
+      "case": "composition-mixed-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-006",
+      "case": "single-L1024-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-007",
+      "case": "composition-uniform-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-008",
+      "case": "composition-reverse-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-009",
+      "case": "single-L1024-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-010",
+      "case": "single-L4096-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-011",
+      "case": "single-L7168-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-012",
+      "case": "single-L7168-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-013",
+      "case": "composition-mixed-D16",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-014",
+      "case": "single-L2048-D0",
+      "stage": "warmup",
+      "block": 0,
+      "observer": "light",
+      "paired_content_key": "ec-warmup-0-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-015",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-train-1-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-016",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-train-1-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-017",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-train-1-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-018",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-train-1-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-019",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-train-1-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-020",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-train-1-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-021",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-train-1-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-022",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-train-1-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-023",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-train-1-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-024",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-train-1-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-025",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-train-1-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-026",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-train-1-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-027",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-train-2-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-028",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-train-2-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-029",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-train-2-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-030",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-train-2-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-031",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-train-2-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-032",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-train-2-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-033",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-train-2-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-034",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-train-2-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-035",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-train-2-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-036",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-train-2-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-037",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-train-2-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-038",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-train-2-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-039",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-train-3-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-040",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-train-3-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-041",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-train-3-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-042",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-train-3-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-043",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-train-3-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-044",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-train-3-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-045",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-train-3-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-046",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-train-3-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-047",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-train-3-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-048",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-train-3-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-049",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-train-3-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-050",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-train-3-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-051",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-train-4-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-052",
+      "case": "single-L7168-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-train-4-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-053",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-train-4-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-054",
+      "case": "single-L7168-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-train-4-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-055",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-train-4-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-056",
+      "case": "single-L1024-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-train-4-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-057",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-train-4-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-058",
+      "case": "composition-uniform-D0",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-train-4-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-059",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-train-4-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-060",
+      "case": "composition-uniform-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-train-4-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-061",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-train-4-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-062",
+      "case": "single-L1024-D16",
+      "stage": "train",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-train-4-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-063",
+      "case": "composition-reverse-D0",
+      "stage": "held",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-held-1-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-064",
+      "case": "composition-reverse-D0",
+      "stage": "held",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-held-1-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-065",
+      "case": "single-L2048-D16",
+      "stage": "held",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-held-1-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-066",
+      "case": "single-L2048-D16",
+      "stage": "held",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-held-1-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-067",
+      "case": "single-L4096-D0",
+      "stage": "held",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-held-1-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-068",
+      "case": "single-L4096-D0",
+      "stage": "held",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-held-1-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-069",
+      "case": "single-L4096-D16",
+      "stage": "held",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-held-1-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-070",
+      "case": "single-L4096-D16",
+      "stage": "held",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-held-1-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-071",
+      "case": "single-L2048-D0",
+      "stage": "held",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-held-1-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-072",
+      "case": "single-L2048-D0",
+      "stage": "held",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-held-1-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-073",
+      "case": "composition-reverse-D16",
+      "stage": "held",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-held-1-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-074",
+      "case": "composition-reverse-D16",
+      "stage": "held",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-held-1-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-075",
+      "case": "composition-mixed-D0",
+      "stage": "held",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-held-1-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-076",
+      "case": "composition-mixed-D0",
+      "stage": "held",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-held-1-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-077",
+      "case": "composition-mixed-D16",
+      "stage": "held",
+      "block": 1,
+      "observer": "off",
+      "paired_content_key": "ec-held-1-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-078",
+      "case": "composition-mixed-D16",
+      "stage": "held",
+      "block": 1,
+      "observer": "light",
+      "paired_content_key": "ec-held-1-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-079",
+      "case": "single-L2048-D0",
+      "stage": "held",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-held-2-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-080",
+      "case": "single-L2048-D0",
+      "stage": "held",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-held-2-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-081",
+      "case": "single-L4096-D16",
+      "stage": "held",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-held-2-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-082",
+      "case": "single-L4096-D16",
+      "stage": "held",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-held-2-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-083",
+      "case": "single-L4096-D0",
+      "stage": "held",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-held-2-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-084",
+      "case": "single-L4096-D0",
+      "stage": "held",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-held-2-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-085",
+      "case": "composition-reverse-D0",
+      "stage": "held",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-held-2-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-086",
+      "case": "composition-reverse-D0",
+      "stage": "held",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-held-2-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-087",
+      "case": "single-L2048-D16",
+      "stage": "held",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-held-2-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-088",
+      "case": "single-L2048-D16",
+      "stage": "held",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-held-2-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-089",
+      "case": "composition-reverse-D16",
+      "stage": "held",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-held-2-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-090",
+      "case": "composition-reverse-D16",
+      "stage": "held",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-held-2-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-091",
+      "case": "composition-mixed-D0",
+      "stage": "held",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-held-2-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-092",
+      "case": "composition-mixed-D0",
+      "stage": "held",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-held-2-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-093",
+      "case": "composition-mixed-D16",
+      "stage": "held",
+      "block": 2,
+      "observer": "light",
+      "paired_content_key": "ec-held-2-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-094",
+      "case": "composition-mixed-D16",
+      "stage": "held",
+      "block": 2,
+      "observer": "off",
+      "paired_content_key": "ec-held-2-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-095",
+      "case": "composition-reverse-D0",
+      "stage": "held",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-held-3-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-096",
+      "case": "composition-reverse-D0",
+      "stage": "held",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-held-3-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-097",
+      "case": "composition-reverse-D16",
+      "stage": "held",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-held-3-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-098",
+      "case": "composition-reverse-D16",
+      "stage": "held",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-held-3-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-099",
+      "case": "composition-mixed-D0",
+      "stage": "held",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-held-3-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-100",
+      "case": "composition-mixed-D0",
+      "stage": "held",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-held-3-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-101",
+      "case": "single-L2048-D16",
+      "stage": "held",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-held-3-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-102",
+      "case": "single-L2048-D16",
+      "stage": "held",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-held-3-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-103",
+      "case": "composition-mixed-D16",
+      "stage": "held",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-held-3-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-104",
+      "case": "composition-mixed-D16",
+      "stage": "held",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-held-3-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-105",
+      "case": "single-L2048-D0",
+      "stage": "held",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-held-3-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-106",
+      "case": "single-L2048-D0",
+      "stage": "held",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-held-3-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-107",
+      "case": "single-L4096-D0",
+      "stage": "held",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-held-3-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-108",
+      "case": "single-L4096-D0",
+      "stage": "held",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-held-3-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-109",
+      "case": "single-L4096-D16",
+      "stage": "held",
+      "block": 3,
+      "observer": "light",
+      "paired_content_key": "ec-held-3-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-110",
+      "case": "single-L4096-D16",
+      "stage": "held",
+      "block": 3,
+      "observer": "off",
+      "paired_content_key": "ec-held-3-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-111",
+      "case": "composition-mixed-D16",
+      "stage": "held",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-held-4-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-112",
+      "case": "composition-mixed-D16",
+      "stage": "held",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-held-4-composition-mixed-D16"
+    },
+    {
+      "trial_id": "ec-113",
+      "case": "composition-mixed-D0",
+      "stage": "held",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-held-4-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-114",
+      "case": "composition-mixed-D0",
+      "stage": "held",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-held-4-composition-mixed-D0"
+    },
+    {
+      "trial_id": "ec-115",
+      "case": "single-L2048-D16",
+      "stage": "held",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-held-4-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-116",
+      "case": "single-L2048-D16",
+      "stage": "held",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-held-4-single-L2048-D16"
+    },
+    {
+      "trial_id": "ec-117",
+      "case": "single-L2048-D0",
+      "stage": "held",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-held-4-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-118",
+      "case": "single-L2048-D0",
+      "stage": "held",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-held-4-single-L2048-D0"
+    },
+    {
+      "trial_id": "ec-119",
+      "case": "single-L4096-D0",
+      "stage": "held",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-held-4-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-120",
+      "case": "single-L4096-D0",
+      "stage": "held",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-held-4-single-L4096-D0"
+    },
+    {
+      "trial_id": "ec-121",
+      "case": "single-L4096-D16",
+      "stage": "held",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-held-4-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-122",
+      "case": "single-L4096-D16",
+      "stage": "held",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-held-4-single-L4096-D16"
+    },
+    {
+      "trial_id": "ec-123",
+      "case": "composition-reverse-D16",
+      "stage": "held",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-held-4-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-124",
+      "case": "composition-reverse-D16",
+      "stage": "held",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-held-4-composition-reverse-D16"
+    },
+    {
+      "trial_id": "ec-125",
+      "case": "composition-reverse-D0",
+      "stage": "held",
+      "block": 4,
+      "observer": "light",
+      "paired_content_key": "ec-held-4-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-126",
+      "case": "composition-reverse-D0",
+      "stage": "held",
+      "block": 4,
+      "observer": "off",
+      "paired_content_key": "ec-held-4-composition-reverse-D0"
+    },
+    {
+      "trial_id": "ec-127",
+      "case": "single-L1024-D0",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "off",
+      "paired_content_key": "ec-held_reference-5-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-128",
+      "case": "single-L1024-D0",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "light",
+      "paired_content_key": "ec-held_reference-5-single-L1024-D0"
+    },
+    {
+      "trial_id": "ec-129",
+      "case": "single-L7168-D0",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "off",
+      "paired_content_key": "ec-held_reference-5-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-130",
+      "case": "single-L7168-D0",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "light",
+      "paired_content_key": "ec-held_reference-5-single-L7168-D0"
+    },
+    {
+      "trial_id": "ec-131",
+      "case": "composition-uniform-D0",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "off",
+      "paired_content_key": "ec-held_reference-5-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-132",
+      "case": "composition-uniform-D0",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "light",
+      "paired_content_key": "ec-held_reference-5-composition-uniform-D0"
+    },
+    {
+      "trial_id": "ec-133",
+      "case": "single-L1024-D16",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "off",
+      "paired_content_key": "ec-held_reference-5-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-134",
+      "case": "single-L1024-D16",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "light",
+      "paired_content_key": "ec-held_reference-5-single-L1024-D16"
+    },
+    {
+      "trial_id": "ec-135",
+      "case": "single-L7168-D16",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "off",
+      "paired_content_key": "ec-held_reference-5-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-136",
+      "case": "single-L7168-D16",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "light",
+      "paired_content_key": "ec-held_reference-5-single-L7168-D16"
+    },
+    {
+      "trial_id": "ec-137",
+      "case": "composition-uniform-D16",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "off",
+      "paired_content_key": "ec-held_reference-5-composition-uniform-D16"
+    },
+    {
+      "trial_id": "ec-138",
+      "case": "composition-uniform-D16",
+      "stage": "held_reference",
+      "block": 5,
+      "observer": "light",
+      "paired_content_key": "ec-held_reference-5-composition-uniform-D16"
+    }
+  ],
+  "features": {
+    "bias": 1.0,
+    "prefill": 2048.0,
+    "decode_context": 32768.0,
+    "attention_pairs": 2097152.0
+  },
+  "gates": {
+    "condition_limit": 1000.0,
+    "ttft_absolute_s": 0.005,
+    "completion_absolute_s": 0.01,
+    "relative_error": 0.2,
+    "repeat_relative_spread": 0.2,
+    "observer_absolute_s": 0.002,
+    "observer_relative": 0.1
+  },
+  "hard_seconds": 1800,
+  "fit_max_nfev": 60,
+  "parameter_bounds_s": [
+    1e-07,
+    0.5
+  ],
+  "starts_s": [
+    [
+      0.001,
+      0.01,
+      0.001,
+      0.001
+    ],
+    [
+      0.005,
+      0.05,
+      0.005,
+      0.005
+    ]
+  ],
+  "model_accepted": false,
+  "model": {
+    "name": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554"
+  }
+}

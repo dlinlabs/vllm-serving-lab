@@ -1,0 +1,23 @@
+{
+  "schema": "native-v2-round3-freeze-v1",
+  "reviewed_common_integration": "9b02f6ebdbd6681763b562bc3c37aa564b8b330a",
+  "reviewed_bridge_commit": "1cbe251ced4d54bec8f56cfbce95983081abc16a",
+  "reviewed_collector_commit": "ab8c3920a1751be1fe3974f378719d523f0627e0",
+  "sources": {
+    "opus": "7e5df26b8a3a914ff69769cd7dcdbb84157f77b1",
+    "astra": "ae600f9707bb4c7d9545db40e71cc87c1578d862",
+    "gemini": "78b3c46ef7b4dda728ce0618f934442445f5b338",
+    "sol": "c285e1e300cf42db80ed2eb25dd3e0b1d02500c3"
+  },
+  "integration_scope": "Owned round3 report,revision module and focused tests only. Gemini Markdown trailing whitespace normalized;original source blobs preserved.",
+  "validation": {
+    "runner": "Existing Python 3.12 CPU environment",
+    "command": "python -m pytest -q experiments/mpc-research/native-v2/round3 --junitxml=results/mpc-native-v2/round3-cpu-junit.xml",
+    "passed": 26,
+    "subtests_passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "Reproducibility only;some tests intentionally demonstrate false acceptance in frozen prototypes."
+  },
+  "scientific_status": "Three genuine native model rounds completed. No native GPU experiment,qualified MPC or performance win. Mayor adjudication rejects remaining revised-evaluator defects;agreement is not experimental evidence."
+}

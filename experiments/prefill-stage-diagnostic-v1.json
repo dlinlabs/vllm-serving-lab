@@ -1,0 +1,37 @@
+{
+  "schema": "prefill-stage-diagnostic-v1",
+  "scope": "targeted_stage_diagnostic_only",
+  "status": "development_measurement_protocol_not_physical_model_acceptance",
+  "planned_trial_ids": ["trial-014", "trial-007", "trial-211", "trial-212"],
+  "case_source": "experiments/prefill-service-v1.order.json",
+  "workload_changes": false,
+  "runtime": {
+    "adapter": "V2",
+    "executor": "vllm.v1.executor.uniproc_executor.UniProcExecutor",
+    "same_core_worker_process": true,
+    "async_scheduling": true,
+    "max_concurrent_batches": 2,
+    "preserve_engine_graph_and_async_defaults": true
+  },
+  "cpu_stages": ["forward", "sample_tokens", "logits_sample", "copy_enqueue", "post_update", "output_ready", "commit"],
+  "cuda_event_pairs": ["forward", "sample_tokens", "logits_sample", "copy_enqueue", "post_update"],
+  "cuda_scope": "stream-local elapsed spans; preparation, CPU enqueue gaps and copy-stream waits may be included; nested spans are not additive",
+  "copy_order": "AsyncOutput enqueues native copy before postprocess_sampled; preserve original stream wait and copy_event synchronization",
+  "copy_bytes": "primary sampled-token and num-sampled buffers only; extra payload presence recorded separately",
+  "deep_profile": {
+    "start": "first foreground/sentinel-bearing forward call",
+    "consecutive_steps": 5,
+    "stop": "after matching fifth sample_tokens returns, including copy enqueue and postprocess",
+    "stop_and_export_overhead": "record separately; deep CPU/TTFT observations are not performance labels"
+  },
+  "active_deadline_seconds": 180,
+  "attempts": 1,
+  "no_gateway_or_transfer": true,
+  "no_model_fit_or_held_scoring": true,
+  "no_extra_per_step_synchronization": true,
+  "event_resolution": "query after native request drain; no device synchronization outside native/profiler behavior",
+  "integrity": "exact step/request identity, all stages, native dependency order, finite event spans, committed-output totals and first output, five complete deep enqueue windows",
+  "cuda_scope_qualified": false,
+  "model_accepted": false,
+  "complete_experiment_passed": false
+}

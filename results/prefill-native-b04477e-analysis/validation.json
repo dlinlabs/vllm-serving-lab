@@ -1,0 +1,27 @@
+{
+  "related_cpu_tests": 212,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "compileall": "passed",
+  "diff_check": "passed",
+  "native_cpu_for_capture": {
+    "commit": "b04477e8e06af31ee390b749b61fba60ef480ecb",
+    "tests": 865,
+    "embedded_acceptance_verified": true,
+    "junit_present_in_archive": false
+  },
+  "native_gpu_execution_of_new_profile_fix": false,
+  "model_accepted": false,
+  "gpu_scope_qualified": false,
+  "source_sha256": {
+    "prefill_lab/plugin.py": "df484e8885e9b53dd036d260e5af1581fece7db171706ec7d14f46ef98d8ea69",
+    "prefill_lab/deep_diagnostic.py": "4413994a0efe2c9bd19e739ec6a30d9d67bc4fe2b51ea21f3f1ef98351a0afdc",
+    "prefill_lab/suite.py": "7d814af4f227d30774c8f8eb58eb1ffc7178094db50360dad36184e4bacc73ed",
+    "scripts/prefill_host.py": "773858977306049f9ddd62437db2d35c7d9d2ed509e703208482fb6bdd3a849c",
+    "scripts/run_prefill_service.py": "634e14af66695082676dee4872bfdc6aa49f3de660cdabe5a954efc2483bb542",
+    "scripts/analyze_prefill_capture.py": "706b0ac72dbbe641b54b9972ab3e75ea9ea91f317afbe6610e3ded7174d87bf3",
+    "scripts/plot_prefill_capture_audit.py": "fc071c8982faeca7b2afb1ce450a87357e327704f6fce2605ea1b7e4ec56302f",
+    "tests/test_prefill_deep.py": "3d52ee8f0b9b0c05d1c427b157bf6d6fc65365132133507934ece8efca96cc30"
+  }
+}

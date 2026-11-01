@@ -1,0 +1,31 @@
+{
+  "schema": "cpu-validation-v1",
+  "python": "3.12.14",
+  "scope": "Selected related CPU tests only; no native procfs/resource/full-suite or GPU acceptance",
+  "counts": {
+    "tests": 270,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_async_predictor_cases": 46,
+  "junit_sha256": "3c317b298647538caaeb7c82ac6bccbacebd54c96d29734c9d2967e1d6a2e0e3",
+  "compilation_passed": true,
+  "native_cpu_acceptance": false,
+  "gpu_executed": false,
+  "physical_model_accepted": false,
+  "complete_experiment_passed": false,
+  "adaptive_cap_accepted": false,
+  "mpc_accepted": false,
+  "earlier_related_run": {
+    "tests": 266,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "first_targeted_attempt": {
+    "passed": 25,
+    "failed": 1,
+    "reason": "Idle-yield fixture did not leave scheduler work; corrected to pending request blocked by sequence limit; native rule unchanged"
+  }
+}

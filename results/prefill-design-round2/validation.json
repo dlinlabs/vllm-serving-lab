@@ -1,0 +1,30 @@
+{
+  "scope": "CPU design/helper checks only; no native collector or GPU acceptance",
+  "parent_commit": "d97251aeed60c5a55e735d69d289281ca767a39e",
+  "related_tests_passed": 88,
+  "cell_scenario_foreground_prefix_checks": 110,
+  "unchanged_frozen_barrier_predictions_checked": 44,
+  "public_evidence_files_verified": {
+    "old": 161,
+    "new": 138
+  },
+  "independent_ITL_core_results_identical": true,
+  "plan_reproducibility": "byte-identical fresh and committed outputs; all manifest hashes checked in tests",
+  "source_guard_match": true,
+  "estimated_active_seconds": 1317.7774448158516,
+  "sha256": {
+    "prefill_design.py": "50dea063f646d88ad6fa246b0384a5635dbee6f7b67765a11f17207dde9f3462",
+    "scripts/build_prefill_design.py": "044a07ecdba54b5628450e0cc09f2a04f12870a20cb15185df606754088568eb",
+    "scripts/check_prefill_itl.py": "d2d123bc2686b694b69f1a8b74503f0bf60d6700bed30cc8f3ced83e27143bb5",
+    "tests/test_prefill_design.py": "21f8ba84109186a545a6d7b1b44063aa21246c90f640ca7172ce2180792dfef6",
+    "experiments/prefill-service-v1.md": "e5ad34bb65c4e6389208838f6e681ae218bc9a64866aa2f4b7bca5a79342539a",
+    "experiments/prefill-service-v1.design.json": "5b4d50b9c1f25de8fe8ac06760704f672fa81bff0e5046889e9970c5b5ea97e4",
+    "results/prefill-design-round2/itl-scenarios.json": "fb57349ce99a03d090a8e5a2b5daeb9ea6bd3355331319b98a98cd523b77445a",
+    "results/prefill-design-round2/tests.txt": "0438a28cb800426db0f7eecd6b7b4f45e3ac87bd3e1055454e97b1f70f24a5a9",
+    "results/prefill-design-round2/report.md": "d239107b154c85f0358c1b0afa5456986682737f4b9e59d015b1cc60a4ef79ed"
+  },
+  "explicit_primary_contrasts": {
+    "H2": 36,
+    "H3": 6
+  }
+}

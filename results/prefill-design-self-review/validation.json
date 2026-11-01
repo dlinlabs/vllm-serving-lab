@@ -1,0 +1,37 @@
+{
+  "scope": "CPU self-review only; no native collector or GPU acceptance",
+  "parent_commit": "3409711b1c139dbf1d7227f1810d04dae4613a30",
+  "related_tests_passed": 99,
+  "complete_feature_training_partitions": 7,
+  "full_model_rank": {
+    "M0": 3,
+    "M1": 4,
+    "M2": 5
+  },
+  "all_planning_families_supported": true,
+  "largest_M2_condition": 11.314218192265177,
+  "training_only_scaling_isolation_test_passed": true,
+  "score_window_background_invariance_cases": 22,
+  "prior_foreground_prefix_checks": 110,
+  "frozen_barrier_TTFT_checks": 44,
+  "historical_ITL_and_transfer_results_unchanged": true,
+  "verified_evidence_files": {
+    "old": 161,
+    "new": 138
+  },
+  "source_guard_match": true,
+  "plan_regeneration_and_committed_manifest_tests_passed": true,
+  "sha256": {
+    "prefill_design.py": "baf04709c2b26b2545080e6edcf00067885b57ab1062c4846800b2c9d2b16e12",
+    "prefill_identifiability.py": "e03636ac8b0f8695c43c90d672eeb6c0f1e557ea5698b316ccdf0bf4b9e4ead8",
+    "scripts/build_prefill_design.py": "ed2c17978913e9517b0baf05260b945f399c3b3456cdd1d5e39dfcb6055e4fe0",
+    "scripts/check_prefill_itl.py": "66da00c86974c430f549e5923f755de77bf63b39db05739596d67016fc8b0411",
+    "tests/test_prefill_design.py": "6a11997c784db7920323a18f57e7cd4b0f56124882311cd8e6bf704bdb8a0b54",
+    "tests/test_prefill_identifiability.py": "29b40e2a6116389a46855c88a2930569eb236cb5f4f0479dec48ca48fec791c6",
+    "experiments/prefill-service-v1.md": "0b603472a1f26f3cab480dc7f9fb340d42df0c6fff7f0a7eb38bd181eaaa3f93",
+    "experiments/prefill-service-v1.design.json": "69785c9e3868d2203b2a84cec84dd5d02609a1cfb1f12bff9288aaeaa846ca31",
+    "results/prefill-design-self-review/itl-scenarios.json": "22b074a5195f71267ef7d5afd1d6670a2e6a9372da2b0fa93877f31ba717a051",
+    "results/prefill-design-self-review/report.md": "f59a7a9d61eec70f114cfecee36c9930a25801e730db85320473683896825196",
+    "results/prefill-design-self-review/tests.txt": "253677b1cce615e8cee0230065db4f6c34a192cd2c8b1165ace7169e9b941de2"
+  }
+}

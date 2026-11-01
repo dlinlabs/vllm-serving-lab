@@ -1,0 +1,24 @@
+{
+  "scope": "Offline audit plus local related CPU tests; not native acceptance or GPU execution",
+  "tests": {
+    "tests": 110,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "command": "python -m pytest -q tests/test_prefill_diagnostic_analysis.py tests/test_prefill_deep.py tests/test_prefill_collector.py tests/test_prefill_host.py tests/test_prefill_review_gates.py tests/test_setup_v1.py",
+  "analyzer_sha256": "6236ee6a7995282152143e996bf2a32668c3e1fc1b0cbf5298c21cb6c8135bab",
+  "new_test_cases": 11,
+  "initial_local_attempt": {
+    "passed": 19,
+    "failed": 2,
+    "cause": "Missing httpx; installed declared requirements-cpu-tests.txt before final run"
+  },
+  "capture_source": "6edb3e3f2e323c09a67e32afd7eddc97e799906e",
+  "recorded_native_tests": 876,
+  "original_native_junit_in_archive": false,
+  "raw_capture_modified": false,
+  "actual_gpu_execution_here": false,
+  "model_accepted": false,
+  "cuda_scope_qualified": false
+}

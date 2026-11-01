@@ -1,0 +1,26 @@
+{
+  "schema": "queue-phase-policy-v1",
+  "scope": "prospective common-clock sensitivity pilot; no HTTP/cap/MPC acceptance",
+  "calibration_rule": "max absolute relative TRAIN OFF endpoint residual around the frozen six-term model",
+  "maximum_scale_half_width": 0.1,
+  "maximum_branches": 2,
+  "maximum_curve_pieces": 256,
+  "maximum_partition_points": 4096,
+  "timing_source_sha256": {
+    "prefill_lab/async_predictor.py": "13588b27f11b81d770b11acbdafabc1d4d211923dde31464a0add028632d5383",
+    "prefill_lab/event_clock_calibration.py": "946da8076c355e3dffb36f9a7e2d6d3dea9670c330f649193ee0565c4dc09fce",
+    "prefill_lab/effective_calibration.py": "373399c2be55edf71d8bba81e95ceebd698f6ab76f3d389452bd6d7358956888",
+    "prefill_lab/causal.py": "727f2d740a976be8c19b48aaddea05edadf23211af9c2cb7b7b78d602c381f89",
+    "prefill_lab/contracts.py": "4d5cda37f5d5f765f286476da675f4155fffcce5e8b22d35d8623f8d8429a23f",
+    "scripts/predict_prefill_async.py": "801595c6e59c0ee989cb2bf8b284daa4cdd528887bfb63d4cbffd5f82a493724"
+  },
+  "queue_absolute_s": 0.01,
+  "queue_relative": 0.2,
+  "trial_prefix": "qp-",
+  "content_prefix": "queue-phase-v1-",
+  "branch_prediction": "nominal no-probe input-poll boundary minus arrival; clipped at zero",
+  "branch_assignment": "nearest frozen point; ties unresolved; assignment is not measured native phase",
+  "endpoint_rules": "unchanged",
+  "unobserved_branches": "report zero counts; no validation claim for unobserved branches",
+  "uncertainty_claim": "empirical calibration envelope for a shared coefficient scale, not a statistical coverage bound"
+}

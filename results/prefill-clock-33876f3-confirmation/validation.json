@@ -1,0 +1,23 @@
+{
+  "scope": "local read-only analysis/design regressions, not new native full/GPU acceptance",
+  "tests": 64,
+  "new_analysis_tests": 12,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "source_sha256": {
+    "scripts/analyze_prefill_clock_capture.py": "f7c3574e5504471161e3a4b661433da4d1e6414973aec0511004c340a1bb81f8",
+    "tests/test_prefill_clock_analysis.py": "9eeabdc0724dca6eff7a1459040e74f45c6e2dc57cf667277274fc40287ed135"
+  },
+  "compile_passed": true,
+  "registered_fingerprints_passed": true,
+  "original_source_commit": "33876f34b8e540c7008ecf5e64880289a60e2b84",
+  "original_native_cpu_tests": 1116,
+  "original_captured_source_files": 156,
+  "input_archive_sha256": "2d1a78e03ca81705257910a1428e76eeb64c7904a9dcb17a0c034a417cdd9fe2",
+  "original_audit_valid": true,
+  "candidate_passed": true,
+  "model_accepted": false,
+  "adaptive_cap_accepted": false,
+  "mpc_accepted": false
+}

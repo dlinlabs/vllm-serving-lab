@@ -1,0 +1,41 @@
+{
+  "version": "native-finite-plan-research-v1",
+  "role": "pure research recommendation, never normal MPC permit or network actuator",
+  "native_calibration_accepted": false,
+  "performance_accepted": false,
+  "model_error_calibrated": false,
+  "actuation_authority": false,
+  "required_parameters": {
+    "cost_spec": "Actual sealed Gateway CostSpec, with cost-token estimator identity",
+    "theta_ms": "Nonnegative TRAIN-native [theta0, thetaD, thetaP], theta0 > 0",
+    "prefill_overhead_s": "Required nonnegative coefficient; no qualified default",
+    "prefill_s_per_token": "Required nonnegative physical-token coefficient; no qualified default",
+    "prefill_source": "Explicit TRAIN fit artifact or clearly labeled experimental assumption",
+    "prefill_identified": "False unless separately identified; never implies calibration acceptance",
+    "cells": "Exact physical-prompt/max-output cells: pclass, physical_prompt_tokens, cost_prompt_tokens, max_tokens, TRAIN empirical train_outputs",
+    "max_decode": "Explicit supported simulated parallel-decode count",
+    "max_prefill_ktokens": "Explicit supported total admitted prefill physical prompt kilo-tokens",
+    "provenance": "Required decode_source, eos_source, observer_sha256, training_source_sha256, train_cutoff"
+  },
+  "identity": "SHA256 of NativeModel.spec(): own source SHA256, parameters, provenance, cost fingerprint, rules; NOT frozen CPU ModelParameters.identity",
+  "forecast": "Past-offer source, receipt-clock domain and observed_through; ordered low/mean/high rates and model-cell workmix. No future arrival tape accepted by choose_plan.",
+  "scenarios": "Three equal-weight deterministic joint quadrature scenarios, pairing rates with conditional TRAIN EOS quartiles .25/.5/.75. Floor(rate*5) equally spaced offers and deficit-balanced workmix. Scenario tuples generated once and shared across all plans.",
+  "plans": "All eight sequences of three 1-second actions in {16,32}; fixed16 continuation from t=3",
+  "score": "Mean modeled completed count satisfying BOTH TTFT<=0.5s AND request-mean TPOT<=0.05s. TPOT=(terminal-first)/(sampled EOS-1); one-token EOS has TPOT=0 by convention. Rejected offers earn zero. Research benchmark conditions frozen before benchmarking, not customer SLO claims or inter-token P99.",
+  "old_request_score": "Old completions count once per rollout when scheduled arrival and first time are known (or first can still be forecast from output=0). Future prefill can spoil their mean TPOT. Missing old scheduled arrival/unknown already-emitted first excludes good credit conservatively, but never excludes interference. Overlapping receding-horizon prediction scores must NOT be summed as benchmark counts; the runner counts actual offered cohorts once.",
+  "tie_break": "Keep current first action, then fewer cap changes including initial transition, then lexicographic",
+  "lifecycle": "FIFO full prefill overhead plus physical tokens times coefficient; parallel decode mu=1000/(theta0+thetaD*D+thetaP*Pk). First token after prefill. Release original charged cost once on modeled EOS; R+c<=budget admission; lower cap never evicts.",
+  "end_effects": "All plans include identical offered continuation through t=5, then full drain until at most t=35. Incomplete drain invalidates search, never earns partial completion reward. This is not an infinite-horizon/stability guarantee.",
+  "fallback": "16 on stale/incomplete/unknown physical work or conditional EOS support, unsupported simulated physics, invalid/nonfinite inputs, undrained rollouts or deadline. This is a recommendation, not an eviction or safety guarantee.",
+  "deadline": "100ms cooperative wall clock across validation and all plans. Any observed overrun returns fallback; Python/OS preemption can delay return beyond 100ms.",
+  "limits": [
+    "TRAIN provenance is caller-supplied, not cryptographically verified by model construction",
+    "ServingObservation must originate from receipt-qualified join_observations; it does not retain all raw native timestamps",
+    "Unknown output/prompt or native waiting work falls back, rather than substituting charged-cost tokens as physical work",
+    "Unknown old prefill progress conservatively restarts the full work; computed_tokens is unused",
+    "Total admitted prefill Pk and ready-first-token D approximate native running-phase features",
+    "FIFO prefill, joint quadrature, empirical EOS survival and stationary workmix are approximations",
+    "Assumes modeled EOS implies successful completion; no transport lag, failures, KV stalls or asynchronous terminal receipt delay",
+    "No native comparison, action-ranking acceptance, calibration acceptance or soft-SLO/stability performance claim"
+  ]
+}

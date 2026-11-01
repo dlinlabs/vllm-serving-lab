@@ -1,0 +1,787 @@
+{
+  "scope": "constructed CPU development sensitivity; no fitting, native uncertainty or policy-performance claim",
+  "model_sha256": "eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec",
+  "contracts_sha256": "f39f6b73b41b1433a220f182679852df5c4332d9022ce903dba9863375236e23",
+  "script_sha256": "61dfca0d556f08c5e559c7ff82f650941560ae162ea13455e34794bec43f6d1c",
+  "fixed_evaluation_window_s": 5,
+  "scenarios_per_plan": 4,
+  "rows": [
+    {
+      "state": "empty",
+      "setting": "control-1",
+      "actions": [
+        16.0
+      ],
+      "mean_lower": 43.0,
+      "mean_upper": 43.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 1,
+      "tail_s": 10
+    },
+    {
+      "state": "empty",
+      "setting": "reference",
+      "actions": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "mean_lower": 43.0,
+      "mean_upper": 43.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    },
+    {
+      "state": "empty",
+      "setting": "control-5",
+      "actions": [
+        16.0,
+        16.0,
+        16.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 43.75,
+      "mean_upper": 43.75,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 5,
+      "tail_s": 10
+    },
+    {
+      "state": "empty",
+      "setting": "tail-4",
+      "actions": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "mean_lower": 43.0,
+      "mean_upper": 43.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 4
+    },
+    {
+      "state": "empty",
+      "setting": "tail-16",
+      "actions": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "mean_lower": 43.0,
+      "mean_upper": 43.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 16
+    },
+    {
+      "state": "empty",
+      "setting": "prefill-slower",
+      "actions": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "mean_lower": 42.0,
+      "mean_upper": 42.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 6e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    },
+    {
+      "state": "empty",
+      "setting": "decode-slower",
+      "actions": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "mean_lower": 39.5,
+      "mean_upper": 39.5,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.0048,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    },
+    {
+      "state": "long-hit",
+      "setting": "control-1",
+      "actions": [
+        32.0
+      ],
+      "mean_lower": 8.0,
+      "mean_upper": 8.75,
+      "unresolved_reward_width": 0.75,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 1,
+      "tail_s": 10
+    },
+    {
+      "state": "long-hit",
+      "setting": "reference",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 20.25,
+      "mean_upper": 21.0,
+      "unresolved_reward_width": 0.75,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    },
+    {
+      "state": "long-hit",
+      "setting": "control-5",
+      "actions": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 33.25,
+      "mean_upper": 34.0,
+      "unresolved_reward_width": 0.75,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 5,
+      "tail_s": 10
+    },
+    {
+      "state": "long-hit",
+      "setting": "tail-4",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 20.0,
+      "mean_upper": 21.0,
+      "unresolved_reward_width": 1.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 4
+    },
+    {
+      "state": "long-hit",
+      "setting": "tail-16",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 20.5,
+      "mean_upper": 21.0,
+      "unresolved_reward_width": 0.5,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 16
+    },
+    {
+      "state": "long-hit",
+      "setting": "prefill-slower",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 20.25,
+      "mean_upper": 21.0,
+      "unresolved_reward_width": 0.75,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 6e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    },
+    {
+      "state": "long-hit",
+      "setting": "decode-slower",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 17.75,
+      "mean_upper": 18.75,
+      "unresolved_reward_width": 1.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.0048,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    },
+    {
+      "state": "over-cap-awaiting",
+      "setting": "control-1",
+      "actions": [
+        32.0
+      ],
+      "mean_lower": 0.0,
+      "mean_upper": 0.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 1,
+      "tail_s": 10
+    },
+    {
+      "state": "over-cap-awaiting",
+      "setting": "reference",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 0.0,
+      "mean_upper": 0.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    },
+    {
+      "state": "over-cap-awaiting",
+      "setting": "control-5",
+      "actions": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 0.0,
+      "mean_upper": 0.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 5,
+      "tail_s": 10
+    },
+    {
+      "state": "over-cap-awaiting",
+      "setting": "tail-4",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 0.0,
+      "mean_upper": 0.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 4
+    },
+    {
+      "state": "over-cap-awaiting",
+      "setting": "tail-16",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 0.0,
+      "mean_upper": 0.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 16
+    },
+    {
+      "state": "over-cap-awaiting",
+      "setting": "prefill-slower",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 0.0,
+      "mean_upper": 0.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 6e-05,
+        "decode_s_per_token": 0.004,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    },
+    {
+      "state": "over-cap-awaiting",
+      "setting": "decode-slower",
+      "actions": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "mean_lower": 0.0,
+      "mean_upper": 0.0,
+      "unresolved_reward_width": 0.0,
+      "parameters": {
+        "cost_spec": {
+          "intercept": 0.259,
+          "input_per_token": 0.000758,
+          "output_per_token": 0.0052083333,
+          "minimum": 0.1,
+          "default_max_tokens": 128,
+          "tokenizer_identity": "unqualified",
+          "estimator_version": "gateway-token-estimate-v1"
+        },
+        "prefill_s_per_token": 5e-05,
+        "decode_s_per_token": 0.0048,
+        "first_overhead_s": 0.03,
+        "decode_interference": 0.02,
+        "model_version": "cpu-lifecycle-v1",
+        "calibration_version": "synthetic-unqualified-v1",
+        "supported_budgets": [
+          16.0,
+          32.0
+        ],
+        "max_prompt_tokens": 32768,
+        "max_output_tokens": 4096
+      },
+      "control_steps": 3,
+      "tail_s": 10
+    }
+  ]
+}

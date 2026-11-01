@@ -1,0 +1,20 @@
+{
+  "experiment_id": "NV3-R9-frozen-kernel-conditioning-witness",
+  "source_sha256": "b1d83f7af2956d51b5f9d9b014ecff50b2b3a6915c5f10cdb52f034ed8a920b5",
+  "source_commit": "fa9079e6c436b94f776c1ddc39a90e2c86fe8a46",
+  "model_version": "nv3-opus-admission-birth-v5",
+  "controller_version": "none; CPU counterexample only",
+  "environment": "Mayor CPU; no GPU intervention",
+  "hypothesis": "Cyclic next-alive selection is not a uniform conditional empirical draw",
+  "records": [[2.0, 1.5, 2.0], [0.5, null, 0.5], [3.0, null, 3.0]],
+  "min_alive": 1.0,
+  "uniform_start_strata": [0.1, 0.5, 0.9],
+  "actual_draws": [[2.0, 1.5, 2.0], [3.0, null, 3.0], [3.0, null, 3.0]],
+  "actual_survivor_probabilities": [0.3333333333333333, 0.6666666666666666],
+  "uniform_conditional_survivor_probabilities": [0.5, 0.5],
+  "result": "Independently reproduced with the exact frozen kernel_draw implementation",
+  "analysis": "Changes forecast sampling, not just descriptive reporting. Existing frozen scores remain evidence for the original implementation; they must not be silently relabeled as corrected-model results.",
+  "next_action": "Separately freeze uniform eligible-set repair; preserve support/backoff semantics and compare on previously unused complete development blocks before native controller qualification.",
+  "gpu_seconds": 0,
+  "gpu_cost_usd": 0
+}

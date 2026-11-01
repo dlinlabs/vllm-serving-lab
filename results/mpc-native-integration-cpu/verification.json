@@ -1,0 +1,57 @@
+{
+  "schema": "mpc-native-integration-cpu-verification-v1",
+  "integration_parent_commit": "b9015b7944990fbab160846ad996219294ae1481",
+  "implementation_hash": "b4f234020105f69f608da45dba7317a8bb632ecd84aeb0e310362740e5fa083a",
+  "python": "3.12.16",
+  "full_cpu": {
+    "passed": 2014,
+    "skipped": 1,
+    "failed": 0,
+    "errors": 0,
+    "warnings": 1,
+    "elapsed_s": 265.14,
+    "skip_reason": "Native vLLM is not installed in this CPU-only environment",
+    "scope": "Full regression before packaging-only telemetry inclusion; product implementation unchanged afterward",
+    "junit": "qualification-junit.xml",
+    "log": "qualification-pytest.log"
+  },
+  "post_packaging_manifest_regression": {
+    "passed": 30,
+    "skipped": 0,
+    "failed": 0,
+    "elapsed_s": 0.68,
+    "junit": "packaging-manifest-junit.xml",
+    "log": "packaging-manifest-pytest.log",
+    "pyproject_sha256": "a1127c872bd76486a66df056e372558e6e339cd903cff4396a5cf77be827f6ec"
+  },
+  "wheel": {
+    "initial_nonisolated_build": "Failed: setuptools missing; declared isolated build dependency used instead",
+    "initial_import": "Failed: ModuleNotFoundError: telemetry",
+    "initial_sha256": "60493fbea267a912824662dc7a02e068a7fa3f3cb0b5ad3ed0a831c3ea2659ec",
+    "corrected_sha256": "3a93ed176e294316fdbfa9e293b7ddff7eae76e585d4dec240e2163448ae20d4",
+    "corrected_isolated_imports": ["mpc_lab.http_capture", "mpc_lab.identification", "mpc_lab.actuator"],
+    "source_files_byte_matched": 43,
+    "native_client_server_identity_qualified": false
+  },
+  "protocol": {
+    "path": "identification-protocol-v2.json",
+    "protocol_hash": "54816c60572be02e2b7acf539b8d5c52a7953338656fdc0334cdcf36580ca737",
+    "independent_seed_blocks": 24,
+    "episodes": 48,
+    "approved": false,
+    "heldout_arrivals_generated": false
+  },
+  "artifact_sha256": {
+    "identification-protocol-v2.json": "09a20a024a30457e3869830544b99be569564afe2e77477ba23b5ad5ce712166",
+    "qualification-junit.xml": "98cedf79cafb6b139377f88cf09b967e3ebb4199c5c7930e4f4a40e341563e66",
+    "qualification-pytest.log": "d827cab097dab9161faf5c322cdba27cc3b03e7cfa63c484e98425eaabfbe76c",
+    "packaging-manifest-junit.xml": "3556e4f126eb7e543867d87b740bb5b01f07627659c9a983bd6d94d56f914535",
+    "packaging-manifest-pytest.log": "211c072e360135fd76580fe8f75dea263b60eac5c69c57d0cf6b70de7c0f369e"
+  },
+  "native_gpu_executed": false,
+  "real_model_http_executed": false,
+  "paid_resources_started": false,
+  "mpc_policy_parameters_changed": false,
+  "frozen_negative_benchmark_modified": false,
+  "mpc_superiority_or_equivalence_demonstrated": false
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "queue-receipt-probe-policy-v1",
+  "scope": "calibration-only receipt-state and observer diagnosis; no model/HTTP/cap/MPC acceptance",
+  "base_clock_plan_sha256": "da470f9f5b751c51b8edde7242218d0c7e3c56a5d0ed0355055544c181da68ae",
+  "hard_seconds": 1800,
+  "arms": [
+    "baseline",
+    "receipt",
+    "light"
+  ],
+  "balanced_blocks": 6,
+  "warmup_blocks": 1,
+  "clock_reference_trials": 64,
+  "clock_training_trials": 48,
+  "probe_trials": 168,
+  "total_trials": 232,
+  "queue_budget": "existing 10ms/20%; no fitted tolerance",
+  "receipt_scope": "CPU schedule/commit return and pre-ADD state; not exact poll or physical GPU completion"
+}

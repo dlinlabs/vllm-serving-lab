@@ -1,0 +1,62 @@
+{
+  "schema": "native-v3-qualified-evidence-manifest-v1",
+  "scope": "Capture, HTTP, guarded intervention and drained epoch qualification; not model calibration, MPC performance or completed ten-hour evidence.",
+  "environment": {
+    "gpu": "RTX 4090 24564 MiB",
+    "driver": "595.91.07",
+    "vllm": "0.30.0",
+    "torch": "2.13.0",
+    "transformers": "5.22.1",
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "model_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "core_implementation_hash": "b4f234020105f69f608da45dba7317a8bb632ecd84aeb0e310362740e5fa083a"
+  },
+  "artifacts": [
+    {
+      "file": "pr33-native-v3-qualification-retry03-evidence.tar.gz",
+      "sha256": "cbbb88639bae23a9b4fe9a5aa3f8b39d7716506d09ee40710561e649a28ca800",
+      "source_commit": "2587d2b822dcd3812353ce2ac3369b7192fa7ba7",
+      "arms": 16,
+      "complete_natural_eos_requests": 40,
+      "v3_valid_audits": 16,
+      "retained_strict_v2_failures": 8,
+      "measured_light_requests": 20,
+      "measured_terminal_overhang_tokens": 20,
+      "unmeasured_off_request_physical_tails": 20,
+      "controller": "Fixed reservation cost budget32; not concurrency32 or MPC"
+    },
+    {
+      "file": "pr33-native-v3-controlled-interface-smoke01-evidence.tar.gz",
+      "sha256": "2f00e9217800d36c9a62a659a0567ed7b6c00ac07a50d5571ef21bae2e177467",
+      "source_commit": "87f7e564159e5718091f44e92ef85beb4787ccd7",
+      "offered": 922,
+      "natural_eos": 648,
+      "rejected": 274,
+      "actual_offered_window_s": 48,
+      "acknowledged_assignments": 48,
+      "retained_pending_attempts": 2,
+      "scope": "One arrival seed block, two workload cells, complementary random action sequences; not independent efficacy repetitions"
+    },
+    {
+      "file": "pr33-native-v3-controlled-interface-epochs02-evidence.tar.gz",
+      "sha256": "e583df68b0daf48df4ad35885437897342411db9c91c47d75e81840246a9d87a",
+      "source_commit": "6c11fe7e683439f379f0dfdbd21b05f5873b2c90",
+      "offered": 922,
+      "natural_eos": 650,
+      "rejected": 272,
+      "actual_offered_window_s": 48,
+      "paired_gateway_epochs": 2,
+      "owned_gateway_processes_stopped": true,
+      "native_vllm_restarted": false,
+      "scope": "Bounded drained paired-episode epoch rollover; not production outcome-cache retention acceptance"
+    }
+  ],
+  "limitations": [
+    "OFF capture is not literal pristine-disabled hooks and does not provide physical GPU-tail labels.",
+    "Current-stream GPU spans are neither an absolute GPU clock nor exclusive per-request service.",
+    "HTTP TPOT is a request-level mean; SSE content events are not per-token timestamp qualification.",
+    "Source component native-vLLM epoch remains2587d2b; collector/Gateway revisions are recorded separately.",
+    "The long48000-second offered-window plan is running, not completed; final held-out remains unused.",
+    "GPU billing price and lifecycle API access are unverified; stopping serving processes does not stop Pod billing."
+  ]
+}
