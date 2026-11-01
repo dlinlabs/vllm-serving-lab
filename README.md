@@ -1,65 +1,91 @@
 # vLLM Serving Benchmark Lab
 
-**研究如何在大量請求湧入時，讓單張 GPU 上的語言模型服務保持可用。**
+**A single-GPU research lab for keeping language-model serving usable under heavy traffic.**
 
-這個專案使用 vLLM、Qwen3-4B 和相容 OpenAI API 的 Gateway，
-比較不同的請求接納策略。重點不是把 GPU 使用率拉滿，而是：
-**有多少請求能及時完成？為了維持速度，又拒絕了多少請求？**
+Built with vLLM, Qwen3-4B, and an OpenAI-compatible gateway, this project asks:
+**How many requests finish on time, and how many must be rejected to keep the service responsive?**
+High GPU utilization alone is not the goal.
 
-## 它怎麼運作？
+## How it works
 
 ```text
-測試請求 → Gateway 決定接不接 → vLLM 產生回答 → 記錄速度與結果
+Test requests -> Admission gateway -> vLLM generates answers -> Measure results
 ```
 
-Gateway 就像模型前面的交通管制員。忙不過來時，先拒絕部分新請求，
-避免所有人一起排太久；這是延遲與拒絕率的取捨，不是增加 GPU 算力。
+The gateway acts like a traffic controller. When overloaded, it rejects some new
+requests instead of letting everyone wait too long. This trades rejection for
+latency; it does not create more GPU capacity.
 
-| 策略 | 白話說明 |
+| Policy | Plain-language description |
 |---|---|
-| 不限制（`baseline`） | 所有請求都交給模型。 |
-| 按數量限制（`protected` / count） | 按請求個數給額度，長短請求都算一筆。 |
-| 按估計工作量限制（`cost_aware` / cost） | 用輸入長度與要求的輸出上限估算成本，總額度滿了就拒絕新請求。 |
+| Unrestricted (`baseline`) | Send every request to the model. |
+| Request-count limit (`protected` / count) | Allocate capacity by request count; short and long requests each count as one. |
+| Estimated-work limit (`cost_aware` / cost) | Estimate work from prompt length and requested output limit; reject new requests when the total cost budget is full. |
 
-**count16 和 cost16 不是相同容量。**前者按個數計算，後者按估計成本計算；
-cost 也不是 GPU 記憶體 GB 或實測使用秒數。降低 cost 額度不會取消已接納的請求。
+**count16 and cost16 are not equal capacities.** Their budgets use different units.
+Cost is neither GPU memory in GB nor measured GPU time. Lowering a cost budget
+does not cancel requests already admitted.
 
-## 現在做到哪裡？
+## Current status
 
-**固定策略比較已完成；MPC 的效果尚未驗證。**
+**Fixed-policy experiments are complete. MPC performance is not yet validated.**
 
-最新一批在同一個 RTX 4090 後端完成 **80 個正式實驗**，
-比較 count16、count32、cost16、cost32，涵蓋四組請求種子與五種負載。
-112,652 個請求中，77,064 個完成、35,588 個被拒絕，沒有其他終端失敗或輸出截斷。
-四個不同模型已完成獨立分析與交叉檢查。
+The latest batch completed **80 experiments** on one RTX 4090 backend:
+count16, count32, cost16, and cost32 across four arrival seeds and five workloads.
+Of 112,652 requests, 77,064 completed and 35,588 were rejected, with no other
+terminal failures or output-cap terminations. Four different AI models independently
+analyzed the results, then cross-reviewed one another's findings.
 
-結果沒有一個普遍贏家：長短請求會改變策略排名。
-cost32 的平均視窗內合格完成率只比 count32 多約 **0.05 請求／秒**，
-不能據此宣稱統計顯著、所有情境都更好，或 MPC 已經勝出。
+There is no universal winner. Cost32 averaged only **0.05 more SLO-qualified
+requests per second** than count32 within the observation windows, about 0.7%.
+This is descriptive evidence, not statistical significance or an MPC result.
+Window-only completions and completions during the subsequent drain are reported
+separately. Rejections, timeouts, and failures are not removed from evaluation.
 
-「合格完成」指符合本批預定的延遲要求；視窗內計數與允許排空期完成的計數分開報告。
-拒絕、超時與失敗不會從評估中刪掉。
+[Full results, metric definitions, and limitations (Traditional Chinese)](https://github.com/dlinlabs/vllm-serving-lab/blob/08b933e65ad2b5054beca1c4651296c9a6684be8/experiments/mpc-research/native-v3/baseline04-four-model-technical-consensus.zh-TW.md)
 
-[閱讀完整結果、指標定義與限制](https://github.com/dlinlabs/vllm-serving-lab/blob/08b933e65ad2b5054beca1c4651296c9a6684be8/experiments/mpc-research/native-v3/baseline04-four-model-technical-consensus.zh-TW.md)
+### Why did cost32 only slightly outperform count32?
 
-PR33 已合併到 `analysis/cap-miss-causes-v1`，不是 `main`。
-首頁所在的 `main` 提供基礎服務與測試工具；
-[PR33 的完整研究程式與資料](https://github.com/dlinlabs/vllm-serving-lab/tree/08b933e65ad2b5054beca1c4651296c9a6684be8)
-另有固定版本可供查閱與重現。
+Its gains on long and mixed prompts were largely offset by losses on short prompts.
+These are SLO-qualified, window-only completion counts summed across all four seeds;
+the short and long rows each combine the 128- and 256-token output-limit workloads.
 
-## MPC 是什麼？
+| Prompt workload | Count32 | Cost32 | Difference |
+|---|---:|---:|---:|
+| Short: 128 input tokens | 15,697 | 14,737 | -960 |
+| Long: 4,096 input tokens | 161 | 913 | +752 |
+| Mixed | 1,042 | 1,370 | +328 |
+| **Total** | **16,900** | **17,020** | **+120** |
 
-MPC（模型預測控制）會先預測未來幾秒的狀態，比較多步額度安排，
-**只執行第一步，再用實際回饋重新計算**。
-它不是固定額度，也不是單純看到佇列變長就調整。
+For example, a 128-input/128-output-limit request costs about 1.02 units, so
+cost32 permits up to 31 such concurrent reservations. A 4,096-input/128-output-limit
+request costs about 4.03 units, permitting only seven. Count32 does not distinguish
+their lengths. This illustrates different admission pressure, not an identified
+GPU-memory or scheduling mechanism.
 
-接下來要先驗證真實狀態、額度修改與回饋鏈路，封存可驗證的新模型，
-再和固定策略、反應式控制及單步規劃公平比較。
-目前不能把離線預測、CPU 測試或一次控制成功當作 MPC 效能證明。
+The small overall gain is **not evidence of an input-token counting bug**.
+The audit matched workload tapes and observed token geometry, but did not retain
+every outgoing payload byte. The cost estimate also uses requested output limits,
+not actual output lengths or exact remaining GPU work.
 
-## 如何開始？
+PR33 was merged into `analysis/cap-miss-causes-v1`, not `main`. The default branch
+provides the base service and benchmarks;
+[PR33's research code and data](https://github.com/dlinlabs/vllm-serving-lab/tree/08b933e65ad2b5054beca1c4651296c9a6684be8)
+are available at a fixed revision for browsing and reproduction.
 
-先閱讀報告不需要 GPU。在 Linux、Python 3.12 環境中，可執行 CPU 測試：
+## What is MPC?
+
+Model Predictive Control forecasts the next few seconds, compares multi-step
+budget plans, **applies only the first action, then replans using real feedback**.
+It is neither a fixed limit nor simply reacting to a growing queue.
+
+Next comes real state/control/feedback qualification, a separately versioned model,
+and fair comparison against fixed, reactive, and strong one-move policies.
+Offline forecasts, CPU tests, or one successful control action do not prove MPC gains.
+
+## Getting started
+
+Reading the reports requires no GPU. For CPU tests, use Linux and Python 3.12:
 
 ```bash
 python3 -m venv .venv
@@ -68,21 +94,22 @@ python -m pip install -r requirements-cpu-tests.txt
 python scripts/run_linux_cpu_tests.py
 ```
 
-這組步驟不啟動 vLLM、不下載模型；CPU 測試通過也不代表 GPU 實驗已通過。
-若要實際啟動推論服務，請另看 [V1 環境設定](experiments/v1-setup.md)，
-並先確認 GPU、模型與費用。
-V1 記錄的核心版本是 vLLM `0.30.0` 與 PyTorch `2.13.0+cu130`，不是完整歷史 lockfile。
+These steps do not start vLLM or download a model. Passing CPU tests does not
+qualify a GPU experiment. To start inference, follow the [V1 setup guide](experiments/v1-setup.md)
+and check hardware and costs first. Recorded V1 core versions are vLLM `0.30.0`
+and PyTorch `2.13.0+cu130`; this is not a complete historical lockfile.
 
-## 程式與資料在哪裡？
+## Code and data
 
-| 位置 | 用途 |
+| Location | Purpose |
 |---|---|
-| [gateway.py](gateway.py) | 接納控制與串流代理。 |
-| [run_experiments.py](run_experiments.py) | 產生負載、比較策略與保存結果。 |
-| [experiments/](experiments/) | 實驗方法、設定與操作文件。 |
-| [results/](results/) | 原始資料、分析與重現工具。 |
-| [最新研究資料](https://github.com/dlinlabs/vllm-serving-lab/tree/08b933e65ad2b5054beca1c4651296c9a6684be8/results/mpc-native-v3) | PR33 的模型研究與原生驗證證據。 |
+| [gateway.py](gateway.py) | Admission control and streaming proxy. |
+| [run_experiments.py](run_experiments.py) | Generate traffic, compare policies, and save results. |
+| [experiments/](experiments/) | Methods, configurations, and runbooks. |
+| [results/](results/) | Raw data, analysis, and reproduction tools. |
+| [Latest research data](https://github.com/dlinlabs/vllm-serving-lab/tree/08b933e65ad2b5054beca1c4651296c9a6684be8/results/mpc-native-v3) | PR33 model research and native verification evidence. |
 
-逐階段的數據、架構與重現命令保留在 [舊版完整 README](https://github.com/dlinlabs/vllm-serving-lab/blob/aea7694a0af2d1dadc883b4b9e33d1a9bdb61098/README.md)。
+Detailed historical results, architecture, and reproduction commands remain in the
+[earlier full README](https://github.com/dlinlabs/vllm-serving-lab/blob/aea7694a0af2d1dadc883b4b9e33d1a9bdb61098/README.md).
 
-這是一個研究實驗室，不是已驗證的生產環境自動控制器。
+This is a research lab, not a validated production auto-controller.
