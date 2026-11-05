@@ -1,0 +1,911 @@
+1: """P0 nominal-lineage measured metrics: additive pure calculator plus a run_trace_pilot.py output adapter.
+2: 
+3: Scope: the UNQUALIFIED nominal demonstrator lineage r24-resume-p0-nominal-v1.  This is NOT the legacy L-T16
+4: world: the legacy comparison16 scorer is neither modified nor reused, and no G06/G16/Native14 qualification is
+5: inherited or claimed.  Only measured quantities are reported: no winner, capacity, SLO guarantee or production
+6: claim.
+7: 
+8: * ``compute(run)`` -- pure core over strict normalized rows (``ROW_KEYS``); refuses, never repairs, bad input.
+9: * ``adapt_run_trace_pilot(output_dir, arm=..., purpose=...)`` -- maps one run_trace_pilot.py output directory
+10:   onto normalized rows with the exact field mapping in ``RAW_MAPPING``; refuses what the raw files cannot
+11:   support (it never invents events, SLO fields or controller timings).
+12: * ``select_train_fixed(...)`` -- Train-only empirical fixed16 vs fixed32 choice by unchanged natural-SLO count.
+13: * ``comparison_table(...)`` -- one measured table per split, without any winner field.
+14: 
+15: Natural SLO uses the UNCHANGED r23 ``score_http.py`` (sha256 pinned; executed from verified bytes, no bytecode).
+16: """
+17: import argparse
+18: import hashlib
+19: import json
+20: import math
+21: from pathlib import Path
+22: import sys
+23: import types
+24: 
+25: SCHEMA = 'r24-resume-p0-nominal-metrics-v1'
+26: LINEAGE = 'r24-resume-p0-nominal-v1'
+27: QUALIFICATION = ('UNQUALIFIED nominal demonstrator: not the legacy L-T16 world; no G06/G16/Native14 qualification '
+28:                  'inherited or claimed')
+29: FATES = ('complete', 'rejected', 'http_error', 'stream_error', 'transport_error', 'cancelled', 'not_launched',
+30:          'unknown')
+31: FAILURE_FATES = ('http_error', 'stream_error', 'transport_error', 'cancelled')
+32: PURPOSES = ('train', 'eval')
+33: CLAIM_SCOPE = {
+34:     'train': 'Train split: in-sample engineering measurement only; no generalization claim',
+35:     'eval': 'Eval split: procedural holdout of synthetic draws from one public generator; not an OOD, real-trace or '
+36:             'Azure holdout',
+37: }
+38: ARMS = ('fixed16', 'fixed32', 'train_selected_fixed', 'strong_one_move', 'mpc', 'causal_reactive')
+39: RUN_ARMS = tuple(arm for arm in ARMS if arm != 'train_selected_fixed')
+40: FIXED_BUDGETS = {'fixed16': 16.0, 'fixed32': 32.0}
+41: QUANTILES = (50, 95, 99)
+42: GROUP_EDGES = (512, 2048)
+43: GROUPS = ('le512', '513to2048', 'gt2048')
+44: FIFO_LABEL = 'PENDING_VERIFIED_BACKEND_FCFS_CONFIG'
+45: FIFO_NOTE = ('FIFO is a queue ordering, not a fourth algorithm, and does not imply any budget; the label stays pending '
+46:              'until the actual backend FCFS configuration is verified (never derived from a CPU plant)')
+47: SCORE_HTTP_PATH = Path(__file__).resolve().parent.parent / 'native-r23' / 'score_http.py'
+48: SCORE_HTTP_SHA256 = '9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d'
+49: ROW_KEYS = frozenset({'request_id', 'group_tokens', 'max_output_tokens', 'scheduled_at', 'sent_at',
+50:                       'first_content_at', 'terminal_at', 'fate', 'completion_tokens', 'slo'})
+51: SLO_KEYS = frozenset({'status', 'finish_reason', 'requested_ignore_eos', 'stream_done', 'stream_error'})
+52: RUN_KEYS = frozenset({'arm', 'purpose', 'clock_domain', 'offered_start', 'offered_duration_s', 'envelope_start',
+53:                       'envelope_end', 'envelope_scope', 'rows', 'slo_missing', 'control', 'control_missing',
+54:                       'provenance'})
+55: ENVELOPE_SCOPES = {
+56:     'offered_cohort_observed': 'offered start to the later of offered end and last observed terminal; EXCLUDES pre-offer '
+57:                                'setup/solver warmup, post-terminal drain and unresolved requests: a lower bound on the '
+58:                                'full wall, not the full wall',
+59:     'full_wall': 'caller-recorded actual wall in the run clock domain including setup, solver, HTTP, unresolved '
+60:                  'requests and final drain',
+61: }
+62: PENALIZED_ESTIMAND = ('failure-penalized operational TTFT over ALL offered requests (missing first content = +inf); '
+63:                       'NOT a survival-analysis identified quantile of right-censored latency')
+64: CONDITIONAL_ESTIMAND = 'TTFT conditional on fate complete (selection-biased; read with fates and the penalized TTFT)'
+65: COHORT_LABEL = ('cohort-normalized (includes tail): all-offered cohort count / offered window seconds; not steady-state '
+66:                 'GPU throughput')
+67: ENVELOPE_LABEL = 'actual wall envelope: count / (envelope_end - envelope_start)'
+68: CLAIMS_NOT_MADE = (
+69:     'no winner or superiority', 'no capacity, SLO guarantee or production claim',
+70:     'no G06/G16/Native14 qualification', 'hashes are integrity pins, not Train/Eval disjointness or leakage proof',
+71:     'FIFO label pending verified backend FCFS configuration',
+72: )
+73: 
+74: 
+75: class MetricsInputError(ValueError):
+76:     """Normalized input violates the frozen schema: refused, never repaired."""
+77: 
+78: 
+79: class AdapterRefusal(ValueError):
+80:     """Raw run_trace_pilot output cannot support the normalized schema: refused, no events invented."""
+81: 
+82: 
+83: _SCORE_HTTP = None
+84: 
+85: 
+86: def score_http():
+87:     """The unchanged r23 natural-SLO scorer, executed only from bytes matching the pinned sha256."""
+88:     global _SCORE_HTTP
+89:     if _SCORE_HTTP is None:
+90:         data = SCORE_HTTP_PATH.read_bytes()
+91:         if hashlib.sha256(data).hexdigest() != SCORE_HTTP_SHA256:
+92:             raise RuntimeError('score_http.py differs from the pinned sha256; natural SLO scoring refused')
+93:         module = types.ModuleType('r23_score_http_pinned')
+94:         module.__file__ = str(SCORE_HTTP_PATH)
+95:         exec(compile(data, str(SCORE_HTTP_PATH), 'exec'), module.__dict__)
+96:         _SCORE_HTTP = module
+97:     return _SCORE_HTTP
+98: 
+99: 
+100: def _is_number(value):
+101:     return type(value) in (int, float) and math.isfinite(value)
+102: 
+103: 
+104: def _number(value, name):
+105:     if not _is_number(value):
+106:         raise MetricsInputError(f'{name} must be a finite int/float (bool refused)')
+107:     return value
+108: 
+109: 
+110: def _optional_number(value, name):
+111:     return None if value is None else _number(value, name)
+112: 
+113: 
+114: def _nonempty_str(value, name):
+115:     if not isinstance(value, str) or not value:
+116:         raise MetricsInputError(f'{name} must be a non-empty string')
+117:     return value
+118: 
+119: 
+120: def group_of(tokens):
+121:     """Predeclared prompt-token groups (edges 512 and 2048 inclusive on the left group)."""
+122:     if tokens <= GROUP_EDGES[0]:
+123:         return GROUPS[0]
+124:     return GROUPS[1] if tokens <= GROUP_EDGES[1] else GROUPS[2]
+125: 
+126: 
+127: def percentile_block(values, estimand=None):
+128:     """Nearest-rank ordered[ceil(q*n/100)-1] (integer rank arithmetic); a rank on +inf yields null with a reason."""
+129:     ordered = sorted(values)
+130:     n = len(ordered)
+131:     block = {'n': n, 'method': 'nearest_rank_ceil'}
+132:     if estimand is not None:
+133:         block['estimand'] = estimand
+134:     if not n:
+135:         for q in QUANTILES:
+136:             block.update({f'p{q}': None, f'p{q}_rank': None, f'p{q}_is_sample_max': None})
+137:         block.update(max=None, n_failure_penalty=0, null_reason='no_samples')
+138:         return block
+139:     block['n_failure_penalty'] = sum(value == math.inf for value in ordered)
+140:     for q in QUANTILES:
+141:         rank = (q * n + 99) // 100
+142:         value = ordered[rank - 1]
+143:         block[f'p{q}'] = value if math.isfinite(value) else None
+144:         block[f'p{q}_rank'] = rank
+145:         block[f'p{q}_is_sample_max'] = rank == n
+146:         if not math.isfinite(value):
+147:             block[f'p{q}_null_reason'] = 'rank_falls_on_failure_penalty'
+148:     block['max'] = ordered[-1] if math.isfinite(ordered[-1]) else None
+149:     block['null_reason'] = None
+150:     return block
+151: 
+152: 
+153: def _validate_row(row, index):
+154:     if not isinstance(row, dict) or set(row) != ROW_KEYS:
+155:         raise MetricsInputError(f'row {index}: keys must be exactly {sorted(ROW_KEYS)}')
+156:     name = f'row {index}'
+157:     _nonempty_str(row['request_id'], f'{name} request_id')
+158:     for key in ('group_tokens', 'max_output_tokens'):
+159:         if type(row[key]) is not int or row[key] <= 0:
+160:             raise MetricsInputError(f'{name} {key} must be a positive int')
+161:     scheduled = _number(row['scheduled_at'], f'{name} scheduled_at')
+162:     sent, first, terminal = (_optional_number(row[key], f'{name} {key}')
+163:                              for key in ('sent_at', 'first_content_at', 'terminal_at'))
+164:     fate = row['fate']
+165:     if fate not in FATES:
+166:         raise MetricsInputError(f'{name} fate must be one of {FATES}')
+167:     tokens = row['completion_tokens']
+168:     if tokens is not None and (type(tokens) is not int or tokens < 0):
+169:         raise MetricsInputError(f'{name} completion_tokens must be null or an int >= 0')
+170:     slo = row['slo']
+171:     if slo is not None:
+172:         if not isinstance(slo, dict) or set(slo) != SLO_KEYS:
+173:             raise MetricsInputError(f'{name} slo keys must be exactly {sorted(SLO_KEYS)}')
+174:         _nonempty_str(slo['status'], f'{name} slo.status')
+175:         if slo['finish_reason'] is not None and not isinstance(slo['finish_reason'], str):
+176:             raise MetricsInputError(f'{name} slo.finish_reason must be null or a string')
+177:         if any(type(slo[key]) is not bool for key in ('requested_ignore_eos', 'stream_done', 'stream_error')):
+178:             raise MetricsInputError(f'{name} slo flags must be bool')
+179:         if (slo['status'] == 'complete') != (fate == 'complete'):
+180:             raise MetricsInputError(f'{name} slo.status complete must coincide with fate complete')
+181:     if first is not None and (sent is None or first < sent or first < scheduled):
+182:         raise MetricsInputError(f'{name} clock order: first_content_at needs sent_at <= first and scheduled_at <= first')
+183:     if terminal is not None and (sent is None or terminal < sent or (first is not None and terminal < first)):
+184:         raise MetricsInputError(f'{name} clock order: terminal_at needs sent_at <= terminal and first <= terminal')
+185:     if fate == 'not_launched' and not (sent is None and first is None and terminal is None and tokens is None):
+186:         raise MetricsInputError(f'{name} not_launched carries no send/first/terminal/token observation')
+187:     if fate == 'complete' and (sent is None or first is None or terminal is None):
+188:         raise MetricsInputError(f'{name} complete requires sent_at, first_content_at and terminal_at')
+189:     if fate in ('rejected',) + FAILURE_FATES and (sent is None or terminal is None):
+190:         raise MetricsInputError(f'{name} {fate} requires sent_at and terminal_at')
+191: 
+192: 
+193: def _validate_control(run):
+194:     control, missing = run['control'], run['control_missing']
+195:     if control is None:
+196:         _nonempty_str(missing, 'control_missing (required when control is null)')
+197:         if run['arm'] in FIXED_BUDGETS:
+198:             raise MetricsInputError('fixed arms require a verified static_fixed control record')
+199:         return
+200:     if missing is not None:
+201:         raise MetricsInputError('control_missing must be null when control is provided')
+202:     if not isinstance(control, dict):
+203:         raise MetricsInputError('control must be a dict')
+204:     kind = control.get('kind')
+205:     if kind == 'static_fixed':
+206:         if set(control) != {'kind', 'budget', 'basis'}:
+207:             raise MetricsInputError('static_fixed control keys must be exactly kind, budget, basis')
+208:         _nonempty_str(control['basis'], 'control.basis')
+209:         if run['arm'] not in FIXED_BUDGETS or control['budget'] != FIXED_BUDGETS[run['arm']] \
+210:                 or type(control['budget']) is not float:
+211:             raise MetricsInputError('static_fixed control must belong to fixed16/fixed32 with its exact float budget')
+212:     elif kind == 'measured_intervals':
+213:         if set(control) != {'kind', 'source', 'intervals'}:
+214:             raise MetricsInputError('measured_intervals control keys must be exactly kind, source, intervals')
+215:         if run['arm'] in FIXED_BUDGETS:
+216:             raise MetricsInputError('fixed arms are static: no controller decision intervals')
+217:         _nonempty_str(control['source'], 'control.source')
+218:         if not isinstance(control['intervals'], list):
+219:             raise MetricsInputError('control.intervals must be a list')
+220:         for index, item in enumerate(control['intervals']):
+221:             if not isinstance(item, list) or len(item) != 2:
+222:                 raise MetricsInputError(f'control interval {index} must be [start, end]')
+223:             start, end = (_number(value, f'control interval {index}') for value in item)
+224:             if end < start:
+225:                 raise MetricsInputError(f'control interval {index} ends before it starts')
+226:     else:
+227:         raise MetricsInputError('control.kind must be static_fixed or measured_intervals')
+228: 
+229: 
+230: def validate_run(run):
+231:     if not isinstance(run, dict) or set(run) != RUN_KEYS:
+232:         raise MetricsInputError(f'run keys must be exactly {sorted(RUN_KEYS)}')
+233:     if run['arm'] not in RUN_ARMS:
+234:         raise MetricsInputError(f'run arm must be one of {RUN_ARMS} (train_selected_fixed is a table alias)')
+235:     if run['purpose'] not in PURPOSES:
+236:         raise MetricsInputError(f'purpose must be one of {PURPOSES}')
+237:     _nonempty_str(run['clock_domain'], 'clock_domain')
+238:     offered_start = _number(run['offered_start'], 'offered_start')
+239:     duration = _number(run['offered_duration_s'], 'offered_duration_s')
+240:     start, end = _number(run['envelope_start'], 'envelope_start'), _number(run['envelope_end'], 'envelope_end')
+241:     if duration <= 0 or start > offered_start or end < offered_start + duration:
+242:         raise MetricsInputError('envelope must cover [offered_start, offered_start + offered_duration_s] with '
+243:                                 'positive duration')
+244:     if run['envelope_scope'] not in ENVELOPE_SCOPES:
+245:         raise MetricsInputError(f'envelope_scope must be one of {sorted(ENVELOPE_SCOPES)}')
+246:     if not isinstance(run['rows'], list):
+247:         raise MetricsInputError('rows must be a list')
+248:     for index, row in enumerate(run['rows']):
+249:         _validate_row(row, index)
+250:     if len({row['request_id'] for row in run['rows']}) != len(run['rows']):
+251:         raise MetricsInputError('request_id values must be unique (all-offered denominator)')
+252:     missing = run['slo_missing']
+253:     if missing is None:
+254:         if any(row['slo'] is None for row in run['rows']):
+255:             raise MetricsInputError('natural SLO fields must be present on every row or on none')
+256:     else:
+257:         if (not isinstance(missing, list) or not missing
+258:                 or any(not isinstance(item, str) or not item for item in missing)):
+259:             raise MetricsInputError('slo_missing must be null or a non-empty list of reasons')
+260:         if any(row['slo'] is not None for row in run['rows']):
+261:             raise MetricsInputError('natural SLO fields must be present on every row or on none')
+262:     _validate_control(run)
+263:     provenance = run['provenance']
+264:     if not isinstance(provenance, dict):
+265:         raise MetricsInputError('provenance must be a dict')
+266:     _nonempty_str(provenance.get('offered_trace_sha256'), 'provenance.offered_trace_sha256')
+267: 
+268: 
+269: def _rate(count, total):
+270:     return count / total if total else None
+271: 
+272: 
+273: def _fate_summary(rows):
+274:     fates = {fate: 0 for fate in FATES}
+275:     for row in rows:
+276:         fates[row['fate']] += 1
+277:     total = len(rows)
+278:     failures = sum(fates[fate] for fate in FAILURE_FATES)
+279:     return {
+280:         'n_offered': total, 'fates': fates, 'delivered': fates['complete'], 'failures': failures,
+281:         'rejection_rate': _rate(fates['rejected'], total), 'failure_rate': _rate(failures, total),
+282:         'not_launched_rate': _rate(fates['not_launched'], total), 'unknown_rate': _rate(fates['unknown'], total),
+283:         'delivered_fraction': _rate(fates['complete'], total),
+284:     }
+285: 
+286: 
+287: def _penalized(rows, origin):
+288:     return [row['first_content_at'] - row[origin] if row['first_content_at'] is not None else math.inf
+289:             for row in rows]
+290: 
+291: 
+292: def _ttft(rows):
+293:     complete = [row for row in rows if row['fate'] == 'complete']
+294:     return {
+295:         'conditional_scheduled': percentile_block(
+296:             [row['first_content_at'] - row['scheduled_at'] for row in complete], CONDITIONAL_ESTIMAND),
+297:         'conditional_client_send': percentile_block(
+298:             [row['first_content_at'] - row['sent_at'] for row in complete], CONDITIONAL_ESTIMAND),
+299:         'all_offered_penalized_scheduled': percentile_block(_penalized(rows, 'scheduled_at'), PENALIZED_ESTIMAND),
+300:         'all_offered_penalized_client_send': percentile_block(_penalized(rows, 'sent_at'), PENALIZED_ESTIMAND),
+301:     }
+302: 
+303: 
+304: def _natural_slo(run):
+305:     if run['slo_missing'] is not None:
+306:         return {
+307:             'available': False, 'null_reason': 'natural_slo_fields_unavailable', 'missing': list(run['slo_missing']),
+308:             'substitution': 'none: no TTFT-only or client --ttft-slo substitute', 'natural_slo_good': None,
+309:             'slo_attainment_fraction': None, 'cohort_slo_goodput_rps': None, 'in_window_slo_goodput_rps': None,
+310:             'wall_envelope_slo_goodput_rps': None,
+311:         }, None
+312:     module = score_http()
+313:     rows = [{
+314:         'status': row['slo']['status'], 'finish_reason': row['slo']['finish_reason'],
+315:         'requested_ignore_eos': row['slo']['requested_ignore_eos'], 'stream_done': row['slo']['stream_done'],
+316:         'stream_error': row['slo']['stream_error'],
+317:         'usage': None if row['completion_tokens'] is None else {'completion_tokens': row['completion_tokens']},
+318:         'scheduled_at': row['scheduled_at'], 'first_content_at': row['first_content_at'],
+319:         'terminal_at': row['terminal_at'],
+320:     } for row in run['rows']]
+321:     scored = module.score(rows, run['offered_duration_s'], offered_start=run['offered_start'],
+322:                           accounting_started_at=run['envelope_start'], accounting_finished_at=run['envelope_end'])
+323:     return {
+324:         'available': True, 'null_reason': None, 'rule': scored['rule'], 'score_http_sha256': SCORE_HTTP_SHA256,
+325:         'all_offered': scored['all_offered'], 'natural_slo_good': scored['natural_slo_good'],
+326:         'slo_attainment_fraction': scored['all_offered_good_fraction'],
+327:         'slo_attainment_fraction_unit': 'dimensionless: natural_slo_good / all_offered',
+328:         'cohort_slo_goodput_rps': scored['cohort_slo_goodput_rps'], 'cohort_slo_goodput_label': COHORT_LABEL,
+329:         'in_window_slo_goodput_rps': scored['in_window_slo_goodput_rps'],
+330:         'wall_envelope_slo_goodput_rps': scored['policy_and_tail_wall_slo_goodput_rps'],
+331:         'wall_envelope_label': ENVELOPE_LABEL, 'wall_envelope_scope': run['envelope_scope'],
+332:         'wall_envelope_s': scored['policy_and_tail_wall_s'],
+333:         'after_offer_tail_and_accounting_s': scored['after_offer_tail_and_accounting_s'],
+334:         'statuses': scored['statuses'], 'finish_reasons': scored['finish_reasons'],
+335:         'censored_cap_completions': scored['censored_cap_completions'],
+336:         'one_token_complete': scored['one_token_complete'],
+337:     }, [module.natural_good(row) for row in rows]
+338: 
+339: 
+340: def _throughput(run, rows, envelope_s):
+341:     duration = run['offered_duration_s']
+342:     delivered = [row for row in rows if row['fate'] == 'complete']
+343:     missing = [row for row in delivered if row['completion_tokens'] is None]
+344:     observed = sum(row['completion_tokens'] for row in delivered if row['completion_tokens'] is not None)
+345:     upper = observed + sum(row['max_output_tokens'] for row in missing)
+346: 
+347:     def per_second(window):
+348:         return {'lower': observed / window, 'upper': upper / window, 'exact': not missing}
+349: 
+350:     return {
+351:         'delivered_definition': 'fate complete (client success; includes length-capped completions)',
+352:         'delivered': len(delivered), 'offered_rps': len(rows) / duration,
+353:         'cohort_normalized_delivered_rps': len(delivered) / duration, 'cohort_label': COHORT_LABEL,
+354:         'wall_envelope_delivered_rps': len(delivered) / envelope_s, 'wall_envelope_label': ENVELOPE_LABEL,
+355:         'wall_envelope_scope': run['envelope_scope'],
+356:         'completion_tokens_observed': observed, 'completion_tokens_missing_usage_rows': len(missing),
+357:         'completion_tokens_upper_bound': upper,
+358:         'bounds_rule': 'lower = observed endpoint usage; upper adds max_output_tokens per delivered row lacking usage; '
+359:                        'no chunk-count or max_tokens substitution as a point value',
+360:         'cohort_normalized_completion_tokens_per_s': per_second(duration),
+361:         'wall_envelope_completion_tokens_per_s': per_second(envelope_s),
+362:         'undelivered_reported_completion_tokens': sum(row['completion_tokens'] for row in rows
+363:                                                       if row['fate'] != 'complete'
+364:                                                       and row['completion_tokens'] is not None),
+365:     }
+366: 
+367: 
+368: def _groups(rows, good):
+369:     result = {}
+370:     for name in GROUPS:
+371:         members = [index for index, row in enumerate(rows) if group_of(row['group_tokens']) == name]
+372:         member_rows = [rows[index] for index in members]
+373:         summary = _fate_summary(member_rows)
+374:         count = None if good is None else sum(good[index] for index in members)
+375:         summary.update(
+376:             natural_slo_good=count,
+377:             slo_attainment_fraction=None if good is None else _rate(count, len(members)),
+378:             ttft_conditional_scheduled=percentile_block(
+379:                 [row['first_content_at'] - row['scheduled_at'] for row in member_rows if row['fate'] == 'complete'],
+380:                 CONDITIONAL_ESTIMAND),
+381:             ttft_all_offered_penalized_scheduled=percentile_block(_penalized(member_rows, 'scheduled_at'),
+382:                                                                   PENALIZED_ESTIMAND))
+383:         result[name] = summary
+384:     return result
+385: 
+386: 
+387: def _spread(groups, key):
+388:     used = [name for name in GROUPS if groups[name]['n_offered']]
+389:     out = {'metric': key, 'groups_used': used, 'k': len(used), 'worst_min': None, 'best_max': None, 'gap': None,
+390:            'min_over_max': None, 'jain': None}
+391:     if len(used) < 2:
+392:         return dict(out, null_reason='fewer_than_two_nonempty_groups')
+393:     values = [groups[name][key] for name in used]
+394:     if any(value is None for value in values):
+395:         return dict(out, null_reason='metric_unavailable')
+396:     total, low, high = sum(values), min(values), max(values)
+397:     out.update(worst_min=low, best_max=high, gap=high - low, min_over_max=low / high if high else None,
+398:                jain=total * total / (len(values) * sum(value * value for value in values)) if total else None,
+399:                null_reason=None if total else 'all_zero: jain and min_over_max undefined')
+400:     return out
+401: 
+402: 
+403: def _fairness(groups):
+404:     used = [name for name in GROUPS if groups[name]['n_offered']]
+405:     rejection = {name: groups[name]['rejection_rate'] for name in used}
+406:     ttft = {name: groups[name]['ttft_conditional_scheduled'] for name in used}
+407:     numeric = {name: block['p95'] for name, block in ttft.items() if block['p95'] is not None}
+408:     worst = max(numeric, key=numeric.get) if numeric else None
+409:     return {
+410:         'scope': 'descriptive across predeclared prompt-token groups; no starvation or fairness guarantee',
+411:         'slo_attainment_fraction': _spread(groups, 'slo_attainment_fraction'),
+412:         'delivered_fraction': _spread(groups, 'delivered_fraction'),
+413:         'worst_group_rejection_rate': max(rejection.values()) if rejection else None,
+414:         'worst_group_ttft_conditional_scheduled_p95': None if worst is None else numeric[worst],
+415:         'worst_group_ttft_conditional_scheduled_p95_group': worst,
+416:         'worst_group_ttft_conditional_scheduled_p95_n': None if worst is None else ttft[worst]['n'],
+417:         'groups_without_conditional_p95': [name for name in used if name not in numeric],
+418:     }
+419: 
+420: 
+421: def _union(intervals):
+422:     total, current = 0.0, None
+423:     for start, end in sorted(intervals):
+424:         if current is None or start > current[1]:
+425:             if current is not None:
+426:                 total += current[1] - current[0]
+427:             current = [start, end]
+428:         else:
+429:             current[1] = max(current[1], end)
+430:     return total + (current[1] - current[0] if current is not None else 0.0)
+431: 
+432: 
+433: def _overhead(run, envelope_s):
+434:     control = run['control']
+435:     scope = 'separate from TTFT/E2E/goodput (never added to request latencies); no fabricated solver cost'
+436:     if control is None:
+437:         return {'available': False, 'null_reason': run['control_missing'], 'decisions': None, 'union_total_s': None,
+438:                 'union_within_envelope_s': None, 'union_fraction_of_envelope': None, 'durations_s': None,
+439:                 'scope': scope}
+440:     if control['kind'] == 'static_fixed':
+441:         return {'available': True, 'kind': 'static_fixed', 'budget': control['budget'], 'basis': control['basis'],
+442:                 'decisions': 0, 'union_total_s': 0.0, 'union_within_envelope_s': 0.0,
+443:                 'union_fraction_of_envelope': 0.0, 'durations_s': percentile_block([]), 'scope': scope}
+444:     intervals = [tuple(item) for item in control['intervals']]
+445:     clipped = [(max(start, run['envelope_start']), min(end, run['envelope_end'])) for start, end in intervals]
+446:     within = _union([item for item in clipped if item[0] <= item[1]])
+447:     return {'available': True, 'kind': 'measured_intervals', 'source': control['source'],
+448:             'decisions': len(intervals), 'union_total_s': _union(intervals), 'union_within_envelope_s': within,
+449:             'union_fraction_of_envelope': within / envelope_s,
+450:             'durations_s': percentile_block([end - start for start, end in intervals]), 'scope': scope}
+451: 
+452: 
+453: def compute(run):
+454:     """Measured metrics for one arm on one offered cohort (strict normalized input)."""
+455:     validate_run(run)
+456:     rows = run['rows']
+457:     envelope_s = run['envelope_end'] - run['envelope_start']
+458:     natural, good = _natural_slo(run)
+459:     groups = _groups(rows, good)
+460:     sent = [row['sent_at'] - row['scheduled_at'] for row in rows if row['sent_at'] is not None]
+461:     return {
+462:         'schema': SCHEMA, 'lineage': LINEAGE, 'qualification': QUALIFICATION, 'arm': run['arm'],
+463:         'purpose': run['purpose'], 'claim_scope': CLAIM_SCOPE[run['purpose']], 'clock_domain': run['clock_domain'],
+464:         'offered_trace_sha256': run['provenance']['offered_trace_sha256'],
+465:         'windows': {'offered_start': run['offered_start'], 'offered_duration_s': run['offered_duration_s'],
+466:                     'offered_end': run['offered_start'] + run['offered_duration_s'],
+467:                     'envelope_start': run['envelope_start'], 'envelope_end': run['envelope_end'],
+468:                     'envelope_s': envelope_s, 'envelope_scope': run['envelope_scope'],
+469:                     'envelope_scope_label': ENVELOPE_SCOPES[run['envelope_scope']],
+470:                     'full_wall_s': envelope_s if run['envelope_scope'] == 'full_wall' else None,
+471:                     'full_wall_null_reason': None if run['envelope_scope'] == 'full_wall' else
+472:                     'full wall not recorded: wall-envelope rates use the offered-cohort observed envelope'},
+473:         'all_offered': len(rows), 'outcomes': _fate_summary(rows), 'ttft_s': _ttft(rows),
+474:         'send_lag_s': dict(percentile_block(sent, 'sent_at - scheduled_at over sent rows'),
+475:                            n_not_sent=len(rows) - len(sent)),
+476:         'natural_slo': natural, 'throughput': _throughput(run, rows, envelope_s), 'groups': groups,
+477:         'group_edges': {'le512': '<=512', '513to2048': '513..2048', 'gt2048': '>2048',
+478:                         'key': 'group_tokens (tokenizer-measured prompt tokens frozen before outcomes)'},
+479:         'fairness': _fairness(groups), 'controller_overhead': _overhead(run, envelope_s),
+480:         'fifo_label': FIFO_LABEL, 'fifo_note': FIFO_NOTE, 'provenance': run['provenance'],
+481:         'claims_not_made': list(CLAIMS_NOT_MADE),
+482:     }
+483: 
+484: 
+485: def select_train_fixed(results):
+486:     """Empirical Train-only fixed16 vs fixed32 choice, frozen before any Eval replay.
+487: 
+488:     Primary: more natural-SLO good completions (equal offered cohort, so identical to cohort goodput order);
+489:     tie 1: fewer not-delivered offered requests; tie 2: lower budget.  Refusals are returned, not raised.
+490:     """
+491:     rule = {'primary': 'natural_slo_good (higher)', 'tie_1': 'all_offered - delivered (lower)',
+492:             'tie_2': 'budget (lower)', 'not': 'nominal forecast freeze_fixed', 'data': 'Train split only'}
+493: 
+494:     def refused(reason):
+495:         return {'status': 'REFUSED', 'reason': reason, 'rule': rule}
+496: 
+497:     if not isinstance(results, dict) or set(results) != set(FIXED_BUDGETS):
+498:         return refused('exactly fixed16 and fixed32 Train measurements are required')
+499:     for arm, metrics in results.items():
+500:         if not isinstance(metrics, dict) or metrics.get('schema') != SCHEMA or metrics.get('arm') != arm:
+501:             return refused(f'{arm}: not a {SCHEMA} result for this arm')
+502:         if metrics['purpose'] != 'train':
+503:             return refused(f'{arm}: purpose {metrics["purpose"]!r}; selection uses Train only')
+504:         overhead = metrics['controller_overhead']
+505:         if overhead.get('kind') != 'static_fixed' or overhead.get('budget') != FIXED_BUDGETS[arm]:
+506:             return refused(f'{arm}: not a verified static fixed runtime')
+507:         if not metrics['natural_slo']['available']:
+508:             return refused(f'{arm}: natural SLO unavailable ({metrics["natural_slo"]["missing"]}); no TTFT-only '
+509:                            'substitute')
+510:     if len({metrics['offered_trace_sha256'] for metrics in results.values()}) != 1 \
+511:             or len({metrics['all_offered'] for metrics in results.values()}) != 1:
+512:         return refused('fixed16 and fixed32 were not measured on the identical offered Train trace')
+513:     candidates = {arm: {'budget': FIXED_BUDGETS[arm], 'natural_slo_good': metrics['natural_slo']['natural_slo_good'],
+514:                         'cohort_slo_goodput_rps': metrics['natural_slo']['cohort_slo_goodput_rps'],
+515:                         'not_delivered': metrics['all_offered'] - metrics['outcomes']['delivered']}
+516:                   for arm, metrics in results.items()}
+517:     a, b = (candidates[arm] for arm in ('fixed16', 'fixed32'))
+518:     decided_by = ('primary_natural_slo_good' if a['natural_slo_good'] != b['natural_slo_good'] else
+519:                   'tie_1_fewer_not_delivered' if a['not_delivered'] != b['not_delivered'] else 'tie_2_lower_budget')
+520:     selected = min(candidates, key=lambda arm: (-candidates[arm]['natural_slo_good'],
+521:                                                 candidates[arm]['not_delivered'], candidates[arm]['budget']))
+522:     return {'status': 'SELECTED', 'selected_arm': selected, 'selected_budget': FIXED_BUDGETS[selected],
+523:             'decided_by': decided_by, 'rule': rule, 'candidates': candidates,
+524:             'offered_trace_sha256': results['fixed16']['offered_trace_sha256'],
+525:             'scope': 'Train in-sample selection; must be frozen before any Eval replay; not a performance claim'}
+526: 
+527: 
+528: def summarize(metrics):
+529:     ttft = metrics['ttft_s']
+530: 
+531:     def q(block):
+532:         return {key: block[key] for key in ('n', 'p50', 'p95', 'p99', 'p95_is_sample_max', 'p99_is_sample_max',
+533:                                             'n_failure_penalty')}
+534: 
+535:     natural, throughput, overhead = metrics['natural_slo'], metrics['throughput'], metrics['controller_overhead']
+536:     return {
+537:         'all_offered': metrics['all_offered'], 'envelope_scope': metrics['windows']['envelope_scope'],
+538:         'fates': metrics['outcomes']['fates'],
+539:         'rejection_rate': metrics['outcomes']['rejection_rate'], 'failure_rate': metrics['outcomes']['failure_rate'],
+540:         'not_launched_rate': metrics['outcomes']['not_launched_rate'],
+541:         'unknown_rate': metrics['outcomes']['unknown_rate'],
+542:         'ttft_conditional_scheduled': q(ttft['conditional_scheduled']),
+543:         'ttft_conditional_client_send': q(ttft['conditional_client_send']),
+544:         'ttft_all_offered_penalized_scheduled': q(ttft['all_offered_penalized_scheduled']),
+545:         'ttft_all_offered_penalized_client_send': q(ttft['all_offered_penalized_client_send']),
+546:         'natural_slo_available': natural['available'], 'natural_slo_null_reason': natural['null_reason'],
+547:         'natural_slo_good': natural['natural_slo_good'], 'slo_attainment_fraction': natural['slo_attainment_fraction'],
+548:         'cohort_slo_goodput_rps': natural['cohort_slo_goodput_rps'],
+549:         'wall_envelope_slo_goodput_rps': natural['wall_envelope_slo_goodput_rps'],
+550:         'cohort_normalized_delivered_rps': throughput['cohort_normalized_delivered_rps'],
+551:         'wall_envelope_delivered_rps': throughput['wall_envelope_delivered_rps'],
+552:         'cohort_normalized_completion_tokens_per_s': throughput['cohort_normalized_completion_tokens_per_s'],
+553:         'wall_envelope_completion_tokens_per_s': throughput['wall_envelope_completion_tokens_per_s'],
+554:         'jain_slo_attainment': metrics['fairness']['slo_attainment_fraction']['jain'],
+555:         'jain_delivered_fraction': metrics['fairness']['delivered_fraction']['jain'],
+556:         'controller_decisions': overhead['decisions'], 'controller_union_within_envelope_s':
+557:             overhead['union_within_envelope_s'], 'controller_overhead_null_reason': overhead.get('null_reason'),
+558:     }
+559: 
+560: 
+561: def comparison_table(entries, *, purpose, train_selection=None):
+562:     """Measured comparison rows for one split; arms absent from ``entries`` are NOT_RUN.  No winner field."""
+563:     if purpose not in PURPOSES:
+564:         raise MetricsInputError(f'purpose must be one of {PURPOSES}')
+565:     if not isinstance(entries, dict) or not set(entries) <= set(RUN_ARMS):
+566:         raise MetricsInputError(f'entries must map a subset of {RUN_ARMS} (train_selected_fixed is derived)')
+567:     rows, measured = [], {}
+568:     for arm in RUN_ARMS:
+569:         entry = entries.get(arm, {'status': 'NOT_RUN', 'reason': 'not provided'})
+570:         status = entry.get('status') if isinstance(entry, dict) else None
+571:         if status == 'MEASURED':
+572:             metrics = entry.get('metrics')
+573:             if set(entry) != {'status', 'metrics'} or not isinstance(metrics, dict) or metrics.get('arm') != arm \
+574:                     or metrics.get('schema') != SCHEMA or metrics.get('purpose') != purpose:
+575:                 raise MetricsInputError(f'{arm}: MEASURED entry needs this arm/split {SCHEMA} metrics')
+576:             measured[arm] = metrics
+577:             rows.append({'arm': arm, 'status': status, 'reason': None, 'alias_of': None,
+578:                          'summary': summarize(metrics)})
+579:         elif status in ('REFUSED', 'NOT_RUN') and set(entry) == {'status', 'reason'} \
+580:                 and isinstance(entry['reason'], str) and entry['reason']:
+581:             rows.append({'arm': arm, 'status': status, 'reason': entry['reason'], 'alias_of': None, 'summary': None})
+582:         else:
+583:             raise MetricsInputError(f'{arm}: entry status must be MEASURED, REFUSED or NOT_RUN (with reason)')
+584:     identities = {(metrics['offered_trace_sha256'], metrics['all_offered'], metrics['windows']['envelope_scope'])
+585:                   for metrics in measured.values()}
+586:     if len(identities) > 1:
+587:         raise MetricsInputError('measured arms differ in offered trace identity, all-offered count or envelope scope: '
+588:                                 'incomparable')
+589:     if train_selection is not None and (not isinstance(train_selection, dict) or (
+590:             train_selection.get('status') == 'SELECTED' and train_selection.get('selected_arm') not in FIXED_BUDGETS)):
+591:         raise MetricsInputError('train_selection must be a select_train_fixed result')
+592:     if train_selection is None:
+593:         alias = {'arm': 'train_selected_fixed', 'status': 'NOT_RUN', 'reason': 'no Train selection provided',
+594:                  'alias_of': None, 'summary': None}
+595:     elif train_selection.get('status') != 'SELECTED':
+596:         alias = {'arm': 'train_selected_fixed', 'status': 'REFUSED',
+597:                  'reason': f'Train selection refused: {train_selection.get("reason")}', 'alias_of': None,
+598:                  'summary': None}
+599:     else:
+600:         target = train_selection['selected_arm']
+601:         source = next(row for row in rows if row['arm'] == target)
+602:         alias = {'arm': 'train_selected_fixed', 'status': 'ALIAS' if source['status'] == 'MEASURED' else source['status'],
+603:                  'reason': source['reason'], 'alias_of': target, 'summary': source['summary'],
+604:                  'note': 'alias of a measured static fixed arm, not an independent algorithm'}
+605:     rows.insert(2, alias)
+606:     identity = next(iter(identities)) if identities else (None, None, None)
+607:     return {'schema': SCHEMA + '-table', 'lineage': LINEAGE, 'qualification': QUALIFICATION, 'purpose': purpose,
+608:             'claim_scope': CLAIM_SCOPE[purpose], 'offered_trace_sha256': identity[0], 'all_offered': identity[1],
+609:             'envelope_scope': identity[2], 'rows': rows, 'fifo_label': FIFO_LABEL, 'fifo_note': FIFO_NOTE, 'claims_not_made': list(CLAIMS_NOT_MADE)}
+610: 
+611: 
+612: # ----------------------------------------------------------------------------------------------------------------
+613: # run_trace_pilot.py adapter (raw sources: run_trace_pilot.py c02808e7, sustained_load.py 278906b8,
+614: # run_budget_pilot.py 86dae681, trace_workload.py 98f6c818, nominal_workload.py 614ae110)
+615: # ----------------------------------------------------------------------------------------------------------------
+616: RAW_FILES = ('manifest.json', 'client.json', 'trace.json', 'budget_changes.json')
+617: RESULT_FIELDS = frozenset({'scheduled_at', 'workload', 'request_id', 'client_request_id', 'stream_complete',
+618:                            'started_at', 'first_content_at', 'finished_at', 'status', 'ttft', 'end_to_end',
+619:                            'input_tokens', 'output_tokens', 'total_tokens', 'max_output_tokens', 'error_type',
+620:                            'error_message', 'error_phase', 'success', 'rejected'})
+621: LAUNCHED_KEYS = RESULT_FIELDS | {'trace_id', 'expected_input_tokens'}
+622: PLACEHOLDER_KEYS = frozenset({'trace_id', 'client_request_id', 'request_id', 'scheduled_at', 'started_at',
+623:                               'first_content_at', 'finished_at', 'status', 'ttft', 'end_to_end', 'stream_complete',
+624:                               'input_tokens', 'output_tokens', 'max_output_tokens', 'expected_input_tokens',
+625:                               'success', 'rejected', 'error_type', 'error_message', 'error_phase'})
+626: TRACE_REQUEST_KEYS = frozenset({'trace_id', 'arrival_seconds', 'input_tokens', 'max_tokens', 'prompt'})
+627: NOT_LAUNCHED_MESSAGE = 'collection interrupted'
+628: STREAM_ERROR_TYPES = ('InvalidSSE', 'IncompleteStream', 'EmptyContentStream')
+629: OFFERED_TAPE_SCHEMA = 'r24-resume-p0-offered-tape-v1'
+630: SLO_MISSING_RUN_TRACE_PILOT = [
+631:     'finish_reason: sustained_load.consume_request never records it (stop vs length unknown)',
+632:     'requested_ignore_eos: not recorded per row (replay uses the code default; not a per-row observation)',
+633:     'stream_error: no distinct per-row field (only error_type)',
+634: ]
+635: RAW_MAPPING = {
+636:     'files': {'manifest.json': 'schema_version 1, status, config=vars(args), measurement_start/end, provenance',
+637:               'client.json': '{"requests": rows}; row = dataclasses.asdict(RequestResult) + trace_id + '
+638:                              'expected_input_tokens, or the run_trace_pilot.unlaunched placeholder',
+639:               'trace.json': 'trace_workload schema_version 1 copy; sha256 must equal manifest.trace_sha256',
+640:               'budget_changes.json': 'budget actuation records (static fixed: exactly one, acknowledged before '
+641:                                      'measurement_start)'},
+642:     'clock_domain': 'runner time.monotonic(); scheduled_at must equal measurement_start + arrival_seconds',
+643:     'request_id': 'trace_id (client row order must equal trace order)',
+644:     'group_tokens': 'expected_input_tokens (== trace input_tokens: tokenizer-measured chat-template count)',
+645:     'max_output_tokens': 'max_output_tokens (== trace max_tokens)',
+646:     'scheduled_at': 'scheduled_at', 'sent_at': 'started_at (consume_request start, before POST)',
+647:     'first_content_at': 'first_content_at (first SSE event with content)',
+648:     'terminal_at': 'finished_at (consume_request finally)',
+649:     'completion_tokens': 'output_tokens (usage.completion_tokens from the include_usage chunk) or null',
+650:     'fate': {'complete': 'success true', 'rejected': 'rejected true (HTTP 503 admission-capacity body)',
+651:              'not_launched': 'placeholder NotLaunched, message "collection interrupted", no observation',
+652:              'unknown': 'placeholder with any other message (send state unknown) or an unmatched combination',
+653:              'cancelled': 'error_type CancelledError', 'http_error': 'error_type HTTPStatusError',
+654:              'stream_error': 'error_type InvalidSSE|IncompleteStream|EmptyContentStream',
+655:              'transport_error': 'any other error_type (httpx exception class name)'},
+656:     'slo': 'null for every row: natural SLO refused (see SLO_MISSING_RUN_TRACE_PILOT)',
+657:     'envelope': 'scope offered_cohort_observed: start = measurement_start; end = max(measurement_end, every '
+658:                 'finished_at); full wall (gateway start, warmup, budget install, final drain) is not one recorded '
+659:                 'monotonic interval, so full_wall_s stays null',
+660:     'model': 'trace model must be an absolute local path equal to gateway_launch.settings.MODEL_NAME, and '
+661:              'initial_metrics.tokenizer_available must be true',
+662:     'control': 'fixed arms only: static --budget verified; closed-loop arms are refused by this adapter',
+663: }
+664: ADAPTER_QUALIFIERS = [
+665:     'command argv is not recorded by run_trace_pilot (config=vars(args) preserved instead)',
+666:     'cache_policy is self-reported by the runner; the backend prefix-cache launch must be verified separately',
+667:     'backend launch provenance is not observed by the runner',
+668:     'analyze_trace_pilot load/control fidelity is not evaluated here; preserve the runner exit status and report',
+669:     'static budget: runner acknowledgement before measurement_start; gateway-internal application semantics not '
+670:     'verified by this adapter',
+671:     'FIFO/FCFS backend ordering unverified (label pending)',
+672:     'gateway zero character-fallback and cost-spec identity are not verified here (gateway.py unread); only startup '
+673:     'tokenizer_available and MODEL_NAME == absolute local trace model are checked',
+674:     'full wall not recorded by run_trace_pilot: wall-envelope rates use the offered-cohort observed envelope, a '
+675:     'lower bound on the full wall (warmup_start/warmup_end preserved)',
+676: ]
+677: MANIFEST_PRESERVED = ('schema_version', 'status', 'error', 'config', 'created_at', 'git_commit', 'git_dirty',
+678:                       'code_sha256', 'packages', 'python', 'gpu', 'models', 'run_id', 'trace_sha256',
+679:                       'input_trace_sha256', 'replay_plan_sha256', 'control_protocol', 'experiment_protocol',
+680:                       'gateway_launch', 'backend_launch_provenance', 'package_scope', 'host', 'measurement_start',
+681:                       'measurement_end', 'warmup_start', 'warmup_end', 'forced_gateway_kill', 'collector_errors',
+682:                       'initial_metrics', 'post_warmup_metrics', 'final_metrics')
+683: TAPE_PRESERVED = ('kind', 'offered_tape_schema', 'offered_tape_sha256', 'generator', 'protocol_id', 'purpose',
+684:                   'source_id', 'tokenizer_sha256', 'measured_equals_requested_count')
+685: 
+686: 
+687: def _strict_json(data, name):
+688:     def pairs(items):
+689:         keys = [key for key, _ in items]
+690:         if len(keys) != len(set(keys)):
+691:             raise AdapterRefusal(f'{name}: duplicate JSON object key')
+692:         return dict(items)
+693: 
+694:     def constant(token):
+695:         raise AdapterRefusal(f'{name}: non-finite JSON constant {token}')
+696: 
+697:     try:
+698:         return json.loads(data, object_pairs_hook=pairs, parse_constant=constant)
+699:     except AdapterRefusal:
+700:         raise
+701:     except ValueError as exc:
+702:         raise AdapterRefusal(f'{name}: not JSON') from exc
+703: 
+704: 
+705: def _raw_number(value, name, optional=True):
+706:     if value is None and optional:
+707:         return None
+708:     if not _is_number(value):
+709:         raise AdapterRefusal(f'{name} must be a finite number')
+710:     return value
+711: 
+712: 
+713: def _map_row(raw, request, start, index):
+714:     name = f'client row {index}'
+715:     if not isinstance(raw, dict):
+716:         raise AdapterRefusal(f'{name}: not an object')
+717:     if raw.get('trace_id') != request['trace_id']:
+718:         raise AdapterRefusal(f'{name}: trace_id differs from trace order')
+719:     if type(raw.get('expected_input_tokens')) is not int or raw['expected_input_tokens'] != request['input_tokens']:
+720:         raise AdapterRefusal(f'{name}: expected_input_tokens differs from the trace')
+721:     if raw.get('max_output_tokens') != request['max_tokens']:
+722:         raise AdapterRefusal(f'{name}: max_output_tokens differs from the trace')
+723:     scheduled = _raw_number(raw.get('scheduled_at'), f'{name} scheduled_at', optional=False)
+724:     if abs(scheduled - (start + request['arrival_seconds'])) > 1e-6:
+725:         raise AdapterRefusal(f'{name}: scheduled_at is not measurement_start + arrival_seconds')
+726:     keys = set(raw)
+727:     sent = first = terminal = tokens = None
+728:     if keys == PLACEHOLDER_KEYS:
+729:         if raw['error_type'] != 'NotLaunched' or raw['success'] is not False or raw['rejected'] is not False:
+730:             raise AdapterRefusal(f'{name}: placeholder row is not a NotLaunched record')
+731:         pristine = (raw['error_message'] == NOT_LAUNCHED_MESSAGE and raw['stream_complete'] is False and
+732:                     all(raw[key] is None for key in ('request_id', 'started_at', 'first_content_at', 'finished_at',
+733:                                                      'status', 'ttft', 'end_to_end', 'input_tokens', 'output_tokens')))
+734:         fate = 'not_launched' if pristine else 'unknown'
+735:     elif keys == LAUNCHED_KEYS:
+736:         sent, first, terminal = (_raw_number(raw[key], f'{name} {key}')
+737:                                  for key in ('started_at', 'first_content_at', 'finished_at'))
+738:         ttft = _raw_number(raw['ttft'], f'{name} ttft')
+739:         if (ttft is None) != (first is None) or (ttft is not None and (sent is None or abs(ttft - (first - sent)) > 1e-9)):
+740:             raise AdapterRefusal(f'{name}: ttft is not first_content_at - started_at')
+741:         tokens = raw['output_tokens']
+742:         if tokens is not None and (type(tokens) is not int or tokens < 0):
+743:             raise AdapterRefusal(f'{name}: output_tokens must be null or an int >= 0')
+744:         if type(raw['success']) is not bool or type(raw['rejected']) is not bool:
+745:             raise AdapterRefusal(f'{name}: success/rejected must be bool')
+746:         error_type = raw['error_type']
+747:         if raw['success']:
+748:             if raw['rejected'] or error_type is not None or raw['stream_complete'] is not True:
+749:                 raise AdapterRefusal(f'{name}: inconsistent success record')
+750:             fate = 'complete'
+751:         elif raw['rejected']:
+752:             if error_type is not None or raw['status'] != 503:
+753:                 raise AdapterRefusal(f'{name}: inconsistent rejection record')
+754:             fate = 'rejected'
+755:         elif error_type == 'CancelledError':
+756:             fate = 'cancelled'
+757:         elif error_type == 'HTTPStatusError':
+758:             fate = 'http_error'
+759:         elif error_type in STREAM_ERROR_TYPES:
+760:             fate = 'stream_error'
+761:         elif isinstance(error_type, str) and error_type and error_type != 'NotLaunched':
+762:             fate = 'transport_error'
+763:         else:
+764:             fate = 'unknown'
+765:     else:
+766:         raise AdapterRefusal(f'{name}: raw schema drift (missing {sorted(LAUNCHED_KEYS - keys)}, '
+767:                              f'extra {sorted(keys - LAUNCHED_KEYS)})')
+768:     return {'request_id': raw['trace_id'], 'group_tokens': raw['expected_input_tokens'],
+769:             'max_output_tokens': raw['max_output_tokens'], 'scheduled_at': scheduled, 'sent_at': sent,
+770:             'first_content_at': first, 'terminal_at': terminal, 'fate': fate, 'completion_tokens': tokens,
+771:             'slo': None}
+772: 
+773: 
+774: def _static_control(manifest, config, changes, start, arm):
+775:     budget = FIXED_BUDGETS[arm]
+776:     if config.get('budget_schedule') is not None:
+777:         raise AdapterRefusal(f'{arm}: fixed arm must use --budget, not a --budget-schedule')
+778:     if type(config.get('budget')) not in (int, float) or float(config['budget']) != budget:
+779:         raise AdapterRefusal(f'{arm}: config budget {config.get("budget")!r} != {budget}')
+780:     if not isinstance(changes, list) or len(changes) != 1 or not isinstance(changes[0], dict):
+781:         raise AdapterRefusal(f'{arm}: static run needs exactly one budget actuation record')
+782:     record = changes[0]
+783:     sent = _raw_number(record.get('sent'), 'budget record sent', optional=False)
+784:     acknowledged = _raw_number(record.get('acknowledged'), 'budget record acknowledged', optional=False)
+785:     if not sent <= acknowledged < start or record.get('target') != start:
+786:         raise AdapterRefusal(f'{arm}: budget not acknowledged before measurement_start')
+787:     if record.get('status', 'acknowledged') != 'acknowledged' or record.get('requested_budget', budget) != budget:
+788:         raise AdapterRefusal(f'{arm}: budget actuation record is not an acknowledged {budget} installation')
+789:     launch = manifest.get('gateway_launch')
+790:     settings = launch.get('settings') if isinstance(launch, dict) else None
+791:     if not isinstance(settings, dict) or settings.get('ADMISSION_MODE') != 'cost_aware' \
+792:             or settings.get('MAX_ADMITTED_COST') != str(float(config['budget'])):
+793:         raise AdapterRefusal(f'{arm}: gateway launch settings do not show cost_aware admission at budget {budget}')
+794:     return {'kind': 'static_fixed', 'budget': budget,
+795:             'basis': 'static_budget_installed_before_offered_start_verified: config --budget, gateway launch '
+796:                      'MAX_ADMITTED_COST and one acknowledged actuation before measurement_start'}
+797: 
+798: 
+799: def _model_fidelity(manifest, trace):
+800:     model = trace.get('model')
+801:     if not isinstance(model, str) or not model.startswith('/'):
+802:         raise AdapterRefusal(f'trace model {model!r}: protocol requires the absolute local model path (a repo id '
+803:                              'MODEL_NAME can silently use the gateway character fallback)')
+804:     launch = manifest.get('gateway_launch')
+805:     settings = launch.get('settings') if isinstance(launch, dict) else None
+806:     if not isinstance(settings, dict) or settings.get('MODEL_NAME') != model:
+807:         raise AdapterRefusal('gateway launch MODEL_NAME differs from the trace model')
+808:     initial = manifest.get('initial_metrics')
+809:     if not isinstance(initial, dict) or initial.get('tokenizer_available') is not True:
+810:         raise AdapterRefusal('gateway initial metrics do not show tokenizer_available true')
+811: 
+812: 
+813: def adapt_run_trace_pilot(output_dir, *, arm, purpose):
+814:     """Normalized run for one static fixed arm from a run_trace_pilot.py output directory (see RAW_MAPPING)."""
+815:     if arm not in FIXED_BUDGETS:
+816:         raise AdapterRefusal(f'{arm!r}: run_trace_pilot hosts only static --budget or a predeclared open-loop '
+817:                              '--budget-schedule with a process-internal admin key, so closed-loop arms need the '
+818:                              'coordinator journal; this adapter maps fixed16/fixed32 only')
+819:     if purpose not in PURPOSES:
+820:         raise AdapterRefusal(f'purpose must be one of {PURPOSES}')
+821:     out = Path(output_dir)
+822:     data, parsed = {}, {}
+823:     for name in RAW_FILES:
+824:         try:
+825:             data[name] = (out / name).read_bytes()
+826:         except OSError as exc:
+827:             raise AdapterRefusal(f'{name}: unreadable ({type(exc).__name__})') from exc
+828:         parsed[name] = _strict_json(data[name], name)
+829:     manifest, client, trace, changes = (parsed[name] for name in RAW_FILES)
+830:     if not isinstance(manifest, dict) or manifest.get('schema_version') != 1:
+831:         raise AdapterRefusal('manifest.json: schema_version must be 1')
+832:     if manifest.get('status') != 'collected':
+833:         raise AdapterRefusal(f'manifest status {manifest.get("status")!r} != collected '
+834:                              f'(error {manifest.get("error")!r}); failed captures are refused, not rescored')
+835:     config = manifest.get('config')
+836:     if not isinstance(config, dict):
+837:         raise AdapterRefusal('manifest.json: config missing')
+838:     if hashlib.sha256(data['trace.json']).hexdigest() != manifest.get('trace_sha256'):
+839:         raise AdapterRefusal('trace.json sha256 differs from manifest.trace_sha256')
+840:     if not isinstance(trace, dict) or trace.get('schema_version') != 1 or not isinstance(trace.get('requests'), list) \
+841:             or not trace['requests'] or not _is_number(trace.get('duration_seconds')):
+842:         raise AdapterRefusal('trace.json: not a schema_version 1 replay trace')
+843:     for index, request in enumerate(trace['requests']):
+844:         if not isinstance(request, dict) or set(request) != TRACE_REQUEST_KEYS \
+845:                 or not _is_number(request['arrival_seconds']) or type(request['input_tokens']) is not int \
+846:                 or type(request['max_tokens']) is not int:
+847:             raise AdapterRefusal(f'trace request {index}: not a schema_version 1 request')
+848:     provenance = trace.get('provenance')
+849:     if not isinstance(provenance, dict) or provenance.get('offered_tape_schema') != OFFERED_TAPE_SCHEMA:
+850:         raise AdapterRefusal(f'trace.json: provenance is not a nominal {OFFERED_TAPE_SCHEMA} replay')
+851:     if provenance.get('purpose') != purpose:
+852:         raise AdapterRefusal(f'trace provenance purpose {provenance.get("purpose")!r} != declared {purpose!r}')
+853:     if config.get('cache_policy') != 'disabled':
+854:         raise AdapterRefusal(f'cache_policy {config.get("cache_policy")!r}: protocol requires disabled')
+855:     _model_fidelity(manifest, trace)
+856:     start = _raw_number(manifest.get('measurement_start'), 'measurement_start', optional=False)
+857:     end = _raw_number(manifest.get('measurement_end'), 'measurement_end', optional=False)
+858:     if abs((end - start) - trace['duration_seconds']) > 1e-6:
+859:         raise AdapterRefusal('measurement window differs from the trace duration')
+860:     if not isinstance(client, dict) or set(client) != {'requests'} or not isinstance(client['requests'], list) \
+861:             or len(client['requests']) != len(trace['requests']):
+862:         raise AdapterRefusal('client.json: request rows do not cover the offered trace one-to-one')
+863:     rows = [_map_row(raw, request, start, index)
+864:             for index, (raw, request) in enumerate(zip(client['requests'], trace['requests']))]
+865:     control = _static_control(manifest, config, changes, start, arm)
+866:     error_types = {}
+867:     for raw in client['requests']:
+868:         error_types[str(raw['error_type'])] = error_types.get(str(raw['error_type']), 0) + 1
+869:     run = {
+870:         'arm': arm, 'purpose': purpose, 'clock_domain': 'run_trace_pilot runner time.monotonic()',
+871:         'offered_start': start, 'offered_duration_s': trace['duration_seconds'], 'envelope_start': start,
+872:         'envelope_end': max([end] + [row['terminal_at'] for row in rows if row['terminal_at'] is not None]),
+873:         'envelope_scope': 'offered_cohort_observed', 'rows': rows, 'slo_missing': list(SLO_MISSING_RUN_TRACE_PILOT), 'control': control, 'control_missing': None,
+874:         'provenance': {
+875:             'source': 'run_trace_pilot.py output directory', 'output_dir': str(out),
+876:             'raw_file_sha256': {name: hashlib.sha256(data[name]).hexdigest() for name in RAW_FILES},
+877:             'offered_trace_sha256': manifest['trace_sha256'],
+878:             'offered_tape': {key: provenance.get(key) for key in TAPE_PRESERVED},
+879:             'manifest': {key: manifest.get(key) for key in MANIFEST_PRESERVED},
+880:             'raw_error_type_counts': error_types,
+881:             'client_config_slo_not_used': {'ttft_slo': config.get('ttft_slo'), 'e2e_slo': config.get('e2e_slo')},
+882:             'mapping': RAW_MAPPING, 'qualifiers': list(ADAPTER_QUALIFIERS),
+883:         },
+884:     }
+885:     try:
+886:         validate_run(run)
+887:     except MetricsInputError as exc:
+888:         raise AdapterRefusal(f'normalized run invalid: {exc}') from exc
+889:     return run
+890: 
+891: 
+892: def main(argv=None):
+893:     parser = argparse.ArgumentParser(description='Measured P0 nominal metrics for one static fixed run_trace_pilot '
+894:                                                  'output directory (no winner, no qualification).',
+895:                                      allow_abbrev=False)
+896:     parser.add_argument('--output-dir', required=True)
+897:     parser.add_argument('--arm', required=True, choices=sorted(FIXED_BUDGETS))
+898:     parser.add_argument('--purpose', required=True, choices=PURPOSES)
+899:     args = parser.parse_args(argv)
+900:     try:
+901:         metrics = compute(adapt_run_trace_pilot(args.output_dir, arm=args.arm, purpose=args.purpose))
+902:     except (AdapterRefusal, MetricsInputError) as exc:
+903:         print(json.dumps({'status': 'REFUSED', 'error': f'{type(exc).__name__}: {exc}'}, sort_keys=True),
+904:               file=sys.stderr)
+905:         return 1
+906:     print(json.dumps(metrics, sort_keys=True, indent=1, allow_nan=False))
+907:     return 0
+908: 
+909: 
+910: if __name__ == '__main__':
+911:     sys.exit(main())

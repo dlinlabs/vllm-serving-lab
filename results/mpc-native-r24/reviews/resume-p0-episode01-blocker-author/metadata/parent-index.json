@@ -1,0 +1,63 @@
+{
+  "schema": "resume-p0-recorder-metrics-candidate-parent-v1",
+  "observed_utc": "2026-11-05T00:00:36Z",
+  "base_head": "5e9696eca54133ee440314b681f11764a0937744",
+  "status": "CPU_AUTHOR_TESTED_INDEPENDENT_ACCEPTANCE_PENDING",
+  "scope": "Experimental recorder and metrics only. Not Native qualification, a benchmark, a Train selection, or independent acceptance.",
+  "sources": {
+    "nominal_metrics.py": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+    "nominal_client.py": "f369e5ce01a54dcfa9086fe8ee4a1528d7e52d19179db78201e06961da4c7bda",
+    "test_nominal_metrics.py": "b325444ba51f6c56182d317e5147011841d46ed835a95abb06a016a1a9222f78",
+    "test_nominal_client.py": "fb67d758703b86cc3a0c6705b56fb7e06c596e0e160e75bf471c0cdb911b4613"
+  },
+  "archives": [
+    {
+      "path": "resume-p0-client01-author",
+      "original_manifest_sha256": "0ccdbf13e3d4c6a60aecc1d84e5bc9985203d02ae6104ed5ed97631cd69c1881",
+      "regular_files_including_manifest": 120,
+      "regular_bytes": 437341,
+      "omitted_pytest_current_symlinks": 8,
+      "status": "Superseded client01 checkpoint against metrics01, not accepted benchmark evidence."
+    },
+    {
+      "path": "resume-p0-metrics02-author",
+      "original_manifest_sha256": "b02a11ab8f43a02d0aaef4cb75a6c0db1f890a460bf5bd108f23ed006d360d8c",
+      "regular_files_including_manifest": 270,
+      "regular_bytes": 1002647,
+      "omitted_pytest_current_symlinks": 16,
+      "status": "New corrected candidate; independent review pending."
+    }
+  ],
+  "archive_verification": "All original regular bytes copied and both original manifests independently checked in the destinations. Links were not copied or followed; original SYMLINKS.txt records remain sealed.",
+  "author_cpu_results": {
+    "python_3_14_4": "87 passed in 3.22s",
+    "python_3_12_16": "87 passed in 3.23s",
+    "attempts_per_interpreter": 1,
+    "retry_count": 0,
+    "interpretation": "Literal CPU controls; no real service HTTP, SSH, GPU inference or admission effect."
+  },
+  "disclosures": [
+    "Original metrics02 PLAN.json is malformed strict JSON; preserve its bytes and PLAN-ERRATA-01.json, not a silently repaired plan.",
+    "Errata disclose the trace-derived offered-ID digest and three client ownership notes outside the named plan scope.",
+    "Owner reports F1-F7 corrected; the prior independent FAIL is not closed by owner tests or this archive.",
+    "Parent checked archives, source hashes and delivery metadata, not a duplicate implementation review."
+  ],
+  "independent_review": {
+    "owner": "Role4",
+    "priority": "Finish and seal independent Milestone A first, then recorder/metrics review.",
+    "scope": "Four frozen source/test modules plus optional unchanged natural scorer and gateway request-ID/503 contract, at most six sources and 320 KiB.",
+    "required": "Separate recorder and metrics PASS/FAIL, F1-F5 closure evidence, all-offered outcomes, natural SLO, clock/envelope, provenance and comparability."
+  },
+  "remaining_driver_obligations": [
+    "Actually verify declared common hardware, model assets, served alias, tokenizer, backend, gateway, resources, source and clock identities.",
+    "Record full startup-through-cleanup wall time and actual static/control evidence, not client-return time or planner ACK alone.",
+    "Join gateway admission/terminal telemetry and ordered owner ledger by actual x-request-id.",
+    "Record the frozen Train selection digest at Eval replay after the Train-only selection; otherwise the selected-Fixed alias remains refused.",
+    "Preserve the F8 actual prior/model identity preflight and documented F9 stationary forecast limitation."
+  ],
+  "execution_gate": "No actual GPU startup until independent recorder and metrics acceptance. Qualification precedes Train Fixed measurement and freeze; held-out Eval remains last.",
+  "native_runs": 0,
+  "qualified_native_cycles": 0,
+  "pushed": false,
+  "merged": false
+}

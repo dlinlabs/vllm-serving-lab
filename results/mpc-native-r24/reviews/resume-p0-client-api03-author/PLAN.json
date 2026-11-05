@@ -1,0 +1,12 @@
+{
+ "scope": ".runtime/r24-resume-p0-nominal-client-api03",
+ "objective": "smallest additive extraction so the Role6 runtime can await a complete raw-v2 capture inside its existing loop (API-FREEZE.json); not research",
+ "owned_edits": ["experiments/mpc-research/resume-mvp/nominal_client.py", "experiments/mpc-research/resume-mvp/test_nominal_client.py (two focused tests + small helper; existing tests unchanged)"],
+ "not_edited": ["nominal_metrics.py", "test_nominal_metrics.py", "peer sources", "sealed scopes (metrics01, client01, metrics02, episode01)"],
+ "tests_preregistered": {
+  "new": ["library capture inside a running loop: exact caller start/deadline/reserve/domain, all offers, no asyncio.run/signal handlers, concurrent caller task progresses, write_capture codec, unchanged build_run consumes it, CLI envelope key parity, zero-send refusals, single use", "cancellation (repeated) mid-replay: partial envelope interrupted in place, every request task joined (no leftover tasks, envelope stable afterwards), CancelledError re-raised; non-cancel failure returns failed envelope with all allocated offers"],
+  "regression": "all existing test_nominal_client.py tests unchanged (CLI replay/finalize/refusal/raw-engineering/SIGINT contract)"
+ },
+ "attempt_protocol": {"interpreter": "files/r24-mpc-py312-venv/bin/python3.12 only", "command": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 60 nice -n19 <py312> -B -m pytest -q -p no:cacheprovider --noconftest -c <scope>/pytest-empty.ini --rootdir=<attempt> --basetemp=<attempt>/basetemp test_nominal_client.py", "rules": ["one generation per attempt", "no retries", "failures preserved", "a repair goes to a new attempt directory with a written reason; only changed failures repeated", "pins before/after each attempt"], "static_only": "ast.parse of the two edited files under 3.12 and 3.14 (no test run under 3.14; the 87x2 suite is not rerun)"},
+ "forbidden": ["HTTP to any service", "network", "SSH", "GPU", "Eval", "Git", "installs", "Markdown", "child agents", "peer edits"]
+}

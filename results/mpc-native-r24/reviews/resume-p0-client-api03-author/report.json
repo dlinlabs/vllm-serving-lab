@@ -1,0 +1,214 @@
+{
+ "schema": "r24-resume-p0-nominal-client-api03-report-v1",
+ "scope": ".runtime/r24-resume-p0-nominal-client-api03",
+ "role": "PR32 team16 Role7 fair benchmark metrics and negative cases",
+ "model": {
+  "id": "claude-opus-5.5",
+  "reasoning_effort": "max"
+ },
+ "status": "SEALED: additive in-loop raw-v2 capture API in nominal_client.py; CPU literal controls 43/43 on py3.12 (2 new + 41 pre-existing, one attempt, no retries); NOT independently accepted (Role4 B review pending); no Native/GPU/HTTP-to-real-service evidence",
+ "trigger": {
+  "scope": ".runtime/r24-resume-p0-nominal-episode01",
+  "SHA256SUMS_sha256": "c3f9bbcd1be6d78a3b860a1de355f34682d6328cd370c17bff3a4fb5eb17cec7",
+  "entries": 21,
+  "verified": "sha256sum -c before reading",
+  "read": "BLOCKER.json and API_EVIDENCE.json only",
+  "blocker": "NO_GO_SAFE_RAW_V2_COMPOSITION_API_MISSING"
+ },
+ "scope_control_files_sha256": {
+  "STARTED.txt": "16453a27dc2760fb329bbe6a32b8c8163749f5287a057f059bf02fed1b842c0a",
+  "ORIGINALS.sha256": "8f3b6ad3ecb704e4430cf6ba5dfeca864712013b320978ba0741fc0b5c3c0757",
+  "API-FREEZE.json": "6c314f785de79c3061fe68cbfdda2ee8fea9b61c8c61b0ef7e65f895b988f88f",
+  "PLAN.json": "3153697c81c0a13fce268ebb610cc30e7a0a7cc10c2700bd5004eac4f7906f28",
+  "pytest-empty.ini": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+  "run_attempt.sh": "dd642638c2e4ad781f7caa61e9d5d4a924e1e071c4408e28478fa582a1d8100a",
+  "static-check.txt": "902c6f6c939959f8555a891dc0fef986c9d8dc6c693a0e8d4fdff048b96f9ddd"
+ },
+ "scope_control_note": "STARTED/ORIGINALS/API-FREEZE/PLAN/pytest-empty.ini written before any source edit; run_attempt.sh and static-check.txt after the edits, before attempt01",
+ "sources": {
+  "experiments/mpc-research/resume-mvp/nominal_client.py": {
+   "original_sha256": "f369e5ce01a54dcfa9086fe8ee4a1528d7e52d19179db78201e06961da4c7bda",
+   "final_sha256": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+   "original_lines": 824,
+   "final_lines": 971
+  },
+  "experiments/mpc-research/resume-mvp/test_nominal_client.py": {
+   "original_sha256": "fb67d758703b86cc3a0c6705b56fb7e06c596e0e160e75bf471c0cdb911b4613",
+   "final_sha256": "8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66",
+   "original_lines": 560,
+   "final_lines": 696
+  },
+  "experiments/mpc-research/resume-mvp/nominal_metrics.py": {
+   "pinned_sha256": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+   "unchanged": true
+  },
+  "experiments/mpc-research/resume-mvp/test_nominal_metrics.py": {
+   "pinned_sha256": "b325444ba51f6c56182d317e5147011841d46ed835a95abb06a016a1a9222f78",
+   "unchanged": true
+  }
+ },
+ "definitions_vs_original": {
+  "changed": [
+   "<module docstring>",
+   "_capture",
+   "_replay_main",
+   "replay"
+  ],
+  "added": [
+   "EXIT_CODES",
+   "NOT_RUN_ERROR",
+   "PreparedCapture",
+   "_collect",
+   "_load_inputs",
+   "_new_capture",
+   "_preflight_local",
+   "_replay",
+   "_settle",
+   "capture_replay",
+   "prepare_capture",
+   "write_capture"
+  ],
+  "removed": [],
+  "byte_identical_count": 55
+ },
+ "definitions_note": "top-level def/class/assignment source segments compared by ast; every definition not listed as changed/added is byte-identical, asserted for _request, StreamParse, normalized_row, summarize_records, build_run, check_binding, check_tokenizer, check_served_models, _run_cancellable, _finalize_main, main, _write_new, prepare_records, clock_domain, load_tokenizer",
+ "api": {
+  "signatures": {
+   "prepare_capture": "def prepare_capture(*, trace_path, binding_path, arm, purpose, gateway_url, backend_url, request_timeout=120.0, tokenizer_loader=load_tokenizer)",
+   "capture_replay": "async def capture_replay(prepared, *, offered_start, deadline, cleanup_reserve_s, clock_domain, transport=None)",
+   "write_capture": "def write_capture(path, capture)",
+   "replay": "async def replay(client, trace, records, *, gateway_url, offered_start, drain_timeout)"
+  },
+  "PreparedCapture": {
+   "__slots__": [
+    "capture",
+    "trace",
+    "ready",
+    "started"
+   ],
+   "construct": "only via prepare_capture (single use)"
+  },
+  "constants": {
+   "EXIT_CODES": {
+    "collected": 0,
+    "refused": 2,
+    "interrupted": 3,
+    "failed": 4
+   },
+   "NOT_RUN_ERROR": "not_run: prepared by prepare_capture only (no offers sent)"
+  },
+  "usage": "prepared = prepare_capture(...) [sync, before the start exists; no HTTP/loop/signals]; if prepared.ready: capture = await capture_replay(prepared, offered_start=S, deadline=D, cleanup_reserve_s=R, clock_domain=nominal_client.clock_domain()) inside the caller loop; write_capture(path, prepared.capture) in every outcome (also after refusal/cancellation)",
+  "prepare_capture": "same envelope initializer and strict input loading as the CLI (sources, trace, binding, loopback URLs, provenance purpose) plus arm in RUN_ARMS, the CLI purpose rule, request_timeout finite > 0, check_binding, tokenizer from local_model_path and check_tokenizer; refusal/failure returned (ready False, status refused/failed), never raised; ready envelope keeps status failed with NOT_RUN_ERROR until capture_replay",
+  "capture_replay": "ClientRefusal raised (envelope untouched) unless ready and unused; caller values recorded in config (non-finite -> null); refusals with zero sends: non-finite inputs or reserve < 0, clock_domain differs, deadline - reserve < offered_start + duration (never truncated), offered_start not in (now, now + 600 s] at entry and again after GET /v1/models; then the unchanged replay with drain_deadline = deadline - cleanup_reserve_s exactly; collected/refused/failed returned; CancelledError/KeyboardInterrupt finalize interrupted in place then re-raise; other BaseException finalize failed then re-raise; rows and summary cover every allocated record whenever records exist",
+  "write_capture": "the CLI capture.json codec (_write_new: sorted keys, indent 1, allow_nan False, exclusive create, fsync); returns sha256 of the written bytes",
+  "cli": "main/replay/finalize argv, _run_cancellable signal semantics around asyncio.run, exit codes (EXIT_CODES values unchanged), stdout/stderr lines and capture.json keys unchanged; _replay_main and _capture delegate to _new_capture/_load_inputs/_preflight_local/_collect/_settle"
+ },
+ "role6_requirements": {
+  "awaitable_entry_or_prepare_capture_finalize": "prepare_capture + await capture_replay (+ write_capture); metrics finalization stays build_run (unchanged)",
+  "reuse_same_replay_sse_rowmapper_codec": "capture_replay -> _collect -> _replay -> unchanged _request/StreamParse; _settle -> unchanged normalized_row/summarize_records; write_capture -> unchanged _write_new; the CLI uses the same helpers",
+  "no_asyncio_run_or_signal_handlers_in_library": "none in prepare_capture/capture_replay/_collect/_replay; test 1 runs inside a caller loop with a concurrent heartbeat sampling signal.getsignal(SIGINT/SIGTERM)",
+  "caller_exact_future_start_original_deadline_reserve_never_retimed": "offered_start used verbatim (records scheduled_at = start + arrival); drain_deadline = deadline - reserve; passed/truncating/foreign-domain/non-finite inputs refused, zero sends",
+  "preload_binding_tokenizer_before_start": "prepare_capture runs check_binding + tokenizer + check_tokenizer before any offered start exists; unbound alias refused there",
+  "retain_all_offers_partial_capture_tasks_joined_failure_visible": "except BaseException -> _settle in place; cancellation re-raised after every request task is joined; Exceptions returned as failed/refused envelopes",
+  "caller_lifecycle_owns_interrupts": "no handler installation; the caller catches CancelledError/KeyboardInterrupt and persists prepared.capture"
+ },
+ "tests": {
+  "file": "experiments/mpc-research/resume-mvp/test_nominal_client.py",
+  "existing_tests_unchanged": true,
+  "existing_note": "original file bytes are an exact prefix of the final file (additions appended only)",
+  "added": [
+   "FakeBackend",
+   "FakeTokenizer",
+   "lib_prepare",
+   "lib_replay",
+   "test_library_capture_inside_running_loop_keeps_caller_clock_and_cli_envelope",
+   "CloseFails",
+   "test_library_cancellation_and_failure_keep_every_allocated_offer_after_joining_requests"
+  ],
+  "test_library_capture_inside_running_loop_keeps_caller_clock_and_cli_envelope": [
+   "prepared envelope: ready, status failed + NOT_RUN_ERROR, records null, 4 prompts tokenizer-verified",
+   "awaited inside a running loop with a concurrent caller heartbeat task: collected, no leftover tasks, heartbeat before start and after offered_end, signal.getsignal samples constant",
+   "offered_start/offered_end/drain_deadline == start / start + 0.4 / (start + 1.2) - 0.5 exactly; config records entry library + caller start/deadline/reserve/domain",
+   "all 4 offers retained: complete, rejected admission_capacity_503, complete (length), cancelled response_body at the drain deadline (before the caller deadline); scheduled_at exact",
+   "rows/summary equal the unchanged mappers; 1 GET /v1/models + 4 POSTs",
+   "write_capture sha matches bytes, JSON round-trip equal, second write FileExistsError",
+   "unchanged build_run + nominal_metrics.compute: all_offered 4, cancelled 1",
+   "CLI capture top-level keys identical; CLI config keys strict subset of library config keys",
+   "zero-send refusals: truncating deadline, passed start, foreign clock_domain, NaN reserve, negative reserve (each persisted by write_capture)",
+   "prepare refusals: served_alias mismatch (ready False, refused), heldout purpose",
+   "unready and already-used PreparedCapture raise ClientRefusal; first envelope unchanged; nothing sent"
+  ],
+  "test_library_cancellation_and_failure_keep_every_allocated_offer_after_joining_requests": [
+   "three caller cancellations mid-window: CancelledError re-raised; no leftover tasks; envelope unchanged after sleeping past the third offer schedule; 1 GET + 2 POSTs only",
+   "status interrupted, error CancelledError: replay interrupted; fates complete, cancelled response_body, not_launched cancelled_before_send; rows/summary (offered 3, sent 2); build_run refuses as failure evidence",
+   "transport close failure after all offers: failed envelope returned (not raised) with the complete record, rows and summary"
+  ]
+ },
+ "static_check": [
+  "3.12.16 ast.parse OK nominal_client.py 933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+  "3.12.16 ast.parse OK test_nominal_client.py 8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66",
+  "3.14.4 ast.parse OK nominal_client.py 933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+  "3.14.4 ast.parse OK test_nominal_client.py 8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66"
+ ],
+ "attempt_protocol": {
+  "interpreter": "files/r24-mpc-py312-venv/bin/python3.12 only",
+  "command": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 60 nice -n19 <py312> -B -m pytest -q -p no:cacheprovider --noconftest -c <scope>/pytest-empty.ini --rootdir=<attempt> --basetemp=<attempt>/basetemp test_nominal_client.py",
+  "rules": [
+   "one generation per attempt",
+   "no retries",
+   "failures preserved",
+   "a repair goes to a new attempt directory with a written reason; only changed failures repeated",
+   "pins before/after each attempt"
+  ],
+  "static_only": "ast.parse of the two edited files under 3.12 and 3.14 (no test run under 3.14; the 87x2 suite is not rerun)"
+ },
+ "attempts": [
+  {
+   "dir": "attempts/attempt01",
+   "run_sh": "exec env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 60 nice -n19 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B -m pytest -q -p no:cacheprovider --noconftest -c /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-client-api03/pytest-empty.ini --rootdir=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-client-api03/attempts/attempt01 --basetemp=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-client-api03/attempts/attempt01/basetemp test_nominal_client.py",
+   "run_sh_sha256": "b7fbab57e6a55704a8ef372914f9013e8a5005b0e2d04f068ee171328ee16fbb",
+   "started": "2026-11-05T00:45:08.345Z",
+   "ended": "2026-11-05T00:45:14.919Z",
+   "exit_code": 0,
+   "result_line": "43 passed in 6.42s",
+   "log_sha256": "a4b9968d2f0b1b81fe4c9d4208a7cc2548b817b7d218ee4bc86892eaa8b65f25",
+   "pins_before_equal_after_and_pycache_unchanged": true,
+   "pinned_copies_equal_final_sources": true,
+   "interpreter": "files/r24-mpc-py312-venv/bin/python3.12 (3.12.16; pytest 9.2.0; httpx 0.28.1)"
+  }
+ ],
+ "failures": [],
+ "disclosures": [
+  "freeze wording says replay becomes a thin wrapper of _replay(drain_deadline=offered_start + duration + drain_timeout); the implementation passes drain_timeout and _replay computes offered_end + drain_timeout as before (identical float, original validation/exception order kept); the CLI passes that same float as drain_deadline",
+  "no join change: in the installed CPython 3.12.16 and 3.14.4 asyncio sources a cancelled gather cancels its children and completes only after all of them finish, so the unchanged replay finally (cancel all, then gather) joins every request task under repeated cancellation; executed on 3.12 only (test 2)",
+  "the non-cancel failure with allocated offers is triggered by a transport whose aclose raises (per-request exceptions are recorded by _request and never escape)",
+  "not executed: the offered_start-passed refusal inside _replay after records are allocated (needs the clock to pass the start between the post-/v1/models check and _replay), KeyboardInterrupt and other BaseException paths of capture_replay",
+  "discrimination is reasoned, not mutation-executed: the original lacks the API (AttributeError); a nested asyncio.run raises RuntimeError (status failed, not collected); unjoined tasks leave tasks/sends; retiming breaks exact start/scheduled_at/drain_deadline equalities",
+  "signal check samples getsignal every 20 ms during the capture; a handler installed and removed between samples would not be seen (no handler code exists in the library path)",
+  "CLI parity checked as envelope key sets plus the 41 unchanged CLI/SSE/SIGINT tests, not value equality",
+  "py3.14: ast.parse only (preregistered); the 87x2 suites were not rerun",
+  "test timing margins: 0.2-0.3 s start lead, cancellation 0.3 s before the third offer"
+ ],
+ "claims_not_made": [
+  "no Native inference, GPU, SSH, network or real-service HTTP",
+  "no full wall at client return (driver-owned), no control/comparability verification",
+  "no qualification, admission-boundary, apply/reobserve, performance or winner evidence",
+  "no Train selection, Eval access or FIFO/FCFS claim",
+  "no independent acceptance"
+ ],
+ "remaining_blockers": {
+  "next_gate": "independent Role4 recorder+metrics review of this sealed client with unchanged metrics02 (nominal_metrics.py 49c76b8b...); no GPU startup before it passes",
+  "caller_obligations": [
+   "choose offered_start with lead for the GET /v1/models preflight (start still future afterwards, else refused with zero sends)",
+   "persist prepared.capture with write_capture in every outcome, including refusal and after catching CancelledError/KeyboardInterrupt",
+   "own signals/cancellation and the full wall (actual startup to final drain) outside capture_replay",
+   "one PreparedCapture per capture (single use)"
+  ],
+  "unchanged_from_metrics02_report": [
+   "driver comparability record + full_wall + static control evidence before Train fixed selection",
+   "train_selection_sha256 not recorded by the client: Eval train_selected_fixed alias stays REFUSED (UNVERIFIED)",
+   "gateway owner ledger join by x-request-id, gateway zero-fallback check, FIFO/FCFS backend verification (driver/Mayor)",
+   "A8 adapter public-alias vs local-asset restriction (adapter path only, deferred)"
+  ]
+ }
+}

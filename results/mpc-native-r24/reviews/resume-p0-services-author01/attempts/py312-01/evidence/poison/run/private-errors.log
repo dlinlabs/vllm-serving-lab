@@ -1,0 +1,14 @@
+signal:1611895:15
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/frozen/nominal_services.py", line 253, in _cleanup
+    self._signal(row, sig)
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/frozen/test_nominal_services.py", line 224, in failing_signal
+    raise PermissionError("test-only injected signal denial")
+PermissionError: test-only injected signal denial
+signal:1611895:9
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/frozen/nominal_services.py", line 253, in _cleanup
+    self._signal(row, sig)
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/frozen/test_nominal_services.py", line 224, in failing_signal
+    raise PermissionError("test-only injected signal denial")
+PermissionError: test-only injected signal denial

@@ -1,0 +1,36 @@
+{
+  "schema": "resume-p0-nominal-planner01-parent-findings-v1",
+  "status": "CPU_CANDIDATE_PRESERVED_COMPARISON_ACCEPTANCE_BLOCKED_FIXED_TIMING",
+  "author_model_id": "gpt-6-astra",
+  "author_reasoning_effort": "max",
+  "archive": "results/mpc-native-r24/reviews/resume-p0-nominal-planner01-author",
+  "archive_files_including_seal": 57,
+  "seal_sha256": "3c834babb11f0f89933917179d358533216e9b137f51f586b904d4dc7fe78793",
+  "original_and_archive_seals_verified": true,
+  "parent_read": ["complete nominal_planner.py", "complete test_nominal_planner.py", "report.json", "verification.json", "SHA256SUMS"],
+  "author_final_tests": {"python": "3.14.4", "passed": 11},
+  "finding": {
+    "id": "P0-FIXED-TIME-01",
+    "basis": "Source review and literal CPU reproduction, not Native performance.",
+    "description": "Zero rollout calls do not remove the artificial solver wait: fixed_action returns the solver window's future first_action_at and applies the MPC solver-only deadline to Fixed.",
+    "consequence": "Fixed can be delayed or refused even when its real action deadline and source freshness remain valid, biasing a comparison.",
+    "original_live_source_witness": {
+      "first_action_delay_after_return_s": 0.09887490002438426,
+      "fixed_refused_with_live_action_deadline": "solve_deadline_exhausted",
+      "source_file_rehashed_during_original_witness": false
+    },
+    "pinned_reproduction_command": ".venv/bin/python -B results/mpc-native-r24/reviews/resume-p0-nominal-planner01-fixed-delay-witness.py --frozen-source-root results/mpc-native-r24/reviews/resume-p0-nominal-planner01-author/attempt-02/sources",
+    "pinned_reproduction_result": "results/mpc-native-r24/reviews/resume-p0-nominal-planner01-fixed-delay-result.json",
+    "required_fix": "Fixed must be immediately applicable without a model-solver wait or solver-only expiry. Preserve real entry/action deadline, identity, clock, ledger, source freshness and CAS requirements; leave MPC/OneMove guards unchanged."
+  },
+  "successor_authorized": ".runtime/r24-resume-p0-nominal-planner02",
+  "other_limitations": [
+    "freeze_fixed chooses a model-ranked training reference, not an empirically strongest GPU Fixed baseline.",
+    "Typed scenario provenance and hashes are declarations, not proof of no evaluation leakage.",
+    "Read-state callbacks are injected, not implemented concurrent HTTP observation.",
+    "No CPU result qualifies real actuation, Native prediction or a complete loop."
+  ],
+  "native_qualification": false,
+  "p0_complete": false,
+  "resume_ready": false
+}

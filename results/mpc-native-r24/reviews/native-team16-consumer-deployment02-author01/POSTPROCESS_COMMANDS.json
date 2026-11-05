@@ -1,0 +1,14 @@
+{
+  "schema":"deployment02-proof-and-seal-command-plan-v1",
+  "same_standard_wrapper_and_interpreters_as":"COMMANDS.json",
+  "commands":[
+    {"Python":"py314","argv":["postprocess02.py","--label","py314","--report"],"stdout_stderr":"outputs/postprocess-py314.log","actual_exit_file":"outputs/postprocess-py314.exit"},
+    {"Python":"py312","argv":["postprocess02.py","--label","py312"],"stdout_stderr":"outputs/postprocess-py312.log","actual_exit_file":"outputs/postprocess-py312.exit"},
+    {"Python":"py314","argv":["seal02.py"],"stdout":"Tool transcript only;no writes after manifest closure."},
+    {"Python":"py312","argv":["seal02.py","--verify-only"],"stdout":"Read-only tool transcript;no writes after seal."}
+  ],
+  "not_control_execution":true,
+  "not_a_third_source_generation":true,
+  "no_owned_helpers_started":true,
+  "live_entrypoints_invoked":false
+}

@@ -1,0 +1,177 @@
+1: """One causal nominal forecast, never the offered Eval tape or its generator.
+2: 
+3: Freeze the authorized Train prior once before decisions. Future arrivals are
+4: Poisson(88/5); lengths are draws from the frozen Train histogram, not known
+5: future requests. Mayor reported tokenizer validation for the exact Train replay
+6: and asset fingerprint below; that proof is not re-executed here. It establishes
+7: Train chat-template counts, NOT future tokenization, gateway cost or calibration.
+8: 
+9: Reuse ONE returned .causal / planner panel for MPC and OneMove. Neither policy
+10: nor candidate path is an RNG input. Production callers must supply the actual
+11: same-domain monotonic clock. The coordinator's source_digest must also include
+12: this module AND the imported nominal_workload.py, not just its old three files.
+13: """
+14: 
+15: from __future__ import annotations
+16: 
+17: from collections import Counter
+18: from dataclasses import asdict, dataclass
+19: import hashlib
+20: import json
+21: import math
+22: from pathlib import Path
+23: from random import Random
+24: import sys
+25: import time
+26: from typing import Callable
+27: 
+28: import nominal_workload as workload
+29: from nominal_planner import CausalScenario, StateVersion
+30: from mpc_lab.contracts import FutureOffer, Scenario, Snapshot, digest
+31: from mpc_lab.controller import validate_snapshot
+32: 
+33: 
+34: TRAIN_SHA256 = "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"
+35: WORKLOAD_SHA256 = "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+36: TOKENIZER_FINGERPRINT = "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5"
+37: TRAIN_REPLAY_SHA256 = "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7"
+38: MARKS = ((256, 128, 33), (1024, 128, 26), (3072, 128, 29))
+39: RNG_NAMESPACE = "resume-p0-nominal-forecast-v1"
+40: RNG_SEED = 5105
+41: MAX_OFFERS = 512
+42: HORIZON_S = 15.0  # scored 5s plus contention-only 10s tail
+43: ASSUMPTIONS = (
+44:     "Unqualified cpu-lifecycle-v1 / synthetic-unqualified-v1; no Native permission.",
+45:     "Future lengths sampled from measured Train counts for the pinned tokenizer only.",
+46:     "Mayor-reported Train tokenizer proof; TRANSFORMERS 5.22.1; proof commit pending at delivery.",
+47:     "Future output=max_output=128, success=True, service_scale=1, zero transport delays.",
+48:     "Old output fraction=1 and old success=True; no oracle completion/progress information.",
+49: )
+50: 
+51: 
+52: class ScenarioRefused(ValueError):
+53:     pass
+54: 
+55: 
+56: def _require(ok, reason):
+57:     if not ok:
+58:         raise ScenarioRefused(reason)
+59: 
+60: 
+61: def _time(value):
+62:     try:
+63:         valid = type(value) in (int, float) and math.isfinite(value) and value >= 0
+64:     except OverflowError:
+65:         valid = False
+66:     _require(valid, "invalid_clock")
+67:     return value
+68: 
+69: 
+70: @dataclass(frozen=True)
+71: class TrainPrior:
+72:     clock_domain: str
+73:     available_at: float
+74:     marks: tuple[tuple[int, int, int], ...] = MARKS
+75:     count: int = 88
+76:     duration_s: float = 5.0
+77:     train_sha256: str = TRAIN_SHA256
+78:     workload_sha256: str = WORKLOAD_SHA256
+79:     tokenizer_fingerprint: str = TOKENIZER_FINGERPRINT
+80:     train_replay_sha256: str = TRAIN_REPLAY_SHA256
+81: 
+82:     @property
+83:     def content_sha256(self):
+84:         return digest({key: value for key, value in asdict(self).items()
+85:                        if key not in ("clock_domain", "available_at")})
+86: 
+87: 
+88: @dataclass(frozen=True)
+89: class NominalForecast:
+90:     causal: CausalScenario
+91:     prior: TrainPrior
+92:     rng_seed_material: str
+93:     rng_runtime: str
+94:     producer_sources: tuple[tuple[str, str], ...]
+95:     assumptions: tuple[str, ...] = ASSUMPTIONS
+96: 
+97: 
+98: def freeze_train_prior(train_path: str | Path, *, purpose: str, clock_domain: str,
+99:                        clock: Callable[[], float] = time.monotonic) -> TrainPrior:
+100:     """Read/hash ONLY the frozen Train file; do not call workload.load_tape (it regenerates)."""
+101:     _require(purpose == "train", "train_only_prior")
+102:     _require(type(clock_domain) is str and bool(clock_domain.strip()), "missing_clock_domain")
+103:     path = Path(train_path)
+104:     _require(path.name == "train.tape.json", "train_filename_required")
+105:     started = _time(clock())
+106:     with path.open("rb") as handle:
+107:         raw = handle.read(16385)
+108:     _require(hashlib.sha256(raw).hexdigest() == TRAIN_SHA256, "train_source_hash_mismatch")
+109:     _require(hashlib.sha256(Path(workload.__file__).read_bytes()).hexdigest() == WORKLOAD_SHA256,
+110:              "workload_source_hash_mismatch")
+111:     tape = json.loads(raw)
+112:     _require(tape["split"]["purpose"] == "train" and tape["schema"] == workload.TAPE_SCHEMA
+113:              and tape["columns"] == list(workload.COLUMNS), "train_schema_or_purpose_mismatch")
+114:     marks = tuple((p, m, n) for (p, m), n in
+115:                   sorted(Counter((row[2], row[3]) for row in tape["rows"]).items()))
+116:     _require(tape["count"] == len(tape["rows"]) == 88
+117:              and tape["protocol"]["duration_ns"] == 5 * workload.NS_PER_SECOND
+118:              and marks == MARKS, "unfrozen_train_prior")
+119:     available = _time(clock())
+120:     _require(available >= started, "nonmonotonic_clock")
+121:     return TrainPrior(clock_domain, available, marks)
+122: 
+123: 
+124: def make_scenario(prior: TrainPrior, snapshot: Snapshot, *, purpose: str,
+125:                   clock: Callable[[], float] = time.monotonic) -> NominalForecast:
+126:     """No tape I/O/refit here. Availability is sampled AFTER generation and hashing."""
+127:     _require(purpose in ("train", "evaluation", "engineering"), "invalid_forecast_purpose")
+128:     _require(type(prior) is TrainPrior and type(snapshot) is Snapshot, "typed_prior_snapshot_required")
+129:     _require(prior == TrainPrior(prior.clock_domain, prior.available_at), "unfrozen_train_prior")
+130:     started = _time(clock())
+131:     reason = validate_snapshot(snapshot, now=started, clock_domain=prior.clock_domain,
+132:                                expected_identity=snapshot.identity, max_age_s=0.5)
+133:     _require(reason is None, reason or "invalid_snapshot")
+134:     _require(_time(prior.available_at) <= snapshot.sampled_at, "prior_not_available_at_source_time")
+135:     state = StateVersion.from_snapshot(snapshot)
+136:     seed_material = json.dumps(
+137:         [RNG_NAMESPACE, RNG_SEED, prior.content_sha256, asdict(state), snapshot.sampled_at],
+138:         sort_keys=True, separators=(",", ":"), allow_nan=False,
+139:     )
+140:     rng = Random(seed_material)
+141:     offers, offset = [], 0.0
+142:     seen = {request.request_id for request in snapshot.requests}
+143:     while True:
+144:         gap = rng.expovariate(prior.count / prior.duration_s)
+145:         _require(type(gap) in (int, float) and math.isfinite(gap)
+146:                  and gap > 0 and offset + gap > offset, "nonadvancing_or_invalid_arrival")
+147:         offset += gap
+148:         if offset >= HORIZON_S:
+149:             break
+150:         _require(len(offers) < MAX_OFFERS, "future_offer_cap_exceeded")
+151:         rank = rng.randrange(prior.count)
+152:         for prompt, maximum, count in prior.marks:
+153:             if rank < count:
+154:                 break
+155:             rank -= count
+156:         rid = f"{RNG_NAMESPACE}:{snapshot.sequence}:{len(offers)}"
+157:         _require(rid not in seen, "forecast_id_collision")
+158:         offers.append(FutureOffer(rid, offset, prompt, maximum, maximum))
+159:     scenario = Scenario(tuple(offers))
+160:     sources = (
+161:         ("nominal_scenario.py", hashlib.sha256(Path(__file__).read_bytes()).hexdigest()),
+162:         ("nominal_workload.py", hashlib.sha256(Path(workload.__file__).read_bytes()).hexdigest()),
+163:     )
+164:     _require(sources[1][1] == prior.workload_sha256, "workload_source_hash_mismatch")
+165:     runtime = f"Python {sys.version.split()[0]} stdlib random.Random(str, version=2)/expovariate/randrange"
+166:     source_sha = digest({
+167:         "prior": asdict(prior), "seed_material": seed_material, "rng_runtime": runtime,
+168:         "sources": sources, "scenario": asdict(scenario), "assumptions": ASSUMPTIONS,
+169:     })
+170:     available = _time(clock())
+171:     _require(available >= started, "nonmonotonic_clock")
+172:     reason = validate_snapshot(snapshot, now=available, clock_domain=prior.clock_domain,
+173:                                expected_identity=snapshot.identity, max_age_s=0.5)
+174:     _require(reason is None, reason or "invalid_snapshot")
+175:     causal = CausalScenario(scenario, state, source_sha, snapshot.sampled_at, available,
+176:                             "development", purpose)
+177:     return NominalForecast(causal, prior, seed_material, runtime, sources)

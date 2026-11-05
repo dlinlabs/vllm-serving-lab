@@ -1,0 +1,7 @@
+{
+ "amends": "SELECTION.json (682bff62...)",
+ "made_at_utc_after": "reading selected files 1-4,7",
+ "reason": "sustained_load.consume_request delegates the content predicate to telemetry.has_sse_content; reusing the identical content semantics requires reading that function span only",
+ "add_view_span": {"path": "telemetry.py", "sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370", "bytes": 17187, "span": "has_sse_content definition and direct helpers only"},
+ "budget_after": {"files": 8, "max_view_bytes_upper_bound": 143201}
+}

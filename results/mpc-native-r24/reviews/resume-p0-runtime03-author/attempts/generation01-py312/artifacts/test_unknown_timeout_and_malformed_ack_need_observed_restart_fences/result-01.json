@@ -1,0 +1,31 @@
+{
+  "Native_qualified": false,
+  "episode_deadline": 103.0,
+  "failure": null,
+  "issued_commands": 1,
+  "ledger_CAS": false,
+  "mode": "experimental_nominal_demo",
+  "native_token_application_at": null,
+  "objective": "gateway-resolved-success-ttft0.5-lower-count-hold-switch-sum-lex-v1",
+  "pending": true,
+  "pending_outcome": "unknown",
+  "protocol_sha256": "50bee7546a1bce216acbb0fffbd8443b3ffb131a5f79f6e6ef0e87bb08374510",
+  "scope": "gateway-nominal-unqualified-v1",
+  "static_Fixed_FIFO_benchmark_implemented": false,
+  "steps": [
+    {
+      "actual_cap_applied_at": null,
+      "cap_change_applied": null,
+      "deadline": 100.5,
+      "deadline_met": true,
+      "elapsed_s": 0.09999999999999432,
+      "entered_at": 100.0,
+      "error_type": "ReadTimeout",
+      "finished_at": 100.1,
+      "native_token_application_at": null,
+      "outcome_observed_at": 100.1,
+      "reason": "CPU unknown write [REDACTED_AUTH]",
+      "status": "pending"
+    }
+  ]
+}

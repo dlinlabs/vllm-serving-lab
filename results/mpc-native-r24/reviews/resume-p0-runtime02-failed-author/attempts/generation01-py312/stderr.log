@@ -1,0 +1,126 @@
+test_cli02_describe_is_offline_stable_and_standalone (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_describe_is_offline_stable_and_standalone) ... ok
+test_cli02_input_refusals_and_partial_planning_inputs_are_retained (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_input_refusals_and_partial_planning_inputs_are_retained) ... usage: python3.12 -m unittest [-h] [--url URL] --journal JOURNAL
+                              [--scenario-file SCENARIO_FILE | --train-tape TRAIN_TAPE]
+                              [--forecast-purpose {train,evaluation,engineering}]
+                              [--cost-spec-file COST_SPEC_FILE]
+                              [--policy {mpc,one_move}] [--steps STEPS]
+                              [--episode-seconds EPISODE_SECONDS]
+                              [--poll-seconds POLL_SECONDS]
+                              [--describe-protocol] [--start-at START_AT]
+                              [--experimental-nominal-demo]
+                              [--nominal-permit NOMINAL_PERMIT]
+python3.12 -m unittest: error: argument --scenario-file: not allowed with argument --train-tape
+usage: python3.12 -m unittest [-h] [--url URL] --journal JOURNAL
+                              [--scenario-file SCENARIO_FILE | --train-tape TRAIN_TAPE]
+                              [--forecast-purpose {train,evaluation,engineering}]
+                              [--cost-spec-file COST_SPEC_FILE]
+                              [--policy {mpc,one_move}] [--steps STEPS]
+                              [--episode-seconds EPISODE_SECONDS]
+                              [--poll-seconds POLL_SECONDS]
+                              [--describe-protocol] [--start-at START_AT]
+                              [--experimental-nominal-demo]
+                              [--nominal-permit NOMINAL_PERMIT]
+python3.12 -m unittest: error: experimental POST requires a separate nominal permit and causal scenario file or Train tape
+usage: python3.12 -m unittest [-h] [--url URL] --journal JOURNAL
+                              [--scenario-file SCENARIO_FILE | --train-tape TRAIN_TAPE]
+                              [--forecast-purpose {train,evaluation,engineering}]
+                              [--cost-spec-file COST_SPEC_FILE]
+                              [--policy {mpc,one_move}] [--steps STEPS]
+                              [--episode-seconds EPISODE_SECONDS]
+                              [--poll-seconds POLL_SECONDS]
+                              [--describe-protocol] [--start-at START_AT]
+                              [--experimental-nominal-demo]
+                              [--nominal-permit NOMINAL_PERMIT]
+python3.12 -m unittest: error: --train-tape requires an explicit --forecast-purpose, used only with Train
+FAIL
+test_cli02_pending_restart_reuses_static_train_and_start_bindings (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_pending_restart_reuses_static_train_and_start_bindings) ... ERROR
+test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start) ... ERROR
+
+======================================================================
+ERROR: test_cli02_pending_restart_reuses_static_train_and_start_bindings (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_pending_restart_reuses_static_train_and_start_bindings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_runtime.py", line 893, in test_cli02_pending_restart_reuses_static_train_and_start_bindings
+    startup1, startup2, first, unchanged, fenced, second_binding = asyncio.run(exercise())
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_runtime.py", line 876, in exercise
+    startup1 = await r.wait_for_start(first, cli_entered=clock())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py", line 729, in wait_for_start
+    runtime._binding()
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py", line 314, in _binding
+    _require(self.planner.parameters == self.parameters and self.planner.identity == self.identity
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py", line 67, in _require
+    raise RuntimeRefused(reason)
+nominal_runtime.RuntimeRefused: runtime_configuration_or_parameter_binding_changed
+
+======================================================================
+ERROR: test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_runtime.py", line 786, in test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start
+    result = self.invoke(arguments)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_runtime.py", line 658, in invoke
+    r.main(arguments)
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py", line 813, in main
+    print(json.dumps(asyncio.run(execute()), sort_keys=True, allow_nan=False))
+                     ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py", line 808, in execute
+    startup = await wait_for_start(runtime, cli_entered=cli_entered)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py", line 729, in wait_for_start
+    runtime._binding()
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py", line 314, in _binding
+    _require(self.planner.parameters == self.parameters and self.planner.identity == self.identity
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py", line 67, in _require
+    raise RuntimeRefused(reason)
+nominal_runtime.RuntimeRefused: runtime_configuration_or_parameter_binding_changed
+
+======================================================================
+FAIL: test_cli02_input_refusals_and_partial_planning_inputs_are_retained (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_input_refusals_and_partial_planning_inputs_are_retained)
+----------------------------------------------------------------------
+nominal_runtime.RuntimeRefused: runtime_configuration_or_parameter_binding_changed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_runtime.py", line 974, in test_cli02_input_refusals_and_partial_planning_inputs_are_retained
+    self.write("START_REFUSALS.json", asyncio.run(rejected_start()))
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_runtime.py", line 968, in rejected_start
+    with self.assertRaisesRegex(r.RuntimeRefused, "shared_start_past_or_outside_envelope") as failure:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "shared_start_past_or_outside_envelope" does not match "runtime_configuration_or_parameter_binding_changed"
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.308s
+
+FAILED (failures=1, errors=2)

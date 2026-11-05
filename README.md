@@ -30,6 +30,34 @@ does not cancel requests already admitted.
 
 **Fixed-policy experiments are complete. MPC performance is not yet validated.**
 
+### Current MPC P0 snapshot
+
+The CPU planner, runtime/recorder composition, and actual GPU service
+startup/owned cleanup have component evidence. **Native MPC is still blocked:**
+the engineering caller mishandles nonzero ledger closure and counts planned
+requests as offered on pre-run failures. No qualified native control cycles,
+actual admission-effect result, Train baseline freeze, or held-out MPC comparison
+has been collected for this MVP.
+
+See the [current gate and blocker report](results/mpc-native-r24/reviews/resume-p0-publication-status01.json),
+[independent caller review](results/mpc-native-r24/reviews/resume-p0-native-caller-independent01-author/REPORT.json),
+[architecture](docs/architecture.md), and [benchmark evidence and limitations](docs/benchmark_results.md).
+This is a hash-bound snapshot of selected local research files, not an import of
+the entire research history; original local commit references are provenance
+metadata. The [export manifest](results/mpc-p0-publication/source-export.json)
+identifies every exported file.
+
+To run the scoped CPU/mock controls from a checkout with Python 3.12 and the
+dependencies in `requirements-cpu-tests.txt`:
+
+```bash
+python experiments/mpc-research/resume-mvp/run_cpu_controls.py
+```
+
+This command does not start vLLM or use a GPU. Draft regressions for the unresolved
+caller defects are preserved as patches and negative witnesses, not included in
+the accepted test set. Passing the CPU controls does **not** qualify Native MPC.
+
 The latest batch completed **80 experiments** on one RTX 4090 backend:
 count16, count32, cost16, and cost32 across four arrival seeds and five workloads.
 Of 112,652 requests, 77,064 completed and 35,588 were rejected, with no other

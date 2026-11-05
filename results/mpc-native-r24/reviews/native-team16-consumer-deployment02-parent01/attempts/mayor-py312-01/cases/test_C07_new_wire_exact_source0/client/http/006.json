@@ -1,0 +1,36 @@
+{
+  "auth_values_captured": false,
+  "body_complete": true,
+  "call_settings": {
+    "absolute_deadline": 912887.695688437,
+    "body_cap_bytes": 1048576,
+    "http_timeout_s": 0.2,
+    "maximum_http_exchanges": 1900
+  },
+  "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+  "client_headers_at": 912887.199459537,
+  "client_receive_at": 912887.199483937,
+  "client_send_at": 912887.198929037,
+  "credential_removed": false,
+  "dispatch_attempted": true,
+  "error_type": null,
+  "http_status": 200,
+  "method": "POST",
+  "path": "/admin/mpc/flush-prefix",
+  "request_body": "{\"expected_run_id\":\"synthetic-gateway\",\"expected_sequence\":3}",
+  "request_id": null,
+  "reserved_at": 912887.198835937,
+  "response_body_base64": "eyJzY2hlbWEiOiJyMjQtZ2F0ZXdheS1mbHVzaGVkLXByZWZpeC12MSIsInNvdXJjZV9zaGEyNTYiOiI5Y2QzYzdkZWUwODFhMzRhOTY1ZjNiYmE0ZGIzNDk0YzAyODNjNzlkN2ZkODQ0OTEyMzgxMWZmYmM2ZTgxY2JiIiwicnVuX2lkIjoic3ludGhldGljLWdhdGV3YXkiLCJjbG9ja19kb21haW4iOiJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwiZmx1c2hlZF90aHJvdWdoX3NlcXVlbmNlIjozLCJzb3VyY2VfYXQiOjkxMjg4Ny4xOTkxNjI0MzcsImZsdXNoX3N0YXJ0ZWRfYXQiOjkxMjg4Ny4xOTkyMDk0MzcsImZsdXNoX2ZpbmlzaGVkX2F0Ijo5MTI4ODcuMTk5MzcyNzM3LCJwcm9jZXNzX2lkZW50aXR5Ijp7InBpZCI6MjAwLCJzdGFydF90aWNrcyI6NDAsInBpZF9uYW1lc3BhY2UiOiJwaWQ6WzQwMjY1MzIyMTRdIn0sInNhbXBsZV9maW5pc2hlZF9hdCI6OTEyODg3LjE5OTM3NDEzNywid3JpdGVfZXJyb3JzIjowLCJkcm9wcGVkIjowLCJzY29wZSI6IlNlcmlhbGl6ZWQgYXBwZW5kIGNvbXBsZXRpb24sIG5vdCBmc3luYyBjcmFzaCBkdXJhYmlsaXR5IG9yIG5hdGl2ZSBjb21tb24tY3V0IHByb29mLiIsIm5hdGl2ZV9tcGNfcGVybWl0dGVkIjpmYWxzZX0=",
+  "response_body_sha256": "299d0f30f136b9fe2f8d9665cd9c326370ff9a0b579854b27fbd8a646834c3c0",
+  "response_bytes_captured": 647,
+  "response_headers": {
+    "content-type": "application/json"
+  },
+  "role": "cut-flush",
+  "sequence": 6,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "scheme": "http"
+  }
+}

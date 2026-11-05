@@ -1,0 +1,14 @@
+{
+ "subject": "PLAN.json (sha256 5cb58915934de58c3633c52973878d1d90c814442fa1b0378cfffc41a19759bf, 2196 bytes), preserved byte-for-byte and read-only",
+ "written": "after attempt01 (both Pythons already run once), while preparing report.json; no source, test or attempt byte changed by this errata",
+ "defect": "PLAN.json is not strict JSON: object attempt_protocol contains two bare string members without keys ('one generation per attempt per Python; ...' and 'pins of owned files before/after each attempt'); Python json.load raises JSONDecodeError at line 8 column 596 (char 2143). The other six frozen JSON files parse.",
+ "intended_reading": "the two strings are attempt-protocol rules and were followed: one generation per attempt per Python, no retries, failures preserved, any repair in a new attempt directory with a written reason, owned-file pins before and after each attempt (attempts/*/pins-before.sha256, pins-after.sha256)",
+ "scope_deviation_disclosed": {
+  "planned": "PLAN.json owned_edits: nominal_client.py (build_run + finalize only); PLAN-AMENDMENT-01 (frozen before any client edit) added rejection-body retention and the client capture schema v2",
+  "additional_client_edits_not_named_in_either": [
+   "_replay_main records capture.offered_request_ids_sha256 = nm.request_ids_sha256(trace request ids in frozen trace order) plus its null placeholder: SCHEMA-FREEZE requires the provenance digest to come from the frozen offered trace; deriving it in build_run from the capture's own rows would make the F4 check tautological",
+   "three NOT_CLIENT_OWNED text lines (gateway telemetry/owner ledger join by x-request-id; comparability record; Eval train_selection_sha256 not recorded)"
+  ],
+  "effect": "no change to request sending, schedule, fates, SSE parsing or row mapping"
+ }
+}

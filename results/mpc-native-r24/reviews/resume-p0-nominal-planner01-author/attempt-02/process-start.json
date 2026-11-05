@@ -1,0 +1,31 @@
+{
+  "command": [
+    "env",
+    "-u",
+    "PYTHONPATH",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "PYTHONHASHSEED=0",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+    "OMP_NUM_THREADS=1",
+    "OPENBLAS_NUM_THREADS=1",
+    "MKL_NUM_THREADS=1",
+    "NUMEXPR_NUM_THREADS=1",
+    "nice",
+    "-n",
+    "19",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "experiments/mpc-research/resume-mvp",
+    "-p",
+    "test_nominal_planner.py",
+    "-v"
+  ],
+  "parent_pid": 1304551,
+  "pid": 1304553,
+  "start_ticks": "92142628",
+  "started_at": "2026-11-04T21:53:55.467858+00:00"
+}

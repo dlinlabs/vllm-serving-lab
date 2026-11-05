@@ -1,0 +1,29 @@
+{
+  "acknowledgement_is_application": false,
+  "actual_application_before_deadline": "established_by_interval_upper",
+  "actual_application_interval": [
+    910501.591916277,
+    910501.591937177
+  ],
+  "actual_applied_at": null,
+  "before_budget": 32,
+  "before_version": 0,
+  "client_receive_at": 910501.591937177,
+  "client_send_at": 910501.591817877,
+  "interval_justification": "Pinned synchronous write before response, corroborated by the next real public state.",
+  "next_budget": 32,
+  "next_public_sampled_at": 910501.591958777,
+  "next_version": 1,
+  "raw_server_applied_at_claim": 910501.591916277,
+  "server_checked_at": 910501.591916277,
+  "server_checked_semantics": "source_proven_pre_write_expiry_sample",
+  "server_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+  "server_received_at": null,
+  "server_received_interval": [
+    910501.591817877,
+    910501.591916277
+  ],
+  "server_received_observability": "not_exposed",
+  "server_run_id": "synthetic-gateway",
+  "status": "observed_budget_transition_interval_censored"
+}

@@ -1,0 +1,128 @@
+{
+  "API03_members_reverified": 97,
+  "Mayor_accepted": false,
+  "Native_failed_experiment": false,
+  "Native_permission": false,
+  "clients_closed": 15,
+  "completed_at": "2026-11-05T01:50:00.687299+00:00",
+  "episode02_members_preserved": 111,
+  "episode_invocations": 15,
+  "input_pins_preserved": 56,
+  "invocations_reaching_worker_tasks": 5,
+  "known_process_identities_gone": 4,
+  "new_discrimination_result": "all refused before workers with exact expected reason",
+  "new_discrimination_subcases": 3,
+  "outer_test_tasks_joined": 1,
+  "peer_source_bytes": 200013,
+  "peer_source_count": 6,
+  "peers_edited": false,
+  "positive_shared_start_result": {
+    "CPU_budget_POSTs": 0,
+    "actual_Native_admission_effect": null,
+    "fates": {
+      "cancelled": 0,
+      "complete": 4,
+      "http_error": 0,
+      "not_launched": 0,
+      "rejected": 1,
+      "stream_error": 0,
+      "transport_error": 0,
+      "unknown": 0
+    },
+    "runtime_steps": [
+      "hold",
+      "hold",
+      "hold"
+    ]
+  },
+  "qualification": null,
+  "remaining_blocker": "E03-1: pre-worker RuntimeRefused classified failed rather than refused",
+  "retries": 0,
+  "same_coroutine_signal_checks": 15,
+  "schema": "nominal-episode03-report-v1",
+  "seal_exclusions": [
+    "SHA256SUMS",
+    "SEAL_RECEIPT.json"
+  ],
+  "selected_controls": [
+    "test_shared_start_full_outcomes_and_real_controller_feedback",
+    "test_default_off_preparation_and_configuration_refusals_do_not_start",
+    "test_returned_failure_envelopes_cancel_peer_and_preserve_results",
+    "test_caller_cancellation_joins_workers_and_persists_partial_outcomes"
+  ],
+  "source_diff": "SOURCE_DIFF.patch",
+  "source_edits_after_freeze": false,
+  "source_freeze_sha256": "3c32caa6d352cb9f916c55653709461d6fd3d2a8bddbcbf20c004292a1d294a3",
+  "source_generations": 1,
+  "source_ids": {
+    "experiments/mpc-research/resume-mvp/nominal_client.py": {
+      "bytes": 54831,
+      "sha256": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_episode.py": {
+      "bytes": 17266,
+      "sha256": "4b2de8f69750629b78c58808a28cc0203be6807ac91acf7529b0210e3ce45db0"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_metrics.py": {
+      "bytes": 75924,
+      "sha256": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_permit.py": {
+      "bytes": 3902,
+      "sha256": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_planner.py": {
+      "bytes": 21987,
+      "sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_runtime.py": {
+      "bytes": 45768,
+      "sha256": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_scenario.py": {
+      "bytes": 8166,
+      "sha256": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_services.py": {
+      "bytes": 19419,
+      "sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_workload.py": {
+      "bytes": 25248,
+      "sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    "experiments/mpc-research/resume-mvp/test_nominal_client.py": {
+      "bytes": 41180,
+      "sha256": "8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66"
+    },
+    "experiments/mpc-research/resume-mvp/test_nominal_episode.py": {
+      "bytes": 23051,
+      "sha256": "4c43e1c9e5fcc96c117b0fe610ce9c689be6f5f0a16e33ca7e46ff6168859ab7"
+    }
+  },
+  "status": "3PASS_1FAIL_DISTINCT_PREFLIGHT_CLASSIFICATION_STOP",
+  "test_attempts": 1,
+  "test_process": {
+    "absolute_test_deadline": 935115.641880298,
+    "attempt": 1,
+    "elapsed_s": 7.6300170050235465,
+    "identity_after_wait": null,
+    "joined": true,
+    "new_discrimination_subcases": 3,
+    "original_identity": {
+      "pid": 2037778,
+      "start_ticks": "93505564",
+      "state": "R"
+    },
+    "original_identity_gone": true,
+    "peer_or_historical_suites_run": 0,
+    "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+    "returncode": 1,
+    "scope": "CPU-only corrected episode module, no Native permission",
+    "selected_controls": 4,
+    "timed_out": false
+  },
+  "test_result": "3 PASS / 1 FAIL method, one existing subcase fails; failures=1/errors=0",
+  "transports_closed": 30,
+  "worker_tasks_joined": 10
+}

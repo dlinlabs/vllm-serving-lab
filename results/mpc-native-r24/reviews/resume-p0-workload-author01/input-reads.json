@@ -1,0 +1,10 @@
+{
+  "schema": "r24-resume-p0-workload01-input-reads-v1",
+  "read_budget": "<=8 directly needed current tracked source/test/schema files, each <=512KiB, exact paths (no archival copies)",
+  "files_read": [
+    {"path": "run_trace_pilot.py", "bytes": 29647, "sha256": "c02808e7cfb3aade6563620d373b1c16fc6f8af47a549c41ddf901b0cd6ad2bc", "purpose": "replay CLI and trace field usage"},
+    {"path": "trace_workload.py", "bytes": 4745, "sha256": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f", "purpose": "replay trace schema_version 1 (validate_trace/load_trace/verify_prompts/synthetic_prompt)"}
+  ],
+  "own_tool_copied": {"from": ".runtime/r24-team16-sampling-curvature-label02/run_attempt.sh", "sha256": "147490a55df4b6c56a17e5e8d79f68191fe4a87378e697375f7a401ed21d43dd", "sealed_in": "label02 SHA256SUMS c0d58f4c681f6ce5c234788e079242fe347788a714d4b9ffa216d2df9e586b1f"},
+  "not_read": ["experiments/mpc-research/resume-mvp/nominal_permit.py", "experiments/mpc-research/resume-mvp/nominal_planner.py", "experiments/mpc-research/resume-mvp/test_nominal_permit.py", "experiments/mpc-research/resume-mvp/test_nominal_planner.py", "any native-client module (peer-owned, unsealed)", "any Eval outcome or journal"]
+}

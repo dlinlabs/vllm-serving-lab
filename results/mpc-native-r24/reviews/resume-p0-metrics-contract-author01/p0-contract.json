@@ -1,0 +1,107 @@
+{
+  "schema": "r24-team16-resume-p0-contract-v1",
+  "scope": ".runtime/r24-team16-resume-p0-contract01",
+  "role": "Role7 fair existing benchmark metrics/negative cases",
+  "model": "claude-opus-5.5",
+  "reasoning_effort": "max",
+  "status": "CONTRACT_PROPOSAL_ONLY_MAYOR_CHOICE_REQUIRED",
+  "produced_measurements": false,
+  "implementation_done": false,
+  "tests_run": false,
+  "runtime_native_gpu_ssh_network_git_install": false,
+  "claims": {"superiority": false, "production": false, "slo_guarantee": false, "gate_closure": false},
+  "pins": [
+    {"sha256": "a3e4a33d282b0cb28d98991a9eb81d30fc0b8c83a4aec46e7d1f4323113d59fe", "bytes": 54291, "path": "results/mpc-native-r24/reviews/native-team16-send-order-author01/comparison16.py", "role": "current corrected scorer; Mayor limited-source+fresh-CPU accepted fb884d3e (per Mayor; docstring still says not accepted)"},
+    {"sha256": "9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d", "bytes": 3914, "path": "experiments/mpc-research/native-r23/score_http.py", "role": "r23 natural SLO rule and all-offered score imported by comparison16"},
+    {"sha256": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a", "bytes": 26866, "path": "results/mpc-native-r24/reviews/native-team16-planner-revision02-author01/policy_planner16.py", "role": "planner rev02 best_fixed/best_one_move/best_multistep (E2 2b4ed5bc)"},
+    {"sha256": "5f889665ca247a29a95b14e326129ca77a0c38f8492967276ff9abe7ad755eee", "bytes": 24285, "path": "results/mpc-native-r24/reviews/native-team16-comparison-author01/native-gpu-protocol16.json", "role": "preregistered protocol16; eligible_now=false; launch_permitted=false"},
+    {"sha256": "415737cdfeb53de04507f358a691d08e291b029d92322f9b0b69510aad9d1aa1", "bytes": 8485, "path": "docs/benchmark_results.md", "role": "P0 required table and metric requirements (five docs b1b61d93)"},
+    {"sha256": "be89d12b9cd42a5c725fa26b9e751dc76238c6ffc8043a0ceada552978f2d579", "bytes": 4956, "path": "docs/architecture.md", "role": "admission/actuator semantics"},
+    {"sha256": "c84858d2f4973de890d8eaaba33ca42ec7d5d0e13f5c097feaa829f4d337df99", "bytes": 14048, "path": "mpc_lab/benchmark.py", "role": "public runnable CPU baseline interface"},
+    {"sha256": "eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec", "bytes": 21361, "path": "mpc_lab/model.py", "role": "public CPU plant queue semantics"}
+  ],
+  "pins_total": {"files": 8, "bytes": 158206, "budget_files": 8, "budget_bytes": 1048576},
+  "not_pinned_not_read": ["gateway.py", "mpc_lab/contracts.py (Outcome.good rule)", "mpc_lab/controller.py (one-move delayed-transition strength)"],
+  "assumptions": [
+    "tracked status and commits (b1b61d93, fb884d3e, 54e96495, 26139be5, 2b4ed5bc, c00d29d2, 52b2b244) are as reported by Mayor/docs; not verified by Role7 with git",
+    "selection discovery used names/sizes and keyword-count grep only"
+  ],
+  "lineages": {
+    "L-T16": {"code": ["comparison16.py a3e4", "score_http.py 9a173ab9", "policy_planner16.py 164f3947"], "nature": "paired all-offered validator/scorer of caller-produced episode journals", "today": "fixtures only", "native_model_arms": "refused when policy status ok on non-synthetic world (comparison16:730)"},
+    "L-PUB": {"code": ["mpc_lab/benchmark.py c84858d2", "mpc_lab/model.py eadbfe17"], "nature": "runnable synthetic CPU plant, exploratory, plant differs from forecast model", "estimator": "linear-interpolation quantile (benchmark.py:56-62), differs from nearest-rank", "good_rule": "unpinned contracts.py"},
+    "rule": "never pool or co-tabulate lineages; every row carries lineage and basis (synthetic_fixture|observed_research|cpu_synthetic)"
+  },
+  "clocks": {
+    "domain": "single endpoint_clock_domain",
+    "scheduled_at": "offered_start + frozen offset_s (comparison16:679)",
+    "sent_at": "actual client send or null (=not_launched); scheduled<=sent<=observed (comparison16:683,700)",
+    "first_content_at_terminal_at": "client-observed; >= sent_at else case refused (comparison16:755); scheduled<=terminal<=fate_observed_at (comparison16:713)",
+    "windows": "offered [offered_start, offered_start+duration_s); cut offered_start+cut_offset_s; accounting [started_at, finished_at] contains offered window (score_http:41-48)",
+    "costs": "native: endpoint domain inside envelope (comparison16:748); fixture costs not convertible"
+  },
+  "estimator": {"percentile": "nearest-rank ordered[ceil(q*n/100)-1] (comparison16:775-779)", "quantiles": [50, 95, 99], "always_report_n": true, "flags": {"p95_is_sample_max": "n<=19", "p99_is_sample_max": "n<=99"}, "pooling": "arm-level pools request samples across cases; never average percentiles across cases"},
+  "metrics": [
+    {"id": "M1a", "name": "ttft_sched_cond", "status": "existing", "source": "comparison16:782-803", "definition": "first_content_at-scheduled_at over status==complete rows with finite first_content_at", "note": "completion-conditional, selection-biased, not SLO credit"},
+    {"id": "M1b", "name": "ttft_send_cond", "status": "new", "definition": "first_content_at-sent_at over the M1a row set; sent_at joined from offers by position and request_id (make_case enforces identical order)"},
+    {"id": "M1c", "name": "ttft_sched_all_offered_censored", "status": "new", "definition": "every offered row: first_content_at-scheduled_at if finite first content observed under any fate, else +inf; nearest-rank over n_offered; rank on +inf gives value null and censored=true"},
+    {"id": "M1d", "name": "e2e_from_scheduled_s", "status": "existing", "source": "comparison16:782-803", "definition": "terminal_at-scheduled_at over complete rows; descriptive"},
+    {"id": "M2", "name": "all_offered_slo_goodput", "status": "existing_unchanged", "source": "score_http:7-38,41-69", "rule_schema": "r23-natural-endpoint-slo-v1", "thresholds": {"ttft_limit_s": 0.5, "multi_token_output_delay_limit_s": 0.05, "one_token_e2e_limit_s": 0.5}, "primary": "natural_slo_good/all_offered (null if all_offered==0)", "also": ["cohort_slo_goodput_rps=good/offered_window_s", "in_window_slo_goodput_rps", "policy_and_tail_wall_slo_goodput_rps"], "not_comparable": "E1 historical SLO goodput was TTFT-only"},
+    {"id": "M3", "name": "throughput", "status": "new", "delivered": "status in {complete,length}; status authoritative, no relabelling", "request_throughput": "delivered/D", "token_throughput": "sum usage.completion_tokens (int>=0) over delivered rows / D", "windows_D": {"primary": "offered_window_s (cohort completions incl. tail; mirrors cohort goodput)", "in_window": "terminal_at<=window_end over offered_window_s; missing terminal counted", "envelope": "policy_and_tail_wall_s incl. setup/warmup/drain"}, "missing_usage": "excluded, counted, value flagged lower_bound", "forbidden_substitutes": ["max_tokens", "HTTP record count", "SSE chunk count"], "separate": "undelivered rows' reported tokens", "context": "offered_rps=all_offered/offered_window_s"},
+    {"id": "M4", "name": "fates", "status": "counts_existing_rates_new", "fates": ["complete", "rejected", "timeout", "error", "failed", "cancelled", "length", "not_launched", "pending"], "rates_denominator": "all_offered (null if 0)", "rejection_rate": "rejected/all_offered (gateway admission refusal only)", "failure_rate": "(timeout+error+failed+cancelled)/all_offered plus components", "not_launched": "infrastructure non-send; never merged into rejection; no replacement (G12 pending)", "pending": "right-censored unknown; zero credit", "length": "capped; delivered; no SLO credit", "complete_not_slo_good": "count(complete)-natural_slo_good", "retained": "policy-episode statuses, unknown application, cleanup records"},
+    {"id": "M5", "name": "group_fairness", "status": "new", "group_key": "pure function of frozen request fields, no workload schema change (comparison16:153 has no group field)", "default_proposal_mayor_choice": {"field": "prompt_tokens", "classes": {"S": "<=512", "M": "513..2048", "L": ">2048"}}, "freeze": "code constant before outcomes; recorded in identity bundle", "per_group": ["n_offered", "natural_slo_good", "attainment", "rejection_rate", "failure_rate", "not_launched", "pending", "M1a percentiles with n", "M1c percentiles with n"], "summary_nonempty_groups_k_ge_2": {"worst_group_attainment": "min", "attainment_gap": "max-min", "min_over_max": "null if max==0", "jain_unweighted": "(sum a)^2/(k*sum a^2); null if all a==0, never 1", "worst_group_rejection": "max", "worst_group_ttft_p95": "max conditional p95 with its n"}, "k_lt_2": "null with reason fewer_than_two_nonempty_groups", "paired": "per-case contrasts vs train_selected_fixed, descriptive only", "non_claims": ["no starvation guarantee", "absolute group latency confounded by request size"]},
+    {"id": "M6", "name": "end_to_end_controller_overhead", "status": "existing_plus_new", "existing": "account_costs measured_envelope_s, measured_covered_union_s, category_union_s_nonadditive (comparison16:379-406); actuation_lag_s (comparison16:522)", "category_mapping": {"observation": ["acquisition", "export"], "model_and_optimization": ["solver"], "ipc": ["ipc"], "logging": ["journal"], "actuation": ["control"], "lifecycle": ["setup", "cleanup"]}, "new": ["union_fraction_of_endpoint_envelope only if costs.clock_domain==endpoint domain else null", "model ok tick decision_at-plan.source_at", "model ok tick solver_elapsed_s", "reactive tick decision_at-observation.observed_at", "per change applied_at-source_at (model)", "tick counts by exact status and reason"], "missed_deadlines": "only as refused/failed ticks by exact reason; no inferred classification", "rules": ["never add/subtract/convert overhead into TTFT/E2E/goodput", "frozen schedule prevents slowing workload", "fixed arms: no ticks, delay n=0 null, costs explicit"], "insufficient": "L-PUB controller_wall_s is decision compute only (benchmark.py:162,235)"},
+    {"id": "M7", "name": "sample_counts_design", "status": "existing_unchanged", "per_case_n_offered_max": 1024, "pairing": "complete arms x cases, paired exposure, Williams order (comparison16:854-896)", "protocol16": {"S1_train_min": 16, "S2_eval_min": 36, "total": 52, "pilot_cap": 48, "fits": false}, "inference": "none; decision.winner None (comparison16:994); G07/G08 absent"}
+  ],
+  "missing_zero_censored": {
+    "n_zero_percentile": "null",
+    "all_offered_zero_rates": "null, never 0 or 1",
+    "zero_completions_throughput": "0.0 (duration>0 enforced)",
+    "complete_without_first": "excluded from M1a/M1b, counted; +inf in M1c",
+    "not_launched": "absent from M1b; +inf in M1c",
+    "pending": "zero credit; +inf in M1c unless first content observed",
+    "empty_group": "listed n=0; excluded from summaries",
+    "unvalidated_or_refused": "validate via comparison16 validate_case/compare_campaign first; refused campaign yields refusal only, no metrics"
+  },
+  "fidelity": {
+    "identity_bundle": ["commit", "argv", "config sha256", "python version", "scorer sha", "score_http sha", "planner sha", "P0 module sha", "panel sha", "Train choice sha", "world sha (21 keys)", "workload shas", "seed", "horizon", "objective", "scenario shas", "model sha and qualification", "initial budget", "fixed budget", "reactive parameters", "budget support {16,32}", "SOURCE_AGE_LIMIT_S 0.5", "SLO rule schema", "group edges", "execution order and actual sequence"],
+    "enforced_equalities": ["paired_exposure/validate_runs", "model arm panel binding", "fixed budget binding", "Train-only frozen choice, disjoint evaluation"],
+    "gap_low_severity": {"finding": "comparison16 reads solver_budget_s/actuation_budget_s from each plan (comparison16:465-468) without binding them across ticks or arms; path selection unaffected (complete enumeration) but refusal incidence could differ", "requirement": "P0 module requires one identical planner contract (budgets, step offsets, solver/actuation budgets, cost spec) across strong_one_move and mpc; refuse otherwise"},
+    "strong_baselines_unchanged": {"fixed": "best constant path", "one_move": "best path with <=1 transition from received budget incl. delayed", "mpc": "best multistep, first action only", "sources": ["planner:111-117,203-214", "comparison16:453", "planner:268-324", "comparison16:913-934"]},
+    "l_pub_one_move": "control_steps=1 (benchmark.py:155); delayed-transition strength unverified (controller.py unpinned)"
+  },
+  "fifo": {
+    "decision": "ALIAS",
+    "alias_of": {"L-T16": "fixed32", "L-PUB": "fixed-32"},
+    "independent_algorithm": false,
+    "independent_episodes": false,
+    "in_williams_design": false,
+    "in_comparison_family": false,
+    "definition": "non-predictive FCFS holding the largest supported budget under identical admission R+c<=u, identical workload and limits",
+    "evidence": ["comparison16:476-491,617-642 arms differ only by applied budget timeline in {16,32}; no ordering parameter", "benchmark.py:175-182 arrival admit-or-reject, no gateway wait queue", "benchmark.py:188-196 and model.py:7,22 FIFO prefill in admission order", "architecture.md:50-53 lower budget never evicts"],
+    "disclosure": "if Train selects 32, train_selected_fixed is also the same algorithm (separately run preregistered episodes)",
+    "rejected": {"unthrottled_fcfs": "breaks shared {16,32} support; budget is weighted reservation cost (cost_semantics unfrozen), not sequence count", "gateway_wait_queue": "new admission mechanism with unequal queue limits; not P0"}
+  },
+  "code_changes_later_frozen_scope": [
+    {"id": "C1", "what": "new additive p0_metrics16.py post-validation on comparison16 a3e4 outputs", "adds": ["M1b", "M1c", "M3", "M4 rates", "M5", "M6 additions", "FIFO alias row", "identity bundle", "refusal passthrough", "planner-contract equality check"], "reuses_unchanged": ["nearest_rank", "conditional_latency", "account_costs", "score_http"]},
+    {"id": "C2", "what": "only if CPU table chosen: additive L-PUB outcome_metrics extensions", "adds": ["delivered req/s", "synthetic output tokens/s from plant output_tokens", "fairness same edges", "nearest-rank or disclosed interpolation", "fixed-32 alias", "never present accepted_throughput_rps as throughput", "verify one-move strength"]},
+    {"id": "C3", "what": "table renderer with lineage/basis/alias/refusal flags; native model rows 'prohibited (Native14 FAIL)'; no winner field"}
+  ],
+  "unchanged": ["comparison16 a3e4", "score_http", "planner rev02", "protocol16", "ARMS", "Williams order", "budgets", "thresholds", "denominators", "Train-only selection", "send-order refusal", "native model prohibition", "52>48"],
+  "future_focused_cases_not_now": ["censored +inf rank", "zero denominators", "Jain all-zero", "alias identity", "missing usage", "clock-domain mismatch null fraction"],
+  "mayor_choices": [
+    {"id": "Q1", "choice": "lineage for P0 numbers", "options": ["L-PUB CPU exploratory now", "L-T16 native non-model arms after gates", "both, never pooled"]},
+    {"id": "Q2", "choice": "group key edges", "default": "prompt_tokens 512/2048"},
+    {"id": "Q3", "choice": "primary throughput window", "default": "offered_window_s"},
+    {"id": "Q4", "choice": "FIFO alias", "default": "fixed32"},
+    {"id": "Q5", "choice": "TTFT-only secondary good count", "default": "no"}
+  ],
+  "status_context": {
+    "measured_p0_values": "none (benchmark_results.md:72-83)",
+    "native14": "FAIL; model arms prohibited natively",
+    "d2_f1": "accepted blocker 26139be5; Role6 repair pending; not reviewed",
+    "g06": "pending", "g16": "pending",
+    "protocol16_binding": "binds b4b83d; amendment 2f336bc9 not adopted",
+    "e4_coverage": "1 of 2 FAIL; not throughput"
+  },
+  "smallest_blocker": "Mayor choices Q1-Q5, then frozen C1 scope (+C2 if CPU table); native numbers additionally need D2-F1 repair acceptance, G06/G16, fresh host and preregistration"
+}

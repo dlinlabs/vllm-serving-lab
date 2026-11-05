@@ -1,0 +1,57 @@
+{
+  "schema": "r24-team16-planner-revision02-frozen-plan-v1",
+  "role": 5,
+  "scope": ".runtime/r24-team16-planner-revision02",
+  "predecessor": ".runtime/r24-team16-planner-revision01",
+  "predecessor_seal_sha256": "2051bc18e9fa4c659f77718668f289362f04ab4ab59f1cdfd74348a5733a3926",
+  "predecessor_planner_sha256": "eb02844885814ebb01150e8db1d29aa90c29d859a5074a265968543b505c4a06",
+  "critique": ".runtime/r24-team16-comparison/planner16-critique",
+  "critique_seal_sha256": "d85e68185c85bb149ea4e80489577a11af6b4ed3e078221468c42819d104216f",
+  "parent_evidence_commit_reported": "a5f676aa1fcc035eb6225c4a7c218722471c81c8",
+  "parent_evidence_map": "results/mpc-native-r24/reviews/native-team16-numerical-crossreview-parent-seal01.json",
+  "git_verification_performed": false,
+  "implementation_plan": [
+    "Verify and pin all prior inputs/seals, the authorized frozen critique, relevant planner-only parent proofs, and this plan before testing.",
+    "Copy the previous 102 controls and the ten independent Role7 controls byte for byte; reproduce Role7's seven defect failures and three positive/scope passes on both Pythons before changes.",
+    "Keep the original complete native evaluator and revision01 product-rounding refusals. Add exact Fraction objective keys computed from every frozen per-world metric and positive weight, using floats only as display summaries.",
+    "Perform complete-panel validation before exact reordering. Rank MPC, all constant candidates and strong-OneMove with the same exact keys; preserve the original lexicographic objective and transition definition.",
+    "Use those exact per-panel means in train aggregation too; never reconstruct training decisions from absorbed display floats. Bind the arithmetic mode into the frozen planner contract.",
+    "Make the frozen training artifact enumerate every canonical budget in the accepted shared action set, up to three. Support its selected third budget without modifying the sealed planner15 base. Keep explicit fixed16/fixed32 and legacy caller-declared two-point choices compatible.",
+    "Charge exact-key generation/sorting and serialization to the existing cooperative solver/source-age/actuation guard. Refuse incomplete, tampered, stale or late panels atomically.",
+    "Run the unchanged102 controls, unchanged Role7 controls, and focused nonzero-common-term, sum-absorption, exact-training, full-action-set, token-integrity and deadline tests on both prescribed Pythons.",
+    "Preserve every failed attempt and source snapshot; seal exact source changes, input pins, commands, corrected claims and machine-readable report. Parent independently accepts and integrates."
+  ],
+  "unchanged_contract": {
+    "max_scenarios": 16,
+    "steps": [2, 4],
+    "max_budgets": 3,
+    "max_complete_panel_cells": 1296,
+    "first_action_source_age_limit_s": 0.5,
+    "objective": "Maximize weighted all-offered natural-SLO-good count; minimize weighted HTTP cohort wall, transitions from received budget, path sum, lexicographic path.",
+    "strong_one_move": "All paths with at most one transition including the received-budget transition, including delayed moves.",
+    "fixed_named_arms": [16, 32],
+    "train_selected_fixed": "Strongest constant over the full shared contract action set, frozen before heldout evaluation.",
+    "thresholds": {"rhat_max": 1.01, "bulk_ess_min": 400, "tail_ess_min": 400}
+  },
+  "integration_constraints_not_new_defects": {
+    "I3": "Runtime supplies a true common-domain dequeue clock or separately enforces acquisition/queue/IPC TTL and endpoint accounting.",
+    "I4": "Actual fixed arms apply their frozen constants independently of model-panel success/cost; model refusals hold and stay in all-offered denominators.",
+    "runtime_or_comparison_peer_edits": false
+  },
+  "execution": {
+    "prescribed_python314_and_python312": true,
+    "threads": 1,
+    "unset_PYTHONPATH": true,
+    "nice": 19,
+    "python_B_no_bytecode_plugins_or_cache": true,
+    "exclusive_attempt_logs": true,
+    "agents_git_network_GPU_live_actuation": false
+  },
+  "qualification": {
+    "synthetic_only": true,
+    "native14": "REJECTED",
+    "native_mpc_permitted": false,
+    "native_performance_or_unpredictability_cause_claimed": false,
+    "parent_acceptance": false
+  }
+}

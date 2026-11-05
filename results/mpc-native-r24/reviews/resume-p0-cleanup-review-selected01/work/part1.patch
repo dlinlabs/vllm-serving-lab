@@ -1,0 +1,378 @@
+--- immutable-deployment02/launch01.py
++++ cleanup-successor01/candidate/launch01.py
+@@ -3,6 +3,7 @@
+ 
+ import argparse
+ import fcntl
++import math
+ import os
+ from pathlib import Path
+ import signal
+@@ -72,35 +73,38 @@
+ 
+ 
+ def monitor(owned, client, started, cancelled, directory=c.PUBLIC):
+-    while True:
+-        owned.remember()
+-        registration = directory / "consumer-registration02.json"
+-        acknowledgement = directory / "consumer-registered02.json"
+-        if registration.exists() and not acknowledgement.exists():
+-            row = c.load(registration)
+-            c.require(row["schema"] == "team16-cut-consumer02-registration-v1"
+-                      and row["parent"]["pid"] == client["process"].pid
+-                      and row["parent"]["start_ticks"] == owned.identities[client["process"].pid]
+-                      and row["consumer_source_freeze_sha256"] == c.sha(c.CONSUMER / "CONTROL_FREEZE.json"),
+-                      "consumer_source_parent_registration")
+-            c.publish(acknowledgement, owned.register_leaf(row, client))
+-        active = marker(directory, "active-start.json", started)
+-        finished = marker(directory, "protocol-finished.json", started)
+-        now = time.monotonic()
+-        deadline = active["started_at"] + 23 if active else started + 180
+-        if finished:
+-            c.require(finished["finished_at"] <= deadline
+-                      and finished["active_started_at"] == (active["started_at"] if active else None),
+-                      "late_or_inconsistent_protocol_completion")
+-            return dict(anchor=finished["finished_at"], cancel=False, normal=True)
+-        if client["process"].poll() is not None:
+-            return dict(anchor=now, cancel=False, normal=False, failure="client_exited_without_completion")
+-        if any(root["process"].poll() is not None for root in owned.roots if root is not client):
+-            return dict(anchor=now, cancel=True, normal=False, failure="service_exited_during_acquisition")
+-        if cancelled or now >= deadline:
+-            return dict(anchor=now, cancel=True, normal=False, failure="signal_or_phase_deadline")
+-        arm(min(started + 203, deadline))
+-        time.sleep(0.05)
++    try:
++        while True:
++            owned.remember()
++            registration = directory / "consumer-registration02.json"
++            acknowledgement = directory / "consumer-registered02.json"
++            if registration.exists() and not acknowledgement.exists():
++                row = c.load(registration)
++                c.require(row["schema"] == "team16-cut-consumer02-registration-v1"
++                          and row["parent"]["pid"] == client["process"].pid
++                          and row["parent"]["start_ticks"] == owned.identities[client["process"].pid]
++                          and row["consumer_source_freeze_sha256"] == c.sha(c.CONSUMER / "CONTROL_FREEZE.json"),
++                          "consumer_source_parent_registration")
++                c.publish(acknowledgement, owned.register_leaf(row, client))
++            active = marker(directory, "active-start.json", started)
++            finished = marker(directory, "protocol-finished.json", started)
++            now = time.monotonic()
++            deadline = active["started_at"] + 23 if active else started + 180
++            if finished:
++                c.require(finished["finished_at"] <= deadline
++                          and finished["active_started_at"] == (active["started_at"] if active else None),
++                          "late_or_inconsistent_protocol_completion")
++                return dict(anchor=finished["finished_at"], cancel=False, normal=True)
++            if client["process"].poll() is not None:
++                return dict(anchor=now, cancel=False, normal=False, failure="client_exited_without_completion")
++            if any(root["process"].poll() is not None for root in owned.roots if root is not client):
++                return dict(anchor=now, cancel=True, normal=False, failure="service_exited_during_acquisition")
++            if cancelled or now >= deadline:
++                return dict(anchor=now, cancel=True, normal=False, failure="signal_or_phase_deadline")
++            arm(min(started + 203, deadline))
++            time.sleep(0.05)
++    finally:
++        signal.setitimer(signal.ITIMER_REAL, 0)
+ 
+ 
+ def output_inventory(directory):
+@@ -155,6 +159,162 @@
+                 warmup_send_attempted=(directory / "client/warmup-offered.json").exists(),
+                 planned_warmup=1, missing_receipt_not_proof_of_no_send=True,
+                 maximum_requested_completion_tokens=48)
++
++
++def incomplete_all_offered(directory, *, deadline):
++    planned = c.load(c.OFFERS)["rows"]
++    c.require(len(planned) == 2, "two_original_planned_offers")
++    inventory, errors, truncated = [], [], False
++    groups = ("client/http-refusals", "client/http-reservations", "client/http", "client/consumer")
++    for group in groups:
++        if time.monotonic() >= deadline:
++            truncated = True
++            break
++        folder = directory / group
++        try:
++            with os.scandir(folder) as entries:
++                for entry in entries:
++                    if len(inventory) >= 1900 or time.monotonic() >= deadline:
++                        truncated = True
++                        break
++                    if not entry.name.endswith(".json") or (
++                            group == "client/consumer" and "refus" not in entry.name):
++                        continue
++                    row = dict(path=group + "/" + entry.name, content_not_claimed_complete=True)
++                    try:
++                        row.update(bytes_observed=entry.stat(follow_symlinks=False).st_size,
++                                   symlink=entry.is_symlink())
++                    except OSError as error:
++                        row["stat_error_type"] = type(error).__name__
++                    inventory.append(row)
++        except OSError as error:
++            errors.append(dict(directory=group, error_type=type(error).__name__))
++    return dict(schema="team16-all-offered-incomplete-v1", status="INCOMPLETE",
++        planned_managed=2, offers=[dict(row, fate="unobserved", fate_known=False) for row in planned],
++        planned_warmup=1, warmup_send_attempted=None, actual_observation_count=None,
++        observed_final_fates=None, client_result_read=False, inventory_complete=False,
++        raw_and_refusal_directory_references=list(groups), inventory_snapshot=inventory,
++        inventory_errors=errors, inventory_truncated_or_deadline=truncated,
++        empty_inventory_not_zero_observations=True, missing_receipt_not_proof_of_no_send=True,
++        maximum_requested_completion_tokens=48, actual_application_at=None,
++        scope="Nonjoined failure snapshot;mutable result and receipt bodies are not parsed or called complete.")
++
++
++def cleanup_owned_stage(owned, client, started, supervision, *, directory, secret):
++    signal.setitimer(signal.ITIMER_REAL, 0)
++    now = time.monotonic()
++    hard_deadline = started + 243
++    state = dict(schema="team16-cleanup-successor-attempt-v1", entered_at=now,
++        original_hard_deadline=hard_deadline, errors=[], cleanup=None,
++        owned_exists=owned is not None, cleanup_attempted=False, cleanup_call_finished=False,
++        cleanup_returned=False)
++    anchor, cancel = now, True
++    try:
++        recorded = supervision["anchor"]
++        c.require(type(recorded) in (float, int) and math.isfinite(recorded)
++                  and started <= recorded <= now, "invalid_recorded_cleanup_anchor")
++        state["recorded_anchor"] = recorded
++        if supervision.get("anchor_origin") == "initial_unset":
++            state["anchor_resolution"] = "exception_fallback_initial_unset_true_current_time"
++            state["errors"].append(dict(phase="anchor", reason="initial_anchor_was_not_a_shared_teardown"))
++        else:
++            anchor = recorded
++            state["anchor_resolution"] = "recorded_shared_anchor_preserved"
++        cancel = supervision.get("cancel") is not False
++    except BaseException as error:
++        state["anchor_resolution"] = "exception_fallback_invalid_anchor_true_current_time"
++        state["errors"].append(dict(phase="anchor", **c.failure(error, secret)))
++    deadline = min(anchor + 40, hard_deadline)
++    state.update(anchor=anchor, cleanup_deadline=deadline, deadline_exhausted_at_entry=now >= deadline)
++    if now >= deadline:
++        state["errors"].append(dict(phase="anchor", reason="recorded_cleanup_budget_exhausted_no_reset"))
++    try:
++        c.publish(directory / "host-cleanup-anchor02.json", dict(
++            anchor=anchor, clock_domain=c.domain(), original_host_cleanup_cutoff=hard_deadline))
++    except BaseException as error:
++        state["errors"].append(dict(phase="anchor_publication_or_clock", **c.failure(error, secret)))
++    # A raising phase alarm must not preempt the explicit bounded owned stop/reap path.
++    signal.setitimer(signal.ITIMER_REAL, 0)
++    try:
++        if owned is not None:
++            state["cleanup_attempted"] = True
++            state["cleanup"] = owned.cleanup(anchor, client=client,
++                cancelled=cancel or bool(state["errors"]), hard_deadline=hard_deadline)
++            state["cleanup_returned"] = True
++        else:
++            state["cleanup"] = dict(all_joined=True, capture_complete=True, surviving_owned_pids=[],
++                started_at=anchor, finished_at=time.monotonic(), readers=[], events=[])
++    except BaseException as error:
++        state["errors"].append(dict(phase="owned_cleanup", **c.failure(error, secret)))
++    finally:
++        signal.setitimer(signal.ITIMER_REAL, 0)
++        state["cleanup_call_finished"] = True
++        state["attempt_finished_at"] = time.monotonic()
++    known = {} if owned is None else dict(owned.identities)
++    if owned is not None:
++        for root in owned.roots:
++            known.setdefault(root["process"].pid, None)
++    identities = []
++    for pid, ticks in known.items():
++        row = dict(pid=pid, start_ticks=ticks, state="unknown")
++        try:
++            current = owned.helper.snapshot(pid)
++            if ticks is not None and (current is None or current[0] != ticks):
++                row["state"] = "old_identity_gone"
++            elif ticks is not None:
++                row["state"] = "same_identity_present"
++        except BaseException as error:
++            row["error_type"] = type(error).__name__
++        identities.append(row)
++    state["owned_identity_report"] = identities
++    state["remaining_owned"] = [row for row in identities if row["state"] != "old_identity_gone"]
++    cleanup = state["cleanup"]
++    if cleanup and cleanup.get("errors"):
++        state["errors"].extend(cleanup["errors"])
++    state["actual_joined"] = bool(cleanup and cleanup["all_joined"] and not state["remaining_owned"])
++    state["cleanup_in_budget"] = bool(cleanup and now < deadline and cleanup["finished_at"] <= deadline)
++    state["joined_in_budget"] = state["actual_joined"] and state["cleanup_in_budget"]
++    finished = cleanup["finished_at"] if cleanup else state["attempt_finished_at"]
++    state["IO_deadline"] = min(started + 260, finished + 17)
++    if not state["joined_in_budget"]:
++        try:
++            c.require(time.monotonic() < state["IO_deadline"], "incomplete_offered_original_IO_exhausted")
++            c.write(directory / "all-offered.json",
++                    incomplete_all_offered(directory, deadline=state["IO_deadline"]))
++            state["incomplete_all_offered_written"] = True
++        except BaseException as error:
++            state["errors"].append(dict(phase="incomplete_all_offered", **c.failure(error, secret)))
++        try:
++            c.require(time.monotonic() < state["IO_deadline"], "failure_marker_original_IO_exhausted")
++            c.write(directory / "DO_NOT_EXPORT.json", dict(
++                reason="owned_cleanup_incomplete_or_budget_missed", component_pass=False,
++                actual_joined=state["actual_joined"], joined_in_budget=False,
++                remaining_owned=state["remaining_owned"], actual_application_at=None))
++        except BaseException as error:
++            state["errors"].append(dict(phase="failure_marker", **c.failure(error, secret)))
++    try:
++        c.require(time.monotonic() < state["IO_deadline"], "cleanup_receipt_original_IO_exhausted")
++        c.write(directory / "cleanup-attempt02.json", state)
++    except BaseException as error:
++        state["errors"].append(dict(phase="cleanup_receipt", **c.failure(error, secret)))
++    try:
++        print(__import__("json").dumps(dict(
++            schema=state["schema"], cleanup_attempted=state["cleanup_attempted"],
++            cleanup_call_finished=state["cleanup_call_finished"], cleanup_returned=state["cleanup_returned"],
++            remaining_owned=state["remaining_owned"], joined_in_budget=state["joined_in_budget"],
++            errors=state["errors"])), flush=True)
++    except BaseException as error:
++        state["errors"].append(dict(phase="cleanup_stdout", error_type=type(error).__name__))
++    return state
++
++
++def release_after_cleanup(lock, state):
++    c.require(state["cleanup_call_finished"]
++              and (not state["owned_exists"] or state["cleanup_attempted"])
++              and "remaining_owned" in state, "owned_cleanup_attempt_and_identity_report_before_unlock")
++    signal.setitimer(signal.ITIMER_REAL, 0)
++    fcntl.flock(lock, fcntl.LOCK_UN)
++    os.close(lock)
+ 
+ 
+ def publish_outputs(directory, result, *, joined, secret, deadline, no_key_created=False):
+@@ -241,7 +401,7 @@
+                   prediction_qualified=False, exact_point_gate=False, copy_ready_qualification=False)
+     result["private_config_creation_attempted"] = False
+     owned, client, secret = None, None, ""
+-    supervision = dict(anchor=started, cancel=True, normal=False)
++    supervision = dict(anchor=started, cancel=True, normal=False, anchor_origin="initial_unset")
+     try:
+         result["fresh_host_receipt"] = fresh_host(prereg)
+         environment = c.clock_helpers().native_environment(c.STATE, c.STATE / "python-cache-evidence")
+@@ -292,72 +452,64 @@
+         result["errors"].append(type(error).__name__)
+         supervision = dict(anchor=time.monotonic(), cancel=True, normal=False)
+     finally:
+-        anchor = supervision["anchor"]
+-        cleanup = None
++        signal.setitimer(signal.ITIMER_REAL, 0)
++        cleanup_state = cleanup_owned_stage(
++            owned, client, started, supervision, directory=c.PUBLIC, secret=secret)
+         try:
+-            c.publish(c.PUBLIC / "host-cleanup-anchor02.json", dict(
+-                anchor=anchor, clock_domain=c.domain(), original_host_cleanup_cutoff=started + 243))
+-            arm(min(anchor + 40, started + 243))
+-            if owned:
+-                cleanup = owned.cleanup(anchor, client=client, cancelled=supervision["cancel"],
+-                                        hard_deadline=started + 243)
+-            else:
+-                cleanup = dict(all_joined=True, capture_complete=True, surviving_owned_pids=[],
+-                               started_at=anchor, finished_at=time.monotonic(), readers=[], events=[])
+-        except BaseException as error:
+-            result["errors"].append("cleanup:" + type(error).__name__)
+-        result["cleanup"] = cleanup
+-        joined = bool(cleanup and cleanup["all_joined"])
+-        result["private_config_close_pending_safe_export"] = c.CONFIG.exists()
+-        result["client_returncode"] = client["process"].returncode if client else None
+-        io_deadline = min(started + 260, (cleanup["finished_at"] if cleanup else time.monotonic()) + 17)
+-        try:
+-            arm(io_deadline)
+-            c.require(joined, "DO_NOT_EXPORT_owned_helpers_remain")
+-            c.write(c.PUBLIC / "all-offered.json", all_offered(c.PUBLIC, client is not None))
+-            result["source_after"] = c.source_snapshot()
+-            result["sources_unchanged"] = result.get("source_before") == result["source_after"]
+-            result["gpu_after"] = c.clock_helpers().gpu_inventory()
+-            c.require_idle(result["gpu_after"])
+-            c.verify_code()
+-            result["candidate_unchanged"] = True
+-            c.write(c.PUBLIC / "origin-events-consumer02.json", c.load_origins(c.ORIGINS))
+-            result["privacy_pass"] = c.privacy_scan((c.PUBLIC,), secret) if secret else owned is None
+-            c.require(result["privacy_pass"], "DO_NOT_EXPORT_CREDENTIAL_REFUSAL")
+-            if client:
+-                returned = persist_close(c.PUBLIC, anchor=anchor, hard_deadline=started + 243,
+-                                         io_deadline=io_deadline, joined=joined)
+-                result["actual_consumer_close"] = dict(
+-                    staged_sha256=returned["staged_sha256"], persisted_sha256=returned["persisted_sha256"],
+-                    persisted_at=returned["persisted_at"], original_IO_deadline=io_deadline)
+-                report = c.load(c.PUBLIC / "client/result.json")
+-                close = c.load(c.PUBLIC / "client/client-cleanup.json")
+-                result["component_pass"] = bool(
+-                    report["component_pass"] and close["joined"] and result["client_returncode"] == 0
+-                    and returned["receipt"]["component_pass"] is True
+-                    and (c.PUBLIC / "consumer-registered02.json").exists()
+-                    and supervision["normal"] and cleanup["capture_complete"]
+-                    and result["sources_unchanged"] and not result["errors"] and not cancelled)
+-        except BaseException as error:
+-            result["errors"].append("postflight:" + type(error).__name__)
+-        result.update(finished_at=time.monotonic(), signals=cancelled)
+-        result["phase_bounds"] = bool(
+-            cleanup and cleanup["finished_at"] <= anchor + 40
+-            and result["finished_at"] <= started + 260
+-            and result["finished_at"] <= cleanup["finished_at"] + 17)
+-        result["component_pass"] = result["component_pass"] and result["phase_bounds"] and not result["errors"]
+-        try:
+-            result["component_pass"] = publish_outputs(
+-                c.PUBLIC, result, joined=joined, secret=secret, deadline=io_deadline,
+-                no_key_created=not result["private_config_creation_attempted"] and owned is None)
+-        except BaseException as error:
+-            result["component_pass"] = False
+-            c.write(c.PUBLIC / "DO_NOT_EXPORT.json",
+-                    dict(reason="final_output_refusal", error_type=type(error).__name__))
++            anchor, cleanup = cleanup_state["anchor"], cleanup_state["cleanup"]
++            joined = cleanup_state["joined_in_budget"]
++            result.update(cleanup=cleanup, cleanup_attempt=cleanup_state)
++            result["errors"].extend(cleanup_state["errors"])
++            result["private_config_close_pending_safe_export"] = c.CONFIG.exists()
++            result["client_returncode"] = client["process"].returncode if client else None
++            io_deadline = cleanup_state["IO_deadline"]
++            try:
++                arm(io_deadline)
++                c.require(joined, "DO_NOT_EXPORT_owned_helpers_remain_or_cleanup_budget_missed")
++                c.write(c.PUBLIC / "all-offered.json", all_offered(c.PUBLIC, client is not None))
++                result["source_after"] = c.source_snapshot()
++                result["sources_unchanged"] = result.get("source_before") == result["source_after"]
++                result["gpu_after"] = c.clock_helpers().gpu_inventory()
++                c.require_idle(result["gpu_after"])
++                c.verify_code()
++                result["candidate_unchanged"] = True
++                c.write(c.PUBLIC / "origin-events-consumer02.json", c.load_origins(c.ORIGINS))
++                result["privacy_pass"] = c.privacy_scan((c.PUBLIC,), secret) if secret else owned is None
++                c.require(result["privacy_pass"], "DO_NOT_EXPORT_CREDENTIAL_REFUSAL")
++                if client:
++                    returned = persist_close(c.PUBLIC, anchor=anchor, hard_deadline=started + 243,
++                                             io_deadline=io_deadline, joined=joined)
++                    result["actual_consumer_close"] = dict(
++                        staged_sha256=returned["staged_sha256"], persisted_sha256=returned["persisted_sha256"],
++                        persisted_at=returned["persisted_at"], original_IO_deadline=io_deadline)
++                    report = c.load(c.PUBLIC / "client/result.json")
++                    close = c.load(c.PUBLIC / "client/client-cleanup.json")
++                    result["component_pass"] = bool(
++                        report["component_pass"] and close["joined"] and result["client_returncode"] == 0
++                        and returned["receipt"]["component_pass"] is True
++                        and (c.PUBLIC / "consumer-registered02.json").exists()
++                        and supervision["normal"] and cleanup["capture_complete"]
++                        and result["sources_unchanged"] and not result["errors"] and not cancelled)
++            except BaseException as error:
++                result["errors"].append("postflight:" + type(error).__name__)
++            result.update(finished_at=time.monotonic(), signals=cancelled)
++            result["phase_bounds"] = bool(
++                cleanup and cleanup["finished_at"] <= min(anchor + 40, started + 243)
++                and result["finished_at"] <= started + 260
++                and result["finished_at"] <= cleanup["finished_at"] + 17)
++            result["component_pass"] = result["component_pass"] and result["phase_bounds"] and not result["errors"]
++            try:
++                result["component_pass"] = publish_outputs(
++                    c.PUBLIC, result, joined=joined, secret=secret, deadline=io_deadline,
++                    no_key_created=not result["private_config_creation_attempted"] and owned is None)
++            except BaseException as error:
++                result["component_pass"] = False
++                if not (c.PUBLIC / "DO_NOT_EXPORT.json").exists():
++                    c.write(c.PUBLIC / "DO_NOT_EXPORT.json",
++                            dict(reason="final_output_refusal", error_type=type(error).__name__))
+         finally:
+             signal.setitimer(signal.ITIMER_REAL, 0)
+-            fcntl.flock(lock, fcntl.LOCK_UN)
+-            os.close(lock)
++            release_after_cleanup(lock, cleanup_state)
+     print(__import__("json").dumps(dict(output=str(c.PUBLIC), component_pass=result["component_pass"],
+                                       owned_joined=joined, actual_application_at=None)))
+     return 0 if result["component_pass"] else 1

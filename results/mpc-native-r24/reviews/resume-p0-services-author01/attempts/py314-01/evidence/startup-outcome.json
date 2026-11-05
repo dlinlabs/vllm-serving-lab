@@ -1,0 +1,90 @@
+{
+  "deadline_monotonic": 927098.875408102,
+  "error_count": 2,
+  "errors": [
+    "enter:OwnershipError",
+    "service_exit:OwnershipError"
+  ],
+  "expired": false,
+  "known": [
+    {
+      "pgid": 1611607,
+      "pid": 1611607,
+      "ppid": 1611598,
+      "sid": 1611607,
+      "start_ticks": 92709589
+    },
+    {
+      "pgid": 1611610,
+      "pid": 1611610,
+      "ppid": 1611598,
+      "sid": 1611610,
+      "start_ticks": 92709590
+    }
+  ],
+  "known_identities_gone": true,
+  "lock_paths": [
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/attempts/py314-01/evidence/startup/component.lock",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/attempts/py314-01/evidence/startup/mayor.lock"
+  ],
+  "native_eligibility": false,
+  "owner": {
+    "pgid": 1611598,
+    "pid": 1611598,
+    "ppid": 1611597,
+    "sid": 1611598,
+    "start_ticks": 92709581
+  },
+  "pending_spawn": null,
+  "run_dir": "attempts/py314-01/evidence/startup/run",
+  "schema": "nominal-service-ownership-v1",
+  "service_failure": true,
+  "services": [
+    {
+      "argv": [
+        "<redacted>",
+        "<redacted>",
+        "<redacted>",
+        "<redacted>"
+      ],
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "name": "engine",
+      "redacted_env_entries": 2,
+      "root_identity": {
+        "pgid": 1611607,
+        "pid": 1611607,
+        "ppid": 1611598,
+        "sid": 1611607,
+        "start_ticks": 92709589
+      }
+    },
+    {
+      "argv": [
+        "<redacted>",
+        "<redacted>",
+        "<redacted>",
+        "<redacted>"
+      ],
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "name": "gateway",
+      "redacted_env_entries": 2,
+      "root_identity": {
+        "pgid": 1611610,
+        "pid": 1611610,
+        "ppid": 1611598,
+        "sid": 1611610,
+        "start_ticks": 92709590
+      }
+    }
+  ],
+  "source_sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+  "status": "STOPPED",
+  "universal_OS_proof": false,
+  "unknown": []
+}

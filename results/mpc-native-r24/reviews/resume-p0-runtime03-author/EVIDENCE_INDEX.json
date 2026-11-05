@@ -1,0 +1,162 @@
+{
+  "canonicalization": {
+    "POSTs": 0,
+    "equivalent_roots": [
+      "http://cpu.invalid",
+      "http://cpu.invalid/"
+    ],
+    "real_MockTransport_GETs": 2,
+    "redirects_still_refused": true,
+    "refused_endpoint_changes": [
+      "https://cpu.invalid/",
+      "http://other.invalid/",
+      "http://cpu.invalid:8080/",
+      "http://cpu.invalid/api/",
+      "http://user:password@cpu.invalid/",
+      "http://cpu.invalid/?x=1",
+      "http://cpu.invalid/#fragment"
+    ],
+    "refused_raw_URLs": [
+      {
+        "endpoint": "http://user:password@cpu.invalid",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://@cpu.invalid/",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/?x=1",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/?",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/#fragment",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/#",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/api",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid//",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/.",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/..",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/%2f",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid\\path",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid/\n",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": " http://cpu.invalid/",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "//cpu.invalid/",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http:cpu.invalid",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "ftp://cpu.invalid/",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid:",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid:bad",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      },
+      {
+        "endpoint": "http://cpu.invalid:65536",
+        "reason": "explicit_HTTP_root_endpoint_required"
+      }
+    ],
+    "scope": "CPU-only, no Native qualification"
+  },
+  "files": {
+    "attempts/generation01-py312/artifacts/test_cli02_describe_is_offline_stable_and_standalone/DESCRIBE_BINDING.json": {
+      "bytes": 1961,
+      "sha256": "ac9aee6217a2fa3c6e1a971ef31dab484bbd4f5fa5e76c00c065167f19094161"
+    },
+    "attempts/generation01-py312/artifacts/test_cli02_input_refusals_and_partial_planning_inputs_are_retained/START_REFUSALS.json": {
+      "bytes": 260,
+      "sha256": "af7ee9351a439daba8c9621915a8e40376f60927fe8ee1945a18dccd7ceb2ab3"
+    },
+    "attempts/generation01-py312/artifacts/test_cli02_input_refusals_and_partial_planning_inputs_are_retained/partial-plan.json": {
+      "bytes": 62455,
+      "sha256": "390997199e988a2404f8edb24b270733f46a7b253ce16856bfa0a111f2327169"
+    },
+    "attempts/generation01-py312/artifacts/test_cli02_pending_restart_reuses_static_train_and_start_bindings/PENDING_RESTART.json": {
+      "bytes": 5674,
+      "sha256": "6db3fb707c64108de78f6ae64f670ddc18b8f43e06c6e60d536af76a6b6a34c1"
+    },
+    "attempts/generation01-py312/artifacts/test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start/REALIZED_REPLAY.json": {
+      "bytes": 3312,
+      "sha256": "907fb229d3f23fa872bc3b172c9a25a59dd6d0c30f1b71d67ae16733743bdeaf"
+    },
+    "attempts/generation01-py312/artifacts/test_root03_canonicalization_preserves_strict_endpoint_binding/ROOT_URL_CANONICALIZATION.json": {
+      "bytes": 2828,
+      "sha256": "23e6756cf6da2241811525b60d4d210effcc0b34d4a501a927f7acb8c10fbaac"
+    }
+  },
+  "old_control_bodies_unchanged": 16,
+  "qualification": "Actual CPU MockTransport observations and model replay, not Native admission evidence.",
+  "realized_CPU_replay": {
+    "offline_selected_path_replays": 2,
+    "planner_rollouts": 16,
+    "plans": [
+      {
+        "lower": 49.0,
+        "offers": 268,
+        "realized_scenario_sha256": "5cda970f92810b73d69bfad0743de576ca70349c39d82eabc0fc717949172949",
+        "upper": 49.0
+      },
+      {
+        "lower": 48.0,
+        "offers": 235,
+        "realized_scenario_sha256": "1e4b9abdb2ac14425ac4b9fd3e1057361389840b623e66fa6a549b0dd4d66d8f",
+        "upper": 48.0
+      }
+    ],
+    "scope": "CPU nominal forecast replay, not Native",
+    "startup": {
+      "CLI_envelope_deadline": 927967.585822358,
+      "cli_entered_at": 927907.585822358,
+      "requested_start_at": 927907.7854942579,
+      "resumed_existing_episode": false,
+      "wait_entered_at": 927907.588957258,
+      "wait_finished_at": 927907.787200657
+    }
+  }
+}

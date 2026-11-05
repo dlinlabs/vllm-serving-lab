@@ -1,0 +1,71 @@
+{
+  "schema": "team16-offline-native-evidence-contract-findings-v1",
+  "reported_observation_answer": {
+    "compatible_without_application_point": true,
+    "source": "inputs/control02/inputs/product/mpc_lab/native_state.py",
+    "source_sha256": "835df8ebaa58c773074e65cedba4627b468d14b560233a7655bf9cd2240b83d6",
+    "symbols": ["NativeBinding", "NativeState", "estimate_native_state"],
+    "reason": "The existing reported-state contract has separate Gateway and native source/receipt clocks, identity/epoch binding and pending_batches; no previous application timestamp is a field or prerequisite.",
+    "safe_scope": "A full source-observed queue window after the confirmed write interval and received by a same-domain historical cutoff can accompany this unchanged NativeState. The two samples are not an atomic Gateway/native owner cut. No forecast or real-time consumption is executed or attested.",
+    "availability": "Use collector client_receive_at, not sampled_at, guard time, interval endpoint or frozen callback entry. The existing NativeState and bridge both reject unreceived/future or stale evidence. No claim is made that parsing/planning/journal IO completed by a historical cutoff."
+  },
+  "application_interval": {
+    "source": "inputs/control02/inputs/product/gateway.py",
+    "symbols": ["mpc_update_budget"],
+    "source_lines": [907, 926],
+    "semantics": "applied_at is read before the expiry guard and before admission_budget/budget_version mutation. The synchronous write precedes the successful response. The unchanged control02 validator corroborates the write with a later public budget/version snapshot and bounds it by a genuine response receipt.",
+    "actual_application_at": null,
+    "exact_time_consumer": "Refused; do not fill null with a bound, midpoint, acknowledgment or pre-write applied_at.",
+    "existing_qualification_contract": "inputs/runtime16/NATIVE_PREREQUISITES.json",
+    "qualification_contract_changed": false
+  },
+  "physical_stock": {
+    "sources": [
+      "inputs/control02/inputs/source13/queue_observer.py",
+      "inputs/source13-scheduler-runtime.py",
+      "inputs/control02/native_probe02.py"
+    ],
+    "symbols": ["queue_snapshot", "snapshot", "full_queue_observation"],
+    "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+    "meaning": "Retain the complete scheduler inventory and every issued route, including work:[], plus derived ghost IDs. NativeState.progress is RUNNING-only; its emptiness cannot erase pending_batches or the accompanying full queue.",
+    "legacy_native02_record": "inputs/native02-client/http/035.json",
+    "legacy_scope": "running/waiting/frontend_unfinished0 and requests[] but pending_batches1; route identity unavailable. The bridge refuses full-stock consumption without inventing whether the route is ghost, zero-work or live.",
+    "full_native02_records": [36, 37],
+    "emptiness_scope": "Source-observed windows only; no GPU future queried, no remaining GPU-time inference, no persistent quiescence. The original two-sample Native02 replay/drain criterion remains unchanged."
+  },
+  "runtime_planning_blocker": {
+    "path_status": "refused",
+    "sources": [
+      "inputs/runtime16/receding16.py",
+      "inputs/runtime16/native-r23/native_live_source.py",
+      "inputs/runtime16/native-r23/clocked_owner_cut.py",
+      "inputs/runtime16/native-r23/source_owner_phases.py",
+      "inputs/runtime16/native-r23/capture_owner_closure.py",
+      "inputs/runtime16/native-r23/public_planning_inputs.py"
+    ],
+    "symbols": [
+      "RecedingLoop16._snapshot",
+      "LiveNativeScenarioSource.__call__",
+      "collect_clocked_owner_cut",
+      "classify_source_owners",
+      "establish_initial_capture_closure",
+      "prepare_public_inputs"
+    ],
+    "missing_evidence": [
+      "No Native02 r24 native_phase capture/lifecycle/publication inventory.",
+      "No source-bracketed process-clock proof for a runtime clocked owner cut and no flushed byte-bound Gateway ledger prefix closed at that cut.",
+      "No InitialCaptureClosure. The current bootstrap specifically requires same_budget_ack and Gateway sequence/budget_version1 after the original readiness CAS. Native02 intentionally starts with exact32/version0 and no readiness actuator. Do not invent that CAS or retroactively issue it.",
+      "No fresh NativePanelAcquisition or caller history token; budget_version is not an acquisition/publication request token.",
+      "No qualified model, converged posterior, normalized predictive/client law, heldout validation or full-sweep native comparison."
+    ],
+    "proposed_future_amendment_not_implemented": [
+      "If a future authorized source cut is supplied, define and independently review closure initialization using its actual startup/offer/queue/publication and ledger evidence, rather than fabricating the old readiness CAS.",
+      "Keep application-interval evidence and collector availability explicit. Do not relax any existing point-time-qualified path without a separate approved interval-aware qualification contract.",
+      "Preserve actual issued/ghost/zero-work stock and source age through any later historical scenario propagation; unknown remaining readiness/service stays unknown or explicitly unqualified.",
+      "Retain all existing model/predictive/convergence/comparison gates. This bridge authorizes no next live component test."
+    ]
+  },
+  "default_enabled": false,
+  "native_mpc_permitted": false,
+  "deployable": false
+}

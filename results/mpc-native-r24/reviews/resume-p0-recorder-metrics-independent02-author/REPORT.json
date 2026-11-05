@@ -1,0 +1,430 @@
+{
+  "schema": "pr32-team16-role4/recorder-metrics-independent02/report/v1",
+  "written_utc": "2026-11-05T01:27:29Z",
+  "status": "FINAL (bounded independent source gate; sealed with SHA256SUMS in this capsule)",
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+  "capsule": ".runtime/r24-resume-p0-recorder-metrics-independent02",
+  "author": {
+    "role": "PR32 team16 Role4 independent validation (measurement, claim and leakage audit)",
+    "provider": "Anthropic",
+    "model_id": "claude-opus-5.5",
+    "reasoning_effort": "max",
+    "child_agents": 0,
+    "nested_agents": 0,
+    "model_changes": 0
+  },
+  "mandate": "Mayor GO: bounded independent B source gate of the frozen Role7 async client03 recorder and the unchanged metrics02 module; separate RECORDER and METRICS PASS/FAIL; close or reopen F1-F5 with line proofs and label F6/F7; separate hard component defects from declared driver/actual-host obligations; source-only allowed plus few preregistered literal CPU witnesses; no Eval/native/network/GPU/SSH/installs/Git/Markdown/nested agents; seal and stop.",
+  "verdicts": {
+    "RECORDER": {
+      "component": "experiments/mpc-research/resume-mvp/nominal_client.py (Role7 async client-api03; raw-v2 capture schema unchanged)",
+      "sha256": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+      "lines": 971,
+      "bytes": 54831,
+      "verdict": "PASS",
+      "verdict_kind": "conditional independent SOURCE-GATE PASS for recorder correctness on the pinned bytes; not an execution, actual-host, comparability or performance acceptance",
+      "hard_component_defects": [],
+      "non_blocking_findings": ["N1", "N2", "O-1"],
+      "basis": [
+        "every offered request gets one pre-allocated record (fate not_launched, fate_reason not_sent) before any send: prepare_records 347-362; records one-to-one with the trace 486-487; capture rows must equal the per-record normalized rows 568-570",
+        "absolute schedule, never retimed: sleep on time.monotonic() until scheduled_at 408-409, sent_at stamped as send-attempt start 417, send_lag_s 418; a passed START is refused before sending at 878-879 (capture_replay), 735 (after GET /v1/models) and 488-489 (inside _replay after allocation)",
+        "all offered fates recorded: not_launched (not_sent 355, cancelled_before_send 410-411, implementation_exception_before_send 412-415); unknown (sent_outcome_not_recorded 419, implementation_exception 461-465); rejected only for the exact gateway 503 admission body carrying estimated_request_cost (380-393, 431-434), otherwise http_error http_<status> (433-434); complete vs stream_error by SSE anomalies (441-442); cancelled and transport_error split into before_response_headers vs response_body (443-460); late exceptions keep the recorded outcome and prefix after_outcome (396-398, 444, 453, 462); terminal_at always stamped in finally (466-467)",
+        "SSE evidence: [DONE], data_after_done, invalid_sse, error_event, unexpected_choice_index, finish_reason contradiction (including content after a finish), missing_done and empty_content anomalies (268-311, 313-326); finish_reason kept with observed/absent/contradiction evidence and all reasons seen (322-326, 339-340); completion_tokens only from exactly one usage event with an int >= 0, else absent/multiple_usage/invalid_usage (327-334); prompt_tokens_match against the verified expected input tokens (365-368)",
+        "non-success bodies hashed and retained only when strict UTF-8 and bounded (426-430, 371-377); response x-request-id recorded (425; RESPONSE_ID_HEADER 48); request carries a 32-hex uuid5 x-benchmark-request-id (47, 351) matching the gateway regex (gateway 562)",
+        "join: every request task is cancelled and gathered with return_exceptions=True before _replay returns or raises (501-504)",
+        "async API: capture_replay runs in the caller loop with finite offered_start/deadline/reserve checks (870-871), caller clock_domain must equal the recorder clock domain (872-873), drain_deadline = deadline - cleanup_reserve_s (874) refused if it ends before the offered window (875-876); Exception -> settled refused/failed envelope returned (882-886); CancelledError/KeyboardInterrupt/other BaseException -> settled then re-raised (884-885); no signal handlers outside the CLI _run_cancellable (897-915, add_signal_handler at 904)",
+        "build_run refuses non-collected captures as failure evidence that is never scored (563-564) and non core purposes (565-567); full_wall must be a driver record in the capture clock domain covering the offered window, every terminal and collection_end (571-586); static_fixed control_evidence structure and timing (587-597); declared comparability cross-checked for model alias/path/tokenizer and ignore_eos (598-599, 623-635); provenance offered_count, duration and request-id digest derived from the validated trace (695-697, 608-609); result validated by nm.validate_run (616-619)",
+        "persistence: canonical strict JSON with allow_nan=False and exclusive create (647-653); write_capture is the caller-owned persistence point (891)"
+      ],
+      "conditions": [
+        "valid only for nominal_client.py sha256 933e4161... with the unchanged raw-v2 schema and API03 contract; any byte change voids this verdict",
+        "the declared driver obligations below (NOT_CLIENT_OWNED 98-115) must be met and evidenced on the actual host before any claim-qualified run",
+        "the caller persists every envelope (collected, refused, failed, interrupted) via write_capture in a finally, handles a write failure (N1), records external interrupt reasons (O-9) and treats only status collected plus a successful build_run as scoreable",
+        "N1, N2 and O-1 are LOW non-blocking hardening items; on conforming producer output none of them changes a fate or a metric",
+        "owner-disclosed untested paths remain untested by Role4 as well"
+      ]
+    },
+    "METRICS": {
+      "component": "experiments/mpc-research/resume-mvp/nominal_metrics.py (metrics02 v2, unchanged since Role7 metrics02 seal)",
+      "sha256": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+      "lines": 1211,
+      "bytes": 75924,
+      "verdict": "PASS",
+      "verdict_kind": "conditional independent SOURCE-GATE PASS for metrics correctness on the pinned bytes; comparability is declared-fact equality, not actual-host verification",
+      "hard_component_defects": [],
+      "non_blocking_findings": ["N2", "O-2", "O-5", "O-7"],
+      "basis": [
+        "natural SLO executed only from the pinned unchanged r23 score_http.py bytes (52-53, 117-124; RULE score_http 7-17, natural_good 20-38); Role4 snapshot sha256 equals 9a173ab9...; client runs carry slo_missing None (client 603) and every row's requested_ignore_eos must equal the declared generation ignore_eos (392-394)",
+        "row validation: fate set FATES 34-35 (210-211); early send refused with EARLY_SEND_TOLERANCE_S 0.0 (82, 226-228); rejected and failure fates require sent_at and terminal_at (237)",
+        "all-offered denominator: unique request ids (298-299); offered_count and in-order request-id digest bound to provenance (323-334); envelope covers the offered window (289-291); rows inside the offered window and declared envelope, offered_cohort_observed envelope exact within tolerance (337-351); fate counts and rates over all rows including not_launched and unknown (401-410)",
+        "comparability: declared facts validated (360-394) and compared across arms by canonical digest; undeclared arm -> UNVERIFIED refusal, differing fact -> incomparable refusal, differing trace/count/ids/shape/schedule/duration/envelope scope -> incomparable (670-698); Train selection refused when fixed16/fixed32 are not comparable (731); comparison table raises on any cross-arm refusal (855-857)",
+        "Train selection and reuse: frozen SELECTION_RULE with tie rules (91, 645-652, 701-748); purpose must be train and the rule unchanged (760, 772); candidate and request-id digests recomputed (782); selection_sha256 recomputed else tampered or forged (770); Train table candidates must be the measured fixed arms (884-886); Eval alias raises on positive reuse signals and comparability or selection mismatch and is REFUSED UNVERIFIED for unbound arms (887-903)",
+        "labels: fairness k, n, Jain note and null reasons (517-554, summary 819); rate direction and token-rate scope (72-79, 459-460, 484-485, summary 818); send lag min and n_negative (633-635, summary 817)"
+      ],
+      "conditions": [
+        "valid only for nominal_metrics.py sha256 49c76b8b... with score_http.py sha256 9a173ab9... unchanged",
+        "comparability means canonical equality of producer/driver-declared facts (COMPARABILITY_BASIS 89-90); actual hardware/assets/backend/gateway/resources/code/client/clock identity must be verified by the Mayor driver on the host",
+        "the Eval train_selected_fixed alias stays REFUSED UNVERIFIED until train_selection_sha256 is recorded at replay by the driver/API; this refusal is the correct fail-closed outcome",
+        "selection binds declared digests only (753); Train-freeze timing is a protocol obligation the module cannot observe (708)",
+        "the deferred old run_trace_pilot adapter path in the same file (A8, about 912-1211) is outside this verdict"
+      ]
+    },
+    "gate_meaning": "Role4 independent recorder+metrics source-gate PASS for the two pinned components. It satisfies only the independent recorder/metrics correctness step of the Priority-B order. It does not authorize GPU startup, native execution, Train qualification or Eval (Mayor/Parent own those), is not Parent acceptance, does not verify actual-host comparability and does not evaluate any controller.",
+    "not_implied": [
+      "no MPC win, controller validation, capacity or SLO guarantee, production readiness or calibration",
+      "Native14 remains FAIL; no posterior, PIT or native MPC promotion",
+      "no change to A (closed at 5f1fa7a36ef3091fc7e48d3f5f835dab1be649f5) or to any scientific gate"
+    ]
+  },
+  "pins": {
+    "sources_root_relative": {
+      "experiments/mpc-research/resume-mvp/nominal_client.py": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+      "experiments/mpc-research/resume-mvp/test_nominal_client.py": "8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66",
+      "experiments/mpc-research/resume-mvp/nominal_metrics.py": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+      "experiments/mpc-research/resume-mvp/test_nominal_metrics.py": "b325444ba51f6c56182d317e5147011841d46ed835a95abb06a016a1a9222f78",
+      "experiments/mpc-research/native-r23/score_http.py": "9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d",
+      "gateway.py": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+    },
+    "source_count": 6,
+    "core_four_bytes": 208791,
+    "snapshots": "inputs/ holds byte copies (mode 444) of the five experiment files; gateway.py hashed in place, only ranges displayed",
+    "metadata_root_relative": {
+      ".runtime/r24-resume-p0-nominal-client-api03/SHA256SUMS": "b3e6174797f8d466181ebf42e87b5c45133341ff7351265d166d0cfc1dfc8a1b",
+      ".runtime/r24-resume-p0-nominal-client-api03/report.json": "c63600c47a21fd74414e0108da79bff941034767bec3febbdfbdb8980a6964ed",
+      ".runtime/r24-resume-p0-nominal-client-api03/API-FREEZE.json": "6c314f785de79c3061fe68cbfdda2ee8fea9b61c8c61b0ef7e65f895b988f88f",
+      ".runtime/r24-resume-p0-nominal-client-api03/REPORT-ERRATA-01.json": "fa7740141d24964824006f8c389420b7cee41bc585e276164445c2534ab06f7a",
+      ".runtime/r24-resume-p0-nominal-metrics02/SHA256SUMS": "b02a11ab8f43a02d0aaef4cb75a6c0db1f890a460bf5bd108f23ed006d360d8c",
+      ".runtime/r24-resume-p0-nominal-metrics02/report.json": "0d4a5b99c14a02472737abac93b28235c87730f7a4cc9e29f2437722d510e74d",
+      ".runtime/r24-resume-p0-nominal-metrics02/PLAN-ERRATA-01.json": "61b31bdbde92d4ede40cbc0d05c62000f514a566fb1ee719e1385d4237107067",
+      ".runtime/r24-resume-p0-metrics-independent01/SHA256SUMS": "43b80aff6fb02be80a3d79b60fe7c56c9f4bbd3a461477344c79cb3acaf093bb",
+      ".runtime/r24-resume-p0-metrics-independent01/REPORT.json": "a3fb13a66a43a0bdf652d82333542e80ad23a22d823247bcb031e8aba40589d3"
+    },
+    "capsule_pin_files": {
+      "SOURCE-PINS.sha256": "18c3586f30cf859515b81064be85ed36be235a745f7c362b01b8becaae630058",
+      "META-PINS.sha256": "898877f3cd7737e2665d5891b399cad5c9b0b58b90d6f22a30c18e2dd8556e4b",
+      "TOOL-PINS.sha256": "c7970cc66bda4143b5f27a8b7c3811cfa9463d01184c8184e38b9626256fbfa7",
+      "run_logged.sh": "f88f7a4a75f4240a64853318e1f1b10cf7bd4e7cc94bfbb401f98cd53b812d6d",
+      "created.utc": "b0b96ea9fd35568293e9d48cc87ead22614ae5fad0223960bdd8da71020cc2a6"
+    },
+    "runtimes": {
+      "py314": "ROOT/.venv/bin/python3.14 (3.14.4)",
+      "py312": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 (3.12.16)",
+      "invocation": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 <python> -B -I ..."
+    }
+  },
+  "f_closure": [
+    {
+      "id": "F1",
+      "independent01_severity": "HIGH",
+      "independent01_title": "comparison identity omitted hardware/model/resources/client settings; mismatched runs treated as comparable with neither refusal nor UNVERIFIED status",
+      "status": "CLOSED at the declared-facts level (refusal or explicit UNVERIFIED; no silent comparable label)",
+      "proof": [
+        "metrics 85 COMPARABILITY_FACTS = hardware, model, backend, gateway, resources, code, client_generation, clock; 89-90 COMPARABILITY_BASIS states declared facts, not host verification",
+        "metrics 360-394 _validate_comparability: absolute model.local_model_path (373-374); served_alias_verified must be True (378-380); gateway facts may not contain the arm setting MAX_ADMITTED_COST (385-387); canonical JSON (388-391); declared ignore_eos equals every row (392-394)",
+        "metrics 603-607 _comparability returns NOT_RECORDED or DECLARED with record digest",
+        "metrics 670-698 _cross_arm_refusal: identity of trace sha, all-offered, ids digest, shape digest, duration, envelope scope (676-679) and relative schedule (681-687); any undeclared arm -> UNVERIFIED refusal (688-691); any differing fact digest -> incomparable (692-697)",
+        "metrics 731 Train selection REFUSED for non-comparable fixed16/fixed32; 855-857 comparison table raises",
+        "client 623-635 _check_comparability cross-checks declared model alias/path/tokenizer and ignore_eos against the capture"
+      ],
+      "residual": "declared strings are not hardware identity; observed host, clock_domain and client sources_sha256 are recorded but not compared (O-2); actual-host verification is the Mayor/driver obligation"
+    },
+    {
+      "id": "F2",
+      "independent01_severity": "MEDIUM",
+      "independent01_title": "Eval table accepted any SELECTED dict: no Train/Eval provenance binding, no same-trace leakage detector, selection provenance dropped",
+      "status": "CLOSED as binding of declared records; Eval alias fail-closed (REFUSED UNVERIFIED) until replay-time stamping exists",
+      "proof": [
+        "metrics 750-783 _verify_selection: frozen rule and train purpose (760, 772), digests recomputed (782), selection_sha256 recomputed else tampered or forged (770); 753 discloses that a self-consistent record can still be fabricated",
+        "metrics 873-907 _alias_row: selection provenance carried into the row (880-882); Train candidates must be this table's measured fixed arms (884-886); Eval raises on same trace sha, same ids digest or any shared request id (890-894, passing is not disjointness proof), on comparability sha mismatch (895-896) and on a different recorded selection sha (897-899); unbound Eval arms -> REFUSED selection provenance UNVERIFIED (900-903)",
+        "metrics 708 states Train-freeze timing is an unobservable protocol obligation"
+      ],
+      "residual": "nominal_client.py has no slot to record train_selection_sha256 at replay: build_run provenance 605-614 has no such key and the name occurs only in NOT_CLIENT_OWNED 114; editing a built run afterwards would not evidence at-replay timing. Every Eval alias is therefore REFUSED UNVERIFIED by construction: declared driver/API obligation, correct fail-closed behaviour, not a component defect"
+    },
+    {
+      "id": "F3",
+      "independent01_severity": "MEDIUM",
+      "independent01_title": "early or non-causal send (sent_at < scheduled_at) accepted and invisible in send_lag_s",
+      "status": "CLOSED",
+      "proof": [
+        "metrics 82 EARLY_SEND_TOLERANCE_S = 0.0 and 226-228 refuse sent_at < scheduled_at",
+        "metrics 633-635 send_lag_s percentile block with n_not_sent, min and n_negative; summary 817 carries send_lag_min_s and send_lag_n_negative",
+        "client 408-409 waits on time.monotonic() until scheduled_at and 417 stamps sent_at afterwards on the same monotonic clock, so sent_at >= scheduled_at by construction"
+      ],
+      "residual": "large positive send lag is not gated and the table summary omits its upper percentiles (O-7)"
+    },
+    {
+      "id": "F4",
+      "independent01_severity": "MEDIUM",
+      "independent01_title": "all-offered denominator not bound to the offered trace; arms not checked for the same request-id set",
+      "status": "CLOSED",
+      "proof": [
+        "metrics 298-299 unique request ids; 323-334 _validate_cohort: offered_count == len(rows) and in-order row id digest == provenance.offered_request_ids_sha256",
+        "metrics 676-687 cross-arm identity includes all_offered, request_ids_sha256, request_shape_sha256 and the relative schedule",
+        "client 347-362 one record per trace request before any send; 486-487 one-to-one; 568-570 rows equal records; 695-697 offered_count, duration and nm.request_ids_sha256 over trace_id taken from the validated trace"
+      ],
+      "residual": "for producers other than this recorder the digest is producer-declared (self-consistent fabrication possible), consistent with the declared-facts basis"
+    },
+    {
+      "id": "F5",
+      "independent01_severity": "MEDIUM",
+      "independent01_title": "row timestamps not bound to the offered window or envelope; offered_cohort_observed definition enforced only by the adapter",
+      "status": "CLOSED",
+      "proof": [
+        "metrics 289-291 envelope must cover [offered_start, offered_start + duration]",
+        "metrics 337-346 scheduled_at inside the offered window; sent_at, first_content_at and terminal_at inside the declared envelope",
+        "metrics 347-351 offered_cohort_observed envelope must equal [offered_start, max(offered_end, last terminal_at)] within ENVELOPE_TOLERANCE_S",
+        "client 571-586 envelope from the capture or a same-clock-domain driver full_wall covering offered window, every terminal and collection_end"
+      ],
+      "residual": "full_wall truthfulness is a driver record (NOT_CLIENT_OWNED 107)"
+    },
+    {
+      "id": "F6",
+      "independent01_severity": "LOW",
+      "independent01_title": "group fairness summaries dropped group sizes",
+      "status": "CLOSED (labels)",
+      "proof": [
+        "metrics 517-531 _spread reports k, n, Jain note and null reasons; 534-554 _fairness; summarize 786-826 carries group_k (819), n_offered_by_group, worst group with its n and the fairness note"
+      ],
+      "residual": "worst-group choice at 539 uses max() and reports the first maximum without a tie list (cosmetic)"
+    },
+    {
+      "id": "F7",
+      "independent01_severity": "LOW",
+      "independent01_title": "rate labels on a lower-bound envelope and delivered-only token rates lost their qualifiers",
+      "status": "CLOSED (labels)",
+      "proof": [
+        "metrics 72-79 label constants attached at 459-460 and 484-485; summary 818 carries wall_rate_direction and token_rate_scope"
+      ],
+      "residual": "none in source; correct interpretation still depends on the envelope scope being reported with each rate"
+    },
+    {
+      "id": "F8",
+      "independent01_severity": "LOW",
+      "independent01_title": "forecaster snapshot identity check is self-referential",
+      "status": "NOT_REASSESSED (forecaster source outside this gate)",
+      "proof": [],
+      "residual": "per Mayor disposition: actual prior/model-binding preflight obligation"
+    },
+    {
+      "id": "F9",
+      "independent01_severity": "LOW",
+      "independent01_title": "forecast arrivals use a fixed 15 s stationary horizon with no offered-window input",
+      "status": "NOT_REASSESSED (forecaster source outside this gate)",
+      "proof": [],
+      "residual": "per Mayor disposition: documented nominal stationary-model limitation, not new research"
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "N1",
+      "component": "RECORDER",
+      "severity": "LOW",
+      "confidence": "HIGH (control flow confirmed by preregistered witness W01 on py3.14.4 and py3.12.16 using extracted pinned function spans)",
+      "title": "_strict_json accepts overflow float literals such as 1e999 as +/-inf and verbatim-copy paths keep them, so a capture can become unwritable under allow_nan=False, contradicting the docstring at client 131",
+      "evidence": [
+        "client 130-137 _strict_json refuses duplicate keys and the NaN/Infinity constants (126-127) but passes no parse_float, so an out-of-range number parses to inf; the CLI-only helper _finite_float (140-144, used at 946-949) is not used here",
+        "verbatim copies of parsed values: SSE usage 289-290 into record usage (341, 366); admission 503 fields 390 (only estimated_request_cost sanitized by _finite at 389); models_response 727; binding 698; trace provenance 693",
+        "client 647-653 _write_new: json.dumps(..., allow_nan=False) at 648 raises before the file is opened",
+        "client 797 CLI write has no try: ValueError traceback, interpreter exit status 1 instead of an EXIT_CODES value and no capture.json; library write_capture (891) raises to the caller"
+      ],
+      "witness": "W01 C1/C2: 1e999 and -1e999 parse to +/-inf; C3/C4 controls: Infinity and NaN refused; C5: finite 503 body gives a rejection with max_admitted_cost 32.0; C6: overflowed max_admitted_cost copied as inf; C7: overflowed estimated_request_cost sanitized to None; C8: finite write succeeds (sha256 35562eeedd5964c4b6fb3163756c0b2396047f9ebba981ee48b389437886fd29 on both Pythons); C9: _write_new raises ValueError 'Out of range float values are not JSON compliant: inf' and creates no file",
+      "effect": "a whole capture (every offered record, including failure evidence) can be lost at write time; nothing is mis-scored (fail-closed) but the all-attempts-persisted intent is violated",
+      "trigger_condition": "a producer must emit a JSON number outside the double range; common Python serving encoders are expected to emit Infinity/NaN tokens or null instead (not verified here), so reachability on the intended stack is unlikely",
+      "disposition": "non-blocking hardening: give _strict_json a parse_float that rejects non-finite values (then existing ValueError handling classifies the input as invalid) or sanitize copied fields; correct the docstring; the caller finally should persist at least an error record if write_capture raises. The same parse pattern in the deferred old-adapter metrics _strict_json (metrics 985-1001) was not assessed (A8 deferred).",
+      "blocks_gate": false
+    },
+    {
+      "id": "N2",
+      "component": "RECORDER build_run and METRICS _validate_control",
+      "severity": "LOW",
+      "confidence": "HIGH (source)",
+      "title": "the static_fixed arm budget is not cross-checked against the recorder's own retained gateway 503 max_admitted_cost and budget_version",
+      "evidence": [
+        "gateway 679-686 admission 503 body carries max_admitted_cost = decision.budget and budget_version with an x-request-id header",
+        "client 390 retains those fields in each rejected record; normalized rows (508-518) do not carry them",
+        "client 587-597 checks only control_evidence structure and timing; metrics 257-259 checks only that the declared budget equals FIXED_BUDGETS[arm] as a float"
+      ],
+      "effect": "a fixed16/fixed32 mislabel (gateway actually holding another budget) passes both components whenever the declared control/control_evidence is wrong, although the capture holds contradicting rejection evidence",
+      "disposition": "recommended cheap refusal in build_run for static_fixed: any retained rejection with max_admitted_cost != control.budget, or more than one budget_version, refuses the run; until then this stays the declared driver obligation NOT_CLIENT_OWNED 102-103. Not a component defect.",
+      "blocks_gate": false
+    }
+  ],
+  "observations": [
+    {
+      "id": "O-1",
+      "severity": "LOW",
+      "confidence": "HIGH for control flow; MEDIUM for reachability (telemetry.has_sse_content not read)",
+      "title": "malformed but valid SSE JSON can raise AttributeError in StreamParse; the outcome becomes fate unknown and, inside the cancel/transport handlers, the original cause is lost",
+      "evidence": [
+        "client 289-290 appends any non-null usage without a dict check; 333 and 335 call usage.get on the single usage value, so a non-dict usage (for example 5) raises AttributeError; feed also calls .get on non-dict events or choices (289, 292-293)",
+        "normal path: result() at 439 raises inside the try, 461-464 keep fate unknown with fate_reason implementation_exception, and the partial parse (first_content_at and others) is not applied",
+        "handler path: 446-447 (CancelledError) and 455-456 (httpx.HTTPError) call parse.result() inside the except clause; an AttributeError there escapes the handler, so _error (450, 460) and the re-raise (451) are skipped, fate stays unknown with sent_outcome_not_recorded (419) and error_type/error_message stay None; finally 466-467 still stamps terminal_at",
+        "504 gather(return_exceptions=True) silently discards that AttributeError; metrics accept unknown (34-35) and count it in unknown_rate (410), never as good"
+      ],
+      "effect": "fail-closed for goodput, but misattributes a server-side malformation, drain cancellation or transport error to an unknown client outcome and loses the original exception text",
+      "condition": "requires telemetry.has_sse_content (unread) to accept such an event without ValueError; handler path additionally needs a concurrent cancellation or transport error",
+      "disposition": "non-blocking hardening: classify non-dict event/choice/usage as invalid_sse or invalid_usage inside feed/result and keep except handlers non-raising",
+      "blocks_gate": false
+    },
+    {
+      "id": "O-2",
+      "severity": "LOW",
+      "confidence": "HIGH (source)",
+      "title": "observed host, clock_domain and client sources_sha256 are recorded but never compared across arms",
+      "evidence": [
+        "client 663-681 _new_capture records host, clock_domain and sources_sha256; 611 provenance client_sources_sha256",
+        "metrics 620 per-run clock_domain output; cross-arm identity 676-679 omits these; declared clock fact is a free string (366-367)"
+      ],
+      "effect": "cross-arm comparability rests solely on declared facts even where the recorder holds contrary observations",
+      "disposition": "recommended: compare observed host/sources digest/clock_domain with declared hardware/code/clock facts in client 623-635 or metrics 670-698; otherwise Mayor actual-host verification obligation",
+      "blocks_gate": false
+    },
+    {
+      "id": "O-3",
+      "severity": "INFO",
+      "title": "deadline and reserve are cancellation targets, not a hard return bound",
+      "evidence": [
+        "client 874 drain_deadline = deadline - cleanup_reserve_s, refused if it ends before the offered window (875-876); the join (501-504) and _settle (757-771) have no timeout"
+      ],
+      "effect": "returning before the absolute deadline depends on prompt task cancellation; reserve size is caller-chosen"
+    },
+    {
+      "id": "O-4",
+      "severity": "INFO",
+      "title": "gateway request-id contract for the ledger join",
+      "evidence": [
+        "gateway 560-569 adopts the 32-hex x-benchmark-request-id (562); invalid 400 (563), duplicate 409 (565) and registry-capacity 503 (568) return without x-request-id; the capacity 503 detail differs from ADMISSION_DETAIL (client 49) so the recorder labels it http_error, correctly",
+        "gateway 638 strips the benchmark header upstream; 640, 686 and 752-753 set x-request-id on forwarded, rejected and streamed responses",
+        "gateway 566-569 registry of 100000 ids is never evicted"
+      ],
+      "effect": "the driver ledger join must tolerate request_id None for ID-refused requests; very long gateway lifetimes across many runs eventually produce capacity 503s (fail-closed http_error)"
+    },
+    {
+      "id": "O-5",
+      "severity": "LOW",
+      "confidence": "MEDIUM (trace_workload not read)",
+      "title": "Eval reuse/comparability checks can raise for the whole table on benign overlaps",
+      "evidence": [
+        "metrics 892 any shared request id raises a positive reuse signal; 895-896 require the Eval comparability digest to equal the Train one; the raise propagates from the table insert at 858"
+      ],
+      "effect": "if Train and Eval trace_id namespaces overlap or comparability records contain run-specific fields, the Eval table is refused (fail-closed false positive, never a false PASS)",
+      "disposition": "driver: use disjoint trace_id namespaces and run-invariant comparability records"
+    },
+    {
+      "id": "O-6",
+      "severity": "INFO",
+      "title": "zero-send wording holds for offered requests only",
+      "evidence": [
+        "client 855 'Refusals send nothing' and 105 'zero sends': refusals at 729, 731 and 735 follow the backend GET /v1/models at 725; the 488-489 refusal can fire only in a microsecond window after allocation (owner-disclosed untested)"
+      ]
+    },
+    {
+      "id": "O-7",
+      "severity": "LOW",
+      "confidence": "HIGH (source)",
+      "title": "positive send lag is ungated and only min/n_negative reach the table summary",
+      "evidence": [
+        "metrics 633-635 per-run send_lag_s percentile block exists; summary 817 keeps only min and n_negative",
+        "client 408-418 timestamps include asyncio loop lag of the caller loop, which can differ by arm when controller work shares that loop"
+      ],
+      "effect": "scheduled-origin latency silently absorbs loop lag; arm differences could partly reflect recorder/controller loop contention",
+      "disposition": "driver reports per-arm send-lag p50/p95/p99/max and controller overhead separately; optional refusal threshold later"
+    },
+    {
+      "id": "O-8",
+      "severity": "INFO",
+      "title": "library build_run accepts capture_sha256=None",
+      "evidence": [
+        "client 558 default None copied to provenance 606; CLI finalize binds the digest (924); metrics selection does not require it"
+      ],
+      "effect": "driver must pass the digest returned by write_capture to bind metrics to persisted bytes"
+    },
+    {
+      "id": "O-9",
+      "severity": "INFO",
+      "title": "an interrupt delivered outside the capture_replay frame leaves the initial envelope",
+      "evidence": [
+        "client 666 initial status failed with error None (864 resets error); 882-885 settle only exceptions raised inside the coroutine; owner-disclosed KeyboardInterrupt path untested"
+      ],
+      "effect": "envelope shows failed with no reason, rows None and tasks possibly not joined; caller must record the interrupt reason and persist the envelope"
+    },
+    {
+      "id": "INFO-1",
+      "severity": "INFO",
+      "title": "terminal_at includes end-of-stream cleanup",
+      "evidence": [
+        "gateway 747 awaits safe_cleanup inside the stream before the body ends (749-755); client finally 466-467 after close"
+      ],
+      "effect": "conservative for the natural multi-token delay (score_http 11-12, 38); done_at retained separately"
+    },
+    {
+      "id": "INFO-2",
+      "severity": "INFO",
+      "title": "no client-side pool queueing; sent_at precedes connection setup",
+      "evidence": [
+        "client 720-721 httpx max_connections = offered count + 1; 417 sent_at is send-attempt start (QUALIFIERS 86)"
+      ]
+    }
+  ],
+  "driver_obligations_not_component_defects": [
+    "record train_selection_sha256 at Eval replay after Train freeze (NOT_CLIENT_OWNED 114); until then the Eval alias is REFUSED UNVERIFIED, correctly",
+    "verify hardware, model assets/argv, backend, gateway configuration, resources, code, client generation and clock comparability facts on the actual host; only MAX_ADMITTED_COST inside gateway facts is mechanically refused (metrics 385-387); records must be run-invariant for Eval (895-896)",
+    "static fixed budget installed at startup, acknowledged before offered_start and verified held through final drain (102-103); cross-check against retained 503 max_admitted_cost recommended (N2)",
+    "warmup and drains (101, 106), shared absolute START with lead time (104-105), full wall record (107), controller decision journals for non-fixed arms (108)",
+    "persist every envelope via write_capture in a finally, handle write failure (N1), never score non-collected captures (client 563-564), record interrupt reasons (O-9)",
+    "pass the write_capture digest to build_run (O-8)",
+    "FIFO/FCFS verification (109); gateway telemetry and ordered owner ledger joined by x-request-id, including ID-refused requests (110-111, O-4)",
+    "F8 actual prior/model-binding preflight; gateway MODEL_NAME, tokenizer_available, zero character fallback and CostSpec identity are not verified by the recorder (QUALIFIERS 89, NOT_CLIENT_OWNED 100)",
+    "report per-arm send-lag percentiles and controller overhead separately (O-7)",
+    "A8 old-adapter absolute-model restriction deferred; not on the new client path"
+  ],
+  "owner_disclosed_untested_paths": [
+    "offered_start-passed refusal inside _replay after allocation (client 488-489)",
+    "KeyboardInterrupt and other BaseException paths of capture_replay (882-885)",
+    "gather join under repeated cancels is a source-reasoned CPython 3.12.16/3.14.4 claim, not tested",
+    "client tests ran once on py3.12 only (43 passed: 41 pre-existing + 2 new); py3.14 ast.parse only",
+    "Role4 did not execute these paths either"
+  ],
+  "witness_w01": {
+    "plan": "PLAN.json sha256 1a12c9377ddacd679898c3a5ea9c404a2efe9708abe0e9b38ecae0db70f53153 (preregistered C1-C9 and decision rule before execution)",
+    "script": "witness/w01_strict_json_overflow.py sha256 85af1f509664acbd9a80f467c07a8e6750d99e2a482153b551d35e13ba563c85",
+    "method": "extracts exact pinned spans of inputs/nominal_client.py (49, 51-52, 122-123, 126-127, 130-137, 380-393, 647-653) and executes them in isolation; no module import, no network, no data",
+    "runs": [
+      {"python": "3.14.4", "log": "witness-w01-py314.log", "log_sha256": "c99c76ad5565f4fa740cc0bb4633edb70ae16e9984e79cbc72227a588d1858d6", "exit": 0, "all_expectations_met": true},
+      {"python": "3.12.16", "log": "witness-w01-py312.log", "log_sha256": "140e88490e202ef80a2af8ef42a730c8314076953ef5ff974ebf9eb043ab7a3c", "exit": 0, "all_expectations_met": true}
+    ],
+    "outputs": "witness/out-py314/finite_control.json and witness/out-py312/finite_control.json (sha256 35562eee...); no overflow.json created on either Python",
+    "attempts": "exactly one attempt per Python; no failures to retain",
+    "result": "N1 confirmed"
+  },
+  "review_coverage": {
+    "full_read": ["nominal_client.py 1-971", "nominal_metrics.py 1-1211 (old-adapter part read for context only, A8 deferred)", "score_http.py", "test_nominal_client.py and test_nominal_metrics.py (viewed, not rerun)"],
+    "partial_read": ["gateway.py 536-580 and 628-760 displayed; whole file hashed and grep-scanned for request-id/503 strings"],
+    "metadata_read": ["api03 report.json, API-FREEZE.json, REPORT-ERRATA-01.json", "metrics02 report.json, PLAN-ERRATA-01.json", "own sealed independent01 REPORT.json findings"]
+  },
+  "read_disclosure": {
+    "logged": ["pin-check01.log", "pin-freeze01.log", "ctx-independent01-findings01.log", "meta-read01.log", "view-client-01.log", "view-metrics-01.log", "view-client-tests-01.log", "view-metrics-tests-01.log", "view-score-01.log", "gateway-locate01.log", "gateway-ranges01.log"],
+    "unlogged_display_reads": "view-tool reads of own logs; sed/awk/grep displays of own inputs/ snapshots and own logs for exact line numbers (disclosed in commands.log MANUAL lines); no other files",
+    "not_read": ["telemetry.py (has_sse_content)", "trace_workload.py (validate_trace)", "native_services_smoke.py and its tests (unsealed, Role3)", "any unsealed peer output", "actual Train/Eval data, journals, raw requests, arrays"]
+  },
+  "limitations": [
+    "source-only review plus one extracted-function witness; no full-module import or execution, no author suites rerun; author results (43 client tests on py3.12, 87x2 metrics02) were context, not proof",
+    "telemetry.py and trace_workload.py unread: SSE content detection and trace validation assumed as documented",
+    "gateway behaviour inferred from displayed ranges only; nothing exercised against a real service",
+    "CPython asyncio join semantics under repeated cancellation not independently tested",
+    "W01 proves the behaviour of the extracted spans, not module integration",
+    "bounded review: the finding list may be incomplete; no formal verification"
+  ],
+  "nonclaims": [
+    "no GPU, native, Train-qualification or Eval authorization; Mayor/Parent own acceptance, integration, commits and execution",
+    "no MPC win, controller validity, SLO guarantee, production readiness or calibration claim",
+    "Native14 remains FAIL; coverage and other scientific gates unchanged",
+    "no Eval or Train data read; no network, GPU, SSH, git, installs or edits outside this capsule"
+  ],
+  "artifacts": {
+    "report": "REPORT.json",
+    "checker": "check_report.py (strict JSON and required-key checker, run once per Python)",
+    "witness": ["PLAN.json", "witness/w01_strict_json_overflow.py", "witness/out-py314/finite_control.json", "witness/out-py312/finite_control.json"],
+    "logs": "see commands.log; every logged command with exit status",
+    "seal": "SHA256SUMS over every regular file except itself"
+  }
+}

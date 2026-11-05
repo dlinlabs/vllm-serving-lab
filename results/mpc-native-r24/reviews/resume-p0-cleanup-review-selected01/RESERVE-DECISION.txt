@@ -1,0 +1,4 @@
+Recorded before viewing any reserve file.
+R-a prepare01.py: NOT required. run_controls01.py -> cpu_load01.load()/verify_inputs -> test_cleanup01 T01/T02 never import or execute prepare01.py and only read the frozen PLAN_FREEZE/INPUT_FREEZE/CONTROL_FREEZE/INPUTS files plus in-place hash-bound dependencies.
+Reserve slots used: R-b attempts/generation01-py314/T01/control-result.json and R-c attempts/generation01-py314/T02/control-result.json (author results, for comparison only, viewed after own run).
+R-d FAILURES.json: not selected (14-file cap reached).

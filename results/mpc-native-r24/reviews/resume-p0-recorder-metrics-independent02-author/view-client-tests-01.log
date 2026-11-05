@@ -1,0 +1,696 @@
+     1	"""Focused CPU controls for nominal_client: literal SSE edge cases, retained fates, strict model binding, CLI.
+     2	
+     3	All HTTP is in-process ``httpx.MockTransport``; no server, network, GPU or real tokenizer is used.
+     4	"""
+     5	import asyncio
+     6	import hashlib
+     7	import json
+     8	import os
+     9	import signal
+    10	import time
+    11	
+    12	import httpx
+    13	import pytest
+    14	
+    15	import nominal_client as nc
+    16	import nominal_metrics as nm
+    17	import trace_workload as tw
+    18	
+    19	ALIAS = 'Qwen/Qwen3-4B-Instruct-2507'
+    20	LOCAL = '/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507'
+    21	GATEWAY = 'http://127.0.0.1:8080'
+    22	BACKEND = 'http://127.0.0.1:8000'
+    23	RUN_ID = '00000000-0000-4000-8000-000000000001'
+    24	DONE = 'data: [DONE]'
+    25	USAGE = {'prompt_tokens': 9, 'completion_tokens': 2, 'total_tokens': 11}
+    26	MODELS = {'object': 'list', 'data': [{'id': ALIAS, 'object': 'model', 'root': LOCAL, 'max_model_len': 8192}]}
+    27	
+    28	
+    29	class FakeBackend:
+    30	    def to_str(self):
+    31	        return '{"literal": "cpu tokenizer"}'
+    32	
+    33	
+    34	class FakeTokenizer:
+    35	    backend_tokenizer = FakeBackend()
+    36	    chat_template = 'literal-template'
+    37	
+    38	    def apply_chat_template(self, messages, tokenize, add_generation_prompt, return_dict):
+    39	        assert tokenize and add_generation_prompt and return_dict
+    40	        return {'input_ids': [0] * (len(messages[0]['content']) + 4)}
+    41	
+    42	
+    43	FINGERPRINT = tw.tokenizer_fingerprint(FakeTokenizer())
+    44	
+    45	
+    46	def make_trace(prompts, arrivals, duration=1.0, purpose='train', cap=8):
+    47	    return {
+    48	        'schema_version': 1, 'model': ALIAS, 'max_model_len': 8192, 'duration_seconds': duration, 'output_cap': cap,
+    49	        'requests': [{'trace_id': f'r{index:02d}', 'arrival_seconds': arrival, 'input_tokens': len(prompt) + 4,
+    50	                      'max_tokens': cap, 'prompt': prompt}
+    51	                     for index, (prompt, arrival) in enumerate(zip(prompts, arrivals))],
+    52	        'provenance': {'purpose': purpose, 'tokenizer_sha256': FINGERPRINT},
+    53	    }
+    54	
+    55	
+    56	def make_binding(**changes):
+    57	    binding = {
+    58	        'schema': nc.BINDING_SCHEMA, 'served_alias': ALIAS, 'local_model_path': LOCAL, 'tokenizer_sha256': FINGERPRINT,
+    59	        'served_model_names': [ALIAS],
+    60	        'backend_argv': ['vllm', 'serve', LOCAL, '--served-model-name', ALIAS, '--scheduling-policy', 'fcfs',
+    61	                         '--no-enable-prefix-caching', '--max-model-len', '8192'],
+    62	        'backend_argv_source': 'literal CPU control (no launched backend)',
+    63	    }
+    64	    binding.update(changes)
+    65	    return binding
+    66	
+    67	
+    68	def make_comparability(ignore_eos=False, **model_changes):
+    69	    model = {'local_model_path': LOCAL, 'asset_sha256': '1' * 64, 'served_alias': ALIAS,
+    70	             'served_alias_verified': True, 'tokenizer_sha256': FINGERPRINT}
+    71	    return {'hardware': {'gpu': 'literal CPU control'}, 'model': dict(model, **model_changes),
+    72	            'backend': {'argv': 'literal'}, 'gateway': {'source_sha256': '2' * 64}, 'resources': {'cpu': 'literal'},
+    73	            'code': {'client': 'literal'}, 'client_generation': {'ignore_eos': ignore_eos,
+    74	                                                                 'max_tokens_policy': 'trace max_tokens'},
+    75	            'clock': 'literal monotonic'}
+    76	
+    77	
+    78	def chunk(content=None, finish=None, index=0, usage=None, choices=True):
+    79	    event = {'id': 'c', 'object': 'chat.completion.chunk', 'choices': [], 'usage': usage}
+    80	    if choices:
+    81	        delta = {} if content is None else {'content': content}
+    82	        event['choices'] = [{'index': index, 'delta': delta, 'finish_reason': finish}]
+    83	    return 'data: ' + json.dumps(event)
+    84	
+    85	
+    86	ROLE = 'data: ' + json.dumps({'choices': [{'index': 0, 'delta': {'role': 'assistant', 'content': ''},
+    87	                                           'finish_reason': None}]})
+    88	STOP = [ROLE, chunk('Hi'), chunk(' there', 'stop'), chunk(usage=USAGE, choices=False), DONE]
+    89	LENGTH = [chunk('a'), chunk('b', 'length'), chunk(usage=USAGE, choices=False), DONE]
+    90	
+    91	
+    92	def parse(lines):
+    93	    stream = nc.StreamParse()
+    94	    for at, line in enumerate(lines, start=1):
+    95	        stream.feed(line, float(at))
+    96	    return stream.result()
+    97	
+    98	
+    99	async def _body(lines, hang):
+   100	    for line in lines:
+   101	        yield (line + '\n\n').encode()
+   102	    if hang:
+   103	        await asyncio.sleep(30)
+   104	
+   105	
+   106	def sse(lines, hang=False):
+   107	    return httpx.Response(200, headers={'content-type': 'text/event-stream', 'x-request-id': 'gw-1'},
+   108	                          content=_body(lines, hang))
+   109	
+   110	
+   111	def refuse_connect(request):
+   112	    raise httpx.ConnectError('literal connection refused', request=request)
+   113	
+   114	
+   115	def interrupt(request):
+   116	    os.kill(os.getpid(), signal.SIGINT)
+   117	    return sse([chunk('a')], hang=True)
+   118	
+   119	
+   120	# Literal shape of the root gateway.py (0b1a80ad lines 653-692) admission 503 body; values are CPU literals.
+   121	GATEWAY_REJECTION = {'detail': nc.ADMISSION_DETAIL, 'estimated_request_cost': 1.5, 'estimated_input_tokens': 9,
+   122	                     'estimated_output_tokens': 8, 'max_admitted_cost': 16.0, 'budget_version': 3}
+   123	REJECTION_TEXT = json.dumps(GATEWAY_REJECTION, separators=(',', ':'))
+   124	
+   125	
+   126	async def _failing_body():
+   127	    yield b'{"detail":'
+   128	    raise httpx.ReadError('literal body read failure')
+   129	
+   130	
+   131	BEHAVIOR = {
+   132	    'stop': lambda request: sse(STOP), 'length': lambda request: sse(LENGTH),
+   133	    'admission': lambda request: httpx.Response(503, headers={'x-request-id': 'gw-rejected'},
+   134	                                                content=REJECTION_TEXT.encode()),
+   135	    'busy': lambda request: httpx.Response(503, json={'detail': 'overloaded'}),
+   136	    'server': lambda request: httpx.Response(500, text='literal failure'),
+   137	    'bodyfail': lambda request: httpx.Response(503, content=_failing_body()),
+   138	    'connect': refuse_connect, 'nodone': lambda request: sse(STOP[:-1]),
+   139	    'hang': lambda request: sse([chunk('a')], hang=True), 'interrupt': interrupt,
+   140	}
+   141	
+   142	
+   143	def make_handler(seen, models=None):
+   144	    async def handler(request):
+   145	        if request.method == 'GET' and request.url.path == nc.MODELS_PATH:
+   146	            seen.append(('models', str(request.url)))
+   147	            return httpx.Response(200, json=MODELS if models is None else models)
+   148	        body = json.loads(request.content)
+   149	        seen.append((body, dict(request.headers), str(request.url)))
+   150	        return BEHAVIOR[body['messages'][0]['content']](request)
+   151	    return handler
+   152	
+   153	
+   154	def run_metrics(records, start, duration, arm='fixed16'):
+   155	    rows = [nc.normalized_row(record) for record in records]
+   156	    end = max([start + duration] + [row['terminal_at'] for row in rows if row['terminal_at'] is not None])
+   157	    control = {'kind': 'static_fixed', 'budget': 16.0, 'basis': 'literal'} if arm == 'fixed16' else None
+   158	    return nm.compute({
+   159	        'arm': arm, 'purpose': 'train', 'clock_domain': 'literal', 'offered_start': start,
+   160	        'offered_duration_s': duration, 'envelope_start': start, 'envelope_end': end,
+   161	        'envelope_scope': 'offered_cohort_observed', 'rows': rows, 'slo_missing': None, 'control': control,
+   162	        'control_missing': None if control else 'literal: no controller',
+   163	        'provenance': {'offered_trace_sha256': 'x', 'offered_count': len(rows),
+   164	                       'offered_request_ids_sha256': nm.request_ids_sha256(row['request_id'] for row in rows)},
+   165	    })
+   166	
+   167	
+   168	def test_stop_stream_evidence_ignores_non_data_lines_and_same_chunk_finish():
+   169	    result = parse([': keepalive', 'id: 7', 'event: chunk', 'retry: 5', ''] + STOP)
+   170	    assert result['anomalies'] == [] and result['stream_done'] is True and result['done_at'] == 10.0
+   171	    assert (result['finish_reason'], result['finish_reason_evidence'], result['finish_reasons_seen']) == (
+   172	        'stop', 'observed', ['stop'])
+   173	    assert (result['first_content_at'], result['last_content_at']) == (7.0, 8.0)
+   174	    assert (result['completion_tokens'], result['completion_tokens_evidence'], result['prompt_tokens']) == (
+   175	        2, 'usage', 9)
+   176	    assert (result['data_events'], result['content_events'], result['finish_reason_events']) == (4, 2, 1)
+   177	
+   178	
+   179	PARSE_CASES = {
+   180	    'length': (LENGTH, 'length', 'observed', [], 2, 'usage'),
+   181	    'finish_absent': ([chunk('a'), chunk(usage=USAGE, choices=False), DONE], None, 'absent', [], 2, 'usage'),
+   182	    'two_finish_values': ([chunk('a', 'stop'), chunk(None, 'length'), DONE], None, 'contradiction',
+   183	                          ['finish_reason_contradiction'], None, 'absent'),
+   184	    'content_after_finish': ([chunk('a', 'stop'), chunk('b'), DONE], None, 'contradiction',
+   185	                             ['finish_reason_contradiction'], None, 'absent'),
+   186	    'error_event': ([chunk('a'), 'data: ' + json.dumps({'error': {'message': 'boom'}}), DONE], None, 'absent',
+   187	                    ['error_event'], None, 'absent'),
+   188	    'invalid_json': ([chunk('a', 'stop'), 'data: {not json', DONE], 'stop', 'observed', ['invalid_sse'], None,
+   189	                     'absent'),
+   190	    'nan_constant': ([chunk('a', 'stop'), 'data: {"choices": [], "usage": {"completion_tokens": NaN}}', DONE],
+   191	                     'stop', 'observed', ['invalid_sse'], None, 'absent'),
+   192	    'null_choices': ([chunk('a'), 'data: {"choices": null}', DONE], None, 'absent', ['invalid_sse'], None, 'absent'),
+   193	    'missing_done': ([chunk('a', 'stop'), chunk(usage=USAGE, choices=False)], 'stop', 'observed', ['missing_done'],
+   194	                     2, 'usage'),
+   195	    'empty_content': ([ROLE, chunk(None, 'stop'), DONE], 'stop', 'observed', ['empty_content'], None, 'absent'),
+   196	    'data_after_done': ([chunk('a', 'stop'), DONE, chunk('b')], 'stop', 'observed', ['data_after_done'], None,
+   197	                        'absent'),
+   198	    'multiple_usage': ([chunk('a', 'stop'), chunk(usage=USAGE, choices=False), chunk(usage=USAGE, choices=False),
+   199	                        DONE], 'stop', 'observed', [], None, 'multiple_usage'),
+   200	    'bool_usage': ([chunk('a', 'stop'), chunk(usage={'completion_tokens': True}, choices=False), DONE], 'stop',
+   201	                   'observed', [], None, 'invalid_usage'),
+   202	    'choice_index_1': ([chunk('a', 'stop', index=1), DONE], 'stop', 'observed', ['unexpected_choice_index'], None,
+   203	                       'absent'),
+   204	    'precedence': ([chunk('a'), 'data: {bad'], None, 'absent', ['invalid_sse', 'missing_done'], None, 'absent'),
+   205	}
+   206	
+   207	
+   208	@pytest.mark.parametrize('name', sorted(PARSE_CASES))
+   209	def test_stream_parse_literal_edge_cases(name):
+   210	    lines, finish, evidence, anomalies, tokens, tokens_evidence = PARSE_CASES[name]
+   211	    result = parse(lines)
+   212	    assert (result['finish_reason'], result['finish_reason_evidence'], result['anomalies'],
+   213	            result['completion_tokens'], result['completion_tokens_evidence']) == (
+   214	        finish, evidence, anomalies, tokens, tokens_evidence)
+   215	
+   216	
+   217	def _replay(trace, seen, lead=0.05, drain=0.3, before=None):
+   218	    async def scenario():
+   219	        async with httpx.AsyncClient(transport=httpx.MockTransport(make_handler(seen))) as client:
+   220	            start = time.monotonic() + lead
+   221	            records = nc.prepare_records(trace, start, RUN_ID)
+   222	            helper = asyncio.create_task(before(start)) if before else None
+   223	            deadline = await nc.replay(client, trace, records, gateway_url=GATEWAY, offered_start=start,
+   224	                                       drain_timeout=drain)
+   225	            if helper:
+   226	                await helper
+   227	            return start, records, deadline
+   228	    return asyncio.run(scenario())
+   229	
+   230	
+   231	def test_replay_retains_every_fate_payload_and_absolute_schedule():
+   232	    prompts = ['stop', 'admission', 'busy', 'server', 'connect', 'length', 'nodone', 'hang']
+   233	    arrivals = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07]
+   234	    trace = tw.validate_trace(make_trace(prompts, arrivals, duration=0.2))
+   235	    seen = []
+   236	    start, records, deadline = _replay(trace, seen)
+   237	    by_prompt = dict(zip(prompts, records))
+   238	    assert {prompt: (record['fate'], record['fate_reason']) for prompt, record in by_prompt.items()} == {
+   239	        'stop': ('complete', 'complete'), 'admission': ('rejected', 'admission_capacity_503'),
+   240	        'busy': ('http_error', 'http_503'), 'server': ('http_error', 'http_500'),
+   241	        'connect': ('transport_error', 'before_response_headers'), 'length': ('complete', 'complete'),
+   242	        'nodone': ('stream_error', 'missing_done'), 'hang': ('cancelled', 'response_body')}
+   243	    assert (by_prompt['stop']['finish_reason'], by_prompt['length']['finish_reason']) == ('stop', 'length')
+   244	    admission = by_prompt['admission']
+   245	    assert admission['rejection'] == dict(GATEWAY_REJECTION, fields_absent=[])
+   246	    assert (admission['request_id'], admission['body_text'], admission['body_text_null_reason'],
+   247	            admission['body_sha256']) == ('gw-rejected', REJECTION_TEXT, None,
+   248	                                          hashlib.sha256(REJECTION_TEXT.encode()).hexdigest())
+   249	    assert by_prompt['busy']['rejection'] is None and by_prompt['stop']['request_id'] == 'gw-1'
+   250	    assert by_prompt['hang']['first_content_at'] is not None and by_prompt['hang']['terminal_at'] >= deadline - 0.01
+   251	    assert by_prompt['stop']['prompt_tokens_match'] is False  # literal usage prompt_tokens 9 != trace input 8
+   252	    for arrival, record in zip(arrivals, records):
+   253	        assert record['scheduled_at'] == start + arrival
+   254	        assert record['sent_at'] >= record['scheduled_at'] and record['send_lag_s'] >= 0
+   255	        assert record['terminal_at'] >= record['sent_at']
+   256	    assert len(seen) == len(prompts)
+   257	    for body, headers, url in seen:
+   258	        prompt = body['messages'][0]['content']
+   259	        assert url == GATEWAY + nc.CHAT_PATH and headers[nc.REQUEST_ID_HEADER] == by_prompt[prompt]['client_request_id']
+   260	        assert body == {'model': ALIAS, 'messages': [{'role': 'user', 'content': prompt}], 'temperature': 0,
+   261	                        'max_tokens': 8, 'stream': True, 'stream_options': {'include_usage': True},
+   262	                        'ignore_eos': False}
+   263	    metrics = run_metrics(records, start, 0.2)
+   264	    assert metrics['all_offered'] == 8 and metrics['outcomes']['fates'] == {
+   265	        'complete': 2, 'rejected': 1, 'http_error': 2, 'stream_error': 1, 'transport_error': 1, 'cancelled': 1,
+   266	        'not_launched': 0, 'unknown': 0}
+   267	
+   268	
+   269	def test_rejection_body_retention_is_verbatim_and_never_invented():
+   270	    partial = {'detail': nc.ADMISSION_DETAIL, 'estimated_request_cost': 2.0, 'budget_version': 7}
+   271	    assert nc._admission_rejection(503, json.dumps(partial).encode()) == dict(
+   272	        partial, estimated_input_tokens=None, estimated_output_tokens=None, max_admitted_cost=None,
+   273	        fields_absent=['estimated_input_tokens', 'estimated_output_tokens', 'max_admitted_cost'])
+   274	    assert nc._admission_rejection(500, REJECTION_TEXT.encode()) is None
+   275	    assert nc._admission_rejection(503, json.dumps(dict(GATEWAY_REJECTION, detail='overloaded')).encode()) is None
+   276	    big = b'x' * nc.MAX_RETAINED_BODY_BYTES
+   277	    assert nc._retained_body(big) == (big.decode(), None)
+   278	    assert nc._retained_body(big + b'x') == (None, 'over_65536_bytes')
+   279	    assert nc._retained_body(b'\xff literal') == (None, 'not_utf8')
+   280	    prompts = ['busy', 'server', 'bodyfail', 'stop']
+   281	    trace = tw.validate_trace(make_trace(prompts, [0.0, 0.01, 0.02, 0.03], duration=0.1))
+   282	    records = dict(zip(prompts, _replay(trace, [])[1]))
+   283	    busy, server, failed, stop = (records[prompt] for prompt in prompts)
+   284	    assert (busy['fate'], busy['rejection'], json.loads(busy['body_text'])) == (
+   285	        'http_error', None, {'detail': 'overloaded'})
+   286	    assert busy['body_sha256'] == hashlib.sha256(busy['body_text'].encode()).hexdigest()
+   287	    assert (server['body_text'], server['body_text_null_reason']) == ('literal failure', None)
+   288	    assert (failed['fate'], failed['fate_reason'], failed['http_status'], failed['body_text'],
+   289	            failed['body_text_null_reason'], failed['body_bytes']) == (
+   290	        'transport_error', 'response_body', 503, None, 'body_read_incomplete', None)
+   291	    assert (stop['body_text'], stop['body_text_null_reason']) == (None, 'not_applicable')
+   292	
+   293	
+   294	def test_blocked_loop_sends_late_with_recorded_lag_never_early_or_retimed():
+   295	    trace = tw.validate_trace(make_trace(['stop', 'stop'], [0.0, 0.05], duration=0.1))
+   296	
+   297	    async def block(start):
+   298	        await asyncio.sleep(max(0.0, start - 0.001 - time.monotonic()))
+   299	        time.sleep(0.15)
+   300	
+   301	    start, records, _ = _replay(trace, [], drain=0.5, before=block)
+   302	    assert [record['fate'] for record in records] == ['complete', 'complete']
+   303	    assert [record['scheduled_at'] for record in records] == [start, start + 0.05]
+   304	    assert records[0]['send_lag_s'] >= 0.14 and records[1]['send_lag_s'] >= 0.09
+   305	    assert all(record['sent_at'] >= record['scheduled_at'] for record in records)
+   306	
+   307	
+   308	def test_passed_offered_start_is_refused_with_zero_sends():
+   309	    trace = tw.validate_trace(make_trace(['stop'], [0.0], duration=0.1))
+   310	    seen = []
+   311	    with pytest.raises(nc.ClientRefusal, match='already passed'):
+   312	        _replay(trace, seen, lead=-0.001)
+   313	    assert seen == []
+   314	
+   315	
+   316	def test_external_cancel_keeps_unsent_request_not_launched():
+   317	    trace = tw.validate_trace(make_trace(['stop', 'stop'], [0.0, 0.6], duration=1.0))
+   318	
+   319	    async def scenario():
+   320	        async with httpx.AsyncClient(transport=httpx.MockTransport(make_handler([]))) as client:
+   321	            start = time.monotonic() + 0.05
+   322	            records = nc.prepare_records(trace, start, RUN_ID)
+   323	            task = asyncio.create_task(nc.replay(client, trace, records, gateway_url=GATEWAY, offered_start=start,
+   324	                                                 drain_timeout=0.5))
+   325	            await asyncio.sleep(0.3)
+   326	            task.cancel()
+   327	            with pytest.raises(asyncio.CancelledError):
+   328	                await task
+   329	            return start, records
+   330	
+   331	    start, records = asyncio.run(scenario())
+   332	    assert records[0]['fate'] == 'complete'
+   333	    assert (records[1]['fate'], records[1]['fate_reason'], records[1]['sent_at']) == (
+   334	        'not_launched', 'cancelled_before_send', None)
+   335	    assert run_metrics(records, start, 1.0)['outcomes']['fates']['not_launched'] == 1
+   336	
+   337	
+   338	def test_literal_records_map_to_unchanged_natural_slo_with_all_offered_denominator():
+   339	    trace = make_trace(['a' * 10, 'b' * 600, 'c' * 3000], [0.0, 0.1, 0.2], duration=1.0, cap=128)
+   340	    records = nc.prepare_records(trace, 100.0, RUN_ID)
+   341	    for record, lines, sent, terminal in (
+   342	            (records[0], [(100.2, chunk('Hi')), (100.22, chunk('!', 'stop')),
+   343	                          (100.23, chunk(usage=USAGE, choices=False)), (100.235, DONE)], 100.01, 100.24),
+   344	            (records[1], [(100.4, chunk('a')), (100.45, chunk('b', 'length')),
+   345	                          (100.46, chunk(usage={'completion_tokens': 3}, choices=False)), (100.465, DONE)],
+   346	             100.11, 100.47)):
+   347	        stream = nc.StreamParse()
+   348	        for at, line in lines:
+   349	            stream.feed(line, at)
+   350	        nc._apply(record, stream.result())
+   351	        record.update(sent_at=sent, send_lag_s=sent - record['scheduled_at'], terminal_at=terminal,
+   352	                      fate='complete', fate_reason='complete')
+   353	    rows = [nc.normalized_row(record) for record in records]
+   354	    capture = {
+   355	        'schema': nc.SCHEMA, 'status': 'collected', 'arm': 'mpc', 'purpose': 'train', 'records': records,
+   356	        'rows': rows, 'clock_domain': 'literal', 'offered_start': 100.0, 'offered_duration_s': 1.0,
+   357	        'collection_end': 101.2, 'trace_sha256': 'f' * 64, 'trace_provenance': {}, 'run_id': RUN_ID,
+   358	        'binding_evidence': None, 'sources_sha256': {}, 'summary': nc.summarize_records(records),
+   359	        'offered_count': 3,
+   360	        'offered_request_ids_sha256': nm.request_ids_sha256(request['trace_id'] for request in trace['requests']),
+   361	    }
+   362	    for change, match in (({'offered_count': 4}, 'all-offered cohort: 3 rows'),
+   363	                          ({'offered_request_ids_sha256': nm.request_ids_sha256(['r00', 'r02', 'r01'])},
+   364	                           'request ids')):
+   365	        with pytest.raises(nc.ClientRefusal, match=match):
+   366	            nc.build_run(dict(capture, **change), control_missing='literal: no controller journal')
+   367	    with pytest.raises(nc.ClientRefusal, match='comparability contradicts'):
+   368	        nc.build_run(capture, control_missing='literal', comparability=make_comparability())
+   369	    assert capture['summary']['finish_reasons_of_complete'] == {'stop': 1, 'length': 1}
+   370	    metrics = nm.compute(nc.build_run(capture, control_missing='literal: no controller journal'))
+   371	    assert metrics['natural_slo']['natural_slo_good'] == 1
+   372	    assert metrics['natural_slo']['slo_attainment_fraction'] == pytest.approx(1 / 3)
+   373	    assert metrics['outcomes']['fates']['not_launched'] == 1 and metrics['windows']['envelope_end'] == 101.0
+   374	    assert metrics['ttft_s']['all_offered_penalized_scheduled']['n'] == 3
+   375	    assert metrics['controller_overhead']['null_reason'] == 'literal: no controller journal'
+   376	    assert {name: block['n_offered'] for name, block in metrics['groups'].items()} == {
+   377	        'le512': 1, '513to2048': 1, 'gt2048': 1}
+   378	
+   379	
+   380	def test_binding_accepts_public_alias_bound_to_local_assets():
+   381	    trace = make_trace(['stop'], [0.0])
+   382	    evidence = nc.check_binding(trace, make_binding())
+   383	    assert (evidence['served_alias'], evidence['local_model_path'], evidence['argv_scheduling_policy'],
+   384	            evidence['argv_prefix_caching_flags'], evidence['argv_max_model_len']) == (
+   385	        ALIAS, LOCAL, 'fcfs', ['--no-enable-prefix-caching'], '8192')
+   386	    both = make_binding(served_model_names=[ALIAS, LOCAL], backend_argv=[
+   387	        'python', '-m', 'vllm.entrypoints.openai.api_server', '--model', LOCAL, '--served-model-name', ALIAS, LOCAL])
+   388	    assert nc.check_binding(trace, both)['argv_scheduling_policy'] is None
+   389	    assert trace['model'] == ALIAS
+   390	
+   391	
+   392	BINDING_REFUSALS = {
+   393	    'unbound': (None, 'unbound served alias'),
+   394	    'extra_key': (dict(make_binding(), extra=1), 'binding keys'),
+   395	    'alias_differs': (make_binding(served_alias='other/model', served_model_names=['other/model']), 'trace.model'),
+   396	    'relative_path': (make_binding(local_model_path='models/Qwen3-4B-Instruct-2507'), 'absolute normalized'),
+   397	    'unnormalized_path': (make_binding(local_model_path='/workspace/../workspace/m'), 'absolute normalized'),
+   398	    'tokenizer_sha': (make_binding(tokenizer_sha256='0' * 64), 'tokenizer_sha256'),
+   399	    'alias_not_served': (make_binding(served_model_names=[LOCAL]), 'served_model_names'),
+   400	    'duplicate_names': (make_binding(served_model_names=[ALIAS, ALIAS]), 'served_model_names'),
+   401	    'argv_other_model': (make_binding(backend_argv=['vllm', 'serve', '/other', '--served-model-name', ALIAS]),
+   402	                         'does not launch'),
+   403	    'argv_equals_form': (make_binding(backend_argv=['vllm', 'serve', LOCAL, f'--served-model-name={ALIAS}']),
+   404	                         'exactly one'),
+   405	    'argv_repeated': (make_binding(backend_argv=['vllm', 'serve', LOCAL, '--served-model-name', ALIAS,
+   406	                                                 '--served_model_name', ALIAS]), 'exactly one'),
+   407	    'argv_names_differ': (make_binding(backend_argv=['vllm', 'serve', LOCAL, '--served-model-name', ALIAS, 'x']),
+   408	                          'exactly one'),
+   409	    'argv_source_empty': (make_binding(backend_argv_source=''), 'backend_argv_source'),
+   410	}
+   411	
+   412	
+   413	@pytest.mark.parametrize('name', sorted(BINDING_REFUSALS))
+   414	def test_binding_refusals(name):
+   415	    binding, match = BINDING_REFUSALS[name]
+   416	    with pytest.raises(nc.ClientRefusal, match=match):
+   417	        nc.check_binding(make_trace(['stop'], [0.0]), binding)
+   418	
+   419	
+   420	def test_served_models_and_tokenizer_refusals():
+   421	    binding = make_binding()
+   422	    assert nc.check_served_models(binding, MODELS, 8192)['alias_root'] == LOCAL
+   423	    entry = MODELS['data'][0]
+   424	    for models, match in (
+   425	            ({'data': [dict(entry, id='other')]}, 'ids differ'),
+   426	            ({'data': [entry, dict(entry, id='extra')]}, 'ids differ'),
+   427	            ({'data': [dict(entry, root=ALIAS)]}, 'root differs'),
+   428	            ({'data': [{key: value for key, value in entry.items() if key != 'max_model_len'}]}, 'max_model_len'),
+   429	            ([], 'not a model list')):
+   430	        with pytest.raises(nc.ClientRefusal, match=match):
+   431	            nc.check_served_models(binding, models, 8192)
+   432	    trace = make_trace(['abc'], [0.0])
+   433	    assert nc.check_tokenizer(trace, binding, FakeTokenizer())['prompts_verified'] == 1
+   434	
+   435	    class OtherTemplate(FakeTokenizer):
+   436	        chat_template = 'other-template'
+   437	
+   438	    with pytest.raises(nc.ClientRefusal, match='fingerprint'):
+   439	        nc.check_tokenizer(trace, binding, OtherTemplate())
+   440	    trace['requests'][0]['input_tokens'] += 1
+   441	    with pytest.raises(nc.ClientRefusal, match='token counts'):
+   442	        nc.check_tokenizer(trace, binding, FakeTokenizer())
+   443	
+   444	
+   445	def write_json(path, value):
+   446	    path.write_text(json.dumps(value))
+   447	    return str(path)
+   448	
+   449	
+   450	def cli_replay(tmp_path, name, prompts, arrivals, *, purpose='train', declared=None, arm='fixed16', binding=True,
+   451	               models=None, extra=()):
+   452	    trace_path = write_json(tmp_path / f'{name}.trace.json', make_trace(prompts, arrivals, 0.4, purpose))
+   453	    binding_path = tmp_path / f'{name}.binding.json'
+   454	    if binding:
+   455	        write_json(binding_path, make_binding())
+   456	    out, seen = tmp_path / name, []
+   457	    code = nc.main(['replay', '--trace', trace_path, '--binding', str(binding_path), '--gateway-url', GATEWAY,
+   458	                    '--backend-url', BACKEND, '--arm', arm, '--purpose', declared or purpose, '--output-dir',
+   459	                    str(out), '--start-delay', '0.3', '--drain-timeout', '0.5', *extra],
+   460	                   transport=httpx.MockTransport(make_handler(seen, models)),
+   461	                   tokenizer_loader=lambda path: FakeTokenizer() if path == LOCAL else None)
+   462	    capture_path = out / 'capture.json'
+   463	    return code, json.loads(capture_path.read_text()) if capture_path.exists() else None, seen, capture_path
+   464	
+   465	
+   466	def test_cli_replay_then_finalize_fixed_arm_only_with_driver_evidence(tmp_path, capsys):
+   467	    code, capture, seen, capture_path = cli_replay(tmp_path, 'fixed', ['stop', 'admission', 'length'],
+   468	                                                   [0.0, 0.05, 0.1])
+   469	    assert (code, capture['status'], capture['error']) == (0, 'collected', None)
+   470	    assert [record['fate'] for record in capture['records']] == ['complete', 'rejected', 'complete']
+   471	    assert capture['rows'] == [nc.normalized_row(record) for record in capture['records']]
+   472	    assert seen[0] == ('models', BACKEND + nc.MODELS_PATH) and len(seen) == 4
+   473	    assert capture['binding_evidence']['served_models']['alias_root'] == LOCAL
+   474	    assert capture['binding_evidence']['tokenizer']['prompts_verified'] == 3
+   475	    assert capture['payload_template']['model'] == ALIAS and set(capture['sources_sha256']) == set(nc.SOURCES)
+   476	    domain, start, end = capture['clock_domain'], capture['offered_start'], capture['collection_end']
+   477	    control = write_json(tmp_path / 'control.json', {'kind': 'static_fixed', 'budget': 16.0,
+   478	                                                     'basis': 'literal startup MAX_ADMITTED_COST'})
+   479	    evidence = {'acknowledged_at': start - 0.1, 'held_verified_at': end + 0.1, 'clock_domain': domain,
+   480	                'source': 'literal CPU control'}
+   481	    wall = {'start': start - 1.0, 'end': end + 0.2, 'clock_domain': domain, 'source': 'literal CPU control'}
+   482	    good = ['--control-json', control, '--control-evidence-json', write_json(tmp_path / 'evidence.json', evidence)]
+   483	
+   484	    def bad_evidence(index, **change):
+   485	        return ['--control-json', control, '--control-evidence-json',
+   486	                write_json(tmp_path / f'evidence{index}.json', dict(evidence, **change))]
+   487	
+   488	    capsys.readouterr()
+   489	    comparability = make_comparability()
+   490	    for index, (extra, match) in enumerate((
+   491	            (['--control-missing', 'none'], 'fixed arms require'),
+   492	            (bad_evidence(1, acknowledged_at=start), 'static_fixed control needs'),
+   493	            (bad_evidence(2, held_verified_at=end - 0.01), 'static_fixed control needs'),
+   494	            (bad_evidence(3, clock_domain='other'), 'static_fixed control needs'),
+   495	            (good + ['--full-wall-json', write_json(tmp_path / 'wall1.json', dict(wall, end=end - 0.01))],
+   496	             'full_wall must contain'),
+   497	            (good + ['--comparability-json', write_json(tmp_path / 'cmp1.json', make_comparability(
+   498	                local_model_path='/workspace/other'))], 'comparability contradicts'),
+   499	            (good + ['--comparability-json', write_json(tmp_path / 'cmp2.json', make_comparability(True))],
+   500	             'comparability contradicts'))):
+   501	        out = tmp_path / f'refused{index}'
+   502	        assert nc.main(['finalize', '--capture', str(capture_path), '--output-dir', str(out), *extra]) == 2
+   503	        assert match in capsys.readouterr().err and not out.exists()
+   504	    final = ['finalize', '--capture', str(capture_path), '--output-dir', str(tmp_path / 'final'), *good,
+   505	             '--full-wall-json', write_json(tmp_path / 'wall.json', wall),
+   506	             '--comparability-json', write_json(tmp_path / 'comparability.json', comparability)]
+   507	    assert nc.main(final) == 0
+   508	    run_bytes = (tmp_path / 'final' / 'run.json').read_bytes()
+   509	    run, metrics = json.loads(run_bytes), json.loads((tmp_path / 'final' / 'metrics.json').read_text())
+   510	    assert run['envelope_scope'] == 'full_wall' and run['provenance']['control_evidence'] == evidence
+   511	    assert (run['provenance']['comparability'], metrics['comparability']['status']) == (comparability, 'DECLARED')
+   512	    assert metrics['offered_cohort']['request_ids_sha256'] == nm.request_ids_sha256(['r00', 'r01', 'r02'])
+   513	    assert metrics['all_offered'] == 3 and metrics['outcomes']['fates']['rejected'] == 1
+   514	    assert metrics['windows']['full_wall_s'] == pytest.approx(wall['end'] - wall['start'])
+   515	    assert nc.main(final) == 2 and (tmp_path / 'final' / 'run.json').read_bytes() == run_bytes
+   516	
+   517	
+   518	def test_cli_refusals_send_nothing_and_preserve_capture(tmp_path):
+   519	    code, capture, seen, _ = cli_replay(tmp_path, 'unbound', ['stop'], [0.0], binding=False)
+   520	    assert (code, capture['status'], seen, capture['records']) == (2, 'refused', [], None)
+   521	    assert 'unreadable' in capture['error']
+   522	    code, capture, seen, _ = cli_replay(tmp_path, 'hfroot', ['stop'], [0.0],
+   523	                                        models={'data': [dict(MODELS['data'][0], root=ALIAS)]})
+   524	    assert (code, capture['status'], [item[0] for item in seen], capture['records']) == (2, 'refused', ['models'], None)
+   525	    assert 'root differs' in capture['error']
+   526	    code, capture, seen, _ = cli_replay(tmp_path, 'mislabel', ['stop'], [0.0], purpose='engineering', declared='train')
+   527	    assert (code, capture['status'], seen) == (2, 'refused', []) and 'provenance purpose' in capture['error']
+   528	    (tmp_path / 'existing').mkdir()
+   529	    (tmp_path / 'existing' / 'marker').write_text('kept')
+   530	    assert cli_replay(tmp_path, 'existing', ['stop'], [0.0])[:3] == (2, None, [])
+   531	    assert (tmp_path / 'existing' / 'marker').read_text() == 'kept'
+   532	    for flag, value in (('--purpose', 'heldout'), ('--purpose', 'eval_probe'), ('--purpose', 'Train'),
+   533	                        ('--drain-timeout', 'nan'), ('--start-delay', 'inf')):
+   534	        with pytest.raises(SystemExit) as exit_info:
+   535	            cli_replay(tmp_path, f'argparse-{value}', ['stop'], [0.0], extra=(flag, value))
+   536	        assert exit_info.value.code == 2 and not (tmp_path / f'argparse-{value}').exists()
+   537	
+   538	
+   539	def test_raw_engineering_purpose_is_captured_but_never_finalized(tmp_path, capsys):
+   540	    code, capture, _, capture_path = cli_replay(tmp_path, 'probe', ['stop'], [0.0], purpose='engineering',
+   541	                                                arm='mpc')
+   542	    assert (code, capture['status'], capture['purpose'], capture['records'][0]['fate']) == (
+   543	        0, 'collected', 'engineering', 'complete')
+   544	    capsys.readouterr()
+   545	    out = tmp_path / 'probe-final'
+   546	    assert nc.main(['finalize', '--capture', str(capture_path), '--output-dir', str(out),
+   547	                    '--control-missing', 'raw probe']) == 2
+   548	    assert 'raw engineering capture' in capsys.readouterr().err and not out.exists()
+   549	
+   550	
+   551	def test_sigint_interrupt_preserves_every_offered_record(tmp_path):
+   552	    before = signal.getsignal(signal.SIGINT)
+   553	    code, capture, _, _ = cli_replay(tmp_path, 'interrupted', ['interrupt', 'stop'], [0.0, 0.35])
+   554	    assert signal.getsignal(signal.SIGINT) is before
+   555	    assert (code, capture['status']) == (3, 'interrupted') and capture['error'].startswith('CancelledError')
+   556	    assert [(record['fate'], record['fate_reason']) for record in capture['records']] == [
+   557	        ('cancelled', 'response_body'), ('not_launched', 'cancelled_before_send')]
+   558	    assert capture['records'][0]['first_content_at'] is not None and capture['summary']['offered'] == 2
+   559	    with pytest.raises(nc.ClientRefusal, match='preserved as failure evidence'):
+   560	        nc.build_run(capture, control_missing='interrupted')
+   561	
+   562	
+   563	def lib_prepare(tmp_path, name, prompts, arrivals, duration=0.4, *, purpose='train', **binding_changes):
+   564	    trace_path = write_json(tmp_path / f'{name}.trace.json', make_trace(prompts, arrivals, duration, purpose))
+   565	    binding_path = write_json(tmp_path / f'{name}.binding.json', make_binding(**binding_changes))
+   566	    return nc.prepare_capture(trace_path=trace_path, binding_path=binding_path, arm='mpc', purpose=purpose,
+   567	                              gateway_url=GATEWAY, backend_url=BACKEND,
+   568	                              tokenizer_loader=lambda path: FakeTokenizer() if path == LOCAL else None)
+   569	
+   570	
+   571	def lib_replay(prepared, transport, **change):
+   572	    """capture_replay awaited in a fresh loop; change values may be callables of the planned offered start."""
+   573	    async def scenario():
+   574	        start = time.monotonic() + 0.2
+   575	        kwargs = dict(offered_start=start, deadline=start + 1.0, cleanup_reserve_s=0.1, clock_domain=nc.clock_domain())
+   576	        kwargs.update({key: value(start) if callable(value) else value for key, value in change.items()})
+   577	        return await nc.capture_replay(prepared, transport=transport, **kwargs)
+   578	    return asyncio.run(scenario())
+   579	
+   580	
+   581	def test_library_capture_inside_running_loop_keeps_caller_clock_and_cli_envelope(tmp_path):
+   582	    prepared = lib_prepare(tmp_path, 'lib', ['stop', 'admission', 'length', 'hang'], [0.0, 0.05, 0.1, 0.15])
+   583	    capture, seen, beats = prepared.capture, [], []
+   584	    assert (prepared.ready, capture['status'], capture['error'], capture['records']) == (
+   585	        True, 'failed', nc.NOT_RUN_ERROR, None)
+   586	    assert capture['binding_evidence']['tokenizer']['prompts_verified'] == 4
+   587	
+   588	    def handlers():
+   589	        return signal.getsignal(signal.SIGINT), signal.getsignal(signal.SIGTERM)
+   590	
+   591	    async def scenario():
+   592	        inside = handlers()
+   593	
+   594	        async def heartbeat():
+   595	            while True:
+   596	                beats.append((time.monotonic(), handlers()))
+   597	                await asyncio.sleep(0.02)
+   598	
+   599	        beat = asyncio.create_task(heartbeat())
+   600	        start = time.monotonic() + 0.3
+   601	        result = await nc.capture_replay(prepared, offered_start=start, deadline=start + 1.2, cleanup_reserve_s=0.5,
+   602	                                         clock_domain=nc.clock_domain(),
+   603	                                         transport=httpx.MockTransport(make_handler(seen)))
+   604	        left = [task for task in asyncio.all_tasks() if task not in (beat, asyncio.current_task())]
+   605	        beat.cancel()
+   606	        await asyncio.gather(beat, return_exceptions=True)
+   607	        return start, inside, result, left
+   608	
+   609	    start, inside, result, left = asyncio.run(scenario())
+   610	    records = capture['records']
+   611	    assert result is capture and (capture['status'], capture['error'], left) == ('collected', None, [])
+   612	    assert (capture['offered_start'], capture['offered_end'], capture['drain_deadline']) == (
+   613	        start, start + 0.4, start + 1.2 - 0.5)
+   614	    assert {key: capture['config'][key] for key in ('entry', 'driver_offered_start', 'caller_deadline',
+   615	                                                    'cleanup_reserve_s', 'caller_clock_domain')} == {
+   616	        'entry': 'library', 'driver_offered_start': start, 'caller_deadline': start + 1.2, 'cleanup_reserve_s': 0.5,
+   617	        'caller_clock_domain': capture['clock_domain']}
+   618	    assert [(record['fate'], record['fate_reason']) for record in records] == [
+   619	        ('complete', 'complete'), ('rejected', 'admission_capacity_503'), ('complete', 'complete'),
+   620	        ('cancelled', 'response_body')]
+   621	    assert [record['scheduled_at'] for record in records] == [start + arrival for arrival in (0.0, 0.05, 0.1, 0.15)]
+   622	    # the hung request is cancelled at deadline - reserve, leaving the caller's cleanup reserve unused
+   623	    assert capture['drain_deadline'] - 0.01 <= records[3]['terminal_at'] < start + 1.2
+   624	    assert capture['rows'] == [nc.normalized_row(record) for record in records]
+   625	    assert capture['summary'] == nc.summarize_records(records)
+   626	    assert seen[0] == ('models', BACKEND + nc.MODELS_PATH) and len(seen) == 5
+   627	    assert {sample for _, sample in beats} == {inside}  # no signal handler installed or removed
+   628	    assert beats[0][0] < start and beats[-1][0] > capture['offered_end']  # the caller's own task kept running
+   629	    digest = nc.write_capture(tmp_path / 'lib.capture.json', capture)
+   630	    data = (tmp_path / 'lib.capture.json').read_bytes()
+   631	    assert digest == hashlib.sha256(data).hexdigest() and json.loads(data) == capture
+   632	    with pytest.raises(FileExistsError):
+   633	        nc.write_capture(tmp_path / 'lib.capture.json', capture)
+   634	    metrics = nm.compute(nc.build_run(json.loads(data), control_missing='literal: no controller journal'))
+   635	    assert metrics['all_offered'] == 4 and metrics['outcomes']['fates']['cancelled'] == 1
+   636	    cli = cli_replay(tmp_path, 'cli', ['stop'], [0.0], arm='mpc')[1]
+   637	    assert set(cli) == set(capture) and set(cli['config']) < set(capture['config'])
+   638	    frozen, sent = json.dumps(capture, sort_keys=True), []
+   639	    for name, change, match in (('truncated', {'deadline': lambda planned: planned + 0.45}, 'never truncated'),
+   640	                                ('passed', {'offered_start': lambda planned: planned - 0.5}, 'no rescheduling'),
+   641	                                ('domain', {'clock_domain': 'literal other host'}, 'clock_domain differs'),
+   642	                                ('nan', {'cleanup_reserve_s': float('nan')}, 'finite'),
+   643	                                ('negative', {'cleanup_reserve_s': -0.1}, 'finite')):
+   644	        refused = lib_replay(lib_prepare(tmp_path, name, ['stop'], [0.0]), httpx.MockTransport(make_handler(sent)),
+   645	                             **change)
+   646	        assert (refused['status'], refused['records'], sent) == ('refused', None, []) and match in refused['error']
+   647	        nc.write_capture(tmp_path / f'{name}.capture.json', refused)
+   648	    unbound = lib_prepare(tmp_path, 'unbound', ['stop'], [0.0], served_alias='other/alias')
+   649	    assert (unbound.ready, unbound.capture['status']) == (False, 'refused')
+   650	    assert 'served_alias' in unbound.capture['error']
+   651	    assert lib_prepare(tmp_path, 'heldout', ['stop'], [0.0], purpose='heldout').capture['status'] == 'refused'
+   652	    for unusable in (unbound, prepared):
+   653	        with pytest.raises(nc.ClientRefusal, match='ready, unused'):
+   654	            lib_replay(unusable, httpx.MockTransport(make_handler(sent)))
+   655	    assert sent == [] and json.dumps(capture, sort_keys=True) == frozen
+   656	
+   657	
+   658	class CloseFails(httpx.MockTransport):
+   659	    async def aclose(self):
+   660	        raise RuntimeError('literal transport close failure')
+   661	
+   662	
+   663	def test_library_cancellation_and_failure_keep_every_allocated_offer_after_joining_requests(tmp_path):
+   664	    prepared = lib_prepare(tmp_path, 'cancel', ['stop', 'hang', 'stop'], [0.0, 0.05, 0.6], duration=1.0)
+   665	    seen = []
+   666	
+   667	    async def scenario():
+   668	        start = time.monotonic() + 0.2
+   669	        task = asyncio.create_task(nc.capture_replay(
+   670	            prepared, offered_start=start, deadline=start + 3.0, cleanup_reserve_s=0.5,
+   671	            clock_domain=nc.clock_domain(), transport=httpx.MockTransport(make_handler(seen))))
+   672	        await asyncio.sleep(max(0.0, start + 0.3 - time.monotonic()))
+   673	        for _ in range(3):  # repeated caller cancellation while the request tasks are being joined
+   674	            task.cancel()
+   675	            await asyncio.sleep(0)
+   676	        with pytest.raises(asyncio.CancelledError):
+   677	            await task
+   678	        left = [other for other in asyncio.all_tasks() if other is not asyncio.current_task()]
+   679	        frozen = json.dumps(prepared.capture, sort_keys=True)
+   680	        await asyncio.sleep(max(0.0, start + 0.75 - time.monotonic()))  # past r02's scheduled send
+   681	        return left, frozen
+   682	
+   683	    left, frozen = asyncio.run(scenario())
+   684	    capture = prepared.capture
+   685	    assert (left, json.dumps(capture, sort_keys=True), len(seen)) == ([], frozen, 3)
+   686	    assert (capture['status'], capture['error']) == ('interrupted', 'CancelledError: replay interrupted')
+   687	    assert [(record['fate'], record['fate_reason']) for record in capture['records']] == [
+   688	        ('complete', 'complete'), ('cancelled', 'response_body'), ('not_launched', 'cancelled_before_send')]
+   689	    assert capture['rows'] == [nc.normalized_row(record) for record in capture['records']]
+   690	    assert (capture['summary']['offered'], capture['summary']['sent']) == (3, 2)
+   691	    with pytest.raises(nc.ClientRefusal, match='preserved as failure evidence'):
+   692	        nc.build_run(capture, control_missing='interrupted')
+   693	    failed = lib_replay(lib_prepare(tmp_path, 'closefail', ['stop'], [0.0]), CloseFails(make_handler([])))
+   694	    assert (failed['status'], failed['error']) == ('failed', 'RuntimeError: literal transport close failure')
+   695	    assert [record['fate'] for record in failed['records']] == ['complete'] and failed['summary']['offered'] == 1
+   696	    assert failed['rows'] == [nc.normalized_row(record) for record in failed['records']]

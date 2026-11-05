@@ -1,0 +1,72 @@
+{
+  "GPU": false,
+  "actual_application_at": null,
+  "baseline_tests_per_python": 4,
+  "code_sha256": {
+    "finish01.py": "3e5fe99c06e416cc6111f32e84cd708126102359d59183ff656e0b698a02b14e",
+    "freeze_inputs01.py": "85127f43110269ca3bd178cd7ab34453a09a3d558f87eed8294bbed6ba90a31e",
+    "freeze_supplement01.py": "19ca905bb05aedfba8c9401c23e60f06b16ec2459e8384a1fc9c25cdfb3c2b10",
+    "frozen01.py": "90ceca91da8d7a1e2e2d9e1b5a8db8dde236b748883345e819d6bfa29635b16d",
+    "preflight01.py": "9cad1c746fdcb326f6fab0edc2a7f1e3da82f29eb74744853b9dc3ed2a748ebd",
+    "pytest.ini": "568a9423d6aacd3e5fc7d6d5ff3613880d6cf5ff86dc94b197d391b641fe63ef",
+    "run_checks01.py": "f22f6623c65bf62991054360b611368ae4213a9b4a86b779ba7445840b0b94b2",
+    "run_local.py": "975959f6efefc5e129f9fc5da24689ef98eda04f1da68a4e1e801ef3cda706ad",
+    "run_preflight01.py": "a57531925caab49971b955c63bff5cb49c929862aefd2278de67db34e49c3b91",
+    "synthetic01.py": "16ae10fe64c0c2e02776665ba8b630a147ac52f735e1c78cb571d49b624b09ed",
+    "test_preflight01.py": "deb1244e30dfb0150b5299a4172fa16f7a8db293a230195d0f7c82476389ed91",
+    "validate.sh": "2887f259006657517212528bce9b94f97363eedf04454fc132a639e1ee0e97ff"
+  },
+  "exact_point_gate": false,
+  "failures_preserved": true,
+  "final_tests": {
+    "py312-final01": {
+      "passed": 34,
+      "seconds": 0.908
+    },
+    "py314-final01": {
+      "passed": 34,
+      "seconds": 0.797
+    }
+  },
+  "git": false,
+  "inputs": {
+    "bindings": 77,
+    "input_sha256": "3ee93fe6df50b2847f6fc7f3ab27f5329a00a71d5ad476f71824114b44ecb765",
+    "originals": true,
+    "protocol_sha256": "df8ea48fc7257453da97b7d3a3c5214d4712279c047bfa7f484e92f556ea08c9",
+    "supplemental_bindings": 1,
+    "supplemental_sha256": "269b562cb0c0c95a87b0f1045770df6c18115c0021a3d577c1d41acf4940b4a5"
+  },
+  "installs": false,
+  "live_launcher_ready": false,
+  "mayor_approval_pending": true,
+  "model_qualification_changed": false,
+  "native_execution": false,
+  "native_mpc_permitted": false,
+  "nested_agents": false,
+  "network": false,
+  "no_original_contract_relaxation": true,
+  "offline_output_sha256": {
+    "outputs/py312-default.json": "c8d6a64626c1188e61eff63c804aaa7fe7b05d5026c3ec6d6abf8b8639816ef0",
+    "outputs/py312-inspect.json": "7586a00b859a1c3a2c3b2e16b8f05d2b0e5c9a883e59c6516415aab81e741d2c",
+    "outputs/py314-default.json": "c8d6a64626c1188e61eff63c804aaa7fe7b05d5026c3ec6d6abf8b8639816ef0",
+    "outputs/py314-inspect.json": "7586a00b859a1c3a2c3b2e16b8f05d2b0e5c9a883e59c6516415aab81e741d2c"
+  },
+  "prior_Native02_commit": "25a6ef60bba38712f1f226df9b4ef29f0818c023",
+  "prior_bridge_commit": "ea0b6c11134c13690a8964f2320aa394627cfdc7",
+  "prior_runtime_commit": "09fcf951dba37b00feffbbc8d14d22ef865fea0b",
+  "proposed_offers": {
+    "managed": 2,
+    "max_tokens_each": 16,
+    "maximum_completion_tokens": 48,
+    "maximum_total": 3,
+    "warmup": 1
+  },
+  "proposed_outer_bound_s": 260,
+  "remaining_owned_children": 0,
+  "schema": "team16-owner-acquisition-preflight-delivery-v1",
+  "seal": "SHA256SUMS; external digest reported after sealing",
+  "status": "SEALED_CPU_PREFLIGHT_WITH_EXPLICIT_LAUNCH_BLOCKERS",
+  "synthetic_execution_only": true,
+  "unchanged_owner_helpers": 10
+}

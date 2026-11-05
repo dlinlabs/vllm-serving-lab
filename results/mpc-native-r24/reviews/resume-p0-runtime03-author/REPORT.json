@@ -1,0 +1,99 @@
+{
+  "Native_permission": false,
+  "accepted_by_Mayor": false,
+  "cleanup_receipts": 17,
+  "clients_closed": 60,
+  "completed_at": "2026-11-04T23:47:18.376523+00:00",
+  "explicit_async_tasks_joined": 1,
+  "immutable02_members_verified": 47,
+  "known_preparation_supervisor_test_CLI_identities_gone": 4,
+  "model": {
+    "id": "gpt-6-astra",
+    "provenance": "retained verified Role6 assignment",
+    "reasoning_effort": "max"
+  },
+  "post_freeze_source_edits": false,
+  "preserved_binding_count": 38,
+  "qualification": "CPU integration PASS only; B admission behavior and Native qualification remain unproved.",
+  "real_approval_created": false,
+  "retries": 0,
+  "schema": "resume-p0-nominal-runtime03-report-v1",
+  "scope": "Small shared strict root-URL canonicalization correction; existing integration only.",
+  "seal_exclusions": [
+    "SHA256SUMS",
+    "SEAL_RECEIPT.json"
+  ],
+  "selected_controls": [
+    "NominalRuntimeCLIIntegrationTests.test_cli02_describe_is_offline_stable_and_standalone",
+    "NominalRuntimeCLIIntegrationTests.test_cli02_input_refusals_and_partial_planning_inputs_are_retained",
+    "NominalRuntimeCLIIntegrationTests.test_cli02_pending_restart_reuses_static_train_and_start_bindings",
+    "NominalRuntimeCLIIntegrationTests.test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start",
+    "NominalRuntimeTests.test_ack_without_reobservation_stays_pending_and_ack_is_not_erased",
+    "NominalRuntimeTests.test_command_count_and_episode_deadline_survive_restart",
+    "NominalRuntimeTests.test_concurrent_owner_refuses_and_cancelled_post_releases_its_lock",
+    "NominalRuntimeTests.test_default_off_missing_permit_and_hold_are_not_application",
+    "NominalRuntimeTests.test_every_first_action_replans_and_reobserves",
+    "NominalRuntimeTests.test_fsync_failure_preserves_partial_and_refuses_restart_before_post",
+    "NominalRuntimeTests.test_original_entry_covers_get_solve_and_durable_persistence",
+    "NominalRuntimeTests.test_precommit_run_clock_identity_cas_sequence_and_ledger_changes_refuse",
+    "NominalRuntimeTests.test_real_planner_feedback",
+    "NominalRuntimeTests.test_root03_canonicalization_preserves_strict_endpoint_binding",
+    "NominalRuntimeTests.test_snapshot_capability_costs_freshness_and_strict_raw_json",
+    "NominalRuntimeTests.test_source_configuration_and_unresolved_journal_cannot_be_substituted",
+    "NominalRuntimeTests.test_unknown_timeout_and_malformed_ack_need_observed_restart_fences"
+  ],
+  "source_bundle_sha256": "71dcb4fcc63e32b4bcc1b4e9d6f2c1a7c37a72fc5a5589563ae7f1707d5f8bb5",
+  "source_diff": "SOURCE_DIFF.patch",
+  "source_freeze_sha256": "2cf799c8b9655e1669914157ef0e3d818ece5fd43251783114e8c0d6aa2be417",
+  "source_generations": 1,
+  "source_ids": {
+    "experiments/mpc-research/resume-mvp/nominal_permit.py": {
+      "bytes": 3902,
+      "sha256": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_planner.py": {
+      "bytes": 21987,
+      "sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_runtime.py": {
+      "bytes": 45768,
+      "sha256": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_scenario.py": {
+      "bytes": 8166,
+      "sha256": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_workload.py": {
+      "bytes": 25248,
+      "sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    "experiments/mpc-research/resume-mvp/test_nominal_runtime.py": {
+      "bytes": 57168,
+      "sha256": "52459b65f121ee6f27144b545c33a21f755ccb9f6ec013883ea6e304bd782eb0"
+    }
+  },
+  "status": "AUTHOR_CPU_PASS_MAYOR_ACCEPTANCE_PENDING",
+  "test_attempts": 1,
+  "test_process": {
+    "attempt": 1,
+    "elapsed_s": 2.0684026919770986,
+    "identity_after_wait": null,
+    "joined": true,
+    "new_canonicalization_controls": 1,
+    "old_runtime_controls": 12,
+    "original_identity": {
+      "pid": 1654626,
+      "start_ticks": "92790708",
+      "state": "R"
+    },
+    "original_identity_gone": true,
+    "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+    "returncode": 0,
+    "scope": "CPU-only selected runtime module, no historical/peer suite or Native permission",
+    "selected_controls": 17,
+    "timed_out": false,
+    "unchanged_cli02_controls": 4
+  },
+  "test_result": "17 PASS",
+  "unchanged_old_control_bodies": 16
+}

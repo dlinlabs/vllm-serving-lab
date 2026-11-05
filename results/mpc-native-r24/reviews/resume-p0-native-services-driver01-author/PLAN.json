@@ -1,0 +1,77 @@
+{
+  "schema": "role3-resume-p0-native-services-driver-plan-v1",
+  "model_id": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "identity_basis": "retained Mayor-verified identity; no new model lookup/change",
+  "authority": "CPU-only code and mocked controls; only Mayor may authorize/run real host probe",
+  "accepted_helper_commit": "7f5daa591c43e83ad62a9052ca80efbcca4a0624",
+  "accepted_helper_sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+  "owned_public_files": [
+    "experiments/mpc-research/resume-mvp/native_services_smoke.py",
+    "experiments/mpc-research/resume-mvp/test_native_services_smoke.py"
+  ],
+  "exclusive_delivery": ".runtime/r24-resume-p0-native-services-driver01",
+  "canonical_source_inputs": [
+    "experiments/mpc-research/resume-mvp/nominal_services.py",
+    "experiments/mpc-research/resume-mvp/nominal_protocol.json",
+    "gateway.py",
+    "mpc_lab/model.py (lines1-160 only, ModelParameters import provenance; no model execution)"
+  ],
+  "first_three_canonical_source_bytes": 72683,
+  "requested_source_budget_files": 4,
+  "requested_source_budget_bytes": 131072,
+  "source_scope_deviation": {
+    "occurred": true,
+    "tool": "rg",
+    "mistake": "First gateway search used ROOT plus glob gateway.py, which recursively matched historical/peer copies rather than the one canonical file.",
+    "reported_matches": 8280,
+    "reported_matching_files": 114,
+    "returned_form": "truncated compact summary including path names and selected lines",
+    "strict_four_file_search_scope_satisfied": false,
+    "containment": "No returned archival/peer source was used, copied, hashed or revisited. Subsequent reads targeted only canonical ROOT/gateway.py. This deviation is retained, not counted as clean budget compliance."
+  },
+  "controls": {
+    "frozen_generations": 1,
+    "attempts_per_interpreter": 1,
+    "interpreters": ["ROOT/.venv/bin/python", "supplied Python3.12 venv"],
+    "aggregate_CPU_budget_seconds": 60,
+    "services_HTTP_source_identity_GPU_and_asset_probes_mocked": true,
+    "actual_servers_subprocess_GPU_HTTP_SSH_calls_in_tests": 0,
+    "planned_controls": [
+      "OFF has no IO or service/HTTP/GPU/source side effects",
+      "Exact production locks, fixed native argv, offline env and unqualified labels; reject altered lock/backend binding",
+      "Mocked success preserves GET-only readiness, secret privacy and bounded shutdown receipt ordering",
+      "Source/readiness mismatch retains failure and clean closure without success",
+      "POISON/nonjoin retains failure and skips post-GPU subprocess"
+    ],
+    "failure_policy": "Preserve every raw attempt. No retries, changed thresholds, additional generation, or broad old suites."
+  },
+  "real_probe": {
+    "default_execute": false,
+    "default_total_seconds": 480,
+    "cleanup_reserve_seconds": 30,
+    "term_grace_seconds": 10,
+    "offered_inference_requests": 0,
+    "admin_POSTs": 0,
+    "readiness_only": ["backend health", "backend models", "gateway metrics", "gateway admin MPC state"],
+    "real_execution_by_agent_authorized": false,
+    "host_execution_held_until_recorder_metrics_independent_acceptance": true,
+    "dependency_order": [
+      "runtime03 acceptance",
+      "recorder and F1-F5 metrics completion",
+      "Role4 independent recorder and metrics acceptance",
+      "actual GPU ownership/startup/cleanup",
+      "five-request Train qualification",
+      "consecutive apply/reobserve and actual admission effect",
+      "Train fixed16/32 measurements and freeze",
+      "held-out Eval"
+    ],
+    "expected_gateway_identity": "Frozen public contracts.ModelParameters(cost_spec=actual intended CostSpec).identity; no arbitrary support hash",
+    "tokenizer_identity": "<verified fingerprint>;model=<local MODEL_NAME>;available=True;fallback=chars4-chat-v1"
+  },
+  "unchanged_gates": [
+    "No Native inference/MPC/benchmark qualification",
+    "No B admission-behavior evidence or real control cycles",
+    "Native14 FAIL, coverage1/2 FAIL, G06/G16 pending, D2-F1 unchanged"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "auth_values_captured": false,
+  "body_complete": true,
+  "call_settings": {
+    "absolute_deadline": 1361157.205756355,
+    "body_cap_bytes": 1048576,
+    "http_timeout_s": 19.841495048021898,
+    "maximum_http_exchanges": 1900
+  },
+  "client_clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+  "client_headers_at": 1361137.628030676,
+  "client_receive_at": 1361137.62862366,
+  "client_send_at": 1361137.364265967,
+  "credential_removed": false,
+  "dispatch_attempted": true,
+  "error_type": null,
+  "http_status": 200,
+  "method": "POST",
+  "path": "/v1/chat/completions",
+  "request_body": "{\"max_tokens\":16,\"messages\":[{\"content\":\"Count upwards from 1, separated by spaces. Continue counting without commentary.\",\"role\":\"user\"}],\"model\":\"Qwen/Qwen3-4B-Instruct-2507\",\"stream\":false,\"temperature\":0}",
+  "request_id": "424b40a4154771f71ee2ba61093aa447",
+  "reserved_at": 1361137.363417541,
+  "response_body_base64": "eyJpZCI6ImNoYXRjbXBsLTQyNGI0MGE0MTU0NzcxZjcxZWUyYmE2MTA5M2FhNDQ3Iiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwiY3JlYXRlZCI6MTc5MzgwMzE1MywibW9kZWwiOiJRd2VuL1F3ZW4zLTRCLUluc3RydWN0LTI1MDciLCJjaG9pY2VzIjpbeyJpbmRleCI6MCwibWVzc2FnZSI6eyJyb2xlIjoiYXNzaXN0YW50IiwiY29udGVudCI6IjEgMiAzIDQgNSA2IDcgOCAiLCJyZWZ1c2FsIjpudWxsLCJhbm5vdGF0aW9ucyI6bnVsbCwiYXVkaW8iOm51bGwsImZ1bmN0aW9uX2NhbGwiOm51bGwsInJlYXNvbmluZyI6bnVsbH0sImxvZ3Byb2JzIjpudWxsLCJmaW5pc2hfcmVhc29uIjoibGVuZ3RoIiwic3RvcF9yZWFzb24iOm51bGwsInRva2VuX2lkcyI6bnVsbCwicm91dGVkX2V4cGVydHMiOm51bGx9XSwic2VydmljZV90aWVyIjpudWxsLCJzeXN0ZW1fZmluZ2VycHJpbnQiOiJ2bGxtLTAuMzAuMC04YTUzNTFkZCIsInVzYWdlIjp7InByb21wdF90b2tlbnMiOjIzLCJ0b3RhbF90b2tlbnMiOjM5LCJjb21wbGV0aW9uX3Rva2VucyI6MTYsInByb21wdF90b2tlbnNfZGV0YWlscyI6bnVsbCwiY29tcGxldGlvbl90b2tlbnNfZGV0YWlscyI6bnVsbH0sInByb21wdF9sb2dwcm9icyI6bnVsbCwicHJvbXB0X3Rva2VuX2lkcyI6bnVsbCwicHJvbXB0X3RleHQiOm51bGwsImt2X3RyYW5zZmVyX3BhcmFtcyI6bnVsbCwiZWNfdHJhbnNmZXJfcGFyYW1zIjpudWxsLCJtZXRyaWNzIjpudWxsfQ==",
+  "response_body_sha256": "98b651ef3f7b33534bedf7d9266bafd0dbf136c594e7fa8113bada7a0a1a3e90",
+  "response_bytes_captured": 733,
+  "response_headers": {
+    "content-type": "application/json",
+    "x-request-id": "424b40a4154771f71ee2ba61093aa447"
+  },
+  "role": "managed-1",
+  "sequence": 71,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "scheme": "http"
+  }
+}

@@ -1,0 +1,88 @@
+PR32 seven-role team16: verified catalog and bounded implementation contract
+
+ROOT=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21
+Baseline HEAD=8219e7c0da36a10c02951fd6d6ee79ff67732bb5
+
+Startup evidence:
+The installed authenticated runtime 1.0.105, protocol 3, answered models.list.
+The catalog-only probe created zero LLM sessions and made zero inference calls.
+Its owned server exited 0. No credentials were printed or persisted.
+Original catalog: .runtime/r24-topmodel-verification01/catalog.json
+Probe source: results/mpc-native-r24/reviews/native-agent-model-catalog01.py
+Source SHA256=834e02f6ca0e0ae9aaf8256301351e84d74b94893e94ae57abb7cbe654ca0d75
+Both selected IDs have vendor metadata, enabled policy, powerful category and
+supportedReasoningEfforts=[low,medium,high,xhigh,max].
+The returned catalog has no Gemini IDs. Do not substitute Flash.
+Categories present: lightweight, versatile, powerful, plus unspecified rows.
+The catalog does not rank individual powerful models against one another.
+This is verified top-category/maximum-effort selection, not empirical proof
+that a particular model is objectively strongest across all providers.
+The exact prelaunch seven-row table was reported to the user before launch.
+
+1 OpenAI    gpt-6-astra    max identification .runtime/r24-team16-identification
+2 Anthropic claude-opus-5.5 max mixing        .runtime/r24-team16-mixing
+3 OpenAI    gpt-6-astra    max improvement    .runtime/r24-team16-improvement
+4 Anthropic claude-opus-5.5 max validation    .runtime/r24-team16-validation
+5 OpenAI    gpt-6-astra    max planner        .runtime/r24-team16-planner
+6 OpenAI    gpt-6-astra    max runtime        .runtime/r24-team16-runtime
+7 Anthropic claude-opus-5.5 max comparison    .runtime/r24-team16-comparison
+
+All seven prior model15 agents acknowledged safe pause, sealed partial work,
+reported no owned helpers and returned idle. Their unspecified model IDs and
+untested drafts do not qualify as highest-model or accepted scientific work.
+MPC15 authors are also idle. Maximum concurrently active background agents: 7.
+Never broadcast to historical agents; never launch nested agents or helpers
+outside a specifically bounded test. Never silently change model or effort.
+Model override acceptance must be recorded from task tool results, not from
+an agent's self-description. Parent remains coordinator/reviewer/integrator.
+
+Scientific state:
+Native14 completed 4*(2000 warmup+3000 retained) sweeps; max Rhat
+3.6750452719276576, minimum bulk ESS 4.336133031401349, tail ESS
+10.94451798214706. It FAILS the unchanged 1.01/400/400 convergence gates.
+Zero retained numerical/energy/slice failures does not imply mixing.
+No accepted posterior, qualified MPC model, native performance win or
+deployment permission exists. Native14 predictive comparisons are descriptive.
+The 05-95 intervals are central 90%, not 95% confidence intervals.
+Original full W/U, priors, measure, labels and all baselines must be retained.
+Near-support stiffness is a supported hypothesis, not a proven unique cause.
+
+Carry-forward evidence:
+Native14 acceptance/failure: dcc639a3d2c08d0a3d82a3ffe6d610f3d1f73438.
+Geometry: .runtime/r24-native-state14-mixing-diagnosis01.
+Parent independently replayed reference and boundary controls on Python3.14
+and 3.12: 3 fixed points and 9 boundary cases passed on each; zero random draws
+and zero actual-D transitions. This is synthetic identity evidence only.
+Existing .runtime/r24-model15-* partial drafts are untested frozen inputs.
+Planner15: .runtime/r24-mpc-parallel15-planner; author 20 tests per Python.
+Runtime15: .runtime/r24-mpc-parallel15-runtime; author 51 tests per Python.
+Comparison15: .runtime/r24-mpc-parallel15-comparison; read PAUSED.md first.
+Its previous 13-case suite passed both Pythons; final two edits/tests are
+unvalidated. Do not attribute old reports to the current final revision.
+
+Execution:
+Read current reports, pins and relevant sources before implementation.
+Work only in the exclusive new directory; never modify sealed originals,
+installed SDK, native files, product code or another role's output.
+No git, push, merge, gt done, new GPU rental or network experiments by agents.
+Mayor owns all commits, integration and existing-GPU scheduling.
+No live MPC actuation on an unqualified model. Preserve native/synthetic
+provenance and untouched heldout. Do not inspect heldout to choose models.
+Do not run actual-D MCMC or rescan/decompress the five ~84GB large journals.
+Use pinned small originals and deterministic/reference controls first.
+Any required subsequent native experiment is preregistered and gated by Mayor;
+native evidence cannot be replaced by synthetic success.
+Every role must produce executable work plus focused dual-Python controls,
+machine-readable report, native qualification blockers, preserved failure logs,
+exact commands, source pins, and SHA256SUMS. Existing old passes are not new
+validation. No threshold relaxation or baseline weakening.
+Before expensive computation, freeze plan and source hashes.
+Use existing .venv/bin/python (3.14) and
+/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python.
+Set OPENBLAS_NUM_THREADS=OMP_NUM_THREADS=MKL_NUM_THREADS=NUMEXPR_NUM_THREADS=1,
+PYTHONDONTWRITEBYTECODE=1, PYTEST_DISABLE_PLUGIN_AUTOLOAD=1; unset PYTHONPATH.
+Use nice -n19, -B and pytest -pno:cacheprovider; exclusive attempt outputs.
+Never overwrite failed logs or rerun once-only guards.
+Return a bounded sealed delivery with honest unvalidated/blocked status.
+Mayor performs independent review, peer-cross-critique of frozen deliveries,
+focused acceptance and precise local commits; accepted changes get hashes.

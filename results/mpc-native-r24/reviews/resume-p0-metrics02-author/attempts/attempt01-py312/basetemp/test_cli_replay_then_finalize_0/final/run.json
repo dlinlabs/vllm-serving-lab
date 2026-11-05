@@ -1,0 +1,237 @@
+{
+ "arm": "fixed16",
+ "clock_domain": "time.monotonic clock_gettime(CLOCK_MONOTONIC) host=DESKTOP-Q3SLA74 boot_id=bf25e215-1377-4585-a5fa-f5181f96f467",
+ "control": {
+  "basis": "literal startup MAX_ADMITTED_COST",
+  "budget": 16.0,
+  "kind": "static_fixed"
+ },
+ "control_missing": null,
+ "envelope_end": 928578.2558703519,
+ "envelope_scope": "full_wall",
+ "envelope_start": 928576.653408351,
+ "offered_duration_s": 0.4,
+ "offered_start": 928577.653408351,
+ "provenance": {
+  "capture_sha256": "65ee03ad980fe4ec553dea350b1a838ee74df94ed2b4460a373eebfa204015e2",
+  "capture_summary": {
+   "completion_tokens_evidence": {
+    "not_applicable": 1,
+    "usage": 2
+   },
+   "fates": {
+    "cancelled": 0,
+    "complete": 2,
+    "http_error": 0,
+    "not_launched": 0,
+    "rejected": 1,
+    "stream_error": 0,
+    "transport_error": 0,
+    "unknown": 0
+   },
+   "finish_reason_evidence": {
+    "absent": 0,
+    "contradiction": 0,
+    "not_applicable": 1,
+    "observed": 2
+   },
+   "finish_reasons_of_complete": {
+    "length": 1,
+    "stop": 1
+   },
+   "implementation_exceptions": 0,
+   "max_send_lag_s": 0.0016768999630585313,
+   "offered": 3,
+   "prompt_tokens_matched": 0,
+   "prompt_tokens_mismatch": 2,
+   "sent": 3
+  },
+  "client_sources_sha256": {
+   "nominal_client.py": "f369e5ce01a54dcfa9086fe8ee4a1528d7e52d19179db78201e06961da4c7bda",
+   "nominal_metrics.py": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+   "score_http.py": "9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d",
+   "telemetry.py": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370",
+   "trace_workload.py": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f"
+  },
+  "comparability": {
+   "backend": {
+    "argv": "literal"
+   },
+   "client_generation": {
+    "ignore_eos": false,
+    "max_tokens_policy": "trace max_tokens"
+   },
+   "clock": "literal monotonic",
+   "code": {
+    "client": "literal"
+   },
+   "gateway": {
+    "source_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+   },
+   "hardware": {
+    "gpu": "literal CPU control"
+   },
+   "model": {
+    "asset_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "local_model_path": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "served_alias": "Qwen/Qwen3-4B-Instruct-2507",
+    "served_alias_verified": true,
+    "tokenizer_sha256": "7d87564c4d3b3e436f5a813250e28ead3ca39bb3d24fbfdb88ece29d629ecd46"
+   },
+   "resources": {
+    "cpu": "literal"
+   }
+  },
+  "control_evidence": {
+   "acknowledged_at": 928577.553408351,
+   "clock_domain": "time.monotonic clock_gettime(CLOCK_MONOTONIC) host=DESKTOP-Q3SLA74 boot_id=bf25e215-1377-4585-a5fa-f5181f96f467",
+   "held_verified_at": 928578.1558703519,
+   "source": "literal CPU control"
+  },
+  "full_wall": {
+   "clock_domain": "time.monotonic clock_gettime(CLOCK_MONOTONIC) host=DESKTOP-Q3SLA74 boot_id=bf25e215-1377-4585-a5fa-f5181f96f467",
+   "end": 928578.2558703519,
+   "source": "literal CPU control",
+   "start": 928576.653408351
+  },
+  "mapping": {
+   "completion_tokens": "the single usage.completion_tokens object of the stream, else null",
+   "first_content_at": "time.monotonic() when the first content-bearing SSE event was parsed",
+   "group_tokens": "trace input_tokens (tokenizer-measured, frozen before outcomes)",
+   "max_output_tokens": "trace max_tokens",
+   "request_id": "trace_id",
+   "scheduled_at": "offered_start + arrival_seconds",
+   "sent_at": "time.monotonic() immediately before client.stream (send-attempt start, before connection acquisition; null if never sent)",
+   "slo.finish_reason": "observed finish_reason (null when absent, contradictory or n/a)",
+   "slo.requested_ignore_eos": "ignore_eos of the payload actually sent (constant false)",
+   "slo.status": "fate",
+   "slo.stream_done": "data: [DONE] received",
+   "slo.stream_error": "fate == stream_error",
+   "terminal_at": "time.monotonic() in finally after the response context closed (null if never sent)"
+  },
+  "model_binding": {
+   "argv_max_model_len": "8192",
+   "argv_prefix_caching_flags": [
+    "--no-enable-prefix-caching"
+   ],
+   "argv_scheduling_policy": "fcfs",
+   "argv_scheduling_policy_note": "recorded only; FIFO label stays pending (not a verified FCFS ordering)",
+   "backend_argv_sha256": "42e694338663f19abca31364972e8b28f26a0f8e583396b364b1a2de217ea9d8",
+   "backend_argv_source": "literal CPU control (no launched backend)",
+   "local_model_path": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+   "served_alias": "Qwen/Qwen3-4B-Instruct-2507",
+   "served_model_names": [
+    "Qwen/Qwen3-4B-Instruct-2507"
+   ],
+   "served_models": {
+    "alias_max_model_len": 8192,
+    "alias_root": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "ids": [
+     "Qwen/Qwen3-4B-Instruct-2507"
+    ]
+   },
+   "tokenizer": {
+    "fingerprint": "7d87564c4d3b3e436f5a813250e28ead3ca39bb3d24fbfdb88ece29d629ecd46",
+    "prompts_verified": 3
+   }
+  },
+  "not_client_owned": [
+   "backend launch and actual argv capture (binding.backend_argv/backend_argv_source)",
+   "gateway launch with MODEL_NAME == local_model_path; tokenizer_available; zero character fallback; CostSpec",
+   "warmup and post-warmup gateway drain before the offered start",
+   "static fixed budget as startup MAX_ADMITTED_COST before warmup/offers: acknowledged before offered_start and verified held through final drain (control + control_evidence)",
+   "one shared absolute host-monotonic offered START with lead time for the recorder preflight (binding, tokenizer load, prompt verification, /v1/models); a passed START is refused with zero sends, never retimed",
+   "final gateway drain (in_flight 0, admitted cost 0) and fallback counters after the recorder returns",
+   "full wall record {start, end, clock_domain, source} covering setup, solver, HTTP, unresolved and final drain",
+   "controller decision intervals (coordinator journal) for non-fixed arms",
+   "FIFO/FCFS backend ordering verification",
+   "gateway admitted/terminal cost, budget and budget_version telemetry and the ordered owner ledger (joined to records by x-request-id)",
+   "cross-arm comparability facts record (finalize --comparability-json); only its model alias/path/tokenizer and ignore_eos are cross-checked here",
+   "train_selection_sha256 binding of Eval replays (not recorded by this recorder: Eval alias stays UNVERIFIED)"
+  ],
+  "offered_count": 3,
+  "offered_request_ids_sha256": "026df6f8ce83adb3cf10363af8d8303147e3a2daecbf4e61943229697124ee56",
+  "offered_tape": {
+   "generator": null,
+   "kind": null,
+   "measured_equals_requested_count": null,
+   "offered_tape_schema": null,
+   "offered_tape_sha256": null,
+   "protocol_id": null,
+   "purpose": "train",
+   "source_id": null,
+   "tokenizer_sha256": "7d87564c4d3b3e436f5a813250e28ead3ca39bb3d24fbfdb88ece29d629ecd46"
+  },
+  "offered_trace_sha256": "a153097e9ebd190081e385ca9d88be9d06f9a5772f64d6b958b426659201d395",
+  "qualifiers": [
+   "UNQUALIFIED nominal lineage: no G06/G16/Native14 qualification, winner, capacity or SLO guarantee",
+   "clocks are client HTTP observations (send-attempt start, SSE parse times, close), not per-token GPU clocks",
+   "model binding verified here: alias == trace.model, backend argv model path and served names, backend /v1/models ids/root/max_model_len, tokenizer fingerprint and every prompt token count from local_model_path; NOT verified here: gateway MODEL_NAME, gateway tokenizer_available, zero character fallback, CostSpec identity",
+   "FIFO label pending: an argv --scheduling-policy value is recorded, never claimed as verified FCFS ordering",
+   "no warmup, budget installation, permit, server launch or gateway drain by this recorder",
+   "distinct hashes are integrity pins, not Train/Eval disjointness or leakage proof",
+   "purposes other than train/eval are raw engineering captures only (never core metrics runs, never heldout)",
+   "non-success bodies retained verbatim when strict UTF-8 and <= 65536 bytes (else length + sha256 only); admission rejections keep every gateway body field plus x-request-id; no auth header is sent or recorded"
+  ],
+  "run_id": "50f356c9-3cd1-439c-b2a9-56f39b76d8be",
+  "source": "nominal_client.py capture"
+ },
+ "purpose": "train",
+ "rows": [
+  {
+   "completion_tokens": 2,
+   "fate": "complete",
+   "first_content_at": 928577.655490951,
+   "group_tokens": 8,
+   "max_output_tokens": 8,
+   "request_id": "r00",
+   "scheduled_at": 928577.653408351,
+   "sent_at": 928577.655085251,
+   "slo": {
+    "finish_reason": "stop",
+    "requested_ignore_eos": false,
+    "status": "complete",
+    "stream_done": true,
+    "stream_error": false
+   },
+   "terminal_at": 928577.655558451
+  },
+  {
+   "completion_tokens": null,
+   "fate": "rejected",
+   "first_content_at": null,
+   "group_tokens": 13,
+   "max_output_tokens": 8,
+   "request_id": "r01",
+   "scheduled_at": 928577.703408351,
+   "sent_at": 928577.703916152,
+   "slo": {
+    "finish_reason": null,
+    "requested_ignore_eos": false,
+    "status": "rejected",
+    "stream_done": false,
+    "stream_error": false
+   },
+   "terminal_at": 928577.704330452
+  },
+  {
+   "completion_tokens": 2,
+   "fate": "complete",
+   "first_content_at": 928577.755148952,
+   "group_tokens": 10,
+   "max_output_tokens": 8,
+   "request_id": "r02",
+   "scheduled_at": 928577.753408351,
+   "sent_at": 928577.754708552,
+   "slo": {
+    "finish_reason": "length",
+    "requested_ignore_eos": false,
+    "status": "complete",
+    "stream_done": true,
+    "stream_error": false
+   },
+   "terminal_at": 928577.755238652
+  }
+ ],
+ "slo_missing": null
+}

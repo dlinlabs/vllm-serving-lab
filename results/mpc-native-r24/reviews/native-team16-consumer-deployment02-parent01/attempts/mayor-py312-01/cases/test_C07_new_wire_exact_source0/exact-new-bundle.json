@@ -1,0 +1,1282 @@
+{
+  "Native_execution": false,
+  "actual_application_at": null,
+  "actual_mock_overlap": true,
+  "bundle": {
+    "closure": {
+      "baseline_publications": {
+        "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+          "put_finished_at": 912887.173589537,
+          "put_started_at": 912887.173584237
+        }
+      },
+      "capture_id": "nv2-team16-cut-consumer02-fixed32",
+      "capture_started_at": 912887.174401137,
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "gateway_run_id": "synthetic-gateway",
+      "initial_cut_at": 912887.182980037,
+      "initial_sequence": 1,
+      "native_run_id": "synthetic-native",
+      "native_sources": {
+        "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+        "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+        "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+        "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b"
+      }
+    },
+    "current": {
+      "barrier_base64": "eyJzY2hlbWEiOiJyMjQtZ2F0ZXdheS1mbHVzaGVkLXByZWZpeC12MSIsInNvdXJjZV9zaGEyNTYiOiI5Y2QzYzdkZWUwODFhMzRhOTY1ZjNiYmE0ZGIzNDk0YzAyODNjNzlkN2ZkODQ0OTEyMzgxMWZmYmM2ZTgxY2JiIiwicnVuX2lkIjoic3ludGhldGljLWdhdGV3YXkiLCJjbG9ja19kb21haW4iOiJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwiZmx1c2hlZF90aHJvdWdoX3NlcXVlbmNlIjozLCJzb3VyY2VfYXQiOjkxMjg4Ny4xOTkxNjI0MzcsImZsdXNoX3N0YXJ0ZWRfYXQiOjkxMjg4Ny4xOTkyMDk0MzcsImZsdXNoX2ZpbmlzaGVkX2F0Ijo5MTI4ODcuMTk5MzcyNzM3LCJwcm9jZXNzX2lkZW50aXR5Ijp7InBpZCI6MjAwLCJzdGFydF90aWNrcyI6NDAsInBpZF9uYW1lc3BhY2UiOiJwaWQ6WzQwMjY1MzIyMTRdIn0sInNhbXBsZV9maW5pc2hlZF9hdCI6OTEyODg3LjE5OTM3NDEzNywid3JpdGVfZXJyb3JzIjowLCJkcm9wcGVkIjowLCJzY29wZSI6IlNlcmlhbGl6ZWQgYXBwZW5kIGNvbXBsZXRpb24sIG5vdCBmc3luYyBjcmFzaCBkdXJhYmlsaXR5IG9yIG5hdGl2ZSBjb21tb24tY3V0IHByb29mLiIsIm5hdGl2ZV9tcGNfcGVybWl0dGVkIjpmYWxzZX0=",
+      "journal": {
+        "closure": {
+          "baseline_publications": {
+            "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+              "put_finished_at": 912887.173589537,
+              "put_started_at": 912887.173584237
+            }
+          },
+          "capture_id": "nv2-team16-cut-consumer02-fixed32",
+          "capture_started_at": 912887.174401137,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "gateway_run_id": "synthetic-gateway",
+          "initial_cut_at": 912887.182980037,
+          "initial_sequence": 1,
+          "native_run_id": "synthetic-native",
+          "native_sources": {
+            "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+            "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+            "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+            "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b"
+          }
+        },
+        "cut": {
+          "baseline_native_ids": [
+            "chatcmpl-ffffffffffffffffffffffffffffffff-11111111"
+          ],
+          "capture_initialization_verified": false,
+          "common_clock_proof": {
+            "capture_verified": false,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "clock_process_binding_only": true,
+            "gateway_run_id": "synthetic-gateway",
+            "native_mpc_permitted": false,
+            "native_run_id": "synthetic-native",
+            "oldest_source_age_s": 0.00444350007455796,
+            "owner_inventory_verified": false,
+            "schema": "r24-owned-common-clock-proof-v1",
+            "validated_at": 912887.201033437
+          },
+          "cut_at": 912887.196589937,
+          "deployable": false,
+          "gateway_process_proof": {
+            "boot_id": "bf25e215-1377-4585-a5fa-f5181f96f467",
+            "capture_verified": false,
+            "checked_from": 912887.197627237,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "clock_source_sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f",
+            "collector": {
+              "parent_pid": 1,
+              "pid": 900,
+              "pid_namespace": "pid:[4026532214]",
+              "process_group": 900,
+              "session": 900,
+              "start_ticks": 5,
+              "time_namespace": "time:[4026531834]"
+            },
+            "endpoint_pid_binding": "trusted_owned_single_process_gateway",
+            "native_mpc_permitted": false,
+            "owned_chain": [
+              {
+                "parent_pid": 900,
+                "pid": 200,
+                "pid_namespace": "pid:[4026532214]",
+                "process_group": 200,
+                "session": 200,
+                "start_ticks": 40,
+                "time_namespace": "time:[4026531834]"
+              }
+            ],
+            "owner_inventory_verified": false,
+            "process_clock_verified_under_trust_model": true,
+            "received_at": 912887.198721037,
+            "remaining_obligations": [
+              "Caller-authenticated startup, endpoint and installed-source provenance",
+              "No unobserved transient namespace/identity ABA during acquisition",
+              "Native complete capture, initial-drain and common-cut inventory closure",
+              "Recheck proof compatibility and age through later planning/dispatch"
+            ],
+            "request_sent_at": 912887.197630337,
+            "role": "gateway",
+            "run_id": "synthetic-gateway",
+            "sample_finished_at": 912887.198243337,
+            "schema": "r24-owned-process-clock-proof-v1",
+            "source_age_s": 0.0004827000666409731,
+            "source_at": 912887.198243337,
+            "validated_at": 912887.198726037
+          },
+          "native_absence_verified": false,
+          "native_common_cut_verified": false,
+          "native_mpc_permitted": false,
+          "native_observation": {
+            "base": {
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "frontend_sampled_at": 912887.196826137,
+              "frontend_unfinished": 0,
+              "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+              "orphaned": null,
+              "pending_batches": 2,
+              "requests": [],
+              "run_id": "synthetic-native",
+              "running": 0,
+              "sampled_at": 912887.196752937,
+              "schema": "pr33-native-read-only-v1",
+              "waiting": 0
+            },
+            "complete": true,
+            "native_phase": {
+              "capture": {
+                "started_at": 912887.174401137,
+                "status": "running",
+                "trial_id": "nv2-team16-cut-consumer02-fixed32"
+              },
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+              "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+              "lifecycle": {
+                "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222": {
+                  "enqueue": 912887.195215737,
+                  "finish_reason": "stop",
+                  "finished": 912887.195301237,
+                  "first": 912887.195301237,
+                  "input_tokens": 5,
+                  "max_tokens": 16,
+                  "output_tokens": 1
+                }
+              },
+              "missing_schedule_starts": [
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              ],
+              "native_mpc_permitted": false,
+              "process_identity": {
+                "pid": 111,
+                "pid_namespace": "pid:[4026532214]",
+                "start_ticks": 30
+              },
+              "publications": {
+                "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222": {
+                  "put_finished_at": 912887.195207237,
+                  "put_started_at": 912887.195200837
+                },
+                "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+                  "put_finished_at": 912887.173589537,
+                  "put_started_at": 912887.173584237
+                }
+              },
+              "queue_age_prefix_complete": false,
+              "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+              "queue_schedule_starts": {},
+              "refusal_reasons": [],
+              "run_id": "synthetic-native",
+              "sample_finished_at": 912887.196825437,
+              "schema": "r24-native-live-phase-v1",
+              "scope": "Serialized core lifecycle plus coherently retained input-publication brackets; all retained publication history is returned without assuming a capture-time boundary excludes pending inputs. Schedule starts are CPU scheduler entry, not GPU start/readiness. No Gateway owner join, source-age propagation, residual ingress model or deployment qualification.",
+              "source_at": 912887.196589937,
+              "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b",
+              "writer_generation_after": 4,
+              "writer_generation_before": 4
+            },
+            "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+            "queue_oldest_first": [
+              {
+                "step_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "work": [
+                  {
+                    "position": 6,
+                    "prompt_length": 5,
+                    "request_id": "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222",
+                    "tokens": 1
+                  }
+                ]
+              },
+              {
+                "step_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "work": []
+              }
+            ],
+            "queued_ghost_request_ids": [
+              "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222"
+            ],
+            "refusal_reasons": [],
+            "sample_finished_at": 912887.196755237,
+            "sample_started_at": 912887.196592037,
+            "scheduler_state": {
+              "requests": {},
+              "running": [],
+              "waiting": []
+            },
+            "schema": "r23-native-queue-read-only-v1",
+            "skipped_waiting": [],
+            "streaming_waiting": 0
+          },
+          "native_process_proof": {
+            "boot_id": "bf25e215-1377-4585-a5fa-f5181f96f467",
+            "capture_verified": false,
+            "checked_from": 912887.196271837,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "clock_source_sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f",
+            "collector": {
+              "parent_pid": 1,
+              "pid": 900,
+              "pid_namespace": "pid:[4026532214]",
+              "process_group": 900,
+              "session": 900,
+              "start_ticks": 5,
+              "time_namespace": "time:[4026531834]"
+            },
+            "endpoint_pid_binding": "authenticated_core_metadata",
+            "native_mpc_permitted": false,
+            "owned_chain": [
+              {
+                "parent_pid": 110,
+                "pid": 111,
+                "pid_namespace": "pid:[4026532214]",
+                "process_group": 100,
+                "session": 100,
+                "start_ticks": 30,
+                "time_namespace": "time:[4026531834]"
+              },
+              {
+                "parent_pid": 100,
+                "pid": 110,
+                "pid_namespace": "pid:[4026532214]",
+                "process_group": 100,
+                "session": 100,
+                "start_ticks": 20,
+                "time_namespace": "time:[4026531834]"
+              },
+              {
+                "parent_pid": 900,
+                "pid": 100,
+                "pid_namespace": "pid:[4026532214]",
+                "process_group": 100,
+                "session": 100,
+                "start_ticks": 10,
+                "time_namespace": "time:[4026531834]"
+              }
+            ],
+            "owner_inventory_verified": false,
+            "process_clock_verified_under_trust_model": true,
+            "received_at": 912887.197335337,
+            "remaining_obligations": [
+              "Caller-authenticated startup, endpoint and installed-source provenance",
+              "No unobserved transient namespace/identity ABA during acquisition",
+              "Native complete capture, initial-drain and common-cut inventory closure",
+              "Recheck proof compatibility and age through later planning/dispatch"
+            ],
+            "request_sent_at": 912887.196279637,
+            "role": "native",
+            "run_id": "synthetic-native",
+            "sample_finished_at": 912887.196825437,
+            "schema": "r24-owned-process-clock-proof-v1",
+            "source_age_s": 0.0007523000240325928,
+            "source_at": 912887.196589937,
+            "validated_at": 912887.197342237
+          },
+          "oldest_source_age_s": 0.00444350007455796,
+          "owner_prefix": {
+            "acquisition": "explicit_serialized_flush",
+            "age_as_of_receiver_clock": 912887.201027837,
+            "barrier": {
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "dropped": 0,
+              "flush_finished_at": 912887.199372737,
+              "flush_started_at": 912887.199209437,
+              "flushed_through_sequence": 3,
+              "native_mpc_permitted": false,
+              "process_identity": {
+                "pid": 200,
+                "pid_namespace": "pid:[4026532214]",
+                "start_ticks": 40
+              },
+              "run_id": "synthetic-gateway",
+              "sample_finished_at": 912887.199374137,
+              "schema": "r24-gateway-flushed-prefix-v1",
+              "scope": "Serialized append completion, not fsync crash durability or native common-cut proof.",
+              "source_at": 912887.199162437,
+              "source_sha256": "9cd3c7dee081a34a965f3bba4db3494c0283c79d7fd8449123811ffbc6e81cbb",
+              "write_errors": 0
+            },
+            "barrier_received_at": 912887.199660437,
+            "barrier_roundtrip_s": 0.0008385999826714396,
+            "barrier_sent_at": 912887.198821837,
+            "barrier_sha256": "299d0f30f136b9fe2f8d9665cd9c326370ff9a0b579854b27fbd8a646834c3c0",
+            "budget": 32,
+            "budget_version": 1,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "closed_through_sequence": 3,
+            "cut_at": 912887.196589937,
+            "deployable": false,
+            "gateway_prefix_closed": true,
+            "native_absence_verified": false,
+            "native_common_cut_verified": false,
+            "native_mpc_permitted": false,
+            "native_run_id": "synthetic-native",
+            "owners": [],
+            "prefix_bytes": 2450,
+            "receipt": {
+              "prefix_received_at": 912887.199861337,
+              "prefix_sha256": "0471a620b67363d03cb47db983ac3b4be18ddd29993d5b46b5e7f55ec45c3a93",
+              "prefix_started_at": 912887.199703537,
+              "snapshot_received_at": 912887.198805037,
+              "snapshot_sent_at": 912887.197433237,
+              "snapshot_sha256": "588c8223aad2b8f0bd60365933505a92f91418d109e90691a86f3d7a2fab9f6c"
+            },
+            "released_native_ids": [
+              "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222"
+            ],
+            "run_id": "synthetic-gateway",
+            "schema": "r24-gateway-live-owner-prefix-v1",
+            "scope": "Gateway-time owner facts from received prefix; ledger admission linearization, not exact RequestMark time. No native phase, readiness, cancellation, GPU retirement or residual inferred.",
+            "snapshot": {
+              "budget": 32,
+              "budget_version": 1,
+              "capabilities": [
+                "mpc-budget-cas-expiry-v1"
+              ],
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "cost_spec": {
+                "default_max_tokens": 128,
+                "estimator_version": "gateway-token-estimate-v1",
+                "input_per_token": 0,
+                "intercept": 16,
+                "minimum": 0.1,
+                "output_per_token": 0,
+                "tokenizer_identity": "unqualified"
+              },
+              "identity": {
+                "calibration_version": "unqualified",
+                "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+                "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+                "model_version": "synthetic",
+                "support_hash": "unqualified"
+              },
+              "requests": [],
+              "run_id": "synthetic-gateway",
+              "sampled_at": 912887.198243337,
+              "schema": "mpc-admission-v1",
+              "sequence": 3
+            },
+            "snapshot_at": 912887.198243337,
+            "source_age_upper_s": 0.005248000030405819,
+            "trial_liveness_verified": false,
+            "validation_elapsed_s": 0.0011602999875321984
+          },
+          "schema": "r24-clocked-owner-cut-v1",
+          "scope": "Native-clock cut and strictly later Gateway received prefix, under owned-process/source trust. Initial-drain/capture history closure, owner-to-native phase classification and residual scenarios remain separate obligations.",
+          "validated_at": 912887.201033437
+        },
+        "native_record": {
+          "auth_values_captured": false,
+          "body_complete": true,
+          "call_settings": {
+            "absolute_deadline": 912887.695688437,
+            "body_cap_bytes": 1048576,
+            "http_timeout_s": 0.2,
+            "maximum_http_exchanges": 1900
+          },
+          "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "client_headers_at": 912887.196954837,
+          "client_receive_at": 912887.196969137,
+          "client_send_at": 912887.196497437,
+          "credential_removed": false,
+          "dispatch_attempted": true,
+          "error_type": null,
+          "http_status": 200,
+          "method": "GET",
+          "path": "/pr33-native/phase-state",
+          "request_body": null,
+          "request_id": null,
+          "reserved_at": 912887.196392837,
+          "response_body_base64": "ewogICAic2NoZW1hIjogInIyMy1uYXRpdmUtcXVldWUtcmVhZC1vbmx5LXYxIiwKICAgInF1ZXVlX29ic2VydmVyX3NoYTI1NiI6ICJlMDc4N2EyY2QyZDBiNGNmYjVhZGExNGMwMDRkMWQ3NmE2MmRkY2JmYjEyMGI1Y2VhOWRlMDJhZjM4YTFhYTkzIiwKICAgInNhbXBsZV9zdGFydGVkX2F0IjogOTEyODg3LjE5NjU5MjAzNywKICAgImNvbXBsZXRlIjogdHJ1ZSwKICAgInJlZnVzYWxfcmVhc29ucyI6IFtdLAogICAic2NoZWR1bGVyX3N0YXRlIjogewogICAgICAicnVubmluZyI6IFtdLAogICAgICAid2FpdGluZyI6IFtdLAogICAgICAicmVxdWVzdHMiOiB7fQogICB9LAogICAicXVldWVfb2xkZXN0X2ZpcnN0IjogWwogICAgICB7CiAgICAgICAgICJzdGVwX2lkIjogImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLAogICAgICAgICAid29yayI6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgICAicmVxdWVzdF9pZCI6ICJjaGF0Y21wbC1hYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYS0yMjIyMjIyMiIsCiAgICAgICAgICAgICAgICJwb3NpdGlvbiI6IDYsCiAgICAgICAgICAgICAgICJ0b2tlbnMiOiAxLAogICAgICAgICAgICAgICAicHJvbXB0X2xlbmd0aCI6IDUKICAgICAgICAgICAgfQogICAgICAgICBdCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAgInN0ZXBfaWQiOiAiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYiIsCiAgICAgICAgICJ3b3JrIjogW10KICAgICAgfQogICBdLAogICAicXVldWVkX2dob3N0X3JlcXVlc3RfaWRzIjogWwogICAgICAiY2hhdGNtcGwtYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEtMjIyMjIyMjIiCiAgIF0sCiAgICJza2lwcGVkX3dhaXRpbmciOiBbXSwKICAgInN0cmVhbWluZ193YWl0aW5nIjogMCwKICAgImJhc2UiOiB7CiAgICAgICJzY2hlbWEiOiAicHIzMy1uYXRpdmUtcmVhZC1vbmx5LXYxIiwKICAgICAgIm9ic2VydmVyX3NoYTI1NiI6ICI3NzYzM2RjNzY1MjA2NmU0NWI3NjgwZDI5N2QzZTM2ZGRiOTdhM2UxMjIyMmRlOWY1MjZhNzZiOWEwMWQ2NmI0IiwKICAgICAgInJ1bl9pZCI6ICJzeW50aGV0aWMtbmF0aXZlIiwKICAgICAgImNsb2NrX2RvbWFpbiI6ICJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwKICAgICAgInNhbXBsZWRfYXQiOiA5MTI4ODcuMTk2NzUyOTM3LAogICAgICAiY29tcGxldGUiOiB0cnVlLAogICAgICAicnVubmluZyI6IDAsCiAgICAgICJ3YWl0aW5nIjogMCwKICAgICAgInBlbmRpbmdfYmF0Y2hlcyI6IDIsCiAgICAgICJmcm9udGVuZF91bmZpbmlzaGVkIjogMCwKICAgICAgInJlcXVlc3RzIjogW10sCiAgICAgICJvcnBoYW5lZCI6IG51bGwsCiAgICAgICJmcm9udGVuZF9zYW1wbGVkX2F0IjogOTEyODg3LjE5NjgyNjEzNwogICB9LAogICAic2FtcGxlX2ZpbmlzaGVkX2F0IjogOTEyODg3LjE5Njc1NTIzNywKICAgIm5hdGl2ZV9waGFzZSI6IHsKICAgICAgInNjaGVtYSI6ICJyMjQtbmF0aXZlLWxpdmUtcGhhc2UtdjEiLAogICAgICAic291cmNlX3NoYTI1NiI6ICI3ZGQ4NjZiYWMyNWZlNWQyMTFjODJkMTk2ZjA5NTRjNmQ3MzdiOWEzNTFkYTRjYjlkOWNlNjUyMmM2YThmYTliIiwKICAgICAgImlucHV0X3Bvc3Rfc291cmNlX3NoYTI1NiI6ICJkNWNlNzQzMjAzNTU2OGU3NjRmYmE5N2RkNWE3MWMzMWQxNmEzNTcxMjYyYjJlMjU5MzIxMmFiMTMyMzQyNzY0IiwKICAgICAgInF1ZXVlX29ic2VydmVyX3NoYTI1NiI6ICJlMDc4N2EyY2QyZDBiNGNmYjVhZGExNGMwMDRkMWQ3NmE2MmRkY2JmYjEyMGI1Y2VhOWRlMDJhZjM4YTFhYTkzIiwKICAgICAgImNvcmVfc291cmNlX3NoYTI1NiI6ICIyNjhiZjQwNTM0YTg1MzgxMjg2N2FlOGU4MDA0MGYxOTA5ODNjYjM2NGI0MTE4MmI1NTk2OWFhY2UyMGM5M2Y1IiwKICAgICAgImNsb2NrX2RvbWFpbiI6ICJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwKICAgICAgInJ1bl9pZCI6ICJzeW50aGV0aWMtbmF0aXZlIiwKICAgICAgInByb2Nlc3NfaWRlbnRpdHkiOiB7CiAgICAgICAgICJwaWQiOiAxMTEsCiAgICAgICAgICJzdGFydF90aWNrcyI6IDMwLAogICAgICAgICAicGlkX25hbWVzcGFjZSI6ICJwaWQ6WzQwMjY1MzIyMTRdIgogICAgICB9LAogICAgICAic291cmNlX2F0IjogOTEyODg3LjE5NjU4OTkzNywKICAgICAgImNhcHR1cmUiOiB7CiAgICAgICAgICJ0cmlhbF9pZCI6ICJudjItdGVhbTE2LWN1dC1jb25zdW1lcjAyLWZpeGVkMzIiLAogICAgICAgICAic3RhcnRlZF9hdCI6IDkxMjg4Ny4xNzQ0MDExMzcsCiAgICAgICAgICJzdGF0dXMiOiAicnVubmluZyIKICAgICAgfSwKICAgICAgImxpZmVjeWNsZSI6IHsKICAgICAgICAgImNoYXRjbXBsLWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhLTIyMjIyMjIyIjogewogICAgICAgICAgICAiaW5wdXRfdG9rZW5zIjogNSwKICAgICAgICAgICAgIm1heF90b2tlbnMiOiAxNiwKICAgICAgICAgICAgIm91dHB1dF90b2tlbnMiOiAxLAogICAgICAgICAgICAiZW5xdWV1ZSI6IDkxMjg4Ny4xOTUyMTU3MzcsCiAgICAgICAgICAgICJmaXJzdCI6IDkxMjg4Ny4xOTUzMDEyMzcsCiAgICAgICAgICAgICJmaW5pc2hlZCI6IDkxMjg4Ny4xOTUzMDEyMzcsCiAgICAgICAgICAgICJmaW5pc2hfcmVhc29uIjogInN0b3AiCiAgICAgICAgIH0KICAgICAgfSwKICAgICAgInB1YmxpY2F0aW9ucyI6IHsKICAgICAgICAgImNoYXRjbXBsLWZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmLTExMTExMTExIjogewogICAgICAgICAgICAicHV0X3N0YXJ0ZWRfYXQiOiA5MTI4ODcuMTczNTg0MjM3LAogICAgICAgICAgICAicHV0X2ZpbmlzaGVkX2F0IjogOTEyODg3LjE3MzU4OTUzNwogICAgICAgICB9LAogICAgICAgICAiY2hhdGNtcGwtYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEtMjIyMjIyMjIiOiB7CiAgICAgICAgICAgICJwdXRfc3RhcnRlZF9hdCI6IDkxMjg4Ny4xOTUyMDA4MzcsCiAgICAgICAgICAgICJwdXRfZmluaXNoZWRfYXQiOiA5MTI4ODcuMTk1MjA3MjM3CiAgICAgICAgIH0KICAgICAgfSwKICAgICAgIndyaXRlcl9nZW5lcmF0aW9uX2JlZm9yZSI6IDQsCiAgICAgICJ3cml0ZXJfZ2VuZXJhdGlvbl9hZnRlciI6IDQsCiAgICAgICJxdWV1ZV9zY2hlZHVsZV9zdGFydHMiOiB7fSwKICAgICAgIm1pc3Npbmdfc2NoZWR1bGVfc3RhcnRzIjogWwogICAgICAgICAiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYSIKICAgICAgXSwKICAgICAgInF1ZXVlX2FnZV9wcmVmaXhfY29tcGxldGUiOiBmYWxzZSwKICAgICAgInJlZnVzYWxfcmVhc29ucyI6IFtdLAogICAgICAibmF0aXZlX21wY19wZXJtaXR0ZWQiOiBmYWxzZSwKICAgICAgInNjb3BlIjogIlNlcmlhbGl6ZWQgY29yZSBsaWZlY3ljbGUgcGx1cyBjb2hlcmVudGx5IHJldGFpbmVkIGlucHV0LXB1YmxpY2F0aW9uIGJyYWNrZXRzOyBhbGwgcmV0YWluZWQgcHVibGljYXRpb24gaGlzdG9yeSBpcyByZXR1cm5lZCB3aXRob3V0IGFzc3VtaW5nIGEgY2FwdHVyZS10aW1lIGJvdW5kYXJ5IGV4Y2x1ZGVzIHBlbmRpbmcgaW5wdXRzLiBTY2hlZHVsZSBzdGFydHMgYXJlIENQVSBzY2hlZHVsZXIgZW50cnksIG5vdCBHUFUgc3RhcnQvcmVhZGluZXNzLiBObyBHYXRld2F5IG93bmVyIGpvaW4sIHNvdXJjZS1hZ2UgcHJvcGFnYXRpb24sIHJlc2lkdWFsIGluZ3Jlc3MgbW9kZWwgb3IgZGVwbG95bWVudCBxdWFsaWZpY2F0aW9uLiIsCiAgICAgICJjb21wbGV0ZSI6IHRydWUsCiAgICAgICJzYW1wbGVfZmluaXNoZWRfYXQiOiA5MTI4ODcuMTk2ODI1NDM3CiAgIH0KfQ==",
+          "response_body_sha256": "dca623337fa8b57dcfe989d09186101f8481cee8ce611c06c883adb89e8b0268",
+          "response_bytes_captured": 3985,
+          "response_headers": {
+            "content-type": "application/json"
+          },
+          "role": "offer-2-inflight-cut-native",
+          "sequence": 4,
+          "target": {
+            "host": "127.0.0.1",
+            "port": 8000,
+            "scheme": "http"
+          }
+        },
+        "observation": {
+          "acquisition_token": null,
+          "actual_application_at": null,
+          "available_at": 912887.201033437,
+          "consumed_at": 912887.201041637,
+          "deployable": false,
+          "exact_application_time_gate": false,
+          "full_stock": {
+            "base": {
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "frontend_sampled_at": 912887.196826137,
+              "frontend_unfinished": 0,
+              "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+              "orphaned": null,
+              "pending_batches": 2,
+              "requests": [],
+              "run_id": "synthetic-native",
+              "running": 0,
+              "sampled_at": 912887.196752937,
+              "schema": "pr33-native-read-only-v1",
+              "waiting": 0
+            },
+            "queue_oldest_first": [
+              {
+                "step_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "work": [
+                  {
+                    "position": 6,
+                    "prompt_length": 5,
+                    "request_id": "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222",
+                    "tokens": 1
+                  }
+                ]
+              },
+              {
+                "step_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "work": []
+              }
+            ],
+            "queued_ghost_request_ids": [
+              "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222"
+            ],
+            "scheduler_state": {
+              "requests": {},
+              "running": [],
+              "waiting": []
+            },
+            "skipped_waiting": [],
+            "streaming_waiting": 0
+          },
+          "gateway_budget_version": 1,
+          "native_execution_authorized": false,
+          "native_mpc_permitted": false,
+          "prediction_qualified": false,
+          "qualified_model": false,
+          "request_token": null,
+          "source_at": 912887.196589937
+        },
+        "phases": {
+          "available_at": 912887.201033437,
+          "capture_id": "nv2-team16-cut-consumer02-fixed32",
+          "classified_at": 912887.201350737,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "cut_canonical_sha256": "b323629cf68ad8121e0d985c1c71087e6c4a2b70903e389b43ac32668eccdefc",
+          "decision_time_state_verified": false,
+          "deployable": false,
+          "gateway_run_id": "synthetic-gateway",
+          "ghost_ids": [
+            "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222"
+          ],
+          "initial_closure_canonical_sha256": "ce32d7c94f476892bca416ae0e3052d66067ce21c4fae69e88af5fcd99aad8f6",
+          "native_mpc_permitted": false,
+          "native_run_id": "synthetic-native",
+          "owners": [],
+          "received_prefix_through_sequence": 3,
+          "released_ghost_ids": [
+            "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222"
+          ],
+          "released_native_ids": [
+            "chatcmpl-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-22222222"
+          ],
+          "requires_source_age_propagation": true,
+          "running_ids": [],
+          "schema": "r24-source-time-owner-phases-v1",
+          "scope": "Trusted clocked acquisition plus bound initial closure and actual-offer public memory. Phase/owner facts at historical native source T only. Later Gateway receipt closes T; it does not advance native state to decision time or provide ingress/release/HTTP residuals.",
+          "source_at": 912887.196589937,
+          "source_budget": 32,
+          "source_budget_version": 1,
+          "waiting_ids": []
+        },
+        "prefix": {
+          "bytes": 2450,
+          "path": "offer-2-inflight-cut-prefix.jsonl",
+          "sha256": "0471a620b67363d03cb47db983ac3b4be18ddd29993d5b46b5e7f55ec45c3a93"
+        },
+        "status": "source_cut_received"
+      },
+      "prefix_base64": "eyJldmVudCI6ICJtcGNfbGVkZ2VyIiwgInJ1bl9pZCI6ICJzeW50aGV0aWMtZ2F0ZXdheSIsICJ0aW1lc3RhbXAiOiA5MTM4ODcuMTc0MTIyMjM3LCAibW9ub3RvbmljIjogOTEyODg3LjE3NDEyMjQzNywgImNsb2NrX2RvbWFpbiI6ICJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwgImlkZW50aXR5IjogeyJtb2RlbF92ZXJzaW9uIjogInN5bnRoZXRpYyIsICJjYWxpYnJhdGlvbl92ZXJzaW9uIjogInVucXVhbGlmaWVkIiwgInN1cHBvcnRfaGFzaCI6ICJ1bnF1YWxpZmllZCIsICJjb3N0X2hhc2giOiAiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsICJpbXBsZW1lbnRhdGlvbl9oYXNoIjogIjU1MjMzMTVjNWM1OTA4MzgzNGY5MmVjMDgyNDVjODQ5NzExYzdmMDk3YzFkNmE2MjljNjY3NzBlNDFmYjNlZWEifSwgInNlcXVlbmNlIjogMSwgImVmZmVjdGl2ZV9hdCI6IDkxMjg4Ny4xNzQxMTkzMzcsICJyZXNlcnZlZF9jb3N0IjogMC4wLCAicnVubmluZyI6IDAsICJjb21wbGV0ZSI6IHRydWUsICJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMSwgImxlZGdlcl9zY2hlbWFfdmVyc2lvbiI6IDIsICJjaGFuZ2Vfa2luZCI6ICJjb250cm9sIn0KeyJldmVudCI6ICJidWRnZXRfdXBkYXRlZCIsICJydW5faWQiOiAic3ludGhldGljLWdhdGV3YXkiLCAidGltZXN0YW1wIjogOTEzODg3LjE3NDEyNjMzNywgIm1vbm90b25pYyI6IDkxMjg4Ny4xNzQxMjY0MzcsICJvcGVyYXRpb25faWQiOiAib3B0ZWFtMTYtY3V0LWNvbnN1bWVyMDIiLCAicHJldmlvdXNfYnVkZ2V0IjogMzIsICJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMSwgImFwcGxpZWRfYXQiOiA5MTI4ODcuMTc0MTE1NDM3fQp7ImV2ZW50IjogIm1wY19sZWRnZXIiLCAicnVuX2lkIjogInN5bnRoZXRpYy1nYXRld2F5IiwgInRpbWVzdGFtcCI6IDkxMzg4Ny4xOTUxMDg4MzcsICJtb25vdG9uaWMiOiA5MTI4ODcuMTk1MTA5MzM3LCAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLCAiaWRlbnRpdHkiOiB7Im1vZGVsX3ZlcnNpb24iOiAic3ludGhldGljIiwgImNhbGlicmF0aW9uX3ZlcnNpb24iOiAidW5xdWFsaWZpZWQiLCAic3VwcG9ydF9oYXNoIjogInVucXVhbGlmaWVkIiwgImNvc3RfaGFzaCI6ICJjMzg3NDI1OTA2ODk1MmQ1ZjkyOTdkYjJkNmQyOGU1NThhZjE3ZGYwMzAxNTI3MDJlODFhNjJlNTQxODEzNWU4IiwgImltcGxlbWVudGF0aW9uX2hhc2giOiAiNTUyMzMxNWM1YzU5MDgzODM0ZjkyZWMwODI0NWM4NDk3MTFjN2YwOTdjMWQ2YTYyOWM2Njc3MGU0MWZiM2VlYSJ9LCAic2VxdWVuY2UiOiAyLCAiZWZmZWN0aXZlX2F0IjogOTEyODg3LjE5NTEwNDUzNywgInJlc2VydmVkX2Nvc3QiOiAxNi4wLCAicnVubmluZyI6IDEsICJjb21wbGV0ZSI6IHRydWUsICJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMSwgImxlZGdlcl9zY2hlbWFfdmVyc2lvbiI6IDIsICJjaGFuZ2Vfa2luZCI6ICJhZG1pc3Npb24iLCAicmVxdWVzdF9jb3N0IjogMTYsICJyZXF1ZXN0X2lkIjogImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIn0KeyJldmVudCI6ICJtcGNfbGVkZ2VyIiwgInJ1bl9pZCI6ICJzeW50aGV0aWMtZ2F0ZXdheSIsICJ0aW1lc3RhbXAiOiA5MTM4ODcuMTk1MzIwMDM3LCAibW9ub3RvbmljIjogOTEyODg3LjE5NTMyMDIzNywgImNsb2NrX2RvbWFpbiI6ICJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwgImlkZW50aXR5IjogeyJtb2RlbF92ZXJzaW9uIjogInN5bnRoZXRpYyIsICJjYWxpYnJhdGlvbl92ZXJzaW9uIjogInVucXVhbGlmaWVkIiwgInN1cHBvcnRfaGFzaCI6ICJ1bnF1YWxpZmllZCIsICJjb3N0X2hhc2giOiAiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsICJpbXBsZW1lbnRhdGlvbl9oYXNoIjogIjU1MjMzMTVjNWM1OTA4MzgzNGY5MmVjMDgyNDVjODQ5NzExYzdmMDk3YzFkNmE2MjljNjY3NzBlNDFmYjNlZWEifSwgInNlcXVlbmNlIjogMywgImVmZmVjdGl2ZV9hdCI6IDkxMjg4Ny4xOTUzMTgwMzcsICJyZXNlcnZlZF9jb3N0IjogMC4wLCAicnVubmluZyI6IDAsICJjb21wbGV0ZSI6IHRydWUsICJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMSwgImxlZGdlcl9zY2hlbWFfdmVyc2lvbiI6IDIsICJjaGFuZ2Vfa2luZCI6ICJ0ZXJtaW5hbCIsICJyZXF1ZXN0X2Nvc3QiOiAxNiwgInJlcXVlc3RfaWQiOiAiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEifQo=",
+      "snapshot_base64": "eyJzY2hlbWEiOiJtcGMtYWRtaXNzaW9uLXYxIiwicnVuX2lkIjoic3ludGhldGljLWdhdGV3YXkiLCJjbG9ja19kb21haW4iOiJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwic2FtcGxlZF9hdCI6OTEyODg3LjE5ODI0MzMzNywiYnVkZ2V0IjozMiwiYnVkZ2V0X3ZlcnNpb24iOjEsInJlcXVlc3RzIjpbXSwiaWRlbnRpdHkiOnsibW9kZWxfdmVyc2lvbiI6InN5bnRoZXRpYyIsImNhbGlicmF0aW9uX3ZlcnNpb24iOiJ1bnF1YWxpZmllZCIsInN1cHBvcnRfaGFzaCI6InVucXVhbGlmaWVkIiwiY29zdF9oYXNoIjoiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsImltcGxlbWVudGF0aW9uX2hhc2giOiI1NTIzMzE1YzVjNTkwODM4MzRmOTJlYzA4MjQ1Yzg0OTcxMWM3ZjA5N2MxZDZhNjI5YzY2NzcwZTQxZmIzZWVhIn0sInNlcXVlbmNlIjozLCJjb21wbGV0ZSI6dHJ1ZSwiY2FwYWJpbGl0aWVzIjpbIm1wYy1idWRnZXQtY2FzLWV4cGlyeS12MSJdLCJjb3N0X3NwZWMiOnsiaW50ZXJjZXB0IjoxNiwiaW5wdXRfcGVyX3Rva2VuIjowLCJvdXRwdXRfcGVyX3Rva2VuIjowLCJtaW5pbXVtIjowLjEsImRlZmF1bHRfbWF4X3Rva2VucyI6MTI4LCJ0b2tlbml6ZXJfaWRlbnRpdHkiOiJ1bnF1YWxpZmllZCIsImVzdGltYXRvcl92ZXJzaW9uIjoiZ2F0ZXdheS10b2tlbi1lc3RpbWF0ZS12MSJ9fQ=="
+    },
+    "initial": {
+      "barrier_base64": "eyJzY2hlbWEiOiJyMjQtZ2F0ZXdheS1mbHVzaGVkLXByZWZpeC12MSIsInNvdXJjZV9zaGEyNTYiOiI5Y2QzYzdkZWUwODFhMzRhOTY1ZjNiYmE0ZGIzNDk0YzAyODNjNzlkN2ZkODQ0OTEyMzgxMWZmYmM2ZTgxY2JiIiwicnVuX2lkIjoic3ludGhldGljLWdhdGV3YXkiLCJjbG9ja19kb21haW4iOiJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwiZmx1c2hlZF90aHJvdWdoX3NlcXVlbmNlIjoxLCJzb3VyY2VfYXQiOjkxMjg4Ny4xODc2NzgwMzcsImZsdXNoX3N0YXJ0ZWRfYXQiOjkxMjg4Ny4xODc3MjY2MzcsImZsdXNoX2ZpbmlzaGVkX2F0Ijo5MTI4ODcuMTg3OTgxMDM3LCJwcm9jZXNzX2lkZW50aXR5Ijp7InBpZCI6MjAwLCJzdGFydF90aWNrcyI6NDAsInBpZF9uYW1lc3BhY2UiOiJwaWQ6WzQwMjY1MzIyMTRdIn0sInNhbXBsZV9maW5pc2hlZF9hdCI6OTEyODg3LjE4Nzk4MzAzNywid3JpdGVfZXJyb3JzIjowLCJkcm9wcGVkIjowLCJzY29wZSI6IlNlcmlhbGl6ZWQgYXBwZW5kIGNvbXBsZXRpb24sIG5vdCBmc3luYyBjcmFzaCBkdXJhYmlsaXR5IG9yIG5hdGl2ZSBjb21tb24tY3V0IHByb29mLiIsIm5hdGl2ZV9tcGNfcGVybWl0dGVkIjpmYWxzZX0=",
+      "journal": {
+        "acquisition_token": null,
+        "actual_application_at": null,
+        "closure": {
+          "baseline_publications": {
+            "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+              "put_finished_at": 912887.173589537,
+              "put_started_at": 912887.173584237
+            }
+          },
+          "capture_id": "nv2-team16-cut-consumer02-fixed32",
+          "capture_started_at": 912887.174401137,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "gateway_run_id": "synthetic-gateway",
+          "initial_cut_at": 912887.182980037,
+          "initial_sequence": 1,
+          "native_run_id": "synthetic-native",
+          "native_sources": {
+            "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+            "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+            "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+            "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b"
+          }
+        },
+        "confirmation": {
+          "acknowledgement_is_application": false,
+          "actual_application_before_deadline": "established_by_interval_upper",
+          "actual_application_interval": [
+            912887.174115437,
+            912887.174127837
+          ],
+          "actual_applied_at": null,
+          "before_budget": 32,
+          "before_version": 0,
+          "client_receive_at": 912887.174127837,
+          "client_send_at": 912887.174060637,
+          "interval_justification": "Pinned synchronous write before response, corroborated by the next real public state.",
+          "next_budget": 32,
+          "next_public_sampled_at": 912887.174140337,
+          "next_version": 1,
+          "raw_server_applied_at_claim": 912887.174115437,
+          "server_checked_at": 912887.174115437,
+          "server_checked_semantics": "source_proven_pre_write_expiry_sample",
+          "server_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "server_received_at": null,
+          "server_received_interval": [
+            912887.174060637,
+            912887.174115437
+          ],
+          "server_received_observability": "not_exposed",
+          "server_run_id": "synthetic-gateway",
+          "status": "observed_budget_transition_interval_censored"
+        },
+        "cut": {
+          "baseline_native_ids": [
+            "chatcmpl-ffffffffffffffffffffffffffffffff-11111111"
+          ],
+          "capture_initialization_verified": false,
+          "common_clock_proof": {
+            "capture_verified": false,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "clock_process_binding_only": true,
+            "gateway_run_id": "synthetic-gateway",
+            "native_mpc_permitted": false,
+            "native_run_id": "synthetic-native",
+            "oldest_source_age_s": 0.00644660007674247,
+            "owner_inventory_verified": false,
+            "schema": "r24-owned-common-clock-proof-v1",
+            "validated_at": 912887.189426637
+          },
+          "cut_at": 912887.182980037,
+          "deployable": false,
+          "gateway_process_proof": {
+            "boot_id": "bf25e215-1377-4585-a5fa-f5181f96f467",
+            "capture_verified": false,
+            "checked_from": 912887.185549737,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "clock_source_sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f",
+            "collector": {
+              "parent_pid": 1,
+              "pid": 900,
+              "pid_namespace": "pid:[4026532214]",
+              "process_group": 900,
+              "session": 900,
+              "start_ticks": 5,
+              "time_namespace": "time:[4026531834]"
+            },
+            "endpoint_pid_binding": "trusted_owned_single_process_gateway",
+            "native_mpc_permitted": false,
+            "owned_chain": [
+              {
+                "parent_pid": 900,
+                "pid": 200,
+                "pid_namespace": "pid:[4026532214]",
+                "process_group": 200,
+                "session": 200,
+                "start_ticks": 40,
+                "time_namespace": "time:[4026531834]"
+              }
+            ],
+            "owner_inventory_verified": false,
+            "process_clock_verified_under_trust_model": true,
+            "received_at": 912887.186982737,
+            "remaining_obligations": [
+              "Caller-authenticated startup, endpoint and installed-source provenance",
+              "No unobserved transient namespace/identity ABA during acquisition",
+              "Native complete capture, initial-drain and common-cut inventory closure",
+              "Recheck proof compatibility and age through later planning/dispatch"
+            ],
+            "request_sent_at": 912887.185552737,
+            "role": "gateway",
+            "run_id": "synthetic-gateway",
+            "sample_finished_at": 912887.186525437,
+            "schema": "r24-owned-process-clock-proof-v1",
+            "source_age_s": 0.00046199990902096033,
+            "source_at": 912887.186525437,
+            "validated_at": 912887.186987437
+          },
+          "native_absence_verified": false,
+          "native_common_cut_verified": false,
+          "native_mpc_permitted": false,
+          "native_observation": {
+            "base": {
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "frontend_sampled_at": 912887.183257937,
+              "frontend_unfinished": 0,
+              "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+              "orphaned": 0,
+              "pending_batches": 0,
+              "requests": [],
+              "run_id": "synthetic-native",
+              "running": 0,
+              "sampled_at": 912887.183180037,
+              "schema": "pr33-native-read-only-v1",
+              "waiting": 0
+            },
+            "complete": true,
+            "native_phase": {
+              "capture": {
+                "started_at": 912887.174401137,
+                "status": "running",
+                "trial_id": "nv2-team16-cut-consumer02-fixed32"
+              },
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+              "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+              "lifecycle": {},
+              "missing_schedule_starts": [],
+              "native_mpc_permitted": false,
+              "process_identity": {
+                "pid": 111,
+                "pid_namespace": "pid:[4026532214]",
+                "start_ticks": 30
+              },
+              "publications": {
+                "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+                  "put_finished_at": 912887.173589537,
+                  "put_started_at": 912887.173584237
+                }
+              },
+              "queue_age_prefix_complete": true,
+              "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+              "queue_schedule_starts": {},
+              "refusal_reasons": [],
+              "run_id": "synthetic-native",
+              "sample_finished_at": 912887.183257137,
+              "schema": "r24-native-live-phase-v1",
+              "scope": "Serialized core lifecycle plus coherently retained input-publication brackets; all retained publication history is returned without assuming a capture-time boundary excludes pending inputs. Schedule starts are CPU scheduler entry, not GPU start/readiness. No Gateway owner join, source-age propagation, residual ingress model or deployment qualification.",
+              "source_at": 912887.182980037,
+              "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b",
+              "writer_generation_after": 2,
+              "writer_generation_before": 2
+            },
+            "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+            "queue_oldest_first": [],
+            "queued_ghost_request_ids": [],
+            "refusal_reasons": [],
+            "sample_finished_at": 912887.183182737,
+            "sample_started_at": 912887.182981837,
+            "scheduler_state": {
+              "requests": {},
+              "running": [],
+              "waiting": []
+            },
+            "schema": "r23-native-queue-read-only-v1",
+            "skipped_waiting": [],
+            "streaming_waiting": 0
+          },
+          "native_process_proof": {
+            "boot_id": "bf25e215-1377-4585-a5fa-f5181f96f467",
+            "capture_verified": false,
+            "checked_from": 912887.182621337,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "clock_source_sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f",
+            "collector": {
+              "parent_pid": 1,
+              "pid": 900,
+              "pid_namespace": "pid:[4026532214]",
+              "process_group": 900,
+              "session": 900,
+              "start_ticks": 5,
+              "time_namespace": "time:[4026531834]"
+            },
+            "endpoint_pid_binding": "authenticated_core_metadata",
+            "native_mpc_permitted": false,
+            "owned_chain": [
+              {
+                "parent_pid": 110,
+                "pid": 111,
+                "pid_namespace": "pid:[4026532214]",
+                "process_group": 100,
+                "session": 100,
+                "start_ticks": 30,
+                "time_namespace": "time:[4026531834]"
+              },
+              {
+                "parent_pid": 100,
+                "pid": 110,
+                "pid_namespace": "pid:[4026532214]",
+                "process_group": 100,
+                "session": 100,
+                "start_ticks": 20,
+                "time_namespace": "time:[4026531834]"
+              },
+              {
+                "parent_pid": 900,
+                "pid": 100,
+                "pid_namespace": "pid:[4026532214]",
+                "process_group": 100,
+                "session": 100,
+                "start_ticks": 10,
+                "time_namespace": "time:[4026531834]"
+              }
+            ],
+            "owner_inventory_verified": false,
+            "process_clock_verified_under_trust_model": true,
+            "received_at": 912887.183811637,
+            "remaining_obligations": [
+              "Caller-authenticated startup, endpoint and installed-source provenance",
+              "No unobserved transient namespace/identity ABA during acquisition",
+              "Native complete capture, initial-drain and common-cut inventory closure",
+              "Recheck proof compatibility and age through later planning/dispatch"
+            ],
+            "request_sent_at": 912887.182629337,
+            "role": "native",
+            "run_id": "synthetic-native",
+            "sample_finished_at": 912887.183257137,
+            "schema": "r24-owned-process-clock-proof-v1",
+            "source_age_s": 0.0008406999986618757,
+            "source_at": 912887.182980037,
+            "validated_at": 912887.183820737
+          },
+          "oldest_source_age_s": 0.00644660007674247,
+          "owner_prefix": {
+            "acquisition": "explicit_serialized_flush",
+            "age_as_of_receiver_clock": 912887.189420737,
+            "barrier": {
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "dropped": 0,
+              "flush_finished_at": 912887.187981037,
+              "flush_started_at": 912887.187726637,
+              "flushed_through_sequence": 1,
+              "native_mpc_permitted": false,
+              "process_identity": {
+                "pid": 200,
+                "pid_namespace": "pid:[4026532214]",
+                "start_ticks": 40
+              },
+              "run_id": "synthetic-gateway",
+              "sample_finished_at": 912887.187983037,
+              "schema": "r24-gateway-flushed-prefix-v1",
+              "scope": "Serialized append completion, not fsync crash durability or native common-cut proof.",
+              "source_at": 912887.187678037,
+              "source_sha256": "9cd3c7dee081a34a965f3bba4db3494c0283c79d7fd8449123811ffbc6e81cbb",
+              "write_errors": 0
+            },
+            "barrier_received_at": 912887.188298337,
+            "barrier_roundtrip_s": 0.0012163000646978617,
+            "barrier_sent_at": 912887.187082037,
+            "barrier_sha256": "35ec17189413355e2f059ccb63cc92fbf7ce78b36b47e1d0d3ac9c061b83191c",
+            "budget": 32,
+            "budget_version": 1,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "closed_through_sequence": 1,
+            "cut_at": 912887.182980037,
+            "deployable": false,
+            "gateway_prefix_closed": true,
+            "native_absence_verified": false,
+            "native_common_cut_verified": false,
+            "native_mpc_permitted": false,
+            "native_run_id": "synthetic-native",
+            "owners": [],
+            "prefix_bytes": 938,
+            "receipt": {
+              "prefix_received_at": 912887.188500337,
+              "prefix_sha256": "a5c987d2dc6003398a0ff17eab494f069b69e4f2e057aa120d7a67d129326b83",
+              "prefix_started_at": 912887.188341337,
+              "snapshot_received_at": 912887.187053937,
+              "snapshot_sent_at": 912887.185382737,
+              "snapshot_sha256": "171347cb4434b5d78a0f08c7dfdabddf55f6c12faa46c468bd45eae4c53365a6"
+            },
+            "released_native_ids": [],
+            "run_id": "synthetic-gateway",
+            "schema": "r24-gateway-live-owner-prefix-v1",
+            "scope": "Gateway-time owner facts from received prefix; ledger admission linearization, not exact RequestMark time. No native phase, readiness, cancellation, GPU retirement or residual inferred.",
+            "snapshot": {
+              "budget": 32,
+              "budget_version": 1,
+              "capabilities": [
+                "mpc-budget-cas-expiry-v1"
+              ],
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "cost_spec": {
+                "default_max_tokens": 128,
+                "estimator_version": "gateway-token-estimate-v1",
+                "input_per_token": 0,
+                "intercept": 16,
+                "minimum": 0.1,
+                "output_per_token": 0,
+                "tokenizer_identity": "unqualified"
+              },
+              "identity": {
+                "calibration_version": "unqualified",
+                "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+                "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+                "model_version": "synthetic",
+                "support_hash": "unqualified"
+              },
+              "requests": [],
+              "run_id": "synthetic-gateway",
+              "sampled_at": 912887.186525437,
+              "schema": "mpc-admission-v1",
+              "sequence": 1
+            },
+            "snapshot_at": 912887.186525437,
+            "source_age_upper_s": 0.007583400118164718,
+            "trial_liveness_verified": false,
+            "validation_elapsed_s": 0.0009126999648287892
+          },
+          "schema": "r24-clocked-owner-cut-v1",
+          "scope": "Native-clock cut and strictly later Gateway received prefix, under owned-process/source trust. Initial-drain/capture history closure, owner-to-native phase classification and residual scenarios remain separate obligations.",
+          "validated_at": 912887.189426637
+        },
+        "deployable": false,
+        "exact_application_time_gate": false,
+        "initial_closure": {
+          "baseline_publications": {
+            "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+              "put_finished_at": 912887.173589537,
+              "put_started_at": 912887.173584237
+            }
+          },
+          "capture_id": "nv2-team16-cut-consumer02-fixed32",
+          "capture_started_at": 912887.174401137,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "gateway_run_id": "synthetic-gateway",
+          "initial_cut_at": 912887.182980037,
+          "initial_sequence": 1,
+          "native_run_id": "synthetic-native",
+          "native_sources": {
+            "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+            "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+            "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+            "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b"
+          }
+        },
+        "native_execution_authorized": false,
+        "native_mpc_permitted": false,
+        "native_record": {
+          "auth_values_captured": false,
+          "body_complete": true,
+          "call_settings": {
+            "absolute_deadline": 912887.675737937,
+            "body_cap_bytes": 1048576,
+            "http_timeout_s": 0.2,
+            "maximum_http_exchanges": 1900
+          },
+          "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "client_headers_at": 912887.183417037,
+          "client_receive_at": 912887.183438137,
+          "client_send_at": 912887.182841537,
+          "credential_removed": false,
+          "dispatch_attempted": true,
+          "error_type": null,
+          "http_status": 200,
+          "method": "GET",
+          "path": "/pr33-native/phase-state",
+          "request_body": null,
+          "request_id": null,
+          "reserved_at": 912887.182733537,
+          "response_body_base64": "ewogICAic2NoZW1hIjogInIyMy1uYXRpdmUtcXVldWUtcmVhZC1vbmx5LXYxIiwKICAgInF1ZXVlX29ic2VydmVyX3NoYTI1NiI6ICJlMDc4N2EyY2QyZDBiNGNmYjVhZGExNGMwMDRkMWQ3NmE2MmRkY2JmYjEyMGI1Y2VhOWRlMDJhZjM4YTFhYTkzIiwKICAgInNhbXBsZV9zdGFydGVkX2F0IjogOTEyODg3LjE4Mjk4MTgzNywKICAgImNvbXBsZXRlIjogdHJ1ZSwKICAgInJlZnVzYWxfcmVhc29ucyI6IFtdLAogICAic2NoZWR1bGVyX3N0YXRlIjogewogICAgICAicnVubmluZyI6IFtdLAogICAgICAid2FpdGluZyI6IFtdLAogICAgICAicmVxdWVzdHMiOiB7fQogICB9LAogICAicXVldWVfb2xkZXN0X2ZpcnN0IjogW10sCiAgICJxdWV1ZWRfZ2hvc3RfcmVxdWVzdF9pZHMiOiBbXSwKICAgInNraXBwZWRfd2FpdGluZyI6IFtdLAogICAic3RyZWFtaW5nX3dhaXRpbmciOiAwLAogICAiYmFzZSI6IHsKICAgICAgInNjaGVtYSI6ICJwcjMzLW5hdGl2ZS1yZWFkLW9ubHktdjEiLAogICAgICAib2JzZXJ2ZXJfc2hhMjU2IjogIjc3NjMzZGM3NjUyMDY2ZTQ1Yjc2ODBkMjk3ZDNlMzZkZGI5N2EzZTEyMjIyZGU5ZjUyNmE3NmI5YTAxZDY2YjQiLAogICAgICAicnVuX2lkIjogInN5bnRoZXRpYy1uYXRpdmUiLAogICAgICAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLAogICAgICAic2FtcGxlZF9hdCI6IDkxMjg4Ny4xODMxODAwMzcsCiAgICAgICJjb21wbGV0ZSI6IHRydWUsCiAgICAgICJydW5uaW5nIjogMCwKICAgICAgIndhaXRpbmciOiAwLAogICAgICAicGVuZGluZ19iYXRjaGVzIjogMCwKICAgICAgImZyb250ZW5kX3VuZmluaXNoZWQiOiAwLAogICAgICAicmVxdWVzdHMiOiBbXSwKICAgICAgIm9ycGhhbmVkIjogMCwKICAgICAgImZyb250ZW5kX3NhbXBsZWRfYXQiOiA5MTI4ODcuMTgzMjU3OTM3CiAgIH0sCiAgICJzYW1wbGVfZmluaXNoZWRfYXQiOiA5MTI4ODcuMTgzMTgyNzM3LAogICAibmF0aXZlX3BoYXNlIjogewogICAgICAic2NoZW1hIjogInIyNC1uYXRpdmUtbGl2ZS1waGFzZS12MSIsCiAgICAgICJzb3VyY2Vfc2hhMjU2IjogIjdkZDg2NmJhYzI1ZmU1ZDIxMWM4MmQxOTZmMDk1NGM2ZDczN2I5YTM1MWRhNGNiOWQ5Y2U2NTIyYzZhOGZhOWIiLAogICAgICAiaW5wdXRfcG9zdF9zb3VyY2Vfc2hhMjU2IjogImQ1Y2U3NDMyMDM1NTY4ZTc2NGZiYTk3ZGQ1YTcxYzMxZDE2YTM1NzEyNjJiMmUyNTkzMjEyYWIxMzIzNDI3NjQiLAogICAgICAicXVldWVfb2JzZXJ2ZXJfc2hhMjU2IjogImUwNzg3YTJjZDJkMGI0Y2ZiNWFkYTE0YzAwNGQxZDc2YTYyZGRjYmZiMTIwYjVjZWE5ZGUwMmFmMzhhMWFhOTMiLAogICAgICAiY29yZV9zb3VyY2Vfc2hhMjU2IjogIjI2OGJmNDA1MzRhODUzODEyODY3YWU4ZTgwMDQwZjE5MDk4M2NiMzY0YjQxMTgyYjU1OTY5YWFjZTIwYzkzZjUiLAogICAgICAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLAogICAgICAicnVuX2lkIjogInN5bnRoZXRpYy1uYXRpdmUiLAogICAgICAicHJvY2Vzc19pZGVudGl0eSI6IHsKICAgICAgICAgInBpZCI6IDExMSwKICAgICAgICAgInN0YXJ0X3RpY2tzIjogMzAsCiAgICAgICAgICJwaWRfbmFtZXNwYWNlIjogInBpZDpbNDAyNjUzMjIxNF0iCiAgICAgIH0sCiAgICAgICJzb3VyY2VfYXQiOiA5MTI4ODcuMTgyOTgwMDM3LAogICAgICAiY2FwdHVyZSI6IHsKICAgICAgICAgInRyaWFsX2lkIjogIm52Mi10ZWFtMTYtY3V0LWNvbnN1bWVyMDItZml4ZWQzMiIsCiAgICAgICAgICJzdGFydGVkX2F0IjogOTEyODg3LjE3NDQwMTEzNywKICAgICAgICAgInN0YXR1cyI6ICJydW5uaW5nIgogICAgICB9LAogICAgICAibGlmZWN5Y2xlIjoge30sCiAgICAgICJwdWJsaWNhdGlvbnMiOiB7CiAgICAgICAgICJjaGF0Y21wbC1mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZi0xMTExMTExMSI6IHsKICAgICAgICAgICAgInB1dF9zdGFydGVkX2F0IjogOTEyODg3LjE3MzU4NDIzNywKICAgICAgICAgICAgInB1dF9maW5pc2hlZF9hdCI6IDkxMjg4Ny4xNzM1ODk1MzcKICAgICAgICAgfQogICAgICB9LAogICAgICAid3JpdGVyX2dlbmVyYXRpb25fYmVmb3JlIjogMiwKICAgICAgIndyaXRlcl9nZW5lcmF0aW9uX2FmdGVyIjogMiwKICAgICAgInF1ZXVlX3NjaGVkdWxlX3N0YXJ0cyI6IHt9LAogICAgICAibWlzc2luZ19zY2hlZHVsZV9zdGFydHMiOiBbXSwKICAgICAgInF1ZXVlX2FnZV9wcmVmaXhfY29tcGxldGUiOiB0cnVlLAogICAgICAicmVmdXNhbF9yZWFzb25zIjogW10sCiAgICAgICJuYXRpdmVfbXBjX3Blcm1pdHRlZCI6IGZhbHNlLAogICAgICAic2NvcGUiOiAiU2VyaWFsaXplZCBjb3JlIGxpZmVjeWNsZSBwbHVzIGNvaGVyZW50bHkgcmV0YWluZWQgaW5wdXQtcHVibGljYXRpb24gYnJhY2tldHM7IGFsbCByZXRhaW5lZCBwdWJsaWNhdGlvbiBoaXN0b3J5IGlzIHJldHVybmVkIHdpdGhvdXQgYXNzdW1pbmcgYSBjYXB0dXJlLXRpbWUgYm91bmRhcnkgZXhjbHVkZXMgcGVuZGluZyBpbnB1dHMuIFNjaGVkdWxlIHN0YXJ0cyBhcmUgQ1BVIHNjaGVkdWxlciBlbnRyeSwgbm90IEdQVSBzdGFydC9yZWFkaW5lc3MuIE5vIEdhdGV3YXkgb3duZXIgam9pbiwgc291cmNlLWFnZSBwcm9wYWdhdGlvbiwgcmVzaWR1YWwgaW5ncmVzcyBtb2RlbCBvciBkZXBsb3ltZW50IHF1YWxpZmljYXRpb24uIiwKICAgICAgImNvbXBsZXRlIjogdHJ1ZSwKICAgICAgInNhbXBsZV9maW5pc2hlZF9hdCI6IDkxMjg4Ny4xODMyNTcxMzcKICAgfQp9",
+          "response_body_sha256": "34cda2294869dd38efc8f1b522ff1a1eb55ee7137a07a18885b92815f3d09eb3",
+          "response_bytes_captured": 2862,
+          "response_headers": {
+            "content-type": "application/json"
+          },
+          "role": "initial-cut-native",
+          "sequence": 0,
+          "target": {
+            "host": "127.0.0.1",
+            "port": 8000,
+            "scheme": "http"
+          }
+        },
+        "observation": {
+          "acquisition_token": null,
+          "actual_application_at": null,
+          "available_at": 912887.189426637,
+          "consumed_at": 912887.189945137,
+          "deployable": false,
+          "exact_application_time_gate": false,
+          "full_stock": {
+            "base": {
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "frontend_sampled_at": 912887.183257937,
+              "frontend_unfinished": 0,
+              "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+              "orphaned": 0,
+              "pending_batches": 0,
+              "requests": [],
+              "run_id": "synthetic-native",
+              "running": 0,
+              "sampled_at": 912887.183180037,
+              "schema": "pr33-native-read-only-v1",
+              "waiting": 0
+            },
+            "queue_oldest_first": [],
+            "queued_ghost_request_ids": [],
+            "scheduler_state": {
+              "requests": {},
+              "running": [],
+              "waiting": []
+            },
+            "skipped_waiting": [],
+            "streaming_waiting": 0
+          },
+          "gateway_budget_version": 1,
+          "native_execution_authorized": false,
+          "native_mpc_permitted": false,
+          "prediction_qualified": false,
+          "qualified_model": false,
+          "request_token": null,
+          "source_at": 912887.182980037
+        },
+        "phases": {
+          "available_at": 912887.189426637,
+          "capture_id": "nv2-team16-cut-consumer02-fixed32",
+          "classified_at": 912887.192371037,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "cut_canonical_sha256": "11d8cfc1a9333e2cac5cf3506f03a457305e50d199fb8d04f2a30253d41c721c",
+          "decision_time_state_verified": false,
+          "deployable": false,
+          "gateway_run_id": "synthetic-gateway",
+          "ghost_ids": [],
+          "initial_closure_canonical_sha256": "ce32d7c94f476892bca416ae0e3052d66067ce21c4fae69e88af5fcd99aad8f6",
+          "native_mpc_permitted": false,
+          "native_run_id": "synthetic-native",
+          "owners": [],
+          "received_prefix_through_sequence": 1,
+          "released_ghost_ids": [],
+          "released_native_ids": [],
+          "requires_source_age_propagation": true,
+          "running_ids": [],
+          "schema": "r24-source-time-owner-phases-v1",
+          "scope": "Trusted clocked acquisition plus bound initial closure and actual-offer public memory. Phase/owner facts at historical native source T only. Later Gateway receipt closes T; it does not advance native state to decision time or provide ingress/release/HTTP residuals.",
+          "source_at": 912887.182980037,
+          "source_budget": 32,
+          "source_budget_version": 1,
+          "waiting_ids": []
+        },
+        "prediction_qualified": false,
+        "prefix": {
+          "bytes": 938,
+          "path": "initial-cut-prefix.jsonl",
+          "sha256": "a5c987d2dc6003398a0ff17eab494f069b69e4f2e057aa120d7a67d129326b83"
+        },
+        "qualified_model": false,
+        "request_token": null,
+        "schema": "team16-owner-bootstrap-boundary-v1",
+        "status": "source_cut_received"
+      },
+      "prefix_base64": "eyJldmVudCI6ICJtcGNfbGVkZ2VyIiwgInJ1bl9pZCI6ICJzeW50aGV0aWMtZ2F0ZXdheSIsICJ0aW1lc3RhbXAiOiA5MTM4ODcuMTc0MTIyMjM3LCAibW9ub3RvbmljIjogOTEyODg3LjE3NDEyMjQzNywgImNsb2NrX2RvbWFpbiI6ICJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwgImlkZW50aXR5IjogeyJtb2RlbF92ZXJzaW9uIjogInN5bnRoZXRpYyIsICJjYWxpYnJhdGlvbl92ZXJzaW9uIjogInVucXVhbGlmaWVkIiwgInN1cHBvcnRfaGFzaCI6ICJ1bnF1YWxpZmllZCIsICJjb3N0X2hhc2giOiAiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsICJpbXBsZW1lbnRhdGlvbl9oYXNoIjogIjU1MjMzMTVjNWM1OTA4MzgzNGY5MmVjMDgyNDVjODQ5NzExYzdmMDk3YzFkNmE2MjljNjY3NzBlNDFmYjNlZWEifSwgInNlcXVlbmNlIjogMSwgImVmZmVjdGl2ZV9hdCI6IDkxMjg4Ny4xNzQxMTkzMzcsICJyZXNlcnZlZF9jb3N0IjogMC4wLCAicnVubmluZyI6IDAsICJjb21wbGV0ZSI6IHRydWUsICJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMSwgImxlZGdlcl9zY2hlbWFfdmVyc2lvbiI6IDIsICJjaGFuZ2Vfa2luZCI6ICJjb250cm9sIn0KeyJldmVudCI6ICJidWRnZXRfdXBkYXRlZCIsICJydW5faWQiOiAic3ludGhldGljLWdhdGV3YXkiLCAidGltZXN0YW1wIjogOTEzODg3LjE3NDEyNjMzNywgIm1vbm90b25pYyI6IDkxMjg4Ny4xNzQxMjY0MzcsICJvcGVyYXRpb25faWQiOiAib3B0ZWFtMTYtY3V0LWNvbnN1bWVyMDIiLCAicHJldmlvdXNfYnVkZ2V0IjogMzIsICJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMSwgImFwcGxpZWRfYXQiOiA5MTI4ODcuMTc0MTE1NDM3fQo=",
+      "snapshot_base64": "eyJzY2hlbWEiOiJtcGMtYWRtaXNzaW9uLXYxIiwicnVuX2lkIjoic3ludGhldGljLWdhdGV3YXkiLCJjbG9ja19kb21haW4iOiJsaW51eC1tb25vdG9uaWM6YmYyNWUyMTUtMTM3Ny00NTg1LWE1ZmEtZjUxODFmOTZmNDY3OnRpbWU6WzQwMjY1MzE4MzRdIiwic2FtcGxlZF9hdCI6OTEyODg3LjE4NjUyNTQzNywiYnVkZ2V0IjozMiwiYnVkZ2V0X3ZlcnNpb24iOjEsInJlcXVlc3RzIjpbXSwiaWRlbnRpdHkiOnsibW9kZWxfdmVyc2lvbiI6InN5bnRoZXRpYyIsImNhbGlicmF0aW9uX3ZlcnNpb24iOiJ1bnF1YWxpZmllZCIsInN1cHBvcnRfaGFzaCI6InVucXVhbGlmaWVkIiwiY29zdF9oYXNoIjoiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsImltcGxlbWVudGF0aW9uX2hhc2giOiI1NTIzMzE1YzVjNTkwODM4MzRmOTJlYzA4MjQ1Yzg0OTcxMWM3ZjA5N2MxZDZhNjI5YzY2NzcwZTQxZmIzZWVhIn0sInNlcXVlbmNlIjoxLCJjb21wbGV0ZSI6dHJ1ZSwiY2FwYWJpbGl0aWVzIjpbIm1wYy1idWRnZXQtY2FzLWV4cGlyeS12MSJdLCJjb3N0X3NwZWMiOnsiaW50ZXJjZXB0IjoxNiwiaW5wdXRfcGVyX3Rva2VuIjowLCJvdXRwdXRfcGVyX3Rva2VuIjowLCJtaW5pbXVtIjowLjEsImRlZmF1bHRfbWF4X3Rva2VucyI6MTI4LCJ0b2tlbml6ZXJfaWRlbnRpdHkiOiJ1bnF1YWxpZmllZCIsImVzdGltYXRvcl92ZXJzaW9uIjoiZ2F0ZXdheS10b2tlbi1lc3RpbWF0ZS12MSJ9fQ=="
+    },
+    "public_memory": {
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": {
+        "max_tokens": 16,
+        "prompt_tokens": 5
+      }
+    },
+    "startup": {
+      "capture_begin_record": {
+        "auth_values_captured": false,
+        "body_complete": true,
+        "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "client_headers_at": 912887.174408637,
+        "client_receive_at": 912887.174408637,
+        "client_send_at": 912887.174398237,
+        "credential_removed": false,
+        "error_type": null,
+        "http_status": 200,
+        "method": "POST",
+        "path": "/pr33-native/batch",
+        "request_body": "{\"operation\": \"begin\", \"trial_id\": \"nv2-team16-cut-consumer02-fixed32\"}",
+        "response_body_base64": "eyJiZWdpbiI6IHsiZXh0ZXJuYWwiOiB0cnVlfSwgImJyaWRnZV9zaGEyNTYiOiAiNWQ3NmQ5OTQ5MjFiYjE2MDg4Y2FiZjliOGY5ZWJlODg0M2MxN2Y3YmFjYjRiMWRjOTc5YmYyNTVhZDhjY2VmOCIsICJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21tYW5kX3N0YXJ0ZWRfYXQiOiA5MTI4ODcuMTc0NDA3NTM3LCAicGxhbl9zaGEyNTYiOiAiOWNjNDcyN2EyNTFlNDIyOTZjYTU2YjI5OGExM2UzZDI5OWY2MWMwOWZlZjc3MzgyNTRiZTQ4Mzk3YjNiZDQzYiIsICJydW5faWQiOiAic3ludGhldGljLWJhdGNoLWNhcHR1cmUiLCAic2NoZW1hIjogIm5hdGl2ZS12Mi1iYXRjaC1jYXB0dXJlLXYxIiwgInNvdXJjZV9jb21taXQiOiAiMTA0ZTY1YTY5ZGY3Mzk5N2I5NzdiY2UyNTg4YjY1NWFlNzE0ZjQ1ZCIsICJ0cmlhbF9pZCI6ICJudjItdGVhbTE2LWN1dC1jb25zdW1lcjAyLWZpeGVkMzIifQ==",
+        "response_body_sha256": "a62ddc6d87e3749cf0d2490b22c79974064e5a2af5c387d2f514075f0f0e2be1",
+        "response_headers": {}
+      },
+      "capture_metadata_record": {
+        "auth_values_captured": false,
+        "body_complete": true,
+        "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "client_headers_at": 912887.174361837,
+        "client_receive_at": 912887.174361837,
+        "client_send_at": 912887.174329737,
+        "credential_removed": false,
+        "error_type": null,
+        "http_status": 200,
+        "method": "POST",
+        "path": "/pr33-native/batch",
+        "request_body": "{\"operation\": \"metadata\"}",
+        "response_body_base64": "eyJicmlkZ2Vfc2hhMjU2IjogIjVkNzZkOTk0OTIxYmIxNjA4OGNhYmY5YjhmOWViZTg4NDNjMTdmN2JhY2I0YjFkYzk3OWJmMjU1YWQ4Y2NlZjgiLCAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLCAiY29tbWFuZF9zdGFydGVkX2F0IjogOTEyODg3LjE3NDMzMDEzNywgInBsYW5fc2hhMjU2IjogIjljYzQ3MjdhMjUxZTQyMjk2Y2E1NmIyOThhMTNlM2QyOTlmNjFjMDlmZWY3NzM4MjU0YmU0ODM5N2IzYmQ0M2IiLCAicnVuX2lkIjogInN5bnRoZXRpYy1iYXRjaC1jYXB0dXJlIiwgInJ1bnRpbWUiOiB7InBpcGVsaW5lX3BhcmFsbGVsX3NpemUiOiAxLCAicHJvY2Vzc19pZCI6IDExMSwgInNvdXJjZSI6IHsiZmlsZXMiOiB7ImNvbXBpbGF0aW9uL2JyZWFrYWJsZV9jdWRhZ3JhcGgucHkiOiAiM2NjNDI3NjEyYTA4ZTJiOWIzZmVlNDc1NDgwMjY0MDBjMWQwNzc2ZTJkNDc0NzUzNWU1OWVmNTUxMmJkZjFlOCIsICJjb21waWxhdGlvbi9jdWRhX2dyYXBoLnB5IjogIjA1Yzg2MzkyZDdmYWU5NjdhYzczMDc2ZGJhN2UwMTk5MGEwZTNhZTYxOWU0ODY2NDUwYTBjMWJlNTZiZDExOTIiLCAiY29uZmlnL21vZGVsLnB5IjogImY0MTY4YjY3Y2M5M2NlNzJmZjJhNmQ0YzY2OTc0MjIzZTMyZmQwZjFmYWI0YzA1ZTQ0YmQ2OGEyNzVlMThkNjkiLCAiY29uZmlnL3NjaGVkdWxlci5weSI6ICI4MjIxNzlkYTYyYmU0YmNhMDYxOWM4NTkwMDgyYWUwOTEyM2Y1YzQ0MTVmOWNjMjAzN2JlNjczNzQ4MjM5ZWRiIiwgImNvbmZpZy92bGxtLnB5IjogIjk1NmI4MTJlNWE3MTliY2JmYTNhMzk1ODgwMTM2MWIzOGI5YzkyOGM5NmI4YzA3MzMxMWJiYjk2Mzc2ZGZiN2EiLCAiZW50cnlwb2ludHMvbGF1bmNoZXJzL2FwaV9zZXJ2ZXIvZW50cnkucHkiOiAiZGI2ODlmODQ4NmU1ZDJjOWViNTlkMzQ3ZTAzYTI3Y2U4MzdkMDE0ZjhkM2Q3Zjg0ZDU1YTBlMzgyODEzY2E4NCIsICJlbnRyeXBvaW50cy9vcGVuYWkvY29tcGxldGlvbi9wcm90b2NvbC5weSI6ICI1Zjc5MzA2MzVmZDM5MjQ4MjYwMTUyMTEwMzJmYjI5ODIwNmIyN2M3ZjA0Y2Q2Y2QyMjI0YmIxMjhlNGEzYTUwIiwgImVudHJ5cG9pbnRzL29wZW5haS9jb21wbGV0aW9uL3NlcnZpbmcucHkiOiAiNzVkMDVkZGRkZjMwMzczNGEwNzhhM2U0MmZjYjE3M2ZlZjU4ZWE1NmRhMDliYzBiNWM3NTI1Y2I5YmJiZjUyNyIsICJlbnZzLnB5IjogImZiZDM3MGIyZjU2ZmY3OThkMzczZTg1NzA1YzllMDQ0Y2NhZTg5M2VmOTc0ZjI4MDBlZWM0ZWY2ZjJiNGZiN2YiLCAiZm9yd2FyZF9jb250ZXh0LnB5IjogImNjMTQ3MzQ3N2RjYzdiNzYyYzM5MDFiMjVjYzdiZjM1YzA2YTJjNDJmMTkzMTM2ZmVkNTUzYWJmNmZlMzNmMGUiLCAicGx1Z2lucy9fX2luaXRfXy5weSI6ICJmYjZlNmVlNDMyYzVhNGFlMjA3YWFmZmU0YjU0NmFjYTkzODFmNTZlZTg0OThiMGEzZTBkOWFmMmQyODlkMDIzIiwgInBsdWdpbnMvZW5kcG9pbnRfcGx1Z2lucy9pbnRlcmZhY2UucHkiOiAiOTI5MzYxNmNjZDNjZGY3MjVmYTA4N2QzZjc2YTUxOGRiYTg3MWVmMmM3OTY0NDY5OTBmYTJhMGE1ZmMxNTllZSIsICJzYW1wbGluZ19wYXJhbXMucHkiOiAiZjIxZWZjOThiZjhjZThhYWI4OGViNjdhZGI0MjA3Mjg1ZTUwOWExNjdkOTc2ZTE0ZDNlMmU4MjgyZTAyNGJlYSIsICJ2MS9jb3JlL3NjaGVkL2FzeW5jX3NjaGVkdWxlci5weSI6ICJlNTg2YTBlZjNjNjc3OGJlNTZhOTNlN2Y5YmI3MTJkNGRlOWRlNmU3ZDdmZTdlM2UxZDUxZGFlODNlY2ZjNTA4IiwgInYxL2NvcmUvc2NoZWQvb3V0cHV0LnB5IjogIjNhNjZjOGVmYWVmZTEwYzU3MmY2ZjMzY2YxZjhhYTQ2MTA3NThjOTQ1MTMwY2FkNjJlYjlmNzMzMTAwNTY3N2MiLCAidjEvY29yZS9zY2hlZC9zY2hlZHVsZXIucHkiOiAiYzFkYjQ1ZjNiYmFkM2E4NzVkZDg2MzgzMzFiODg3MGM0MzgwYWMxYWI0NzM0MjY1YmE1Yzg2MzgzM2E4Mjg4NCIsICJ2MS9jdWRhZ3JhcGhfZGlzcGF0Y2hlci5weSI6ICI1MWY2MzI3NTNhZjcyOWFlZWU2Y2U0YTgwMmQ5ZDc0YjY0ZjIyZWVmMDJhNTI0ZjM2ZTJhMjRiMDdlZjBjZjYzIiwgInYxL2VuZ2luZS9fX2luaXRfXy5weSI6ICI0ZTU5ODI4Nzg3NjM0MTIzMDI2YTZiNDI0ZjQ4YzIxZDY5MTkxM2RkMzM4YjU5ZGQxM2YyNWZhMjYwZjIyODRiIiwgInYxL2VuZ2luZS9hc3luY19sbG0ucHkiOiAiNTJjYmY0MDRmMWRiYzk5YzZiZWJmNGE1MGE3ZWIxOGZmODQyYTFmNTMxMDZhNDVmMzY1NTIzMTkyZDgxNmJlMSIsICJ2MS9lbmdpbmUvY29yZS5weSI6ICIyNjhiZjQwNTM0YTg1MzgxMjg2N2FlOGU4MDA0MGYxOTA5ODNjYjM2NGI0MTE4MmI1NTk2OWFhY2UyMGM5M2Y1IiwgInYxL2VuZ2luZS9jb3JlX2NsaWVudC5weSI6ICJmZDZjYTBjYjc0OTliMzA4NmVlZjJmYzU3Njc0YjdhY2U1NmVmMWM2NDhmMDllOTJlMTQ0YjI1NWI3OTAxOGY4IiwgInYxL2VuZ2luZS9vdXRwdXRfcHJvY2Vzc29yLnB5IjogImU0N2I4NmNkNjljZTFjMWUzZjUzZGFjNjU1ZWFhNzVjMzJhNDA1N2QxMGY0YTFkYjE2YmI4M2EzOTdmMmEzMjkiLCAidjEvZXhlY3V0b3IvdW5pcHJvY19leGVjdXRvci5weSI6ICIzY2IwMzliODBmZTliMDNkYzExMjJmOTNjMWY4YTQwOThlZjEzNTUxMDRiMzE3ZmY2ZGYyNTM1OGY0MzQ5NDk0IiwgInYxL21ldHJpY3MvbG9nZ2Vycy5weSI6ICJjMTJiNGZiZWJmZTg4NmI2OTcxMjdmMTExNGVhYTBiYjgzYzU0YTc4Njc1OTE5ZDE3OGI2MTljM2Q4ZDVkNjU1IiwgInYxL21ldHJpY3Mvc3RhdHMucHkiOiAiYWYxOTgzZGRjMzJmYTRkMzI4NGU3MjIxMmM2NTI1ZGFmOTYxZGQ4NDQyOTAyM2EwMmQ2MTJiNjhiMzExMmNmMyIsICJ2MS9yZXF1ZXN0LnB5IjogImRhNjEwZDUyMDNlNzJkMmQ1MjRhZGM1ZmIzOWRmMTE1MDJhMjM1MjBmMmYzMWQ5YTQ0Y2YxM2QzNDNmOWMyNWQiLCAidjEvd29ya2VyL2dwdS9hc3luY191dGlscy5weSI6ICI3N2UxN2E0NTcwZWFkMmJlMzBhZTliMDA4ODhjZjA3N2EzYjg3MzAxOGMxMmNhMDU0OWI4NTNiZmRhMDJjMWJhIiwgInYxL3dvcmtlci9ncHUvYXR0bl91dGlscy5weSI6ICJiOWI4MWU1OWRkYTI3MjBiMWY5YzQzNDQ3MTM4MWY4NzkyMjg4MzI0NDNlNTI3NTZlNDY5YjRhZDQ5MDU4ODhmIiwgInYxL3dvcmtlci9ncHUvY3VkYWdyYXBoX3V0aWxzLnB5IjogIjZlOWMwNDI4OTA2MDM1MzVlMzAwYTQwZGY4ZWUxNTlkYmVkMTA1OGE2NGE4M2FlNTBmZjAzMjllMzMyZTA1ZmYiLCAidjEvd29ya2VyL2dwdS9kcF91dGlscy5weSI6ICJlMjY4NjdiYzg5ZTZiZmM5MzNjYWJjNWVkMTNlNWRjN2I4ZDJkMzAzMDExOGNhMWNhNjRjODc4NWRhYmMwZmMxIiwgInYxL3dvcmtlci9ncHUvaW5wdXRfYmF0Y2gucHkiOiAiZDVkZDk1NmViMzE5YmQ2OWRkOWU3NjIwNDc4MzNkODFhZDQwYjIxZmNlNjE5ZmNiMjEzMzc1OWU3MzYyMDY5NCIsICJ2MS93b3JrZXIvZ3B1L21vZGVsX3J1bm5lci5weSI6ICIxNzRjOTNkYjkyMWMyM2NmMDM5NmVlZTQ3NjRiZTI1YjJiZDJkNGI2YTA2ZTlmYTQxY2UzNTk4Yjg4NGNlOGNlIiwgInYxL3dvcmtlci9ncHUvc2FtcGxlL291dHB1dC5weSI6ICJkNmUyOThjMGYxOTdkNDg3YThmYWFmNzIwMGY1MDBmYTgzZGYxZDdhNGJiZjQzMzljYWRkNmExODAwOGY3ZjljIiwgInYxL3dvcmtlci9ncHUvc3RhdGVzLnB5IjogIjk5NDE4ZjVkZjQzY2E2MTJkZWQ3MjYwOWZlZTAxMTYyMGIwNjViMmNhYjJmMjQ5Y2NiMzg3MDk2YmY0YWU3MWEiLCAidjEvd29ya2VyL2dwdV9tb2RlbF9ydW5uZXIucHkiOiAiODdjMjlkMDhjMGJiZjY2OTkzZDhiOTg0ODExZTczMjVlMzVlNjQzNjI0MmE3NzNmZWI1NWVjODhmMTZiMmM1MSIsICJ2MS93b3JrZXIvZ3B1X3dvcmtlci5weSI6ICI2OTk0NDM2ZTQ1NDdjMDk5NmFiNTU1YjNlODE0ZThjY2VhMjZiNjUwZGZjMWIzNzhiOTdkNjQwNzQ1MzA5MzQ3IiwgInYxL3dvcmtlci91dGlscy5weSI6ICIwY2EzZWM2YmY0ZDIwMDc2MTQ1YjdmZTY0ZTU2NDk2MmFkZWJlZGM4Zjc1YTg1NmI1MTdiYTBiMmYyZDc3YWNmIiwgInYxL3dvcmtlci93b3JrZXJfYmFzZS5weSI6ICI0YTFhNTI2NmI5MTJmZTk3OTkxZDhkYzg5ZDkyYjkyMzk5MGRhOWY2Y2I0YjgxN2QwMGQ1MmU5YzBkMjZkZDdjIn0sICJ1cHN0cmVhbSI6ICJodHRwczovL2dpdGh1Yi5jb20vdmxsbS1wcm9qZWN0L3ZsbG0vdHJlZS92MC4zMC4wIiwgInZlcnNpb24iOiAiMC4zMC4wIn0sICJ0ZW5zb3JfcGFyYWxsZWxfc2l6ZSI6IDEsICJ3b3JrZXJzIjogW3sic291cmNlIjogeyJmaWxlcyI6IHsiY29tcGlsYXRpb24vYnJlYWthYmxlX2N1ZGFncmFwaC5weSI6ICIzY2M0Mjc2MTJhMDhlMmI5YjNmZWU0NzU0ODAyNjQwMGMxZDA3NzZlMmQ0NzQ3NTM1ZTU5ZWY1NTEyYmRmMWU4IiwgImNvbXBpbGF0aW9uL2N1ZGFfZ3JhcGgucHkiOiAiMDVjODYzOTJkN2ZhZTk2N2FjNzMwNzZkYmE3ZTAxOTkwYTBlM2FlNjE5ZTQ4NjY0NTBhMGMxYmU1NmJkMTE5MiIsICJjb25maWcvbW9kZWwucHkiOiAiZjQxNjhiNjdjYzkzY2U3MmZmMmE2ZDRjNjY5NzQyMjNlMzJmZDBmMWZhYjRjMDVlNDRiZDY4YTI3NWUxOGQ2OSIsICJjb25maWcvc2NoZWR1bGVyLnB5IjogIjgyMjE3OWRhNjJiZTRiY2EwNjE5Yzg1OTAwODJhZTA5MTIzZjVjNDQxNWY5Y2MyMDM3YmU2NzM3NDgyMzllZGIiLCAiY29uZmlnL3ZsbG0ucHkiOiAiOTU2YjgxMmU1YTcxOWJjYmZhM2EzOTU4ODAxMzYxYjM4YjljOTI4Yzk2YjhjMDczMzExYmJiOTYzNzZkZmI3YSIsICJlbnRyeXBvaW50cy9sYXVuY2hlcnMvYXBpX3NlcnZlci9lbnRyeS5weSI6ICJkYjY4OWY4NDg2ZTVkMmM5ZWI1OWQzNDdlMDNhMjdjZTgzN2QwMTRmOGQzZDdmODRkNTVhMGUzODI4MTNjYTg0IiwgImVudHJ5cG9pbnRzL29wZW5haS9jb21wbGV0aW9uL3Byb3RvY29sLnB5IjogIjVmNzkzMDYzNWZkMzkyNDgyNjAxNTIxMTAzMmZiMjk4MjA2YjI3YzdmMDRjZDZjZDIyMjRiYjEyOGU0YTNhNTAiLCAiZW50cnlwb2ludHMvb3BlbmFpL2NvbXBsZXRpb24vc2VydmluZy5weSI6ICI3NWQwNWRkZGRmMzAzNzM0YTA3OGEzZTQyZmNiMTczZmVmNThlYTU2ZGEwOWJjMGI1Yzc1MjVjYjliYmJmNTI3IiwgImVudnMucHkiOiAiZmJkMzcwYjJmNTZmZjc5OGQzNzNlODU3MDVjOWUwNDRjY2FlODkzZWY5NzRmMjgwMGVlYzRlZjZmMmI0ZmI3ZiIsICJmb3J3YXJkX2NvbnRleHQucHkiOiAiY2MxNDczNDc3ZGNjN2I3NjJjMzkwMWIyNWNjN2JmMzVjMDZhMmM0MmYxOTMxMzZmZWQ1NTNhYmY2ZmUzM2YwZSIsICJwbHVnaW5zL19faW5pdF9fLnB5IjogImZiNmU2ZWU0MzJjNWE0YWUyMDdhYWZmZTRiNTQ2YWNhOTM4MWY1NmVlODQ5OGIwYTNlMGQ5YWYyZDI4OWQwMjMiLCAicGx1Z2lucy9lbmRwb2ludF9wbHVnaW5zL2ludGVyZmFjZS5weSI6ICI5MjkzNjE2Y2NkM2NkZjcyNWZhMDg3ZDNmNzZhNTE4ZGJhODcxZWYyYzc5NjQ0Njk5MGZhMmEwYTVmYzE1OWVlIiwgInNhbXBsaW5nX3BhcmFtcy5weSI6ICJmMjFlZmM5OGJmOGNlOGFhYjg4ZWI2N2FkYjQyMDcyODVlNTA5YTE2N2Q5NzZlMTRkM2UyZTgyODJlMDI0YmVhIiwgInYxL2NvcmUvc2NoZWQvYXN5bmNfc2NoZWR1bGVyLnB5IjogImU1ODZhMGVmM2M2Nzc4YmU1NmE5M2U3ZjliYjcxMmQ0ZGU5ZGU2ZTdkN2ZlN2UzZTFkNTFkYWU4M2VjZmM1MDgiLCAidjEvY29yZS9zY2hlZC9vdXRwdXQucHkiOiAiM2E2NmM4ZWZhZWZlMTBjNTcyZjZmMzNjZjFmOGFhNDYxMDc1OGM5NDUxMzBjYWQ2MmViOWY3MzMxMDA1Njc3YyIsICJ2MS9jb3JlL3NjaGVkL3NjaGVkdWxlci5weSI6ICJjMWRiNDVmM2JiYWQzYTg3NWRkODYzODMzMWI4ODcwYzQzODBhYzFhYjQ3MzQyNjViYTVjODYzODMzYTgyODg0IiwgInYxL2N1ZGFncmFwaF9kaXNwYXRjaGVyLnB5IjogIjUxZjYzMjc1M2FmNzI5YWVlZTZjZTRhODAyZDlkNzRiNjRmMjJlZWYwMmE1MjRmMzZlMmEyNGIwN2VmMGNmNjMiLCAidjEvZW5naW5lL19faW5pdF9fLnB5IjogIjRlNTk4Mjg3ODc2MzQxMjMwMjZhNmI0MjRmNDhjMjFkNjkxOTEzZGQzMzhiNTlkZDEzZjI1ZmEyNjBmMjI4NGIiLCAidjEvZW5naW5lL2FzeW5jX2xsbS5weSI6ICI1MmNiZjQwNGYxZGJjOTljNmJlYmY0YTUwYTdlYjE4ZmY4NDJhMWY1MzEwNmE0NWYzNjU1MjMxOTJkODE2YmUxIiwgInYxL2VuZ2luZS9jb3JlLnB5IjogIjI2OGJmNDA1MzRhODUzODEyODY3YWU4ZTgwMDQwZjE5MDk4M2NiMzY0YjQxMTgyYjU1OTY5YWFjZTIwYzkzZjUiLCAidjEvZW5naW5lL2NvcmVfY2xpZW50LnB5IjogImZkNmNhMGNiNzQ5OWIzMDg2ZWVmMmZjNTc2NzRiN2FjZTU2ZWYxYzY0OGYwOWU5MmUxNDRiMjU1Yjc5MDE4ZjgiLCAidjEvZW5naW5lL291dHB1dF9wcm9jZXNzb3IucHkiOiAiZTQ3Yjg2Y2Q2OWNlMWMxZTNmNTNkYWM2NTVlYWE3NWMzMmE0MDU3ZDEwZjRhMWRiMTZiYjgzYTM5N2YyYTMyOSIsICJ2MS9leGVjdXRvci91bmlwcm9jX2V4ZWN1dG9yLnB5IjogIjNjYjAzOWI4MGZlOWIwM2RjMTEyMmY5M2MxZjhhNDA5OGVmMTM1NTEwNGIzMTdmZjZkZjI1MzU4ZjQzNDk0OTQiLCAidjEvbWV0cmljcy9sb2dnZXJzLnB5IjogImMxMmI0ZmJlYmZlODg2YjY5NzEyN2YxMTE0ZWFhMGJiODNjNTRhNzg2NzU5MTlkMTc4YjYxOWMzZDhkNWQ2NTUiLCAidjEvbWV0cmljcy9zdGF0cy5weSI6ICJhZjE5ODNkZGMzMmZhNGQzMjg0ZTcyMjEyYzY1MjVkYWY5NjFkZDg0NDI5MDIzYTAyZDYxMmI2OGIzMTEyY2YzIiwgInYxL3JlcXVlc3QucHkiOiAiZGE2MTBkNTIwM2U3MmQyZDUyNGFkYzVmYjM5ZGYxMTUwMmEyMzUyMGYyZjMxZDlhNDRjZjEzZDM0M2Y5YzI1ZCIsICJ2MS93b3JrZXIvZ3B1L2FzeW5jX3V0aWxzLnB5IjogIjc3ZTE3YTQ1NzBlYWQyYmUzMGFlOWIwMDg4OGNmMDc3YTNiODczMDE4YzEyY2EwNTQ5Yjg1M2JmZGEwMmMxYmEiLCAidjEvd29ya2VyL2dwdS9hdHRuX3V0aWxzLnB5IjogImI5YjgxZTU5ZGRhMjcyMGIxZjljNDM0NDcxMzgxZjg3OTIyODgzMjQ0M2U1Mjc1NmU0NjliNGFkNDkwNTg4OGYiLCAidjEvd29ya2VyL2dwdS9jdWRhZ3JhcGhfdXRpbHMucHkiOiAiNmU5YzA0Mjg5MDYwMzUzNWUzMDBhNDBkZjhlZTE1OWRiZWQxMDU4YTY0YTgzYWU1MGZmMDMyOWUzMzJlMDVmZiIsICJ2MS93b3JrZXIvZ3B1L2RwX3V0aWxzLnB5IjogImUyNjg2N2JjODllNmJmYzkzM2NhYmM1ZWQxM2U1ZGM3YjhkMmQzMDMwMTE4Y2ExY2E2NGM4Nzg1ZGFiYzBmYzEiLCAidjEvd29ya2VyL2dwdS9pbnB1dF9iYXRjaC5weSI6ICJkNWRkOTU2ZWIzMTliZDY5ZGQ5ZTc2MjA0NzgzM2Q4MWFkNDBiMjFmY2U2MTlmY2IyMTMzNzU5ZTczNjIwNjk0IiwgInYxL3dvcmtlci9ncHUvbW9kZWxfcnVubmVyLnB5IjogIjE3NGM5M2RiOTIxYzIzY2YwMzk2ZWVlNDc2NGJlMjViMmJkMmQ0YjZhMDZlOWZhNDFjZTM1OThiODg0Y2U4Y2UiLCAidjEvd29ya2VyL2dwdS9zYW1wbGUvb3V0cHV0LnB5IjogImQ2ZTI5OGMwZjE5N2Q0ODdhOGZhYWY3MjAwZjUwMGZhODNkZjFkN2E0YmJmNDMzOWNhZGQ2YTE4MDA4ZjdmOWMiLCAidjEvd29ya2VyL2dwdS9zdGF0ZXMucHkiOiAiOTk0MThmNWRmNDNjYTYxMmRlZDcyNjA5ZmVlMDExNjIwYjA2NWIyY2FiMmYyNDljY2IzODcwOTZiZjRhZTcxYSIsICJ2MS93b3JrZXIvZ3B1X21vZGVsX3J1bm5lci5weSI6ICI4N2MyOWQwOGMwYmJmNjY5OTNkOGI5ODQ4MTFlNzMyNWUzNWU2NDM2MjQyYTc3M2ZlYjU1ZWM4OGYxNmIyYzUxIiwgInYxL3dvcmtlci9ncHVfd29ya2VyLnB5IjogIjY5OTQ0MzZlNDU0N2MwOTk2YWI1NTViM2U4MTRlOGNjZWEyNmI2NTBkZmMxYjM3OGI5N2Q2NDA3NDUzMDkzNDciLCAidjEvd29ya2VyL3V0aWxzLnB5IjogIjBjYTNlYzZiZjRkMjAwNzYxNDViN2ZlNjRlNTY0OTYyYWRlYmVkYzhmNzVhODU2YjUxN2JhMGIyZjJkNzdhY2YiLCAidjEvd29ya2VyL3dvcmtlcl9iYXNlLnB5IjogIjRhMWE1MjY2YjkxMmZlOTc5OTFkOGRjODlkOTJiOTIzOTkwZGE5ZjZjYjRiODE3ZDAwZDUyZTljMGQyNmRkN2MifSwgInVwc3RyZWFtIjogImh0dHBzOi8vZ2l0aHViLmNvbS92bGxtLXByb2plY3QvdmxsbS90cmVlL3YwLjMwLjAiLCAidmVyc2lvbiI6ICIwLjMwLjAifX1dfSwgInNjaGVtYSI6ICJuYXRpdmUtdjItYmF0Y2gtY2FwdHVyZS12MSIsICJzb3VyY2VfY29tbWl0IjogIjEwNGU2NWE2OWRmNzM5OTdiOTc3YmNlMjU4OGI2NTVhZTcxNGY0NWQiLCAid29ya2VyX2Nsb2NrcyI6IFt7ImJyaWRnZV9zaGEyNTYiOiAiNWQ3NmQ5OTQ5MjFiYjE2MDg4Y2FiZjliOGY5ZWJlODg0M2MxN2Y3YmFjYjRiMWRjOTc5YmYyNTVhZDhjY2VmOCIsICJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJwcm9jZXNzX2lkIjogMTExfV19",
+        "response_body_sha256": "dad60b2b215d82a8f311683915ee8bb039df6d1202697e3e92afbafb758e878e",
+        "response_headers": {}
+      },
+      "cas_command_record": {
+        "auth_values_captured": false,
+        "body_complete": true,
+        "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "client_headers_at": 912887.174127837,
+        "client_receive_at": 912887.174127837,
+        "client_send_at": 912887.174060637,
+        "credential_removed": false,
+        "error_type": null,
+        "http_status": 200,
+        "method": "POST",
+        "path": "/admin/mpc/budget",
+        "request_body": "{\"budget\": 32, \"clock_domain\": \"linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]\", \"expected_version\": 0, \"identity\": {\"calibration_version\": \"unqualified\", \"cost_hash\": \"c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8\", \"implementation_hash\": \"5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea\", \"model_version\": \"synthetic\", \"support_hash\": \"unqualified\"}, \"not_after\": 912887.673980837, \"operation_id\": \"opteam16-cut-consumer02\", \"run_id\": \"synthetic-gateway\", \"schema\": \"mpc-admission-v1\"}",
+        "response_body_base64": "eyJhcHBsaWVkX2F0IjogOTEyODg3LjE3NDExNTQzNywgImJ1ZGdldCI6IDMyLCAiYnVkZ2V0X3ZlcnNpb24iOiAxLCAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLCAib3BlcmF0aW9uX2lkIjogIm9wdGVhbTE2LWN1dC1jb25zdW1lcjAyIiwgInByZXZpb3VzX2J1ZGdldCI6IDMyLCAicnVuX2lkIjogInN5bnRoZXRpYy1nYXRld2F5IiwgInNjaGVtYSI6ICJtcGMtYWRtaXNzaW9uLXYxIiwgInN0YXR1cyI6ICJhcHBsaWVkIn0=",
+        "response_body_sha256": "d751796c881fd18d21fcaa383950a302a76fed33dc7fc7af754a6a5adbce1747",
+        "response_headers": {}
+      },
+      "drain_records": [
+        {
+          "auth_values_captured": false,
+          "body_complete": true,
+          "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "client_headers_at": 912887.173794137,
+          "client_receive_at": 912887.173794137,
+          "client_send_at": 912887.173619337,
+          "credential_removed": false,
+          "error_type": null,
+          "http_status": 200,
+          "method": "GET",
+          "path": "/pr33-native/queue-state",
+          "request_body": null,
+          "response_body_base64": "eyJiYXNlIjogeyJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21wbGV0ZSI6IHRydWUsICJmcm9udGVuZF9zYW1wbGVkX2F0IjogOTEyODg3LjE3Mzc5MzYzNywgImZyb250ZW5kX3VuZmluaXNoZWQiOiAwLCAib2JzZXJ2ZXJfc2hhMjU2IjogIjc3NjMzZGM3NjUyMDY2ZTQ1Yjc2ODBkMjk3ZDNlMzZkZGI5N2EzZTEyMjIyZGU5ZjUyNmE3NmI5YTAxZDY2YjQiLCAib3JwaGFuZWQiOiAwLCAicGVuZGluZ19iYXRjaGVzIjogMCwgInJlcXVlc3RzIjogW10sICJydW5faWQiOiAic3ludGhldGljLW5hdGl2ZSIsICJydW5uaW5nIjogMCwgInNhbXBsZWRfYXQiOiA5MTI4ODcuMTczNzkwNzM3LCAic2NoZW1hIjogInByMzMtbmF0aXZlLXJlYWQtb25seS12MSIsICJ3YWl0aW5nIjogMH0sICJjb21wbGV0ZSI6IHRydWUsICJxdWV1ZV9vYnNlcnZlcl9zaGEyNTYiOiAiZTA3ODdhMmNkMmQwYjRjZmI1YWRhMTRjMDA0ZDFkNzZhNjJkZGNiZmIxMjBiNWNlYTlkZTAyYWYzOGExYWE5MyIsICJxdWV1ZV9vbGRlc3RfZmlyc3QiOiBbXSwgInF1ZXVlZF9naG9zdF9yZXF1ZXN0X2lkcyI6IFtdLCAicmVmdXNhbF9yZWFzb25zIjogW10sICJzYW1wbGVfZmluaXNoZWRfYXQiOiA5MTI4ODcuMTczNzkzMzM3LCAic2FtcGxlX3N0YXJ0ZWRfYXQiOiA5MTI4ODcuMTczNjIwOTM3LCAic2NoZWR1bGVyX3N0YXRlIjogeyJyZXF1ZXN0cyI6IHt9LCAicnVubmluZyI6IFtdLCAid2FpdGluZyI6IFtdfSwgInNjaGVtYSI6ICJyMjMtbmF0aXZlLXF1ZXVlLXJlYWQtb25seS12MSIsICJza2lwcGVkX3dhaXRpbmciOiBbXSwgInN0cmVhbWluZ193YWl0aW5nIjogMH0=",
+          "response_body_sha256": "d979b3991ea08c7a05f1230c5995046e485dd46de23ff487094caba16332c838",
+          "response_headers": {}
+        },
+        {
+          "auth_values_captured": false,
+          "body_complete": true,
+          "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "client_headers_at": 912887.173955437,
+          "client_receive_at": 912887.173955437,
+          "client_send_at": 912887.173822537,
+          "credential_removed": false,
+          "error_type": null,
+          "http_status": 200,
+          "method": "GET",
+          "path": "/pr33-native/queue-state",
+          "request_body": null,
+          "response_body_base64": "eyJiYXNlIjogeyJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21wbGV0ZSI6IHRydWUsICJmcm9udGVuZF9zYW1wbGVkX2F0IjogOTEyODg3LjE3Mzk1NTIzNywgImZyb250ZW5kX3VuZmluaXNoZWQiOiAwLCAib2JzZXJ2ZXJfc2hhMjU2IjogIjc3NjMzZGM3NjUyMDY2ZTQ1Yjc2ODBkMjk3ZDNlMzZkZGI5N2EzZTEyMjIyZGU5ZjUyNmE3NmI5YTAxZDY2YjQiLCAib3JwaGFuZWQiOiAwLCAicGVuZGluZ19iYXRjaGVzIjogMCwgInJlcXVlc3RzIjogW10sICJydW5faWQiOiAic3ludGhldGljLW5hdGl2ZSIsICJydW5uaW5nIjogMCwgInNhbXBsZWRfYXQiOiA5MTI4ODcuMTczOTUzOTM3LCAic2NoZW1hIjogInByMzMtbmF0aXZlLXJlYWQtb25seS12MSIsICJ3YWl0aW5nIjogMH0sICJjb21wbGV0ZSI6IHRydWUsICJxdWV1ZV9vYnNlcnZlcl9zaGEyNTYiOiAiZTA3ODdhMmNkMmQwYjRjZmI1YWRhMTRjMDA0ZDFkNzZhNjJkZGNiZmIxMjBiNWNlYTlkZTAyYWYzOGExYWE5MyIsICJxdWV1ZV9vbGRlc3RfZmlyc3QiOiBbXSwgInF1ZXVlZF9naG9zdF9yZXF1ZXN0X2lkcyI6IFtdLCAicmVmdXNhbF9yZWFzb25zIjogW10sICJzYW1wbGVfZmluaXNoZWRfYXQiOiA5MTI4ODcuMTczOTU1MTM3LCAic2FtcGxlX3N0YXJ0ZWRfYXQiOiA5MTI4ODcuMTczODIzMDM3LCAic2NoZWR1bGVyX3N0YXRlIjogeyJyZXF1ZXN0cyI6IHt9LCAicnVubmluZyI6IFtdLCAid2FpdGluZyI6IFtdfSwgInNjaGVtYSI6ICJyMjMtbmF0aXZlLXF1ZXVlLXJlYWQtb25seS12MSIsICJza2lwcGVkX3dhaXRpbmciOiBbXSwgInN0cmVhbWluZ193YWl0aW5nIjogMH0=",
+          "response_body_sha256": "6d1e6747394f0473d50120d6ed30b00b3b0cdc6558bbcc2a7fba3c30e064e2f3",
+          "response_headers": {}
+        }
+      ],
+      "gateway_confirm_record": {
+        "auth_values_captured": false,
+        "body_complete": true,
+        "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "client_headers_at": 912887.174158837,
+        "client_receive_at": 912887.174158837,
+        "client_send_at": 912887.174138237,
+        "credential_removed": false,
+        "error_type": null,
+        "http_status": 200,
+        "method": "GET",
+        "path": "/admin/mpc/state",
+        "request_body": null,
+        "response_body_base64": "eyJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMSwgImNhcGFiaWxpdGllcyI6IFsibXBjLWJ1ZGdldC1jYXMtZXhwaXJ5LXYxIl0sICJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21wbGV0ZSI6IHRydWUsICJjb3N0X3NwZWMiOiB7ImRlZmF1bHRfbWF4X3Rva2VucyI6IDEyOCwgImVzdGltYXRvcl92ZXJzaW9uIjogImdhdGV3YXktdG9rZW4tZXN0aW1hdGUtdjEiLCAiaW5wdXRfcGVyX3Rva2VuIjogMCwgImludGVyY2VwdCI6IDE2LCAibWluaW11bSI6IDAuMSwgIm91dHB1dF9wZXJfdG9rZW4iOiAwLCAidG9rZW5pemVyX2lkZW50aXR5IjogInVucXVhbGlmaWVkIn0sICJpZGVudGl0eSI6IHsiY2FsaWJyYXRpb25fdmVyc2lvbiI6ICJ1bnF1YWxpZmllZCIsICJjb3N0X2hhc2giOiAiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsICJpbXBsZW1lbnRhdGlvbl9oYXNoIjogIjU1MjMzMTVjNWM1OTA4MzgzNGY5MmVjMDgyNDVjODQ5NzExYzdmMDk3YzFkNmE2MjljNjY3NzBlNDFmYjNlZWEiLCAibW9kZWxfdmVyc2lvbiI6ICJzeW50aGV0aWMiLCAic3VwcG9ydF9oYXNoIjogInVucXVhbGlmaWVkIn0sICJyZXF1ZXN0cyI6IFtdLCAicnVuX2lkIjogInN5bnRoZXRpYy1nYXRld2F5IiwgInNhbXBsZWRfYXQiOiA5MTI4ODcuMTc0MTQwMzM3LCAic2NoZW1hIjogIm1wYy1hZG1pc3Npb24tdjEiLCAic2VxdWVuY2UiOiAxfQ==",
+        "response_body_sha256": "4df8faf4b30e88e0eae0f9a717cf5a8a85176e3b53a0b60c26b5a51b765dbb03",
+        "response_headers": {}
+      },
+      "gateway_initial_record": {
+        "auth_values_captured": false,
+        "body_complete": true,
+        "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "client_headers_at": 912887.174016437,
+        "client_receive_at": 912887.174016437,
+        "client_send_at": 912887.173972937,
+        "credential_removed": false,
+        "error_type": null,
+        "http_status": 200,
+        "method": "GET",
+        "path": "/admin/mpc/state",
+        "request_body": null,
+        "response_body_base64": "eyJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMCwgImNhcGFiaWxpdGllcyI6IFsibXBjLWJ1ZGdldC1jYXMtZXhwaXJ5LXYxIl0sICJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21wbGV0ZSI6IHRydWUsICJjb3N0X3NwZWMiOiB7ImRlZmF1bHRfbWF4X3Rva2VucyI6IDEyOCwgImVzdGltYXRvcl92ZXJzaW9uIjogImdhdGV3YXktdG9rZW4tZXN0aW1hdGUtdjEiLCAiaW5wdXRfcGVyX3Rva2VuIjogMCwgImludGVyY2VwdCI6IDE2LCAibWluaW11bSI6IDAuMSwgIm91dHB1dF9wZXJfdG9rZW4iOiAwLCAidG9rZW5pemVyX2lkZW50aXR5IjogInVucXVhbGlmaWVkIn0sICJpZGVudGl0eSI6IHsiY2FsaWJyYXRpb25fdmVyc2lvbiI6ICJ1bnF1YWxpZmllZCIsICJjb3N0X2hhc2giOiAiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsICJpbXBsZW1lbnRhdGlvbl9oYXNoIjogIjU1MjMzMTVjNWM1OTA4MzgzNGY5MmVjMDgyNDVjODQ5NzExYzdmMDk3YzFkNmE2MjljNjY3NzBlNDFmYjNlZWEiLCAibW9kZWxfdmVyc2lvbiI6ICJzeW50aGV0aWMiLCAic3VwcG9ydF9oYXNoIjogInVucXVhbGlmaWVkIn0sICJyZXF1ZXN0cyI6IFtdLCAicnVuX2lkIjogInN5bnRoZXRpYy1nYXRld2F5IiwgInNhbXBsZWRfYXQiOiA5MTI4ODcuMTczOTgwODM3LCAic2NoZW1hIjogIm1wYy1hZG1pc3Npb24tdjEiLCAic2VxdWVuY2UiOiAwfQ==",
+        "response_body_sha256": "0412462bbaf8bc7e280745ac59e8b013b7f68482ccc99452ceec6dcfd0e4a989",
+        "response_headers": {}
+      },
+      "gateway_owned": {
+        "cleanup_completed": false,
+        "native_ready": true,
+        "pid": 200,
+        "process_group": 200,
+        "readiness": {
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "gateway_run_id": "synthetic-gateway",
+          "same_budget_ack": {
+            "acknowledgment": {
+              "applied_at": 912887.174115437,
+              "budget": 32,
+              "budget_version": 1,
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "operation_id": "opteam16-cut-consumer02",
+              "previous_budget": 32,
+              "run_id": "synthetic-gateway",
+              "schema": "mpc-admission-v1",
+              "status": "applied"
+            },
+            "command": {
+              "budget": 32,
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "expected_version": 0,
+              "identity": {
+                "calibration_version": "unqualified",
+                "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+                "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+                "model_version": "synthetic",
+                "support_hash": "unqualified"
+              },
+              "not_after": 912887.673980837,
+              "operation_id": "opteam16-cut-consumer02",
+              "run_id": "synthetic-gateway",
+              "schema": "mpc-admission-v1"
+            },
+            "status": "applied"
+          },
+          "snapshot": {
+            "budget": 32,
+            "budget_version": 0,
+            "capabilities": [
+              "mpc-budget-cas-expiry-v1"
+            ],
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "complete": true,
+            "cost_spec": {
+              "default_max_tokens": 128,
+              "estimator_version": "gateway-token-estimate-v1",
+              "input_per_token": 0,
+              "intercept": 16,
+              "minimum": 0.1,
+              "output_per_token": 0,
+              "tokenizer_identity": "unqualified"
+            },
+            "identity": {
+              "calibration_version": "unqualified",
+              "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+              "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+              "model_version": "synthetic",
+              "support_hash": "unqualified"
+            },
+            "requests": [],
+            "run_id": "synthetic-gateway",
+            "sampled_at": 912887.173980837,
+            "schema": "mpc-admission-v1",
+            "sequence": 0
+          }
+        },
+        "start_ticks": "40",
+        "started_at": 99
+      },
+      "native_owned": {
+        "cleanup_completed": false,
+        "native_ready": true,
+        "pid": 100,
+        "process_group": 100,
+        "readiness": {
+          "frames": [
+            {
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "frontend_sampled_at": 912887.173793637,
+              "frontend_unfinished": 0,
+              "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+              "orphaned": 0,
+              "pending_batches": 0,
+              "requests": [],
+              "run_id": "synthetic-native",
+              "running": 0,
+              "sampled_at": 912887.173790737,
+              "schema": "pr33-native-read-only-v1",
+              "waiting": 0
+            },
+            {
+              "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+              "complete": true,
+              "frontend_sampled_at": 912887.173955237,
+              "frontend_unfinished": 0,
+              "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+              "orphaned": 0,
+              "pending_batches": 0,
+              "requests": [],
+              "run_id": "synthetic-native",
+              "running": 0,
+              "sampled_at": 912887.173953937,
+              "schema": "pr33-native-read-only-v1",
+              "waiting": 0
+            }
+          ],
+          "warmup_response": {
+            "choices": [
+              {
+                "finish_reason": "stop"
+              }
+            ],
+            "id": "chatcmpl-ffffffffffffffffffffffffffffffff",
+            "usage": {
+              "completion_tokens": 1
+            }
+          }
+        },
+        "start_ticks": "10",
+        "started_at": 99
+      },
+      "warmup_record": {
+        "auth_values_captured": false,
+        "body_complete": true,
+        "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "client_headers_at": 912887.173595837,
+        "client_receive_at": 912887.173595837,
+        "client_send_at": 912887.173579237,
+        "credential_removed": false,
+        "error_type": null,
+        "http_status": 200,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_body": "{\"max_tokens\": 16}",
+        "response_body_base64": "eyJjaG9pY2VzIjogW3siZmluaXNoX3JlYXNvbiI6ICJzdG9wIn1dLCAiaWQiOiAiY2hhdGNtcGwtZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmYiLCAidXNhZ2UiOiB7ImNvbXBsZXRpb25fdG9rZW5zIjogMX19",
+        "response_body_sha256": "10762cfaeee08016dac69101213b027fda795fb1005802a30a54bce37cf29cd5",
+        "response_headers": {}
+      }
+    }
+  },
+  "planner_entry_at": null,
+  "source_collector_return_observed_at": 912887.204101737,
+  "terminal_at": 912887.205152637
+}

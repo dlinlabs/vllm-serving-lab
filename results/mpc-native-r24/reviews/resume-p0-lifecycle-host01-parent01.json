@@ -1,0 +1,42 @@
+{
+  "schema": "resume-p0-real-lifecycle-attempt01-parent-v1",
+  "status": "STARTUP_FAIL_OWNED_CLEANUP_PASS",
+  "preregistration_commit": "44f570058c30ea6680909c9b4487d14fc8e569e4",
+  "preregistration": "resume-p0-lifecycle-prereg01/PREREGISTRATION.json",
+  "actual_driver_exit": 1,
+  "actual_lifecycle_passed": false,
+  "raw_archive": "resume-p0-lifecycle-host01-author",
+  "raw_manifest_sha256": "10f0325bcbec199af6d7a9a7a8b842d17372aa91638377a71e2587d7fe40b9dd",
+  "raw_regular_files": 28,
+  "raw_remote_bundle_sha256": "f0de1e4d8e2946d419d6ef75f0b55b57c93d7263702fc09dd035b709f02214eb",
+  "failure": "Gateway bind failed: 127.0.0.1:8001 address already in use. Subsequent read-only ss identifies existing host infrastructure nginx PID88 on 0.0.0.0:8001.",
+  "containment": "Do not stop or alter nginx. All newly owned services stopped; no pending spawn, no unknown process and no compute application remained. Original logs and driver failure remain unchanged.",
+  "actual_receipts": {
+    "ownership": "STOPPED",
+    "known_identities_gone": true,
+    "pending_spawn": null,
+    "unknown": [],
+    "telemetry": "closed, complete, zero dropped/write errors/remaining/unflushed/owner sequence",
+    "post_gpu": "same GPU UUID, 1 MiB, 0%, no compute applications at 2026-11-05T01:39:30Z",
+    "readiness": "NOT established; engine startup and expected model readiness not proven"
+  },
+  "correction": {
+    "scope": "Dedicated backend18000/gateway18001 only, including upstream URL and readiness GETs; both observed free. No model/resource/optimization/metric/guard change.",
+    "cpu_proof": "resume-p0-native-services-ports03-proof",
+    "cpu_manifest_sha256": "d3c72ce7240cf2951f4a1a7b1c03c7f36850f355ed64a586ff978ea9349babfb",
+    "cpu_regular_files": 45,
+    "python": "3.12.16",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "attempts": 1,
+    "source_sha256": "70de7480c5e827a081babbbec7bc61e1f567285aa5c2669d68bd0434de8f4ec2",
+    "test_sha256": "9a8c1226f1c1255a141060fed079f860a2daf24c926c131a375e341051b253ba"
+  },
+  "retry_rule": "No blind repeat. A new exact-source preregistration is required before one corrected-port host attempt.",
+  "secrets": "Downloaded raw files checked for authorization/admin-key fields or bearer values; none found. No actual admin key serialized.",
+  "offered_inference_requests": 0,
+  "control_posts": 0,
+  "native_qualified_cycles": 0,
+  "claim_boundary": "This is a failed real startup attempt with successful observed cleanup, not GPU lifecycle qualification, native MPC evidence or a performance result."
+}

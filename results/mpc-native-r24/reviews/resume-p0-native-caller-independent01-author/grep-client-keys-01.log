@@ -1,0 +1,86 @@
+3:Replays one frozen trace_workload schema-1 replay trace against a loopback gateway at ABSOLUTE offered offsets and
+33:HERE = Path(__file__).resolve().parent
+42:BINDING_SCHEMA = 'r24-resume-p0-nominal-model-binding-v1'
+56:MAX_START_WAIT_S = 600.0
+59:NOT_RUN_ERROR = 'not_run: prepared by prepare_capture only (no offers sent)'
+63:# Precedence follows sustained_load.consume_request (InvalidSSE > IncompleteStream > EmptyContentStream).
+67:TAPE_KEYS = ('kind', 'offered_tape_schema', 'offered_tape_sha256', 'generator', 'protocol_id', 'purpose', 'source_id',
+69:SOURCES = {'nominal_client.py': Path(__file__).resolve(), 'nominal_metrics.py': HERE / 'nominal_metrics.py',
+74:    'max_output_tokens': 'trace max_tokens', 'scheduled_at': 'offered_start + arrival_seconds',
+82:    'slo.stream_done': 'data: [DONE] received', 'slo.stream_error': 'fate == stream_error',
+101:    'warmup and post-warmup gateway drain before the offered start',
+102:    'static fixed budget as startup MAX_ADMITTED_COST before warmup/offers: acknowledged before offered_start and '
+104:    'one shared absolute host-monotonic offered START with lead time for the recorder preflight (binding, tokenizer '
+338:            'done_at': self.done_at, 'stream_done': self.done_at is not None, 'data_events': self.data_events,
+347:def prepare_records(trace, offered_start, run_id):
+348:    """One placeholder per offered request (fate not_launched until sent), allocated before any send."""
+353:        'scheduled_at': offered_start + request['arrival_seconds'], 'sent_at': None, 'send_lag_s': None,
+356:        'stream_done': False, 'data_events': 0, 'content_events': 0, 'finish_reason': None,
+402:    """Send one offered request at its absolute time and record every observation; never reschedules."""
+427:                record['body_text_null_reason'] = 'body_read_incomplete'
+442:                                                         if parsed['anomalies'] else ('complete', 'complete'))
+470:async def replay(client, trace, records, *, gateway_url, offered_start, drain_timeout):
+471:    """Offer every request at offered_start + arrival_seconds; retain every outcome in ``records`` (in place).
+473:    In-flight requests are cancelled at offered_end + drain_timeout.  Returns the drain deadline.
+477:    return await _replay(client, trace, records, gateway_url=gateway_url, offered_start=offered_start,
+481:async def _replay(client, trace, records, *, gateway_url, offered_start, drain_timeout=None, drain_deadline=None):
+482:    """``replay`` body; the drain deadline is offered_end + drain_timeout or the caller's absolute drain_deadline.
+487:        raise ClientRefusal('records must cover the offered trace one-to-one')
+488:    if not time.monotonic() < offered_start:
+489:        raise ClientRefusal('offered_start already passed: absolute offsets cannot be honoured (no rescheduling)')
+493:    offered_end = offered_start + trace['duration_seconds']
+494:    deadline = offered_end + drain_timeout if drain_deadline is None else drain_deadline
+496:        while (now := time.monotonic()) < offered_end:
+497:            await asyncio.sleep(offered_end - now)
+517:                'stream_done': record['stream_done'], 'stream_error': fate == 'stream_error'},
+531:        if record['fate'] == 'complete':
+534:        'offered': len(records), 'sent': len(lags), 'fates': counts('fate', nm.FATES),
+536:        'finish_reasons_of_complete': finish,
+538:        'prompt_tokens_mismatch': sum(record['prompt_tokens_match'] is False for record in records),
+571:    domain, offered_start = capture['clock_domain'], capture['offered_start']
+572:    observed_end = max([offered_start + capture['offered_duration_s']]
+576:        scope, start, end = 'offered_cohort_observed', offered_start, observed_end
+584:        if full_wall['start'] > offered_start or full_wall['end'] < collected_end:
+585:            raise ClientRefusal('full_wall must contain the offered window, every terminal and the collection end')
+591:                or not _finite(evidence['held_verified_at']) or not evidence['acknowledged_at'] < offered_start
+594:            raise ClientRefusal('static_fixed control needs driver control_evidence {acknowledged_at < offered_start, '
+601:        'arm': capture['arm'], 'purpose': capture['purpose'], 'clock_domain': domain, 'offered_start': offered_start,
+602:        'offered_duration_s': capture['offered_duration_s'], 'envelope_start': start, 'envelope_end': end,
+607:            'offered_trace_sha256': capture['trace_sha256'], 'offered_tape': capture['trace_provenance'],
+608:            'offered_count': capture.get('offered_count'),
+609:            'offered_request_ids_sha256': capture.get('offered_request_ids_sha256'), 'comparability': comparability,
+663:def _new_capture(arm, purpose, program, argv, config):
+675:        'binding_evidence': None, 'models_response': None, 'offered_count': None, 'offered_request_ids_sha256': None,
+676:        'offered_duration_s': None,
+677:        'offered_start': None, 'offered_end': None, 'drain_deadline': None, 'collection_end': None,
+695:    capture['offered_count'], capture['offered_duration_s'] = len(trace['requests']), trace['duration_seconds']
+696:    capture['offered_request_ids_sha256'] = nm.request_ids_sha256(request['trace_id']
+708:    """Model binding and tokenizer checks from local_model_path (no HTTP), before any offered start."""
+718:    """Backend /v1/models check, then ``schedule(now) -> (offered_start, drain_deadline)``; every offer is allocated
+733:        offered_start, drain_deadline = schedule(now)
+734:        if not now < offered_start <= now + MAX_START_WAIT_S:
+735:            raise ClientRefusal(f'offered_start must lie in (now, now + {MAX_START_WAIT_S}s]: no rescheduling')
+736:        capture['offered_start'] = offered_start
+737:        capture['offered_end'] = offered_start + trace['duration_seconds']
+738:        records = capture['records'] = prepare_records(trace, offered_start, capture['run_id'])
+742:                          offered_start=offered_start, drain_deadline=drain_deadline)
+751:        offered_start = args.offered_start if args.offered_start is not None else now + args.start_delay
+752:        return offered_start, offered_start + trace['duration_seconds'] + args.drain_timeout
+757:def _settle(capture, ending=None):
+759:    allocated record; returns the CLI exit code of that status."""
+784:        'driver_offered_start': args.offered_start, 'trace_path': str(args.trace), 'binding_path': str(args.binding)})
+815:    trace/binding/URL/purpose loading and the local binding + tokenizer checks, before any offered start exists.
+824:                               'start_delay_s': None, 'driver_offered_start': None, 'caller_deadline': None,
+850:async def capture_replay(prepared, *, offered_start, deadline, cleanup_reserve_s, clock_domain, transport=None):
+851:    """Await one complete raw-v2 capture inside the caller's running loop (no asyncio.run, no signal handlers).
+853:    ``offered_start`` is the caller's exact future absolute time.monotonic() start (never retimed); in-flight requests
+857:    envelope is finalized 'interrupted' in place (every allocated record, rows, summary) and the exception re-raised.
+865:    capture['config'].update(driver_offered_start=offered_start if _finite(offered_start) else None,
+870:        if not (_finite(offered_start) and _finite(deadline) and _finite(cleanup_reserve_s)) or cleanup_reserve_s < 0:
+871:            raise ClientRefusal('offered_start, deadline and cleanup_reserve_s must be finite numbers (reserve >= 0)')
+875:        if drain_deadline < offered_start + trace['duration_seconds']:
+876:            raise ClientRefusal('deadline - cleanup_reserve_s ends before the offered window: refused, never truncated')
+878:        if not now < offered_start <= now + MAX_START_WAIT_S:
+879:            raise ClientRefusal(f'offered_start must lie in (now, now + {MAX_START_WAIT_S}s]: no rescheduling')
+881:                       lambda now: (offered_start, drain_deadline))
+946:    replay_parser.add_argument('--offered-start', type=_finite_float, help='driver absolute time.monotonic() origin')

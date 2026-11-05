@@ -1,0 +1,507 @@
+{
+  "schema": "r24-resume-evidence-audit-a02/report-v1",
+  "capsule": ".runtime/r24-resume-evidence-audit-a02",
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+  "created_utc": "2026-11-04T23:52:40.294391594Z",
+  "report_drafted_after_utc": "2026-11-05T00:01:56Z",
+  "role": "PR32 team16 Role4 Independent Validation: FINAL deliverable-A per-bullet claim audit (read-only; successor of a01)",
+  "model": {"id": "claude-opus-5.5", "reasoning_effort": "max", "child_or_nested_agents": 0},
+  "successor_of": {
+    "capsule": ".runtime/r24-resume-evidence-audit-a01",
+    "sha256sums_digest": "1d819ec0d7be41db23eaf51ab58b0b35ff9161a5d7822d54972c28e1412a3fb6",
+    "report_sha256": "32b666232a7dcc306c22a9e8d5015ad54c62a9a33279c6b44cb1c98ec2228be2",
+    "status": "sealed and unchanged; a02 re-verified its seal (pin-check01.log) and reuses its 8 pins (SOURCE-PINS.sha256 is a byte-identical copy)",
+    "relation": "a02 adds the required explicit per-bullet PASS/FAIL, phrase-level evidence maps, the quantitative-claims ledger and FINAL verified-only AI Infrastructure and Autonomous Systems variants. It supersedes a01 wording only where listed in delta_from_a01."
+  },
+  "question": "For every individual resume bullet in the three two-bullet variants of docs/resume_bullets.md (plus the two summary resume-safe bullets): PASS or FAIL, with evidence references (trace/test/commit) for every quantitative claim, rejection or smallest correction of unsupported wording, and final AI Infrastructure and Autonomous Systems variants using only verified evidence. Deliverable A is judged independently of deliverable B.",
+  "judging_criterion": {
+    "PASS": "Every assertion in the bullet has documented support in the frozen 8-file package (directly, or indirectly through an explicitly cited evidence ID, commit, trace or test), and the bullet does not materially imply an unsupported result (native/MPC win, measured comparison, production use, calibration, SLO guarantee, completed native loop or clean-checkout reproduction).",
+    "FAIL": "At least one assertion has no in-package support (UNSUPPORTED_IN_PACKAGE) or the wording materially implies an unsupported result (MISLEADING). A FAIL bullet must not be used as written; the smallest correction is given.",
+    "support_classes": {
+      "DIRECT": "stated by an accepted evidence ID, acceptance/result index or E1 archive reference in the package",
+      "INDIRECT": "follows from cited evidence without being stated as such (acceptable for PASS)",
+      "DESIGN_ONLY": "documented design or repository-layer description without an accepted test/evidence ID (acceptable for PASS only with a design verb such as Designed; excluded from final variants)",
+      "UNSUPPORTED_IN_PACKAGE": "no support anywhere in the pinned package (FAIL)",
+      "MISLEADING": "contradicted by, or implying a result explicitly absent from, the package (FAIL)"
+    },
+    "B_independence": "Known-missing deliverable-B evidence is never an A FAIL by itself; only wording that implies B results is.",
+    "final_variants_standard": "Stricter: every phrase must be DIRECT; no design-only phrase, no number, no cross-version composite inside one claim."
+  },
+  "verdict": {
+    "A_status": "CONDITIONAL_ACCEPT: five of eight bullets PASS as written; three FAIL with exact smallest corrections; the final verified-only variants below are usable now",
+    "per_bullet_status": {
+      "V1-b1": "PASS",
+      "V1-b2": "FAIL",
+      "V2-b1": "PASS",
+      "V2-b2": "PASS",
+      "V3-b1": "FAIL",
+      "V3-b2": "PASS",
+      "S-b1": "PASS",
+      "S-b2": "FAIL"
+    },
+    "pass_count": 5,
+    "fail_count": 3,
+    "variant_level": {
+      "AI Inference / Infrastructure (V1)": "FAIL as written because bullet 2 fails (A1, A2); PASS after those two edits; final form FAI-1/FAI-2",
+      "Autonomous Systems / Runtime (V2)": "PASS as written (A4, A9 optional LOW); final verified-only form FAU-1/FAU-2",
+      "General Software / Distributed Systems (V3)": "FAIL as written because bullet 1 contains unsupported 'asynchronous' (A10, LOW); PASS after replacing or citing that word",
+      "resume_project_summary.md Resume-safe wording": "bullet 1 PASS; bullet 2 FAIL (A3)"
+    },
+    "finding_counts": {"HIGH": 0, "MEDIUM": 3, "LOW": 7, "total": 10},
+    "blocking_ids": ["A1", "A2", "A3", "A10"],
+    "blocking_note": "A1-A3 are MEDIUM. A10 is LOW severity (not shown false, trivially fixable) but blocks bullet V3-b1 as written under the per-bullet verified-wording standard.",
+    "explicit_unsupported_claims_found": "NONE_FOUND",
+    "implied_B_wording": ["A1 (implied native benchmarking)", "A2 (implied measured Fixed/OneMove comparisons)"],
+    "requires_new_native_experiment_for_A": false,
+    "requires_clean_checkout_or_old_runtime_reproduction_for_A": false
+  },
+  "scope": {
+    "docs_commit_stated_by_mayor": "98e1174de56b01fd4448259c002d9f32223298ad",
+    "files": 8,
+    "input_bytes_total": 50089,
+    "limit": "<=8 files and <=64 KiB",
+    "read_only": true,
+    "not_read": ["link targets (existence verified in a01: 48/48 relative links on both Pythons)", "gateway.py and all other source modules", "E1-E5 archives and their indices", "any deliverable-B, runtime, recorder or metrics02 material (B recheck is a separate later scope)", "Eval data"],
+    "not_done": ["git", "HTTP or network", "GPU or SSH", "installs", "Markdown writing", "runtime tests", "new experiments", "child agents"]
+  },
+  "inputs": [
+    {"path": "docs/resume_bullets.md", "bytes": 3219, "sha256": "30eefaca94e2037f53a28b1d588d3cbd52ef181698d668f007b38540c302c0d5"},
+    {"path": "docs/resume_project_summary.md", "bytes": 9605, "sha256": "299cc5aced7864e279598014b0dc660e3f3089798ab456de1408072e965651ea"},
+    {"path": "docs/benchmark_results.md", "bytes": 14764, "sha256": "fcb4a60baea17d8306c45ba020d875487f0091232736168d02c1c41c55a5784b"},
+    {"path": "docs/architecture.md", "bytes": 6724, "sha256": "16ed463a378da4a46d5cb7c961ed911ed830d05a2dbff24bf3e61c687d70ebf0"},
+    {"path": "docs/interview_defense.md", "bytes": 6395, "sha256": "6f41ff459b42913180eb05e81a8b2503bbc5454cc50e70ad6696e1d2f18d534c"},
+    {"path": "results/mpc-native-r24/reviews/resume-p0-components-parent02.json", "bytes": 3264, "sha256": "a2ebee8f6958ccb63b133c07c6950a1a3df8097ce611c628078a5cdeac23bd84"},
+    {"path": "results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json", "bytes": 2892, "sha256": "14ced2ecd5f8efaaeb9f13db9449e3b7f152add591d9f381840aae97188d1231"},
+    {"path": "results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json", "bytes": 3226, "sha256": "62b1c087e218153f3795221a0bde98a89c03ef92967068cb10049e0e966a5517"}
+  ],
+  "file_keys": {
+    "RB": "docs/resume_bullets.md",
+    "RS": "docs/resume_project_summary.md",
+    "BR": "docs/benchmark_results.md",
+    "AR": "docs/architecture.md",
+    "ID": "docs/interview_defense.md",
+    "CP": "results/mpc-native-r24/reviews/resume-p0-components-parent02.json",
+    "TK": "results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json",
+    "SC": "results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json"
+  },
+  "anchors": [
+    {"id": "RB-22", "file": "RB", "line": 22, "text": "The historical captures are not MPC performance measurements."},
+    {"id": "RB-23", "file": "RB", "line": 23, "text": "model-ranked Fixed reference is not an empirically selected strong baseline."},
+    {"id": "RB-35", "file": "RB", "line": 35, "text": "interfaces are not a claim that the complete native loop has been demonstrated."},
+    {"id": "RB-36", "file": "RB", "line": 36, "text": "The forecast is nominal and uncalibrated; its CPU validation is not an"},
+    {"id": "RB-48", "file": "RB", "line": 48, "text": "Do not substitute \"production deployed\" for"},
+    {"id": "RB-49", "file": "RB", "line": 49, "text": "\"implemented\", or claim full clean-checkout benchmark reproduction."},
+    {"id": "RB-53", "file": "RB", "line": 53, "text": "Do not claim MPC speedup, superior goodput, production use, guaranteed p99,"},
+    {"id": "RB-54", "file": "RB", "line": 54, "text": "bounded end-to-end latency, starvation freedom, native sampler convergence or"},
+    {"id": "RB-55", "file": "RB", "line": 55, "text": "Do not combine CPU test totals across versions."},
+    {"id": "RS-03", "file": "RS", "line": 3, "text": "A: scoped resume evidence package finalized; B: native MPC P0 open"},
+    {"id": "RS-41", "file": "RS", "line": 41, "text": "applied-control timing. These are scheduled identification runs, not MPC runs."},
+    {"id": "RS-42", "file": "RS", "line": 42, "text": "CPU deadline/version checks. Runtime integration is not accepted."},
+    {"id": "RS-62", "file": "RS", "line": 62, "text": "**Missing native end-to-end evidence.**"},
+    {"id": "RS-64", "file": "RS", "line": 64, "text": "**Not collected.**"},
+    {"id": "RS-66", "file": "RS", "line": 66, "text": "clean-checkout MVP reproduction remains unverified."},
+    {"id": "BR-03", "file": "BR", "line": 3, "text": "no qualified native MPC-versus-baseline performance result"},
+    {"id": "BR-09", "file": "BR", "line": 9, "text": "RTX 4090, reported 24,564 MiB,"},
+    {"id": "BR-11", "file": "BR", "line": 11, "text": "vLLM 0.30.0, Torch 2.13.0+cu130, Python 3.12.3. The manifests explicitly say"},
+    {"id": "BR-12", "file": "BR", "line": 12, "text": "these package records are not proof of the remote backend version and do not"},
+    {"id": "BR-15", "file": "BR", "line": 15, "text": "Both captures replay the same Azure-derived arrivals/input lengths with"},
+    {"id": "BR-16", "file": "BR", "line": 16, "text": "synthetic prompts, output cap 128, context 8192 and 300-second arrival windows."},
+    {"id": "BR-17", "file": "BR", "line": 17, "text": "TTFT SLO is 0.5 seconds."},
+    {"id": "BR-21", "file": "BR", "line": 21, "text": "| Shared A | 7,643 | 1,976 | 5,667 | 0 | 572 | 1.906667 | 2.412583 |"},
+    {"id": "BR-22", "file": "BR", "line": 22, "text": "| Shared B | 7,643 | 2,059 | 5,584 | 0 | 736 | 2.453333 | 2.202635 |"},
+    {"id": "BR-24", "file": "BR", "line": 24, "text": "TTFT p99 is conditional on successful requests"},
+    {"id": "BR-29", "file": "BR", "line": 29, "text": "These are **scheduled identification captures on different hosts**, with"},
+    {"id": "BR-31", "file": "BR", "line": 31, "text": "and gateway virtual-environment paths. They are not MPC, Fixed/OneMove"},
+    {"id": "BR-32", "file": "BR", "line": 32, "text": "comparisons, causal schedule effects or proof of an optimal cap."},
+    {"id": "BR-34", "file": "BR", "line": 34, "text": "Recorded `git_dirty=true` is retained"},
+    {"id": "BR-41", "file": "BR", "line": 41, "text": "[A report](../results/shared-client-20261018/captures/shared-client-a-r1/report.json)"},
+    {"id": "BR-43", "file": "BR", "line": 43, "text": "[Raw-bundle index](../results/shared-client-20261018/raw-bundle/index.json)"},
+    {"id": "BR-44", "file": "BR", "line": 44, "text": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e"},
+    {"id": "BR-45", "file": "BR", "line": 45, "text": "[verification.json](../results/shared-client-20261018/verification.json)"},
+    {"id": "BR-47", "file": "BR", "line": 47, "text": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586"},
+    {"id": "BR-48", "file": "BR", "line": 48, "text": "aea7694a0af2d1dadc883b4b9e33d1a9bdb61098"},
+    {"id": "BR-60", "file": "BR", "line": 60, "text": "This command does not regenerate the E1 outcome table."},
+    {"id": "BR-61", "file": "BR", "line": 61, "text": "the 15 manifest-recorded runtime files"},
+    {"id": "BR-67", "file": "BR", "line": 67, "text": "The runtime commit was not resolvable in the current local object database"},
+    {"id": "BR-70", "file": "BR", "line": 70, "text": "This is a P0 portability gap."},
+    {"id": "BR-77", "file": "BR", "line": 77, "text": "130 CPU cases passed per Python"},
+    {"id": "BR-77b", "file": "BR", "line": 77, "text": "2b4ed5bc754060cba11c16852b7798b975bc03eb"},
+    {"id": "BR-78", "file": "BR", "line": 78, "text": "nine CPU integration cases passed per Python"},
+    {"id": "BR-78b", "file": "BR", "line": 78, "text": "c00d29d2296bda7e249578f2de7c08650a4d79c9"},
+    {"id": "BR-79", "file": "BR", "line": 79, "text": "one approximately 67-second GPU run"},
+    {"id": "BR-79b", "file": "BR", "line": 79, "text": "(one of two required nonempty in-flight observations). 90 HTTP records; three generations (one warmup and two managed); 43 completion tokens including 11 warmup tokens."},
+    {"id": "BR-79c", "file": "BR", "line": 79, "text": "52b2b244f5904306f730ab6ca26a3d572343e2b2"},
+    {"id": "BR-79d", "file": "BR", "line": 79, "text": "d6ded2b25a0667028f6ab9f2cc08fe76df1c3315"},
+    {"id": "BR-80", "file": "BR", "line": 80, "text": "26139be5f90ec7386e2c578c95aa331aa0052244"},
+    {"id": "BR-82", "file": "BR", "line": 82, "text": "No row above establishes calibrated prediction, actual MPC benefit, production"},
+    {"id": "BR-93", "file": "BR", "line": 93, "text": "Fixed-policy solver-wait/deadline bias corrected"},
+    {"id": "BR-93b", "file": "BR", "line": 93, "text": "f645a66a44bcbe0e4894cab4213d7f9349ae1481"},
+    {"id": "BR-93c", "file": "BR", "line": 93, "text": "negative witness `814a9b5aa38dd8783ae643270b5aed59e1bc12b7`"},
+    {"id": "BR-94", "file": "BR", "line": 94, "text": "All 88 frozen Train prompts matched requested chat-template token counts with the real cached tokenizer."},
+    {"id": "BR-94b", "file": "BR", "line": 94, "text": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7"},
+    {"id": "BR-94c", "file": "BR", "line": 94, "text": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e"},
+    {"id": "BR-94d", "file": "BR", "line": 94, "text": "1e9540caa9dd37f927d5389d05be3d973d234bf7"},
+    {"id": "BR-95", "file": "BR", "line": 95, "text": "14 controls passed on Python 3.12.16 from a scoped Git materialization"},
+    {"id": "BR-95b", "file": "BR", "line": 95, "text": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0"},
+    {"id": "BR-98", "file": "BR", "line": 98, "text": "Its stationary rolling 15-second horizon can"},
+    {"id": "BR-99", "file": "BR", "line": 99, "text": "extend beyond the public five-second workload window."},
+    {"id": "BR-103", "file": "BR", "line": 103, "text": "block claim-qualified Train selection/comparison on metrics01"},
+    {"id": "BR-106", "file": "BR", "line": 106, "text": "No new native MPC measurements are available."},
+    {"id": "BR-112", "file": "BR", "line": 112, "text": "| Strong development-selected Fixed | Not measured"},
+    {"id": "BR-114", "file": "BR", "line": 114, "text": "| Strong OneMove | Not measured"},
+    {"id": "BR-115", "file": "BR", "line": 115, "text": "| Receding-horizon MPC | Not measured"},
+    {"id": "BR-165", "file": "BR", "line": 165, "text": "The earlier contract proposal used boundaries 512 and 2048 tokens"},
+    {"id": "BR-166", "file": "BR", "line": 166, "text": "frozen nominal workload has exact prompt classes 256, 1024 and 3072 tokens,"},
+    {"id": "AR-31", "file": "AR", "line": 31, "text": "do not claim these algorithms as project contributions"},
+    {"id": "AR-32", "file": "AR", "line": 32, "text": "Reservation accounting, admission/rejection, streaming lifecycle and cleanup."},
+    {"id": "AR-33", "file": "AR", "line": 33, "text": "Scheduled arrivals, actual applications, request/state/diagnostic records."},
+    {"id": "AR-36", "file": "AR", "line": 36, "text": "Observation guards, pending-command handling and first-action coordination."},
+    {"id": "AR-36b", "file": "AR", "line": 36, "text": "native qualification pending"},
+    {"id": "AR-39", "file": "AR", "line": 39, "text": "The public library and frozen team16 prototypes are separate versions."},
+    {"id": "AR-45", "file": "AR", "line": 45, "text": "`nominal_planner.py` provides typed finite-horizon planning,"},
+    {"id": "AR-46", "file": "AR", "line": 46, "text": "`nominal_scenario.py` generates Train-only nominal forecasts, and"},
+    {"id": "AR-48", "file": "AR", "line": 48, "text": "Runtime wiring, request-outcome recording and service ownership are still"},
+    {"id": "AR-52", "file": "AR", "line": 52, "text": "Current source links are reading aids, not proof of the implementation measured"},
+    {"id": "AR-56", "file": "AR", "line": 56, "text": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a"},
+    {"id": "AR-93", "file": "AR", "line": 93, "text": "A frozen Train-only prior generates shared candidate inputs;"},
+    {"id": "ID-21", "file": "ID", "line": 21, "text": "It evaluates future action sequences against a prediction model and constrained"},
+    {"id": "ID-22", "file": "ID", "line": 22, "text": "objective, executes the first action and reobserves before replanning."},
+    {"id": "ID-24", "file": "ID", "line": 24, "text": "not runtime integration or native MPC."},
+    {"id": "ID-58", "file": "ID", "line": 58, "text": "Fixed holds a development-selected budget."},
+    {"id": "ID-60", "file": "ID", "line": 60, "text": "Strong OneMove searches a best allowed single transition with the same model"},
+    {"id": "ID-101", "file": "ID", "line": 101, "text": "Each offered 7,643 requests in 300 seconds: A rejected 5,667, B rejected 5,584;"},
+    {"id": "ID-102", "file": "ID", "line": 102, "text": "572 and 736, respectively, met the TTFT SLO."},
+    {"id": "ID-118", "file": "ID", "line": 118, "text": "Do not claim a native MPC deployment, measured speedup or"},
+    {"id": "CP-03", "file": "CP", "line": 3, "text": "814a9b5aa38dd8783ae643270b5aed59e1bc12b7"},
+    {"id": "CP-08", "file": "CP", "line": 8, "text": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1"},
+    {"id": "CP-09", "file": "CP", "line": 9, "text": "0f716b28de50daa79110bb84b82022654ec5586a7b8e7147f4d7dd6fc903988b"},
+    {"id": "CP-11", "file": "CP", "line": 11, "text": "Fixed is applicable at guarded current time and ignores MPC-only solve timing while retaining actual expiry, source, clock, ledger and version checks."},
+    {"id": "CP-12", "file": "CP", "line": 12, "text": "including both intentional red regressions and construction-deadline correction"},
+    {"id": "CP-13", "file": "CP", "line": 13, "text": "Unchanged solver timing and full-panel selection"},
+    {"id": "CP-14", "file": "CP", "line": 14, "text": "freeze_fixed remains only a model-ranked reference."},
+    {"id": "CP-22", "file": "CP", "line": 22, "text": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"},
+    {"id": "CP-24", "file": "CP", "line": 24, "text": "Only archive/tapes-v1/{train.tape.json,eval.tape.json}"},
+    {"id": "CP-25", "file": "CP", "line": 25, "text": "Eval tape contents were hashed, not displayed or used for forecasting/tuning."},
+    {"id": "CP-26", "file": "CP", "line": 26, "text": "public seeds, not OOD or real-trace generalization."},
+    {"id": "CP-27", "file": "CP", "line": 27, "text": "Generator CPU controls and fake-tokenizer adapter accepted"},
+    {"id": "CP-32", "file": "CP", "line": 32, "text": "\"python\": \"3.14.4\""},
+    {"id": "CP-34", "file": "CP", "line": 34, "text": "\"tests\": 35"},
+    {"id": "CP-36", "file": "CP", "line": 36, "text": "\"exit\": 0"},
+    {"id": "CP-37", "file": "CP", "line": 37, "text": "8 permit + 15 planner + 12 workload focused controls coexist"},
+    {"id": "CP-38", "file": "CP", "line": 38, "text": "\"fair measured comparison\", \"clean-checkout end-to-end reproduction\""},
+    {"id": "TK-02", "file": "TK", "line": 2, "text": "Real-tokenizer CPU validation on the existing authorized GPU host; not GPU inference"},
+    {"id": "TK-03", "file": "TK", "line": 3, "text": "\"status\": \"PASS\""},
+    {"id": "TK-04", "file": "TK", "line": 4, "text": "1e9540caa9dd37f927d5389d05be3d973d234bf7"},
+    {"id": "TK-07", "file": "TK", "line": 7, "text": "resume-p0-tokenizer01-raw"},
+    {"id": "TK-11", "file": "TK", "line": 11, "text": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507"},
+    {"id": "TK-12", "file": "TK", "line": 12, "text": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5"},
+    {"id": "TK-13", "file": "TK", "line": 13, "text": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"},
+    {"id": "TK-14", "file": "TK", "line": 14, "text": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7"},
+    {"id": "TK-15", "file": "TK", "line": 15, "text": "\"train_replay_bytes\": 257950"},
+    {"id": "TK-16", "file": "TK", "line": 16, "text": "\"offers\": 88"},
+    {"id": "TK-17", "file": "TK", "line": 17, "text": "\"measured_chat_template_tokens_equal_requested_labels\": 88"},
+    {"id": "TK-38", "file": "TK", "line": 38, "text": "installed vLLM is not evidence that a specific backend binary/config was executed."},
+    {"id": "TK-42", "file": "TK", "line": 42, "text": "\"no_accuracy_superiority_SLO_guarantee_or_Resume_Ready_claim\": true"},
+    {"id": "SC-02", "file": "SC", "line": 2, "text": "not real closed-loop acceptance"},
+    {"id": "SC-10", "file": "SC", "line": 10, "text": "\"train_only\": true"},
+    {"id": "SC-11", "file": "SC", "line": 11, "text": "\"offers\": 88"},
+    {"id": "SC-12", "file": "SC", "line": 12, "text": "\"duration_s\": 5"},
+    {"id": "SC-13", "file": "SC", "line": 13, "text": "\"rate_per_s\": 17.6"},
+    {"id": "SC-14", "file": "SC", "line": 14, "text": "[[256,128,33],[1024,128,26],[3072,128,29]]"},
+    {"id": "SC-15", "file": "SC", "line": 15, "text": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc"},
+    {"id": "SC-16", "file": "SC", "line": 16, "text": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e"},
+    {"id": "SC-19", "file": "SC", "line": 19, "text": "Stationary nominal Poisson arrivals, independent sampled Train marks, maximum output 128"},
+    {"id": "SC-20", "file": "SC", "line": 20, "text": "\"horizon_s\": 15"},
+    {"id": "SC-21", "file": "SC", "line": 21, "text": "\"score_window_s\": 5"},
+    {"id": "SC-22", "file": "SC", "line": 22, "text": "\"contention_tail_s\": 10"},
+    {"id": "SC-23", "file": "SC", "line": 23, "text": "\"cap\": 512"},
+    {"id": "SC-26", "file": "SC", "line": 26, "text": "One immutable realization/panel for all paths and both policy selections."},
+    {"id": "SC-27", "file": "SC", "line": 27, "text": "exact realized inputs must be retained for replay."},
+    {"id": "SC-28", "file": "SC", "line": 28, "text": "This is not a fitted Native arrival/service law or proof of prediction accuracy."},
+    {"id": "SC-34", "file": "SC", "line": 34, "text": "verify invalidation of a previously matching permit"},
+    {"id": "SC-38", "file": "SC", "line": 38, "text": "\"python\": \"3.12.16\""},
+    {"id": "SC-39", "file": "SC", "line": 39, "text": "\"attempts\": 1"},
+    {"id": "SC-40", "file": "SC", "line": 40, "text": "\"passed\": 14"},
+    {"id": "SC-41", "file": "SC", "line": 41, "text": "\"exit\": 0"},
+    {"id": "SC-42", "file": "SC", "line": 42, "text": "\"elapsed_s\": 0.035"},
+    {"id": "SC-43", "file": "SC", "line": 43, "text": "70b443082f255b4ce7830d3056669882c1bccd8d506d3c8320037f6c94e40045"},
+    {"id": "SC-44", "file": "SC", "line": 44, "text": "23c5e1df9b6d36bc086e8e6e06c09cfaa50fc68e"},
+    {"id": "SC-45", "file": "SC", "line": 45, "text": "not complete P0 benchmark reproduction."},
+    {"id": "SC-48", "file": "SC", "line": 48, "text": "retain actual CausalScenario inputs"},
+    {"id": "SC-52", "file": "SC", "line": 52, "text": "\"Native_or_Resume_Ready\": false"}
+  ],
+  "per_bullet": [
+    {
+      "id": "V1-b1", "variant": "AI Inference / Infrastructure", "bullet": 1, "file": "RB", "lines": [11, 13],
+      "text": "Built an instrumented vLLM admission-control gateway and trace-replay pipeline, retaining request outcomes, overload rejections and control-timing evidence from real-GPU scheduled-budget identification captures.",
+      "status": "PASS",
+      "assertions": [
+        {"phrase": "Built an instrumented vLLM admission-control gateway", "support_class": "DIRECT", "anchor_ids": ["AR-32", "AR-33", "BR-31", "AR-52"], "note": "Gateway and measurement layers; E1 captures recorded gateway virtual-environment paths; attributing E1 to current files requires matching archived hashes."},
+        {"phrase": "vLLM", "support_class": "DIRECT", "anchor_ids": ["AR-31", "BR-11", "BR-12"], "note": "vLLM is the external backend; optional O1 'in front of vLLM' avoids implying vLLM-internal admission algorithms."},
+        {"phrase": "trace-replay pipeline", "support_class": "DIRECT", "anchor_ids": ["BR-15", "BR-16", "BR-44"]},
+        {"phrase": "retaining request outcomes, overload rejections", "support_class": "DIRECT", "anchor_ids": ["BR-21", "BR-22", "BR-41", "BR-43", "BR-45", "RS-41"]},
+        {"phrase": "control-timing evidence", "support_class": "DIRECT", "anchor_ids": ["RS-41", "AR-33"]},
+        {"phrase": "real-GPU scheduled-budget identification captures", "support_class": "DIRECT", "anchor_ids": ["BR-09", "BR-29", "BR-32", "RB-22"]}
+      ],
+      "evidence_ids": ["E1"],
+      "refs": {"trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e", "publication_commit": "aea7694a0af2d1dadc883b4b9e33d1a9bdb61098", "recorded_runtime_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586 (not locally resolvable; disclosed BR:67-70)", "audit": "archived raw-to-report comparison verification.json (BR:45, BR:63-65); not rerun"},
+      "quantitative_claims_in_bullet": "none",
+      "findings": [],
+      "optional": "O1: 'an instrumented admission-control gateway in front of vLLM'"
+    },
+    {
+      "id": "V1-b2", "variant": "AI Inference / Infrastructure", "bullet": 2, "file": "RB", "lines": [14, 16],
+      "text": "Implemented CPU-tested finite-horizon admission-policy planning with shared forecast inputs, Fixed/OneMove comparisons and deadline/version guards; corrected a Fixed-policy timing bias before native benchmarking.",
+      "status": "FAIL",
+      "assertions": [
+        {"phrase": "Implemented CPU-tested finite-horizon admission-policy planning", "support_class": "DIRECT", "anchor_ids": ["AR-45", "CP-34", "CP-37", "BR-77", "AR-39"], "note": "E6 planner02 (current) and E2 frozen team16 planner are separate versions; CPU counts are not summed."},
+        {"phrase": "shared forecast inputs", "support_class": "DIRECT", "anchor_ids": ["SC-26", "AR-93"]},
+        {"phrase": "Fixed/OneMove comparisons", "support_class": "MISLEADING", "anchor_ids": ["CP-13", "CP-14", "RB-23", "BR-112", "BR-114", "BR-103"], "note": "A2"},
+        {"phrase": "deadline/version guards", "support_class": "DIRECT", "anchor_ids": ["CP-11", "RS-42"]},
+        {"phrase": "corrected a Fixed-policy timing bias", "support_class": "DIRECT", "anchor_ids": ["BR-93", "BR-93b", "BR-93c", "CP-11"]},
+        {"phrase": "before native benchmarking", "support_class": "MISLEADING", "anchor_ids": ["BR-03", "BR-106", "BR-115", "RS-64"], "note": "A1"}
+      ],
+      "evidence_ids": ["E2", "E6", "E8"],
+      "refs": {"correction_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481", "negative_witness_commit": "814a9b5aa38dd8783ae643270b5aed59e1bc12b7", "E2_commit": "2b4ed5bc754060cba11c16852b7798b975bc03eb", "E8_commit": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0", "tests": "E6 Parent CPU 35 tests Python 3.14.4 exit 0 (CP:29-37); E8 14 controls Python 3.12.16 (SC:36-45); E2 130 CPU cases per Python (BR:77)"},
+      "quantitative_claims_in_bullet": "none",
+      "findings": ["A1", "A2", "A4"],
+      "smallest_correction": "A1+A2: replace 'Fixed/OneMove comparisons' with 'model-evaluated Fixed/OneMove references' and delete ' before native benchmarking'.",
+      "corrected_text": "Implemented CPU-tested finite-horizon admission-policy planning with shared forecast inputs, model-evaluated Fixed/OneMove references and deadline/version guards; corrected a Fixed-policy timing bias."
+    },
+    {
+      "id": "V2-b1", "variant": "Autonomous Systems / Runtime", "bullet": 1, "file": "RB", "lines": [27, 29],
+      "text": "Designed a finite-horizon admission-control prototype with coherent scenario evaluation, first-action replanning interfaces and CPU-tested source/version/deadline guards.",
+      "status": "PASS",
+      "assertions": [
+        {"phrase": "Designed a finite-horizon admission-control prototype", "support_class": "DIRECT", "anchor_ids": ["AR-45", "AR-46", "ID-21"]},
+        {"phrase": "coherent scenario evaluation", "support_class": "DIRECT", "anchor_ids": ["SC-26", "SC-40", "BR-95"]},
+        {"phrase": "first-action replanning interfaces", "support_class": "DESIGN_ONLY", "anchor_ids": ["AR-36", "AR-36b", "ID-22", "RB-35", "AR-48", "SC-48"], "note": "Design/repository-layer description only; no accepted test or evidence ID covers these interfaces; nominal runtime wiring is still under integration. 'Designed' plus 'interfaces' and the RB:34-35 disclaimer keep it within support; excluded from the final verified-only variant."},
+        {"phrase": "CPU-tested source/version/deadline guards", "support_class": "DIRECT", "anchor_ids": ["CP-11", "RS-42", "SC-34"]}
+      ],
+      "evidence_ids": ["E2", "E6", "E8"],
+      "refs": {"correction_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481", "E8_commit": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0", "E2_commit": "2b4ed5bc754060cba11c16852b7798b975bc03eb"},
+      "quantitative_claims_in_bullet": "none",
+      "findings": ["A4"]
+    },
+    {
+      "id": "V2-b2", "variant": "Autonomous Systems / Runtime", "bullet": 2, "file": "RB", "lines": [30, 32],
+      "text": "Built a Train-only forecast and reproducible replay-input pipeline, preserving realized model assumptions, tokenizer-validation evidence and explicit limitations instead of claiming calibrated native prediction.",
+      "status": "PASS",
+      "assertions": [
+        {"phrase": "Built a Train-only forecast", "support_class": "DIRECT", "anchor_ids": ["SC-10", "SC-15", "AR-46", "BR-95"]},
+        {"phrase": "reproducible replay-input pipeline", "support_class": "INDIRECT", "anchor_ids": ["CP-24", "CP-26", "CP-27", "CP-22", "TK-14", "RB-49"], "note": "Seeded public draws, hash-pinned canonical tapes and accepted generator controls; no regeneration rerun is recorded in the package; not a clean-checkout claim."},
+        {"phrase": "preserving realized model assumptions", "support_class": "INDIRECT", "anchor_ids": ["SC-19", "SC-27", "SC-48"], "note": "A9: nominal assumptions are recorded; retention of actual realized scenario inputs is a pending integration obligation."},
+        {"phrase": "tokenizer-validation evidence", "support_class": "DIRECT", "anchor_ids": ["TK-03", "TK-16", "TK-17", "BR-94"]},
+        {"phrase": "explicit limitations instead of claiming calibrated native prediction", "support_class": "DIRECT", "anchor_ids": ["RB-36", "BR-98", "SC-28", "TK-42"]}
+      ],
+      "evidence_ids": ["E7", "E8", "E6-workload01"],
+      "refs": {"tokenizer_commit": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e", "replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7", "prior_content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc", "E8_commit": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0"},
+      "quantitative_claims_in_bullet": "none",
+      "findings": ["A9"]
+    },
+    {
+      "id": "V3-b1", "variant": "General Software / Distributed Systems", "bullet": 1, "file": "RB", "lines": [41, 42],
+      "text": "Implemented an asynchronous inference gateway with reservation accounting, overload handling and lifecycle telemetry for auditable serving studies.",
+      "status": "FAIL",
+      "assertions": [
+        {"phrase": "Implemented an ... inference gateway with reservation accounting, overload handling", "support_class": "DIRECT", "anchor_ids": ["AR-32", "BR-21", "BR-22"]},
+        {"phrase": "lifecycle telemetry", "support_class": "DIRECT", "anchor_ids": ["AR-32", "AR-33"]},
+        {"phrase": "for auditable serving studies", "support_class": "DIRECT", "anchor_ids": ["BR-45", "RS-41"]},
+        {"phrase": "asynchronous", "support_class": "UNSUPPORTED_IN_PACKAGE", "anchor_ids": [], "note": "A10: the only occurrence across the five docs is this bullet (quant-lines01.log); no evidence index mentions it; not shown false."}
+      ],
+      "evidence_ids": ["E1"],
+      "refs": {"publication_commit": "aea7694a0af2d1dadc883b4b9e33d1a9bdb61098", "trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e"},
+      "quantitative_claims_in_bullet": "none",
+      "findings": ["A10"],
+      "smallest_correction": "A10: replace 'asynchronous' with 'streaming' (AR:32) or delete it; or keep it only after the Mayor adds an exact gateway.py source citation to the evidence note.",
+      "corrected_text": "Implemented a streaming inference gateway with reservation accounting, overload handling and lifecycle telemetry for auditable serving studies."
+    },
+    {
+      "id": "V3-b2", "variant": "General Software / Distributed Systems", "bullet": 2, "file": "RB", "lines": [43, 46],
+      "text": "Developed replay and independent validation workflows linking request outcomes, configurations and commands to recorded source hashes and evidence commits, including reproducible workload generation and real-tokenizer input checks while preserving negative results.",
+      "status": "PASS",
+      "assertions": [
+        {"phrase": "Developed replay and independent validation workflows", "support_class": "DIRECT", "anchor_ids": ["BR-15", "BR-45", "BR-80", "BR-103"]},
+        {"phrase": "linking request outcomes, configurations and commands to recorded source hashes and evidence commits", "support_class": "DIRECT", "anchor_ids": ["BR-41", "BR-43", "BR-44", "BR-34", "BR-47", "BR-48", "BR-67"], "note": "Recorded runtime commit is not locally resolvable; the link is to recorded hashes and commits, not a clean checkout."},
+        {"phrase": "reproducible workload generation", "support_class": "INDIRECT", "anchor_ids": ["CP-24", "CP-26", "CP-27"], "note": "A9 optional tightening."},
+        {"phrase": "real-tokenizer input checks", "support_class": "DIRECT", "anchor_ids": ["TK-02", "TK-17", "BR-94"]},
+        {"phrase": "preserving negative results", "support_class": "DIRECT", "anchor_ids": ["BR-79b", "BR-80", "BR-93c", "TK-07"]}
+      ],
+      "evidence_ids": ["E1", "E4", "E5", "E6", "E7", "E8"],
+      "refs": {"publication_commit": "aea7694a0af2d1dadc883b4b9e33d1a9bdb61098", "E4_results_commit": "52b2b244f5904306f730ab6ca26a3d572343e2b2", "E5_commit": "26139be5f90ec7386e2c578c95aa331aa0052244", "negative_witness_commit": "814a9b5aa38dd8783ae643270b5aed59e1bc12b7", "tokenizer_commit": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e"},
+      "quantitative_claims_in_bullet": "none",
+      "findings": ["A9"]
+    },
+    {
+      "id": "S-b1", "variant": "resume_project_summary.md Resume-safe wording", "bullet": 1, "file": "RS", "lines": [109, 111],
+      "text": "Built an instrumented vLLM serving gateway and auditable trace-replay tooling for admission-control and overload analysis, preserving request outcomes and auditable control-timing evidence.",
+      "status": "PASS",
+      "assertions": [
+        {"phrase": "Built an instrumented vLLM serving gateway", "support_class": "DIRECT", "anchor_ids": ["AR-31", "AR-32", "AR-33"]},
+        {"phrase": "auditable trace-replay tooling for admission-control and overload analysis", "support_class": "DIRECT", "anchor_ids": ["BR-15", "BR-21", "BR-22", "BR-45"]},
+        {"phrase": "preserving request outcomes and auditable control-timing evidence", "support_class": "DIRECT", "anchor_ids": ["RS-41", "BR-43", "BR-45"]}
+      ],
+      "evidence_ids": ["E1"],
+      "refs": {"publication_commit": "aea7694a0af2d1dadc883b4b9e33d1a9bdb61098", "trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e"},
+      "quantitative_claims_in_bullet": "none",
+      "findings": [],
+      "optional": "O1: 'serving gateway in front of vLLM'"
+    },
+    {
+      "id": "S-b2", "variant": "resume_project_summary.md Resume-safe wording", "bullet": 2, "file": "RS", "lines": [112, 114],
+      "text": "Implemented a frozen finite-horizon policy planner with CPU-tested exact candidate ordering and deadline/version checks; corrected baseline timing bias while retaining explicit native-integration and comparison limitations.",
+      "status": "FAIL",
+      "assertions": [
+        {"phrase": "Implemented a frozen finite-horizon policy planner with CPU-tested exact candidate ordering and deadline/version checks", "support_class": "DIRECT", "anchor_ids": ["RS-42", "BR-77", "BR-77b", "AR-56"]},
+        {"phrase": "corrected baseline timing bias", "support_class": "MISLEADING", "anchor_ids": ["BR-93", "BR-93b", "CP-08", "AR-39", "AR-56"], "note": "A3"},
+        {"phrase": "retaining explicit native-integration and comparison limitations", "support_class": "DIRECT", "anchor_ids": ["RS-42", "ID-24", "BR-106"]}
+      ],
+      "evidence_ids": ["E2", "E6"],
+      "refs": {"E2_commit": "2b4ed5bc754060cba11c16852b7798b975bc03eb", "E2_source_sha256": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a", "E6_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481", "E6_planner02_source_sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1"},
+      "quantitative_claims_in_bullet": "none",
+      "findings": ["A3"],
+      "smallest_correction": "A3: replace the summary pair with a pointer to the scoped variants in resume_bullets.md (preferred), or reword bullet 2 as corrected_text.",
+      "corrected_text": "Implemented finite-horizon policy-planner prototypes with CPU-tested candidate ordering and deadline/version checks, and corrected a Fixed-baseline timing bias in the current nominal planner while retaining explicit native-integration and comparison limitations.",
+      "version_mapping": "candidate ordering = frozen team16 planner (E2; policy_planner16.py SHA256 164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a; commit 2b4ed5bc754060cba11c16852b7798b975bc03eb); timing-bias correction = current nominal planner02 (E6; source SHA256 e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1; commit f645a66a44bcbe0e4894cab4213d7f9349ae1481)"
+    }
+  ],
+  "quantitative_claims": {
+    "resume_bullets_contain_numbers": false,
+    "statement": "None of the six variant bullets, the two summary resume-safe bullets or the four final bullets contains a number (the checker asserts no digits). Quantitative detail stays in the evidence ledger; every documented quantitative claim is listed below with its evidence references and verification status.",
+    "verification_status_legend": {
+      "INDEX_MATCHED": "doc figure equals the pinned acceptance/result index in scope and internal arithmetic holds (checked by the logged checker)",
+      "ARITHMETIC_CONSISTENT": "internal sums and ratios recomputed from the pinned doc; raw archive not re-read",
+      "DOC_STATED_SOURCE_CITED": "doc figure with commit/index/trace cited; source outside the 8-file scope, not re-read"
+    },
+    "ledger": [
+      {"id": "Q1", "evidence_id": "E1", "claim": "Runner-recorded hardware/configuration: RTX 4090, 24,564 MiB, driver 595.91.07, Qwen3-4B-Instruct-2507, vLLM 0.30.0, Torch 2.13.0+cu130, Python 3.12.3", "doc_locations": ["BR:9-14"], "refs": {"manifests": "BR:42", "historical_report": "BR:46", "publication_commit": "aea7694a0af2d1dadc883b4b9e33d1a9bdb61098"}, "anchor_ids": ["BR-09", "BR-11", "BR-12", "BR-48"], "verification": "DOC_STATED_SOURCE_CITED", "qualifier": "runner records; the manifests say they are not proof of the remote backend version"},
+      {"id": "Q2", "evidence_id": "E1", "claim": "Same Azure-derived arrivals/input lengths, synthetic prompts, output cap 128, context 8192, 300-second arrival windows, TTFT SLO 0.5 s", "doc_locations": ["BR:15-17"], "refs": {"trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e", "runbooks": "BR:46"}, "anchor_ids": ["BR-15", "BR-16", "BR-17", "BR-44"], "verification": "DOC_STATED_SOURCE_CITED"},
+      {"id": "Q3", "evidence_id": "E1", "claim": "Shared A/B: offered 7,643 each; success 1,976/2,059; rejected 5,667/5,584; failed 0/0; SLO-good 572/736; SLO goodput 1.906667/2.453333 req/s; client TTFT p99 2.412583/2.202635 s; restated in the interview defense", "doc_locations": ["BR:19-22", "ID:101-102"], "refs": {"reports": "BR:41", "raw_bundle_index": "BR:43", "trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e", "audit_test": "verification.json archived raw-to-report comparison (BR:45, BR:63-65); not rerun", "recorded_runtime_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586 (not locally resolvable)", "publication_commit": "aea7694a0af2d1dadc883b4b9e33d1a9bdb61098"}, "anchor_ids": ["BR-21", "BR-22", "ID-101", "ID-102", "BR-41", "BR-43", "BR-45", "BR-47", "BR-48", "BR-67"], "verification": "ARITHMETIC_CONSISTENT", "independent_checks": "success+rejected+failed=offered for A and B; SLO-good<=success; SLO-good/300 equals the stated goodput to 6 decimals; the interview restatement equals the table. p99 is not recomputable without raw data.", "qualifiers": "p99 conditional on success (BR:24-26); arrival window, not total wall (BR:27); different hosts, not causal (BR:29-32); git_dirty=true (BR:34)"},
+      {"id": "Q4", "evidence_id": "E1", "claim": "reproduce.py checks the 15 manifest-recorded runtime files and does not regenerate the outcome table", "doc_locations": ["BR:60-65"], "refs": {"script": "results/shared-client-20261018/reproduce.py (not read)"}, "anchor_ids": ["BR-60", "BR-61"], "verification": "DOC_STATED_SOURCE_CITED"},
+      {"id": "Q5", "evidence_id": "E2", "claim": "130 CPU cases passed per Python", "doc_locations": ["BR:77"], "refs": {"commit": "2b4ed5bc754060cba11c16852b7798b975bc03eb", "index": "native-team16-planner-revision02-parent-seal01.json (not read)", "source_sha256": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a"}, "anchor_ids": ["BR-77", "BR-77b", "AR-56"], "verification": "DOC_STATED_SOURCE_CITED", "qualifier": "frozen team16 version; never summed with E6/E8 (RB:55)"},
+      {"id": "Q6", "evidence_id": "E3", "claim": "nine CPU integration cases passed per Python", "doc_locations": ["BR:78"], "refs": {"commit": "c00d29d2296bda7e249578f2de7c08650a4d79c9", "command": "native-team16-consumer-deployment02-parent01/attempts/mayor-py314.command.json (not read)"}, "anchor_ids": ["BR-78", "BR-78b"], "verification": "DOC_STATED_SOURCE_CITED"},
+      {"id": "Q7", "evidence_id": "E4", "claim": "One approximately 67-second GPU run; coverage FAIL (one of two); 90 HTTP records; three generations (one warmup, two managed); 43 completion tokens including 11 warmup", "doc_locations": ["BR:79", "RS:44"], "refs": {"results_commit": "52b2b244f5904306f730ab6ca26a3d572343e2b2", "preregistration_commit": "d6ded2b25a0667028f6ab9f2cc08fe76df1c3315"}, "anchor_ids": ["BR-79", "BR-79b", "BR-79c", "BR-79d"], "verification": "DOC_STATED_SOURCE_CITED", "qualifier": "partial negative diagnostic; not throughput or prediction"},
+      {"id": "Q8", "evidence_id": "E6", "claim": "Doc row has no numbers; index: Parent CPU 35 tests = 8 permit + 15 planner + 12 workload, Python 3.14.4, 1 attempt, 0.828 s, exit 0; planner02 125 and workload01 71 verified members; Train 88 offers; Eval 104 offers hashed only", "doc_locations": ["BR:93"], "refs": {"correction_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481", "negative_witness_commit": "814a9b5aa38dd8783ae643270b5aed59e1bc12b7", "tests_sha256": "0f716b28de50daa79110bb84b82022654ec5586a7b8e7147f4d7dd6fc903988b", "plan": "resume-p0-parent-cpu01-plan.json (not read)"}, "anchor_ids": ["BR-93", "BR-93b", "BR-93c", "CP-03", "CP-09", "CP-32", "CP-34", "CP-36", "CP-37", "CP-22", "CP-25"], "verification": "INDEX_MATCHED"},
+      {"id": "Q9", "evidence_id": "E7", "claim": "All 88 frozen Train prompts matched requested chat-template token counts; replay SHA256 5e418b89...; exact prompt classes 256/1024/3072", "doc_locations": ["BR:94", "BR:165-167"], "refs": {"commit": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e", "preregistration_commit": "1e9540caa9dd37f927d5389d05be3d973d234bf7", "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5", "train_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f", "replay_bytes": "257950"}, "anchor_ids": ["BR-94", "BR-94b", "BR-94c", "BR-94d", "BR-166", "TK-03", "TK-04", "TK-12", "TK-13", "TK-14", "TK-15", "TK-16", "TK-17", "SC-14", "SC-16", "CP-22"], "verification": "INDEX_MATCHED", "not_verified": "the old 512/2048 boundaries (BR:165) cite metrics-contract-parent01.json, outside scope"},
+      {"id": "Q10", "evidence_id": "E8", "claim": "14 controls passed on Python 3.12.16 from a scoped Git materialization; frozen prior 88 offers over 5 s (17.6/s), class counts 33/26/29, output 128; horizon 15 s = 5 s window + 10 s tail; cap 512", "doc_locations": ["BR:95", "BR:97-99"], "refs": {"commit": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0", "log_sha256": "70b443082f255b4ce7830d3056669882c1bccd8d506d3c8320037f6c94e40045", "materialization_base": "23c5e1df9b6d36bc086e8e6e06c09cfaa50fc68e", "prior_content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc"}, "anchor_ids": ["BR-95", "BR-95b", "BR-98", "BR-99", "SC-10", "SC-11", "SC-12", "SC-13", "SC-14", "SC-15", "SC-19", "SC-20", "SC-21", "SC-22", "SC-23", "SC-38", "SC-39", "SC-40", "SC-41", "SC-42", "SC-43", "SC-44"], "verification": "INDEX_MATCHED"}
+    ],
+    "commit_resolution": "No git was used; all commit IDs are doc-, index- or Mayor-supplied and were not object-verified in this audit."
+  },
+  "findings": [
+    {"id": "A1", "severity": "MEDIUM", "a_blocking": true, "status_vs_a01": "carried; replacement alternative refined", "bullet_ids": ["V1-b2"], "quotes": [{"file": "RB", "lines": [16, 16], "text": "corrected a Fixed-policy timing bias before native benchmarking."}], "issue": "Implies native benchmarking followed the correction. None exists: no qualified native MPC-versus-baseline result, no new native MPC measurements, every comparison cell Not measured, comparable GPU results Not collected.", "evidence_anchor_ids": ["BR-03", "BR-106", "BR-115", "RS-64"], "smallest_correction": "Delete ' before native benchmarking' so the sentence ends '...corrected a Fixed-policy timing bias.' Optional supported extension: '... and added regression tests' (CP-09, CP-12, CP-34). a01's alternative 'found by CPU regression controls' is withdrawn as imprecise: the package attributes discovery to the E6 negative witness (BR-93c) and the repair to intentional red regressions (CP-12)."},
+    {"id": "A2", "severity": "MEDIUM", "a_blocking": true, "status_vs_a01": "carried; replacement wording updated (a01 wording still acceptable)", "bullet_ids": ["V1-b2"], "quotes": [{"file": "RB", "lines": [15, 15], "text": "forecast inputs, Fixed/OneMove comparisons and deadline/version guards;"}], "issue": "On a resume 'Fixed/OneMove comparisons' reads as measured baseline comparisons. Only model-evaluated references exist (a model-ranked Fixed reference; OneMove full-panel selection under the same model). The measured Fixed/OneMove rows are Not measured and claim-qualified comparison on metrics01 is blocked.", "evidence_anchor_ids": ["CP-13", "CP-14", "RB-23", "ID-60", "BR-112", "BR-114", "BR-103", "BR-31", "BR-32"], "smallest_correction": "Replace 'Fixed/OneMove comparisons' with 'model-evaluated Fixed/OneMove references' (a01's 'in-model Fixed/OneMove reference candidates' is an acceptable equivalent)."},
+    {"id": "A3", "severity": "MEDIUM", "a_blocking": true, "status_vs_a01": "carried unchanged", "bullet_ids": ["S-b2"], "quotes": [{"file": "RS", "lines": [112, 114], "text": "Implemented a frozen finite-horizon policy planner with CPU-tested exact candidate ordering and deadline/version checks; corrected baseline timing bias while retaining explicit native-integration and comparison limitations."}], "issue": "Version conflation: the frozen planner with exact candidate ordering is E2 (team16 policy_planner16.py, SHA256 164f3947..., commit 2b4ed5bc...), but the timing-bias correction is E6 in the current nominal planner02 (source e492a254..., commit f645a66a...). The sentence attributes a correction to a frozen artifact, contrary to the separate-version rule.", "evidence_anchor_ids": ["RS-42", "BR-77", "AR-56", "BR-93", "BR-93b", "CP-08", "AR-39"], "smallest_correction": "Replace the summary pair with a pointer to the scoped variants in resume_bullets.md, or reword bullet 2 as S-b2.corrected_text."},
+    {"id": "A4", "severity": "LOW", "a_blocking": false, "status_vs_a01": "carried; extended to RB:34 and V2-b1", "bullet_ids": ["V1-b2", "V2-b1"], "quotes": [{"file": "RB", "lines": [20, 20], "text": "commit; second bullet E2/E6/E8."}, {"file": "RB", "lines": [34, 34], "text": "Evidence: E2/E6/E7/E8 and the [architecture](architecture.md)."}], "issue": "The evidence notes cite E2 together with E6-E8 without saying they are separate versions. V2-b1's singular 'a ... prototype' composes features evidenced in different versions (first-action interfaces in public mpc_lab runtime/actuator; scenario panel E8; guards E2/E6/E8). Not blocking: the verb is 'Designed', no deployment, integration or test-total claim is made, and RB:34-35 disclaims the complete loop.", "evidence_anchor_ids": ["AR-39", "AR-36", "AR-48", "RB-55"], "smallest_correction": "Append to both notes: '(E2 is the frozen team16 planner; E6-E8 are current resume-mvp components; runtime wiring is still under integration.)'"},
+    {"id": "A5", "severity": "LOW", "a_blocking": false, "status_vs_a01": "carried unchanged", "bullet_ids": [], "quotes": [{"file": "BR", "lines": [103, 105], "text": "common-environment identity, frozen selection provenance, complete offered cohorts and timestamp bounds need correction and recheck."}], "issue": "The metrics blocker summary does not name the send-time and window aspect of F3, so a reader cannot map it to the audit items.", "evidence_anchor_ids": ["BR-103"], "smallest_correction": "'... complete offered cohorts, and send-time and window timestamp bounds need correction and recheck.'"},
+    {"id": "A6", "severity": "LOW", "a_blocking": false, "status_vs_a01": "carried unchanged", "bullet_ids": [], "quotes": [{"file": "RS", "lines": [3, 3], "text": "Status: **A: scoped resume evidence package finalized; B: native MPC P0 open**."}], "issue": "'finalized' precedes this final independent audit and Mayor acceptance.", "evidence_anchor_ids": ["RS-03"], "smallest_correction": "'A: scoped resume evidence package (final independent claim audit pending)' until Mayor acceptance; then cite the acceptance record."},
+    {"id": "A7", "severity": "LOW", "a_blocking": false, "status_vs_a01": "carried unchanged", "bullet_ids": [], "quotes": [{"file": "BR", "lines": [94, 94], "text": "with the real cached tokenizer."}], "issue": "The PASS used an explicit local model asset, not a cache lookup; the cache/repository-ID attempt is the retained failure.", "evidence_anchor_ids": ["TK-11", "TK-12", "TK-07"], "smallest_correction": "'with the real tokenizer loaded from the explicit local model asset (fingerprint 4daabcf7...)'."},
+    {"id": "A8", "severity": "LOW", "a_blocking": false, "status_vs_a01": "carried unchanged", "bullet_ids": [], "quotes": [{"file": "ID", "lines": [58, 58], "text": "Fixed holds a development-selected budget."}], "issue": "The present tense reads as already selected; empirical Train selection is still required and the current E6 Fixed is only a model-ranked reference.", "evidence_anchor_ids": ["CP-14", "RB-23", "RS-64"], "smallest_correction": "'Fixed holds one budget selected on development data only (empirical selection still pending; the current E6 Fixed is a model-ranked reference).'"},
+    {"id": "A9", "severity": "LOW", "a_blocking": false, "status_vs_a01": "carried; extended with optional 'reproducible' tightening", "bullet_ids": ["V2-b2", "V3-b2"], "quotes": [{"file": "RB", "lines": [30, 31], "text": "Built a Train-only forecast and reproducible replay-input pipeline, preserving realized model assumptions,"}, {"file": "RB", "lines": [45, 45], "text": "including reproducible workload generation"}], "issue": "'preserving realized model assumptions' can be read as retained realized scenario inputs, which remain a runtime integration obligation; only the nominal assumptions are recorded. 'reproducible' rests on seeded public draws, hash-pinned canonical tapes and accepted generator controls; no regeneration rerun is recorded in the package (indirect support).", "evidence_anchor_ids": ["SC-19", "SC-27", "SC-48", "CP-24", "CP-26", "CP-27"], "smallest_correction": "'preserving realized model assumptions' -> 'recording its nominal model assumptions'; optional: 'reproducible' -> 'hash-pinned' (V2-b2) or 'seeded, hash-pinned' (V3-b2)."},
+    {"id": "A10", "severity": "LOW", "a_blocking": true, "status_vs_a01": "new in a02 (a01 recorded that the word was not source-verified but judged the variant SAFE)", "bullet_ids": ["V3-b1"], "quotes": [{"file": "RB", "lines": [41, 41], "text": "Implemented an asynchronous inference gateway with reservation accounting,"}], "issue": "'asynchronous' has no support anywhere in the frozen package: across the five docs the word occurs only in this bullet (quant-lines01.log async grep), and no evidence index mentions it. Not shown false (gateway.py was not read). LOW severity, but it blocks this bullet as written under the per-bullet verified-wording standard.", "evidence_anchor_ids": ["AR-32"], "smallest_correction": "Replace 'asynchronous' with 'streaming' (AR:32 'streaming lifecycle') or delete it; or keep it only after the Mayor adds an exact gateway.py source citation to the evidence note."}
+  ],
+  "final_variants": {
+    "standard": "Verified-only: every phrase maps to DIRECT support (an accepted evidence ID with a test or acceptance index, or the E1 archive) in the pinned package; no numbers, no design-only phrase, no cross-version composite inside one claim, no implied B result.",
+    "AI_Infrastructure": {
+      "bullets": [
+        {"id": "FAI-1", "derived_from": "V1-b1 (PASS) with optional O1 clarity", "text": "Built an instrumented admission-control gateway in front of vLLM and a trace-replay pipeline, retaining request outcomes, overload rejections and control-timing evidence from real-GPU scheduled-budget identification captures.", "evidence_ids": ["E1"], "version": "historical E1 captures (recorded runtime hashes, git_dirty=true); attributing them to current gateway.py requires a hash match (AR:52-54)", "phrase_map": [
+          {"phrase": "instrumented admission-control gateway", "support_class": "DIRECT", "anchor_ids": ["AR-32", "AR-33", "BR-31"]},
+          {"phrase": "in front of vLLM", "support_class": "DIRECT", "anchor_ids": ["AR-31", "BR-11"]},
+          {"phrase": "trace-replay pipeline", "support_class": "DIRECT", "anchor_ids": ["BR-15", "BR-16", "BR-44"]},
+          {"phrase": "retaining request outcomes, overload rejections", "support_class": "DIRECT", "anchor_ids": ["BR-21", "BR-22", "BR-41", "BR-43", "BR-45"]},
+          {"phrase": "control-timing evidence", "support_class": "DIRECT", "anchor_ids": ["RS-41", "AR-33"]},
+          {"phrase": "real-GPU scheduled-budget identification captures", "support_class": "DIRECT", "anchor_ids": ["BR-09", "BR-29", "RB-22"]}
+        ], "refs": {"trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e", "publication_commit": "aea7694a0af2d1dadc883b4b9e33d1a9bdb61098", "recorded_runtime_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586 (not locally resolvable; disclosed BR:67-70)", "audit": "verification.json (BR:45)"}},
+        {"id": "FAI-2", "derived_from": "V1-b2 (FAIL) after the A1 and A2 corrections, plus a supported regression-test clause", "text": "Implemented CPU-tested finite-horizon admission-policy planning with shared forecast inputs, model-evaluated Fixed/OneMove references and deadline/version guards; corrected a Fixed-policy timing bias and added regression tests.", "evidence_ids": ["E6", "E8"], "version": "current resume-mvp nominal components only (planner02 and the scenario factory); no E2 dependence; CPU counts not summed", "phrase_map": [
+          {"phrase": "CPU-tested finite-horizon admission-policy planning", "support_class": "DIRECT", "anchor_ids": ["AR-45", "CP-34", "CP-37", "CP-36"]},
+          {"phrase": "shared forecast inputs", "support_class": "DIRECT", "anchor_ids": ["SC-26", "AR-93", "BR-95"]},
+          {"phrase": "model-evaluated Fixed/OneMove references", "support_class": "DIRECT", "anchor_ids": ["CP-13", "CP-14", "RB-23", "ID-60"]},
+          {"phrase": "deadline/version guards", "support_class": "DIRECT", "anchor_ids": ["CP-11", "CP-12"]},
+          {"phrase": "corrected a Fixed-policy timing bias", "support_class": "DIRECT", "anchor_ids": ["BR-93", "BR-93b", "BR-93c", "CP-11"]},
+          {"phrase": "added regression tests", "support_class": "DIRECT", "anchor_ids": ["CP-09", "CP-12", "CP-34"]}
+        ], "refs": {"correction_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481", "negative_witness_commit": "814a9b5aa38dd8783ae643270b5aed59e1bc12b7", "planner02_tests_sha256": "0f716b28de50daa79110bb84b82022654ec5586a7b8e7147f4d7dd6fc903988b", "parent_cpu": "35 tests, Python 3.14.4, 1 attempt, exit 0 (CP:29-37)", "scenario_commit": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0", "scenario_controls": "14 passed, Python 3.12.16, exit 0 (SC:36-45)"}}
+      ]
+    },
+    "Autonomous_Systems": {
+      "bullets": [
+        {"id": "FAU-1", "derived_from": "V2-b1 (PASS), tightened: the design-only 'first-action replanning interfaces' is removed and the current-version guards are named", "text": "Designed and CPU-tested a finite-horizon admission-control planning prototype that evaluates all candidate paths on one shared Train-only scenario panel, with source/clock/version/deadline guards and permit-dependency invalidation.", "evidence_ids": ["E6", "E8"], "version": "current resume-mvp nominal components; component level, not runtime-integrated (AR:48-49, SC:47-51)", "phrase_map": [
+          {"phrase": "Designed and CPU-tested a finite-horizon admission-control planning prototype", "support_class": "DIRECT", "anchor_ids": ["AR-45", "CP-34", "CP-36", "SC-40", "SC-41"]},
+          {"phrase": "evaluates all candidate paths on one shared Train-only scenario panel", "support_class": "DIRECT", "anchor_ids": ["SC-26", "SC-10", "CP-13", "AR-46"]},
+          {"phrase": "source/clock/version/deadline guards", "support_class": "DIRECT", "anchor_ids": ["CP-11", "CP-12"]},
+          {"phrase": "permit-dependency invalidation", "support_class": "DIRECT", "anchor_ids": ["SC-34", "BR-95"]}
+        ], "refs": {"correction_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481", "scenario_commit": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0", "scenario_log_sha256": "70b443082f255b4ce7830d3056669882c1bccd8d506d3c8320037f6c94e40045"}, "excluded_from_original": "'first-action replanning interfaces' is DESIGN_ONLY (AR:36, ID:21-22) with no accepted test or evidence ID; restore it only after B provides two consecutive apply/reobserve receipts"},
+        {"id": "FAU-2", "derived_from": "V2-b2 (PASS) with the A9 tightening", "text": "Built a Train-only forecast and hash-pinned replay-input pipeline, recording its nominal model assumptions, tokenizer-validation evidence and explicit limitations instead of claiming calibrated native prediction.", "evidence_ids": ["E7", "E8", "E6-workload01"], "version": "current resume-mvp nominal components", "phrase_map": [
+          {"phrase": "Train-only forecast", "support_class": "DIRECT", "anchor_ids": ["SC-10", "SC-15", "AR-46"]},
+          {"phrase": "hash-pinned replay-input pipeline", "support_class": "DIRECT", "anchor_ids": ["TK-13", "TK-14", "CP-22", "CP-24"]},
+          {"phrase": "recording its nominal model assumptions", "support_class": "DIRECT", "anchor_ids": ["SC-19", "BR-98"]},
+          {"phrase": "tokenizer-validation evidence", "support_class": "DIRECT", "anchor_ids": ["TK-03", "TK-12", "TK-17", "BR-94"]},
+          {"phrase": "explicit limitations instead of claiming calibrated native prediction", "support_class": "DIRECT", "anchor_ids": ["RB-36", "SC-28", "TK-42", "BR-82"]}
+        ], "refs": {"tokenizer_commit": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e", "tokenizer_plan_commit": "1e9540caa9dd37f927d5389d05be3d973d234bf7", "replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7", "train_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f", "prior_content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc", "scenario_commit": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0"}}
+      ]
+    },
+    "usage_note": "Use one pair. Interview answers must keep the package boundaries: E1 captures are scheduled identification data, not MPC; the planner and forecast are CPU-tested components, not a native loop; the forecast is nominal and uncalibrated."
+  },
+  "explicit_claim_check": [
+    {"category": "native or MPC win, speedup or superior goodput", "result": "NONE_FOUND", "exclusion_anchor_ids": ["RB-53", "BR-03", "BR-82", "ID-118"]},
+    {"category": "production deployment or use", "result": "NONE_FOUND", "exclusion_anchor_ids": ["RB-48", "RB-53", "BR-82"]},
+    {"category": "calibrated prediction or forecast accuracy", "result": "NONE_FOUND", "exclusion_anchor_ids": ["RB-36", "BR-82", "SC-28", "TK-42"]},
+    {"category": "SLO guarantee, guaranteed p99 or bounded latency", "result": "NONE_FOUND", "exclusion_anchor_ids": ["RB-53", "RB-54", "BR-24", "TK-42"]},
+    {"category": "clean-checkout or full benchmark reproduction", "result": "NONE_FOUND", "exclusion_anchor_ids": ["RB-49", "RS-66", "BR-70", "CP-38", "SC-45"]},
+    {"category": "completed native closed loop or receding-horizon operation", "result": "NONE_FOUND", "exclusion_anchor_ids": ["RB-35", "RS-62", "SC-02", "BR-115"]}
+  ],
+  "known_missing_B_not_A_FAIL": {
+    "statement": "Correctly disclosed in the package; none is an A FAIL. Only wording that implies these results (A1, A2) fails.",
+    "items": [
+      {"item": "repeated real observe-predict-optimize-first-action-reobserve native loop", "anchor_ids": ["RS-62", "SC-02"]},
+      {"item": "comparable GPU results for MPC/Fixed/FIFO/OneMove and the TTFT/goodput/throughput/rejection/fairness/overhead table", "anchor_ids": ["RS-64", "BR-112", "BR-115"]},
+      {"item": "metrics01 comparison blockers pending correction and recheck", "anchor_ids": ["BR-103"]},
+      {"item": "empirical Train Fixed selection", "anchor_ids": ["CP-14", "RB-23"]},
+      {"item": "runtime integration and realized-input retention", "anchor_ids": ["AR-48", "SC-48"]},
+      {"item": "clean-checkout reproduction; E1 recorded runtime commit not locally resolvable", "anchor_ids": ["RS-66", "BR-67", "BR-70"]}
+    ]
+  },
+  "delta_from_a01": [
+    "Per-bullet PASS/FAIL replaces a01 SAFE/NEEDS_CORRECTION labels: SAFE -> PASS for V1-b1, V2-b1, V2-b2, V3-b2 and S-b1; NEEDS_CORRECTION -> FAIL for V1-b2 and S-b2.",
+    "V3-b1 changes SAFE -> FAIL (new A10, LOW). No new evidence was read: a01 already recorded that 'asynchronous' was not source-verified; the later per-bullet standard (reject unsupported wording; final variants from verified evidence only) makes it a bullet-level FAIL.",
+    "A1: a01's alternative 'found by CPU regression controls' is withdrawn as imprecise; use deletion, or the supported 'and added regression tests'.",
+    "A2: replacement wording 'model-evaluated Fixed/OneMove references' (a01 wording remains acceptable).",
+    "A4 extended to RB:34 and the V2-b1 cross-version composite; A9 extended with the optional 'reproducible' tightening.",
+    "Added the anchor-verified phrase-level evidence maps, the quantitative-claims ledger and the final verified-only variants."
+  ],
+  "unlogged_actions": [
+    "One display-only view-tool read of pinned docs/benchmark_results.md lines 1-71 before logging (disclosed in commands.log MANUAL 2026-11-04T23:56:49Z); the same bytes were later logged in anchors02.log.",
+    "Display-only reads of this capsule's own files (commands.log, run_logged.sh, pin files, created.utc, pin-check01.log and the logs listed below) with the view tool or cat, plus one unlogged ls/tail/wc listing of this capsule after REPORT.json was created.",
+    "REPORT.json authored with the file-create tool, then edited before freezing (limitations wording made precise, this list completed, S-b2 corrected_text made digit-free with a separate version_mapping) after display-only rereads of anchors01.log, anchors02.log and pin-check01.log; no input file was reread for these edits.",
+    "Reasoning context from a01's logged reads reused; no other file was read."
+  ],
+  "logs": [
+    {"file": "pin-check01.log", "purpose": "a01 seal verification, pin-copy identity, current worktree versus pins, doc stat"},
+    {"file": "quant-lines01.log", "purpose": "numeric-line and async/concurrency grep over the five docs"},
+    {"file": "anchors01.log", "purpose": "line-numbered read of resume_bullets.md (full) and selected anchor ranges of the summary, architecture, interview and benchmark docs"},
+    {"file": "anchors02.log", "purpose": "line-numbered read of the three indices and benchmark_results.md lines 1-71"},
+    {"file": "a01-summary01.log", "purpose": "structure, verdict and finding summary of the sealed a01 REPORT.json"},
+    {"file": "report-json-check-python314-01.log", "purpose": "strict checker run, Python 3.14"},
+    {"file": "report-json-check-python312-01.log", "purpose": "strict checker run, Python 3.12"},
+    {"file": "drift-recheck01.log", "purpose": "post-check pin drift and a01 seal recheck"}
+  ],
+  "interpreters": {
+    "python314": {"path": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14", "expected_version": "3.14.4"},
+    "python312": {"path": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12", "expected_version": "3.12.16"},
+    "invocation": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 <python> -B -I -c <checker>"
+  },
+  "limitations": [
+    "No git: equality of the pinned worktree bytes with commit 98e1174de56b01fd4448259c002d9f32223298ad is not verified; only byte equality with the sealed a01 pins is verified (pin-check01.log; the five doc mtimes 2026-11-04T23:29:34Z to 23:31:03Z precede this capsule's creation).",
+    "E1-E5 figures were not re-derived from raw data or their indices (outside the 8-file scope); E1 was checked for internal arithmetic consistency only.",
+    "Link targets were not read; a01 verified that they exist.",
+    "gateway.py, runtime.py, actuator.py and the planner/scenario sources were not read; 'asynchronous' is unsupported, not shown false.",
+    "Commit IDs are doc-, index- or Mayor-supplied and not object-verified.",
+    "Whether the work is personally attributable to the resume holder (including AI-assisted development and multi-role review) cannot be audited from the package; the verbs assume the package's attribution.",
+    "This is an evidence-to-wording audit, not a legal or employer-specific resume standard."
+  ],
+  "nonclaims": [
+    "Not Mayor acceptance, not P0 completion, not ResumeReady and not a deliverable-B result.",
+    "No runtime test, experiment, GPU, HTTP, network or git action was performed.",
+    "The final variants are wording recommendations within the verified evidence; they do not establish any native, MPC, comparison, calibration or SLO result.",
+    "The B recorder/metrics recheck is a separate later scope and was not read before this seal.",
+    "Native14 remains FAIL and all scientific gates are unchanged."
+  ]
+}

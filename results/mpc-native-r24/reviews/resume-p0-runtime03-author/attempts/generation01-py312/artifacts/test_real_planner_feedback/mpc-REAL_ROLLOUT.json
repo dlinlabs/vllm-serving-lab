@@ -1,0 +1,242 @@
+{
+  "actual_MockTransport_budget_changes": 1,
+  "planning_observations": [
+    {
+      "budget": 16.0,
+      "budget_version": 0,
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "complete": true,
+      "identity": {
+        "calibration_version": "synthetic-unqualified-v1",
+        "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+        "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+        "model_version": "cpu-lifecycle-v1",
+        "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+      },
+      "requests": [],
+      "run_id": "CPU-only-nominal-runtime",
+      "sampled_at": 927908.415643355,
+      "sequence": 0
+    },
+    {
+      "budget": 32.0,
+      "budget_version": 1,
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "complete": true,
+      "identity": {
+        "calibration_version": "synthetic-unqualified-v1",
+        "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+        "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+        "model_version": "cpu-lifecycle-v1",
+        "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+      },
+      "requests": [
+        {
+          "admitted_at": 927908.520204555,
+          "cost": 21.1408452,
+          "first_at": null,
+          "max_tokens": 4000,
+          "prompt_tokens": 64,
+          "received_at": 927908.520204555,
+          "request_id": "CPU-admitted-after-cap",
+          "scheduled_at": null
+        }
+      ],
+      "run_id": "CPU-only-nominal-runtime",
+      "sampled_at": 927908.532460955,
+      "sequence": 2
+    }
+  ],
+  "plans": [
+    {
+      "at": 927908.424723455,
+      "decision": {
+        "contract_sha256": "4c463b2e22024a8b3db6b96f94f86ddc3da5abee576de72569d55ba880966076",
+        "evaluated_paths": 8,
+        "first_action": {
+          "budget": 32.0,
+          "not_after": 927908.912441355,
+          "not_before": 927908.5124413549,
+          "source": {
+            "budget": 16.0,
+            "budget_version": 0,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "identity": {
+              "calibration_version": "synthetic-unqualified-v1",
+              "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+              "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+              "model_version": "cpu-lifecycle-v1",
+              "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+            },
+            "run_id": "CPU-only-nominal-runtime",
+            "sequence": 0
+          }
+        },
+        "objective_id": "gateway-resolved-success-ttft0.5-lower-count-hold-switch-sum-lex-v1",
+        "plan": {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "first_action_at": 927908.5124413549,
+          "received_budget": 16.0,
+          "sampled_at": 927908.415643355
+        },
+        "planner_version": "resume-p0-gateway-nominal-planner-v1",
+        "policy": "mpc",
+        "predicted_lower": {
+          "denominator": 1,
+          "numerator": 1
+        },
+        "predicted_upper": {
+          "denominator": 1,
+          "numerator": 1
+        }
+      },
+      "event": "Planned",
+      "planning_started_at": 927908.421309355,
+      "scenario": {
+        "available_at": 927908.415643355,
+        "conditioned_on": {
+          "budget": 16.0,
+          "budget_version": 0,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "identity": {
+            "calibration_version": "synthetic-unqualified-v1",
+            "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+            "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+            "model_version": "cpu-lifecycle-v1",
+            "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+          },
+          "run_id": "CPU-only-nominal-runtime",
+          "sequence": 0
+        },
+        "information_cutoff_at": 927908.415643355,
+        "objective_id": "gateway-resolved-success-ttft0.5-lower-count-hold-switch-sum-lex-v1",
+        "origin": "development",
+        "purpose": "engineering",
+        "scenario": {
+          "egress_delay_s": 0.0,
+          "ingress_delay_s": 0.0,
+          "offers": [
+            {
+              "egress_delay_s": 0.0,
+              "ingress_delay_s": 0.0,
+              "max_tokens": 4000,
+              "offset_s": 0.2,
+              "output_tokens": 1,
+              "prompt_tokens": 64,
+              "request_id": "CPU-forecast-offer",
+              "success": true
+            }
+          ],
+          "old_output_fraction": 1.0,
+          "old_success": true,
+          "service_scale": 1.0
+        },
+        "source_sha256": "8001b1a27b2298f2f8703b736eb6b90515da3cdcfdb2c9262e8e3e904b7ccb35"
+      },
+      "scenario_sha256": "c3d308b71ab75c18f60cfb86b1881d142edf564a63d1b84d92c6d7fd66b79946",
+      "selected_at": 927908.424690855,
+      "snapshot_sha256": "62c18edcfdc9e56529a93f61787ec9f3998f9db0f730ab57a7bbee829dea3bc2",
+      "suffix_execution_permitted": false
+    },
+    {
+      "at": 927908.539157855,
+      "decision": {
+        "contract_sha256": "4c463b2e22024a8b3db6b96f94f86ddc3da5abee576de72569d55ba880966076",
+        "evaluated_paths": 8,
+        "first_action": {
+          "budget": 32.0,
+          "not_after": 927909.032134055,
+          "not_before": 927908.632134055,
+          "source": {
+            "budget": 32.0,
+            "budget_version": 1,
+            "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+            "identity": {
+              "calibration_version": "synthetic-unqualified-v1",
+              "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+              "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+              "model_version": "cpu-lifecycle-v1",
+              "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+            },
+            "run_id": "CPU-only-nominal-runtime",
+            "sequence": 2
+          }
+        },
+        "objective_id": "gateway-resolved-success-ttft0.5-lower-count-hold-switch-sum-lex-v1",
+        "plan": {
+          "actions": [
+            32.0,
+            32.0,
+            32.0
+          ],
+          "first_action_at": 927908.632134055,
+          "received_budget": 32.0,
+          "sampled_at": 927908.532460955
+        },
+        "planner_version": "resume-p0-gateway-nominal-planner-v1",
+        "policy": "mpc",
+        "predicted_lower": {
+          "denominator": 1,
+          "numerator": 0
+        },
+        "predicted_upper": {
+          "denominator": 1,
+          "numerator": 1
+        }
+      },
+      "event": "Planned",
+      "planning_started_at": 927908.535381455,
+      "scenario": {
+        "available_at": 927908.532460955,
+        "conditioned_on": {
+          "budget": 32.0,
+          "budget_version": 1,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "identity": {
+            "calibration_version": "synthetic-unqualified-v1",
+            "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+            "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+            "model_version": "cpu-lifecycle-v1",
+            "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+          },
+          "run_id": "CPU-only-nominal-runtime",
+          "sequence": 2
+        },
+        "information_cutoff_at": 927908.532460955,
+        "objective_id": "gateway-resolved-success-ttft0.5-lower-count-hold-switch-sum-lex-v1",
+        "origin": "development",
+        "purpose": "engineering",
+        "scenario": {
+          "egress_delay_s": 0.0,
+          "ingress_delay_s": 0.0,
+          "offers": [
+            {
+              "egress_delay_s": 0.0,
+              "ingress_delay_s": 0.0,
+              "max_tokens": 4000,
+              "offset_s": 0.2,
+              "output_tokens": 1,
+              "prompt_tokens": 64,
+              "request_id": "CPU-forecast-offer",
+              "success": true
+            }
+          ],
+          "old_output_fraction": 1.0,
+          "old_success": true,
+          "service_scale": 1.0
+        },
+        "source_sha256": "8001b1a27b2298f2f8703b736eb6b90515da3cdcfdb2c9262e8e3e904b7ccb35"
+      },
+      "scenario_sha256": "171b73103d39fa6fccbf635785c6ce8a20f879cf5588d80a1c5657407c7cf5f5",
+      "selected_at": 927908.539128155,
+      "snapshot_sha256": "59992f79eab92a964b3b03be8310c2cbee1e907d81671918dc9fd71719342bde",
+      "suffix_execution_permitted": false
+    }
+  ],
+  "real_rollout_calls": 16,
+  "scope": "literal CPU forecast + MockTransport feedback, not Native"
+}

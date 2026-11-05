@@ -1,0 +1,34 @@
+{
+  "added_at_unix_ns": 1793822681847928299,
+  "additions": [
+    {
+      "bytes": 3590,
+      "manifest_sha256": "84e7d2ec9cead355a09b1651d6e8381b63dddd53c6c1731668edfa0f6de65f6b",
+      "path": "CONTROL_FREEZE.json",
+      "reason": "Q-bind: composition_common01.verify_code (158-162) trusts only the top-level CONTROL_FREEZE sha256 map; need its exact coverage of runnable launcher/service/client/consumer files.",
+      "sha256": "84e7d2ec9cead355a09b1651d6e8381b63dddd53c6c1731668edfa0f6de65f6b"
+    },
+    {
+      "bytes": 987,
+      "manifest_sha256": "745d8d35eae0a148b51db280e61ec64f32d4346520f00deb2550734db3ee738a",
+      "path": "consumer/CONTROL_FREEZE.json",
+      "reason": "Q-bind: consumer READY (consumer01 104) and launcher registration (launch01 84) bind this file's digest; need its exact coverage of the consumer worker-side runnable files.",
+      "sha256": "745d8d35eae0a148b51db280e61ec64f32d4346520f00deb2550734db3ee738a"
+    }
+  ],
+  "first_selection_bytes": 376824,
+  "first_selection_files": 36,
+  "limits": {
+    "additions": 4,
+    "bytes": 4194304,
+    "files": 40
+  },
+  "pinned_before_content_read": true,
+  "pins_sha256": "0df6743ee77563504745c1e6f95636488fd04c141907ba116939e61f3757a398",
+  "problems": [],
+  "python": "3.14.4",
+  "schema": "team16-d2r01-post-freeze-additions-v1",
+  "subject_manifest_sha256": "407bc2e88426f4997064fd7f62d09651af74a2c18c6e4989267f48a601a16ae8",
+  "total_bytes": 381401,
+  "total_files": 38
+}

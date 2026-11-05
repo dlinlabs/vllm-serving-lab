@@ -1,0 +1,770 @@
+--- runtime01/nominal_runtime.py
++++ experiments/mpc-research/resume-mvp/nominal_runtime.py
+@@ -24,19 +24,31 @@
+ import json
+ import os
+ from pathlib import Path
++import sys
+ import time
+ from typing import Callable
+ import uuid
+ 
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parents[2]
++for _directory in (ROOT, HERE):
++    _path = str(_directory)
++    if _path in sys.path:
++        sys.path.remove(_path)
++    sys.path.insert(0, _path)
++
+ import httpx
+ 
+-from mpc_lab.contracts import CostSpec, Identity, ModelParameters, SCHEMA, Snapshot, digest, finite
++from mpc_lab.contracts import (
++    CostSpec, Identity, ModelParameters, SCHEMA, Scenario, Snapshot, digest, finite,
++    implementation_hash,
++)
+ from mpc_lab.controller import validate_snapshot
+ from mpc_lab.runtime import require_guarded_capability, snapshot_from_dict
+ from prefill_lab.live_http import clock_domain
+ from nominal_permit import NominalDemoPermit, SCOPE, source_digest
+ from nominal_planner import (
+-    BUDGETS, CONTRACT_SHA256, OBJECTIVE_ID, PLANNER_VERSION, CausalScenario,
++    BUDGETS, CONTRACT_SHA256, MAX_OFFERS, OBJECTIVE_ID, PLANNER_VERSION, CausalScenario,
+     DecisionWindow, FirstAction, NominalDecision, NominalPlanner, StateVersion, TimedPlan,
+ )
+ 
+@@ -85,6 +97,26 @@
+     return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+ 
+ 
++def module_paths():
++    paths = {"nominal_runtime": str(Path(__file__).resolve())}
++    expected = {
++        "mpc_lab.contracts": ROOT / "mpc_lab/contracts.py",
++        "mpc_lab.controller": ROOT / "mpc_lab/controller.py",
++        "mpc_lab.model": ROOT / "mpc_lab/model.py",
++        "mpc_lab.runtime": ROOT / "mpc_lab/runtime.py",
++        "prefill_lab.live_http": ROOT / "prefill_lab/live_http.py",
++        **{name: HERE / (name + ".py") for name in
++           ("nominal_permit", "nominal_planner", "nominal_scenario", "nominal_workload")},
++    }
++    for name, path in expected.items():
++        if name not in sys.modules and name in ("nominal_scenario", "nominal_workload"):
++            continue
++        actual = Path(sys.modules[name].__file__).resolve()
++        _require(actual == path, "module_outside_frozen_root:" + name)
++        paths[name] = str(actual)
++    return paths
++
++
+ @dataclass(frozen=True)
+ class RuntimeLimits:
+     iterations: int = 4
+@@ -99,6 +131,55 @@
+                  and 0 < self.episode_s <= 60 and 0 < self.solve_s <= 0.1
+                  and self.solve_s < self.decision_s <= 0.5 and 0 <= self.poll_s <= 1,
+                  "invalid_runtime_deadlines")
++
++
++def _protocol(parameters, policy, limits, scenario_binding, endpoint, journal_path, start_at=None):
++    module_paths()
++    endpoint = httpx.URL(endpoint)
++    _require(endpoint.scheme in ("http", "https") and endpoint.host
++             and not endpoint.username and not endpoint.password
++             and endpoint.path in ("", "/") and not endpoint.query and not endpoint.fragment,
++             "explicit_HTTP_root_endpoint_required")
++    _require(type(parameters) is ModelParameters and type(limits) is RuntimeLimits
++             and policy in ("mpc", "one_move"), "typed_nominal_protocol_required")
++    _require(start_at is None or finite(start_at) and start_at >= 0, "invalid_shared_start")
++    value = {
++        "scope": SCOPE, "runtime": JOURNAL_SCHEMA, "planner_contract": CONTRACT_SHA256,
++        "objective": OBJECTIVE_ID, "parameters": asdict(parameters), "policy": policy,
++        "limits": asdict(limits), "scenario_binding": scenario_binding,
++        "endpoint": str(endpoint.copy_with(path="/")), "journal_path": str(Path(journal_path).absolute()),
++        "max_commands": 8, "source_age_s": 0.5, "command_ttl_s": 0.1,
++        "precommit_observation_equality": True, "ledger_CAS": False,
++        "Fixed_FIFO": "separate_static_preoffer_setup_not_implemented",
++    }
++    if start_at is not None:
++        value["start_at"] = start_at
++        value["CLI_start_envelope_s"] = 60.0
++    return _strict(json.dumps(value, allow_nan=False))
++
++
++def describe_protocol(planner, journal_path, *, endpoint, scenario_binding,
++                      policy="mpc", limits=RuntimeLimits(), start_at=None):
++    """Describe actual frozen bindings without a client, journal write or authority."""
++    _require(type(planner) is NominalPlanner, "typed_nominal_planner_required")
++    protocol = _protocol(planner.parameters, policy, limits, scenario_binding, endpoint, journal_path, start_at)
++    directory = Path(__file__).resolve().parent
++    names = ("nominal_permit.py", "nominal_planner.py", "nominal_runtime.py",
++             "nominal_scenario.py", "nominal_workload.py")
++    bundle = {
++        "public_implementation": implementation_hash(),
++        "nominal": {name: hashlib.sha256((directory / name).read_bytes()).hexdigest() for name in names},
++    }
++    source = source_digest()
++    _require(digest(bundle) == source, "source_bundle_description_mismatch")
++    return {
++        "scope": SCOPE, "mode": "protocol_description_only",
++        "protocol": protocol, "protocol_sha256": digest(protocol),
++        "source_sha256": source, "source_bundle": bundle,
++        "expected_identity": asdict(planner.identity), "clock_domain": clock_domain(),
++        "module_paths": module_paths(),
++        "not_an_approval": True, "HTTP_performed": False, "Native_qualified": False,
++    }
+ 
+ 
+ class _Journal:
+@@ -203,7 +284,7 @@
+         admin_key: str, scenario_binding: dict, permit: NominalDemoPermit | None = None,
+         enabled: bool = False, policy: str = "mpc", limits: RuntimeLimits = RuntimeLimits(),
+         parameters: ModelParameters | None = None, clock: Callable[[], float] = time.monotonic,
+-        sleeper=asyncio.sleep,
++        sleeper=asyncio.sleep, start_at: float | None = None,
+     ):
+         _require(type(enabled) is bool and policy in ("mpc", "one_move"),
+                  "explicit_mode_required_static_baselines_not_per_tick")
+@@ -220,16 +301,10 @@
+         self.parameters, self.identity = parameters, planner.identity
+         self.permit, self.enabled, self.policy, self.limits = permit, enabled, policy, limits
+         self.admin_key, self.clock, self.sleeper = admin_key, clock, sleeper
++        self.start_at = start_at
+         self.store = _Journal(journal_path)
+-        self.protocol = _strict(json.dumps({
+-            "scope": SCOPE, "runtime": JOURNAL_SCHEMA, "planner_contract": CONTRACT_SHA256,
+-            "objective": OBJECTIVE_ID, "parameters": asdict(parameters), "policy": policy,
+-            "limits": asdict(limits), "scenario_binding": scenario_binding,
+-            "endpoint": str(client.base_url), "journal_path": str(self.store.path),
+-            "max_commands": 8, "source_age_s": 0.5, "command_ttl_s": 0.1,
+-            "precommit_observation_equality": True, "ledger_CAS": False,
+-            "Fixed_FIFO": "separate_static_preoffer_setup_not_implemented",
+-        }, allow_nan=False))
++        self.protocol = _protocol(parameters, policy, limits, scenario_binding, client.base_url,
++                                  self.store.path, start_at)
+         self.protocol_sha256 = digest(self.protocol)
+         self.state = None
+         self.observed = None
+@@ -240,6 +315,7 @@
+                  and digest(asdict(self.parameters)) == digest(self.protocol["parameters"])
+                  and asdict(self.limits) == self.protocol["limits"]
+                  and self.policy == self.protocol["policy"]
++                 and self.start_at == self.protocol.get("start_at")
+                  and str(self.store.path) == self.protocol["journal_path"]
+                  and str(self.client.base_url) == self.protocol["endpoint"]
+                  and self.client.follow_redirects is False
+@@ -387,6 +463,16 @@
+         planning_started = self._now()
+         source = self.scenario_factory(snapshot)
+         _require(type(source) is CausalScenario, "typed_causal_scenario_required")
++        _require(type(source.scenario) is Scenario and type(source.scenario.offers) is tuple
++                 and len(source.scenario.offers) <= MAX_OFFERS, "bounded_causal_scenario_required")
++        scenario = _plain(source)
++        scenario_bytes = json.dumps(scenario, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
++        _require(len(scenario_bytes) <= MAX_BODY, "causal_receipt_byte_limit")
++        scenario_sha256 = hashlib.sha256(scenario_bytes).hexdigest()
++        snapshot_sha256 = digest(asdict(snapshot))
++        self._record("PlanningInput", planning_started_at=planning_started,
++                     snapshot_sha256=snapshot_sha256, scenario=scenario,
++                     scenario_sha256=scenario_sha256, window=window)
+         decision = self.planner.plan(snapshot, source, window, policy=self.policy,
+                                      clock_domain=clock_domain(), read_state=self._version, clock=self._now)
+         _require(self._now() < window.solve_deadline, "planner_finished_after_original_solve_deadline")
+@@ -405,8 +491,8 @@
+                  and plan.first_action_at == action.not_before == window.first_action_at
+                  and action.not_after == window.action_deadline, "first_action_source_or_time_mismatch")
+         self._record("Planned", planning_started_at=planning_started, selected_at=self._now(),
+-                     snapshot_sha256=digest(asdict(snapshot)),
+-                     scenario_sha256=digest(asdict(source)), decision=_plain(decision),
++                     snapshot_sha256=snapshot_sha256, scenario=scenario,
++                     scenario_sha256=scenario_sha256, decision=_plain(decision),
+                      suffix_execution_permitted=False)
+         return decision
+ 
+@@ -492,6 +578,7 @@
+                 self.state = self.store.read()
+                 domain = clock_domain()
+                 if self.state is None:
++                    _require(self.start_at is None or call_entered >= self.start_at, "shared_start_not_reached")
+                     self.state = {
+                         "schema": JOURNAL_SCHEMA, "scope": SCOPE, "controller_id": uuid.uuid4().hex,
+                         "identity": asdict(self.identity), "clock_domain": domain,
+@@ -499,7 +586,7 @@
+                         "episode_started_at": call_entered, "episode_deadline": call_entered + self.limits.episode_s,
+                         "issued_commands": 0, "source_sha256": None, "pending": None, "events": [],
+                     }
+-                    self.store.save(self.state)
++                    self._record("ProtocolBound", protocol=self.protocol, module_paths=module_paths())
+                 _require(self.state["identity"] == asdict(self.identity)
+                          and self.state["protocol_sha256"] == self.protocol_sha256
+                          and self.state["clock_domain"] == domain, "journal_identity_protocol_or_clock_changed")
+@@ -601,24 +688,113 @@
+     return factory, {"file_sha256": fingerprint, "origin": document["origin"], "purpose": document["purpose"]}
+ 
+ 
++def load_train_scenario(path, *, purpose, clock=time.monotonic):
++    """Freeze Train once; bind static content, not the new process's availability."""
++    import nominal_scenario as producer
++
++    module_paths()
++    _require(purpose in ("train", "evaluation", "engineering"), "explicit_forecast_purpose_required")
++    prior = producer.freeze_train_prior(path, purpose="train", clock_domain=clock_domain(), clock=clock)
++    content = {key: value for key, value in asdict(prior).items()
++               if key not in ("clock_domain", "available_at")}
++    sources = {
++        "nominal_scenario.py": hashlib.sha256(Path(producer.__file__).read_bytes()).hexdigest(),
++        "nominal_workload.py": hashlib.sha256(Path(producer.workload.__file__).read_bytes()).hexdigest(),
++    }
++    binding = {
++        "provider": "frozen-Train-nominal-scenario-v1", "purpose": purpose,
++        "prior_content": content, "prior_content_sha256": prior.content_sha256,
++        "clock_domain": prior.clock_domain, "producer_sources": sources,
++        "rng": {
++            "namespace": producer.RNG_NAMESPACE, "seed": producer.RNG_SEED,
++            "runtime": f"Python {sys.version.split()[0]} stdlib random.Random(str, version=2)/expovariate/randrange",
++            "horizon_s": producer.HORIZON_S, "max_offers": producer.MAX_OFFERS,
++        },
++        "assumptions": producer.ASSUMPTIONS,
++    }
++
++    def factory(snapshot):
++        return producer.make_scenario(prior, snapshot, purpose=purpose, clock=clock).causal
++
++    return factory, binding
++
++
++async def wait_for_start(runtime, *, cli_entered):
++    """Wait before run() entry; an existing validated journal resumes its old episode."""
++    now = runtime._now()
++    receipt = {"requested_start_at": runtime.start_at, "cli_entered_at": cli_entered,
++               "wait_entered_at": now, "resumed_existing_episode": False}
++    if runtime.start_at is None:
++        return {**receipt, "wait_finished_at": now}
++    runtime._binding()
++    if runtime.store.path.exists():
++        with runtime.store.locked():
++            saved = runtime.store.read()
++        _require(saved is not None and saved["identity"] == asdict(runtime.identity)
++                 and saved["protocol_sha256"] == runtime.protocol_sha256
++                 and saved["clock_domain"] == clock_domain()
++                 and runtime.start_at <= saved["episode_started_at"] <= now < saved["episode_deadline"],
++                 "shared_start_restart_binding_or_episode_invalid")
++        return {**receipt, "wait_finished_at": runtime._now(), "resumed_existing_episode": True}
++    end = cli_entered + 60.0
++    if runtime.enabled:
++        _require(type(runtime.permit) is NominalDemoPermit and runtime.permit.approved is True
++                 and finite(runtime.permit.not_before) and finite(runtime.permit.expires_at)
++                 and 0 <= runtime.permit.not_before <= runtime.start_at < runtime.permit.expires_at
++                 and 0 < runtime.permit.expires_at - runtime.permit.not_before <= 60.0,
++                 "shared_start_outside_nominal_permit")
++        end = min(end, runtime.permit.expires_at)
++    _require(finite(cli_entered) and cli_entered <= now <= runtime.start_at
++             and runtime.start_at + runtime.limits.episode_s <= end,
++             "shared_start_past_or_outside_envelope")
++    async with asyncio.timeout(end - now):
++        remaining = runtime.start_at - runtime._now()
++        if remaining > 0:
++            await runtime.sleeper(remaining)
++    finished = runtime._now()
++    _require(runtime.start_at <= finished and finished + runtime.limits.episode_s <= end,
++             "shared_start_wait_exhausted_envelope")
++    return {**receipt, "wait_finished_at": finished, "CLI_envelope_deadline": end}
++
++
+ def main(argv=None):
++    cli_entered = time.monotonic()
+     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+     parser.add_argument("--url", default="http://127.0.0.1:8080")
+     parser.add_argument("--journal", type=Path, required=True)
+-    parser.add_argument("--scenario-file", type=Path)
++    source = parser.add_mutually_exclusive_group()
++    source.add_argument("--scenario-file", type=Path)
++    source.add_argument("--train-tape", type=Path)
++    parser.add_argument("--forecast-purpose", choices=("train", "evaluation", "engineering"))
+     parser.add_argument("--cost-spec-file", type=Path)
+     parser.add_argument("--policy", choices=("mpc", "one_move"), default="mpc")
+     parser.add_argument("--steps", type=int, default=4)
+     parser.add_argument("--episode-seconds", type=float, default=4.0)
++    parser.add_argument("--poll-seconds", type=float, default=0.0)
++    parser.add_argument("--describe-protocol", action="store_true")
++    parser.add_argument("--start-at", type=float)
+     parser.add_argument("--experimental-nominal-demo", action="store_true")
+     parser.add_argument("--nominal-permit", type=Path)
+     args = parser.parse_args(argv)
+-    if args.experimental_nominal_demo and (args.nominal_permit is None or args.scenario_file is None):
+-        parser.error("experimental POST requires a separate nominal permit and causal scenario file")
+-    permit = _load_permit(args.nominal_permit) if args.nominal_permit else None
++    if (args.train_tape is not None) != (args.forecast_purpose is not None):
++        parser.error("--train-tape requires an explicit --forecast-purpose, used only with Train")
++    if not args.describe_protocol and args.experimental_nominal_demo and (
++            args.nominal_permit is None or (args.scenario_file is None and args.train_tape is None)):
++        parser.error("experimental POST requires a separate nominal permit and causal scenario file or Train tape")
+     cost = CostSpec(**_strict(args.cost_spec_file.read_bytes())) if args.cost_spec_file else CostSpec()
+     planner = NominalPlanner(ModelParameters(cost_spec=cost))
+-    factory, binding = load_causal_scenario(args.scenario_file) if args.scenario_file else (None, {"kind": "observe_only"})
++    if args.train_tape:
++        factory, binding = load_train_scenario(args.train_tape, purpose=args.forecast_purpose)
++    else:
++        factory, binding = load_causal_scenario(args.scenario_file) if args.scenario_file else (None, {"kind": "observe_only"})
++    limits = RuntimeLimits(iterations=args.steps, episode_s=args.episode_seconds, poll_s=args.poll_seconds)
++    if args.describe_protocol:
++        print(json.dumps(describe_protocol(
++            planner, args.journal, endpoint=args.url, scenario_binding=binding,
++            policy=args.policy, limits=limits, start_at=args.start_at,
++        ), sort_keys=True, allow_nan=False))
++        return
++    permit = _load_permit(args.nominal_permit) if args.nominal_permit else None
+     key = os.environ.get("ADMIN_API_KEY", "")
+     _require(bool(key), "ADMIN_API_KEY_required")
+ 
+@@ -627,9 +803,12 @@
+             runtime = NominalRuntime(
+                 client, planner, factory, args.journal, admin_key=key, scenario_binding=binding,
+                 permit=permit, enabled=args.experimental_nominal_demo, policy=args.policy,
+-                limits=RuntimeLimits(iterations=args.steps, episode_s=args.episode_seconds),
++                limits=limits, start_at=args.start_at,
+             )
+-            return await runtime.run()
++            startup = await wait_for_start(runtime, cli_entered=cli_entered)
++            result = await runtime.run()
++            result.update(startup=startup, module_paths=module_paths())
++            return result
+ 
+     print(json.dumps(asyncio.run(execute()), sort_keys=True, allow_nan=False))
+ 
+--- runtime01/test_nominal_runtime.py
++++ experiments/mpc-research/resume-mvp/test_nominal_runtime.py
+@@ -6,13 +6,17 @@
+ """
+ 
+ import asyncio
+-from contextlib import contextmanager
++import base64
++from contextlib import contextmanager, redirect_stdout
+ from dataclasses import asdict, replace
+ from fractions import Fraction
+ import hashlib
++import io
+ import json
+ import os
+ from pathlib import Path
++import subprocess
++import sys
+ import time
+ import unittest
+ from unittest import mock
+@@ -23,7 +27,7 @@
+     GUARDED_CAPABILITY, SCHEMA, FutureOffer, ModelParameters, RequestMark,
+     Scenario, Snapshot, digest,
+ )
+-from mpc_lab.runtime import snapshot_to_dict
++from mpc_lab.runtime import snapshot_from_dict, snapshot_to_dict
+ import nominal_planner as p
+ import nominal_runtime as r
+ from nominal_permit import NominalDemoPermit
+@@ -602,5 +606,404 @@
+         self.assertEqual(gateway.gets, gets)
+ 
+ 
++class NominalRuntimeCLIIntegrationTests(unittest.TestCase):
++    """Selected with -k cli02_; do not repeat the preceding runtime01 suite."""
++
++    def setUp(self):
++        base = os.environ.get("NOMINAL_RUNTIME_TEST_DIR")
++        if not base:
++            raise RuntimeError("NOMINAL_RUNTIME_TEST_DIR must name a fresh project-local evidence directory")
++        self.directory = Path(base) / self._testMethodName
++        self.directory.mkdir(parents=True, exist_ok=False)
++        self.train = r.ROOT / "results/mpc-native-r24/reviews/resume-p0-workload-author01/tapes-v1/train.tape.json"
++        self.planner = p.NominalPlanner()
++        self.clients, self.children, self.calls = [], [], 0
++        self.real_client = httpx.AsyncClient
++        self.network_patch = mock.patch.object(
++            httpx.AsyncHTTPTransport, "handle_async_request",
++            side_effect=AssertionError("external HTTP forbidden in CLI02 CPU controls"),
++        )
++        self.network_patch.start()
++        self.addCleanup(self.network_patch.stop)
++
++    def write(self, name, value):
++        with (self.directory / name).open("x", encoding="utf-8") as stream:
++            json.dump(r._plain(value), stream, sort_keys=True, indent=2, allow_nan=False)
++            stream.write("\n")
++
++    def tearDown(self):
++        async def close():
++            for client in self.clients:
++                await client.aclose()
++        asyncio.run(close())
++        self.write("OWNED_CLEANUP.json", {
++            "clients_closed": [client.is_closed for client in self.clients],
++            "standalone_CLI_children": self.children, "runtime_workers": [],
++            "scope": "CPU clients and one bounded offline CLI child only; no campaign/engine ownership",
++        })
++        self.assertTrue(all(client.is_closed for client in self.clients))
++        self.assertTrue(all(child["joined"] and child["original_identity_gone"] for child in self.children))
++
++    def args(self, journal="journal.json"):
++        return [
++            "--url", "http://cpu.invalid", "--journal", str((self.directory / journal).absolute()),
++            "--train-tape", str(self.train), "--forecast-purpose", "engineering",
++            "--steps", "2", "--episode-seconds", "3", "--poll-seconds", "0.02",
++        ]
++
++    def invoke(self, arguments):
++        self.calls += 1
++        output = io.StringIO()
++        with redirect_stdout(output):
++            r.main(arguments)
++        raw = output.getvalue()
++        (self.directory / f"cli-{self.calls:02d}.stdout.json").write_text(raw)
++        return json.loads(raw)
++
++    def client_factory(self, gateway):
++        def construct(*args, **kwargs):
++            client = self.real_client(*args, **kwargs, transport=httpx.MockTransport(gateway.handle))
++            self.clients.append(client)
++            return client
++        return construct
++
++    @contextmanager
++    def train_only(self):
++        import nominal_scenario as producer
++        original_open = Path.open
++        opened_train = []
++
++        def checked_open(path, *args, **kwargs):
++            mode = args[0] if args else kwargs.get("mode", "r")
++            if "r" in mode:
++                if path.name == "eval.tape.json":
++                    raise AssertionError("Eval tape must not be opened")
++                if path == self.train:
++                    opened_train.append(str(path))
++            return original_open(path, *args, **kwargs)
++
++        with mock.patch.object(Path, "open", new=checked_open), mock.patch.object(
++                producer.workload, "load_tape",
++                side_effect=AssertionError("workload regeneration/loading API forbidden")):
++            yield opened_train
++
++    def test_cli02_describe_is_offline_stable_and_standalone(self):
++        import nominal_scenario as producer
++        frozen = []
++        freeze = producer.freeze_train_prior
++
++        def capture_prior(*args, **kwargs):
++            prior = freeze(*args, **kwargs)
++            frozen.append(prior)
++            return prior
++
++        arguments = self.args() + [
++            "--describe-protocol", "--start-at", "1000000000",
++            "--experimental-nominal-demo", "--nominal-permit", str(self.directory / "must-not-read.json"),
++        ]
++        with self.train_only() as reads, \
++                mock.patch.object(producer, "freeze_train_prior", side_effect=capture_prior), \
++                mock.patch.object(producer, "make_scenario", side_effect=AssertionError("no forecast during describe")), \
++                mock.patch.object(r.httpx, "AsyncClient", side_effect=AssertionError("no client during describe")), \
++                mock.patch.object(r, "_load_permit", side_effect=AssertionError("no approval read during describe")), \
++                mock.patch.object(r, "wait_for_start", side_effect=AssertionError("no start wait during describe")):
++            first = self.invoke(arguments)
++            second = self.invoke(arguments)
++        self.assertEqual(len(frozen), 2)
++        self.assertNotEqual(frozen[0].available_at, frozen[1].available_at)
++        self.assertEqual(len(reads), 2)
++        self.assertEqual(first["protocol"], second["protocol"])
++        self.assertEqual(first["protocol_sha256"], second["protocol_sha256"])
++        self.assertEqual(first["source_sha256"], digest(first["source_bundle"]))
++        self.assertEqual(len(first["source_bundle"]["nominal"]), 5)
++        binding = first["protocol"]["scenario_binding"]
++        self.assertNotIn("available_at", json.dumps(binding))
++        self.assertEqual(binding["prior_content_sha256"], digest(binding["prior_content"]))
++        self.assertEqual(binding["prior_content"]["train_sha256"], producer.TRAIN_SHA256)
++        self.assertEqual(binding["prior_content"]["tokenizer_fingerprint"], producer.TOKENIZER_FINGERPRINT)
++        self.assertEqual(first["protocol"]["limits"]["poll_s"], 0.02)
++        self.assertEqual(first["protocol"]["start_at"], 1_000_000_000.0)
++        self.assertFalse((self.directory / "journal.json").exists())
++        self.assertTrue(first["not_an_approval"])
++
++        outside = self.directory / "outside-root"
++        outside.mkdir()
++        command = [sys.executable, "-B", str(r.HERE / "nominal_runtime.py"), *arguments]
++        environment = dict(os.environ)
++        environment.pop("PYTHONPATH", None)
++        with (self.directory / "standalone.stdout.log").open("xb") as stdout, \
++                (self.directory / "standalone.stderr.log").open("xb") as stderr:
++            child = subprocess.Popen(command, cwd=outside, env=environment, stdout=stdout, stderr=stderr)
++            identity = {
++                "pid": child.pid,
++                "start_ticks": Path(f"/proc/{child.pid}/stat").read_text().rsplit(")", 1)[1].split()[19],
++            }
++            try:
++                child.wait(timeout=15)
++            finally:
++                if child.poll() is None:
++                    child.kill()
++                    child.wait(timeout=3)
++                try:
++                    current = Path(f"/proc/{child.pid}/stat").read_text().rsplit(")", 1)[1].split()[19]
++                except FileNotFoundError:
++                    current = None
++                self.children.append({
++                    **identity, "returncode": child.returncode, "joined": child.returncode is not None,
++                    "original_identity_gone": current != identity["start_ticks"], "command": command,
++                    "cwd": str(outside), "PYTHONPATH_unset": True,
++                })
++        self.assertEqual(child.returncode, 0)
++        standalone = json.loads((self.directory / "standalone.stdout.log").read_bytes())
++        self.assertEqual(standalone["protocol_sha256"], first["protocol_sha256"])
++        self.assertEqual(standalone["source_sha256"], first["source_sha256"])
++        self.assertEqual(standalone["module_paths"]["mpc_lab.contracts"], str(r.ROOT / "mpc_lab/contracts.py"))
++        self.assertEqual(standalone["module_paths"]["nominal_scenario"], str(r.HERE / "nominal_scenario.py"))
++        self.write("DESCRIBE_BINDING.json", {
++            "prior_available_at": [prior.available_at for prior in frozen],
++            "stable_protocol_sha256": first["protocol_sha256"], "no_HTTP_or_approval": True,
++            "source_bundle": first["source_bundle"], "actual_module_paths": standalone["module_paths"],
++        })
++
++    def test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start(self):
++        import nominal_scenario as producer
++        gateway = Gateway(self.planner, time.monotonic)
++        realized = []
++        generate = producer.make_scenario
++        start = time.monotonic() + 0.2
++        arguments = self.args() + ["--start-at", repr(start)]
++
++        def capture_forecast(*args, **kwargs):
++            result = generate(*args, **kwargs)
++            realized.append(result)
++            return result
++
++        with self.train_only() as reads, mock.patch.dict(os.environ, {"ADMIN_API_KEY": CPU_KEY}), \
++                mock.patch.object(r.httpx, "AsyncClient", side_effect=self.client_factory(gateway)), \
++                mock.patch.object(producer, "make_scenario", side_effect=capture_forecast), \
++                mock.patch.object(producer, "freeze_train_prior", wraps=producer.freeze_train_prior) as freeze, \
++                mock.patch.object(p, "rollout", wraps=p.rollout) as rollouts:
++            result = self.invoke(arguments)
++        self.assertEqual(freeze.call_count, 1)
++        self.assertEqual(len(reads), 1)
++        self.assertEqual(len(realized), 2)
++        self.assertEqual(rollouts.call_count, 16)
++        self.assertIsNone(result["failure"])
++        self.assertEqual(len(result["steps"]), 2)
++        self.assertEqual(gateway.posts, [])
++        self.assertEqual(gateway.gets, 2)
++        self.assertTrue(all(client.is_closed for client in self.clients))
++        self.assertGreaterEqual(gateway.receipts[0]["at"], start)
++        self.assertGreaterEqual(result["steps"][0]["entered_at"], start)
++        self.assertAlmostEqual(result["episode_deadline"] - result["steps"][0]["entered_at"], 3.0)
++        self.assertGreaterEqual(result["steps"][1]["entered_at"] - result["steps"][0]["finished_at"], 0.02)
++        state = json.loads((self.directory / "journal.json").read_bytes())
++        events = state["events"]
++        protocol = next(event["protocol"] for event in events if event["event"] == "ProtocolBound")
++        self.assertEqual(digest(protocol), state["protocol_sha256"])
++        self.assertEqual(protocol["start_at"], start)
++        planned = [event for event in events if event["event"] == "Planned"]
++        inputs = [event for event in events if event["event"] == "PlanningInput"]
++        snapshots = {}
++        for event in events:
++            if event["event"] == "HTTP" and event["method"] == "GET":
++                snapshot = snapshot_from_dict(json.loads(base64.b64decode(event["body_b64"])))
++                snapshots[digest(asdict(snapshot))] = snapshot
++        parameters = dict(protocol["parameters"])
++        parameters["cost_spec"] = r.CostSpec(**parameters["cost_spec"])
++        parameters["supported_budgets"] = tuple(parameters["supported_budgets"])
++        parameters = ModelParameters(**parameters)
++        replay_receipts = []
++        for index, event in enumerate(planned):
++            self.assertEqual(event["scenario"], r._plain(realized[index].causal))
++            self.assertEqual(event["scenario_sha256"], digest(event["scenario"]))
++            self.assertEqual(inputs[index]["scenario"], event["scenario"])
++            self.assertLess(events.index(inputs[index]), events.index(event))
++            self.assertGreater(realized[index].causal.available_at, realized[index].causal.information_cutoff_at)
++            saved_scenario = dict(event["scenario"]["scenario"])
++            saved_scenario["offers"] = tuple(FutureOffer(**offer) for offer in saved_scenario["offers"])
++            scenario = Scenario(**saved_scenario)
++            saved_plan = dict(event["decision"]["plan"])
++            saved_plan["actions"] = tuple(saved_plan["actions"])
++            plan = p.TimedPlan(**saved_plan)
++            replay = p.rollout(snapshots[event["snapshot_sha256"]], plan, scenario, parameters, p.CONFIG)
++            lower = event["decision"]["predicted_lower"]
++            upper = event["decision"]["predicted_upper"]
++            self.assertEqual(Fraction(replay.score_lower), Fraction(lower["numerator"], lower["denominator"]))
++            self.assertEqual(Fraction(replay.score_upper), Fraction(upper["numerator"], upper["denominator"]))
++            replay_receipts.append({"offers": len(scenario.offers), "lower": replay.score_lower,
++                                    "upper": replay.score_upper, "realized_scenario_sha256": event["scenario_sha256"]})
++        self.write("REALIZED_REPLAY.json", {
++            "scope": "CPU nominal forecast replay, not Native", "plans": replay_receipts,
++            "planner_rollouts": rollouts.call_count, "offline_selected_path_replays": len(replay_receipts),
++            "startup": result["startup"], "observed_GET_receipts": gateway.receipts,
++        })
++
++    def test_cli02_pending_restart_reuses_static_train_and_start_bindings(self):
++        clock = Clock()
++        gateway = Gateway(self.planner, clock)
++        gateway.post_mode = "timeout"
++        start = clock() + 0.05
++        journal = self.directory / "pending.json"
++        gateway.journal = journal.absolute()
++        first_factory, first_binding = r.load_train_scenario(self.train, purpose="evaluation", clock=clock)
++
++        def literal(planner, snapshot, source, window, **kwargs):
++            plan = p.TimedPlan((32.0,) * 3, snapshot.budget, snapshot.sampled_at, window.first_action_at)
++            return p.NominalDecision(
++                kwargs["policy"], plan,
++                p.FirstAction(32.0, window.first_action_at, window.action_deadline, p.StateVersion.from_snapshot(snapshot)),
++                Fraction(0), Fraction(0), 8,
++            )
++
++        def runtime(factory, binding, target=start):
++            client = self.real_client(transport=httpx.MockTransport(gateway.handle), base_url="http://cpu.invalid",
++                                      follow_redirects=False, trust_env=False)
++            self.clients.append(client)
++            value = r.NominalRuntime(
++                client, self.planner, factory, journal, admin_key=CPU_KEY, scenario_binding=binding,
++                enabled=True, limits=r.RuntimeLimits(iterations=1, episode_s=3),
++                clock=clock, sleeper=clock.sleep, start_at=target,
++            )
++            value.permit = NominalDemoPermit(
++                self.planner.identity, gateway.run_id, gateway.domain,
++                CPU_SOURCE, value.protocol_sha256, 100.0, 110.0, approved=True,
++            )
++            return value
++
++        async def exercise():
++            first = runtime(first_factory, first_binding)
++            startup1 = await r.wait_for_start(first, cli_entered=clock())
++            result1 = await first.run()
++            clock.value += 0.02
++            second_factory, second_binding = r.load_train_scenario(self.train, purpose="evaluation", clock=clock)
++            second = runtime(second_factory, second_binding)
++            self.assertEqual(first.protocol_sha256, second.protocol_sha256)
++            startup2 = await r.wait_for_start(second, cli_entered=clock())
++            result2 = await second.run()
++            wrong = runtime(second_factory, second_binding, target=start + 0.01)
++            with self.assertRaisesRegex(r.RuntimeRefused, "shared_start_restart_binding"):
++                await r.wait_for_start(wrong, cli_entered=clock())
++            clock.value += 0.2
++            result3 = await second.run()
++            return startup1, startup2, result1, result2, result3, second_binding
++
++        with self.train_only() as reads, mock.patch.object(r, "source_digest", return_value=CPU_SOURCE), \
++                mock.patch.object(p.NominalPlanner, "plan", new=literal):
++            startup1, startup2, first, unchanged, fenced, second_binding = asyncio.run(exercise())
++        self.assertEqual(len(reads), 1)
++        self.assertEqual(first_binding, second_binding)
++        self.assertEqual(first["pending_outcome"], "unknown")
++        self.assertEqual(unchanged["pending_outcome"], "unknown")
++        self.assertEqual(fenced["steps"][0]["status"], "unknown_fenced_by_server_expiry")
++        self.assertEqual(first["episode_deadline"], unchanged["episode_deadline"])
++        self.assertEqual(first["episode_deadline"], fenced["episode_deadline"])
++        self.assertEqual([first["issued_commands"], unchanged["issued_commands"], fenced["issued_commands"]], [1, 1, 1])
++        self.assertEqual(len(gateway.posts), 1)
++        self.assertFalse(startup1["resumed_existing_episode"])
++        self.assertTrue(startup2["resumed_existing_episode"])
++        self.assertEqual(gateway.receipts[0]["at"], start)
++        self.write("PENDING_RESTART.json", {
++            "scope": "CPU literal decision/MockTransport only, not predictive qualification",
++            "startup": [startup1, startup2], "results": [first, unchanged, fenced],
++            "static_binding": second_binding,
++        })
++
++    def test_cli02_input_refusals_and_partial_planning_inputs_are_retained(self):
++        import nominal_scenario as producer
++        with mock.patch.object(r.httpx, "AsyncClient", side_effect=AssertionError("no HTTP client for invalid input")):
++            for extra in (
++                ["--scenario-file", str(self.directory / "not-opened.json")],
++                ["--experimental-nominal-demo"],
++            ):
++                with self.assertRaises(SystemExit) as stopped:
++                    r.main(self.args() + extra)
++                self.assertEqual(stopped.exception.code, 2)
++            missing_purpose = self.args()
++            index = missing_purpose.index("--forecast-purpose")
++            del missing_purpose[index:index + 2]
++            with self.assertRaises(SystemExit):
++                r.main(missing_purpose + ["--describe-protocol"])
++            with self.assertRaisesRegex(r.RuntimeRefused, "invalid_shared_start"):
++                r.main(self.args() + ["--describe-protocol", "--start-at", "nan"])
++            bad = self.directory / "bad"
++            bad.mkdir()
++            (bad / "train.tape.json").write_text('{"schema":"CPU-invalid-not-authorized-Train"}')
++            with self.train_only():
++                with self.assertRaisesRegex(producer.ScenarioRefused, "train_filename_required"):
++                    r.load_train_scenario(bad / "eval.tape.json", purpose="evaluation")
++                with self.assertRaisesRegex(producer.ScenarioRefused, "train_source_hash_mismatch"):
++                    r.load_train_scenario(bad / "train.tape.json", purpose="engineering")
++            legacy = self.directory / "declared-scenario.json"
++            legacy.write_text(json.dumps({
++                "clock_domain": r.clock_domain(), "information_cutoff_at": 0.0, "available_at": 0.0,
++                "origin": "development", "purpose": "engineering", "scenario": asdict(Scenario(())),
++            }))
++            legacy_result = self.invoke([
++                "--journal", str(self.directory / "legacy.json"), "--scenario-file", str(legacy),
++                "--describe-protocol",
++            ])
++            self.assertEqual(legacy_result["protocol"]["scenario_binding"]["file_sha256"],
++                             hashlib.sha256(legacy.read_bytes()).hexdigest())
++
++        async def rejected_start():
++            clock = Clock()
++            gateway = Gateway(self.planner, clock)
++            reasons = []
++            for kind, target, enabled in (("past", 99.0, False), ("far", 200.0, False),
++                                          ("permit_expiry", 100.05, True)):
++                client = self.real_client(transport=httpx.MockTransport(gateway.handle),
++                                          base_url="http://cpu.invalid", follow_redirects=False, trust_env=False)
++                self.clients.append(client)
++                runtime = r.NominalRuntime(
++                    client, self.planner, None, self.directory / ("start-" + str(target) + ".json"),
++                    admin_key=CPU_KEY, scenario_binding={"CPU_only": True}, clock=clock,
++                    sleeper=clock.sleep, start_at=target, enabled=enabled,
++                )
++                if enabled:
++                    runtime.permit = NominalDemoPermit(
++                        self.planner.identity, gateway.run_id, gateway.domain,
++                        CPU_SOURCE, runtime.protocol_sha256, 100.0, 100.1, approved=True,
++                    )
++                with self.assertRaisesRegex(r.RuntimeRefused, "shared_start_past_or_outside_envelope") as failure:
++                    await r.wait_for_start(runtime, cli_entered=clock())
++                reasons.append({"kind": kind, "reason": str(failure.exception)})
++            self.assertEqual(gateway.gets, 0)
++            self.assertEqual(clock.sleeps, [])
++            return reasons
++        self.write("START_REFUSALS.json", asyncio.run(rejected_start()))
++
++        gateway = Gateway(self.planner, time.monotonic)
++        journal = self.directory / "partial-plan.json"
++        real_rollout = p.rollout
++        called = []
++
++        def stop_after_first(*args, **kwargs):
++            state = json.loads(journal.read_bytes())
++            saved = state["events"][-1]
++            self.assertEqual(saved["event"], "PlanningInput")
++            self.assertEqual(saved["scenario"]["scenario"], r._plain(args[2]))
++            called.append(args[1].actions)
++            if len(called) == 2:
++                raise ValueError("CPU intentional second rollout refusal")
++            return real_rollout(*args, **kwargs)
++
++        with self.train_only(), mock.patch.dict(os.environ, {"ADMIN_API_KEY": CPU_KEY}), \
++                mock.patch.object(r.httpx, "AsyncClient", side_effect=self.client_factory(gateway)), \
++                mock.patch.object(p, "rollout", side_effect=stop_after_first):
++            result = self.invoke(self.args("partial-plan.json") + ["--steps", "1"])
++        self.assertEqual(len(called), 2)
++        self.assertEqual(result["steps"][0]["status"], "refused")
++        self.assertIn("CPU intentional second rollout refusal", result["steps"][0]["reason"])
++        self.assertEqual(gateway.posts, [])
++        events = json.loads(journal.read_bytes())["events"]
++        self.assertEqual(len([event for event in events if event["event"] == "PlanningInput"]), 1)
++        self.assertEqual([event for event in events if event["event"] == "Planned"], [])
++        self.write("PARTIAL_PLANNING_RECEIPT.json", {
++            "real_rollouts_completed": 1, "attempted_candidate_paths": called,
++            "input_saved_before_any_rollout": True, "returned_failure": result,
++        })
++
++
+ if __name__ == "__main__":
+     unittest.main()

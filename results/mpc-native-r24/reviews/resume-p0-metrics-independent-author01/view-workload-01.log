@@ -1,0 +1,496 @@
+1: """Predeclared SYNTHETIC offered-workload tapes (Train/Eval) for future real-GPU measurements.
+2: 
+3: Protocol v1 values are Mayor protocol choices: they are not verified capacity or model accuracy
+4: and were not designed for an MPC win.  A tape is a synthetic *offered* workload drawn from a
+5: public deterministic generator; it carries no outcomes and is distinct from any Native/GPU
+6: execution of it.  Requested prompt-length classes are labels: backend tokenization and gateway
+7: cost are measured at replay time (see ``to_replay_trace``), never assumed equal to the label.
+8: 
+9: CLI (no protocol override flags exist):
+10:     python -B -I nominal_workload.py generate --out-dir NEW_DIR
+11:     python -B -I nominal_workload.py verify --out-dir DIR
+12: """
+13: import argparse
+14: import decimal
+15: import hashlib
+16: import json
+17: from pathlib import Path
+18: import sys
+19: 
+20: GENERATOR_ID = 'r24-resume-p0-nominal-workload-generator'
+21: GENERATOR_VERSION = 1
+22: MODULE_PATH = 'experiments/mpc-research/resume-mvp/nominal_workload.py'
+23: TAPE_SCHEMA = 'r24-resume-p0-offered-tape-v1'
+24: TAPE_KIND = 'SYNTHETIC_OFFERED_WORKLOAD_TAPE'
+25: MANIFEST_SCHEMA = 'r24-resume-p0-workload-manifest-v1'
+26: MANIFEST_NAME = 'manifest.json'
+27: PURPOSES = ('train', 'eval')
+28: STREAMS = ('arrival', 'length_class', 'payload')
+29: COLUMNS = ('request_id', 'offset_ns', 'requested_prompt_tokens', 'max_output_tokens', 'payload_key')
+30: REPLAY_MAX_MODEL_LEN = 8192  # trace_workload.MAX_MODEL_LEN for replay schema_version 1
+31: NS_PER_SECOND = 1_000_000_000
+32: TWO_64 = 1 << 64
+33: DECIMAL_PRECISION = 50
+34: MAX_SUPPORTED_OFFERS = 10_000  # request IDs use a 4-digit index
+35: 
+36: _PROTOCOL_V1 = {
+37:     'protocol_id': 'r24-resume-p0-nominal-workload-v1',
+38:     'protocol_version': 1,
+39:     'kind': 'SYNTHETIC_OFFERED_WORKLOAD',
+40:     'duration_ns': 5 * NS_PER_SECOND,
+41:     'arrival_process': 'homogeneous_poisson',
+42:     'arrival_rate_per_second': 20,
+43:     'max_offers': 1024,
+44:     'prompt_length_classes': [256, 1024, 3072],
+45:     'prompt_length_class_distribution': 'uniform',
+46:     'max_output_tokens': 128,
+47:     'later_gpu_config': {'prefix_cache': 'disabled: required for later GPU measurement; not verified by this CPU component'},
+48:     'splits': {
+49:         'train': {'seed': 4101, 'source_id': 'synthetic:r24-resume-p0-nominal-workload:v1:train',
+50:                   'request_id_prefix': 'p0w1-train-'},
+51:         'eval': {'seed': 4102, 'source_id': 'synthetic:r24-resume-p0-nominal-workload:v1:eval',
+52:                  'request_id_prefix': 'p0w1-eval-'},
+53:     },
+54: }
+55: 
+56: DISCLAIMERS = (
+57:     'SYNTHETIC offered workload from a public deterministic generator: not a real or Azure trace and not a '
+58:     'held-out real-trace sample.',
+59:     'Offered workload only: no execution outcomes; any Native/GPU execution of this tape is a separate measurement.',
+60:     'requested_prompt_tokens are class labels: backend tokenization and gateway cost must be measured, not assumed equal.',
+61:     'Protocol values are protocol choices, not verified capacity or model accuracy, and were not designed for an MPC win.',
+62: )
+63: POLICY = {
+64:     'train': 'Train split: controllers/forecasters may take scenario information only from Train and past observations, '
+65:              'using a forecast RNG distinct from every domain of this generator; Train selection method PENDING Mayor/Role7.',
+66:     'eval': 'Eval split (held out): controllers, forecasters and tuning must never read or regenerate this tape or use its '
+67:             'outcomes; only the measurement harness replays it.',
+68: }
+69: RNG_SPEC = {
+70:     'uniform': 'X(purpose, seed, stream, k) = big-endian uint64 of the first 8 bytes of sha256(domain || k as 8-byte '
+71:                'big-endian); domain = ASCII JSON (separators "," ":") of [generator_id, generator_version, protocol_id, '
+72:                'purpose, seed, stream] followed by one 0x00 byte',
+73:     'streams': list(STREAMS),
+74:     'arrival': 'gap_seconds = (ln(2^64) - ln(2^64 - X)) / rate in decimal.Context(prec=50, ROUND_HALF_EVEN); arrival time '
+75:                't accumulates from 0; offset_ns = floor(t * 10^9); stop at the first offset_ns >= duration_ns; arrival '
+76:                'k = request index; more than max_offers in-window arrivals is refused (no truncation or resampling)',
+77:     'length_class': 'class = prompt_length_classes[(X * n_classes) >> 64] with k = request index (bias <= 2^-64)',
+78:     'payload': 'nonce = 16 lowercase hex digits of X with k = request index',
+79:     'decimal_precision': DECIMAL_PRECISION,
+80: }
+81: PAYLOAD_GENERATION = {
+82:     'key_format': 'protocol_id/purpose/request_id/nonce',
+83:     'template': 'SHARED by both splits at replay-adapter time: trace_workload.synthetic_prompt(tokenizer, '
+84:                 'requested_prompt_tokens, payload_key); tapes carry no prompt text',
+85: }
+86: PROMPT_LENGTH_SEMANTICS = (
+87:     'requested_prompt_tokens is a protocol class label (requested chat-template tokens). It is not assumed equal to '
+88:     'backend tokenization or gateway cost: replay input_tokens are measured with the replay tokenizer and gateway cost '
+89:     'is whatever the gateway computes at run time.'
+90: )
+91: HOLDOUT_BASIS = (
+92:     'Generator independence: each tape is a pure function of the shared protocol fields and its own split spec; RNG '
+93:     'domains include purpose and seed, so Train and Eval use disjoint SHA-256 counter domains (tested: Eval bytes are '
+94:     'invariant to Train seed/source/prefix changes and vice versa; equal seeds with different purposes still differ).',
+95:     'Membership: request-ID namespaces and payload keys (which embed purpose) are disjoint; source IDs differ; the '
+96:     'Train tape contains no Eval seed, source or prefix.',
+97:     'Provenance: this manifest pins the protocol, module and both tape SHA-256 values; verify regenerates byte-identically.',
+98:     'Unequal hashes alone are NOT claimed as holdout evidence. Both seeds are public, so this is a procedural holdout of '
+99:     'synthetic draws from one public generator: not an OOD/generalization split and not an Azure or real-trace holdout.',
+100: )
+101: CLAIMS_NOT_MADE = (
+102:     'no CPU or GPU performance result', 'no capacity or model-accuracy claim', 'no OOD/generalization claim',
+103:     'no Azure or real-trace held-out claim', 'no MPC/controller superiority claim',
+104:     'requested prompt length is not claimed equal to backend tokenization or gateway cost',
+105:     'prefix cache disabled is required but not verified here', 'native-client compatibility NOT_VERIFIED',
+106:     'Train selection method not chosen here (PENDING Mayor/Role7)',
+107: )
+108: 
+109: 
+110: class OfferCapExceeded(ValueError):
+111:     """More in-window arrivals than max_offers: refused, never truncated or resampled."""
+112: 
+113: 
+114: class TapeIntegrityError(ValueError):
+115:     """Tape bytes differ from the frozen generator output."""
+116: 
+117: 
+118: class TapePurposeError(ValueError):
+119:     """Tape split purpose differs from the purpose the caller declared."""
+120: 
+121: 
+122: class VerificationError(ValueError):
+123:     """Output directory differs from the regenerated outputs."""
+124: 
+125: 
+126: def protocol_v1():
+127:     """Fresh copy of the frozen protocol v1 (callers cannot mutate the frozen constant)."""
+128:     return json.loads(json.dumps(_PROTOCOL_V1))
+129: 
+130: 
+131: def canonical_bytes(obj):
+132:     return json.dumps(obj, sort_keys=True, separators=(',', ':'), ensure_ascii=True,
+133:                       allow_nan=False).encode('ascii') + b'\n'
+134: 
+135: 
+136: def sha256_hex(data):
+137:     return hashlib.sha256(data).hexdigest()
+138: 
+139: 
+140: def decimal_context():
+141:     return decimal.Context(prec=DECIMAL_PRECISION, rounding=decimal.ROUND_HALF_EVEN, Emin=-999999, Emax=999999,
+142:                            capitals=1, clamp=0, flags=[],
+143:                            traps=[decimal.InvalidOperation, decimal.DivisionByZero, decimal.Overflow])
+144: 
+145: 
+146: def rng_domain(protocol_id, purpose, seed, stream):
+147:     material = json.dumps([GENERATOR_ID, GENERATOR_VERSION, protocol_id, purpose, seed, stream],
+148:                           separators=(',', ':'), ensure_ascii=True)
+149:     return material.encode('ascii') + b'\x00'
+150: 
+151: 
+152: def uniform64(domain, k):
+153:     return int.from_bytes(hashlib.sha256(domain + k.to_bytes(8, 'big')).digest()[:8], 'big')
+154: 
+155: 
+156: def _positive_int(value, name, upper=None):
+157:     if type(value) is not int or value <= 0 or (upper is not None and value > upper):
+158:         raise ValueError(f'{name} must be a positive int' + (f' <= {upper}' if upper is not None else ''))
+159:     return value
+160: 
+161: 
+162: def exponential_gap_seconds(x, rate, context=None):
+163:     """Exact-decimal exponential(rate) inverse-CDF draw on the uint64 grid."""
+164:     if type(x) is not int or not 0 <= x < TWO_64:
+165:         raise ValueError('x must be an int in [0, 2^64)')
+166:     _positive_int(rate, 'rate')
+167:     ctx = decimal_context() if context is None else context
+168:     numerator = ctx.subtract(ctx.ln(decimal.Decimal(TWO_64)), ctx.ln(decimal.Decimal(TWO_64 - x)))
+169:     return ctx.divide(numerator, decimal.Decimal(rate))
+170: 
+171: 
+172: def length_class_index(x, n_classes):
+173:     if type(x) is not int or not 0 <= x < TWO_64:
+174:         raise ValueError('x must be an int in [0, 2^64)')
+175:     _positive_int(n_classes, 'n_classes')
+176:     return (x * n_classes) >> 64
+177: 
+178: 
+179: def _nonempty_str(value, name):
+180:     if not isinstance(value, str) or not value or not value.isascii():
+181:         raise ValueError(f'{name} must be a non-empty ASCII string')
+182:     return value
+183: 
+184: 
+185: def _validated(protocol, purpose):
+186:     if purpose not in PURPOSES:
+187:         raise ValueError(f'purpose must be one of {PURPOSES}')
+188:     if not isinstance(protocol, dict):
+189:         raise ValueError('protocol must be a dict')
+190:     _nonempty_str(protocol.get('protocol_id'), 'protocol_id')
+191:     _positive_int(protocol.get('protocol_version'), 'protocol_version')
+192:     if protocol.get('kind') != 'SYNTHETIC_OFFERED_WORKLOAD':
+193:         raise ValueError('protocol kind must be SYNTHETIC_OFFERED_WORKLOAD')
+194:     if protocol.get('arrival_process') != 'homogeneous_poisson':
+195:         raise ValueError('only a homogeneous Poisson arrival process is implemented')
+196:     if protocol.get('prompt_length_class_distribution') != 'uniform':
+197:         raise ValueError('only a uniform prompt-length class distribution is implemented')
+198:     _positive_int(protocol.get('duration_ns'), 'duration_ns')
+199:     _positive_int(protocol.get('arrival_rate_per_second'), 'arrival_rate_per_second')
+200:     _positive_int(protocol.get('max_offers'), 'max_offers', MAX_SUPPORTED_OFFERS)
+201:     cap = protocol.get('max_output_tokens')
+202:     if type(cap) is not int or not 0 < cap < REPLAY_MAX_MODEL_LEN:
+203:         raise ValueError('max_output_tokens must be an int in (0, 8192)')
+204:     classes = protocol.get('prompt_length_classes')
+205:     if (not isinstance(classes, list) or not classes
+206:             or any(type(c) is not int or c <= 0 or c + cap > REPLAY_MAX_MODEL_LEN for c in classes)
+207:             or any(a >= b for a, b in zip(classes, classes[1:]))):
+208:         raise ValueError('prompt_length_classes must be strictly increasing positive ints with class + cap <= 8192')
+209:     splits = protocol.get('splits')
+210:     split = splits.get(purpose) if isinstance(splits, dict) else None
+211:     if not isinstance(split, dict) or set(split) != {'seed', 'source_id', 'request_id_prefix'}:
+212:         raise ValueError(f'protocol needs a {purpose} split with exactly seed, source_id and request_id_prefix')
+213:     if type(split['seed']) is not int or split['seed'] < 0:
+214:         raise ValueError('seed must be a non-negative int')
+215:     _nonempty_str(split['source_id'], 'source_id')
+216:     _nonempty_str(split['request_id_prefix'], 'request_id_prefix')
+217:     shared = {key: value for key, value in protocol.items() if key != 'splits'}
+218:     return json.loads(json.dumps(shared)), dict(split, purpose=purpose)
+219: 
+220: 
+221: def generate_split(protocol, purpose):
+222:     """Pure function of the shared protocol fields and this purpose's own split spec."""
+223:     shared, split = _validated(protocol, purpose)
+224:     ctx = decimal_context()
+225:     domains = {stream: rng_domain(shared['protocol_id'], purpose, split['seed'], stream) for stream in STREAMS}
+226:     classes = shared['prompt_length_classes']
+227:     cap = shared['max_output_tokens']
+228:     rows = []
+229:     t = decimal.Decimal(0)
+230:     k = 0
+231:     while True:
+232:         t = ctx.add(t, exponential_gap_seconds(uniform64(domains['arrival'], k), shared['arrival_rate_per_second'], ctx))
+233:         k += 1
+234:         offset_ns = int(ctx.scaleb(t, 9).to_integral_value(rounding=decimal.ROUND_FLOOR, context=ctx))
+235:         if offset_ns >= shared['duration_ns']:
+236:             break
+237:         index = len(rows)
+238:         if index >= shared['max_offers']:
+239:             raise OfferCapExceeded(f'{purpose}: more than max_offers={shared["max_offers"]} arrivals inside the window; '
+240:                                    'refused without truncation or resampling')
+241:         request_id = f'{split["request_id_prefix"]}{index:04d}'
+242:         requested = classes[length_class_index(uniform64(domains['length_class'], index), len(classes))]
+243:         nonce = format(uniform64(domains['payload'], index), '016x')
+244:         rows.append([request_id, offset_ns, requested, cap, f'{shared["protocol_id"]}/{purpose}/{request_id}/{nonce}'])
+245:     return {
+246:         'schema': TAPE_SCHEMA,
+247:         'kind': TAPE_KIND,
+248:         'disclaimers': [*DISCLAIMERS, POLICY[purpose]],
+249:         'generator': {'id': GENERATOR_ID, 'version': GENERATOR_VERSION},
+250:         'protocol': shared,
+251:         'split': split,
+252:         'rng': json.loads(json.dumps(RNG_SPEC)),
+253:         'payload_generation': json.loads(json.dumps(PAYLOAD_GENERATION)),
+254:         'columns': list(COLUMNS),
+255:         'rows': rows,
+256:         'count': len(rows),
+257:     }
+258: 
+259: 
+260: def encode_tape(tape):
+261:     return canonical_bytes(tape)
+262: 
+263: 
+264: def _module_sha256():
+265:     return sha256_hex(Path(__file__).resolve().read_bytes())
+266: 
+267: 
+268: def _replay_adapter_mapping():
+269:     return {
+270:         'consumer': 'run_trace_pilot.py via trace_workload.load_trace/validate_trace/verify_prompts (schema_version 1)',
+271:         'parser_compatible_directly': False,
+272:         'reason': 'schema_version 1 requests require prompt text and tokenizer-measured chat-template input_tokens',
+273:         'function': 'nominal_workload.to_replay_trace(tape, model=..., prompt_for=..., count_tokens=..., '
+274:                     'tokenizer_sha256=...)',
+275:         'field_mapping': {
+276:             'schema_version': 1, 'max_model_len': REPLAY_MAX_MODEL_LEN,
+277:             'model': 'caller supplied (trace_workload.MODEL)',
+278:             'duration_seconds': 'duration_ns / 1e9', 'output_cap': 'max_output_tokens',
+279:             'trace_id': 'request_id', 'arrival_seconds': 'offset_ns / 1e9 (correctly rounded binary64)',
+280:             'prompt': 'prompt_for(requested_prompt_tokens, payload_key)',
+281:             'input_tokens': 'MEASURED count_tokens(prompt); requested label kept in provenance',
+282:             'max_tokens': 'max_output_tokens',
+283:         },
+284:         'recipe_not_executed_here': [
+285:             'import json, sys',
+286:             "sys.path[:0] = ['<ROOT>', '<ROOT>/experiments/mpc-research/resume-mvp']",
+287:             'from transformers import AutoTokenizer',
+288:             'import trace_workload as tw, nominal_workload as nw',
+289:             'tok = AutoTokenizer.from_pretrained(tw.MODEL, local_files_only=True)',
+290:             "tape = nw.load_tape('<tapes-v1>/<purpose>.tape.json', purpose='<purpose>')",
+291:             'trace = nw.to_replay_trace(tape, model=tw.MODEL, prompt_for=lambda n, key: tw.synthetic_prompt(tok, n, key), '
+292:             "count_tokens=lambda text: tw.input_tokens(tok, [{'role': 'user', 'content': text}]), "
+293:             'tokenizer_sha256=tw.tokenizer_fingerprint(tok))',
+294:             'tw.validate_trace(trace); tw.verify_prompts(trace, tok)',
+295:             "open('<new replay trace path>', 'x').write(json.dumps(trace))",
+296:         ],
+297:         'pilot_command_template': 'python run_trace_pilot.py --trace <replay trace json> --output-dir <new dir> '
+298:                                   '--ttft-slo <PENDING Mayor> (--budget <PENDING Mayor> | --budget-schedule '
+299:                                   '<PENDING Mayor>) --cache-policy disabled',
+300:         'pilot_command_notes': [
+301:             '--cache-policy disabled is self-reported by the pilot; the vLLM server must actually be launched with prefix '
+302:             'caching disabled and that launch verified separately.',
+303:             'The Eval replay trace may be built and replayed only by the measurement harness, never by '
+304:             'controllers/forecasters/tuning.',
+305:         ],
+306:         'native_client_mapping': 'NOT_VERIFIED: the peer-owned native-client offered-trace schema was not read by this '
+307:                                  'component (Runtime6 owns it)',
+308:     }
+309: 
+310: 
+311: def _check_pair(protocol):
+312:     specs = [_validated(protocol, purpose)[1] for purpose in PURPOSES]
+313:     train, evaluation = specs
+314:     if train['source_id'] == evaluation['source_id']:
+315:         raise ValueError('Train and Eval source IDs must differ')
+316:     if (train['request_id_prefix'].startswith(evaluation['request_id_prefix'])
+317:             or evaluation['request_id_prefix'].startswith(train['request_id_prefix'])):
+318:         raise ValueError('Train and Eval request-ID namespaces must be disjoint (neither prefix may extend the other)')
+319: 
+320: 
+321: def build_outputs(protocol=None):
+322:     """All output bytes (both tapes and ONE manifest), built entirely in memory before any write."""
+323:     protocol = protocol_v1() if protocol is None else protocol
+324:     _check_pair(protocol)
+325:     outputs = {}
+326:     splits = {}
+327:     for purpose in PURPOSES:
+328:         tape = generate_split(protocol, purpose)
+329:         data = encode_tape(tape)
+330:         name = f'{purpose}.tape.json'
+331:         outputs[name] = data
+332:         splits[purpose] = {
+333:             'file': name, 'sha256': sha256_hex(data), 'bytes': len(data), 'count': tape['count'],
+334:             'seed': tape['split']['seed'], 'source_id': tape['split']['source_id'],
+335:             'request_id_prefix': tape['split']['request_id_prefix'], 'policy': POLICY[purpose],
+336:         }
+337:     manifest = {
+338:         'schema': MANIFEST_SCHEMA,
+339:         'kind': 'SYNTHETIC_OFFERED_WORKLOAD_MANIFEST',
+340:         'generator': {'id': GENERATOR_ID, 'version': GENERATOR_VERSION, 'module': MODULE_PATH,
+341:                       'module_sha256': _module_sha256()},
+342:         'protocol': protocol,
+343:         'protocol_sha256': sha256_hex(canonical_bytes(protocol)),
+344:         'frozen_cli': {
+345:             'generate': f'python -B -I {MODULE_PATH} generate --out-dir <new dir>',
+346:             'verify': f'python -B -I {MODULE_PATH} verify --out-dir <dir>',
+347:             'protocol_overrides': 'none: the CLI has no protocol override flags',
+348:         },
+349:         'splits': splits,
+350:         'holdout_basis': list(HOLDOUT_BASIS),
+351:         'prompt_length_semantics': PROMPT_LENGTH_SEMANTICS,
+352:         'execution_distinction': 'This synthetic offered workload and any Native/GPU execution measurement are distinct '
+353:                                  'artifacts; this component executed nothing on a backend.',
+354:         'replay_adapter': _replay_adapter_mapping(),
+355:         'claims_not_made': list(CLAIMS_NOT_MADE),
+356:     }
+357:     outputs[MANIFEST_NAME] = canonical_bytes(manifest)
+358:     return outputs
+359: 
+360: 
+361: def _summary(outputs):
+362:     manifest = json.loads(outputs[MANIFEST_NAME])
+363:     return {
+364:         'files': {name: {'sha256': sha256_hex(data), 'bytes': len(data)} for name, data in sorted(outputs.items())},
+365:         'counts': {purpose: manifest['splits'][purpose]['count'] for purpose in PURPOSES},
+366:         'module_sha256': manifest['generator']['module_sha256'],
+367:     }
+368: 
+369: 
+370: def write_outputs(out_dir):
+371:     """Generate the frozen v1 outputs into a NEW directory; never overwrites."""
+372:     outputs = build_outputs()
+373:     out = Path(out_dir)
+374:     out.mkdir(exist_ok=False)
+375:     for name in sorted(outputs):
+376:         with (out / name).open('xb') as handle:
+377:             handle.write(outputs[name])
+378:     return _summary(outputs)
+379: 
+380: 
+381: def verify_outputs(out_dir):
+382:     """Regenerate in memory and require the directory to hold exactly the same files and bytes."""
+383:     outputs = build_outputs()
+384:     out = Path(out_dir)
+385:     present = sorted(path.name for path in out.iterdir())
+386:     if present != sorted(outputs):
+387:         raise VerificationError(f'{out}: expected files {sorted(outputs)}, found {present}')
+388:     for name, data in sorted(outputs.items()):
+389:         if (out / name).read_bytes() != data:
+390:             raise VerificationError(f'{out / name}: bytes differ from the regenerated v1 output')
+391:     return _summary(outputs)
+392: 
+393: 
+394: def load_tape(path, *, purpose):
+395:     """Load one frozen v1 tape after checking its declared purpose and exact bytes."""
+396:     if purpose not in PURPOSES:
+397:         raise ValueError(f'purpose must be one of {PURPOSES}')
+398:     data = Path(path).read_bytes()
+399:     try:
+400:         parsed = json.loads(data)
+401:     except ValueError as exc:
+402:         raise TapeIntegrityError(f'{path}: not JSON') from exc
+403:     split = parsed.get('split') if isinstance(parsed, dict) else None
+404:     declared = split.get('purpose') if isinstance(split, dict) else None
+405:     if declared != purpose:
+406:         raise TapePurposeError(f'{path}: tape purpose {declared!r} != requested {purpose!r}')
+407:     if data != encode_tape(generate_split(protocol_v1(), purpose)):
+408:         raise TapeIntegrityError(f'{path}: bytes differ from the frozen v1 {purpose} tape')
+409:     return parsed
+410: 
+411: 
+412: def _check_tape_shape(tape):
+413:     if not isinstance(tape, dict) or tape.get('schema') != TAPE_SCHEMA or tape.get('kind') != TAPE_KIND:
+414:         raise ValueError('not an offered tape of schema ' + TAPE_SCHEMA)
+415:     if tape.get('columns') != list(COLUMNS) or not isinstance(tape.get('rows'), list):
+416:         raise ValueError('offered tape columns/rows malformed')
+417:     if tape.get('count') != len(tape['rows']):
+418:         raise ValueError('offered tape count does not match its rows')
+419:     cap = tape['protocol']['max_output_tokens']
+420:     for row in tape['rows']:
+421:         if not isinstance(row, list) or len(row) != len(COLUMNS) or row[3] != cap:
+422:             raise ValueError('offered tape row malformed')
+423: 
+424: 
+425: def to_replay_trace(tape, *, model, prompt_for, count_tokens, tokenizer_sha256=None):
+426:     """Map an offered tape onto the run_trace_pilot replay schema (trace_workload schema_version 1).
+427: 
+428:     prompt_for(requested_prompt_tokens, payload_key) -> prompt text (shared template);
+429:     count_tokens(prompt) -> MEASURED chat-template token count used as input_tokens.
+430:     Synthesis or counting errors propagate: no retry, no new key, no fallback to the label.
+431:     """
+432:     _check_tape_shape(tape)
+433:     if not isinstance(model, str) or not model:
+434:         raise ValueError('model must be a non-empty string')
+435:     if not tape['rows']:
+436:         raise ValueError('an empty offered tape cannot form a replay trace (schema_version 1 needs >= 1 request)')
+437:     cap = tape['protocol']['max_output_tokens']
+438:     requests = []
+439:     requested = []
+440:     for request_id, offset_ns, requested_tokens, max_output_tokens, payload_key in tape['rows']:
+441:         prompt = prompt_for(requested_tokens, payload_key)
+442:         if not isinstance(prompt, str):
+443:             raise TypeError(f'{request_id}: prompt_for must return text')
+444:         measured = count_tokens(prompt)
+445:         if type(measured) is not int or measured <= 0 or measured + cap > REPLAY_MAX_MODEL_LEN:
+446:             raise ValueError(f'{request_id}: measured input token count {measured!r} is not an int in '
+447:                              f'[1, {REPLAY_MAX_MODEL_LEN - cap}]')
+448:         requests.append({'trace_id': request_id, 'arrival_seconds': offset_ns / NS_PER_SECOND,
+449:                          'input_tokens': measured, 'max_tokens': max_output_tokens, 'prompt': prompt})
+450:         requested.append(requested_tokens)
+451:     provenance = {
+452:         'kind': TAPE_KIND,
+453:         'offered_tape_schema': TAPE_SCHEMA,
+454:         'offered_tape_sha256': sha256_hex(encode_tape(tape)),
+455:         'generator': tape['generator'],
+456:         'protocol_id': tape['protocol']['protocol_id'],
+457:         'purpose': tape['split']['purpose'],
+458:         'source_id': tape['split']['source_id'],
+459:         'requested_prompt_tokens': requested,
+460:         'measured_equals_requested_count': sum(q['input_tokens'] == n for q, n in zip(requests, requested)),
+461:         'prompt_length_semantics': PROMPT_LENGTH_SEMANTICS,
+462:     }
+463:     if tokenizer_sha256 is not None:
+464:         if not isinstance(tokenizer_sha256, str) or not tokenizer_sha256:
+465:             raise ValueError('tokenizer_sha256 must be a non-empty string when given')
+466:         provenance['tokenizer_sha256'] = tokenizer_sha256
+467:     return {
+468:         'schema_version': 1,
+469:         'max_model_len': REPLAY_MAX_MODEL_LEN,
+470:         'model': model,
+471:         'duration_seconds': tape['protocol']['duration_ns'] / NS_PER_SECOND,
+472:         'output_cap': cap,
+473:         'requests': requests,
+474:         'provenance': provenance,
+475:     }
+476: 
+477: 
+478: def main(argv=None):
+479:     parser = argparse.ArgumentParser(description='Frozen protocol v1 synthetic offered-workload tapes '
+480:                                                  '(no protocol override flags).', allow_abbrev=False)
+481:     commands = parser.add_subparsers(dest='command', required=True)
+482:     for name in ('generate', 'verify'):
+483:         commands.add_parser(name, allow_abbrev=False).add_argument('--out-dir', required=True)
+484:     args = parser.parse_args(argv)
+485:     try:
+486:         summary = write_outputs(args.out_dir) if args.command == 'generate' else verify_outputs(args.out_dir)
+487:     except (OSError, ValueError) as exc:
+488:         print(json.dumps({'status': 'REFUSED', 'command': args.command, 'error': f'{type(exc).__name__}: {exc}'},
+489:                          sort_keys=True), file=sys.stderr)
+490:         return 1
+491:     print(json.dumps({'status': 'OK', 'command': args.command, **summary}, sort_keys=True, indent=1))
+492:     return 0
+493: 
+494: 
+495: if __name__ == '__main__':
+496:     sys.exit(main())

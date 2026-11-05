@@ -1,0 +1,48 @@
+--- episode03/experiments/mpc-research/resume-mvp/nominal_episode.py
++++ episode04/experiments/mpc-research/resume-mvp/nominal_episode.py
+@@ -288,7 +288,8 @@
+                 receipt["status"] = "failed"
+                 break
+     except BaseException as error:
+-        receipt["status"] = "refused" if not tasks and isinstance(error, EpisodeRefused) else "failed"
++        receipt["status"] = (
++            "refused" if not tasks and isinstance(error, (EpisodeRefused, runtime_api.RuntimeRefused)) else "failed")
+         receipt["failures"].append({"worker": "coordinator", "error": _error(error)})
+         if not isinstance(error, Exception):
+             interruption = error
+--- episode03/experiments/mpc-research/resume-mvp/test_nominal_episode.py
++++ episode04/experiments/mpc-research/resume-mvp/test_nominal_episode.py
+@@ -347,13 +347,16 @@
+ 
+     async def test_returned_failure_envelopes_cancel_peer_and_preserve_results(self):
+         receipts = []
+-        for kind in ("controller_refused", "recorder_refused", "recorder_failed"):
++        for kind in ("controller_refused", "controller_exception_refused", "recorder_refused", "recorder_failed"):
+             with self.subTest(kind=kind):
+                 prepared = self.prepare(kind)
+                 start = time.monotonic() + 0.25
+                 gateway = self.gateway(state_failure=kind == "controller_refused",
+                                        models=kind.removeprefix("recorder_") if kind.startswith("recorder") else "ok")
+                 runtime = self.runtime(prepared, gateway, start, iterations=2, poll_s=0.01)
++                if kind == "controller_exception_refused":
++                    runtime.run = mock.AsyncMock(
++                        side_effect=runtime_api.RuntimeRefused("CPU post-start runtime refusal"))
+                 result = await self.checked_episode(
+                     prepared, runtime, owner=OwnerFixture(start + 6), offered_start=start, enabled=True,
+                     transport=self.transport(gateway),
+@@ -366,6 +369,15 @@
+                     value = result["workers"]["controller"]["result"]["runtime"]
+                     self.assertIsNone(value["failure"])
+                     self.assertEqual([row["status"] for row in value["steps"]], ["refused", "refused"])
++                    self.assertEqual(prepared.recorder.capture["status"], "interrupted")
++                    self.assertEqual([row["fate"] for row in prepared.recorder.capture["records"]],
++                                     ["not_launched"] * 5)
++                elif kind == "controller_exception_refused":
++                    value = result["workers"]["controller"]
++                    self.assertIsNone(value["result"])
++                    self.assertEqual(value["error"]["type"], "RuntimeRefused")
++                    self.assertEqual(value["error"]["message"], "CPU post-start runtime refusal")
++                    self.assertEqual(gateway.model_gets, 1)
+                     self.assertEqual(prepared.recorder.capture["status"], "interrupted")
+                     self.assertEqual([row["fate"] for row in prepared.recorder.capture["records"]],
+                                      ["not_launched"] * 5)

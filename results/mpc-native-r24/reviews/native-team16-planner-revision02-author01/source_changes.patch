@@ -1,0 +1,241 @@
+--- .runtime/r24-team16-planner-revision01/policy_planner16.py
++++ .runtime/r24-team16-planner-revision02/policy_planner16.py
+@@ -20,6 +20,7 @@
+ 
+ GUARD_SCHEMA = "r24-team16-common-panel-guards-v1"
+ OBJECTIVE = "all-offered-natural-good_then-http-wall_then-transitions_sum_lex-v1"
++RANKING_ARITHMETIC = "exact-rational-frozen-binary-inputs-v1"
+ RANKED_FIELDS = (
+     "rankings", "best_multistep", "best_fixed", "best_one_move", "selected_plan",
+ )
+@@ -94,14 +95,29 @@
+     return scaled, shift
+ 
+ 
++def _encoded_fraction(value):
++    return [str(value.numerator), str(value.denominator)]
++
++
++def _decoded_fraction(value):
++    return Fraction(int(value[0]), int(value[1]))
++
++
++def _exact_mean(weights, denominator, samples, key):
++    return sum(weight * Fraction(sample[key])
++               for weight, sample in zip(weights, samples)) / denominator
++
++
+ def _rank(row):
+     return (
+-        -row["expected_natural_slo_good"], row["expected_cohort_wall_s"],
+-        row["transitions"], sum(row["path"]), tuple(row["path"]),
++        -_decoded_fraction(row["exact_expected_natural_slo_good"]),
++        _decoded_fraction(row["exact_expected_cohort_wall_s"]),
++        row["transitions"], sum(Fraction(budget) for budget in row["path"]),
++        tuple(row["path"]),
+     )
+ 
+ 
+-def _validate_complete(result):
++def _validate_complete(result, *, canonicalize=False):
+     try:
+         contract = result["planner_contract"]
+         budgets, offsets = contract["budgets"], contract["step_offsets_s"]
+@@ -110,6 +126,7 @@
+             result["status"] != "model_plan_only"
+             or result["guard_schema"] != GUARD_SCHEMA
+             or contract["objective"] != OBJECTIVE
++            or contract.get("ranking_arithmetic") != RANKING_ARITHMETIC
+             or result["planner_contract_sha256"] != _fingerprint(contract)
+             or not 1 <= scenarios <= 16 or not 2 <= len(offsets) <= 4
+             or not 1 <= len(budgets) <= 3 or len(set(budgets)) != len(budgets)
+@@ -135,6 +152,8 @@
+         weights = tuple(
+             _finite(weight, positive=True) for weight in result["scenario_weights_scaled"])
+         denominator = math.fsum(weights)
++        exact_weights = tuple(map(Fraction, weights))
++        exact_denominator = sum(exact_weights)
+         for row in rows:
+             samples = row["per_scenario"]
+             if len(samples) != scenarios:
+@@ -165,11 +184,26 @@
+                 expected = math.fsum(terms) / denominator
+                 if _finite(row[expected_key]) != expected:
+                     raise ValueError("policy16_weighted_objective_mismatch")
++                exact = _encoded_fraction(
++                    _exact_mean(exact_weights, exact_denominator, samples, sample_key))
++                exact_key = "exact_" + expected_key
++                if canonicalize:
++                    row[exact_key] = exact
++                elif row.get(exact_key) != exact:
++                    raise ValueError("policy16_exact_objective_mismatch")
+             transitions = sum(
+                 left != right
+                 for left, right in zip([result["received_budget"]] + row["path"], row["path"]))
+             if row["transitions"] != transitions:
+                 raise ValueError("policy16_received_budget_transition_mismatch")
++        if canonicalize:
++            rows.sort(key=_rank)
++            result.update(
++                best_multistep=rows[0],
++                best_fixed=min(
++                    (row for row in rows if len(set(row["path"])) == 1), key=_rank),
++                best_one_move=min(
++                    (row for row in rows if row["transitions"] <= 1), key=_rank))
+         if (
+             rows != sorted(rows, key=_rank)
+             or result["best_multistep"] != rows[0]
+@@ -183,14 +217,24 @@
+         raise ValueError("policy16_invalid_complete_panel") from exc
+ 
+ 
++def _canonical_budgets(budgets):
++    values = tuple(_finite(value, positive=True) for value in budgets)
++    if not 1 <= len(values) <= 3 or len(set(values)) != len(values):
++        raise ValueError("policy16_canonical_shared_action_set_required")
++    return tuple(sorted(
++        int(value) if type(value) is float and value.is_integer() else value
++        for value in values))
++
++
+ @dataclass(frozen=True)
+ class FrozenFixedChoice:
+-    budget: int
++    budget: int | float
+     planner_contract_sha256: str
+     training_panel_sha256: tuple[str, ...]
+     training_weights: tuple[int | float, ...]
+     candidate_objectives: tuple[tuple, ...]
+     split: str = "train"
++    candidate_budgets: tuple[int | float, ...] = (16, 32)
+ 
+     def __post_init__(self):
+         def sha(value):
+@@ -198,7 +242,10 @@
+                     and all(character in "0123456789abcdef" for character in value))
+ 
+         if (
+-            type(self.budget) is not int or self.budget not in (16, 32)
++            type(self.budget) not in (int, float)
++            or type(self.candidate_budgets) is not tuple
++            or self.candidate_budgets != _canonical_budgets(self.candidate_budgets)
++            or self.budget not in self.candidate_budgets
+             or self.split != "train" or not sha(self.planner_contract_sha256)
+             or type(self.training_panel_sha256) is not tuple
+             or not 1 <= len(self.training_panel_sha256) <= 16
+@@ -206,12 +253,12 @@
+             or type(self.training_weights) is not tuple
+             or len(self.training_weights) != len(self.training_panel_sha256)
+             or type(self.candidate_objectives) is not tuple
+-            or len(self.candidate_objectives) != 2
++            or len(self.candidate_objectives) != len(self.candidate_budgets)
+         ):
+             raise ValueError("policy16_immutable_train_choice_fields_required")
+         for weight in self.training_weights:
+             _finite(weight, positive=True)
+-        for budget, row in zip((16, 32), self.candidate_objectives):
++        for budget, row in zip(self.candidate_budgets, self.candidate_objectives):
+             if type(row) is not tuple or len(row) != 4 or row[0] != budget:
+                 raise ValueError("policy16_immutable_train_candidate_rows_required")
+             for value in row[1:]:
+@@ -240,24 +287,28 @@
+     exact_weights = tuple(Fraction(_finite(weight, positive=True)) for weight in weights)
+     denominator = sum(exact_weights)
+     horizon = len(results[0]["planner_contract"]["step_offsets_s"])
++    candidate_budgets = _canonical_budgets(results[0]["planner_contract"]["budgets"])
+     candidates = []
+-    for budget in (16, 32):
++    for budget in candidate_budgets:
+         selected = []
+         for result in results:
+             row = next(
+                 (row for row in result["rankings"] if row["path"] == [budget] * horizon),
+                 None)
+             if row is None:
+-                raise ValueError("policy16_both_original_training_fixed_candidates_required")
++                raise ValueError("policy16_all_shared_fixed_candidates_required")
+             selected.append(row)
+-        good, wall, transitions = (
+-            sum(weight * Fraction(row[key]) for weight, row in zip(exact_weights, selected))
++        good, wall = (
++            sum(weight * _decoded_fraction(row[key])
++                for weight, row in zip(exact_weights, selected))
+             / denominator
+-            for key in ("expected_natural_slo_good", "expected_cohort_wall_s", "transitions")
++            for key in ("exact_expected_natural_slo_good", "exact_expected_cohort_wall_s")
+         )
++        transitions = sum(weight * row["transitions"]
++                          for weight, row in zip(exact_weights, selected)) / denominator
+         candidates.append((budget, good, wall, transitions))
+     chosen = min(candidates, key=lambda row: (
+-        -row[1], row[2], row[3], row[0] * horizon, (row[0],) * horizon))
++        -row[1], row[2], row[3], Fraction(row[0]) * horizon, (row[0],) * horizon))
+     fingerprints = tuple(_fingerprint({
+         "common_panel_sha256": result["common_panel_sha256"],
+         "source_cut_canonical_sha256": result["source_cut_canonical_sha256"],
+@@ -268,7 +319,8 @@
+         chosen[0], results[0]["planner_contract_sha256"], fingerprints,
+         tuple(weights),
+         tuple((budget, float(good), float(wall), float(transitions))
+-              for budget, good, wall, transitions in candidates))
++              for budget, good, wall, transitions in candidates),
++        candidate_budgets=candidate_budgets)
+ 
+ 
+ class PolicyPlanner16(PolicyPlanner15):
+@@ -280,22 +332,25 @@
+             if (
+                 type(training_choice) is not FrozenFixedChoice
+                 or policy != "train_selected_fixed" or training_choice.split != "train"
+-                or type(training_choice.budget) is not int
+-                or training_choice.budget not in (16, 32)
+                 or fixed_budget is not None and fixed_budget != training_choice.budget
+             ):
+                 raise ValueError("policy16_explicit_frozen_training_choice_required")
+             fixed_budget = training_choice.budget
++        general_fixed_choice = training_choice is not None and fixed_budget not in (16, 32)
+         super().__init__(
+             cost_spec=cost_spec, budgets=budgets, step_offsets_s=step_offsets_s,
+             solver_budget_s=solver_budget_s, actuation_budget_s=actuation_budget_s,
+-            policy=policy, fixed_budget=fixed_budget)
++            policy="mpc" if general_fixed_choice else policy,
++            fixed_budget=None if general_fixed_choice else fixed_budget)
++        if general_fixed_choice:
++            self._policy15, self._fixed15 = policy, fixed_budget
+         self._solver_limit16 = self.solver_budget_s
+         self._contract16 = self._contract()
+         self._contract_sha16 = _fingerprint(self._contract16)
+         if (
+             training_choice is not None
+-            and training_choice.planner_contract_sha256 != self._contract_sha16
++            and (training_choice.planner_contract_sha256 != self._contract_sha16
++                 or training_choice.candidate_budgets != _canonical_budgets(self.budgets))
+         ):
+             raise ValueError("policy16_frozen_training_configuration_mismatch")
+         self._selection16 = (self.policy, self.fixed_budget)
+@@ -311,6 +366,7 @@
+             "solver_limit_s": self._solver_limit16,
+             "actuation_budget_s": self.actuation_budget_s,
+             "objective": OBJECTIVE, "first_action_source_age_limit_s": 0.5,
++            "ranking_arithmetic": RANKING_ARITHMETIC,
+         }
+ 
+     def _configuration_guard(self):
+@@ -423,6 +479,8 @@
+                 result.update(
+                     policy=self.policy, fixed_budget=self.fixed_budget,
+                     guard_schema=GUARD_SCHEMA,
++                    ranking_arithmetic=RANKING_ARITHMETIC,
++                    floating_objective_metrics="display_only_not_ordering_keys",
+                     planner_contract=deepcopy(self._contract16),
+                     planner_contract_sha256=self._contract_sha16,
+                     common_panel_sha256=received_sha,
+@@ -443,7 +501,7 @@
+                 )
+                 if result["status"] == "model_plan_only":
+                     try:
+-                        _validate_complete(result)
++                        _validate_complete(result, canonicalize=True)
+                     except ValueError as exc:
+                         self._refuse(result, str(exc))
+                     else:

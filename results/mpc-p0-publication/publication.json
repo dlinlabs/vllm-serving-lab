@@ -1,0 +1,36 @@
+{
+  "schema": "mpc-p0-publication-v1",
+  "format": "DRAFT_PR_SNAPSHOT_NOT_NATIVE_ACCEPTANCE",
+  "original_local_source_commit": "dc3a5b823f90cb5a4f94fd10237f3ab24ece2945",
+  "original_local_branch": "research/r21-local-mpc",
+  "publication_branch": "snapshot/mpc-p0-evidence-20261105",
+  "base_commit": "36f6e9b5adcd4faa4eeeb7f6e904caf0a88a5ecf",
+  "source_export": "source-export.json",
+  "exported_files": 3815,
+  "exported_bytes": 40529153,
+  "historical_local_commits_reachable_in_snapshot": false,
+  "evidence_boundary": "The source manifest binds exported bytes to original local blobs. The eventual PR snapshot commit is the public source identity; original research commit strings are provenance metadata only.",
+  "validation": {
+    "final_command": "python experiments/mpc-research/resume-mvp/run_cpu_controls.py --output results/mpc-p0-publication/validation/final",
+    "final_command_record": "validation/final/command.json",
+    "final_log": "validation/final/pytest.log",
+    "final_junit": "validation/final/junit.xml",
+    "final_result": "506 passed, 164 subtests passed",
+    "python": "3.12.16",
+    "scope": "Selected MPC planner/runtime/recorder/workload and gateway CPU/mock tests, not the entire repository or Native qualification",
+    "earlier_attempts_preserved": {
+      "validation/pytest.log": "Collection setup error: scratch parent .runtime was missing.",
+      "validation/pytest02.log": "503 passed, 155 subtests passed; 3 workload setup failures because NOMINAL_WORKLOAD_SCRATCH was unset. The portable runner supplies all required scratch variables.",
+      "native_caller_negative_witnesses": "../mpc-native-r24/reviews/resume-p0-native-body06-draft-proof"
+    },
+    "export_hash_size_and_heuristic_hygiene_check": "validation/publication-check.json"
+  },
+  "still_blocked": [
+    "B2: nonzero body ledger closure and independent post-GPU idle error accounting",
+    "B3: pre-run planned-versus-offered request accounting and durable not-run receipt",
+    "At least two consecutive real GPU control cycles and actual admission effect",
+    "Train Fixed baseline freeze, held-out Eval and final independent Native metrics audit"
+  ],
+  "GPU_experiment_started_for_publication": false,
+  "merge_requested_or_performed": false
+}

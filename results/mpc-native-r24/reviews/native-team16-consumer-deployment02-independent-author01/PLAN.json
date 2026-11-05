@@ -1,0 +1,58 @@
+{
+  "schema": "d2r01-plan-v1",
+  "reviewer": {"role": "Role7 independent consumer/composition source disposition", "model_id": "claude-opus-5.5", "reasoning_effort": "max", "nested_agents": false},
+  "subject": {
+    "path": ".runtime/r24-team16-native-cut-consumer-deployment02",
+    "SHA256SUMS_sha256": "407bc2e88426f4997064fd7f62d09651af74a2c18c6e4989267f48a601a16ae8",
+    "sealed_entries": 479,
+    "regular_files_including_seal": 480,
+    "mayor_engineering_acceptance_commit_reported": "c00d29d2296bda7e249578f2de7c08650a4d79c9 (not read, not repeated)"
+  },
+  "related_sealed_inputs": {
+    "successor01_SHA256SUMS_sha256": "13bc7f834a9bd0cbc0b8c69765642974e4ba8b1bce5f523666e1f7629f5f1393",
+    "scr01_review_SHA256SUMS_sha256": "1a6c00f513aec3442d954d591ed9a530a982313656ee750e01736cf134f0186f",
+    "scr01_disposition_SHA256SUMS_sha256": "c590c8378a59863a103c780e490814227f40f320f53bed55e63a26e95f694328"
+  },
+  "budget": {
+    "selected_files_limit": 40,
+    "selected_bytes_limit": 4194304,
+    "first_selection_files": 36,
+    "post_freeze_additions_limit": 4,
+    "post_freeze_addition_policy": "Each addition is disclosed in the report with its reason. It must be a deployment02 sealed regular file whose digest matches the deployment02 SHA256SUMS entry. Totals stay at or below 40 files and 4 MiB.",
+    "hash_only_identity_checks": "Hashing files to establish byte identity with successor01, reference copies or generation01 is metadata, not a content read. Content reviewed in scr01 is cited only where the bytes are hash-identical.",
+    "new_controls_limit_per_python": 4,
+    "control_policy": "Run a control only if a concrete new source question cannot be resolved by reading. Freeze the control code and PLAN addendum before execution, run one attempt per Python with each control at most 120 s, and preserve failures. No fake valid Mayor approvals, live main, source patches, Native, GPU, SSH, network or git."
+  },
+  "first_selection": [
+    "launch01.py", "service01.py", "client01.py", "composition_common01.py", "origin_guard/sitecustomize.py",
+    "authorization02.py", "cpu_helper02.py", "pins02.py", "prepare02.py",
+    "consumer/common01.py", "consumer/seal_inputs01.py",
+    "transport01.py", "owned01.py", "coverage01.py", "consumer/consumer01.py",
+    "PROTOCOL.json", "PLAN.json", "NATIVE_PLAN.json", "OFFERS.json", "MAYOR_APPROVAL_TEMPLATE_INVALID.json",
+    "REMAINING_PREREGISTRATION.json", "REPORT.json", "LIMITATIONS.json", "SOURCE_BINDING.json", "AMENDMENT02.json",
+    "INTEGRATION.txt", "README.txt", "MODEL_PROVENANCE.json",
+    "EXACT_SOURCE_DIFF.patch", "GENERATION02_EXACT_DIFF.patch", "SHA256SUMS", "ADDITIONAL_INPUTS.json",
+    "consumer/inputs/base/acquire01.py", "consumer/inputs/base/PROTOCOL.json", "consumer/inputs/base/common01.py",
+    "CONTROL_PLAN.json"
+  ],
+  "questions": {
+    "Q01": "Approval: pure default-OFF validation before any host, config or helper side effect; four separate Mayor receipts, each bound to its own scope and subject, plus fresh-host and preregistration requirements (trusted filesystem attestations, not cryptographic); the invalid template is refused.",
+    "Q02": "Bindings: exact deployment, protocol, plan, offers, successor and Python bindings; identity and CONSUMER_SEAL rebinding; interpreter manifest consistency.",
+    "Q03": "Launch order: launcher, then the two services, then the client; denied paths; mandatory READY/registration failures; ownership gaps between Popen and registration.",
+    "Q04": "Deadlines: consumer pipeline min(begin+.080, source+.500, original active end) and the source clock; producer collection min(call+.5, original active end); a consumer-only refusal must not reset producer deadlines, substitute the ordinal or retry.",
+    "Q05": "Transport budgets: .2 acquisition and global 1900 unchanged; inference 60 / remaining 20 exceptions; acquisition .2 is not an inference cap.",
+    "Q06": "Fates: every offered, not-sent, unknown, failed and cleanup outcome is retained, with no relabelling.",
+    "Q07": "Poison and publication failure behavior; R-ATTR (an ignored return must not mean an absent refusal), R-COUNT (counted=false is not proof of no write), R-SR4 (gateway strictness).",
+    "Q08": "Cleanup order, the real RETURNED receipt versus a pre-return component.json, and shared teardown ownership.",
+    "Q09": "Config, privacy and Base64 export safety.",
+    "Q10": "Original budgets 260/180/20/3/40/17 are respected and not broadened.",
+    "Q11": "Whether R-SR4, R-ATTR and R-COUNT apply to the model-free diagnostic versus a formal paired study."
+  },
+  "mayor_design_disposition_c00_as_given": "P1-P5 are accepted only as a model-free observational diagnostic design, not as live fairness proof. Producer collection uses min(call+.5, original active end); the consumer pipeline uses min(begin+.080, source+.500, original active end). A consumer-only refusal does not reset producer deadlines, substitute the ordinal or retry. Acquisition .2 is not an inference cap (warmup <=60, managed <= remaining 20). A mandatory startup READY/registration failure is a prerequisite or supervision failure. Every outcome is retained.",
+  "mayor_closed_source_questions_to_verify_not_assume": [
+    "Owned.spawn synchronously writes started.json before returning; the launcher spawns both services before the client.",
+    "Capture.observed publishes only offer/control history; an ordinary cut GET or flush does not self-invalidate the lease."
+  ],
+  "prohibitions": ["rerun of the old-42 suite, the Mayor's 9 controls, the scr01 7 controls, full author suites or old inventories", "reading native arrays, traces, RMS, features, targets or journals", "source-root mutation", "SSH, GPU, network or git", "creating a valid approval", "nested agents", "writes to any sealed package"],
+  "not_claimed": ["G06 closure", "G16 closure", "Native14 pass", "Native permission", "paired-study fairness", "model or MPC qualification"]
+}

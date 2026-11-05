@@ -1,0 +1,15 @@
+{
+  "schema":"consumer-successor-legacy42-expectation-migration-v1",
+  "Parent_notice_commit":"5317b0223cb96d5c9f53a0ffae5c71745cbf2e32",
+  "before":"inputs/reference-tests/test_consumer01.py",
+  "after":"migration/test_consumer01.py",
+  "changes":{
+    "budget_as_generation":{"before":"caller_generation_changed","after":"frame_generation_not_lease_start","reason":"Frame must match immutable lease-start generation,not budgetversion."},
+    "changed_generation":{"before":["caller_generation_changed"],"after":["caller_generation_changed","caller_generation_changed_before_BEGIN"],"reason":"Existing changed-authority refusal may occur already at own BEGIN read;the source did not synchronize this old control after BEGIN."}
+  },
+  "unchanged":"All test definitions,parameters/counts,refused status,cleanup/componentfalse/Parent release semantics and other guards,apart from these exact reason expectations.",
+  "author_execution":false,
+  "no_42_PASS_claim":true,
+  "not_a_bool_float_finding":"validate01.py already has strict int generation checks.",
+  "Mayor_application":"Copy this explicit patch into a NEW appropriate Parent regression scope with original fixture/data expectations;do NOT silently edit successor seal or assert42PASS. The migration file is not selected by deployment02's focused controls."
+}

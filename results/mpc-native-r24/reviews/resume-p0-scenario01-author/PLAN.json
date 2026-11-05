@@ -1,0 +1,238 @@
+{
+  "command": [
+    "env",
+    "-u",
+    "PYTHONPATH",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "PYTHONHASHSEED=0",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+    "OMP_NUM_THREADS=1",
+    "OPENBLAS_NUM_THREADS=1",
+    "MKL_NUM_THREADS=1",
+    "NUMEXPR_NUM_THREADS=1",
+    "nice",
+    "-n",
+    "19",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "experiments/mpc-research/resume-mvp",
+    "-p",
+    "test_nominal_scenario.py",
+    "-v"
+  ],
+  "command_cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+  "created_at": "2026-11-04T22:33:31.260375+00:00",
+  "dependency_notice": {
+    "new_required_source_digest_modules": [
+      "experiments/mpc-research/resume-mvp/nominal_scenario.py",
+      "experiments/mpc-research/resume-mvp/nominal_workload.py"
+    ],
+    "not_edited": "Role6/source_digest/other runtime files; no unsealed peer files read",
+    "reason": "nominal_scenario actually imports nominal_workload for frozen Train schema/constants. Coordinator three-module source_digest is insufficient once this factory is imported."
+  },
+  "forecast": {
+    "availability": "actual final clock after forecast/hash generation; no copying source time as availability; end freshness and clock-regression checks",
+    "decision_key": "namespace, seed, immutable prior content hash, complete StateVersion, source sampled_at; never policy/candidate path",
+    "future_output": "128=max_output; success true; zero transport; service_scale1; all unqualified",
+    "horizon_s": 15,
+    "max_offers": 512,
+    "namespace": "resume-p0-nominal-forecast-v1",
+    "overcap": "atomic refusal, no resampling/truncation",
+    "past_updates": "None in v1; no oracle progress/output/completion",
+    "purpose": "Train prior only; forecast purpose train/evaluation/engineering labels never authorize Eval tape access",
+    "reuse": "One immutable returned causal scenario and evaluated panel shared by MPC and OneMove",
+    "rng": "stdlib random.Random string seed version2; expovariate/randrange, no workload SHA/Decimal RNG calls",
+    "score_window_s": 5,
+    "seed": 5105,
+    "seed_choice": "Fixed before first forecast execution; arbitrary engineering value, not selected for scores",
+    "tail_s": 10
+  },
+  "inputs": [
+    {
+      "bytes": 12752,
+      "copy": "attempt-01/sources/.runtime/r24-resume-p0-workload01/tapes-v1/train.tape.json",
+      "path": ".runtime/r24-resume-p0-workload01/tapes-v1/train.tape.json",
+      "sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"
+    },
+    {
+      "bytes": 21987,
+      "copy": "attempt-01/sources/experiments/mpc-research/resume-mvp/nominal_planner.py",
+      "path": "experiments/mpc-research/resume-mvp/nominal_planner.py",
+      "sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1"
+    },
+    {
+      "bytes": 8166,
+      "copy": "attempt-01/sources/experiments/mpc-research/resume-mvp/nominal_scenario.py",
+      "path": "experiments/mpc-research/resume-mvp/nominal_scenario.py",
+      "sha256": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc"
+    },
+    {
+      "bytes": 25248,
+      "copy": "attempt-01/sources/experiments/mpc-research/resume-mvp/nominal_workload.py",
+      "path": "experiments/mpc-research/resume-mvp/nominal_workload.py",
+      "sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    {
+      "bytes": 9126,
+      "copy": "attempt-01/sources/experiments/mpc-research/resume-mvp/test_nominal_scenario.py",
+      "path": "experiments/mpc-research/resume-mvp/test_nominal_scenario.py",
+      "sha256": "a5e0f50ab792fcc68e9714b0cc8383f84bf6e324ed095fb6d672fbc88508b056"
+    },
+    {
+      "bytes": 41800,
+      "copy": "attempt-01/sources/gateway.py",
+      "path": "gateway.py",
+      "sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+    },
+    {
+      "bytes": 63,
+      "copy": "attempt-01/sources/mpc_lab/__init__.py",
+      "path": "mpc_lab/__init__.py",
+      "sha256": "29962543d64e8cdb630a240a999dd9e47ed87cccf4bd03220ca2d82b5d7be09e"
+    },
+    {
+      "bytes": 12329,
+      "copy": "attempt-01/sources/mpc_lab/actuator.py",
+      "path": "mpc_lab/actuator.py",
+      "sha256": "e31dbe92eb3a27be554db15405af0a6046a6820096e84540812d3ee88afc59d5"
+    },
+    {
+      "bytes": 14048,
+      "copy": "attempt-01/sources/mpc_lab/benchmark.py",
+      "path": "mpc_lab/benchmark.py",
+      "sha256": "c84858d2f4973de890d8eaaba33ca42ec7d5d0e13f5c097feaa829f4d337df99"
+    },
+    {
+      "bytes": 6959,
+      "copy": "attempt-01/sources/mpc_lab/contracts.py",
+      "path": "mpc_lab/contracts.py",
+      "sha256": "f39f6b73b41b1433a220f182679852df5c4332d9022ce903dba9863375236e23"
+    },
+    {
+      "bytes": 16323,
+      "copy": "attempt-01/sources/mpc_lab/controller.py",
+      "path": "mpc_lab/controller.py",
+      "sha256": "44d705101820d89677035101110c70f890f94f7d82a5a521ec87d5e09dbf08cc"
+    },
+    {
+      "bytes": 11052,
+      "copy": "attempt-01/sources/mpc_lab/http_capture.py",
+      "path": "mpc_lab/http_capture.py",
+      "sha256": "0648738704771f80470849b0c0beb671d0f17c9dbc75e4095cff155b20d04be7"
+    },
+    {
+      "bytes": 8905,
+      "copy": "attempt-01/sources/mpc_lab/identification.py",
+      "path": "mpc_lab/identification.py",
+      "sha256": "bae3888768be5508f6a5d57a48eddd80abe9e0942f95e7f57bab824707f560f8"
+    },
+    {
+      "bytes": 21361,
+      "copy": "attempt-01/sources/mpc_lab/model.py",
+      "path": "mpc_lab/model.py",
+      "sha256": "eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec"
+    },
+    {
+      "bytes": 4967,
+      "copy": "attempt-01/sources/mpc_lab/native_state.py",
+      "path": "mpc_lab/native_state.py",
+      "sha256": "835df8ebaa58c773074e65cedba4627b468d14b560233a7655bf9cd2240b83d6"
+    },
+    {
+      "bytes": 10743,
+      "copy": "attempt-01/sources/mpc_lab/runtime.py",
+      "path": "mpc_lab/runtime.py",
+      "sha256": "f04c58eb9b5a81e7e1c7a22aaea1cd6b59de88c568ec77d51f1487af4c85b727"
+    },
+    {
+      "bytes": 12223,
+      "copy": "attempt-01/sources/prefill_lab/live_http.py",
+      "path": "prefill_lab/live_http.py",
+      "sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f"
+    },
+    {
+      "bytes": 17187,
+      "copy": "attempt-01/sources/telemetry.py",
+      "path": "telemetry.py",
+      "sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370"
+    }
+  ],
+  "model_assignment": {
+    "authority": "retained Mayor-verified assignment; no model change or new introspection",
+    "model": "gpt-6-astra",
+    "reasoning": "max"
+  },
+  "no_actions": [
+    "Git",
+    "GPU",
+    "SSH",
+    "network",
+    "Eval tape or rows or outcomes",
+    "Eval/workload seed regeneration",
+    "model fitting",
+    "MCMC",
+    "agent delegation",
+    "dependency installs",
+    "product/SDK/old sealed source writes",
+    "tokenizer rerun",
+    "Native approval"
+  ],
+  "owned_source_files": [
+    "experiments/mpc-research/resume-mvp/nominal_scenario.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_scenario.py"
+  ],
+  "parent_source_acceptance": {
+    "authority": "Mayor supplied references; no Git commands run",
+    "planner02_workload_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481",
+    "tokenizer_local_path_prereg_commit": "1e9540caa9dd37f927d5389d05be3d973d234bf7"
+  },
+  "prior": {
+    "count": 88,
+    "duration_s": 5,
+    "freeze_once_before_decisions": true,
+    "joint_prompt_max_output_counts": [
+      [
+        256,
+        128,
+        33
+      ],
+      [
+        1024,
+        128,
+        26
+      ],
+      [
+        3072,
+        128,
+        29
+      ]
+    ],
+    "per_decision_tape_load_or_refit": false,
+    "rate_per_s": 17.6,
+    "train_path": ".runtime/r24-resume-p0-workload01/tapes-v1/train.tape.json",
+    "train_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"
+  },
+  "schema": "resume-p0-nominal-scenario-freeze-v1",
+  "scope": "Minimal causal single-scenario producer for existing CPU nominal planner; no qualification or model-research expansion",
+  "test_policy": {
+    "extra_attempts_only_after": "concrete failure and changed source with old logs/sources retained",
+    "focused_methods": 5,
+    "maximum_attempts": 3,
+    "no_stochastic_search_or_seed_adjustment": true,
+    "planned_attempts": 1,
+    "python": "Python3.14.4"
+  },
+  "tokenizer_evidence": {
+    "asset_path_on_existing_host": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "basis": "Mayor reported CPU-only cached-tokenizer validation, proof commit pending; replay/asset not reread or executed here",
+    "historical_lookup_failure": "Initial offline repo-ID lookup failure was reported by Mayor and preserved there; not rerun or attributed to this task",
+    "meaning": "All88 Train chat-template counts equal requested256/1024/3072 for this asset fingerprint only; future sampled lengths remain nominal, not Eval/backend-cost proof",
+    "tokenizer_fingerprint": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+    "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+    "transformers": "5.22.1"
+  }
+}

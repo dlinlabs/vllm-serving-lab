@@ -1,0 +1,15 @@
+{
+  "source_commit": "104e65a69df73997b977bce2588b655ae714f45d",
+  "arguments": [
+    "-m",
+    "uvicorn",
+    "gateway:app",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8080",
+    "--workers",
+    "1"
+  ],
+  "scope": "Prespecified identification only;loopback;no calibrated MPC. Batch hooks enabled;capture OFF is not pristine disabled."
+}

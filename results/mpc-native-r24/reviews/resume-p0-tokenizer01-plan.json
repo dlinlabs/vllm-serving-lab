@@ -1,0 +1,43 @@
+{
+  "scope": "One real-tokenizer CPU component validation on the already-authorized GPU host; no GPU inference",
+  "necessary_for_P0": "The compact offered tapes are not client inputs. Validate Train conversion with the actual cached Qwen tokenizer and existing replay schema before scheduling serving experiments.",
+  "frozen_before_execution": true,
+  "execution_after_local_preregistration_commit": true,
+  "host": "existing authorized host; same endpoint as the read-only preflight",
+  "read_only_preflight": {
+    "proof": "resume-p0-host-preflight01/probe01.{stdout,stderr}.log",
+    "observed": "RTX 4090, 1 MiB, 0 percent utilization; remote Python 3.12.3",
+    "limit": "Availability only, not source/SDK/privacy/clock/lock qualification. Exact original probe argv was not captured in these two logs."
+  },
+  "remote_directory": "/workspace/pr32-r23/r24-resume-p0-tokenizer01",
+  "python": "/workspace/pr32-r23/venv/bin/python3.12",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "sources": [
+    "experiments/mpc-research/resume-mvp/prepare_replay.py",
+    "experiments/mpc-research/resume-mvp/nominal_workload.py",
+    "trace_workload.py"
+  ],
+  "source_pin_authority": "Exact Git blobs in this preregistration commit, plus uploaded SHA256SUMS verified before execution",
+  "train_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+  "eval_rows_or_tape_uploaded": false,
+  "command": "timeout -s TERM -k 5 180 env CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1 TOKENIZERS_PARALLELISM=false OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /workspace/pr32-r23/venv/bin/python3.12 -B experiments/mpc-research/resume-mvp/prepare_replay.py --tape input/train.tape.json --purpose train --output train.replay.json",
+  "attempts": 1,
+  "acceptance": [
+    "Uploaded source and Train hashes match before execution.",
+    "Exact frozen Train tape purpose and bytes validated, no reseeding.",
+    "All prompts synthesized and measured using the real tokenizer; requested labels alone are insufficient.",
+    "trace_workload.validate_trace and verify_prompts pass.",
+    "Raw stdout, stderr, exit status, output bytes and hashes retained even if unsuccessful."
+  ],
+  "inference_servers_or_HTTP_actuation": false,
+  "package_installs_downloads_or_model_cache_changes_requested": false,
+  "CPU_only_environment": "CUDA hidden, Hugging Face offline and telemetry disabled",
+  "failure_rule": "Retain the first failed attempt. Missing cache or package is a concrete blocker; do not download, silently substitute tokenizers, change seeds, or start a model.",
+  "not_qualified": ["Native14", "GPU prediction accuracy", "MPC runtime", "prefix-cache setting of a serving process", "benchmark results"],
+  "later_serving_protocol_choices_not_executed_here": {
+    "ttft_slo_seconds": 0.5,
+    "natural_slo_rule": "unchanged; no TTFT-only replacement",
+    "fixed_selection": "Empirically compare caps 16 and 32 on Train, freeze before Eval.",
+    "warmup_and_timing": "Must be frozen in the serving protocol; pilot defaults alone are not authorization."
+  }
+}

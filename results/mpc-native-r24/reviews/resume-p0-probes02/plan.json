@@ -1,0 +1,39 @@
+{
+  "schema": "resume-p0-admission-boundary-probe-plan-v1",
+  "status": "CPU_DERIVATION_ONLY_NOT_NATIVE_AUTHORITY",
+  "base_commit": "98e1174de56b01fd4448259c002d9f32223298ad",
+  "reason": "The final user gate requires actual admission-behavior evidence. Under the proposed gateway default cost coefficients, even all four old qualification requests overlapping reserve only 9.9122026496 units, below both supported caps 16/32. A cap ACK from that input cannot demonstrate the required admission boundary effect.",
+  "cost_context": {
+    "source": "gateway.py estimate_request_cost and module defaults",
+    "formula": "max(0.1, 0.259 + 0.000758 * actual_input_tokens + 0.0052083333 * max_output_tokens)",
+    "largest_verified_train_class": 3072,
+    "output_cap": 128,
+    "per_largest_request": 3.2542426624,
+    "four_largest_requests": 13.0169706496,
+    "five_largest_requests": 16.271213312,
+    "conditional_minimum": "Five is the fewest available Train requests whose simultaneous reservation can cross 16 without crossing 32, if the actual serving CostSpec matches these defaults. This is arithmetic, not observed concurrency or a performance result."
+  },
+  "derivation": {
+    "source": "results/mpc-native-r24/reviews/resume-p0-tokenizer02-raw/returned/train.replay.json",
+    "source_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+    "selection": "first five Train rows whose measured input_tokens is 3072, unchanged prompts and max_tokens",
+    "arrival_seconds": [1.25, 1.25, 1.25, 1.25, 1.25],
+    "duration_seconds": 5,
+    "purpose": "engineering",
+    "heldout_or_performance": false,
+    "old_outputs": "Keep warmup and the old four-request probe byte-identical; preserve the old capsule as evidence, not a qualifying result."
+  },
+  "cpu_validation": {
+    "python": "3.12.16",
+    "command": "NOMINAL_PROBE_SCRATCH=$ROOT/.runtime/r24-resume-p0-probes02/py312 $PY312 -B -m unittest discover -s experiments/mpc-research/resume-mvp -p test_prepare_probes.py -v",
+    "controls": "Original tamper/non-clobber/prompt-preservation controls plus the five-row Train-class derivation and byte-identity checks of both old outputs."
+  },
+  "native_acceptance_not_yet_executed": [
+    "Verify actual serving CostSpec, real tokenizer and zero fallback before relying on the boundary arithmetic.",
+    "Require two consecutive full timestamped observe/predict/plan/actual-first-action-application/reobserve cycles.",
+    "Require actual changed-cap application and actual request admission/rejection records linked to that applied budget version; no planner-only, ACK-only or hold-only qualification.",
+    "Reconstruct transaction reservation state from the ordered owner ledger, not racy sampled state. Demonstrate a request decision lying across old/new budget thresholds; mismatch or missing evidence means FAIL or BLOCKED.",
+    "If requests do not overlap or the controller does not produce qualifying actions, preserve the inconclusive/failed result. No seed search, Eval tuning, guard weakening or automatic rerun."
+  ],
+  "scope_exclusions": ["No Eval reading", "No model fitting or sampling research", "No GPU, SSH, HTTP or inference in CPU validation", "No real operator permit"]
+}

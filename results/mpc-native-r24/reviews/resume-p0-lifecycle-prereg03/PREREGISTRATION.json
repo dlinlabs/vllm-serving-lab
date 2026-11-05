@@ -1,0 +1,28 @@
+{
+  "schema": "resume-p0-existing-gpu-lifecycle-corrective-prereg-v3",
+  "authority": "MAYOR_SINGLE_CORRECTED_LIFECYCLE_COMPONENT_ATTEMPT_ONLY",
+  "inherits": "../resume-p0-lifecycle-prereg02/PREREGISTRATION.json",
+  "reason_for_new_attempt": "Diagnosed FlashInfer warmup failure: installed Ninja1.13.2 was outside child PATH. Prepend the configured interpreter bin, proven by regression FAIL before fix and seven CPU controls PASS after fix.",
+  "not_a_blind_retry": true,
+  "source_commit": "939cae8946887465f2dbd1e2318bae2f91a31a56",
+  "source_archive_sha256": "49bc56449776ee118de1006e8f32daf7ca77083f4f354100fb4e14830e64fd1b",
+  "source_archive_bytes": 645120,
+  "source_manifest_sha256": "d62c0fefe0aaf100237eb4ddd1a34611cbeef1e138da5855da263ac8c690a8bd",
+  "source_files": 48,
+  "driver_sha256": "bbc1d1caba98ac8cba7c16321cf07001d4460ba593c538261f7755616b0256a6",
+  "remote_base": "/workspace/pr32-r23/r24-resume-p0-lifecycle-939cae8903",
+  "remote_source": "/workspace/pr32-r23/r24-resume-p0-lifecycle-939cae8903/source",
+  "remote_output": "/workspace/pr32-r23/r24-resume-p0-lifecycle-939cae8903/output",
+  "argv": [
+    "/workspace/pr32-r23/venv/bin/python3.12", "-B",
+    "/workspace/pr32-r23/r24-resume-p0-lifecycle-939cae8903/source/experiments/mpc-research/resume-mvp/native_services_smoke.py",
+    "--execute",
+    "--source-root", "/workspace/pr32-r23/r24-resume-p0-lifecycle-939cae8903/source",
+    "--output-root", "/workspace/pr32-r23/r24-resume-p0-lifecycle-939cae8903/output",
+    "--seconds", "480", "--cleanup-reserve", "30", "--term-grace", "10"
+  ],
+  "attempts": 1,
+  "unchanged": "Same dedicated18000/18001 ports, existing GPU, exact two locks, cached assets, optimizations, admission configuration, original480s deadline/reserve30/TERM10, source identity and cleanup checks. No dependency installation or metrics/controller changes.",
+  "scope": "Lifecycle only, zero offered inference requests and zero admin control POSTs. Not MPC qualification, Fixed Train or Eval.",
+  "stop_rules": "Retain both previous startup failures and all current raw evidence. No new rental, infrastructure-process termination, Push, Merge, criteria relaxation or blind repeat."
+}

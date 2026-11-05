@@ -1,0 +1,39 @@
+{
+  "finisher": "same wrapper + selected python3.12 -B .runtime/r24-resume-p0-nominal-runtime02/finish02.py",
+  "preparation": "standard env/unsetPYTHONPATH/threads1/nobytecode/noautoload/nice19 selected python3.12 -B .runtime/r24-resume-p0-nominal-runtime02/prepare02.py",
+  "runner": "same wrapper + selected python3.12 -B .runtime/r24-resume-p0-nominal-runtime02/run02.py",
+  "source_fact_diagnosis": "Read-only source inspection, no extra runtime/control command.",
+  "test": {
+    "argv": [
+      "env",
+      "-u",
+      "PYTHONPATH",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+      "PYTHONHASHSEED=0",
+      "OMP_NUM_THREADS=1",
+      "OPENBLAS_NUM_THREADS=1",
+      "MKL_NUM_THREADS=1",
+      "NUMEXPR_NUM_THREADS=1",
+      "VECLIB_MAXIMUM_THREADS=1",
+      "BLIS_NUM_THREADS=1",
+      "NOMINAL_RUNTIME_TEST_DIR=.runtime/r24-resume-p0-nominal-runtime02/attempts/generation01-py312/artifacts",
+      "nice",
+      "-n",
+      "19",
+      "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/mpc-research/resume-mvp",
+      "-p",
+      "test_nominal_runtime.py",
+      "-k",
+      "cli02_",
+      "-v"
+    ],
+    "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21"
+  }
+}

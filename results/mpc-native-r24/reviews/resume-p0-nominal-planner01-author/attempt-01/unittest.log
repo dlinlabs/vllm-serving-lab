@@ -1,0 +1,20 @@
+NOMINAL_RECEIPT {"identity": {"calibration_version": "synthetic-unqualified-v1", "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7", "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea", "model_version": "cpu-lifecycle-v1", "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"}, "kind": "identity", "modules": {"mpc_lab": {"path": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/mpc_lab/__init__.py", "sha256": "29962543d64e8cdb630a240a999dd9e47ed87cccf4bd03220ca2d82b5d7be09e"}, "mpc_lab.contracts": {"path": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/mpc_lab/contracts.py", "sha256": "f39f6b73b41b1433a220f182679852df5c4332d9022ce903dba9863375236e23"}, "mpc_lab.controller": {"path": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/mpc_lab/controller.py", "sha256": "44d705101820d89677035101110c70f890f94f7d82a5a521ec87d5e09dbf08cc"}, "mpc_lab.model": {"path": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/mpc_lab/model.py", "sha256": "eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec"}, "nominal_planner": {"path": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_planner.py", "sha256": "bfe04ef6fc5d967c3f51b75855d7724c27ce424502c2b5bce95723422895968e"}}, "scope": "literal-CPU-only-not-Native"}
+test_clock_identity_and_mid_solve_versions_refuse (test_nominal_planner.NominalPlannerTests.test_clock_identity_and_mid_solve_versions_refuse) ... ok
+test_expired_backdated_and_incomplete_entry_refuses_before_forecast (test_nominal_planner.NominalPlannerTests.test_expired_backdated_and_incomplete_entry_refuses_before_forecast) ... ok
+test_full_action_train_fixed_selection_has_no_runtime_solver_tax (test_nominal_planner.NominalPlannerTests.test_full_action_train_fixed_selection_has_no_runtime_solver_tax) ... NOMINAL_RECEIPT {"budget": 32.0, "kind": "train-fixed", "runtime_rollout_calls": 0, "scope": "literal-CPU-only-not-Native", "totals": [[16.0, "0"], [32.0, "1"]]}
+ok
+test_future_or_unbound_scenario_and_mislabeled_objective_refuse (test_nominal_planner.NominalPlannerTests.test_future_or_unbound_scenario_and_mislabeled_objective_refuse) ... ok
+test_incomplete_duplicate_and_wrong_objective_panels_refuse (test_nominal_planner.NominalPlannerTests.test_incomplete_duplicate_and_wrong_objective_panels_refuse) ... ok
+test_partial_forecast_and_solver_failure_never_return_a_winner (test_nominal_planner.NominalPlannerTests.test_partial_forecast_and_solver_failure_never_return_a_winner) ... ok
+test_post_forecast_deadline_and_clock_regression_refuse (test_nominal_planner.NominalPlannerTests.test_post_forecast_deadline_and_clock_regression_refuse) ... ok
+test_real_forecast_holds_received_budget_until_applicable_time (test_nominal_planner.NominalPlannerTests.test_real_forecast_holds_received_budget_until_applicable_time) ... NOMINAL_RECEIPT {"after_action_good": true, "during_solve_accepted": false, "kind": "causal-prefix", "scope": "literal-CPU-only-not-Native"}
+ok
+test_real_full_panel_distinguishes_mpc_from_strong_one_move (test_nominal_planner.NominalPlannerTests.test_real_full_panel_distinguishes_mpc_from_strong_one_move) ... NOMINAL_RECEIPT {"kind": "mpc-vs-one-move", "mpc_lower": "1", "mpc_path": [16.0, 32.0, 32.0], "one_move_lower": "0", "one_move_path": [32.0, 32.0, 32.0], "rollout_calls": 8, "scope": "literal-CPU-only-not-Native"}
+ok
+test_real_one_move_can_delay_its_only_transition (test_nominal_planner.NominalPlannerTests.test_real_one_move_can_delay_its_only_transition) ... NOMINAL_RECEIPT {"kind": "delayed-one-move", "lower": "1", "path": [16.0, 32.0, 32.0], "scope": "literal-CPU-only-not-Native", "transitions": 1}
+ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.010s
+
+OK

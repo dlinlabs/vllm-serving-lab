@@ -1,0 +1,52 @@
+{
+  "schema": "resume-p0-runtime-parent-v1",
+  "base_commit": "7f5daa591c43e83ad62a9052ca80efbcca4a0624",
+  "status": "CPU_RUNTIME_INTEGRATION_ACCEPTED_NOT_NATIVE",
+  "owner": "Role6 retained gpt-6-astra/max",
+  "author_capsule": ".runtime/r24-resume-p0-nominal-runtime03",
+  "archive": "results/mpc-native-r24/reviews/resume-p0-runtime03-author",
+  "author_seal_sha256": "b116dbaa005a27a14fec3ca1cb553cd3b01d3e389ad3adebde5aecb185b9dc1b",
+  "archive_files": 216,
+  "archive_bytes": 1490722,
+  "source_sha256": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959",
+  "tests_sha256": "52459b65f121ee6f27144b545c33a21f755ccb9f6ec013883ea6e304bd782eb0",
+  "parent_review": "Reviewed source/test correction diff, current root/protocol/binding code, standalone imports, Train provider, shared-start/restart logic, realized-scenario journaling, run/CLI and delivery evidence. The unchanged runtime01 core was reviewed previously. Original capsule and current source hashes verified without rerunning the author's green controls.",
+  "correction": "One shared strict root-origin canonicalizer is used by protocol creation, current endpoint binding and CLI. Equivalent bare/root-slash URLs agree; raw credentials/query/fragment/non-root paths, unsupported forms, changed origin and redirects still refuse. No timing/source/version/unknown-command guard was relaxed.",
+  "controls": {
+    "python": "3.12.16",
+    "generation": 1,
+    "attempts": 1,
+    "passed": 17,
+    "old_runtime_controls": 12,
+    "unchanged_cli_controls": 4,
+    "new_canonicalization_control": 1,
+    "elapsed_seconds": 2.0684026919770986,
+    "exit": 0,
+    "clients_closed": 60,
+    "explicit_tasks_joined": 1,
+    "known_control_supervisor_identities_gone": 4,
+    "binding_pins_stable": 38,
+    "realized_selected_path_replays": 2
+  },
+  "capabilities": [
+    "Once-frozen Train prior, no Eval tape or future replay input.",
+    "Stable static protocol binding excluding ephemeral prior availability.",
+    "Full realized CausalScenario receipts before planning, including partial-plan failure evidence.",
+    "Shared host-monotonic offered start, pacing and persistent original episode deadline.",
+    "Offline protocol description without HTTP or approval generation.",
+    "Default GET-only, separate explicit nominal permit required for POST."
+  ],
+  "failure_history": {
+    "runtime02": "Original 1 PASS, 1 FAIL, 2 ERROR URL-binding attempt remains unchanged and committed at dcdb6fe8f880997e7c8096453bbce79316f6eb13.",
+    "immutable02_members_rechecked": 47
+  },
+  "limitations": [
+    "MockTransport and CPU model replay do not establish Native action timing, admission effects or prediction accuracy.",
+    "ACK alone, hold-only behavior and planner output do not satisfy B.",
+    "Complete NominalForecast wrapper is not retained; actual CausalScenario supports these rollout replays, not independent RNG-wrapper reproduction.",
+    "Recorder/metrics independent acceptance, actual service ownership and host preflight remain required before qualification.",
+    "Full serving-driver and clean-checkout benchmark reproduction remain open; CPU runtime acceptance does not close them."
+  ],
+  "Native_permission": false,
+  "B_complete": false
+}

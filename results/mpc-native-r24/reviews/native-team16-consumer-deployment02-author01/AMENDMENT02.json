@@ -1,0 +1,14 @@
+{
+  "schema":"consumer-deployment02-final-bounded-control-amendment-v1",
+  "first_generation_source_freeze":"926fed4b2e87a6e01d0b56524e792c46ffef70eb2711d4e2a291bf7253373fa1",
+  "observed":"Both Python generation01 runs:8PASS,1FAIL. C07 failed exclusive_candidate_cwd_required before acquisition because the new test harness omitted the unchanged required literal preflight cwd.",
+  "classification":"Harness placement failure;the literal cwd guard correctly refused. NOT a Native/model/consumer-runtime defect.",
+  "changes":["Set C07's cwd to the unchanged literal preflight directory using pytest restoration.",
+             "Permit the bounded runner to select only C07 and report selected count accurately."],
+  "unchanged":"All executable client/launcher/service/consumer/transport/ownership/privacy/authorization,protocol,inputs,legacy42 migration and control definitions except the one C07 cwd setup line.",
+  "second_generation_scope":"Only corrected C07 once/Python. Total10 control executions/Python across9 unique controls;no repeat of8 unchanged passing controls or old14/6/42suite.",
+  "preservation":"Archive generation01 source freeze/source bytes before changes;retain both original failed logs/exits/output trees and all helper cleanup proofs.",
+  "cleanup":"Both generation01 runs joined all owned helpers;four actual PID/starttick identities independently gone.",
+  "no_third_generation":true,
+  "no_Native_authorization":true
+}

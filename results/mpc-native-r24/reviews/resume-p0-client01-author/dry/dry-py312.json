@@ -1,0 +1,168 @@
+{
+ "binding_literal": {
+  "backend_argv": [
+   "vllm",
+   "serve",
+   "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+   "--served-model-name",
+   "Qwen/Qwen3-4B-Instruct-2507",
+   "--scheduling-policy",
+   "fcfs",
+   "--no-enable-prefix-caching",
+   "--max-model-len",
+   "8192"
+  ],
+  "backend_argv_source": "literal dry-check argv (no launched backend; NOT launch proof)",
+  "local_model_path": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+  "schema": "r24-resume-p0-nominal-model-binding-v1",
+  "served_alias": "Qwen/Qwen3-4B-Instruct-2507",
+  "served_model_names": [
+   "Qwen/Qwen3-4B-Instruct-2507"
+  ],
+  "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5"
+ },
+ "inputs": {
+  "qualification": {
+   "bytes": 17396,
+   "check_binding": {
+    "argv_max_model_len": "8192",
+    "argv_scheduling_policy": "fcfs",
+    "local_model_path": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "served_alias": "Qwen/Qwen3-4B-Instruct-2507"
+   },
+   "declared_purpose": "engineering",
+   "declared_purpose_cli": "engineering",
+   "duration_seconds": 5,
+   "finalizable_core_purpose": false,
+   "model": "Qwen/Qwen3-4B-Instruct-2507",
+   "n_requests": 4,
+   "output_cap": 128,
+   "path": "results/mpc-native-r24/reviews/resume-p0-probes01/inputs/qualification.json",
+   "provenance_keys": [
+    "derivation",
+    "kind",
+    "not_a_held_out_or_performance_comparison",
+    "probe",
+    "purpose",
+    "source_request_ids",
+    "source_train_replay_sha256",
+    "tokenizer_sha256"
+   ],
+   "provenance_purpose_equals_declared": true,
+   "sha256": "fe480796606b86aec3b2d4c91388a4846d98035b5a9810131e39fd40b627b333",
+   "sha256_expected": "fe480796606b86aec3b2d4c91388a4846d98035b5a9810131e39fd40b627b333",
+   "sha256_match": true,
+   "strict_load": "ok",
+   "tape": {
+    "generator": null,
+    "kind": "ENGINEERING_PROBE_FROM_FROZEN_TRAIN_REPLAY",
+    "measured_equals_requested_count": null,
+    "offered_tape_schema": null,
+    "offered_tape_sha256": null,
+    "protocol_id": null,
+    "purpose": "engineering",
+    "source_id": null,
+    "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5"
+   },
+   "validate_trace": "ok"
+  },
+  "train_replay": {
+   "bytes": 257950,
+   "check_binding": {
+    "argv_max_model_len": "8192",
+    "argv_scheduling_policy": "fcfs",
+    "local_model_path": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "served_alias": "Qwen/Qwen3-4B-Instruct-2507"
+   },
+   "declared_purpose": "train",
+   "declared_purpose_cli": "train",
+   "duration_seconds": 5.0,
+   "finalizable_core_purpose": true,
+   "model": "Qwen/Qwen3-4B-Instruct-2507",
+   "n_requests": 88,
+   "output_cap": 128,
+   "path": ".runtime/r24-resume-p0-tokenizer02/returned/train.replay.json",
+   "provenance_keys": [
+    "generator",
+    "kind",
+    "measured_equals_requested_count",
+    "offered_tape_schema",
+    "offered_tape_sha256",
+    "prompt_length_semantics",
+    "protocol_id",
+    "purpose",
+    "requested_prompt_tokens",
+    "source_id",
+    "tokenizer_sha256"
+   ],
+   "provenance_purpose_equals_declared": true,
+   "sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+   "sha256_expected": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+   "sha256_match": true,
+   "strict_load": "ok",
+   "tape": {
+    "generator": {
+     "keys": [
+      "id",
+      "version"
+     ],
+     "type": "dict"
+    },
+    "kind": "SYNTHETIC_OFFERED_WORKLOAD_TAPE",
+    "measured_equals_requested_count": 88,
+    "offered_tape_schema": "r24-resume-p0-offered-tape-v1",
+    "offered_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+    "protocol_id": "r24-resume-p0-nominal-workload-v1",
+    "purpose": "train",
+    "source_id": "synthetic:r24-resume-p0-nominal-workload:v1:train",
+    "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5"
+   },
+   "validate_trace": "ok"
+  },
+  "warmup": {
+   "bytes": 9579,
+   "check_binding": {
+    "argv_max_model_len": "8192",
+    "argv_scheduling_policy": "fcfs",
+    "local_model_path": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "served_alias": "Qwen/Qwen3-4B-Instruct-2507"
+   },
+   "declared_purpose": "engineering",
+   "declared_purpose_cli": "engineering",
+   "duration_seconds": 3,
+   "finalizable_core_purpose": false,
+   "model": "Qwen/Qwen3-4B-Instruct-2507",
+   "n_requests": 3,
+   "output_cap": 128,
+   "path": "results/mpc-native-r24/reviews/resume-p0-probes01/inputs/warmup.json",
+   "provenance_keys": [
+    "derivation",
+    "kind",
+    "not_a_held_out_or_performance_comparison",
+    "probe",
+    "purpose",
+    "source_request_ids",
+    "source_train_replay_sha256",
+    "tokenizer_sha256"
+   ],
+   "provenance_purpose_equals_declared": true,
+   "sha256": "3a893f485e11204088f03cf08415d1e9d56028ce0a7ee476477ad3d24c2808b2",
+   "sha256_expected": "3a893f485e11204088f03cf08415d1e9d56028ce0a7ee476477ad3d24c2808b2",
+   "sha256_match": true,
+   "strict_load": "ok",
+   "tape": {
+    "generator": null,
+    "kind": "ENGINEERING_PROBE_FROM_FROZEN_TRAIN_REPLAY",
+    "measured_equals_requested_count": null,
+    "offered_tape_schema": null,
+    "offered_tape_sha256": null,
+    "protocol_id": null,
+    "purpose": "engineering",
+    "source_id": null,
+    "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5"
+   },
+   "validate_trace": "ok"
+  }
+ },
+ "python": "3.12.16"
+}

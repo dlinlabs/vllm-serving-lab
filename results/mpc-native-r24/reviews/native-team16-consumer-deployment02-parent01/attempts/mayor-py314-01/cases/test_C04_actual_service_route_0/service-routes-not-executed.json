@@ -1,0 +1,62 @@
+{
+  "Gateway_budget": 32,
+  "Native_argv": [
+    "/workspace/pr32-r23/venv/bin/vllm",
+    "serve",
+    "/root/.cache/huggingface/hub/models--Qwen--Qwen3-4B-Instruct-2507/snapshots/cdbee75f17c01a7cc42f958dc650907174af0554",
+    "--served-model-name",
+    "Qwen/Qwen3-4B-Instruct-2507",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8000",
+    "--dtype",
+    "bfloat16",
+    "--max-model-len",
+    "8192",
+    "--max-num-seqs",
+    "32",
+    "--max-num-batched-tokens",
+    "2048",
+    "--gpu-memory-utilization",
+    "0.8",
+    "--no-enable-prefix-caching",
+    "--tensor-parallel-size",
+    "1",
+    "--enable-request-id-headers"
+  ],
+  "Native_sequences": 32,
+  "Native_tokens": 2048,
+  "actual_exec_called": false,
+  "routes": {
+    "gateway": {
+      "argv": [
+        "gateway",
+        "--config",
+        "/workspace/pr32-r23/cut-consumer-state02/cut-consumer02.private.json",
+        "--plan",
+        "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-deployment02-parent01/NATIVE_PLAN.json",
+        "--python",
+        "/workspace/pr32-r23/venv/bin/python3.12",
+        "--evidence",
+        "/workspace/pr32-r23/source/results/mpc-native-r24/r24-team16-native-cut-consumer-deployment02/gateway",
+        "--identification-protocol",
+        "/workspace/pr32-r23/source/results/mpc-native-r23/runtime/h16-original-protocol.json"
+      ],
+      "entry": "/workspace/pr32-r23/source/experiments/mpc-research/native-r24-prepared-physical13/launch_gateway_prefix_service.py"
+    },
+    "native": {
+      "argv": [
+        "--config",
+        "/workspace/pr32-r23/cut-consumer-state02/cut-consumer02.private.json",
+        "--plan",
+        "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-deployment02-parent01/NATIVE_PLAN.json",
+        "--python",
+        "/workspace/pr32-r23/venv/bin/python3.12",
+        "--evidence",
+        "/workspace/pr32-r23/source/results/mpc-native-r24/r24-team16-native-cut-consumer-deployment02/native"
+      ],
+      "entry": "/workspace/pr32-r23/source/experiments/mpc-research/native-r24-prepared-physical13/launch_queue_service.py"
+    }
+  }
+}

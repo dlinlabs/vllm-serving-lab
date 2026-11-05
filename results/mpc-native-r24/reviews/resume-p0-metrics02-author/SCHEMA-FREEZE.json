@@ -1,0 +1,31 @@
+{
+ "schema": "r24-resume-p0-nominal-metrics-v2",
+ "selection_schema": "r24-resume-p0-nominal-train-selection-v2",
+ "run_keys": "UNCHANGED (arm, purpose, clock_domain, offered_start, offered_duration_s, envelope_start, envelope_end, envelope_scope, rows, slo_missing, control, control_missing, provenance)",
+ "row_keys": "UNCHANGED",
+ "provenance_required_new": {
+  "offered_count": "int >= 0 derived from the frozen offered trace; must equal len(rows) (F4)",
+  "offered_request_ids_sha256": "sha256 of canonical JSON list of offered request ids in trace order (request_ids_sha256 helper); must equal the digest of row ids in row order (F4)"
+ },
+ "provenance_optional_new": {
+  "comparability": "absent/null = NOT_RECORDED (single-run metrics allowed; Train selection and comparison tables REFUSE). If present: keys exactly hardware, model, backend, gateway, resources, code, client_generation, clock. hardware/backend/gateway/resources/code/client_generation non-empty objects; clock non-empty string (declared clock semantics; absolute per-episode starts may differ). model keys exactly local_model_path (absolute), asset_sha256 (64-hex), served_alias, served_alias_verified (true), tokenizer_sha256 (64-hex). client_generation requires ignore_eos (bool) and max_tokens_policy (string); when natural-SLO fields exist every row requested_ignore_eos must equal it. gateway must not contain the per-arm budget MAX_ADMITTED_COST (carried by control). Facts are producer/driver-declared: compared for canonical equality, never verified against a live system here (F1)",
+  "train_selection_sha256": "64-hex digest of the frozen Train selection recorded by the producer for Eval runs; required on every measured Eval arm for an Eval train_selected_fixed ALIAS, otherwise the alias is REFUSED (selection provenance UNVERIFIED) (F2)"
+ },
+ "row_and_window_rules": {
+  "F3": "sent_at < scheduled_at refused; EARLY_SEND_TOLERANCE_S = 0.0 (recorder sends only after monotonic >= scheduled_at); send_lag_s adds min, n_negative (0 in accepted runs) and early_send_tolerance_s",
+  "F5": "every scheduled_at within [offered_start, offered_start + offered_duration_s]; every sent/first/terminal within [envelope_start, envelope_end]; offered_cohort_observed additionally requires envelope_start == offered_start and |envelope_end - max(offered end, last terminal)| <= ENVELOPE_TOLERANCE_S = 1e-6"
+ },
+ "compute_additions": {
+  "offered_cohort": "offered_count, request_ids_sha256, request_shape_sha256 (ids, group_tokens, max_output_tokens), request_ids, relative_scheduled_s, offered_duration_s",
+  "comparability": "status DECLARED|NOT_RECORDED, record, sha256, basis",
+  "train_selection_sha256": "provenance value or null",
+  "labels": "F6 per-group n and k, worst rejection group identity/n/ties, unweighted-Jain note; F7 scope-dependent wall label and direction (offered_cohort_observed: lower-bound envelope, rates are UPPER bounds on full-wall rates), delivered-only token scope and endpoint max_tokens premise; summary carries them"
+ },
+ "cross_arm_rules": {
+  "identity": "trace sha, offered_count, request_ids_sha256, request_shape_sha256, offered_duration_s, envelope scope equal; relative_scheduled_s elementwise within SCHEDULE_TOLERANCE_S = 1e-6 (absolute offered_start may differ)",
+  "comparability": "every measured arm DECLARED with identical canonical sha256, else Train selection REFUSED / comparison_table raises (UNVERIFIED or incomparable)",
+  "selection_output": "SELECTED adds schema, purpose train, request_ids_sha256, request_ids, comparability_sha256, per-candidate metrics_sha256, self-digest selection_sha256; REFUSED carries schema; rule and tie order unchanged",
+  "alias_binding": "train_selection must be a complete self-consistent v2 record (digest verified, decision recomputed from candidates); Train table: candidates' metrics_sha256 must equal the measured fixed arms; Eval table: positive reuse (equal trace sha, equal request-id digest or any shared request id) refuses the table, comparability sha must equal the selection's, every measured Eval arm must record the same train_selection_sha256 (missing -> alias REFUSED UNVERIFIED, different -> refused); alias row carries selection sha, decided_by and candidates. Passing reuse checks is NOT disjointness proof"
+ },
+ "unchanged": ["score_http natural rule and pinned sha", "fates/denominators/quantile estimands", "selection rule and ties", "adapter mapping (adds provenance offered_count/digest only; comparability NOT_RECORDED)", "A8 adapter alias restriction (deferred)"]
+}

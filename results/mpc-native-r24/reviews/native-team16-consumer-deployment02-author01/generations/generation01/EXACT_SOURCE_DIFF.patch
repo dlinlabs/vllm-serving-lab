@@ -1,0 +1,797 @@
+--- inputs/reference-composition/client01.py
++++ client01.py
+@@ -18,6 +18,7 @@
+ import composition_common01 as c
+ from transport01 import Capture
+ from coverage01 import assess as assess_inflight
++from authorization02 import require_activation
+ 
+ 
+ class Wire:
+@@ -623,7 +624,7 @@
+         began = True
+         origins = c.load_origins(c.ORIGINS)
+         c.require_origins(origins, native_pid=process["pid"], gateway_pid=started["gateway"]["pid"])
+-        c.write(directory / "running-origins-consumer01.json", origins)
++        c.write(directory / "running-origins-consumer02.json", origins)
+         memory = {}
+         telemetry = c.PUBLIC / "gateway/gateway-telemetry.jsonl"
+         closure, journal = await collect_one(wire, initial, directory, "initial-cut",
+@@ -686,12 +687,12 @@
+ 
+ async def register_consumer(consumer, ready, directory, startup_deadline):
+     registration = dict(
+-        schema="team16-cut-consumer-registration-v1", identity=ready["identity"]["process"],
++        schema="team16-cut-consumer02-registration-v1", identity=ready["identity"]["process"],
+         clock_domain=ready["identity"]["clock_domain"], run_id=ready["run_id"],
+         parent=c.consumer_module("common01").current_identity()["process"],
+         consumer_source_freeze_sha256=ready["source_freeze_sha256"])
+-    c.publish(directory / "consumer-registration01.json", registration)
+-    path = directory / "consumer-registered01.json"
++    c.publish(directory / "consumer-registration02.json", registration)
++    path = directory / "consumer-registered02.json"
+     while time.monotonic() < startup_deadline:
+         if path.exists():
+             ack = c.load(path)
+@@ -718,7 +719,7 @@
+ 
+ def shared_teardown_anchor(directory, consumer, active_at=None):
+     path = directory / "protocol-finished.json"
+-    host = directory / "host-cleanup-anchor01.json"
++    host = directory / "host-cleanup-anchor02.json"
+     if host.exists():
+         marker = c.load(host)
+         c.require(marker["clock_domain"] == c.domain(), "host_cleanup_clock_domain")
+@@ -776,9 +777,9 @@
+             closed = await boundary.close(cancelled=failed, teardown_anchor=anchor,
+                                           hard_deadline=invocation["cleanup_hard_deadline"])
+             returned_at = time.monotonic()
+-            staging = c.STATE / "consumer-close-returned01.json"
++            staging = c.STATE / "consumer-close-returned02.json"
+             c.write(staging, dict(
+-                schema="team16-actual-consumer-close-return-v1", receipt=closed,
++                schema="team16-actual-consumer02-close-return-v1", receipt=closed,
+                 actual_caller_observed_return_at=returned_at, shared_teardown_anchor=anchor,
+                 original_host_cleanup_cutoff=invocation["cleanup_hard_deadline"],
+                 clock_domain=c.domain(), host_IO_persistence_required=True))
+@@ -809,7 +810,7 @@
+         failure = type(error).__name__
+     finally:
+         cutoffs = [float("inf") if hard_deadline is None else hard_deadline]
+-        for name, key in (("host-cleanup-anchor01.json", "anchor"),
++        for name, key in (("host-cleanup-anchor02.json", "anchor"),
+                           ("protocol-finished.json", "finished_at")):
+             path = directory.parent / name
+             if path.exists():
+@@ -841,21 +842,26 @@
+     import argparse
+     parser = argparse.ArgumentParser(allow_abbrev=False)
+     parser.add_argument("--owned-client", action="store_true")
++    parser.add_argument("--mayor-preregistration", type=Path)
++    parser.add_argument("--approval-sha256")
+     args = parser.parse_args(argv)
+-    if not args.owned_client:
++    activation = require_activation(args.owned_client, args.mayor_preregistration, role="client",
++                                    expected_sha256=args.approval_sha256)
++    if activation is None:
+         print('{"status":"disabled","native_execution":false,"actual_application_at":null}')
+         return 0
+-    raise ValueError("successor_CPU_patch_no_live_entrypoint")
++    c.require(args.approval_sha256 is not None, "owned_approval_digest_required")
+     c.remote_only()
++    invocation = c.load(c.STATE / "client-consumer-invocation02.json")
++    c.require(invocation["approval_sha256"] == activation["approval_sha256"], "same_owned_invocation_approval")
++    invocation_check(invocation)
++    c.owned_parent(invocation["owner_pid"], invocation["owner_start_ticks"])
+     sys.pycache_prefix = str(c.STATE / "python-cache-evidence")
+     c.verify_code()
+     os.chdir(c.PREFLIGHT)
+     c.preflight().frozen.verify()
+     config = c.private_config()
+-    invocation = c.load(c.STATE / "client-consumer-invocation01.json")
+-    invocation_check(invocation)
+-    c.owned_parent(invocation["owner_pid"], invocation["owner_start_ticks"])
+-    c.write(c.STATE / "client-consumer-single-entry01.json", dict(pid=os.getpid()))
++    c.write(c.STATE / "client-consumer-single-entry02.json", dict(pid=os.getpid()))
+     started = {name: c.load(c.PUBLIC / name / "started.json") for name in ("native", "gateway")}
+     output = c.PUBLIC / "client"
+     output.mkdir(mode=0o700)
+--- inputs/reference-composition/launch01.py
++++ launch01.py
+@@ -5,7 +5,6 @@
+ import fcntl
+ import os
+ from pathlib import Path
+-import re
+ import signal
+ import sys
+ import time
+@@ -13,6 +12,7 @@
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ import composition_common01 as c
+ from owned01 import Owned
++from authorization02 import require_activation
+ 
+ 
+ def alarm(signum, frame):
+@@ -22,35 +22,6 @@
+ def arm(deadline):
+     c.require(deadline > time.monotonic(), "phase_deadline_already_exhausted")
+     signal.setitimer(signal.ITIMER_REAL, deadline - time.monotonic())
+-
+-
+-def authority(path):
+-    value = c.load(path)
+-    c.require(set(value) == {"schema", "execute_once", "composition_manifest_sha256", "protocol_sha256",
+-                            "gpu_uuid", "source_root", "existing_Mayor_exclusive_GPU_lock_held",
+-                            "preregistration_commit", "consumer_manifest_sha256",
+-                            "consumer_Mayor_engineering_acceptance", "consumer_independent_review_acceptance",
+-                            "composition_Mayor_acceptance", "fresh_host_receipt", "fresh_host_receipt_sha256"}
+-              and value.get("schema") == "mayor-cut-consumer-composition-preregistration-v1"
+-              and value.get("execute_once") is True
+-              and value.get("composition_manifest_sha256") == c.sha(c.HERE / "SHA256SUMS")
+-              and value.get("protocol_sha256") == c.sha(c.HERE / "PROTOCOL.json")
+-              and value.get("consumer_manifest_sha256") == c.CONSUMER_SEAL
+-              and value.get("gpu_uuid") == "GPU-8610519d-3680-ae5f-cdfc-40037bfb5013"
+-              and value.get("source_root") == str(c.ROOT)
+-              and value.get("existing_Mayor_exclusive_GPU_lock_held") is True
+-              and re.fullmatch("[a-f0-9]{40}", value.get("preregistration_commit", "")),
+-              "new_Mayor_preregistration_required_not_development_approval")
+-    for key in ("consumer_Mayor_engineering_acceptance", "consumer_independent_review_acceptance",
+-                "composition_Mayor_acceptance"):
+-        proof = value[key]
+-        c.require(set(proof) == {"path", "sha256", "accepted"}
+-                  and proof["accepted"] is True and re.fullmatch("[a-f0-9]{64}", proof["sha256"])
+-                  and c.sha(Path(proof["path"])) == proof["sha256"],
+-                  "exact_separate_acceptance_required:" + key)
+-    c.require(c.sha(Path(value["fresh_host_receipt"])) == value["fresh_host_receipt_sha256"],
+-              "fresh_readonly_host_receipt_binding")
+-    return value
+ 
+ 
+ def fresh_host(prereg):
+@@ -103,11 +74,11 @@
+ def monitor(owned, client, started, cancelled, directory=c.PUBLIC):
+     while True:
+         owned.remember()
+-        registration = directory / "consumer-registration01.json"
+-        acknowledgement = directory / "consumer-registered01.json"
++        registration = directory / "consumer-registration02.json"
++        acknowledgement = directory / "consumer-registered02.json"
+         if registration.exists() and not acknowledgement.exists():
+             row = c.load(registration)
+-            c.require(row["schema"] == "team16-cut-consumer-registration-v1"
++            c.require(row["schema"] == "team16-cut-consumer02-registration-v1"
+                       and row["parent"]["pid"] == client["process"].pid
+                       and row["parent"]["start_ticks"] == owned.identities[client["process"].pid]
+                       and row["consumer_source_freeze_sha256"] == c.sha(c.CONSUMER / "CONTROL_FREEZE.json"),
+@@ -139,12 +110,12 @@
+ 
+ def persist_close(directory, *, anchor, hard_deadline, io_deadline, joined):
+     c.require(joined and time.monotonic() < io_deadline, "owned_join_before_actual_close_IO")
+-    staging = c.STATE / "consumer-close-returned01.json"
++    staging = c.STATE / "consumer-close-returned02.json"
+     info = staging.lstat()
+     c.require(not staging.is_symlink() and info.st_uid == os.getuid()
+               and info.st_mode & 0o777 == 0o600 and info.st_nlink == 1, "private_close_receipt")
+     raw = staging.read_bytes()
+-    path = directory / "consumer-actual-returned-close01.json"
++    path = directory / "consumer-actual-returned-close02.json"
+     with path.open("xb") as stream:
+         stream.write(raw)
+         stream.flush()
+@@ -152,7 +123,7 @@
+     c.require(time.monotonic() < io_deadline and c.sha(path) == c.sha_bytes(raw), "close_original_IO_deadline")
+     value = __import__("json").loads(raw)
+     receipt = value["receipt"]
+-    c.require(value["schema"] == "team16-actual-consumer-close-return-v1"
++    c.require(value["schema"] == "team16-actual-consumer02-close-return-v1"
+               and value["clock_domain"] == c.domain() and value["shared_teardown_anchor"] == anchor
+               and value["original_host_cleanup_cutoff"] == hard_deadline
+               and receipt["started_at"] == anchor and receipt["deadline"] == min(anchor + 40, hard_deadline)
+@@ -193,20 +164,49 @@
+     safe = joined and c.privacy_scan((directory,), secret, no_key_created=no_key_created)
+     if safe:
+         c.write(directory / "result-index.json", dict(
+-            schema="team16-cut-consumer-composition-raw-index-v1", files=output_inventory(directory),
++            schema="team16-cut-consumer-deployment02-raw-index-v1", files=output_inventory(directory),
+             output=str(directory), component_pass=result["component_pass"],
+             all_offered="all-offered.json", raw_http="client/http/", ownership="supervision.json",
+             prior_owner_component_not_reexecuted=True, actual_application_at=None, native_mpc_permitted=False,
+-            excluded_final_files=["result-index.json", "export-gate.json", "DO_NOT_EXPORT.json"]))
++            excluded_final_files=["result-index.json", "export-gate.json", "DO_NOT_EXPORT.json",
++                                  "safe-export-before-config-close02.json","private-config-close02.json"]))
++        safe = c.privacy_scan((directory,), secret, no_key_created=no_key_created)
++    removed = False
++    if safe:
++        removed = close_private_config(directory, joined=joined, secret=secret, deadline=deadline,
++                                       no_key_created=no_key_created)
+         safe = c.privacy_scan((directory,), secret, no_key_created=no_key_created)
+     c.require(time.monotonic() < deadline, "output_absolute_deadline")
+     c.write(directory / "export-gate.json", dict(
+         safe_to_export=bool(safe), all_helpers_joined=joined,
+-        component_pass=bool(result["component_pass"] and safe),
++        private_config_removed_after_join_and_safe_scan=removed,
++        component_pass=bool(result["component_pass"] and safe and removed),
+         completed_at=time.monotonic(), absolute_deadline=deadline,
+         privacy_scope="Raw bytes plus decoded response bodies; malformed/unknown JSON refuses export",
+         actual_application_at=None, native_mpc_permitted=False))
+-    return bool(result["component_pass"] and safe)
++    return bool(result["component_pass"] and safe and removed)
++
++
++def close_private_config(directory, *, joined, secret, deadline, no_key_created=False):
++    c.require(joined and time.monotonic() < deadline, "join_before_private_config_close")
++    c.require(c.privacy_scan((directory,), secret, no_key_created=no_key_created),
++              "safe_export_before_private_config_close")
++    c.write(directory / "safe-export-before-config-close02.json", dict(
++        all_helpers_joined=True, safe_to_export=True, checked_at=time.monotonic(),
++        deadline=deadline, scope="Closed output set including exact actual-returned-close receipt."))
++    existed = c.CONFIG.exists()
++    if existed:
++        config = c.private_config(c.CONFIG)
++        c.require(config["ADMIN_API_KEY"] == secret, "owned_private_key_identity")
++        c.CONFIG.unlink()
++    else:
++        c.require(no_key_created, "created_config_missing_before_safe_close")
++    removed = not c.CONFIG.exists()
++    c.write(directory / "private-config-close02.json", dict(
++        private_config_existed=existed, removed=removed, all_helpers_joined=joined,
++        safe_export_before_removal=True, finished_at=time.monotonic(), deadline=deadline))
++    c.require(removed and time.monotonic() < deadline, "private_config_close_original_IO17")
++    return removed
+ 
+ 
+ def main(argv=None):
+@@ -214,21 +214,20 @@
+     parser.add_argument("--execute-on-existing-gpu", action="store_true")
+     parser.add_argument("--mayor-preregistration", type=Path)
+     args = parser.parse_args(argv)
+-    if not args.execute_on_existing_gpu:
++    started = time.monotonic() if args.execute_on_existing_gpu else None
++    activation = require_activation(args.execute_on_existing_gpu, args.mayor_preregistration, role="launch")
++    if activation is None:
+         print('{"status":"disabled","native_execution":false,"actual_application_at":null}')
+         return 0
+-    raise ValueError("successor_CPU_patch_no_live_entrypoint")
+-    started = time.monotonic()
+     c.remote_only()
+-    c.require(args.mayor_preregistration is not None, "Mayor_preregistration_required")
+-    prereg = authority(args.mayor_preregistration)
++    prereg = activation["document"]
+     c.verify_code()
+     c.require(not any(path.exists() or path.is_symlink() for path in (c.STATE, c.PUBLIC)),
+               "exclusive_one_attempt_spent_namespace")
+     lock = acquire_lock()
+     c.STATE.mkdir(mode=0o700)
+     c.PUBLIC.mkdir(mode=0o700)
+-    for name in ("t", "python-cache-evidence", "native-artifacts", "origins-consumer01"):
++    for name in ("t", "python-cache-evidence", "native-artifacts", "origins-consumer02"):
+         (c.STATE / name).mkdir(mode=0o700)
+     sys.pycache_prefix = str(c.STATE / "python-cache-evidence")
+     signal.signal(signal.SIGALRM, alarm)
+@@ -236,7 +235,7 @@
+     cancelled = []
+     for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+         signal.signal(sig, lambda number, frame: cancelled.append(number))
+-    result = dict(schema="team16-owned-cut-consumer-supervision-v1", started_at=started,
++    result = dict(schema="team16-owned-cut-consumer02-supervision-v1", started_at=started,
+                   clock_domain=c.domain(), preregistration=prereg, errors=[],
+                   component_pass=False, actual_application_at=None, native_mpc_permitted=False,
+                   prediction_qualified=False, exact_point_gate=False, copy_ready_qualification=False)
+@@ -270,16 +269,21 @@
+         for service in ("native", "gateway"):
+             c.require(not cancelled and time.monotonic() < started + 180, "cancelled_or_late_before_service")
+             owned.spawn([str(c.PYTHON), "-I", "-B", str(c.HERE / "service01.py"),
+-                         "--service", service, "--owner-pid", str(os.getpid()),
++                         "--owned-service", "--service", service, "--owner-pid", str(os.getpid()),
++                         "--mayor-preregistration", activation["approval_path"],
++                         "--approval-sha256", activation["approval_sha256"],
+                          "--owner-start-ticks", str(c.owner().snapshot(os.getpid())[0])],
+                          directory=c.PUBLIC / service, cwd=c.HERE, env=environment)
+-        c.write(c.STATE / "client-consumer-invocation01.json", dict(
++        c.write(c.STATE / "client-consumer-invocation02.json", dict(
+                 host_started_at=started, startup_deadline=started + 180, outer_deadline=started + 260,
+                 cleanup_hard_deadline=started + 243, clock_domain=c.domain(),
+                 consumer_manifest_sha256=c.CONSUMER_SEAL,
++                approval_sha256=activation["approval_sha256"],
+                 owner_pid=os.getpid(), owner_start_ticks=c.owner().snapshot(os.getpid())[0]))
+         c.require(not cancelled and time.monotonic() < started + 180, "cancelled_or_late_before_client")
+-        client = owned.spawn([str(c.PYTHON), "-I", "-B", str(c.HERE / "client01.py"), "--owned-client"],
++        client = owned.spawn([str(c.PYTHON), "-I", "-B", str(c.HERE / "client01.py"), "--owned-client",
++                              "--mayor-preregistration", activation["approval_path"],
++                              "--approval-sha256", activation["approval_sha256"]],
+                              directory=c.PUBLIC / "client-process", cwd=c.PREFLIGHT, env=environment)
+         supervision = monitor(owned, client, started, cancelled)
+         if "failure" in supervision:
+@@ -291,7 +295,7 @@
+         anchor = supervision["anchor"]
+         cleanup = None
+         try:
+-            c.publish(c.PUBLIC / "host-cleanup-anchor01.json", dict(
++            c.publish(c.PUBLIC / "host-cleanup-anchor02.json", dict(
+                 anchor=anchor, clock_domain=c.domain(), original_host_cleanup_cutoff=started + 243))
+             arm(min(anchor + 40, started + 243))
+             if owned:
+@@ -304,12 +308,7 @@
+             result["errors"].append("cleanup:" + type(error).__name__)
+         result["cleanup"] = cleanup
+         joined = bool(cleanup and cleanup["all_joined"])
+-        if joined and c.CONFIG.exists():
+-            try:
+-                c.CONFIG.unlink()
+-            except OSError as error:
+-                result["errors"].append("private_cleanup:" + type(error).__name__)
+-        result["private_config_removed_after_join"] = not c.CONFIG.exists()
++        result["private_config_close_pending_safe_export"] = c.CONFIG.exists()
+         result["client_returncode"] = client["process"].returncode if client else None
+         io_deadline = min(started + 260, (cleanup["finished_at"] if cleanup else time.monotonic()) + 17)
+         try:
+@@ -322,7 +321,7 @@
+             c.require_idle(result["gpu_after"])
+             c.verify_code()
+             result["candidate_unchanged"] = True
+-            c.write(c.PUBLIC / "origin-events-consumer01.json", c.load_origins(c.ORIGINS))
++            c.write(c.PUBLIC / "origin-events-consumer02.json", c.load_origins(c.ORIGINS))
+             result["privacy_pass"] = c.privacy_scan((c.PUBLIC,), secret) if secret else owned is None
+             c.require(result["privacy_pass"], "DO_NOT_EXPORT_CREDENTIAL_REFUSAL")
+             if client:
+@@ -336,10 +335,9 @@
+                 result["component_pass"] = bool(
+                     report["component_pass"] and close["joined"] and result["client_returncode"] == 0
+                     and returned["receipt"]["component_pass"] is True
+-                    and (c.PUBLIC / "consumer-registered01.json").exists()
++                    and (c.PUBLIC / "consumer-registered02.json").exists()
+                     and supervision["normal"] and cleanup["capture_complete"]
+-                    and result["sources_unchanged"] and not result["errors"] and not cancelled
+-                    and result["private_config_removed_after_join"])
++                    and result["sources_unchanged"] and not result["errors"] and not cancelled)
+         except BaseException as error:
+             result["errors"].append("postflight:" + type(error).__name__)
+         result.update(finished_at=time.monotonic(), signals=cancelled)
+--- inputs/reference-composition/service01.py
++++ service01.py
+@@ -9,19 +9,61 @@
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ import composition_common01 as c
++from authorization02 import require_activation
+ 
+ 
+-def main():
++def service_route(service):
++    c.require(service in ("native", "gateway"), "owned_service_kind")
++    directory = c.PUBLIC / service
++    command = ["--config", str(c.CONFIG), "--plan", str(c.PLAN),
++               "--python", str(c.PYTHON), "--evidence", str(directory)]
++    if service == "gateway":
++        return c.SOURCE13 / "launch_gateway_prefix_service.py", [
++            "gateway", *command, "--identification-protocol", str(c.ORIGINAL_PROTOCOL)]
++    return c.SOURCE13 / "launch_queue_service.py", command
++
++
++def validate_exec(service, program, argv, environment):
++    c.require(service in ("native", "gateway"), "owned_service_kind")
++    if service == "gateway":
++        expected = [str(c.PYTHON), "-m", "uvicorn", "gateway_prefix_bridge:application",
++                    "--factory", "--host", "127.0.0.1", "--port", "8080", "--workers", "1"]
++        c.require(program == str(c.PYTHON) and argv == expected, "source_exec_gateway_arguments")
++    else:
++        c.require(program == str(c.PYTHON.with_name("vllm"))
++                  and argv[0:3] == [program, "serve", str(c.ALIAS)]
++                  and environment["PYTHONPATH"].split(os.pathsep)[0] == str(c.SOURCE13)
++                  and environment["PR33_R24_PREPARED_COPY_READY_ENABLED"] == "0"
++                  and environment["PR33_R24_PREPARED_FORWARD_ENABLED"] == "1"
++                  and environment["PR33_R24_PHASE_OBSERVER_ENABLED"] == "1"
++                  and environment["PR33_R23_INPUT_POST_OBSERVER_ENABLED"] == "1",
++                  "source_exec_native_route")
++        for flag, expected in (("--max-num-seqs","32"),("--max-num-batched-tokens","2048")):
++            c.require(argv.count(flag) == 1 and argv[argv.index(flag) + 1] == expected,
++                      "Native_formation_limit_not_Gateway_admission")
++
++
++def main(argv=None):
+     parser = argparse.ArgumentParser(allow_abbrev=False)
+-    parser.add_argument("--service", choices=("native", "gateway"), required=True)
+-    parser.add_argument("--owner-pid", type=int, required=True)
+-    parser.add_argument("--owner-start-ticks", type=int, required=True)
+-    args = parser.parse_args()
+-    raise ValueError("successor_CPU_patch_no_live_entrypoint")
++    parser.add_argument("--owned-service", action="store_true")
++    parser.add_argument("--service", choices=("native", "gateway"))
++    parser.add_argument("--owner-pid", type=int)
++    parser.add_argument("--owner-start-ticks", type=int)
++    parser.add_argument("--mayor-preregistration", type=Path)
++    parser.add_argument("--approval-sha256")
++    args = parser.parse_args(argv)
++    activation = require_activation(args.owned_service, args.mayor_preregistration, role="service",
++                                    expected_sha256=args.approval_sha256)
++    if activation is None:
++        print('{"status":"disabled","native_execution":false,"actual_application_at":null}')
++        return 0
++    c.require(args.approval_sha256 is not None and args.service is not None
++              and args.owner_pid is not None and args.owner_start_ticks is not None,
++              "owned_service_arguments_required")
+     c.remote_only()
+     sys.pycache_prefix = str(c.STATE / "python-cache-evidence")
+     c.owned_parent(args.owner_pid, args.owner_start_ticks)
+-    c.write(c.STATE / (args.service + "-consumer-single-entry.json"), dict(pid=os.getpid()))
++    c.write(c.STATE / (args.service + "-consumer02-single-entry.json"), dict(pid=os.getpid()))
+     c.verify_code()
+     c.require(os.getsid(0) == os.getpid() == os.getpgrp(), "actual_owned_session_leader")
+     c.private_config()
+@@ -39,32 +81,14 @@
+     directory = c.PUBLIC / args.service
+     c.write(directory / "preexec-origins.json", dict(pid=os.getpid(), modules=before,
+             scope="Loaded in handoff, not proof of postexec hook registration"))
+-    command = ["--config", str(c.CONFIG), "--plan", str(c.PLAN),
+-               "--python", str(c.PYTHON), "--evidence", str(directory)]
+-    if args.service == "gateway":
+-        entry = c.SOURCE13 / "launch_gateway_prefix_service.py"
+-        command = ["gateway", *command, "--identification-protocol", str(c.ORIGINAL_PROTOCOL)]
+-    else:
+-        entry = c.SOURCE13 / "launch_queue_service.py"
++    entry, command = service_route(args.service)
+     original_exec = os.execv
+ 
+     def execute(program, argv):
+-        if args.service == "gateway":
+-            expected = [str(c.PYTHON), "-m", "uvicorn", "gateway_prefix_bridge:application",
+-                        "--factory", "--host", "127.0.0.1", "--port", "8080", "--workers", "1"]
+-            c.require(program == str(c.PYTHON) and argv == expected, "source_exec_gateway_arguments")
+-        else:
+-            c.require(program == str(c.PYTHON.with_name("vllm"))
+-                      and argv[0:3] == [program, "serve", str(c.ALIAS)]
+-                      and os.environ["PYTHONPATH"].split(os.pathsep)[0] == str(c.SOURCE13)
+-                      and os.environ["PR33_R24_PREPARED_COPY_READY_ENABLED"] == "0"
+-                      and os.environ["PR33_R24_PREPARED_FORWARD_ENABLED"] == "1"
+-                      and os.environ["PR33_R24_PHASE_OBSERVER_ENABLED"] == "1"
+-                      and os.environ["PR33_R23_INPUT_POST_OBSERVER_ENABLED"] == "1",
+-                      "source_exec_native_route")
++        validate_exec(args.service, program, argv, os.environ)
+         os.environ["PYTHONPATH"] += os.pathsep + str(c.HERE / "origin_guard")
+-        os.environ["R24_CUT_CONSUMER_ORIGIN_POLICY"] = str(c.HERE / "ORIGIN_POLICY.json")
+-        os.environ["R24_CUT_CONSUMER_ORIGIN_RECORDS"] = str(c.ORIGINS)
++        os.environ["R24_CUT_CONSUMER02_ORIGIN_POLICY"] = str(c.HERE / "ORIGIN_POLICY.json")
++        os.environ["R24_CUT_CONSUMER02_ORIGIN_RECORDS"] = str(c.ORIGINS)
+         c.write(directory / "direct-exec.json", dict(
+             pid=os.getpid(), start_ticks=c.owner().snapshot(os.getpid())[0],
+             executable=program, arguments=argv,
+--- inputs/reference-composition/composition_common01.py
++++ composition_common01.py
+@@ -12,22 +12,22 @@
+ import sys
+ import types
+ 
+-from pin_inputs01 import sha, verify as verify_initial, write
++from pins02 import sha, verify as verify_initial, write
+ 
+ HERE = Path(__file__).resolve().parent
+-CONSUMER = HERE.parent / "candidate"
+-BASE = HERE / "inputs/base"
++CONSUMER = HERE / "consumer"
++BASE = CONSUMER / "inputs/base"
+ PREFLIGHT = CONSUMER / "inputs/preflight"
+ SOURCE = PREFLIGHT / "inputs/source-tree"
+ SOURCE13_REL = "experiments/mpc-research/native-r24-prepared-physical13"
+ ROOT = Path("/workspace/pr32-r23/source")
+ SOURCE13 = ROOT / SOURCE13_REL
+ PYTHON = ROOT.parent / "venv/bin/python3.12"
+-STAGE = ROOT.parent / HERE.name
+-STATE = ROOT.parent / "cut-consumer-state01"
+-ORIGINS = STATE / "origins-consumer01"
+-PUBLIC = ROOT / "results/mpc-native-r24/r24-team16-native-cut-consumer-composition01"
+-CONFIG = STATE / "cut-consumer.private.json"
++STAGE = ROOT.parent / "r24-team16-native-cut-consumer-deployment02"
++STATE = ROOT.parent / "cut-consumer-state02"
++ORIGINS = STATE / "origins-consumer02"
++PUBLIC = ROOT / "results/mpc-native-r24/r24-team16-native-cut-consumer-deployment02"
++CONFIG = STATE / "cut-consumer02.private.json"
+ LOCK = ROOT.parent / "native-component-GPU-8610519d.lock"
+ ALIAS = Path("/root/.cache/huggingface/hub/models--Qwen--Qwen3-4B-Instruct-2507/snapshots/cdbee75f17c01a7cc42f958dc650907174af0554")
+ MODEL = ROOT.parent / "models/Qwen3-4B-Instruct-2507"
+@@ -35,7 +35,7 @@
+ ORIGINAL_PROTOCOL = ROOT / "results/mpc-native-r23/runtime/h16-original-protocol.json"
+ PLAN = HERE / "NATIVE_PLAN.json"
+ OFFERS = HERE / "OFFERS.json"
+-CONSUMER_SEAL = "f7a4202ce3c4f73fe14066193b882732c35bf230ccc380c6836ce646613c9253"
++CONSUMER_SEAL = "13bc7f834a9bd0cbc0b8c69765642974e4ba8b1bce5f523666e1f7629f5f1393"
+ 
+ 
+ def require(value, reason):
+@@ -67,13 +67,17 @@
+ 
+ def verify(originals=False):
+     result = verify_initial(originals)
+-    require(sha(CONSUMER / "BASE-SHA256SUMS") == CONSUMER_SEAL
++    for row in load(HERE / "ADDITIONAL_INPUTS.json")["bindings"]:
++        require(sha(HERE / row["copy"]) == row["sha256"]
++                and (not originals or sha(row["source"]) == row["sha256"]),
++                "additional_original_verifier_binding")
++    require(sha(HERE / "inputs/SUCCESSOR-SHA256SUMS") == CONSUMER_SEAL
+             and sha(PLAN) == sha(CONSUMER / "NATIVE_PLAN.json")
+-            and sha(OFFERS) == sha(CONSUMER / "OFFERS.json"), "unchanged_CPU_source_fixture_inputs")
+-    binding = load(HERE / "CANDIDATE_BINDING.json")
+-    require(binding["live_permitted"] is False
++            and sha(OFFERS) == sha(CONSUMER / "OFFERS.json"), "new_bound_deployment02_inputs")
++    binding = load(HERE / "SOURCE_BINDING.json")
++    require(binding["author_launch_permitted"] is False
+             and sha(CONSUMER / "CONTROL_FREEZE.json") == binding["candidate_control_freeze_sha256"],
+-            "successor_source_binding")
++            "deployment02_successor_source_binding")
+     consumer_module("common01").verify_code()
+     return result
+ 
+@@ -135,7 +139,6 @@
+ 
+ 
+ def remote_only():
+-    raise ValueError("successor_CPU_patch_no_live_entrypoint")
+     require(HERE == STAGE and Path(sys.prefix).resolve() == PYTHON.parent.parent.resolve()
+             and sys.flags.isolated and sys.dont_write_bytecode and not sys.flags.optimize,
+             "Mayor_only_exact_remote_isolated_interpreter")
+--- inputs/reference-composition/origin_guard/sitecustomize.py
++++ origin_guard/sitecustomize.py
+@@ -21,13 +21,13 @@
+ 
+ 
+ def install():
+-    policy_path = os.environ.get("R24_CUT_CONSUMER_ORIGIN_POLICY")
+-    destination = os.environ.get("R24_CUT_CONSUMER_ORIGIN_RECORDS")
++    policy_path = os.environ.get("R24_CUT_CONSUMER02_ORIGIN_POLICY")
++    destination = os.environ.get("R24_CUT_CONSUMER02_ORIGIN_RECORDS")
+     if not policy_path or not destination:
+         return
+     policy = json.loads(Path(policy_path).read_bytes())
+     directory = Path(destination)
+-    if (str(directory) != "/workspace/pr32-r23/cut-consumer-state01/origins-consumer01"
++    if (str(directory) != "/workspace/pr32-r23/cut-consumer-state02/origins-consumer02"
+             or directory.is_symlink() or directory.stat().st_mode & 0o777 != 0o700):
+         os._exit(73)
+     expected = policy["origins"]
+--- inputs/reference-composition/PROTOCOL.json
++++ PROTOCOL.json
+@@ -1,10 +1,10 @@
+ {
+-  "schema": "team16-cut-consumer-composition-protocol-v1",
++  "schema": "team16-cut-consumer-deployment02-protocol-v1",
+   "scope": "Prospective one-stack owner acquisition plus exactly one ordinal2 readonly validation-consumer.",
+-  "dependency_status": "UNACCEPTED consumer f7a420; independent/Mayor acceptance required before any Native authority",
++  "dependency_status": "13bc7f83 successor CPU Parent engineering accepted5317b022;UNACCEPTED for deployment pending independent delta and separate deployment/policy/prereg receipts.",
+   "author_native_execution": false,
+   "default_enabled": false,
+-  "base_protocol": "inputs/base/PROTOCOL.json",
++  "base_protocol": "consumer/inputs/base/PROTOCOL.json",
+   "native_plan": "NATIVE_PLAN.json",
+   "offers": "OFFERS.json",
+   "owned_stacks": 1,
+@@ -18,8 +18,8 @@
+   "maximum_requested_completion_tokens": 48,
+   "payload": "Exact consumer dependency OFFERS bytes; re-IDed accepted inflight payload,unchanged prompt/cap/seed.",
+   "CAS": {"count":1,"budget":32,"expected_version":0,"result_version":1,"ttl_s":0.5},
+-  "readiness_operation_id": "team16-cut-consumer01-bootstrap32",
+-  "capture_id": "nv2-team16-cut-consumer01-fixed32",
++  "readiness_operation_id": "opteam16-cut-consumer02",
++  "capture_id": "nv2-team16-cut-consumer02-fixed32",
+   "startup": {"limit_s":180,"health_poll_s":1,"full_queue_poll_s":0.1,"max_full_queue_samples":1800,"required_empty":2,"warmup_timeout_s":60},
+   "inflight": {
+     "maximum_cuts_per_offer":1,
+@@ -27,6 +27,7 @@
+     "trigger":"Original single dispatch-attempt+20ms pending test; no tuning/retry/resample.",
+     "consumer":"ONLY ordinal2; begin before its actual collector call; no substitute ordinal1/post-outcome cut.",
+     "no_input":"Early/unknown/failed begin is unavailable/refused,retaining outcome and original permitted post/final cut paths.",
++    "producer_deadline":"Original min(call+.500,originalactiveend),NOT shortened to consumer80ms. Consumer lateness refuses only consumer;no new work or resampling.",
+     "coverage":"Retain original descriptive target/nonempty/overlap classification,not a2of2 success gate."
+   },
+   "consumer": {
+@@ -42,6 +43,7 @@
+   },
+   "maximum_http_exchanges":1900,
+   "cut_http_timeout_s":0.2,
++  "inference_timeout_exceptions":"Unchanged original warmup<=60s and managed<=original remaining20s; .2 applies cut/control/GET/flush,not a rewritten inference workload.",
+   "maximum_body_bytes":1048576,
+   "maximum_prefix_bytes":33554432,
+   "executor":{"max_workers":3,"natural_join_max_s":0.5,"shutdown":"Original explicit bounded executor/client cleanup; no asyncio.run shutdown on blocking worker."},
+@@ -50,7 +52,11 @@
+   "final":{"limit_s":3,"poll_s":0.25,"max_full_queue_samples":9,"required_empty":2,"includes_end_ack":true},
+   "cleanup":"Original protocol-finished anchor shared by host and consumer; known-root/explicit-leaf ownership only. Parent persists actual returned close receipt in originalIO17 after all owned joins.",
+   "route":"Unchanged Source13-first prepared-forward/light,copy-ready flag0/extension absent,exact phase/input-post;new service shim only.",
+-  "privacy":"0600 credential config,0700 tmpdir,short bytes+37<=107,parent streaming redaction,decoded-base64 safe-export scan;config removal only after every registered child/reader joins.",
++  "privacy":"0600 credential config,0700 tmpdir,short bytes+37<=107,parent streaming redaction,decoded-base64 safe-export scan;config removal only after every registered child/reader joins AND a persisted safe-export scan proof,then final gated export.",
++  "activation":"Every new launcher/client/service route defaults OFF;exact separate Mayor approval plus dependency/delta/deployment/policy/prereg receipts is required before host inventory,private config access or helpers. Author supplies only an invalid false/null template.",
++  "startup_prerequisite_failure":"Failure of consumer READY/owned registration is a prerequisite/supervision failure,not a successful armed observational comparison;all skipped/unobserved offers and owned cleanup retained. No claim that broken startup is workload-fair.",
++  "claim_limits":"Trusted run-scoped single caller only;no CAS Native/endpoint/unobserved progress,no source-state=current-state assertion,no live workload-fairness qualification.",
++  "same_budget_setup_not_actuator":"The single original Gateway admission32 version0->1 readiness CAS is setup,not a model/consumer decision. It does NOT change Native formation2048tokens/32seqs.",
+   "live_prerequisites":"Fresh Mayor source/Parent/independent acceptance bound to exact seals,new read-only host receipt,current origin/SDK/source guards,exclusive existingGPU lock and newLOCAL preregistration commit.",
+   "actual_application_at":null,
+   "planner_entry_at":null,
+--- inputs/reference-consumer/common01.py
++++ consumer/common01.py
+@@ -16,8 +16,8 @@
+ HERE = Path(__file__).resolve().parent
+ PREFLIGHT = HERE / "inputs/preflight"
+ SOURCE = PREFLIGHT / "inputs/source-tree"
+-NAMESPACE = "team16-cut-consumer-successor01"
+-CAPTURE = "nv2-team16-cut-consumer01-fixed32"
++NAMESPACE = "team16-cut-consumer02"
++CAPTURE = "nv2-team16-cut-consumer02-fixed32"
+ MAX_BYTES = 1_048_576
+ PIPELINE = .080
+ 
+--- inputs/reference-consumer/seal_inputs01.py
++++ consumer/seal_inputs01.py
+@@ -1,91 +1,20 @@
+-"""Copy only exact dependencies; never execute a spent entrypoint."""
++"""Private deployment input verifier; original literal preflight guards stay intact."""
+ 
+-import hashlib
+-import json
++import importlib.util
+ from pathlib import Path
+-import time
++import sys
+ 
+-HERE = Path(__file__).resolve().parent
+-ROOT = HERE.parents[1]
+-
+-
+-def sha(path):
+-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+-
+-
+-def write(path, value):
+-    path = Path(path)
+-    path.parent.mkdir(parents=True, exist_ok=True)
+-    with path.open("x") as stream:
+-        json.dump(value, stream, sort_keys=True, indent=2, allow_nan=False)
+-        stream.write("\n")
++ROOT = Path(__file__).resolve().parents[1]
++NAME = "_consumer_deployment02_pins"
+ 
+ 
+ def verify(originals=False):
+-    doc = json.loads((HERE / "INPUTS.json").read_bytes())
+-    for row in doc["bindings"]:
+-        if sha(HERE / row["copy"]) != row["sha256"] or originals and sha(row["source"]) != row["sha256"]:
+-            raise ValueError("input_binding:" + row["copy"])
+-    for name, fingerprint in json.loads((HERE / "INPUT_FREEZE.json").read_bytes())["sha256"].items():
+-        if sha(HERE / name) != fingerprint:
+-            raise ValueError("input_freeze:" + name)
+-    return dict(bindings=len(doc["bindings"]), originals=originals)
+-
+-
+-def main():
+-    if Path.cwd().resolve() != HERE:
+-        raise ValueError("exclusive_scope")
+-    plan = json.loads(Path("PLAN.json").read_bytes())
+-    base = ROOT / ".runtime/r24-team16-native-owner-inflight-adapter01"
+-    gap = ROOT / ".runtime/r24-team16-native-inflight-runtime-gap01"
+-    if sha(base / "SHA256SUMS") != plan["accepted_inflight_source_seal"] or sha(gap / "SHA256SUMS") != plan["gap_seal"]:
+-        raise ValueError("lineage_seal")
+-    bindings = []
+-    def retain(source, name, expected):
+-        source, target = Path(source), HERE / name
+-        if source.is_symlink() or sha(source) != expected:
+-            raise ValueError("source_pin")
+-        target.parent.mkdir(parents=True, exist_ok=True)
+-        with target.open("xb") as stream:
+-            stream.write(source.read_bytes())
+-        bindings.append(dict(source=str(source), copy=name, sha256=expected))
+-    for root, group, names in (
+-        (base, "base", ["owned01.py", "acquire01.py", "transport01.py", "common01.py",
+-                        "PROTOCOL.json", "OFFERS.json", "NATIVE_PLAN.revision01.json",
+-                        "inputs/launch02/inputs/source13-entry02.py",
+-                        "inputs/launch02/inputs/clock02/safe_exec.py"]),
+-        (gap, "gap", ["NEXT_COMPONENT.json", "FINDINGS.json", "ACTUATOR_TARGET.json", "REPORT.json"])):
+-        pins = {line[66:]: line[:64] for line in (root / "SHA256SUMS").read_text().splitlines()}
+-        selected = set(names)
+-        if group == "base":
+-            selected.update(name for name in pins if name.startswith("inputs/preflight/"))
+-        retain(root / "SHA256SUMS", "inputs/" + group + "/SHA256SUMS", sha(root / "SHA256SUMS"))
+-        for name in sorted(selected):
+-            output = ("inputs/preflight/" + name[len("inputs/preflight/"):]
+-                      if name.startswith("inputs/preflight/") else "inputs/" + group + "/" + name)
+-            retain(root / name, output, pins[name])
+-    native = json.loads(Path("inputs/base/NATIVE_PLAN.revision01.json").read_bytes())
+-    old_trial = native["trials"][0]["trial_id"]
+-    native["trials"][0]["trial_id"] = plan["capture_id"]
+-    write("NATIVE_PLAN.json", native)
+-    offers = json.loads(Path("inputs/base/OFFERS.json").read_bytes())
+-    for row in offers["rows"]:
+-        row["request_id"] = hashlib.sha256(
+-            (plan["namespace"] + ":offer:" + str(row["ordinal"])).encode()).hexdigest()[:32]
+-    write("OFFERS.json", offers)
+-    write("PROSPECTIVE_INPUT_DIFF.json", dict(
+-        scope="INPUTS_ONLY_NOT_NATIVE_AUTHORIZATION", old_trial_id=old_trial,
+-        new_trial_id=plan["capture_id"], plan_other_fields_unchanged=True,
+-        offer_payload_and_cap_unchanged=True, only_offer_IDs_renewed=True,
+-        source_plan_and_payload="inputs/base"))
+-    write("INPUTS.json", dict(bindings=bindings, gap_acceptance="pending Parent",
+-                             previous_inflight_source="accepted by Mayor"))
+-    names = ("PLAN.json", "NATIVE_PLAN.json", "OFFERS.json", "INPUTS.json",
+-             "PROSPECTIVE_INPUT_DIFF.json", "seal_inputs01.py")
+-    write("INPUT_FREEZE.json", dict(frozen_at=time.time(), tests_started=False,
+-                                   sha256={name:sha(name) for name in names}))
+-    print(json.dumps(verify(True), sort_keys=True))
+-
+-
+-if __name__ == "__main__":
+-    main()
++    if NAME not in sys.modules:
++        specification = importlib.util.spec_from_file_location(NAME, ROOT / "pins02.py")
++        value = importlib.util.module_from_spec(specification)
++        sys.modules[NAME] = value
++        specification.loader.exec_module(value)
++    value = sys.modules[NAME]
++    if Path(value.__file__).resolve() != ROOT / "pins02.py":
++        raise ValueError("deployment_input_verifier_origin")
++    return value.verify(originals)
+--- inputs/reference-consumer/NATIVE_PLAN.json
++++ consumer/NATIVE_PLAN.json
+@@ -1,5 +1,5 @@
+ {
+-  "experiment_id": "r24-team16-native-owner-inflight-adapter01",
++  "experiment_id": "r24-team16-native-cut-consumer-deployment02",
+   "gateway_prefix_extension": {
+     "launcher_sha256": "e8c03ccd48e9b9b25c0b0c74199ea5ee10a4f0f0cb2c3c3a5434999f41ac1f0d",
+     "schema": "r24-gateway-flushed-prefix-v1",
+@@ -48,20 +48,20 @@
+     "source_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93"
+   },
+   "schema": "native-v2-batch-capture-plan-v1",
+-  "scope": "Prospective fixed32 inflight owner-acquisition; unchanged source contracts, not model/MPC.",
++  "scope": "Prospective fixed32 one ordinal2 model-free consumer;not model/MPC authorization.",
+   "source_commit": "104e65a69df73997b977bce2588b655ae714f45d",
+-  "trace_sha256": "fbb8b5f937a3d508930fb0a46e288d2e2436afa1910a77d3b420f516c0b39d4d",
++  "trace_sha256": "da129b9980b9875dcddf89c7d5649d131da1a53462078b6cf1dccd749301cf77",
+   "trials": [
+     {
+       "budget": 32,
+       "budget_steps": [],
+       "observer": "light",
+       "request_ids": [
+-        "424b40a4154771f71ee2ba61093aa447",
+-        "3b71d5b1f883c45e68e4931f8e1fab65"
++        "e81e60e95e0bbdacba572fefbbd591b9",
++        "8fbc40ce9c6f9da0721622d3a03af523"
+       ],
+       "seed": 170003,
+-      "trial_id": "nv2-team16-cut-consumer01-fixed32"
++      "trial_id": "nv2-team16-cut-consumer02-fixed32"
+     }
+   ]
+ }
+--- inputs/reference-consumer/OFFERS.json
++++ consumer/OFFERS.json
+@@ -18,14 +18,14 @@
+       "max_tokens": 16,
+       "ordinal": 1,
+       "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+-      "request_id": "f53fe941c1a921b080b5f82193cf5c82"
++      "request_id": "e81e60e95e0bbdacba572fefbbd591b9"
+     },
+     {
+       "fate": "not_offered",
+       "max_tokens": 16,
+       "ordinal": 2,
+       "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+-      "request_id": "d295f5ff94fe468d10feaf79210da79e"
++      "request_id": "8fbc40ce9c6f9da0721622d3a03af523"
+     }
+   ],
+   "schema": "team16-owner-inflight-offers-v1",
+--- inputs/reference-tests/test_consumer01.py
++++ migration/test_consumer01.py
+@@ -204,8 +204,10 @@
+             owner.begin(ordinal=2, pending_at_trigger=True)
+             result = await direct(owner, await fixture.collect(), kind)
+             assert result["status"] == "refused"
+-            if kind in ("changed_generation", "budget_as_generation"):
+-                assert result["reason"] == "caller_generation_changed"
++            if kind == "budget_as_generation":
++                assert result["reason"] == "frame_generation_not_lease_start"
++            elif kind == "changed_generation":
++                assert result["reason"] in ("caller_generation_changed", "caller_generation_changed_before_BEGIN")
+         finally:
+             cleanup = await finish(owner)
+         assert cleanup["all_joined"] and not cleanup["component_pass"]

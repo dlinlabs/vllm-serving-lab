@@ -1,0 +1,125 @@
+--- episode02/experiments/mpc-research/resume-mvp/nominal_episode.py
++++ episode03/experiments/mpc-research/resume-mvp/nominal_episode.py
+@@ -180,7 +180,8 @@
+              and start + runtime.limits.episode_s <= min(prepared.entered_at + 60, permit.expires_at),
+              "shared_start_outside_existing_runtime_envelope")
+     _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory
+-             and runtime.protocol["scenario_binding"] == prepared.scenario_binding,
++             and runtime_api.digest(runtime.protocol["scenario_binding"])
++             == runtime_api.digest(prepared.scenario_binding),
+              "runtime_Train_provider_or_policy_changed")
+     _require(runtime_api._root_endpoint(prepared.recorder.capture["config"]["gateway_url"])
+              == runtime.protocol["endpoint"], "controller_recorder_gateway_mismatch")
+--- episode02/experiments/mpc-research/resume-mvp/test_nominal_episode.py
++++ episode03/experiments/mpc-research/resume-mvp/test_nominal_episode.py
+@@ -152,7 +152,7 @@
+         self.trace = json.loads(episode.PROBE.read_bytes())
+         self.clients, self.transports, self.tasks, self.gateways = [], [], [], []
+         self.planner = runtime_api.NominalPlanner()
+-        self.signal_handlers = (signal.getsignal(signal.SIGINT), signal.getsignal(signal.SIGTERM))
++        self.signal_checks = []
+         for patch in (
+             mock.patch.object(runtime_api, "source_digest", return_value=CPU_SOURCE),
+             mock.patch.object(recorder.tw, "tokenizer_fingerprint",
+@@ -210,6 +210,23 @@
+             value.protocol_sha256, time.monotonic() - 0.1, time.monotonic() + 15.0, approved=True,
+         )
+         return value
++
++    async def checked_episode(self, *args, **kwargs):
++        task = asyncio.current_task()
++        before = (signal.getsignal(signal.SIGINT), signal.getsignal(signal.SIGTERM))
++        try:
++            return await episode.run_episode(*args, **kwargs)
++        finally:
++            after = (signal.getsignal(signal.SIGINT), signal.getsignal(signal.SIGTERM))
++            self.signal_checks.append({
++                "task": task.get_name(), "same_coroutine": asyncio.current_task() is task,
++                "before_handler_ids": [id(handler) for handler in before],
++                "after_handler_ids": [id(handler) for handler in after],
++                "unchanged": before == after,
++                "scope": "immediately around await run_episode in one coroutine/Runner invocation",
++            })
++            self.assertIs(asyncio.current_task(), task)
++            self.assertEqual(before, after)
+ 
+     async def asyncTearDown(self):
+         for task in self.tasks:
+@@ -229,15 +246,15 @@
+             "test_owned_tasks_joined": [task.done() for task in self.tasks],
+             "remaining_loop_tasks": remaining,
+             "active_CPU_stream_ledgers": [len(gateway.active) for gateway in self.gateways],
+-            "signal_handlers_unchanged": self.signal_handlers == (
+-                signal.getsignal(signal.SIGINT), signal.getsignal(signal.SIGTERM)),
++            "signal_handlers_unchanged": (all(row["unchanged"] for row in self.signal_checks)
++                                         if self.signal_checks else None),
++            "signal_checks": self.signal_checks,
+             "processes_or_services_started": [], "not_a_Native_cleanup_receipt": True,
+         })
+         self.assertEqual(remaining, [])
+         self.assertTrue(all(client.is_closed for client in self.clients))
+         self.assertTrue(all(not gateway.active for gateway in self.gateways))
+-        self.assertEqual(self.signal_handlers, (
+-            signal.getsignal(signal.SIGINT), signal.getsignal(signal.SIGTERM)))
++        self.assertTrue(self.signal_checks, "same-coroutine signal check was not reached")
+ 
+     async def test_shared_start_full_outcomes_and_real_controller_feedback(self):
+         prepared = self.prepare("complete")
+@@ -247,7 +264,7 @@
+         owner = OwnerFixture(start + 6.0)
+         gateway = self.gateway()
+         runtime = self.runtime(prepared, gateway, start)
+-        result = await episode.run_episode(
++        result = await self.checked_episode(
+             prepared, runtime, owner=owner, offered_start=start, enabled=True,
+             transport=self.transport(gateway),
+         )
+@@ -294,7 +311,7 @@
+     async def test_default_off_preparation_and_configuration_refusals_do_not_start(self):
+         receipts = []
+         for kind in ("off", "ready_false", "past", "different_start", "truncated", "input_changed",
+-                     "runtime_endpoint_changed"):
++                     "runtime_endpoint_changed", "binding_changed", "provider_changed", "policy_changed"):
+             with self.subTest(kind=kind):
+                 prepared = self.prepare(kind, bad_binding=kind == "ready_false")
+                 start = time.monotonic() + (0.25 if kind != "past" else -0.2)
+@@ -305,11 +322,20 @@
+                     prepared.recorder.capture["config"]["request_timeout_s"] = 123.0
+                 if kind == "runtime_endpoint_changed":
+                     runtime.client.base_url = "http://127.0.0.1:8081"
+-                result = await episode.run_episode(
++                if kind == "binding_changed":
++                    runtime.protocol["scenario_binding"]["CPU_unapproved_binding"] = True
++                if kind == "provider_changed":
++                    runtime.scenario_factory = lambda snapshot, original=runtime.scenario_factory: original(snapshot)
++                if kind == "policy_changed":
++                    runtime.policy = "one_move"
++                result = await self.checked_episode(
+                     prepared, runtime, owner=owner, offered_start=start, enabled=kind != "off",
+                     transport=self.transport(gateway),
+                 )
+                 self.assertEqual(result["status"], "refused", result)
++                if kind in ("binding_changed", "provider_changed", "policy_changed"):
++                    self.assertEqual(result["failures"][0]["error"]["message"],
++                                     "runtime_Train_provider_or_policy_changed")
+                 self.assertEqual(result["workers"], {})
+                 self.assertEqual((gateway.model_gets, len(gateway.gets), len(gateway.requests)), (0, 0, 0))
+                 self.assertEqual(json.loads((prepared.directory / "capture.json").read_bytes()),
+@@ -328,7 +354,7 @@
+                 gateway = self.gateway(state_failure=kind == "controller_refused",
+                                        models=kind.removeprefix("recorder_") if kind.startswith("recorder") else "ok")
+                 runtime = self.runtime(prepared, gateway, start, iterations=2, poll_s=0.01)
+-                result = await episode.run_episode(
++                result = await self.checked_episode(
+                     prepared, runtime, owner=OwnerFixture(start + 6), offered_start=start, enabled=True,
+                     transport=self.transport(gateway),
+                 )
+@@ -359,7 +385,7 @@
+         start = time.monotonic() + 0.3
+         gateway = self.gateway(hold_s=20)
+         runtime = self.runtime(prepared, gateway, start, iterations=6, poll_s=0.4, episode_s=4.5)
+-        task = asyncio.create_task(episode.run_episode(
++        task = asyncio.create_task(self.checked_episode(
+             prepared, runtime, owner=OwnerFixture(start + 6), offered_start=start, enabled=True,
+             transport=self.transport(gateway),
+         ), name="CPU-episode-cancellation-control")

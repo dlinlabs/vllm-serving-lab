@@ -1,0 +1,60 @@
+[
+  {
+    "kind": "frozen-train-prior",
+    "prior": {
+      "available_at": 923875.440732845,
+      "clock_domain": "literal-cpu-monotonic",
+      "count": 88,
+      "duration_s": 5.0,
+      "marks": [
+        [
+          256,
+          128,
+          33
+        ],
+        [
+          1024,
+          128,
+          26
+        ],
+        [
+          3072,
+          128,
+          29
+        ]
+      ],
+      "tokenizer_fingerprint": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+      "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+      "train_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+      "workload_sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    "prior_content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc",
+    "scope": "Train-only nominal CPU; tokenizer proof supplied by Mayor, not rerun"
+  },
+  {
+    "availability_after_sample_s": 0.0010490999557077885,
+    "kind": "real-cpu-panel",
+    "offers": 253,
+    "rollout_calls": 8,
+    "scope": "nominal forecast integration only; not Native performance",
+    "seed_material": "[\"resume-p0-nominal-forecast-v1\",5105,\"f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc\",{\"budget\":16.0,\"budget_version\":3,\"clock_domain\":\"literal-cpu-monotonic\",\"identity\":{\"calibration_version\":\"synthetic-unqualified-v1\",\"cost_hash\":\"4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7\",\"implementation_hash\":\"5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea\",\"model_version\":\"cpu-lifecycle-v1\",\"support_hash\":\"720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95\"},\"run_id\":\"literal-forecast-run\",\"sequence\":7},923875.450810645]",
+    "source_sha256": "313dc174e5c05f3372029766c702a178c07b08a56c65016bebe9a49627bed0c7"
+  },
+  {
+    "kind": "repeatability",
+    "offers": 282,
+    "producer_sources": [
+      [
+        "nominal_scenario.py",
+        "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc"
+      ],
+      [
+        "nominal_workload.py",
+        "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+      ]
+    ],
+    "scenario_sha256": "6b1510469bc9b8e39f805afabdbaf97f9580d2df79c98885a7bb8f69e818545d",
+    "seed_material": "[\"resume-p0-nominal-forecast-v1\",5105,\"f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc\",{\"budget\":16.0,\"budget_version\":3,\"clock_domain\":\"literal-cpu-monotonic\",\"identity\":{\"calibration_version\":\"synthetic-unqualified-v1\",\"cost_hash\":\"4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7\",\"implementation_hash\":\"5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea\",\"model_version\":\"cpu-lifecycle-v1\",\"support_hash\":\"720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95\"},\"run_id\":\"literal-forecast-run\",\"sequence\":7},923875.450732845]",
+    "source_sha256": "691846b1a9b32cdbe7ecf400b9261a9c906984e37f27f9d0f3fb8def5e252cd6"
+  }
+]

@@ -1,0 +1,20 @@
+Preparation (source copies and CODE-FREEZE.json before controls):
+cd /home/daniel_lin/gt/pr32/mayor/mpc-local-r21
+Use only the two owned public Python sources, PLAN.json and run_controls.py.
+Copy the two sources byte-for-byte to this capsule's new frozen/ directory.
+CODE-FREEZE.json binds source SHA256, plan SHA256 and runner SHA256.
+No proposed serving protocol, probe, workload or scientific numerical inputs are executable inputs.
+
+Single aggregate control generation:
+cd /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01
+umask 077
+env -u PYTHONPATH -u PYTHONPROFILEIMPORTTIME -u PYTEST_ADDOPTS -u PYTEST_PLUGINS OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 nice -n 19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python -B run_controls.py > generation01.stdout.log 2> generation01.stderr.log
+Record the exit code once; no retries.
+
+run_controls.py launches the exact two recorded interpreter commands sequentially.
+Both receive the SAME absolute NOMINAL_TEST_DEADLINE, 100 seconds after runner start.
+The runner's original total outer deadline is 110 seconds after runner start.
+The final 10 seconds are a pre-reserved runner-only safety cleanup margin, never a new service grace.
+Every service scope reserves its cleanup inside its own original absolute deadline.
+Only deterministic dummy programs, owned files and Linux process/lock operations are exercised.
+No pytest, bytecode, cache, model, HTTP, SSH, GPU or SIGALRM execution is used.

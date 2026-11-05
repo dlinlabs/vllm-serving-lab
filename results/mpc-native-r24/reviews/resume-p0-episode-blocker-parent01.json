@@ -1,0 +1,20 @@
+{
+  "schema": "resume-p0-episode-api-blocker-parent-v1",
+  "status": "BLOCKED_EXACT_RECORDER_API_DEFECT",
+  "author_capsule": "resume-p0-episode01-blocker-author",
+  "original_manifest_sha256": "c3f9bbcd1be6d78a3b860a1de355f34682d6328cd370c17bff3a4fb5eb17cec7",
+  "original_regular_files": 23,
+  "original_regular_bytes": 251214,
+  "evidence": ["resume-p0-episode01-blocker-author/BLOCKER.json", "resume-p0-episode01-blocker-author/API_EVIDENCE.json"],
+  "defect": "Complete raw-v2 construction, status/error handling and persistence are inside synchronous _replay_main, which calls asyncio.run and owns signals. Public async replay alone does not provide complete raw capture.",
+  "rejected_workarounds": ["Nested event loop", "Duplicated capture codec", "Thread or process detour", "Natural finalize of engineering data"],
+  "next_owner": "Role7",
+  "smallest_fix": "Expose an awaitable capture entry or public prepare/capture/finalize helpers reusing the existing codec and preserving CLI behavior, partial outcomes, cancellation and original shared-start/deadline semantics.",
+  "followup_owner": "Role6",
+  "followup": "Resume the small in-process episode adapter only after the new API is sealed; do not read unsealed peer changes.",
+  "independent_review_order": "Role4 reviews the final sealed async client and unchanged metrics02 once; the v2-then-v3 duplicate audit is not requested.",
+  "runtime03_changed": false,
+  "control_attempts": 0,
+  "native_experiments": 0,
+  "interpretation": "Static API integration defect, not an executed Native qualification failure."
+}

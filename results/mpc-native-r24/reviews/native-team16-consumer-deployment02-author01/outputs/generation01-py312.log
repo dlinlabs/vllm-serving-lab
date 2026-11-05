@@ -1,0 +1,34 @@
+......F..                                                                [100%]
+=================================== FAILURES ===================================
+________ test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap _________
+test_deployment02.py:432: in test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap
+    run(scenario(),tmp_path)
+test_deployment02.py:40: in run
+    raise errors[0]
+client01.py:808: in bounded_loop
+    outcome = loop.run_until_complete(task)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+test_deployment02.py:34: in keep
+    return await awaitable
+           ^^^^^^^^^^^^^^^
+test_deployment02.py:390: in scenario
+    closure,_ = await client.collect_one(wire,case.startup,output,"initial-cut",
+client01.py:155: in collect_one
+    closure, journal = await c.collect_initial(
+composition_common01.py:119: in collect_initial
+    return await bound(**options)
+           ^^^^^^^^^^^^^^^^^^^^^^
+consumer/inputs/preflight/preflight01.py:271: in collect_initial
+    frozen.verify()
+consumer/inputs/preflight/frozen01.py:19: in verify
+    result = verify_initial(originals=originals)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+consumer/inputs/preflight/freeze_inputs01.py:49: in verify
+    raise ValueError("exclusive_candidate_cwd_required")
+E   ValueError: exclusive_candidate_cwd_required
+=========================== short test summary info ============================
+FAILED test_deployment02.py::test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap
+1 failed, 8 passed in 0.99s

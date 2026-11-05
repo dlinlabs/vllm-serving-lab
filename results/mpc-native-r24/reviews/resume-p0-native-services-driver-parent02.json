@@ -1,0 +1,63 @@
+{
+  "schema": "resume-p0-native-lifecycle-driver-parent-v2",
+  "observed_utc": "2026-11-05T00:33:13Z",
+  "status": "CORRECTED_CPU_COMPONENT_PASS_ACTUAL_HOST_HELD",
+  "original_author_archive": "resume-p0-native-services-driver01-author",
+  "original_author_manifest_sha256": "4001d91dd08053ceb650a88e02523de4a56753ccb2fef00bd82f1a65b89a962a",
+  "original_author_regular_files": 94,
+  "original_author_regular_bytes": 364042,
+  "parent_correction_archive": "resume-p0-native-services-driver-parent02-proof",
+  "parent_correction_manifest_sha256": "7882905a416ac750878bb60a3bcc8513746049999425a1a66d9de5445a6c6cc5",
+  "parent_correction_regular_files": 62,
+  "parent_correction_regular_bytes": 258596,
+  "source_sha256": {
+    "native_services_smoke.py": "cccc7e7bfadc4ddc02a5f3c64054f0a047fb094e5ce2e44d466ffff42ee89421",
+    "test_native_services_smoke.py": "5a3889c43d3aea9c764a11f92b1b02902906b8c5b442aa36af6421d7a0b0c297",
+    "unchanged_nominal_services.py": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed"
+  },
+  "review": "Parent read all original driver/test code, checked canonical gateway CostSpec/state contracts and SDK identity defaults, then reviewed the small interruption correction.",
+  "original_author_controls": "Five mocked controls PASS on each of Python 3.14.4 and 3.12.16; these did not cover interruption.",
+  "blocking_defect_reproduced": {
+    "case": "KeyboardInterrupt after readiness and inside the ownership body",
+    "original_result": "Cleanup completed, but finally wrote lifecycle_passed=true with errors=[] and no ownership_exit_returned marker.",
+    "negative_regression": "negative01/stderr.log",
+    "negative_exit_code": 1,
+    "scope": "Mocked CPU only, not a real service or GPU failure."
+  },
+  "smallest_correction": "Record BaseException evidence, re-raise non-Exception interrupts to retain CLI semantics, and require normal ownership-context completion before lifecycle PASS.",
+  "corrected_validation": {
+    "interpreter": "Python 3.12.16",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "attempts": 1,
+    "source_pins_stable": true,
+    "scope": "Five original mocked controls plus one interruption regression; no real service HTTP, SSH, GPU, assets or model-identity path executed.",
+    "proof": "resume-p0-native-services-driver-parent02-proof/RESULT.json"
+  },
+  "reproduction": {
+    "negative_source": "resume-p0-native-services-driver-parent02-proof/before",
+    "negative_argv": "python3.12 -B -m unittest test_native_services_smoke.Controls.test_06_interruption_is_failure_with_cleanup -v",
+    "positive_source": "resume-p0-native-services-driver-parent02-proof/after",
+    "positive_argv": "python3.12 -B /absolute/path/to/positive_source/test_native_services_smoke.py",
+    "environment": "In a fresh working directory, set PYTHONPATH to the selected frozen source directory, NATIVE_SMOKE_TEST_OUTPUT=evidence, NATIVE_SMOKE_PROTOCOL to the absolute original-author inputs/nominal_protocol.json path, PYTHONDONTWRITEBYTECODE=1 and BLAS/OMP threads=1.",
+    "interpretation": "Negative exit 1 is expected on the original driver. Corrected positive exit 0 is expected. Exact original invocations and logs remain in each attempt directory."
+  },
+  "source_scope_deviation": {
+    "strict_four_file_budget_met": false,
+    "original_disclosure": "resume-p0-native-services-driver01-author/SOURCE-SCOPE-DEVIATION.json",
+    "disposition": "Preserve the initial recursive-search overreach and reported containment. Accept only the reviewed corrected CPU functionality, not a claim of source-budget compliance or independent verification of every unsealed snippet the search returned."
+  },
+  "remaining_actual_host_obligations": [
+    "Independent recorder/metrics acceptance before any GPU startup",
+    "Exact remote source/config/assets and immutable identity preflight",
+    "Production locks, actual startup/readiness and shutdown receipts",
+    "Real STOPPED/known-gone, telemetry closure and idle-GPU receipts"
+  ],
+  "default_off": true,
+  "actual_host_validation": false,
+  "native_inference_requests": 0,
+  "admin_budget_posts": 0,
+  "native_qualified_cycles": 0,
+  "execution_authority": "Separate Mayor preregistration only; this CPU acceptance and --execute are not authorization."
+}

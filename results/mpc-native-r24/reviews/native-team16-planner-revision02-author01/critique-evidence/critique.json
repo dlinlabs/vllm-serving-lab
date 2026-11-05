@@ -1,0 +1,603 @@
+{
+ "attempts": [
+  {
+   "attempt": "original-py314-attempt01",
+   "code_unchanged": true,
+   "errors": [],
+   "exit_status": "1",
+   "failed": [
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-strong_one_move]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-strong_one_move]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-strong_one_move]",
+    "test_B_train_selected_fixed_covers_every_constant_policy_of_shared_action_set"
+   ],
+   "no_new_caches": true,
+   "output_log_sha256": "602512d0e0fbca3faab38fc203c3e2ad3103d8a552fa0ebd92c786ae10c5ae7d",
+   "package": "original",
+   "passed": [
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A0_exact_subnormal_draw_zero_common_term_positive_control-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A0_exact_subnormal_draw_zero_common_term_positive_control-strong_one_move]",
+    "test_C_characterize_default_acquisition_clock_excludes_queue_delay"
+   ],
+   "peer_seals_ok": true,
+   "peer_state_unchanged": true,
+   "planner_line_ok": true,
+   "python": "py314",
+   "python_ok": true
+  },
+  {
+   "attempt": "original-py312-attempt01",
+   "code_unchanged": true,
+   "errors": [],
+   "exit_status": "1",
+   "failed": [
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-strong_one_move]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-strong_one_move]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-strong_one_move]",
+    "test_B_train_selected_fixed_covers_every_constant_policy_of_shared_action_set"
+   ],
+   "no_new_caches": true,
+   "output_log_sha256": "8d4b2505b7a0c2b2f0d3a681b6c988d9e01987bbae0b753ea22758bcd65ba4a8",
+   "package": "original",
+   "passed": [
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A0_exact_subnormal_draw_zero_common_term_positive_control-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A0_exact_subnormal_draw_zero_common_term_positive_control-strong_one_move]",
+    "test_C_characterize_default_acquisition_clock_excludes_queue_delay"
+   ],
+   "peer_seals_ok": true,
+   "peer_state_unchanged": true,
+   "planner_line_ok": true,
+   "python": "py312",
+   "python_ok": true
+  },
+  {
+   "attempt": "revision01-py314-attempt01",
+   "code_unchanged": true,
+   "errors": [],
+   "exit_status": "1",
+   "failed": [
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-strong_one_move]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-strong_one_move]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-strong_one_move]",
+    "test_B_train_selected_fixed_covers_every_constant_policy_of_shared_action_set"
+   ],
+   "no_new_caches": true,
+   "output_log_sha256": "206905ea077328409b96ea82df0b7683339982a8aad7dcb137ce2ec59b6bde76",
+   "package": "revision01",
+   "passed": [
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A0_exact_subnormal_draw_zero_common_term_positive_control-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A0_exact_subnormal_draw_zero_common_term_positive_control-strong_one_move]",
+    "test_C_characterize_default_acquisition_clock_excludes_queue_delay"
+   ],
+   "peer_seals_ok": true,
+   "peer_state_unchanged": true,
+   "planner_line_ok": true,
+   "python": "py314",
+   "python_ok": true
+  },
+  {
+   "attempt": "revision01-py312-attempt01",
+   "code_unchanged": true,
+   "errors": [],
+   "exit_status": "1",
+   "failed": [
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-strong_one_move]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-strong_one_move]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-strong_one_move]",
+    "test_B_train_selected_fixed_covers_every_constant_policy_of_shared_action_set"
+   ],
+   "no_new_caches": true,
+   "output_log_sha256": "1db531b6c5425e5d60b4af5d80c82125dc1f212c2e70c2824cf8276033ce7875",
+   "package": "revision01",
+   "passed": [
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A0_exact_subnormal_draw_zero_common_term_positive_control-mpc]",
+    "test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A0_exact_subnormal_draw_zero_common_term_positive_control-strong_one_move]",
+    "test_C_characterize_default_acquisition_clock_excludes_queue_delay"
+   ],
+   "peer_seals_ok": true,
+   "peer_state_unchanged": true,
+   "planner_line_ok": true,
+   "python": "py312",
+   "python_ok": true
+  }
+ ],
+ "control_code_sha256": {
+  "PLAN.json": "fa9a22ded117597f9ee87128a7fd9fd6063a8d5d580be499b137276771de96e9",
+  "controls/pytest.ini": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+  "controls/test_role7_planner_controls.py": "f60c9ddab18e040eb81e69fb735c83683db1a7e6265fd7d362ef36730aa8ea0f",
+  "run_attempt.sh": "bbbde37d1cd70f51e07e96c6f57b3bbc8b13312aff770fc0158a1b3698d6b0c9",
+  "run_controls.py": "f0847f045bad7b6b11f1bb68383e0a8664918cde391b19c341bd9f5ea7bd0cdf"
+ },
+ "findings": [
+  {
+   "code": [
+    "r24-team16-planner-revision01/policy_planner16.py:137,155-165 per-term guard then math.fsum(terms)/denominator",
+    "r24-team16-planner-revision01/policy_planner16.py:97-101 _rank tie-break transitions, path sum, lex",
+    "r24-team16-planner/policy_planner16.py:96-100,136,154-161 same tie-break and aggregation before the patch"
+   ],
+   "confidence": "high",
+   "contradicts": [
+    "r24-team16-planner-revision01/README.md:31-32 'Exact representable subnormal terms are still accepted. No positive draw is dropped'",
+    "r24-team16-planner-revision01/test_policy_planner16_numerical_revision.py:65-76 retained-draw oracle claim; fixtures :19-23 use an all-zero common term",
+    "r24-team16-planner/README.md:59-61 'refuses instead of dropping a draw'"
+   ],
+   "controls": [
+    "A1 exact subnormal products (class revision01 retains)",
+    "A2 normal 2**-60 ratio, wall key",
+    "A3 normal 2**-60 ratio, primary natural-good key",
+    "A0 positive control passes; differs from A1 only by the large draw's common wall 0.0 versus 1.0"
+   ],
+   "fairness_impact": "rankings are common, so no arm-specific advantage; the tie-break turns every absorbed difference into a hold/lower-budget choice, collapsing mpc and strong_one_move together; train-selected fixed inherits absorbed per-panel floats; never MPC-win evidence",
+   "id": "I1_tiny_positive_draw_absorbed_into_artificial_tie",
+   "kind": "defect_in_documented_guarantee",
+   "observed": "accepted model_plan_only, no refusal, all four paths have identical float (good, wall); mpc and strong_one_move both select (16,16); exact rational oracle selects (32,32)",
+   "packages": [
+    "original",
+    "revision01"
+   ],
+   "remedy_options_not_implemented": [
+    "rank on exact Fraction keys (<=81 paths x <=16 draws), floats for display only; freeze_fixed_choice already aggregates exactly",
+    "or refuse (never silently) panels whose weight ratio admits absorption, via an explicit contract bound",
+    "add a nonzero-common-term regression to the retained tiny-draw tests"
+   ],
+   "scope_note": "README.md:33-35 disclaims universal exact-real ordering for normal arithmetic; A2/A3 still drop a whole positive draw, A1 is inside the revision's own subnormal domain",
+   "severity": "medium objective fidelity (deterministic bias); model-expected loss is below one ulp of the dominant term, so practically relevant only for panel weight ratios near or below 2**-52 relative to term scale"
+  },
+  {
+   "code": [
+    "r24-team16-planner-revision01/policy_planner16.py:244 for budget in (16, 32)",
+    "r24-team16-planner-revision01/policy_planner16.py:201,214 FrozenFixedChoice",
+    "r24-team16-planner-revision01/policy_planner16.py:284 constructor",
+    "r24-team16-planner/policy_planner16.py:240,197,210,280",
+    "test_policy_planner16.py:184-191 accepts (32,24,16) for all arms; training tests :593-695 use only (16,32)"
+   ],
+   "confidence": "high",
+   "controls": [
+    "B"
+   ],
+   "fairness_impact": "train-only 'strongest fixed' can be weaker than the strongest constant of the shared action set, manufacturing MPC advantage",
+   "id": "I2_train_selected_fixed_ignores_accepted_third_budget",
+   "kind": "conditional_baseline_weakening",
+   "observed": "budgets (16,24,32): best_fixed == best_multistep == (24,24); freeze_fixed_choice accepted and froze 16; heldout train_selected_fixed executed (16,16) as model_plan_only without refusal",
+   "packages": [
+    "original",
+    "revision01"
+   ],
+   "remedy_options_not_implemented": [
+    "refuse freeze_fixed_choice/train_selected_fixed unless set(budgets) == {16,32}",
+    "or select over every contract budget and widen the frozen dataclass accordingly",
+    "preregister action set {16,32} for every arm (comparison16.py:404 already refuses any path element outside {16,32})"
+   ],
+   "severity": "high whenever a 3-budget contract is compared; none when the shared action set is locked to {16,32}"
+  },
+  {
+   "code": [
+    "r24-team16-planner-revision01/policy_planner16.py:341-353 started at adapter entry, default clock acquisition.entry",
+    "r24-team16-planner-revision01/policy_planner16.py:485-489 solver_elapsed_s and first_action_source_age_s",
+    "r24-team16-planner-revision01/README.md:41-42 Role6 owns acquisition/IPC deadlines and final freshness"
+   ],
+   "confidence": "high",
+   "controls": [
+    "C (characterization, passes)"
+   ],
+   "fairness_impact": "these fields are lower bounds; never use them as model-arm freshness or total controller cost",
+   "id": "I3_planner_age_and_elapsed_exclude_acquisition_and_queue",
+   "integration_requirements": [
+    "runtime passes the true common-domain dequeue clock or enforces TTL itself",
+    "charge acquisition+queue+planning+actuation to model arms in the endpoint domain (comparison16 requires measured costs inside the endpoint envelope)"
+   ],
+   "kind": "documented_scope_integration_constraint",
+   "observed": "10 s acquisition-to-dequeue delay: default adapter clock accepts with first_action_source_age_s 0.15 <= 0.5; same acquisition with the true dequeue clock refuses policy16_full_entry_solver_actuation_deadline",
+   "packages": [
+    "original",
+    "revision01"
+   ],
+   "severity": "medium for cost/freshness accounting; not a planner defect"
+  },
+  {
+   "code": [
+    "r24-team16-planner-revision01/policy_planner16.py:325-334 _refuse pops ranked output for every policy",
+    "r24-team16-planner-revision01/policy_planner16.py:444-450 one numerical refusal covers fixed16/fixed32/train fixed"
+   ],
+   "confidence": "high",
+   "controls": [
+    "not duplicated: revision01 all-arm refusal tests; README.md:26-29"
+   ],
+   "fairness_impact": "routing fixed arms through planner refusals would make fixed32 hold the received 16 or drop the decision point, and would charge fixed arms the full panel search; fixed arms need no planner",
+   "id": "I4_whole_panel_refusal_also_refuses_fixed_arms",
+   "integration_requirements": [
+    "fixed arms actuate their frozen constant independently of model-panel refusals",
+    "model-arm refusals hold and stay in all-offered denominators (comparison16 check_policy/model_decisions already bind fixed arms to one applied budget)"
+   ],
+   "kind": "documented_scope_integration_constraint",
+   "packages": [
+    "original",
+    "revision01"
+   ],
+   "severity": "medium if a runtime routes fixed arms through PolicyPlanner16"
+  }
+ ],
+ "limits": [
+  "synthetic score tables and frozen clocks only; not native, GPU, posterior or timing evidence; no qualification, speed or win implied",
+  "read-only: no peer, source, product or SDK edits; peer seals verified before and after every attempt; existing performance/model gates and Native14 rejection unchanged",
+  "remedies are suggestions only and were not implemented"
+ ],
+ "observation_facts": {
+  "A0_exact_subnormal_draw_zero_common_term_positive_control:mpc": true,
+  "A0_exact_subnormal_draw_zero_common_term_positive_control:strong_one_move": true,
+  "A1_exact_subnormal_draw_nonzero_common_wall:mpc": true,
+  "A1_exact_subnormal_draw_nonzero_common_wall:strong_one_move": true,
+  "A2_normal_2pow-60_draw_nonzero_common_wall:mpc": true,
+  "A2_normal_2pow-60_draw_nonzero_common_wall:strong_one_move": true,
+  "A3_normal_2pow-60_draw_primary_natural_good_key:mpc": true,
+  "A3_normal_2pow-60_draw_primary_natural_good_key:strong_one_move": true,
+  "B": true,
+  "C": true
+ },
+ "observations": [
+  {
+   "control": "A0_exact_subnormal_draw_zero_common_term_positive_control",
+   "float_good_wall": {
+    "(16, 16)": [
+     "0x0.0p+0",
+     "0x0.0000000000020p-1022"
+    ],
+    "(16, 32)": [
+     "0x0.0p+0",
+     "0x0.0000000000020p-1022"
+    ],
+    "(32, 16)": [
+     "0x0.0p+0",
+     "0x0.0000000000020p-1022"
+    ],
+    "(32, 32)": [
+     "0x0.0p+0",
+     "0x0.000000000001cp-1022"
+    ]
+   },
+   "oracle": [
+    32,
+    32
+   ],
+   "policy": "mpc",
+   "refusals": [],
+   "scaled_weights": [
+    "0x1.0000000000000p-2",
+    "0x0.0000000000008p-1022"
+   ],
+   "selected": [
+    32,
+    32
+   ],
+   "status": "model_plan_only"
+  },
+  {
+   "control": "A0_exact_subnormal_draw_zero_common_term_positive_control",
+   "float_good_wall": {
+    "(16, 16)": [
+     "0x0.0p+0",
+     "0x0.0000000000020p-1022"
+    ],
+    "(16, 32)": [
+     "0x0.0p+0",
+     "0x0.0000000000020p-1022"
+    ],
+    "(32, 16)": [
+     "0x0.0p+0",
+     "0x0.0000000000020p-1022"
+    ],
+    "(32, 32)": [
+     "0x0.0p+0",
+     "0x0.000000000001cp-1022"
+    ]
+   },
+   "oracle": [
+    32,
+    32
+   ],
+   "policy": "strong_one_move",
+   "refusals": [],
+   "scaled_weights": [
+    "0x1.0000000000000p-2",
+    "0x0.0000000000008p-1022"
+   ],
+   "selected": [
+    32,
+    32
+   ],
+   "status": "model_plan_only"
+  },
+  {
+   "control": "A1_exact_subnormal_draw_nonzero_common_wall",
+   "float_good_wall": {
+    "(16, 16)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(16, 32)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 16)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 32)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ]
+   },
+   "oracle": [
+    32,
+    32
+   ],
+   "policy": "mpc",
+   "refusals": [],
+   "scaled_weights": [
+    "0x1.0000000000000p-2",
+    "0x0.0000000000008p-1022"
+   ],
+   "selected": [
+    16,
+    16
+   ],
+   "status": "model_plan_only"
+  },
+  {
+   "control": "A1_exact_subnormal_draw_nonzero_common_wall",
+   "float_good_wall": {
+    "(16, 16)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(16, 32)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 16)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 32)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ]
+   },
+   "oracle": [
+    32,
+    32
+   ],
+   "policy": "strong_one_move",
+   "refusals": [],
+   "scaled_weights": [
+    "0x1.0000000000000p-2",
+    "0x0.0000000000008p-1022"
+   ],
+   "selected": [
+    16,
+    16
+   ],
+   "status": "model_plan_only"
+  },
+  {
+   "control": "A2_normal_2pow-60_draw_nonzero_common_wall",
+   "float_good_wall": {
+    "(16, 16)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(16, 32)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 16)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 32)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ]
+   },
+   "oracle": [
+    32,
+    32
+   ],
+   "policy": "mpc",
+   "refusals": [],
+   "scaled_weights": [
+    "0x1.0000000000000p-2",
+    "0x1.0000000000000p-62"
+   ],
+   "selected": [
+    16,
+    16
+   ],
+   "status": "model_plan_only"
+  },
+  {
+   "control": "A2_normal_2pow-60_draw_nonzero_common_wall",
+   "float_good_wall": {
+    "(16, 16)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(16, 32)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 16)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 32)": [
+     "0x0.0p+0",
+     "0x1.0000000000000p+0"
+    ]
+   },
+   "oracle": [
+    32,
+    32
+   ],
+   "policy": "strong_one_move",
+   "refusals": [],
+   "scaled_weights": [
+    "0x1.0000000000000p-2",
+    "0x1.0000000000000p-62"
+   ],
+   "selected": [
+    16,
+    16
+   ],
+   "status": "model_plan_only"
+  },
+  {
+   "control": "A3_normal_2pow-60_draw_primary_natural_good_key",
+   "float_good_wall": {
+    "(16, 16)": [
+     "0x1.0000000000000p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(16, 32)": [
+     "0x1.0000000000000p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 16)": [
+     "0x1.0000000000000p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 32)": [
+     "0x1.0000000000000p+0",
+     "0x1.0000000000000p+0"
+    ]
+   },
+   "oracle": [
+    32,
+    32
+   ],
+   "policy": "mpc",
+   "refusals": [],
+   "scaled_weights": [
+    "0x1.0000000000000p-2",
+    "0x1.0000000000000p-62"
+   ],
+   "selected": [
+    16,
+    16
+   ],
+   "status": "model_plan_only"
+  },
+  {
+   "control": "A3_normal_2pow-60_draw_primary_natural_good_key",
+   "float_good_wall": {
+    "(16, 16)": [
+     "0x1.0000000000000p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(16, 32)": [
+     "0x1.0000000000000p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 16)": [
+     "0x1.0000000000000p+0",
+     "0x1.0000000000000p+0"
+    ],
+    "(32, 32)": [
+     "0x1.0000000000000p+0",
+     "0x1.0000000000000p+0"
+    ]
+   },
+   "oracle": [
+    32,
+    32
+   ],
+   "policy": "strong_one_move",
+   "refusals": [],
+   "scaled_weights": [
+    "0x1.0000000000000p-2",
+    "0x1.0000000000000p-62"
+   ],
+   "selected": [
+    16,
+    16
+   ],
+   "status": "model_plan_only"
+  },
+  {
+   "chosen": [
+    16,
+    16
+   ],
+   "control": "B_three_budget_train_selected_fixed",
+   "error": null,
+   "executed": [
+    "model_plan_only",
+    [
+     16,
+     16
+    ]
+   ],
+   "mpc_best": [
+    24,
+    24
+   ],
+   "strongest_constant": [
+    24,
+    24
+   ]
+  },
+  {
+   "control": "C_acquisition_queue_delay_scope",
+   "default_first_action_source_age_s": 0.14999999999999963,
+   "default_solver_elapsed_s": 0.0,
+   "default_status": "model_plan_only",
+   "explicit_refusals": [
+    "policy16_full_entry_solver_actuation_deadline"
+   ],
+   "explicit_status": "refused",
+   "explicit_timing_refused": true,
+   "queue_delay_s": 10.0
+  }
+ ],
+ "peer_seals_sha256": {
+  "r24-team16-planner": "cd10bed48298d28e26416de5cb34c85c32d4c81bde1bc6c08362766123b6a3b7",
+  "r24-team16-planner-revision01": "2051bc18e9fa4c659f77718668f289362f04ab4ab59f1cdfd74348a5733a3926"
+ },
+ "revision01_patch_assessment": {
+  "fairness_of_refusal": "common-panel, identical for every arm, no threshold or baseline change, guard runs inside the timed solver window",
+  "fixes_targeted_case": "inexact positive products at/below min-normal now refuse the whole common panel (parent/Mayor control; not duplicated)",
+  "incomplete": "summation absorption (I1) reproduces the same accepted (16,16) versus oracle (32,32) pattern with exact terms; narrow the 'no positive draw is dropped' claim or fix I1 before relying on it",
+  "source_changes_patch": "r24-team16-planner-revision01/source_changes.patch"
+ },
+ "schema": "team16-role7-planner-critique-v1",
+ "status": "sealed_read_only_critique",
+ "verifications": {
+  "control_code_unchanged_and_current": true,
+  "each_attempt_exit_status_1_failures_preserved": true,
+  "expected_pass_fail_sets_in_every_attempt": true,
+  "four_attempts_original_and_revision01_on_both_pythons": true,
+  "frozen_peer_module_and_interpreter_identified": true,
+  "no_bytecode_or_pytest_cache_written": true,
+  "observation_facts_hold": true,
+  "observations_identical_across_packages_and_pythons": true,
+  "peer_seals_verified_and_peer_trees_unchanged": true
+ },
+ "verified_non_issues": [
+  "strong_one_move = best row with <=1 transition from the received budget, including delayed single switches, over the same full ranking (strong baseline)",
+  "every arm shares rankings, common_panel_sha256 and planner_contract_sha256; same all-offered good, wall, transitions, path-sum, lex objective for every arm",
+  "fixed choice is train-split only, frozen, contract-bound and aggregated with exact Fractions across training panels (but see I1 within a panel and I2)",
+  "binary weight rescaling preserves exact ratios or refuses"
+ ]
+}

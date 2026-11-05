@@ -1,0 +1,37 @@
+{
+  "ACK": "CapApplied is a guarded Gateway admission-budget ACK, never Native token application or admission-behavior proof. ACK still requires real reobservation; hold is not a change. No ledger CAS claim.",
+  "CLI": {
+    "Train": "--train-tape <canonical train.tape.json> requires explicit --forecast-purpose. Freeze Train once with actual clock_domain, then make_scenario for every fresh observation. No Eval path or workload regeneration API.",
+    "arguments": "--url --journal --train-tape|--scenario-file --forecast-purpose train|evaluation|engineering --cost-spec-file --policy mpc|one_move --steps --episode-seconds --poll-seconds --start-at --describe-protocol --experimental-nominal-demo --nominal-permit",
+    "default": "GET-only; no experimental POST without the explicit flag AND a separate scoped permit AND a causal input. ADMIN_API_KEY supplies the x-admin-api-key header; redirects and proxy environment disabled.",
+    "description": "--describe-protocol computes actual protocol/hash/source bundle/identity/clock/module paths, with no HTTP client, approval read/create, journal write or waiting. --journal and the exact intended configuration remain binding inputs.",
+    "limits": {
+      "commands_per_journal_max": 8,
+      "decision_s": 0.5,
+      "episode_s_default": 4.0,
+      "episode_s_max": 60.0,
+      "iterations_default": 4,
+      "iterations_max": 32,
+      "poll_s_default": 0.0,
+      "poll_s_max": 1.0,
+      "solve_s": 0.1
+    },
+    "root_URL": "HTTP(S) origin root with no trailing slash or one slash canonicalizes identically. Userinfo, query/fragment including empty markers, non-root paths, unsupported/relative forms, whitespace/control bytes and invalid ports refuse. Current origin changes still refuse.",
+    "shared_start": "Optional absolute same-host monotonic --start-at; wait before run() captures its real entry, never after the first GET. New target must be nonpast and leave the episode inside min(CLI-entry+60s, enabled permit expiry). Offline description does not wait. Matching existing journal resumes its original episode without resetting the start/deadline.",
+    "trusted_scenario_file": "Existing declared-scenario file compatibility retained; its exact file hash is bound. This is not a substitute for causal Train generation."
+  },
+  "constructor": "NominalRuntime(client:httpx.AsyncClient, planner:NominalPlanner, scenario_factory:Callable[[Snapshot],CausalScenario]|None, journal_path:Path, *, admin_key:str, scenario_binding:dict, permit:NominalDemoPermit|None=None, enabled:bool=False, policy='mpc', limits:RuntimeLimits=RuntimeLimits(), parameters:ModelParameters|None=None, clock=time.monotonic, sleeper=asyncio.sleep, start_at:float|None=None)",
+  "entry": "<same-host-python> -B <frozenRoot>/experiments/mpc-research/resume-mvp/nominal_runtime.py",
+  "forecast_receipt_limit": "The complete NominalForecast wrapper is not retained. Full realized CausalScenario plus static prior/RNG/source binding is sufficient for these rollout replays; do not claim independent RNG-wrapper reproduction.",
+  "host_binding": "Describe and execute on the actual controller host/interpreter. Clock namespace, Python RNG runtime and absolute journal path are bound; never compare a GPU server's monotonic stamps to Mayor-local time.",
+  "ownership": "No runtime subprocess/worker/executor/Native observer/SIGALRM. Runtime owns its journal flock only; caller closes AsyncClient, CLI does so itself. Client outcome capture, campaign and service/engine cleanup are separate Mayor/Role7 responsibilities.",
+  "pending": "Persisted command count, run/domain/identity/source/protocol, original episode deadline and pending command survive restart. Unknown is fenced only by same-run observed budget-version advance or observed server expiry; no fallback/retry or another write in that reconciliation iteration.",
+  "replay": "ProtocolBound retains parameters/protocol; PlanningInput saves bounded full CausalScenario/window before rollouts; Planned repeats the realized source and digest beside the decision. Two journal/snapshot-derived selected-plan replays matched real CPU predictions.",
+  "run": "await runtime.run(); each decision uses an actual GET, fresh typed scenario/plan, only first action, precommit GET equality, durable pending/count before POST, guarded ACK and actual reobservation.",
+  "source_closure": "Actual public implementation hash plus permit/planner/runtime/scenario/workload file hashes; never echoed from approval fields.",
+  "source_sha256": "71dcb4fcc63e32b4bcc1b4e9d6f2c1a7c37a72fc5a5589563ae7f1707d5f8bb5",
+  "stable_protocol": "Binds actual parameters/policy/limits, canonical endpoint, absolute journal path, start target and static Train prior/data/tokenizer/producer sources/RNG identity. Excludes ephemeral prior.available_at; identical CLI restart binding passed.",
+  "standalone": "HERE and ROOT bootstrap precede own SDK imports. Actual module paths are verified and recorded; standalone from outside Root with PYTHONPATH unset passed.",
+  "status": "AUTHOR_CPU_PASS_MAYOR_ACCEPTANCE_PENDING",
+  "timing": "Original decision entry precedes first GET/journal startup. GET, solve, hashing, serialization and pre-POST fsync consume the same deadline. Returned finished_at follows final journal save; on-disk outcome_observed_at precedes that save."
+}

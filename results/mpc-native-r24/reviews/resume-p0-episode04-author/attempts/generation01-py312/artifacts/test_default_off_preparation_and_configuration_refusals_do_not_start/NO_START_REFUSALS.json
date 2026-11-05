@@ -1,0 +1,152 @@
+[
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "experimental_episode_disabled",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 157, in _eligible\n    _require(enabled is True, \"experimental_episode_disabled\")\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: experimental_episode_disabled\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "off",
+    "status": "refused"
+  },
+  {
+    "capture_status": "refused",
+    "failures": [
+      {
+        "error": {
+          "message": "local_preparation_refused",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 158, in _eligible\n    _require(prepared.error is None and prepared.recorder.ready, \"local_preparation_refused\")\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: local_preparation_refused\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "ready_false",
+    "status": "refused"
+  },
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "shared_start_past_or_mismatched",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 171, in _eligible\n    _require(prepared.prepared_at <= now < start and runtime.start_at == start,\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: shared_start_past_or_mismatched\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "past",
+    "status": "refused"
+  },
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "shared_start_past_or_mismatched",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 171, in _eligible\n    _require(prepared.prepared_at <= now < start and runtime.start_at == start,\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: shared_start_past_or_mismatched\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "different_start",
+    "status": "refused"
+  },
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "original_work_deadline_truncates_episode",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 173, in _eligible\n    _require(deadline - reserve >= start + max(prepared.recorder.trace[\"duration_seconds\"],\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: original_work_deadline_truncates_episode\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "truncated",
+    "status": "refused"
+  },
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "prepared_input_changed_or_reused",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 159, in _eligible\n    _require(not prepared.recorder.started and _inputs(prepared) == prepared.input_sha256,\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: prepared_input_changed_or_reused\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "input_changed",
+    "status": "refused"
+  },
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "runtime_configuration_or_parameter_binding_changed",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 190, in _eligible\n    runtime._binding()\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py\", line 332, in _binding\n    _require(self.planner.parameters == self.parameters and self.planner.identity == self.identity\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py\", line 68, in _require\n    raise RuntimeRefused(reason)\nnominal_runtime.RuntimeRefused: runtime_configuration_or_parameter_binding_changed\n",
+          "type": "RuntimeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "runtime_endpoint_changed",
+    "status": "refused"
+  },
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "runtime_Train_provider_or_policy_changed",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "binding_changed",
+    "status": "refused"
+  },
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "runtime_Train_provider_or_policy_changed",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "provider_changed",
+    "status": "refused"
+  },
+  {
+    "capture_status": "failed",
+    "failures": [
+      {
+        "error": {
+          "message": "runtime_Train_provider_or_policy_changed",
+          "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n",
+          "type": "EpisodeRefused"
+        },
+        "worker": "coordinator"
+      }
+    ],
+    "kind": "policy_changed",
+    "status": "refused"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "absolute_budget_seconds": 110,
+  "actual_model_native_GPU_network_authority": false,
+  "attempts_per_interpreter": 1,
+  "focused_cases_per_interpreter": 6,
+  "frozen_before_controls": true,
+  "generations": 1,
+  "model_id": "gpt-6-astra",
+  "pre_reserved_runner_cleanup_seconds": 10,
+  "public_and_frozen_must_remain_byte_identical": true,
+  "reasoning_effort": "max",
+  "schema": "role3-resume-p0-nominal-services-generation1",
+  "sha256": {
+    "nominal_services.py": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+    "test_nominal_services.py": "528a534e6805eb3c0c772821d0cc728b840530611eb460b6e1453f6dd555f467"
+  },
+  "source_directory": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp",
+  "spec_sha256": {
+    "COMMANDS.txt": "58d332226d0ba2fd91388f680705f0ca08118ece04e790268691966267fb5871",
+    "PLAN.json": "0ac9d9831aac5647764367dfcdd4bc486afeeafe074c087acc4b4e65b8e85007",
+    "freeze_inputs.py": "a12bf7ea648671b47c100cfe82294df1199e23545de70f6b9f911e246d2d14d6",
+    "run_controls.py": "c75f48f66e8f39ae62204b30a352432688f2e86c8bb92fa88caa5360baed2897"
+  },
+  "utc": "2026-11-04T23:27:59.582510+00:00"
+}

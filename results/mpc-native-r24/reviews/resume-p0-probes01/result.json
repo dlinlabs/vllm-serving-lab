@@ -1,0 +1,42 @@
+{
+  "schema": "resume-p0-engineering-probes-result-v1",
+  "status": "CPU_DERIVATION_PASS_NOT_NATIVE",
+  "base_commit": "4c4a444a0194e605ec4c55b6188d76dfeb0d7e83",
+  "source_evidence_commit": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e",
+  "source_train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+  "implementation_sha256": "561b9bc1711c8729c336329175b8a6311b244cf7ad2cfd092cb6a6c5891be1e5",
+  "tests_sha256": "c232688559e113611999a1c95ea03a639d61856ddaf10b1b233a2758180c50dc",
+  "controls": {
+    "python_version": "3.12.16",
+    "passed": 3,
+    "elapsed_seconds": 0.069,
+    "stdout": "py312.stdout.log",
+    "stderr": "py312.stderr.log"
+  },
+  "derivation_command": [
+    "$PYTHON", "-B", "-I",
+    "experiments/mpc-research/resume-mvp/prepare_probes.py",
+    "--train-replay",
+    "results/mpc-native-r24/reviews/resume-p0-tokenizer02-raw/returned/train.replay.json",
+    "--output-dir", "results/mpc-native-r24/reviews/resume-p0-probes01/inputs"
+  ],
+  "qualification": {
+    "path": "inputs/qualification.json",
+    "requests": 4,
+    "bytes": 17396,
+    "sha256": "fe480796606b86aec3b2d4c91388a4846d98035b5a9810131e39fd40b627b333"
+  },
+  "warmup": {
+    "path": "inputs/warmup.json",
+    "requests": 3,
+    "bytes": 9579,
+    "sha256": "3a893f485e11204088f03cf08415d1e9d56028ce0a7ee476477ad3d24c2808b2"
+  },
+  "limitations": [
+    "Only deterministic input derivation is demonstrated; this is not a GPU experiment.",
+    "Previously measured prompts are preserved byte-for-byte; tokenizer execution was not repeated.",
+    "Engineering probes are neither held-out evaluation nor evidence of prediction accuracy.",
+    "The qualification replay cannot alone establish changed-action application or closed-loop qualification.",
+    "Full runtime/client/services integration and separate Native approval remain required."
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "attempts": 1,
+  "derived_error": {
+    "cause": "E02-1 returned a refusal before recorder/controller workers; no burst was sent.",
+    "kind": "cancellation-control TimeoutError waiting three seconds for a burst that could never start",
+    "not_the_runner_timeout": "The whole test process exited normally with code1 after 3.421856s, below its original60s bound."
+  },
+  "harness_defect": {
+    "cause": "Baseline was sampled in synchronous setUp outside asyncio.Runner, then compared during a different running async context. This is a framework-handler comparison, not evidence that the adapter installed a signal handler.",
+    "id": "E02-2",
+    "minimum_correction_not_applied": "Sample and compare handlers around the awaited operation within the same async test coroutine/Runner invocation. Moving only to asyncSetUp while comparing in asyncTearDown is not a sufficient invariant.",
+    "observed": "Every asyncTearDown signal assertion compares default_int_handler against functools.partial(Runner._on_sigint, main_task=...).",
+    "owner": "new test_nominal_episode.py",
+    "raw_false_cleanup_values": "Preserved unchanged; not converted to true or suppressed."
+  },
+  "implementation_defect": {
+    "cause": "runtime.load_train_scenario uses asdict(TrainPrior), retaining tuple-containing prior content (including marks). runtime._protocol canonicalizes through JSON, turning tuples into arrays/lists. Raw Python container equality therefore rejects the unchanged Train binding.",
+    "id": "E02-1",
+    "minimum_correction_not_applied": "Compare canonical binding digests (runtime_api.digest on both values), retaining policy equality and exact provider identity. Do not remove the binding check.",
+    "observed": "runtime_Train_provider_or_policy_changed before creating workers",
+    "owner": "new nominal_episode.py, not accepted runtime03 or client API03",
+    "source": "nominal_episode.py:182-184 compares runtime.protocol['scenario_binding'] directly with prepared.scenario_binding.",
+    "source_evidence": [
+      "nominal_scenario.py:70-74 frozen TrainPrior.marks is tuple[tuple[int,int,int], ...]",
+      "nominal_runtime.py:714-717 preserves asdict(prior) content in the raw factory binding",
+      "nominal_runtime.py:176 returns _strict(json.dumps(value, allow_nan=False))",
+      "All intended execution-case receipts show the same pre-worker refusal and empty workers."
+    ]
+  },
+  "interpretation": "This is an actual failed CPU integration attempt, unlike episode01's zero-attempt source API no-go. It is not a Native failed experiment.",
+  "limits": "Known blockers only. Shared-start replay, runtime planning/application, failure propagation and cancellation joins remain unvalidated on these bytes.",
+  "raw_stderr": "attempts/generation01-py312/stderr.log",
+  "raw_stdout": "attempts/generation01-py312/stdout.log",
+  "result": "Four methods, no overall PASS; unittest reports failures=8, errors=1. Counts include subtests and teardown assertions.",
+  "retries": 0,
+  "source_edits_after_freeze": false,
+  "source_generations": 1
+}

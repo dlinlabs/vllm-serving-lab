@@ -1,0 +1,97 @@
+{
+  "observed_GET_receipts": [
+    {
+      "at": 927907.791790557,
+      "document": {
+        "budget": 16.0,
+        "budget_version": 0,
+        "capabilities": [
+          "mpc-budget-cas-expiry-v1"
+        ],
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "complete": true,
+        "cost_spec": {
+          "default_max_tokens": 128,
+          "estimator_version": "gateway-token-estimate-v1",
+          "input_per_token": 0.000758,
+          "intercept": 0.259,
+          "minimum": 0.1,
+          "output_per_token": 0.0052083333,
+          "tokenizer_identity": "unqualified"
+        },
+        "identity": {
+          "calibration_version": "synthetic-unqualified-v1",
+          "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+          "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+          "model_version": "cpu-lifecycle-v1",
+          "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+        },
+        "requests": [],
+        "run_id": "CPU-only-nominal-runtime",
+        "sampled_at": 927907.791743457,
+        "schema": "mpc-admission-v1",
+        "sequence": 0
+      },
+      "method": "GET"
+    },
+    {
+      "at": 927907.854502757,
+      "document": {
+        "budget": 16.0,
+        "budget_version": 0,
+        "capabilities": [
+          "mpc-budget-cas-expiry-v1"
+        ],
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "complete": true,
+        "cost_spec": {
+          "default_max_tokens": 128,
+          "estimator_version": "gateway-token-estimate-v1",
+          "input_per_token": 0.000758,
+          "intercept": 0.259,
+          "minimum": 0.1,
+          "output_per_token": 0.0052083333,
+          "tokenizer_identity": "unqualified"
+        },
+        "identity": {
+          "calibration_version": "synthetic-unqualified-v1",
+          "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+          "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+          "model_version": "cpu-lifecycle-v1",
+          "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+        },
+        "requests": [],
+        "run_id": "CPU-only-nominal-runtime",
+        "sampled_at": 927907.854449257,
+        "schema": "mpc-admission-v1",
+        "sequence": 0
+      },
+      "method": "GET"
+    }
+  ],
+  "offline_selected_path_replays": 2,
+  "planner_rollouts": 16,
+  "plans": [
+    {
+      "lower": 49.0,
+      "offers": 268,
+      "realized_scenario_sha256": "5cda970f92810b73d69bfad0743de576ca70349c39d82eabc0fc717949172949",
+      "upper": 49.0
+    },
+    {
+      "lower": 48.0,
+      "offers": 235,
+      "realized_scenario_sha256": "1e4b9abdb2ac14425ac4b9fd3e1057361389840b623e66fa6a549b0dd4d66d8f",
+      "upper": 48.0
+    }
+  ],
+  "scope": "CPU nominal forecast replay, not Native",
+  "startup": {
+    "CLI_envelope_deadline": 927967.585822358,
+    "cli_entered_at": 927907.585822358,
+    "requested_start_at": 927907.7854942579,
+    "resumed_existing_episode": false,
+    "wait_entered_at": 927907.588957258,
+    "wait_finished_at": 927907.787200657
+  }
+}

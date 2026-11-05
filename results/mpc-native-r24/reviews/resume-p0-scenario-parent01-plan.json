@@ -1,0 +1,23 @@
+{
+  "scope": "Accept the Train-only scenario factory and close its permit-source dependencies",
+  "necessary_for_P0": "A real receding controller needs causal forecasts, invalidation when forecast code changes, and tests independent of unversioned .runtime fixtures.",
+  "author_seal_sha256": "dee31c6b3792895fd74462b1efb2551628fbebbc0df928c151b563efb2cbd6ae",
+  "verified_author_members_excluding_seal": 30,
+  "unchanged_factory_sha256": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc",
+  "parent_changes": [
+    "Permit source_digest includes nominal_scenario.py and nominal_workload.py alongside the original three action modules.",
+    "Focused regression checks both forecast dependencies invalidate a previously matching source authorization, without reading the peer runtime worktree.",
+    "Scenario tests use the already committed canonical Train tape, not an unversioned .runtime input."
+  ],
+  "source_snapshot": "Four exact staged Git blobs: nominal_scenario.py, test_nominal_scenario.py, nominal_permit.py, test_nominal_permit.py; other required files from base commit 23c5e1df9b6d36bc086e8e6e06c09cfaa50fc68e.",
+  "materialization": "A new isolated scoped Git-source tree containing public mpc_lab/prefill_lab, gateway.py/telemetry.py, accepted planner/workload and the canonical Train tape. Does not copy or read the unsealed experimental runtime02 or any Eval tape.",
+  "command": "<local Python3.12.16> -B -m unittest discover -s experiments/mpc-research/resume-mvp -p 'test_nominal_[ps]*.py' -v",
+  "selector_contents": "Only the new 5-method scenario test and updated 9-method permit test are materialized; planner tests are not materialized.",
+  "expected_tests": 14,
+  "attempts": 1,
+  "timeout_seconds": 120,
+  "clock_scope": "Literal CPU clocks plus one real local CPU forecast/planner integration. Never Native or a live permit.",
+  "acceptance_limit": "Scoped Git materialization verifies component portability only, not the complete P0 clean-checkout benchmark.",
+  "future_source_closure": "Any later action-bearing entrypoint/dependency must also be covered before live approval; this five-file update is not final serving authorization.",
+  "GPU_HTTP_or_Eval_access": false
+}

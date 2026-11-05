@@ -1,0 +1,25 @@
+{
+  "schema":"deployment02-actual-command-ledger-v1",
+  "cwd":"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-deployment02",
+  "wrapper":["env","-u","PYTHONPATH","PYTHONDONTWRITEBYTECODE=1","PYTEST_DISABLE_PLUGIN_AUTOLOAD=1","OPENBLAS_NUM_THREADS=1","OMP_NUM_THREADS=1","MKL_NUM_THREADS=1","NUMEXPR_NUM_THREADS=1","VECLIB_MAXIMUM_THREADS=1","BLIS_NUM_THREADS=1","nice","-n19","<python>","-B"],
+  "interpreters":{
+    "py314":"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+    "py312":"/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12"
+  },
+  "actual_commands":[
+    {"id":"plan-freeze","Python":"py314","argv":["-c","import hashlib,json,pathlib,time; names=(\"PLAN.json\",\"pins02.py\"); f=pathlib.Path(\"PLAN_FREEZE.json\").open(\"x\"); json.dump({\"frozen_before_copy_and_controls\":True,\"at\":time.time(),\"sha256\":{n:hashlib.sha256(pathlib.Path(n).read_bytes()).hexdigest() for n in names}},f,sort_keys=True,indent=2); f.write(\"\\n\"); f.close()"],"then":"pin","tool_shell_id":"7640"},
+    {"id":"pin","Python":"py314","argv":["pins02.py"],"stdout_stderr":"input-copy01.log","exit_file":"input-copy01.exit","tool_shell_id":"7640"},
+    {"id":"freeze01","Python":"py314","argv":["prepare02.py"],"stdout_stderr":"outputs/source-freeze01.log","exit_file":"outputs/source-freeze01.exit","tool_shell_id":"7745"},
+    {"id":"controls01-314","Python":"py314","argv":["run_controls02.py","--output","attempts/generation01-py314"],"source_freeze":"926fed4b2e87a6e01d0b56524e792c46ffef70eb2711d4e2a291bf7253373fa1","stdout_stderr":"outputs/generation01-py314.log","exit_file":"outputs/generation01-py314.exit","tool_shell_id":"deployment02-gen1-py314"},
+    {"id":"controls01-312","Python":"py312","argv":["run_controls02.py","--output","attempts/generation01-py312"],"source_freeze":"926fed4b2e87a6e01d0b56524e792c46ffef70eb2711d4e2a291bf7253373fa1","stdout_stderr":"outputs/generation01-py312.log","exit_file":"outputs/generation01-py312.exit","tool_shell_id":"deployment02-gen1-py312"},
+    {"id":"preserve01","Python":"py314","argv":["revision02.py","preserve"],"stdout_stderr":"outputs/preserve-generation01.log","exit_file":"outputs/preserve-generation01.exit","tool_shell_id":"7753"},
+    {"id":"freeze02","Python":"py314","argv":["revision02.py","freeze"],"stdout_stderr":"outputs/source-freeze02.log","exit_file":"outputs/source-freeze02.exit","tool_shell_id":"7754"},
+    {"id":"controls02-314","Python":"py314","argv":["run_controls02.py","--output","attempts/generation02-py314","--selector","C07"],"source_freeze":"84e7d2ec9cead355a09b1651d6e8381b63dddd53c6c1731668edfa0f6de65f6b","stdout_stderr":"outputs/generation02-py314.log","exit_file":"outputs/generation02-py314.exit","tool_shell_id":"deployment02-gen2-py314"},
+    {"id":"controls02-312","Python":"py312","argv":["run_controls02.py","--output","attempts/generation02-py312","--selector","C07"],"source_freeze":"84e7d2ec9cead355a09b1651d6e8381b63dddd53c6c1731668edfa0f6de65f6b","stdout_stderr":"outputs/generation02-py312.log","exit_file":"outputs/generation02-py312.exit","tool_shell_id":"deployment02-gen2-py312"}
+  ],
+  "command_semantics":"Each wrapper captures a new output file with > and stderr2>&1,then writes its actual status once to the listed .exit file;no retries,old suite discovery or live mains.",
+  "owned_CPU_children":"Exact -I -B argv/PIDs/startticks are persisted in attempt C08 producer-root/started.json and actual consumer started.json;all4 identities gone.",
+  "postprocessing":"Separate POSTPROCESS_FREEZE/POSTPROCESS_COMMANDS record source/proof/metadata checks and sealing,not additional controls or a third source generation.",
+  "no_native_commands_executed":true,
+  "no_GPU_SSH_network_git_install":true
+}

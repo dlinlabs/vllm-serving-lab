@@ -1,0 +1,41 @@
+{
+  "schema": "team16-runtime-integration-limitations-v1",
+  "acceptance": {
+    "planner_revision02": "Parent-accepted LIMITED CPU reference for exact ordering/training of supplied frozen binary numbers and complete shared-set fixed selection.",
+    "runtime_integration": "Candidate only; Mayor acceptance is required.",
+    "native_model_posterior_comparison_or_deployment": false
+  },
+  "scope": [
+    "All observations, score tables, training/evaluation splits, application feedback and timing controls are explicitly synthetic CPU fixtures. Some use the unchanged original CPU rollout/admission law. None is native validation.",
+    "The candidate intentionally restricts its PolicyPlanner16 action tuple to (16,32). Revision02 supports broader shared fixed sets, but this capsule does not establish a three-budget runtime comparison.",
+    "Named fixed and train-frozen policies are exercised through a complete model panel only as a synthetic code proof. They are NOT real fixed-actuator benchmarks.",
+    "Actual fixed benchmark arms must apply their constants independently of model-panel validity/refusal/search and must not be charged model search. No such native actuator path is implemented here.",
+    "A model refusal produces no proposal and no fallback command. A future real model arm must hold its received action while retaining every offered request, refused tick and controller cost in the denominator.",
+    "The parent-reported comparison source/decision/application clock defect remains an independent comparison hold; that parent witness was not rerun and Role7 files were not edited."
+  ],
+  "clock_and_application_receipts": [
+    "The live shadow loop records source, acquisition entry, actual worker planning entry, owner submission/collection and complete public-tick release in one checked clock domain.",
+    "The source-to-first-action bound is 0.5 seconds, not merely a relative planning-time bound. The owner receives the original absolute public-tick deadline.",
+    "Shadow callbacks recheck source/owner/publication versions, clock domain and source TTL after guard work and after journal IO. check-N.json is explicitly provisional; final shadow receipts are persisted in monitor-lifecycle.json at owned close.",
+    "actual_application_at is null and actual_actuation_performed is false. No real CAS, HTTP, native application or application-acknowledgement receipt exists. A shadow check must never be scored as native application.",
+    "Public tick timing cannot attest caller work performed before its entry. Explicit offline owner tests use fictional model-entry clocks and are not live-time evidence.",
+    "Python serialization, hashing and file IO are synchronous and not preemptible. Clock checks refuse late results; they do not prove a hard OS scheduling, transport or disk-latency guarantee."
+  ],
+  "trust_and_ownership": [
+    "Pickle IPC and source/version callbacks are trusted local contracts, not safe untrusted deserialization or observation authenticity.",
+    "Every public proposal retains the historical observation_version field as an alias of request_version. acquisition_snapshot_version is the distinct unchanged acquisition token passed to the planner.",
+    "One bounded 16-byte notification per in-flight request makes parent invalidations visible at worker checks. It is not continuous external-state authentication; the parent's final version/source checks remain authoritative.",
+    "The implementation uses Linux/POSIX nonblocking pipe framing and asyncio selector readiness. Other event-loop/OS backends are unvalidated.",
+    "Owned IPC tasks, acquisition/tick/start tasks and planner processes are drained/joined on tested paths. A deliberately cancellation-hostile acquisition or unkillable OS process cannot be forcibly proven clean by Python; cleanup failures remain explicit.",
+    "Acknowledged worker exit gets 0.5 seconds of cooperative grace, then finite terminate/kill/join escalation. These are soft scheduling bounds, not native control-time guarantees.",
+    "The reusable owner never stops a shared interpreter resource tracker. Dedicated validation runners stop/join only the tracker they themselves caused to start, after all planners are joined."
+  ],
+  "historical_evidence": [
+    "The unmodified runtime reference had contained graceful-exit assertion failures on Python3.14 in this environment, despite the parent's successful independent audit. All tested workers were joined; those failures were not erased.",
+    "Separate byte-exact original controls preserve renewed-relative-TTL late work, post-loop monitor journal scope, acknowledged short-grace termination and callback-entry-only shadow timestamps.",
+    "Revision01 and all earlier capsules, failed harness attempts and numerical witnesses remain frozen. The revision02 numerical acceptance does not retroactively accept their ranking claims."
+  ],
+  "policy_commands": 0,
+  "native_mpc_permitted": false,
+  "deployable": false
+}

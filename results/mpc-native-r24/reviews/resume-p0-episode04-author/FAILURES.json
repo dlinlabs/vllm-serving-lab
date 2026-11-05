@@ -1,0 +1,87 @@
+{
+  "Native_failed_experiment": false,
+  "attempts": 1,
+  "cancellation": "Caller cancellation remains interrupted and is re-raised after persistence and joining; not relabeled refused.",
+  "current_result": "4/4 methods PASS; zero failures/errors; one attempt",
+  "current_unexpected_failures": [],
+  "explicit_expected_failures": [
+    {
+      "cancel_requested": [
+        "recorder"
+      ],
+      "failures": [
+        {
+          "reason": "controller_returned_failure_refusal_pending_or_incomplete",
+          "worker": "controller"
+        }
+      ],
+      "kind": "controller_refused",
+      "status": "failed"
+    },
+    {
+      "cancel_requested": [
+        "recorder"
+      ],
+      "failures": [
+        {
+          "reason": "worker_exception",
+          "worker": "controller"
+        }
+      ],
+      "kind": "controller_exception_refused",
+      "status": "failed"
+    },
+    {
+      "cancel_requested": [
+        "controller"
+      ],
+      "failures": [
+        {
+          "reason": "recorder_returned_refused",
+          "worker": "recorder"
+        }
+      ],
+      "kind": "recorder_refused",
+      "status": "failed"
+    },
+    {
+      "cancel_requested": [
+        "controller"
+      ],
+      "failures": [
+        {
+          "reason": "recorder_returned_failed",
+          "worker": "recorder"
+        }
+      ],
+      "kind": "recorder_failed",
+      "status": "failed"
+    }
+  ],
+  "non_failure_diagnostic_retained": "Unittest asyncio debug logs a 0.101-second synchronous no-start control task. It is retained, not suppressed, and no deadline/test failed.",
+  "original_failures": "Unmodified episode02 eight failures/one error and episode03 three PASS/one FAIL remain sealed. Exact raw logs/results/reports copied under original-failures/ and indexed in ORIGINAL_FAILURES.json.",
+  "persistence": "All16 final captures/episode receipts were written without errors. Existing fail-closed persistence error code is unchanged; malformed N1 data and filesystem-write failure were not injected.",
+  "resolved_E03-1": {
+    "after_workers": {
+      "error": {
+        "message": "CPU post-start runtime refusal",
+        "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 207, in _worker\n    return await call(), None\n           ^^^^^^^^^^^^\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 202, in _controller\n    return {\"startup\": startup, \"runtime\": await runtime.run()}\n                                           ^^^^^^^^^^^^^^^^^^^\n  File \"/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/unittest/mock.py\", line 2291, in _execute_mock_call\n    raise effect\nnominal_runtime.RuntimeRefused: CPU post-start runtime refusal\n",
+        "type": "RuntimeRefused"
+      },
+      "status": "failed"
+    },
+    "before_workers": {
+      "error": {
+        "message": "runtime_configuration_or_parameter_binding_changed",
+        "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 190, in _eligible\n    runtime._binding()\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py\", line 332, in _binding\n    _require(self.planner.parameters == self.parameters and self.planner.identity == self.identity\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py\", line 68, in _require\n    raise RuntimeRefused(reason)\nnominal_runtime.RuntimeRefused: runtime_configuration_or_parameter_binding_changed\n",
+        "type": "RuntimeRefused"
+      },
+      "status": "refused",
+      "workers": {}
+    },
+    "change": "Only add runtime_api.RuntimeRefused to the existing typed no-workers refusal branch; no other implementation bytes or guards changed."
+  },
+  "retries": 0,
+  "source_edits_after_freeze": false,
+  "source_generations": 1
+}

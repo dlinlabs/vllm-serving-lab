@@ -1,0 +1,16 @@
+{
+ "frozen_before": "any read of current nominal_metrics/test/client source bytes in this scope (REPORT.json was read first, as instructed)",
+ "budget": {"max_files": 6, "max_bytes": 262144},
+ "selected_reads": [
+  {"path": ".runtime/r24-resume-p0-metrics-independent01/REPORT.json", "sha256": "SEE_REPORT_SHA_LINE", "bytes": 33161, "read": "full (already read, required first); no view logs, witness script or pinned-src of the audit read"},
+  {"path": "experiments/mpc-research/resume-mvp/nominal_metrics.py", "sha256": "e0119f34437f81dae4c8bb97501a2c0e6d7ec5decfa23f0eb6491db6e6afa58e", "bytes": 56373, "read": "full (owned; surgical metrics02 edits)"},
+  {"path": "experiments/mpc-research/resume-mvp/test_nominal_metrics.py", "sha256": "cca0c280182075e3300a35121cbfae51be272dfa100145420cce167d71f55617", "bytes": 25027, "read": "full (owned; focused regressions appended)"},
+  {"path": "experiments/mpc-research/resume-mvp/nominal_client.py", "sha256": "ad850c639c911c55c20c388bd6797c4d8606f72ed9f97ea23f5ef80e92379c40", "bytes": 42698, "read": "bounded spans only (own sealed client01: normalized_row/build_run/provenance/binding) for integration impact; NOT edited"},
+  {"path": "experiments/mpc-research/resume-mvp/nominal_protocol.json", "sha256": "d857a4ff498ee6364fb9fa99a600e58a1456111616855a4d3c1a42489fa87c0d", "bytes": 9498, "read": "read-only Mayor PROPOSAL metadata for comparability field names (arms, common backend settings, selection rule); not an authority"}
+ ],
+ "pinned_not_read": [
+  {"path": "experiments/mpc-research/native-r23/score_http.py", "sha256": "9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d", "use": "natural scorer must remain byte-unchanged; executed only via the existing pinned loader inside tests"}
+ ],
+ "not_read": ["peer unsealed runtime/planner/services/permit/scenario/workload sources", "audit view logs / witness logs / witness script", "metrics01 and client01 archives beyond SHA256SUMS digests", "any Train/Eval rows, raw journals or Native data"],
+ "total_selected_bytes": 166757
+}

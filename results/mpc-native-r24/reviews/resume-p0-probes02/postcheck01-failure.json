@@ -1,0 +1,12 @@
+{
+  "status": "FAILED_ARITHMETIC_EXPECTATION_NOT_SOURCE_TESTS",
+  "phase": "After the three focused unit controls and input derivation passed, a separate arithmetic postcheck failed.",
+  "original_plan": "plan.initial.json",
+  "failure": "AssertionError comparing the computed default cost with the manually entered per_largest_request number; absolute tolerance 1e-12.",
+  "incorrect_expected_cost": 3.2542826624,
+  "correct_exact_decimal_cost": "3.2542426624",
+  "cause": "Manual arithmetic typo in the proposal, not a change to gateway coefficients or measured outcomes.",
+  "correction": "Correct the proposal's derived arithmetic and rerun only the failed postcheck using Decimal. Source, tests, Train selection, prompt bytes, offsets and three generated traces stay unchanged.",
+  "raw_output_limit": "Original postcheck traceback was returned in the tool transcript, not redirected to a raw log; this JSON records that limitation and does not purport to be the original stderr.",
+  "native_activity": false
+}

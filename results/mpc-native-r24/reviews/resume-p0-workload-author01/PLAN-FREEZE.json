@@ -1,0 +1,78 @@
+{
+  "schema": "r24-resume-p0-workload01-plan-freeze-v1",
+  "frozen_before": "any implementation source exists, any test run and any tape generation; no outcome of the generator has been observed",
+  "owner": "Role2 (estimation reproducibility / numerical stability); Anthropic claude-opus-5.5, reasoning effort max; no child, nested or new agents",
+  "scope": {
+    "repo_writes_only": ["experiments/mpc-research/resume-mvp/nominal_workload.py", "experiments/mpc-research/resume-mvp/test_nominal_workload.py"],
+    "private_data_capsule": ".runtime/r24-resume-p0-workload01",
+    "forbidden": ["product/gateway/SDK/mpc_lab edits", "old sealed capsule edits", "Markdown files", "git", "network/HTTP", "GPU", "SSH", "dependency installs", "reading peer resume-mvp files or peer unsealed capsules", "Native14/fixed-floor/MCMC work (P2 HOLD)", "any Azure held-out claim", "stochastic resampling to obtain desired requests or scores", "/tmp or tempfile defaults"]
+  },
+  "protocol_v1_mayor_choices": {
+    "note": "Protocol CHOICES frozen by Mayor; not verified capacity, not model accuracy, not designed for an MPC win.",
+    "protocol_id": "r24-resume-p0-nominal-workload-v1",
+    "kind": "SYNTHETIC_OFFERED_WORKLOAD",
+    "duration_seconds": 5,
+    "duration_ns": 5000000000,
+    "arrival_process": "homogeneous Poisson, rate 20 requests/second",
+    "max_offers": 1024,
+    "prompt_length_classes_requested_tokens": [256, 1024, 3072],
+    "prompt_length_class_distribution": "uniform (each class probability 1/3 up to the <=2^-64 integer-mapping bias stated below)",
+    "max_output_tokens": 128,
+    "later_gpu_config_requirement": "prefix cache disabled (required for later GPU measurement; not verifiable or verified by this CPU component)",
+    "splits": {
+      "train": {"seed": 4101, "purpose": "train", "source_id": "synthetic:r24-resume-p0-nominal-workload:v1:train", "request_id_prefix": "p0w1-train-"},
+      "eval": {"seed": 4102, "purpose": "eval", "source_id": "synthetic:r24-resume-p0-nominal-workload:v1:eval", "request_id_prefix": "p0w1-eval-"}
+    }
+  },
+  "generator_construction": {
+    "generator_id": "r24-resume-p0-nominal-workload-generator",
+    "generator_version": 1,
+    "uniform_source": "SHA-256 counter mode. X(purpose, seed, stream, k) = big-endian uint64 of the first 8 bytes of sha256(domain || k as 8-byte big-endian), domain = ASCII canonical JSON (separators ',' ':', no spaces) of [generator_id, generator_version, protocol_id, purpose, seed, stream] followed by one 0x00 byte. Streams: 'arrival' (k = arrival attempt index), 'length_class' (k = request index), 'payload' (k = request index). Python stdlib hashlib only; platform independent.",
+    "arrivals": "Exact decimal arithmetic in an explicit decimal.Context(prec=50, ROUND_HALF_EVEN, traps InvalidOperation/DivisionByZero/Overflow); ln is correctly rounded by the decimal specification so results are interpreter independent. gap_seconds = (ln(2^64) - ln(2^64 - X)) / rate, i.e. an exponential(rate) inverse-CDF draw on the discrete uniform grid; X = 0 gives gap 0 (ties allowed); maximum gap 64 ln 2 / rate. t starts at 0 and accumulates; offset_ns = floor(t * 10^9) as an exact integer; generation stops at the first arrival with offset_ns >= duration_ns (equivalently t >= duration).",
+    "offer_cap": "If an arrival inside the window would be offer number max_offers + 1, raise OfferCapExceeded: no truncation, no resampling, no reseeding; count == max_offers is allowed.",
+    "length_class": "idx = (X * 3) >> 64 maps uint64 to {0, 1, 2} -> (256, 1024, 3072); class sizes differ by at most one uint64 value (relative bias <= 2^-64).",
+    "payload": "nonce = 16 lowercase hex digits of X(payload); payload_key = protocol_id + '/' + purpose + '/' + request_id + '/' + nonce. The key seeds the SHARED prompt template only at replay-adapter time; tapes carry no prompt text.",
+    "request_ids": "request_id_prefix + zero-padded 4-digit index (namespaces 'p0w1-train-' and 'p0w1-eval-' are disjoint).",
+    "split_independence": "generate_split(protocol, purpose) reads only the shared protocol fields and that purpose's own split spec; the Train tape never contains the Eval seed/source/prefix and vice versa."
+  },
+  "outputs": {
+    "tape_format": "canonical JSON bytes: json.dumps(sort_keys=True, separators=(',', ':'), ensure_ascii=True, allow_nan=False) + newline; integers and strings only (no floats). Header: schema 'r24-resume-p0-offered-tape-v1', kind 'SYNTHETIC_OFFERED_WORKLOAD_TAPE', disclaimers, generator id/version, shared protocol fields, own split spec, rng spec, columns [request_id, offset_ns, requested_prompt_tokens, max_output_tokens, payload_key], rows, count.",
+    "manifest": "ONE manifest.json for Train and Eval: protocol + canonical protocol sha256, module sha256, frozen CLI, per split file/sha256/bytes/count/seed/source_id/namespace/policy, holdout basis, prompt-length semantics, replay-adapter mapping and pilot command template (TTFT SLO and budget PENDING Mayor), claims not made. Deterministic: no timestamps, hostnames or interpreter versions inside.",
+    "files": ["tapes-v1/train.tape.json", "tapes-v1/eval.tape.json", "tapes-v1/manifest.json"],
+    "train_selection_policy": "PENDING Mayor/Role7 (this component selects nothing)",
+    "eval_policy": "held out: controllers/forecasters/tuning must never read the Eval tape or Eval outcomes; scenario information only from Train/past observations with a forecast RNG different from this generator's domains"
+  },
+  "replay_interface": {
+    "finding": "run_trace_pilot.py consumes trace_workload schema_version 1 traces whose requests carry prompt text and tokenizer-measured chat-template input_tokens (verify_prompts); the compact offered tape is therefore NOT directly parser compatible.",
+    "adapter": "to_replay_trace(tape, model=..., prompt_for=..., count_tokens=..., tokenizer_sha256=None): input_tokens = MEASURED count from count_tokens(prompt), never assumed equal to the requested class; requested labels, payload keys, source id and tape sha kept in provenance; arrival_seconds = offset_ns / 1e9; max_tokens = output cap; refuses empty tapes, non-string prompts, non-integer/bool/non-positive counts and counts exceeding 8192 - cap; synthesis errors propagate (no retry, no new key).",
+    "real_tokenizer_step": "NOT executed here (no tokenizer/GPU host); recipe recorded in the manifest.",
+    "native_client_mapping": "NOT_VERIFIED (peer-owned modules not read)"
+  },
+  "tests_planned": [
+    "spec conformance of the SHA-256 counter uniform source against an independently written domain literal",
+    "known-answer transforms: X=0 gap 0, X=2^64-1 gap 64 ln2/20, class boundaries at ceil(2^64/3) and ceil(2^65/3)",
+    "byte repeatability; Eval alone equals Eval generated after Train",
+    "time range [0, 5e9) ns, non-decreasing, 1 <= count <= 1024, class/cap values",
+    "split separation (disjoint IDs/keys/sources, no Eval spec in Train) and invariance (Eval bytes unchanged under Train spec changes and vice versa; same seed different purpose gives different streams)",
+    "max-offers refusal boundary: max = count passes, max = count - 1 raises",
+    "tape schema/canonical bytes (exact keys, ASCII, newline, integers only)",
+    "manifest content + write_outputs/verify_outputs",
+    "load_tape purpose guard, tamper and non-canonical refusal",
+    "replay adapter output passes ROOT/trace_workload.py validate_trace (imported by exact path) with fake prompt/count functions whose count differs from the requested class; refusal cases",
+    "CLI: no protocol override flags, refuses to clobber, verify detects tampering",
+    "protocol validation refusals"
+  ],
+  "run_protocol": {
+    "interpreters": {"py314": "ROOT/.venv/bin/python3.14", "py312": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python"},
+    "env_prefix": "env -u PYTHONPATH OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 [NOMINAL_WORKLOAD_SCRATCH=<capsule>/scratch-<py>-attemptNN] nice -n 19 timeout -s TERM -k 20 <seconds>",
+    "commands": {
+      "tests": "bash run_attempt.sh tests-<py>-attemptNN <env_prefix 300> <python> -B -I ROOT/experiments/mpc-research/resume-mvp/test_nominal_workload.py -v",
+      "generate_once": "bash run_attempt.sh generate-py314-attempt01 <env_prefix 120> <py314> -B -I ROOT/experiments/mpc-research/resume-mvp/nominal_workload.py generate --out-dir <capsule>/tapes-v1",
+      "verify_each_python": "bash run_attempt.sh verify-<py>-attempt01 <env_prefix 120> <python> -B -I ROOT/experiments/mpc-research/resume-mvp/nominal_workload.py verify --out-dir <capsule>/tapes-v1"
+    },
+    "order": ["source freeze (SOURCE-FREEZE.json + *.py.txt snapshots)", "tests py314", "tests py312", "generate once py314 (only if both test runs pass)", "verify py314 and py312", "report.json", "SHA256SUMS + chmod a-w"],
+    "failure_policy": "Every attempt is preserved (run_attempt.sh noclobber). Only clear implementation defects may be fixed, in a new attempt number, with the failing source snapshotted and the amendment recorded in commands.log and AMENDMENTS.json; protocol constants, seeds, classes, cap, rate, duration and max_offers never change; tapes are generated once and never regenerated to change outcomes.",
+    "time_budget": "first implementation checkpoint ~1 hour after 21:52Z start"
+  },
+  "claims_not_made": ["CPU performance or GPU results", "capacity or model accuracy", "OOD/generalization", "Azure or any real-trace held-out claim", "MPC/controller superiority", "requested prompt length equals backend tokenization or gateway cost", "prefix cache actually disabled", "native-client compatibility", "holdout proven by unequal hashes alone"]
+}

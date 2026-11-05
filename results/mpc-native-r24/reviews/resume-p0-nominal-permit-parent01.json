@@ -1,0 +1,44 @@
+{
+  "schema": "resume-p0-nominal-permit-parent-v1",
+  "status": "CPU_GUARD_IMPLEMENTED_INTEGRATION_AND_INDEPENDENT_REVIEW_PENDING",
+  "purpose": "Make the separately scoped nominal MVP authorization explicit and default-off; do not fabricate Native calibration or reuse identification approval.",
+  "source_sha256": {
+    "experiments/mpc-research/resume-mvp/nominal_permit.py": "0c2831ebd232ad644b605619d1e2826092f173eb30d5bc57f5bb9e817274f91f",
+    "experiments/mpc-research/resume-mvp/test_nominal_permit.py": "5c314eacdf6adfe93394848171d656dedf0b475cbd346b2dbe6792345d3d96c2"
+  },
+  "archive": "results/mpc-native-r24/reviews/resume-p0-nominal-permit-cpu01",
+  "archive_files_including_seal": 8,
+  "seal_sha256": "0f8d85b89c63e9dc79341e1b436db7a0891481dd1017c41b9366dd76e31769b7",
+  "command": ".venv/bin/python -m unittest discover -s experiments/mpc-research/resume-mvp -p test_nominal_permit.py -v",
+  "python312_command": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python -m unittest discover -s experiments/mpc-research/resume-mvp -p test_nominal_permit.py -v",
+  "results": {
+    "python_3_14_4_refined_source": {"tests": 8, "failures": 0},
+    "python_3_12_16_refined_source": {"tests": 8, "failures": 0},
+    "first_draft_python_3_14_4": {"tests": 8, "failures": 0},
+    "refinement_reason": "Bind the actually computed local clock domain separately from a matching permit/server clock, and validate snapshot time before ordering comparisons.",
+    "first_draft_provenance_limit": "The original draft's hashes and successful log are retained; intermediate source bytes were not separately archived. Only the refined source is versioned here.",
+    "native_experiments": 0
+  },
+  "limits": {
+    "scope": "gateway-nominal-unqualified-v1",
+    "duration_seconds_max": 60,
+    "post_commands_max": 8,
+    "entry_to_commit_seconds_max": 0.5,
+    "source_age_seconds_max": 0.5,
+    "budgets": [16, 32]
+  },
+  "integration_requirements": [
+    "The runtime computes the actual local clock and actual source/protocol fingerprints; it must not echo approval fields as evidence.",
+    "The three nominal modules and public implementation must be frozen before calling source_digest; no peer's unfinished sources are accepted.",
+    "The runtime must independently validate guarded capability, exact immutable ledger costs, state identity, source freshness and CAS/operation/expiry semantics.",
+    "Persist issued-command counts and unknown pending commands across restart; do not submit speculative replacements.",
+    "Require post-application reobservation; a no-op, ACK or pure guard PASS is not actual closed-loop application.",
+    "Independent review, same-scope HTTP/cleanup evidence, fresh host checks, preregistration and a separate explicit bounded execution authorization remain required."
+  ],
+  "legacy_native_permits_unchanged": true,
+  "actual_operator_permit_created": false,
+  "real_actuation_authorized": false,
+  "native_qualification": false,
+  "p0_complete": false,
+  "resume_ready": false
+}

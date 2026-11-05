@@ -1,0 +1,836 @@
+     1	"""Bounded Gateway-only nominal coordinator, GET-only unless separately enabled.
+     2	
+     3	CapApplied means a guarded Gateway admission-budget ACK, never Native token
+     4	application. The precommit GET is not ledger CAS. Planner read_state returns
+     5	the last actually GET-observed version, not a simultaneous remote observation.
+     6	
+     7	Use the same journal across restarts. Its count and episode deadline never
+     8	reset; deleting/replacing it is outside this trusted-operator contract.
+     9	Clock, planner and HTTP deadlines are cooperative, not OS hard preemption.
+    10	Fixed/FIFO benchmark setup is deliberately absent: a strong Fixed baseline
+    11	must install its frozen observed-TRAIN cap before offers, not use this loop.
+    12	"""
+    13	
+    14	from __future__ import annotations
+    15	
+    16	import argparse
+    17	import asyncio
+    18	import base64
+    19	from contextlib import contextmanager
+    20	from dataclasses import asdict, dataclass, fields, is_dataclass
+    21	import fcntl
+    22	from fractions import Fraction
+    23	import hashlib
+    24	import json
+    25	import os
+    26	from pathlib import Path
+    27	import sys
+    28	import time
+    29	from typing import Callable
+    30	from urllib.parse import urlsplit
+    31	import uuid
+    32	
+    33	HERE = Path(__file__).resolve().parent
+    34	ROOT = HERE.parents[2]
+    35	for _directory in (ROOT, HERE):
+    36	    _path = str(_directory)
+    37	    if _path in sys.path:
+    38	        sys.path.remove(_path)
+    39	    sys.path.insert(0, _path)
+    40	
+    41	import httpx
+    42	
+    43	from mpc_lab.contracts import (
+    44	    CostSpec, Identity, ModelParameters, SCHEMA, Scenario, Snapshot, digest, finite,
+    45	    implementation_hash,
+    46	)
+    47	from mpc_lab.controller import validate_snapshot
+    48	from mpc_lab.runtime import require_guarded_capability, snapshot_from_dict
+    49	from prefill_lab.live_http import clock_domain
+    50	from nominal_permit import NominalDemoPermit, SCOPE, source_digest
+    51	from nominal_planner import (
+    52	    BUDGETS, CONTRACT_SHA256, MAX_OFFERS, OBJECTIVE_ID, PLANNER_VERSION, CausalScenario,
+    53	    DecisionWindow, FirstAction, NominalDecision, NominalPlanner, StateVersion, TimedPlan,
+    54	)
+    55	
+    56	JOURNAL_SCHEMA = "resume-p0-nominal-journal-v1"
+    57	MAX_BODY = 256 * 1024
+    58	MAX_JOURNAL = 8 * 1024 * 1024
+    59	MAX_EVENTS = 256
+    60	
+    61	
+    62	class RuntimeRefused(ValueError):
+    63	    pass
+    64	
+    65	
+    66	def _require(condition, reason):
+    67	    if not condition:
+    68	        raise RuntimeRefused(reason)
+    69	
+    70	
+    71	def _plain(value):
+    72	    if is_dataclass(value):
+    73	        return _plain(asdict(value))
+    74	    if isinstance(value, Fraction):
+    75	        return {"numerator": value.numerator, "denominator": value.denominator}
+    76	    if isinstance(value, dict):
+    77	        return {key: _plain(item) for key, item in value.items()}
+    78	    if isinstance(value, (tuple, list)):
+    79	        return [_plain(item) for item in value]
+    80	    return value
+    81	
+    82	
+    83	def _strict(raw):
+    84	    def pairs(items):
+    85	        result = {}
+    86	        for key, value in items:
+    87	            _require(key not in result, "duplicate_JSON_key")
+    88	            result[key] = value
+    89	        return result
+    90	
+    91	    def constant(value):
+    92	        raise RuntimeRefused("nonfinite_JSON")
+    93	
+    94	    return json.loads(raw, object_pairs_hook=pairs, parse_constant=constant)
+    95	
+    96	
+    97	def _sha(value):
+    98	    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+    99	
+   100	
+   101	def module_paths():
+   102	    paths = {"nominal_runtime": str(Path(__file__).resolve())}
+   103	    expected = {
+   104	        "mpc_lab.contracts": ROOT / "mpc_lab/contracts.py",
+   105	        "mpc_lab.controller": ROOT / "mpc_lab/controller.py",
+   106	        "mpc_lab.model": ROOT / "mpc_lab/model.py",
+   107	        "mpc_lab.runtime": ROOT / "mpc_lab/runtime.py",
+   108	        "prefill_lab.live_http": ROOT / "prefill_lab/live_http.py",
+   109	        **{name: HERE / (name + ".py") for name in
+   110	           ("nominal_permit", "nominal_planner", "nominal_scenario", "nominal_workload")},
+   111	    }
+   112	    for name, path in expected.items():
+   113	        if name not in sys.modules and name in ("nominal_scenario", "nominal_workload"):
+   114	            continue
+   115	        actual = Path(sys.modules[name].__file__).resolve()
+   116	        _require(actual == path, "module_outside_frozen_root:" + name)
+   117	        paths[name] = str(actual)
+   118	    return paths
+   119	
+   120	
+   121	@dataclass(frozen=True)
+   122	class RuntimeLimits:
+   123	    iterations: int = 4
+   124	    episode_s: float = 4.0
+   125	    decision_s: float = 0.5
+   126	    solve_s: float = 0.1
+   127	    poll_s: float = 0.0
+   128	
+   129	    def __post_init__(self):
+   130	        _require(type(self.iterations) is int and 1 <= self.iterations <= 32, "iteration_limit")
+   131	        _require(all(finite(value) for value in (self.episode_s, self.decision_s, self.solve_s, self.poll_s))
+   132	                 and 0 < self.episode_s <= 60 and 0 < self.solve_s <= 0.1
+   133	                 and self.solve_s < self.decision_s <= 0.5 and 0 <= self.poll_s <= 1,
+   134	                 "invalid_runtime_deadlines")
+   135	
+   136	
+   137	def _root_endpoint(value):
+   138	    """Validate the supplied root spelling before HTTPX can normalize a path."""
+   139	    reason = "explicit_HTTP_root_endpoint_required"
+   140	    _require(isinstance(value, (str, httpx.URL)), reason)
+   141	    raw = str(value)
+   142	    _require(not any(char.isspace() or ord(char) < 32 or ord(char) == 127 for char in raw)
+   143	             and not any(char in raw for char in ("?", "#", "\\")), reason)
+   144	    try:
+   145	        parts = urlsplit(raw)
+   146	        port = parts.port
+   147	        endpoint = httpx.URL(raw)
+   148	    except (ValueError, httpx.InvalidURL) as exc:
+   149	        raise RuntimeRefused(reason) from exc
+   150	    _require(parts.scheme in ("http", "https") and parts.netloc
+   151	             and parts.username is None and parts.password is None
+   152	             and parts.path in ("", "/") and not parts.netloc.endswith(":")
+   153	             and (port is None or 0 <= port <= 65535)
+   154	             and endpoint.host and endpoint.is_absolute_url and endpoint.raw_path == b"/", reason)
+   155	    return str(endpoint.copy_with(path="/"))
+   156	
+   157	
+   158	def _protocol(parameters, policy, limits, scenario_binding, endpoint, journal_path, start_at=None):
+   159	    module_paths()
+   160	    endpoint = _root_endpoint(endpoint)
+   161	    _require(type(parameters) is ModelParameters and type(limits) is RuntimeLimits
+   162	             and policy in ("mpc", "one_move"), "typed_nominal_protocol_required")
+   163	    _require(start_at is None or finite(start_at) and start_at >= 0, "invalid_shared_start")
+   164	    value = {
+   165	        "scope": SCOPE, "runtime": JOURNAL_SCHEMA, "planner_contract": CONTRACT_SHA256,
+   166	        "objective": OBJECTIVE_ID, "parameters": asdict(parameters), "policy": policy,
+   167	        "limits": asdict(limits), "scenario_binding": scenario_binding,
+   168	        "endpoint": endpoint, "journal_path": str(Path(journal_path).absolute()),
+   169	        "max_commands": 8, "source_age_s": 0.5, "command_ttl_s": 0.1,
+   170	        "precommit_observation_equality": True, "ledger_CAS": False,
+   171	        "Fixed_FIFO": "separate_static_preoffer_setup_not_implemented",
+   172	    }
+   173	    if start_at is not None:
+   174	        value["start_at"] = start_at
+   175	        value["CLI_start_envelope_s"] = 60.0
+   176	    return _strict(json.dumps(value, allow_nan=False))
+   177	
+   178	
+   179	def describe_protocol(planner, journal_path, *, endpoint, scenario_binding,
+   180	                      policy="mpc", limits=RuntimeLimits(), start_at=None):
+   181	    """Describe actual frozen bindings without a client, journal write or authority."""
+   182	    _require(type(planner) is NominalPlanner, "typed_nominal_planner_required")
+   183	    protocol = _protocol(planner.parameters, policy, limits, scenario_binding, endpoint, journal_path, start_at)
+   184	    directory = Path(__file__).resolve().parent
+   185	    names = ("nominal_permit.py", "nominal_planner.py", "nominal_runtime.py",
+   186	             "nominal_scenario.py", "nominal_workload.py")
+   187	    bundle = {
+   188	        "public_implementation": implementation_hash(),
+   189	        "nominal": {name: hashlib.sha256((directory / name).read_bytes()).hexdigest() for name in names},
+   190	    }
+   191	    source = source_digest()
+   192	    _require(digest(bundle) == source, "source_bundle_description_mismatch")
+   193	    return {
+   194	        "scope": SCOPE, "mode": "protocol_description_only",
+   195	        "protocol": protocol, "protocol_sha256": digest(protocol),
+   196	        "source_sha256": source, "source_bundle": bundle,
+   197	        "expected_identity": asdict(planner.identity), "clock_domain": clock_domain(),
+   198	        "module_paths": module_paths(),
+   199	        "not_an_approval": True, "HTTP_performed": False, "Native_qualified": False,
+   200	    }
+   201	
+   202	
+   203	class _Journal:
+   204	    def __init__(self, path):
+   205	        self.path = Path(path).absolute()
+   206	        self.partial = self.path.with_name(self.path.name + ".partial")
+   207	
+   208	    @contextmanager
+   209	    def locked(self):
+   210	        self.path.parent.mkdir(parents=True, mode=0o700, exist_ok=True)
+   211	        descriptor = os.open(self.path.with_name(self.path.name + ".lock"),
+   212	                             os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+   213	        try:
+   214	            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+   215	            _require(not self.partial.exists() and not self.partial.is_symlink(),
+   216	                     "unclean_journal_commit_preserved")
+   217	            yield
+   218	        finally:
+   219	            os.close(descriptor)
+   220	
+   221	    def read(self):
+   222	        if not self.path.exists():
+   223	            return None
+   224	        _require(not self.path.is_symlink() and self.path.stat().st_size <= MAX_JOURNAL,
+   225	                 "journal_file_invalid")
+   226	        value = _strict(self.path.read_bytes())
+   227	        keys = {"schema", "scope", "controller_id", "identity", "clock_domain", "protocol_sha256",
+   228	                "run_id", "episode_started_at", "episode_deadline", "issued_commands",
+   229	                "source_sha256", "pending", "events"}
+   230	        _require(type(value) is dict and set(value) == keys and value["schema"] == JOURNAL_SCHEMA
+   231	                 and value["scope"] == SCOPE and type(value["controller_id"]) is str
+   232	                 and len(value["controller_id"]) == 32
+   233	                 and type(value["issued_commands"]) is int and 0 <= value["issued_commands"] <= 8
+   234	                 and type(value["events"]) is list and len(value["events"]) <= MAX_EVENTS
+   235	                 and all(type(event) is dict and type(event.get("event")) is str
+   236	                         for event in value["events"])
+   237	                 and _sha(value["protocol_sha256"]), "journal_invalid")
+   238	        _require(all(finite(value[key]) for key in ("episode_started_at", "episode_deadline"))
+   239	                 and 0 <= value["episode_started_at"] < value["episode_deadline"]
+   240	                 <= value["episode_started_at"] + 60, "journal_episode_invalid")
+   241	        prepared = [event for event in value["events"] if event.get("event") == "PendingPrepared"]
+   242	        _require([event.get("ordinal") for event in prepared]
+   243	                 == list(range(1, value["issued_commands"] + 1)), "journal_count_invalid")
+   244	        pending = value["pending"]
+   245	        resolved = [event["pending"]["ordinal"] for event in value["events"]
+   246	                    if event["event"] in ("CapReobserved", "UnknownFenced")]
+   247	        _require(resolved == list(range(1, value["issued_commands"] + (pending is None))),
+   248	                 "journal_unresolved_command_cannot_disappear")
+   249	        if pending is not None:
+   250	            _require(type(pending) is dict and set(pending) == {"command", "ordinal", "ack"}
+   251	                     and pending["ordinal"] == value["issued_commands"] > 0
+   252	                     and prepared[-1]["command"] == pending["command"], "journal_pending_invalid")
+   253	            command = pending["command"]
+   254	            _require(set(command) == {"schema", "run_id", "clock_domain", "identity",
+   255	                                     "expected_version", "operation_id", "budget", "not_after"}
+   256	                     and command["schema"] == SCHEMA and command["run_id"] == value["run_id"]
+   257	                     and command["identity"] == value["identity"]
+   258	                     and command["clock_domain"] == value["clock_domain"]
+   259	                     and command["operation_id"] == f"nominal-{value['controller_id']}-{pending['ordinal']}"
+   260	                     and type(command["expected_version"]) is int and command["expected_version"] >= 0
+   261	                     and finite(command["budget"]) and command["budget"] in BUDGETS
+   262	                     and finite(command["not_after"])
+   263	                     and value["episode_started_at"] < command["not_after"] <= value["episode_deadline"]
+   264	                     and _sha(value["source_sha256"]), "journal_pending_binding")
+   265	            ack = pending["ack"]
+   266	            if ack is not None:
+   267	                _require(type(ack) is dict and ack.get("schema") == SCHEMA
+   268	                         and ack.get("status") == "applied"
+   269	                         and all(ack.get(key) == command[key] for key in
+   270	                                 ("run_id", "clock_domain", "operation_id", "budget"))
+   271	                         and type(ack.get("budget_version")) is int
+   272	                         and ack["budget_version"] == command["expected_version"] + 1
+   273	                         and finite(ack.get("applied_at"))
+   274	                         and prepared[-1]["not_before"] <= ack["applied_at"] < command["not_after"]
+   275	                         and any(event["event"] == "CapApplied" and event.get("acknowledgment") == ack
+   276	                                 for event in value["events"]), "journal_ACK_invalid")
+   277	        return value
+   278	
+   279	    def save(self, value):
+   280	        raw = json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+   281	        _require(len(raw) <= MAX_JOURNAL and len(value["events"]) <= MAX_EVENTS,
+   282	                 "journal_capacity_preserve_and_stop")
+   283	        fd = os.open(self.partial, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_NOFOLLOW, 0o600)
+   284	        with os.fdopen(fd, "wb") as stream:
+   285	            stream.write(raw)
+   286	            stream.flush()
+   287	            os.fsync(stream.fileno())
+   288	        os.replace(self.partial, self.path)
+   289	        directory = os.open(self.path.parent, os.O_RDONLY | os.O_DIRECTORY)
+   290	        try:
+   291	            os.fsync(directory)
+   292	        finally:
+   293	            os.close(directory)
+   294	
+   295	
+   296	class NominalRuntime:
+   297	    """Caller owns the AsyncClient; run() owns only its bounded journal lock."""
+   298	
+   299	    def __init__(
+   300	        self, client: httpx.AsyncClient, planner: NominalPlanner,
+   301	        scenario_factory: Callable[[Snapshot], CausalScenario] | None, journal_path: Path, *,
+   302	        admin_key: str, scenario_binding: dict, permit: NominalDemoPermit | None = None,
+   303	        enabled: bool = False, policy: str = "mpc", limits: RuntimeLimits = RuntimeLimits(),
+   304	        parameters: ModelParameters | None = None, clock: Callable[[], float] = time.monotonic,
+   305	        sleeper=asyncio.sleep, start_at: float | None = None,
+   306	    ):
+   307	        _require(type(enabled) is bool and policy in ("mpc", "one_move"),
+   308	                 "explicit_mode_required_static_baselines_not_per_tick")
+   309	        _require(type(planner) is NominalPlanner and type(limits) is RuntimeLimits, "typed_nominal_planner_required")
+   310	        parameters = planner.parameters if parameters is None else parameters
+   311	        _require(type(parameters) is ModelParameters and parameters == planner.parameters
+   312	                 and parameters.identity == planner.identity, "exact_model_parameter_binding")
+   313	        _require(isinstance(admin_key, str) and bool(admin_key), "admin_header_required")
+   314	        _require(client.follow_redirects is False and client.base_url.scheme in ("http", "https")
+   315	                 and not client.base_url.username and not client.base_url.password
+   316	                 and client.base_url.path == "/" and not client.base_url.query and not client.base_url.fragment,
+   317	                 "explicit_nonredirecting_HTTP_endpoint_required")
+   318	        self.client, self.planner, self.scenario_factory = client, planner, scenario_factory
+   319	        self.parameters, self.identity = parameters, planner.identity
+   320	        self.permit, self.enabled, self.policy, self.limits = permit, enabled, policy, limits
+   321	        self.admin_key, self.clock, self.sleeper = admin_key, clock, sleeper
+   322	        self.start_at = start_at
+   323	        self.store = _Journal(journal_path)
+   324	        self.protocol = _protocol(parameters, policy, limits, scenario_binding, client.base_url,
+   325	                                  self.store.path, start_at)
+   326	        self.protocol_sha256 = digest(self.protocol)
+   327	        self.state = None
+   328	        self.observed = None
+   329	        self.last_clock = None
+   330	
+   331	    def _binding(self):
+   332	        _require(self.planner.parameters == self.parameters and self.planner.identity == self.identity
+   333	                 and digest(asdict(self.parameters)) == digest(self.protocol["parameters"])
+   334	                 and asdict(self.limits) == self.protocol["limits"]
+   335	                 and self.policy == self.protocol["policy"]
+   336	                 and self.start_at == self.protocol.get("start_at")
+   337	                 and str(self.store.path) == self.protocol["journal_path"]
+   338	                 and _root_endpoint(self.client.base_url) == self.protocol["endpoint"]
+   339	                 and self.client.follow_redirects is False
+   340	                 and digest(self.protocol) == self.protocol_sha256,
+   341	                 "runtime_configuration_or_parameter_binding_changed")
+   342	
+   343	    def _now(self):
+   344	        now = self.clock()
+   345	        _require(finite(now) and now >= 0 and (self.last_clock is None or now >= self.last_clock),
+   346	                 "nonmonotonic_local_clock")
+   347	        self.last_clock = now
+   348	        return now
+   349	
+   350	    def _remaining(self, deadline):
+   351	        remaining = deadline - self._now()
+   352	        _require(remaining > 0, "absolute_entry_or_episode_deadline")
+   353	        return remaining
+   354	
+   355	    def _record(self, event, **values):
+   356	        self.state["events"].append({"event": event, "at": self.clock(), **_plain(values)})
+   357	        self.store.save(self.state)
+   358	
+   359	    def _version(self):
+   360	        _require(self.observed is not None, "no_actual_GET_observation")
+   361	        return StateVersion.from_snapshot(self.observed)
+   362	
+   363	    async def _wire(self, method, path, deadline, *, command=None, body=None):
+   364	        started = self._now()
+   365	        remaining = self._remaining(deadline)
+   366	        chunks, size, stored, chunk_count, status, complete, error = [], 0, 0, 0, None, False, None
+   367	        arguments = {"headers": {"x-admin-api-key": self.admin_key}, "timeout": min(0.2, remaining)}
+   368	        if command is not None:
+   369	            _require(type(body) is bytes, "preencoded_durable_command_required")
+   370	            arguments["content"] = body
+   371	            arguments["headers"]["content-type"] = "application/json"
+   372	        try:
+   373	            async with asyncio.timeout(min(0.2, remaining)):
+   374	                async with self.client.stream(method, path, **arguments) as response:
+   375	                    status = response.status_code
+   376	                    async for chunk in response.aiter_bytes():
+   377	                        chunk_count += 1
+   378	                        _require(chunk_count <= 4096, "HTTP_chunk_limit")
+   379	                        size += len(chunk)
+   380	                        part = chunk[:max(0, MAX_BODY - stored)]
+   381	                        chunks.append(part)
+   382	                        stored += len(part)
+   383	                        _require(size <= MAX_BODY, "HTTP_body_limit")
+   384	                        self._remaining(deadline)
+   385	                    complete = True
+   386	        except BaseException as exc:
+   387	            error = exc
+   388	        raw = b"".join(chunks)
+   389	        saved = raw.replace(self.admin_key.encode(), b"[REDACTED_AUTH]")
+   390	        self._record("HTTP", method=method, path=path, status_code=status,
+   391	                     started_at=started, received_at=self.clock(), bytes_received=size,
+   392	                     response_complete=complete, redacted=saved != raw,
+   393	                     received_prefix_sha256=hashlib.sha256(raw).hexdigest(),
+   394	                     body_b64=base64.b64encode(saved).decode(),
+   395	                     error_type=type(error).__name__ if error else None,
+   396	                     operation_id=command["operation_id"] if command else None)
+   397	        if error is not None:
+   398	            raise error
+   399	        self._remaining(deadline)
+   400	        return status, raw
+   401	
+   402	    async def _state(self, deadline, *, entered_at):
+   403	        get_entered = self._now()
+   404	        status, raw = await self._wire("GET", "/admin/mpc/state", deadline)
+   405	        _require(status == 200, "state_HTTP_status")
+   406	        document = _strict(raw)
+   407	        require_guarded_capability(document)
+   408	        _require(isinstance(document.get("requests"), (list, tuple))
+   409	                 and len(document["requests"]) <= 512, "ledger_capacity")
+   410	        snapshot = snapshot_from_dict(document)
+   411	        local_domain = clock_domain()
+   412	        reason = validate_snapshot(snapshot, now=self._now(), clock_domain=local_domain,
+   413	                                   expected_identity=self.identity, max_age_s=0.5)
+   414	        _require(reason is None, reason or "invalid_snapshot")
+   415	        _require(snapshot.sampled_at >= max(get_entered, entered_at), "snapshot_predates_current_GET_entry")
+   416	        _require(snapshot.budget in BUDGETS, "unsupported_observed_budget")
+   417	        _require(type(document.get("cost_spec")) is dict, "missing_cost_spec")
+   418	        cost = CostSpec(**document["cost_spec"])
+   419	        _require(cost.fingerprint == self.parameters.cost_spec.fingerprint == snapshot.identity.cost_hash,
+   420	                 "cost_spec_fingerprint_mismatch")
+   421	        for mark in snapshot.requests:
+   422	            _require(mark.cost == self.parameters.cost_spec.estimate(mark.prompt_tokens, mark.max_tokens),
+   423	                     "immutable_ledger_cost_mismatch")
+   424	        _require(local_domain == self.state["clock_domain"], "local_clock_domain_changed")
+   425	        if self.state["run_id"] is None:
+   426	            self.state["run_id"] = snapshot.run_id
+   427	            self._record("RunBound", run_id=snapshot.run_id)
+   428	        _require(snapshot.run_id == self.state["run_id"], "gateway_run_changed")
+   429	        self.observed = snapshot
+   430	        self._remaining(deadline)
+   431	        return snapshot
+   432	
+   433	    def _reconcile(self, snapshot):
+   434	        pending = self.state["pending"]
+   435	        if pending is None:
+   436	            return None
+   437	        command, ack = pending["command"], pending["ack"]
+   438	        if (snapshot.run_id != command["run_id"] or snapshot.clock_domain != command["clock_domain"]
+   439	                or asdict(snapshot.identity) != command["identity"]):
+   440	            return {"status": "pending", "reason": "identity_changed_no_fence"}
+   441	        version = snapshot.budget_version
+   442	        if version < command["expected_version"]:
+   443	            return {"status": "pending", "reason": "version_regression_no_fence"}
+   444	        if ack is not None:
+   445	            if version < ack["budget_version"] or snapshot.sampled_at < ack["applied_at"]:
+   446	                return {"status": "pending", "reason": "ACK_requires_real_reobservation"}
+   447	            if version == ack["budget_version"] and snapshot.budget != command["budget"]:
+   448	                return {"status": "pending", "reason": "ACK_observation_inconsistent"}
+   449	            status, event = "applied_reobserved", "CapReobserved"
+   450	        elif version > command["expected_version"]:
+   451	            status, event = "unknown_fenced_by_CAS", "UnknownFenced"
+   452	        elif snapshot.sampled_at >= command["not_after"]:
+   453	            status, event = "unknown_fenced_by_server_expiry", "UnknownFenced"
+   454	        else:
+   455	            return {"status": "pending", "reason": "unchanged_GET_is_not_a_fence"}
+   456	        self.state["pending"] = None
+   457	        self._record(event, outcome=status, pending=pending, observed=asdict(snapshot),
+   458	                     application_known_from_ACK=ack is not None, native_token_application_at=None)
+   459	        return {"status": status, "operation_id": command["operation_id"],
+   460	                "cap_application_known": ack is not None, "native_token_application_at": None}
+   461	
+   462	    def _authorize(self, snapshot, budget, entered, deadline, *, issued):
+   463	        self._binding()
+   464	        if not self.enabled or type(self.permit) is not NominalDemoPermit:
+   465	            return "nominal_not_authorized"
+   466	        current_source = source_digest()
+   467	        reason = self.permit.refusal_reason(
+   468	            snapshot, enabled=self.enabled, expected_identity=self.identity,
+   469	            current_source_sha256=current_source, protocol_sha256=self.protocol_sha256,
+   470	            current_clock_domain=clock_domain(), budget=budget, entered_at=entered,
+   471	            deadline=deadline, now=self._now(), issued_commands=issued,
+   472	        )
+   473	        if reason is None and self.state["source_sha256"] not in (None, current_source):
+   474	            return "journal_source_binding_changed"
+   475	        if reason is None:
+   476	            self.state["source_sha256"] = current_source
+   477	        return reason
+   478	
+   479	    def _decision(self, snapshot, window):
+   480	        self._binding()
+   481	        planning_started = self._now()
+   482	        source = self.scenario_factory(snapshot)
+   483	        _require(type(source) is CausalScenario, "typed_causal_scenario_required")
+   484	        _require(type(source.scenario) is Scenario and type(source.scenario.offers) is tuple
+   485	                 and len(source.scenario.offers) <= MAX_OFFERS, "bounded_causal_scenario_required")
+   486	        scenario = _plain(source)
+   487	        scenario_bytes = json.dumps(scenario, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+   488	        _require(len(scenario_bytes) <= MAX_BODY, "causal_receipt_byte_limit")
+   489	        scenario_sha256 = hashlib.sha256(scenario_bytes).hexdigest()
+   490	        snapshot_sha256 = digest(asdict(snapshot))
+   491	        self._record("PlanningInput", planning_started_at=planning_started,
+   492	                     snapshot_sha256=snapshot_sha256, scenario=scenario,
+   493	                     scenario_sha256=scenario_sha256, window=window)
+   494	        decision = self.planner.plan(snapshot, source, window, policy=self.policy,
+   495	                                     clock_domain=clock_domain(), read_state=self._version, clock=self._now)
+   496	        _require(self._now() < window.solve_deadline, "planner_finished_after_original_solve_deadline")
+   497	        _require(type(decision) is NominalDecision and decision.policy == self.policy
+   498	                 and decision.contract_sha256 == CONTRACT_SHA256 and decision.objective_id == OBJECTIVE_ID
+   499	                 and decision.planner_version == PLANNER_VERSION and decision.evaluated_paths == 8,
+   500	                 "typed_nominal_decision_contract")
+   501	        action, plan = decision.first_action, decision.plan
+   502	        _require(type(action) is FirstAction and type(plan) is TimedPlan
+   503	                 and type(action.source) is StateVersion
+   504	                 and action.source == StateVersion.from_snapshot(snapshot)
+   505	                 and type(plan.actions) is tuple and len(plan.actions) == 3
+   506	                 and all(finite(value) and value in BUDGETS for value in plan.actions)
+   507	                 and action.budget == plan.actions[0] and finite(action.budget)
+   508	                 and plan.received_budget == snapshot.budget and plan.sampled_at == snapshot.sampled_at
+   509	                 and plan.first_action_at == action.not_before == window.first_action_at
+   510	                 and action.not_after == window.action_deadline, "first_action_source_or_time_mismatch")
+   511	        self._record("Planned", planning_started_at=planning_started, selected_at=self._now(),
+   512	                     snapshot_sha256=snapshot_sha256, scenario=scenario,
+   513	                     scenario_sha256=scenario_sha256, decision=_plain(decision),
+   514	                     suffix_execution_permitted=False)
+   515	        return decision
+   516	
+   517	    async def _step(self, entered, deadline):
+   518	        snapshot = await self._state(deadline, entered_at=entered)
+   519	        if self.state["pending"] is not None:
+   520	            return self._reconcile(snapshot)
+   521	        if self.scenario_factory is None:
+   522	            _require(not self.enabled, "causal_scenario_required_for_demo")
+   523	            return {"status": "GET_only", "reason": "no_scenario_no_planning", "cap_change_applied": False}
+   524	        solve_deadline = entered + self.limits.solve_s
+   525	        _require(self._now() < solve_deadline < deadline, "entry_GET_exhausted_solver_window")
+   526	        window = DecisionWindow(entered, solve_deadline, solve_deadline,
+   527	                                min(deadline, snapshot.sampled_at + 0.5))
+   528	        decision = self._decision(snapshot, window)
+   529	        self._remaining(deadline)
+   530	        action = decision.first_action
+   531	        if action.budget == snapshot.budget:
+   532	            return {"status": "hold", "cap_change_applied": False, "actual_cap_applied_at": None}
+   533	        before = self.state["issued_commands"]
+   534	        reason = self._authorize(snapshot, action.budget, entered, deadline, issued=before)
+   535	        if reason:
+   536	            return {"status": "GET_only" if not self.enabled else "refused", "reason": reason,
+   537	                    "cap_change_applied": False}
+   538	        delay = action.not_before - self._now()
+   539	        if delay > 0:
+   540	            _require(delay < self._remaining(deadline), "first_action_not_yet_permitted")
+   541	            await self.sleeper(delay)
+   542	        _require(self._now() >= action.not_before, "first_action_before_not_before")
+   543	        current = await self._state(deadline, entered_at=entered)
+   544	        _require(StateVersion.from_snapshot(current) == StateVersion.from_snapshot(snapshot)
+   545	                 and current.requests == snapshot.requests, "precommit_observation_changed")
+   546	        reason = self._authorize(snapshot, action.budget, entered, deadline, issued=before)
+   547	        _require(reason is None, reason or "nominal_authorization")
+   548	        now = self._now()
+   549	        not_after = min(deadline, self.permit.expires_at, snapshot.sampled_at + 0.5, now + 0.1)
+   550	        _require(now < not_after <= action.not_after, "first_action_expired")
+   551	        command = {
+   552	            "schema": SCHEMA, "run_id": snapshot.run_id, "clock_domain": snapshot.clock_domain,
+   553	            "identity": asdict(self.identity), "expected_version": snapshot.budget_version,
+   554	            "operation_id": f"nominal-{self.state['controller_id']}-{before + 1}",
+   555	            "budget": action.budget, "not_after": not_after,
+   556	        }
+   557	        body = json.dumps(command, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+   558	        self.state["issued_commands"] = before + 1
+   559	        self.state["pending"] = {"command": command, "ordinal": before + 1, "ack": None}
+   560	        self._record("PendingPrepared", ordinal=before + 1, command=command,
+   561	                     entered_at=entered, deadline=deadline, not_before=action.not_before,
+   562	                     exact_POST_body_sha256=hashlib.sha256(body).hexdigest())
+   563	        # Count includes this durable reservation. Recheck that same reservation,
+   564	        # not authorization for a second command, after fsync consumed real time.
+   565	        reason = self._authorize(snapshot, action.budget, entered, deadline, issued=before)
+   566	        _require(reason is None, reason or "nominal_authorization_after_persist")
+   567	        self._remaining(not_after)
+   568	        post_started = self._now()
+   569	        status, raw = await self._wire("POST", "/admin/mpc/budget", deadline, command=command, body=body)
+   570	        reply = _strict(raw)
+   571	        valid = (
+   572	            status == 200 and type(reply) is dict and reply.get("schema") == SCHEMA
+   573	            and reply.get("status") == "applied" and reply.get("operation_id") == command["operation_id"]
+   574	            and reply.get("run_id") == command["run_id"] and reply.get("clock_domain") == command["clock_domain"]
+   575	            and type(reply.get("budget_version")) is int
+   576	            and reply["budget_version"] == command["expected_version"] + 1
+   577	            and finite(reply.get("budget")) and reply["budget"] == command["budget"]
+   578	            and finite(reply.get("previous_budget")) and reply["previous_budget"] == snapshot.budget
+   579	            and finite(reply.get("applied_at"))
+   580	            and post_started <= reply["applied_at"] <= self._now()
+   581	            and reply["applied_at"] < not_after
+   582	        )
+   583	        _require(valid, "unknown_POST_outcome_no_fallback")
+   584	        self.state["pending"]["ack"] = reply
+   585	        self._record("CapApplied", acknowledgment=reply, actual_cap_change=True,
+   586	                     scope="Gateway_admission_budget_only", native_token_application_at=None)
+   587	        observed = await self._state(deadline, entered_at=entered)
+   588	        return self._reconcile(observed)
+   589	
+   590	    async def run(self):
+   591	        call_entered = self._now()
+   592	        steps, failure = [], None
+   593	        try:
+   594	            self._binding()
+   595	            with self.store.locked():
+   596	                self.state = self.store.read()
+   597	                domain = clock_domain()
+   598	                if self.state is None:
+   599	                    _require(self.start_at is None or call_entered >= self.start_at, "shared_start_not_reached")
+   600	                    self.state = {
+   601	                        "schema": JOURNAL_SCHEMA, "scope": SCOPE, "controller_id": uuid.uuid4().hex,
+   602	                        "identity": asdict(self.identity), "clock_domain": domain,
+   603	                        "protocol_sha256": self.protocol_sha256, "run_id": None,
+   604	                        "episode_started_at": call_entered, "episode_deadline": call_entered + self.limits.episode_s,
+   605	                        "issued_commands": 0, "source_sha256": None, "pending": None, "events": [],
+   606	                    }
+   607	                    self._record("ProtocolBound", protocol=self.protocol, module_paths=module_paths())
+   608	                _require(self.state["identity"] == asdict(self.identity)
+   609	                         and self.state["protocol_sha256"] == self.protocol_sha256
+   610	                         and self.state["clock_domain"] == domain, "journal_identity_protocol_or_clock_changed")
+   611	                for index in range(self.limits.iterations):
+   612	                    entered = call_entered if index == 0 else self._now()
+   613	                    deadline = min(entered + self.limits.decision_s, self.state["episode_deadline"])
+   614	                    if self._now() >= deadline:
+   615	                        failure = ("persistent_episode_deadline_exhausted"
+   616	                                   if self._now() >= self.state["episode_deadline"]
+   617	                                   else "absolute_entry_deadline_exhausted")
+   618	                        break
+   619	                    try:
+   620	                        row = await self._step(entered, deadline)
+   621	                    except asyncio.CancelledError:
+   622	                        self._record("Cancelled", pending_unknown=self.state["pending"] is not None)
+   623	                        raise
+   624	                    except OSError:
+   625	                        raise
+   626	                    except Exception as error:
+   627	                        pending = self.state["pending"]
+   628	                        ack = pending["ack"] if pending else None
+   629	                        row = {"status": "pending" if self.state["pending"] else "refused",
+   630	                               "reason": str(error).replace(self.admin_key, "[REDACTED_AUTH]")[:1024],
+   631	                               "error_type": type(error).__name__,
+   632	                               "cap_change_applied": True if ack else (None if pending else False),
+   633	                               "actual_cap_applied_at": ack["applied_at"] if ack else None,
+   634	                               "native_token_application_at": None}
+   635	                    row.update(entered_at=entered, deadline=deadline, outcome_observed_at=self._now())
+   636	                    self._record("StepFinished", **row)
+   637	                    row["finished_at"] = self._now()
+   638	                    row["elapsed_s"] = row["finished_at"] - entered
+   639	                    row["deadline_met"] = row["finished_at"] <= deadline
+   640	                    steps.append(row)
+   641	                    if index + 1 < self.limits.iterations and self.limits.poll_s:
+   642	                        remaining = self.state["episode_deadline"] - self._now()
+   643	                        if remaining <= 0:
+   644	                            break
+   645	                        await self.sleeper(min(self.limits.poll_s, remaining))
+   646	        except asyncio.CancelledError:
+   647	            raise
+   648	        except Exception as error:
+   649	            failure = type(error).__name__ + ":" + str(error).replace(self.admin_key, "[REDACTED_AUTH]")[:1024]
+   650	        pending = self.state["pending"] if self.state else None
+   651	        return {
+   652	            "scope": SCOPE, "mode": "experimental_nominal_demo" if self.enabled else "GET_only",
+   653	            "steps": steps, "failure": failure, "issued_commands": self.state["issued_commands"] if self.state else None,
+   654	            "pending": self.state["pending"] is not None if self.state else None,
+   655	            "pending_outcome": ("unknown" if pending["ack"] is None else "ACK_requires_reobservation")
+   656	            if pending else None,
+   657	            "episode_deadline": self.state["episode_deadline"] if self.state else None,
+   658	            "protocol_sha256": self.protocol_sha256, "ledger_CAS": False,
+   659	            "Native_qualified": False, "native_token_application_at": None,
+   660	            "objective": OBJECTIVE_ID, "static_Fixed_FIFO_benchmark_implemented": False,
+   661	        }
+   662	
+   663	
+   664	def _load_permit(path):
+   665	    _require(path.is_file() and not path.is_symlink() and path.stat().st_size <= 65536,
+   666	             "separate_regular_nominal_permit_required")
+   667	    document = _strict(path.read_bytes())
+   668	    _require(type(document) is dict and set(document) == {field.name for field in fields(NominalDemoPermit)},
+   669	             "nominal_permit_fields")
+   670	    document["identity"] = Identity(**document["identity"])
+   671	    return NominalDemoPermit(**document)
+   672	
+   673	
+   674	def load_causal_scenario(path):
+   675	    """Load one frozen development/TRAIN-derived forecast, never a replay tape.
+   676	
+   677	    The file's actual digest is protocol-bound. Its cutoff/availability must use
+   678	    this host's monotonic clock. The producer's Train-only provenance still needs
+   679	    an independent audit; this loader does not infer a forecast from Eval offers.
+   680	    """
+   681	    from mpc_lab.contracts import FutureOffer, Scenario
+   682	
+   683	    path = Path(path)
+   684	    _require(path.is_file() and not path.is_symlink() and path.stat().st_size <= MAX_BODY,
+   685	             "regular_bounded_causal_scenario_file_required")
+   686	    raw = path.read_bytes()
+   687	    _require(len(raw) <= MAX_BODY, "causal_scenario_file_limit")
+   688	    document = _strict(raw)
+   689	    _require(set(document) == {"clock_domain", "information_cutoff_at", "available_at", "origin", "purpose", "scenario"}
+   690	             and document["clock_domain"] == clock_domain()
+   691	             and document["origin"] in ("development", "past_observations")
+   692	             and document["purpose"] in ("train", "evaluation", "engineering"),
+   693	             "causal_scenario_file_clock_or_fields")
+   694	    scenario = dict(document["scenario"])
+   695	    scenario["offers"] = tuple(FutureOffer(**row) for row in scenario["offers"])
+   696	    scenario = Scenario(**scenario)
+   697	    fingerprint = hashlib.sha256(raw).hexdigest()
+   698	
+   699	    def factory(snapshot):
+   700	        _require(snapshot.clock_domain == document["clock_domain"] == clock_domain(),
+   701	                 "causal_scenario_clock_changed")
+   702	        return CausalScenario(scenario, StateVersion.from_snapshot(snapshot), fingerprint,
+   703	                              document["information_cutoff_at"], document["available_at"],
+   704	                              document["origin"], document["purpose"])
+   705	
+   706	    return factory, {"file_sha256": fingerprint, "origin": document["origin"], "purpose": document["purpose"]}
+   707	
+   708	
+   709	def load_train_scenario(path, *, purpose, clock=time.monotonic):
+   710	    """Freeze Train once; bind static content, not the new process's availability."""
+   711	    import nominal_scenario as producer
+   712	
+   713	    module_paths()
+   714	    _require(purpose in ("train", "evaluation", "engineering"), "explicit_forecast_purpose_required")
+   715	    prior = producer.freeze_train_prior(path, purpose="train", clock_domain=clock_domain(), clock=clock)
+   716	    content = {key: value for key, value in asdict(prior).items()
+   717	               if key not in ("clock_domain", "available_at")}
+   718	    sources = {
+   719	        "nominal_scenario.py": hashlib.sha256(Path(producer.__file__).read_bytes()).hexdigest(),
+   720	        "nominal_workload.py": hashlib.sha256(Path(producer.workload.__file__).read_bytes()).hexdigest(),
+   721	    }
+   722	    binding = {
+   723	        "provider": "frozen-Train-nominal-scenario-v1", "purpose": purpose,
+   724	        "prior_content": content, "prior_content_sha256": prior.content_sha256,
+   725	        "clock_domain": prior.clock_domain, "producer_sources": sources,
+   726	        "rng": {
+   727	            "namespace": producer.RNG_NAMESPACE, "seed": producer.RNG_SEED,
+   728	            "runtime": f"Python {sys.version.split()[0]} stdlib random.Random(str, version=2)/expovariate/randrange",
+   729	            "horizon_s": producer.HORIZON_S, "max_offers": producer.MAX_OFFERS,
+   730	        },
+   731	        "assumptions": producer.ASSUMPTIONS,
+   732	    }
+   733	
+   734	    def factory(snapshot):
+   735	        return producer.make_scenario(prior, snapshot, purpose=purpose, clock=clock).causal
+   736	
+   737	    return factory, binding
+   738	
+   739	
+   740	async def wait_for_start(runtime, *, cli_entered):
+   741	    """Wait before run() entry; an existing validated journal resumes its old episode."""
+   742	    now = runtime._now()
+   743	    receipt = {"requested_start_at": runtime.start_at, "cli_entered_at": cli_entered,
+   744	               "wait_entered_at": now, "resumed_existing_episode": False}
+   745	    if runtime.start_at is None:
+   746	        return {**receipt, "wait_finished_at": now}
+   747	    runtime._binding()
+   748	    if runtime.store.path.exists():
+   749	        with runtime.store.locked():
+   750	            saved = runtime.store.read()
+   751	        _require(saved is not None and saved["identity"] == asdict(runtime.identity)
+   752	                 and saved["protocol_sha256"] == runtime.protocol_sha256
+   753	                 and saved["clock_domain"] == clock_domain()
+   754	                 and runtime.start_at <= saved["episode_started_at"] <= now < saved["episode_deadline"],
+   755	                 "shared_start_restart_binding_or_episode_invalid")
+   756	        return {**receipt, "wait_finished_at": runtime._now(), "resumed_existing_episode": True}
+   757	    end = cli_entered + 60.0
+   758	    if runtime.enabled:
+   759	        _require(type(runtime.permit) is NominalDemoPermit and runtime.permit.approved is True
+   760	                 and finite(runtime.permit.not_before) and finite(runtime.permit.expires_at)
+   761	                 and 0 <= runtime.permit.not_before <= runtime.start_at < runtime.permit.expires_at
+   762	                 and 0 < runtime.permit.expires_at - runtime.permit.not_before <= 60.0,
+   763	                 "shared_start_outside_nominal_permit")
+   764	        end = min(end, runtime.permit.expires_at)
+   765	    _require(finite(cli_entered) and cli_entered <= now <= runtime.start_at
+   766	             and runtime.start_at + runtime.limits.episode_s <= end,
+   767	             "shared_start_past_or_outside_envelope")
+   768	    async with asyncio.timeout(end - now):
+   769	        remaining = runtime.start_at - runtime._now()
+   770	        if remaining > 0:
+   771	            await runtime.sleeper(remaining)
+   772	    finished = runtime._now()
+   773	    _require(runtime.start_at <= finished and finished + runtime.limits.episode_s <= end,
+   774	             "shared_start_wait_exhausted_envelope")
+   775	    return {**receipt, "wait_finished_at": finished, "CLI_envelope_deadline": end}
+   776	
+   777	
+   778	def main(argv=None):
+   779	    cli_entered = time.monotonic()
+   780	    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+   781	    parser.add_argument("--url", default="http://127.0.0.1:8080")
+   782	    parser.add_argument("--journal", type=Path, required=True)
+   783	    source = parser.add_mutually_exclusive_group()
+   784	    source.add_argument("--scenario-file", type=Path)
+   785	    source.add_argument("--train-tape", type=Path)
+   786	    parser.add_argument("--forecast-purpose", choices=("train", "evaluation", "engineering"))
+   787	    parser.add_argument("--cost-spec-file", type=Path)
+   788	    parser.add_argument("--policy", choices=("mpc", "one_move"), default="mpc")
+   789	    parser.add_argument("--steps", type=int, default=4)
+   790	    parser.add_argument("--episode-seconds", type=float, default=4.0)
+   791	    parser.add_argument("--poll-seconds", type=float, default=0.0)
+   792	    parser.add_argument("--describe-protocol", action="store_true")
+   793	    parser.add_argument("--start-at", type=float)
+   794	    parser.add_argument("--experimental-nominal-demo", action="store_true")
+   795	    parser.add_argument("--nominal-permit", type=Path)
+   796	    args = parser.parse_args(argv)
+   797	    if (args.train_tape is not None) != (args.forecast_purpose is not None):
+   798	        parser.error("--train-tape requires an explicit --forecast-purpose, used only with Train")
+   799	    if not args.describe_protocol and args.experimental_nominal_demo and (
+   800	            args.nominal_permit is None or (args.scenario_file is None and args.train_tape is None)):
+   801	        parser.error("experimental POST requires a separate nominal permit and causal scenario file or Train tape")
+   802	    endpoint = _root_endpoint(args.url)
+   803	    cost = CostSpec(**_strict(args.cost_spec_file.read_bytes())) if args.cost_spec_file else CostSpec()
+   804	    planner = NominalPlanner(ModelParameters(cost_spec=cost))
+   805	    if args.train_tape:
+   806	        factory, binding = load_train_scenario(args.train_tape, purpose=args.forecast_purpose)
+   807	    else:
+   808	        factory, binding = load_causal_scenario(args.scenario_file) if args.scenario_file else (None, {"kind": "observe_only"})
+   809	    limits = RuntimeLimits(iterations=args.steps, episode_s=args.episode_seconds, poll_s=args.poll_seconds)
+   810	    if args.describe_protocol:
+   811	        print(json.dumps(describe_protocol(
+   812	            planner, args.journal, endpoint=endpoint, scenario_binding=binding,
+   813	            policy=args.policy, limits=limits, start_at=args.start_at,
+   814	        ), sort_keys=True, allow_nan=False))
+   815	        return
+   816	    permit = _load_permit(args.nominal_permit) if args.nominal_permit else None
+   817	    key = os.environ.get("ADMIN_API_KEY", "")
+   818	    _require(bool(key), "ADMIN_API_KEY_required")
+   819	
+   820	    async def execute():
+   821	        async with httpx.AsyncClient(base_url=endpoint, follow_redirects=False, trust_env=False) as client:
+   822	            runtime = NominalRuntime(
+   823	                client, planner, factory, args.journal, admin_key=key, scenario_binding=binding,
+   824	                permit=permit, enabled=args.experimental_nominal_demo, policy=args.policy,
+   825	                limits=limits, start_at=args.start_at,
+   826	            )
+   827	            startup = await wait_for_start(runtime, cli_entered=cli_entered)
+   828	            result = await runtime.run()
+   829	            result.update(startup=startup, module_paths=module_paths())
+   830	            return result
+   831	
+   832	    print(json.dumps(asyncio.run(execute()), sort_keys=True, allow_nan=False))
+   833	
+   834	
+   835	if __name__ == "__main__":
+   836	    main()

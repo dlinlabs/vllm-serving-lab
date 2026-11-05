@@ -1,0 +1,229 @@
+{
+  "all_known_helpers_joined_or_finished": true,
+  "clients": [
+    {
+      "case": "test_ack_without_reobservation_stays_pending_and_ack_is_not_erased",
+      "clients_closed": [
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_cli02_describe_is_offline_stable_and_standalone",
+      "clients_closed": [],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_cli02_input_refusals_and_partial_planning_inputs_are_retained",
+      "clients_closed": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_cli02_pending_restart_reuses_static_train_and_start_bindings",
+      "clients_closed": [
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start",
+      "clients_closed": [
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_command_count_and_episode_deadline_survive_restart",
+      "clients_closed": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_concurrent_owner_refuses_and_cancelled_post_releases_its_lock",
+      "clients_closed": [
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": [
+        true
+      ]
+    },
+    {
+      "case": "test_default_off_missing_permit_and_hold_are_not_application",
+      "clients_closed": [
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_every_first_action_replans_and_reobserves",
+      "clients_closed": [
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_fsync_failure_preserves_partial_and_refuses_restart_before_post",
+      "clients_closed": [
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_original_entry_covers_get_solve_and_durable_persistence",
+      "clients_closed": [
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_precommit_run_clock_identity_cas_sequence_and_ledger_changes_refuse",
+      "clients_closed": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_real_planner_feedback",
+      "clients_closed": [
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_root03_canonicalization_preserves_strict_endpoint_binding",
+      "clients_closed": [
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_snapshot_capability_costs_freshness_and_strict_raw_json",
+      "clients_closed": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_source_configuration_and_unresolved_journal_cannot_be_substituted",
+      "clients_closed": [
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    },
+    {
+      "case": "test_unknown_timeout_and_malformed_ack_need_observed_restart_fences",
+      "clients_closed": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "tasks_joined": []
+    }
+  ],
+  "identities": [
+    {
+      "fresh_original_identity_gone": true,
+      "owner": "preparation",
+      "pid": 1653560,
+      "start_ticks": "92789049"
+    },
+    {
+      "fresh_original_identity_gone": true,
+      "owner": "bounded test supervisor",
+      "pid": 1654621,
+      "start_ticks": "92790705",
+      "state": "R"
+    },
+    {
+      "fresh_original_identity_gone": true,
+      "owner": "unittest process",
+      "pid": 1654626,
+      "start_ticks": "92790708",
+      "state": "R"
+    },
+    {
+      "PYTHONPATH_unset": true,
+      "command": [
+        "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+        "-B",
+        "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py",
+        "--url",
+        "http://cpu.invalid",
+        "--journal",
+        "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-runtime03/attempts/generation01-py312/artifacts/test_cli02_describe_is_offline_stable_and_standalone/journal.json",
+        "--train-tape",
+        "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/mpc-native-r24/reviews/resume-p0-workload-author01/tapes-v1/train.tape.json",
+        "--forecast-purpose",
+        "engineering",
+        "--steps",
+        "2",
+        "--episode-seconds",
+        "3",
+        "--poll-seconds",
+        "0.02",
+        "--describe-protocol",
+        "--start-at",
+        "1000000000",
+        "--experimental-nominal-demo",
+        "--nominal-permit",
+        ".runtime/r24-resume-p0-nominal-runtime03/attempts/generation01-py312/artifacts/test_cli02_describe_is_offline_stable_and_standalone/must-not-read.json"
+      ],
+      "cwd": ".runtime/r24-resume-p0-nominal-runtime03/attempts/generation01-py312/artifacts/test_cli02_describe_is_offline_stable_and_standalone/outside-root",
+      "fresh_original_identity_gone": true,
+      "joined": true,
+      "original_identity_gone": true,
+      "owner": "offline standalone CLI child",
+      "pid": 1654638,
+      "returncode": 0,
+      "start_ticks": "92790725"
+    }
+  ],
+  "not_universal_engine_or_campaign_cleanup": true,
+  "owned_async_tasks_joined": 1,
+  "runtime_workers": []
+}

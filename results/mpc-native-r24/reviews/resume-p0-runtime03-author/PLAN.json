@@ -1,0 +1,52 @@
+{
+  "schema": "nominal-runtime03-correction-plan-v1",
+  "scope": "One bounded correction of the runtime02 root-URL binding failure; no modeling or Native campaign.",
+  "parent_authorization": "Mayor explicit runtime03 correction instruction, 2026-11-04T15:31:20.033-08:00",
+  "owned_public_files": [
+    "experiments/mpc-research/resume-mvp/nominal_runtime.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_runtime.py"
+  ],
+  "immutable_failed_predecessor": {
+    "scope": ".runtime/r24-resume-p0-nominal-runtime02",
+    "seal_sha256": "d290c5a7768e62cc3d7b3a8481569b0f8eb488c88913a6dbf3556a57f6c71213",
+    "result": "1 PASS / 1 FAIL / 2 ERROR; no retry",
+    "runtime_sha256": "d3cf02e48b95aa119441dc5b562b8b5b84e27c5b38ee62aaa9eeec615861d27c",
+    "test_sha256": "ab69a62e2b35f1740d1f4c983a70f371e7b674ead15fd6f1b0b770a96e0b45a9"
+  },
+  "pre_edit_input_bindings": "BASELINE_INPUT_PINS.json",
+  "correction": {
+    "implementation": "One strict canonical-root helper reused by protocol construction and current endpoint binding; retain nonredirecting clients.",
+    "equivalence": "Supported HTTP(S) origin root with no trailing slash or exactly one trailing slash.",
+    "refusals": "Userinfo including empty userinfo, query or fragment including empty markers, non-root paths, unsupported/relative URLs, whitespace/control-bearing URLs, and changed origin.",
+    "unchanged": "Identity/source/clock/deadline/CAS/ledger/permit guards, existing CLI integration, default-OFF behavior, pending and command-count persistence."
+  },
+  "validation": {
+    "source_generations": 1,
+    "attempts": 1,
+    "interpreter": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+    "runner": "One unittest discovery invocation limited to test_nominal_runtime.py.",
+    "existing_runtime_controls": 12,
+    "unchanged_cli02_controls": 4,
+    "new_canonicalization_controls": 1,
+    "expected_total_controls": 17,
+    "transport": "CPU-only httpx.MockTransport; no external HTTP",
+    "timeout_s": 120,
+    "termination_join_grace_s": 3,
+    "environment": "unset PYTHONPATH, threads=1, no bytecode, no pytest autoload/cache, PYTHONHASHSEED=0, nice -n19, -B",
+    "on_failure": "Retain exact sources, all failures and cleanup receipts; stop without another generation or retry."
+  },
+  "handoff": [
+    "Source copies, before/after pins and exact source diff",
+    "Executable CLI interface, exact commands, raw logs and per-control artifacts",
+    "Current result and immutable predecessor-failure linkage",
+    "Fresh owned process/client/task cleanup receipts",
+    "Structured limitations, REPORT.json, SHA256SUMS and seal receipt"
+  ],
+  "qualification_limits": {
+    "Native14": "Rejected; not requalified by this runtime.",
+    "B": "Requires at least two consecutive real observe/predict/plan/actual-first-action-apply/reobserve cycles and actual admission-behavior change evidence. MockTransport and cap ACKs do not satisfy this.",
+    "authority": "No real approval artifact; experimental flag remains default OFF with separate scoped permit required.",
+    "prohibited": "No agents, broadcasts, model changes, Git, SDK/product/peer edits, network, SSH, GPU, rentals, installs, Eval access, workload regeneration or large tapes.",
+    "ownership": "Runtime journal lock and CPU test clients/known helpers only; no universal campaign, engine or service cleanup claim."
+  }
+}

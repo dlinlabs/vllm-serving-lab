@@ -1,0 +1,485 @@
+{
+  "acquisition_token": null,
+  "actual_application_at": null,
+  "closure": {
+    "baseline_publications": {
+      "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+        "put_finished_at": 912886.010281537,
+        "put_started_at": 912886.010273437
+      }
+    },
+    "capture_id": "nv2-team16-cut-consumer02-fixed32",
+    "capture_started_at": 912886.011195737,
+    "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "gateway_run_id": "synthetic-gateway",
+    "initial_cut_at": 912886.020574537,
+    "initial_sequence": 1,
+    "native_run_id": "synthetic-native",
+    "native_sources": {
+      "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+      "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+      "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+      "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b"
+    }
+  },
+  "confirmation": {
+    "acknowledgement_is_application": false,
+    "actual_application_before_deadline": "established_by_interval_upper",
+    "actual_application_interval": [
+      912886.010897937,
+      912886.010916637
+    ],
+    "actual_applied_at": null,
+    "before_budget": 32,
+    "before_version": 0,
+    "client_receive_at": 912886.010916637,
+    "client_send_at": 912886.010823337,
+    "interval_justification": "Pinned synchronous write before response, corroborated by the next real public state.",
+    "next_budget": 32,
+    "next_public_sampled_at": 912886.010935237,
+    "next_version": 1,
+    "raw_server_applied_at_claim": 912886.010897937,
+    "server_checked_at": 912886.010897937,
+    "server_checked_semantics": "source_proven_pre_write_expiry_sample",
+    "server_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "server_received_at": null,
+    "server_received_interval": [
+      912886.010823337,
+      912886.010897937
+    ],
+    "server_received_observability": "not_exposed",
+    "server_run_id": "synthetic-gateway",
+    "status": "observed_budget_transition_interval_censored"
+  },
+  "cut": {
+    "baseline_native_ids": [
+      "chatcmpl-ffffffffffffffffffffffffffffffff-11111111"
+    ],
+    "capture_initialization_verified": false,
+    "common_clock_proof": {
+      "capture_verified": false,
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "clock_process_binding_only": true,
+      "gateway_run_id": "synthetic-gateway",
+      "native_mpc_permitted": false,
+      "native_run_id": "synthetic-native",
+      "oldest_source_age_s": 0.007349299965426326,
+      "owner_inventory_verified": false,
+      "schema": "r24-owned-common-clock-proof-v1",
+      "validated_at": 912886.027923837
+    },
+    "cut_at": 912886.020574537,
+    "deployable": false,
+    "gateway_process_proof": {
+      "boot_id": "bf25e215-1377-4585-a5fa-f5181f96f467",
+      "capture_verified": false,
+      "checked_from": 912886.023632737,
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "clock_source_sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f",
+      "collector": {
+        "parent_pid": 1,
+        "pid": 900,
+        "pid_namespace": "pid:[4026532214]",
+        "process_group": 900,
+        "session": 900,
+        "start_ticks": 5,
+        "time_namespace": "time:[4026531834]"
+      },
+      "endpoint_pid_binding": "trusted_owned_single_process_gateway",
+      "native_mpc_permitted": false,
+      "owned_chain": [
+        {
+          "parent_pid": 900,
+          "pid": 200,
+          "pid_namespace": "pid:[4026532214]",
+          "process_group": 200,
+          "session": 200,
+          "start_ticks": 40,
+          "time_namespace": "time:[4026531834]"
+        }
+      ],
+      "owner_inventory_verified": false,
+      "process_clock_verified_under_trust_model": true,
+      "received_at": 912886.025437037,
+      "remaining_obligations": [
+        "Caller-authenticated startup, endpoint and installed-source provenance",
+        "No unobserved transient namespace/identity ABA during acquisition",
+        "Native complete capture, initial-drain and common-cut inventory closure",
+        "Recheck proof compatibility and age through later planning/dispatch"
+      ],
+      "request_sent_at": 912886.023637737,
+      "role": "gateway",
+      "run_id": "synthetic-gateway",
+      "sample_finished_at": 912886.024882137,
+      "schema": "r24-owned-process-clock-proof-v1",
+      "source_age_s": 0.0005598000716418028,
+      "source_at": 912886.024882137,
+      "validated_at": 912886.025441937
+    },
+    "native_absence_verified": false,
+    "native_common_cut_verified": false,
+    "native_mpc_permitted": false,
+    "native_observation": {
+      "base": {
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "complete": true,
+        "frontend_sampled_at": 912886.020792737,
+        "frontend_unfinished": 0,
+        "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+        "orphaned": 0,
+        "pending_batches": 0,
+        "requests": [],
+        "run_id": "synthetic-native",
+        "running": 0,
+        "sampled_at": 912886.020725737,
+        "schema": "pr33-native-read-only-v1",
+        "waiting": 0
+      },
+      "complete": true,
+      "native_phase": {
+        "capture": {
+          "started_at": 912886.011195737,
+          "status": "running",
+          "trial_id": "nv2-team16-cut-consumer02-fixed32"
+        },
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "complete": true,
+        "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+        "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+        "lifecycle": {},
+        "missing_schedule_starts": [],
+        "native_mpc_permitted": false,
+        "process_identity": {
+          "pid": 111,
+          "pid_namespace": "pid:[4026532214]",
+          "start_ticks": 30
+        },
+        "publications": {
+          "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+            "put_finished_at": 912886.010281537,
+            "put_started_at": 912886.010273437
+          }
+        },
+        "queue_age_prefix_complete": true,
+        "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+        "queue_schedule_starts": {},
+        "refusal_reasons": [],
+        "run_id": "synthetic-native",
+        "sample_finished_at": 912886.020791837,
+        "schema": "r24-native-live-phase-v1",
+        "scope": "Serialized core lifecycle plus coherently retained input-publication brackets; all retained publication history is returned without assuming a capture-time boundary excludes pending inputs. Schedule starts are CPU scheduler entry, not GPU start/readiness. No Gateway owner join, source-age propagation, residual ingress model or deployment qualification.",
+        "source_at": 912886.020574537,
+        "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b",
+        "writer_generation_after": 2,
+        "writer_generation_before": 2
+      },
+      "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+      "queue_oldest_first": [],
+      "queued_ghost_request_ids": [],
+      "refusal_reasons": [],
+      "sample_finished_at": 912886.020728237,
+      "sample_started_at": 912886.020577837,
+      "scheduler_state": {
+        "requests": {},
+        "running": [],
+        "waiting": []
+      },
+      "schema": "r23-native-queue-read-only-v1",
+      "skipped_waiting": [],
+      "streaming_waiting": 0
+    },
+    "native_process_proof": {
+      "boot_id": "bf25e215-1377-4585-a5fa-f5181f96f467",
+      "capture_verified": false,
+      "checked_from": 912886.020047737,
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "clock_source_sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f",
+      "collector": {
+        "parent_pid": 1,
+        "pid": 900,
+        "pid_namespace": "pid:[4026532214]",
+        "process_group": 900,
+        "session": 900,
+        "start_ticks": 5,
+        "time_namespace": "time:[4026531834]"
+      },
+      "endpoint_pid_binding": "authenticated_core_metadata",
+      "native_mpc_permitted": false,
+      "owned_chain": [
+        {
+          "parent_pid": 110,
+          "pid": 111,
+          "pid_namespace": "pid:[4026532214]",
+          "process_group": 100,
+          "session": 100,
+          "start_ticks": 30,
+          "time_namespace": "time:[4026531834]"
+        },
+        {
+          "parent_pid": 100,
+          "pid": 110,
+          "pid_namespace": "pid:[4026532214]",
+          "process_group": 100,
+          "session": 100,
+          "start_ticks": 20,
+          "time_namespace": "time:[4026531834]"
+        },
+        {
+          "parent_pid": 900,
+          "pid": 100,
+          "pid_namespace": "pid:[4026532214]",
+          "process_group": 100,
+          "session": 100,
+          "start_ticks": 10,
+          "time_namespace": "time:[4026531834]"
+        }
+      ],
+      "owner_inventory_verified": false,
+      "process_clock_verified_under_trust_model": true,
+      "received_at": 912886.021288137,
+      "remaining_obligations": [
+        "Caller-authenticated startup, endpoint and installed-source provenance",
+        "No unobserved transient namespace/identity ABA during acquisition",
+        "Native complete capture, initial-drain and common-cut inventory closure",
+        "Recheck proof compatibility and age through later planning/dispatch"
+      ],
+      "request_sent_at": 912886.020061637,
+      "role": "native",
+      "run_id": "synthetic-native",
+      "sample_finished_at": 912886.020791837,
+      "schema": "r24-owned-process-clock-proof-v1",
+      "source_age_s": 0.0007238000398501754,
+      "source_at": 912886.020574537,
+      "validated_at": 912886.021298337
+    },
+    "oldest_source_age_s": 0.007349299965426326,
+    "owner_prefix": {
+      "acquisition": "explicit_serialized_flush",
+      "age_as_of_receiver_clock": 912886.027917837,
+      "barrier": {
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "dropped": 0,
+        "flush_finished_at": 912886.026542137,
+        "flush_started_at": 912886.026292337,
+        "flushed_through_sequence": 1,
+        "native_mpc_permitted": false,
+        "process_identity": {
+          "pid": 200,
+          "pid_namespace": "pid:[4026532214]",
+          "start_ticks": 40
+        },
+        "run_id": "synthetic-gateway",
+        "sample_finished_at": 912886.026544837,
+        "schema": "r24-gateway-flushed-prefix-v1",
+        "scope": "Serialized append completion, not fsync crash durability or native common-cut proof.",
+        "source_at": 912886.026238237,
+        "source_sha256": "9cd3c7dee081a34a965f3bba4db3494c0283c79d7fd8449123811ffbc6e81cbb",
+        "write_errors": 0
+      },
+      "barrier_received_at": 912886.026860537,
+      "barrier_roundtrip_s": 0.0012889000354334712,
+      "barrier_sent_at": 912886.025571637,
+      "barrier_sha256": "24ac04bdf144144ab3d1aedad837289158bb239c5294abc3bdef78561df5db18",
+      "budget": 32,
+      "budget_version": 1,
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "closed_through_sequence": 1,
+      "cut_at": 912886.020574537,
+      "deployable": false,
+      "gateway_prefix_closed": true,
+      "native_absence_verified": false,
+      "native_common_cut_verified": false,
+      "native_mpc_permitted": false,
+      "native_run_id": "synthetic-native",
+      "owners": [],
+      "prefix_bytes": 938,
+      "receipt": {
+        "prefix_received_at": 912886.027076937,
+        "prefix_sha256": "ab36a419d044ed3063c65e5b0412960f6dd97edf7602f908f11f85c24593ac07",
+        "prefix_started_at": 912886.026901337,
+        "snapshot_received_at": 912886.025533337,
+        "snapshot_sent_at": 912886.023391237,
+        "snapshot_sha256": "ffb55e794457de77e8458d95ccd831d7b30a5f70ed86f75d7a72c3fa14f18c76"
+      },
+      "released_native_ids": [],
+      "run_id": "synthetic-gateway",
+      "schema": "r24-gateway-live-owner-prefix-v1",
+      "scope": "Gateway-time owner facts from received prefix; ledger admission linearization, not exact RequestMark time. No native phase, readiness, cancellation, GPU retirement or residual inferred.",
+      "snapshot": {
+        "budget": 32,
+        "budget_version": 1,
+        "capabilities": [
+          "mpc-budget-cas-expiry-v1"
+        ],
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "complete": true,
+        "cost_spec": {
+          "default_max_tokens": 128,
+          "estimator_version": "gateway-token-estimate-v1",
+          "input_per_token": 0,
+          "intercept": 16,
+          "minimum": 0.1,
+          "output_per_token": 0,
+          "tokenizer_identity": "unqualified"
+        },
+        "identity": {
+          "calibration_version": "unqualified",
+          "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+          "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+          "model_version": "synthetic",
+          "support_hash": "unqualified"
+        },
+        "requests": [],
+        "run_id": "synthetic-gateway",
+        "sampled_at": 912886.024882137,
+        "schema": "mpc-admission-v1",
+        "sequence": 1
+      },
+      "snapshot_at": 912886.024882137,
+      "source_age_upper_s": 0.008834199979901314,
+      "trial_liveness_verified": false,
+      "validation_elapsed_s": 0.0008272000122815371
+    },
+    "schema": "r24-clocked-owner-cut-v1",
+    "scope": "Native-clock cut and strictly later Gateway received prefix, under owned-process/source trust. Initial-drain/capture history closure, owner-to-native phase classification and residual scenarios remain separate obligations.",
+    "validated_at": 912886.027923837
+  },
+  "deployable": false,
+  "exact_application_time_gate": false,
+  "initial_closure": {
+    "baseline_publications": {
+      "chatcmpl-ffffffffffffffffffffffffffffffff-11111111": {
+        "put_finished_at": 912886.010281537,
+        "put_started_at": 912886.010273437
+      }
+    },
+    "capture_id": "nv2-team16-cut-consumer02-fixed32",
+    "capture_started_at": 912886.011195737,
+    "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "gateway_run_id": "synthetic-gateway",
+    "initial_cut_at": 912886.020574537,
+    "initial_sequence": 1,
+    "native_run_id": "synthetic-native",
+    "native_sources": {
+      "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+      "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+      "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+      "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b"
+    }
+  },
+  "native_execution_authorized": false,
+  "native_mpc_permitted": false,
+  "native_record": {
+    "auth_values_captured": false,
+    "body_complete": true,
+    "call_settings": {
+      "absolute_deadline": 912886.512796137,
+      "body_cap_bytes": 1048576,
+      "http_timeout_s": 0.2,
+      "maximum_http_exchanges": 1900
+    },
+    "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "client_headers_at": 912886.020922337,
+    "client_receive_at": 912886.020940237,
+    "client_send_at": 912886.020390237,
+    "credential_removed": false,
+    "dispatch_attempted": true,
+    "error_type": null,
+    "http_status": 200,
+    "method": "GET",
+    "path": "/pr33-native/phase-state",
+    "request_body": null,
+    "request_id": null,
+    "reserved_at": 912886.020224437,
+    "response_body_base64": "ewogICAic2NoZW1hIjogInIyMy1uYXRpdmUtcXVldWUtcmVhZC1vbmx5LXYxIiwKICAgInF1ZXVlX29ic2VydmVyX3NoYTI1NiI6ICJlMDc4N2EyY2QyZDBiNGNmYjVhZGExNGMwMDRkMWQ3NmE2MmRkY2JmYjEyMGI1Y2VhOWRlMDJhZjM4YTFhYTkzIiwKICAgInNhbXBsZV9zdGFydGVkX2F0IjogOTEyODg2LjAyMDU3NzgzNywKICAgImNvbXBsZXRlIjogdHJ1ZSwKICAgInJlZnVzYWxfcmVhc29ucyI6IFtdLAogICAic2NoZWR1bGVyX3N0YXRlIjogewogICAgICAicnVubmluZyI6IFtdLAogICAgICAid2FpdGluZyI6IFtdLAogICAgICAicmVxdWVzdHMiOiB7fQogICB9LAogICAicXVldWVfb2xkZXN0X2ZpcnN0IjogW10sCiAgICJxdWV1ZWRfZ2hvc3RfcmVxdWVzdF9pZHMiOiBbXSwKICAgInNraXBwZWRfd2FpdGluZyI6IFtdLAogICAic3RyZWFtaW5nX3dhaXRpbmciOiAwLAogICAiYmFzZSI6IHsKICAgICAgInNjaGVtYSI6ICJwcjMzLW5hdGl2ZS1yZWFkLW9ubHktdjEiLAogICAgICAib2JzZXJ2ZXJfc2hhMjU2IjogIjc3NjMzZGM3NjUyMDY2ZTQ1Yjc2ODBkMjk3ZDNlMzZkZGI5N2EzZTEyMjIyZGU5ZjUyNmE3NmI5YTAxZDY2YjQiLAogICAgICAicnVuX2lkIjogInN5bnRoZXRpYy1uYXRpdmUiLAogICAgICAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLAogICAgICAic2FtcGxlZF9hdCI6IDkxMjg4Ni4wMjA3MjU3MzcsCiAgICAgICJjb21wbGV0ZSI6IHRydWUsCiAgICAgICJydW5uaW5nIjogMCwKICAgICAgIndhaXRpbmciOiAwLAogICAgICAicGVuZGluZ19iYXRjaGVzIjogMCwKICAgICAgImZyb250ZW5kX3VuZmluaXNoZWQiOiAwLAogICAgICAicmVxdWVzdHMiOiBbXSwKICAgICAgIm9ycGhhbmVkIjogMCwKICAgICAgImZyb250ZW5kX3NhbXBsZWRfYXQiOiA5MTI4ODYuMDIwNzkyNzM3CiAgIH0sCiAgICJzYW1wbGVfZmluaXNoZWRfYXQiOiA5MTI4ODYuMDIwNzI4MjM3LAogICAibmF0aXZlX3BoYXNlIjogewogICAgICAic2NoZW1hIjogInIyNC1uYXRpdmUtbGl2ZS1waGFzZS12MSIsCiAgICAgICJzb3VyY2Vfc2hhMjU2IjogIjdkZDg2NmJhYzI1ZmU1ZDIxMWM4MmQxOTZmMDk1NGM2ZDczN2I5YTM1MWRhNGNiOWQ5Y2U2NTIyYzZhOGZhOWIiLAogICAgICAiaW5wdXRfcG9zdF9zb3VyY2Vfc2hhMjU2IjogImQ1Y2U3NDMyMDM1NTY4ZTc2NGZiYTk3ZGQ1YTcxYzMxZDE2YTM1NzEyNjJiMmUyNTkzMjEyYWIxMzIzNDI3NjQiLAogICAgICAicXVldWVfb2JzZXJ2ZXJfc2hhMjU2IjogImUwNzg3YTJjZDJkMGI0Y2ZiNWFkYTE0YzAwNGQxZDc2YTYyZGRjYmZiMTIwYjVjZWE5ZGUwMmFmMzhhMWFhOTMiLAogICAgICAiY29yZV9zb3VyY2Vfc2hhMjU2IjogIjI2OGJmNDA1MzRhODUzODEyODY3YWU4ZTgwMDQwZjE5MDk4M2NiMzY0YjQxMTgyYjU1OTY5YWFjZTIwYzkzZjUiLAogICAgICAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLAogICAgICAicnVuX2lkIjogInN5bnRoZXRpYy1uYXRpdmUiLAogICAgICAicHJvY2Vzc19pZGVudGl0eSI6IHsKICAgICAgICAgInBpZCI6IDExMSwKICAgICAgICAgInN0YXJ0X3RpY2tzIjogMzAsCiAgICAgICAgICJwaWRfbmFtZXNwYWNlIjogInBpZDpbNDAyNjUzMjIxNF0iCiAgICAgIH0sCiAgICAgICJzb3VyY2VfYXQiOiA5MTI4ODYuMDIwNTc0NTM3LAogICAgICAiY2FwdHVyZSI6IHsKICAgICAgICAgInRyaWFsX2lkIjogIm52Mi10ZWFtMTYtY3V0LWNvbnN1bWVyMDItZml4ZWQzMiIsCiAgICAgICAgICJzdGFydGVkX2F0IjogOTEyODg2LjAxMTE5NTczNywKICAgICAgICAgInN0YXR1cyI6ICJydW5uaW5nIgogICAgICB9LAogICAgICAibGlmZWN5Y2xlIjoge30sCiAgICAgICJwdWJsaWNhdGlvbnMiOiB7CiAgICAgICAgICJjaGF0Y21wbC1mZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZi0xMTExMTExMSI6IHsKICAgICAgICAgICAgInB1dF9zdGFydGVkX2F0IjogOTEyODg2LjAxMDI3MzQzNywKICAgICAgICAgICAgInB1dF9maW5pc2hlZF9hdCI6IDkxMjg4Ni4wMTAyODE1MzcKICAgICAgICAgfQogICAgICB9LAogICAgICAid3JpdGVyX2dlbmVyYXRpb25fYmVmb3JlIjogMiwKICAgICAgIndyaXRlcl9nZW5lcmF0aW9uX2FmdGVyIjogMiwKICAgICAgInF1ZXVlX3NjaGVkdWxlX3N0YXJ0cyI6IHt9LAogICAgICAibWlzc2luZ19zY2hlZHVsZV9zdGFydHMiOiBbXSwKICAgICAgInF1ZXVlX2FnZV9wcmVmaXhfY29tcGxldGUiOiB0cnVlLAogICAgICAicmVmdXNhbF9yZWFzb25zIjogW10sCiAgICAgICJuYXRpdmVfbXBjX3Blcm1pdHRlZCI6IGZhbHNlLAogICAgICAic2NvcGUiOiAiU2VyaWFsaXplZCBjb3JlIGxpZmVjeWNsZSBwbHVzIGNvaGVyZW50bHkgcmV0YWluZWQgaW5wdXQtcHVibGljYXRpb24gYnJhY2tldHM7IGFsbCByZXRhaW5lZCBwdWJsaWNhdGlvbiBoaXN0b3J5IGlzIHJldHVybmVkIHdpdGhvdXQgYXNzdW1pbmcgYSBjYXB0dXJlLXRpbWUgYm91bmRhcnkgZXhjbHVkZXMgcGVuZGluZyBpbnB1dHMuIFNjaGVkdWxlIHN0YXJ0cyBhcmUgQ1BVIHNjaGVkdWxlciBlbnRyeSwgbm90IEdQVSBzdGFydC9yZWFkaW5lc3MuIE5vIEdhdGV3YXkgb3duZXIgam9pbiwgc291cmNlLWFnZSBwcm9wYWdhdGlvbiwgcmVzaWR1YWwgaW5ncmVzcyBtb2RlbCBvciBkZXBsb3ltZW50IHF1YWxpZmljYXRpb24uIiwKICAgICAgImNvbXBsZXRlIjogdHJ1ZSwKICAgICAgInNhbXBsZV9maW5pc2hlZF9hdCI6IDkxMjg4Ni4wMjA3OTE4MzcKICAgfQp9",
+    "response_body_sha256": "fe94426f76b3ac919cf87e81a0ff7b007357d8cbb4b2d918dd35c2839a813f90",
+    "response_bytes_captured": 2862,
+    "response_headers": {
+      "content-type": "application/json"
+    },
+    "role": "initial-cut-native",
+    "sequence": 0,
+    "target": {
+      "host": "127.0.0.1",
+      "port": 8000,
+      "scheme": "http"
+    }
+  },
+  "observation": {
+    "acquisition_token": null,
+    "actual_application_at": null,
+    "available_at": 912886.027923837,
+    "consumed_at": 912886.028377837,
+    "deployable": false,
+    "exact_application_time_gate": false,
+    "full_stock": {
+      "base": {
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "complete": true,
+        "frontend_sampled_at": 912886.020792737,
+        "frontend_unfinished": 0,
+        "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+        "orphaned": 0,
+        "pending_batches": 0,
+        "requests": [],
+        "run_id": "synthetic-native",
+        "running": 0,
+        "sampled_at": 912886.020725737,
+        "schema": "pr33-native-read-only-v1",
+        "waiting": 0
+      },
+      "queue_oldest_first": [],
+      "queued_ghost_request_ids": [],
+      "scheduler_state": {
+        "requests": {},
+        "running": [],
+        "waiting": []
+      },
+      "skipped_waiting": [],
+      "streaming_waiting": 0
+    },
+    "gateway_budget_version": 1,
+    "native_execution_authorized": false,
+    "native_mpc_permitted": false,
+    "prediction_qualified": false,
+    "qualified_model": false,
+    "request_token": null,
+    "source_at": 912886.020574537
+  },
+  "phases": {
+    "available_at": 912886.027923837,
+    "capture_id": "nv2-team16-cut-consumer02-fixed32",
+    "classified_at": 912886.030611337,
+    "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "cut_canonical_sha256": "6fd3f49e6fd2b734742558de03dca275065f780b4df167ada57e292cfc82b401",
+    "decision_time_state_verified": false,
+    "deployable": false,
+    "gateway_run_id": "synthetic-gateway",
+    "ghost_ids": [],
+    "initial_closure_canonical_sha256": "ebecac2d0745564e7577d225599b7d82b962d8a074fec139f9bea903424f66c5",
+    "native_mpc_permitted": false,
+    "native_run_id": "synthetic-native",
+    "owners": [],
+    "received_prefix_through_sequence": 1,
+    "released_ghost_ids": [],
+    "released_native_ids": [],
+    "requires_source_age_propagation": true,
+    "running_ids": [],
+    "schema": "r24-source-time-owner-phases-v1",
+    "scope": "Trusted clocked acquisition plus bound initial closure and actual-offer public memory. Phase/owner facts at historical native source T only. Later Gateway receipt closes T; it does not advance native state to decision time or provide ingress/release/HTTP residuals.",
+    "source_at": 912886.020574537,
+    "source_budget": 32,
+    "source_budget_version": 1,
+    "waiting_ids": []
+  },
+  "prediction_qualified": false,
+  "prefix": {
+    "bytes": 938,
+    "path": "initial-cut-prefix.jsonl",
+    "sha256": "ab36a419d044ed3063c65e5b0412960f6dd97edf7602f908f11f85c24593ac07"
+  },
+  "qualified_model": false,
+  "request_token": null,
+  "schema": "team16-owner-bootstrap-boundary-v1",
+  "status": "source_cut_received"
+}

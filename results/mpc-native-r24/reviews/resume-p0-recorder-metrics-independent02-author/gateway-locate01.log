@@ -1,0 +1,19 @@
+0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570  /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/gateway.py
+542:        identifier=request.headers.get('x-benchmark-request-id','')
+560:        request_id = request.headers.get('x-benchmark-request-id')
+568:                return JSONResponse({'detail': 'benchmark ID capacity exceeded'}, status_code=503)
+638:            if key.lower() not in {"host", "content-length", "x-admin-api-key", "x-benchmark-request-id"}
+640:        headers["x-request-id"] = request_id
+680:                {"detail": "request rejected: admission capacity exceeded",
+681:                 "estimated_request_cost": request_cost,
+686:                status_code=503, headers={"x-request-id": request_id},
+712:                            headers={"x-request-id": request_id})
+752:                    if key.lower() not in {"content-length", "transfer-encoding", "content-encoding", "x-request-id"}},
+753:                 "x-request-id": request_id},
+763:        return JSONResponse({"detail": "budget updates disabled"}, status_code=503)
+774:        return JSONResponse({"detail": "owner ledger unavailable"}, status_code=503)
+794:            return JSONResponse({"detail": "owner ledger unavailable"}, status_code=503)
+817:        return JSONResponse({"detail": "MPC admin disabled"}, status_code=503)
+859:        return JSONResponse({"detail": "owner ledger unavailable"}, status_code=503)
+888:            return JSONResponse({"detail": "owner ledger unavailable"}, status_code=503)
+906:            return JSONResponse({"detail": "operation outcome capacity"}, status_code=503)

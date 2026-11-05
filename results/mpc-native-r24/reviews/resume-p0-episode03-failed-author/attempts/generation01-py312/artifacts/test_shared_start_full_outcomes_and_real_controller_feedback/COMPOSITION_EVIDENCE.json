@@ -1,0 +1,79 @@
+{
+  "CPU_budget_commands": [],
+  "offered_start": 935058.2231979,
+  "original_deadline": 935064.2231979,
+  "requests": [
+    {
+      "at": 935059.474079201
+    },
+    {
+      "at": 935059.474578101
+    },
+    {
+      "at": 935059.474907601
+    },
+    {
+      "at": 935059.475207701
+    },
+    {
+      "at": 935059.475486901
+    }
+  ],
+  "reserve": 0.5,
+  "runtime_GETs": [
+    {
+      "active": 0,
+      "at": 935058.2361205,
+      "budget": 16.0,
+      "budget_version": 0,
+      "sequence": 0
+    },
+    {
+      "active": 0,
+      "at": 935058.867753,
+      "budget": 16.0,
+      "budget_version": 0,
+      "sequence": 0
+    },
+    {
+      "active": 4,
+      "at": 935059.511334501,
+      "budget": 16.0,
+      "budget_version": 0,
+      "sequence": 4
+    }
+  ],
+  "scope": "CPU-only real API/planner execution; not tokenizer validation or Native admission proof",
+  "status": "collected",
+  "summary": {
+    "completion_tokens_evidence": {
+      "not_applicable": 1,
+      "usage": 4
+    },
+    "fates": {
+      "cancelled": 0,
+      "complete": 4,
+      "http_error": 0,
+      "not_launched": 0,
+      "rejected": 1,
+      "stream_error": 0,
+      "transport_error": 0,
+      "unknown": 0
+    },
+    "finish_reason_evidence": {
+      "absent": 0,
+      "contradiction": 0,
+      "not_applicable": 1,
+      "observed": 4
+    },
+    "finish_reasons_of_complete": {
+      "stop": 4
+    },
+    "implementation_exceptions": 0,
+    "max_send_lag_s": 0.0022206009598448873,
+    "offered": 5,
+    "prompt_tokens_matched": 4,
+    "prompt_tokens_mismatch": 0,
+    "sent": 5
+  }
+}

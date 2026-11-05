@@ -1,0 +1,86 @@
+pinned-docs/resume_project_summary.md:3: Status: **research prototype; not Resume Ready for a real closed-loop MPC claim**.
+pinned-docs/resume_project_summary.md:13: control-timing instrumentation, reproducible workload/audit tooling, and
+pinned-docs/resume_project_summary.md:20: reobserves. The actuator changes gateway reservation budget, not the native
+pinned-docs/resume_project_summary.md:21: engine's token budget. [Architecture](architecture.md) distinguishes working
+pinned-docs/resume_project_summary.md:29: | Implemented finite-horizon policy-planning components | E2: independently accepted CPU/shadow tests. No native performance claim follows. |
+pinned-docs/resume_project_summary.md:31: | Preserved negative results and release blockers | E4/E5: incomplete native observation coverage and cleanup failure path; neither is relabelled PASS. |
+pinned-docs/resume_project_summary.md:33: Full traces, commands, configurations and exact commits are indexed in
+pinned-docs/resume_project_summary.md:45: | P0 | Explain original work, actuator, states, model limitations, objective and constraints without conflating gateway and engine state. | Documented; final independent claim audit pending. |
+pinned-docs/resume_project_summary.md:46: | P0 | One runnable, source-pinned path demonstrating repeated real observation, prediction, optimization, first-action application and reobservation. Retain refusals, timeouts and actual applied-state evidence. | **Missing native end-to-end evidence.** Shadow output and ACK-only evidence do not qualify. |
+pinned-docs/resume_project_summary.md:48: | P0 | Comparable descriptive GPU results for MPC, strong development-selected Fixed, FIFO and strong OneMove; same workload, model, resource limits and scoring. | **Not collected.** FIFO identity and missing throughput/fairness reporting require explicit resolution. |
+pinned-docs/resume_project_summary.md:50: | P0 | Portable commands/configurations, raw-to-table reconstruction and exact code/data commits; audit every quantitative resume claim. | Historical bundles exist; clean-checkout MVP reproduction remains unverified. |
+pinned-docs/resume_project_summary.md:63: 2. Freeze one MVP protocol: exact commands, state/action interface, baseline
+pinned-docs/resume_project_summary.md:64:    selection, FIFO meaning, workload, resource bounds, metric definitions,
+pinned-docs/resume_project_summary.md:71:    **Resume Ready** only after P0 closes. Move all optional research to P1/P2.
+pinned-docs/resume_project_summary.md:79: ## Safe resume wording today
+pinned-docs/resume_project_summary.md:81: - Built an instrumented vLLM serving gateway and reproducible trace-replay
+pinned-docs/resume_project_summary.md:84: - Implemented and CPU-validated finite-horizon MPC planning components with
+pinned-docs/resume_project_summary.md:85:   versioned-state, deadline and failure checks; documented the remaining native
+pinned-docs/resume_project_summary.md:86:   closed-loop and baseline-comparison gaps.
+pinned-docs/architecture.md:3: Status: implemented serving/instrumentation and CPU research components;
+pinned-docs/architecture.md:23: Solid arrows describe serving flow or implemented component interfaces, not
+pinned-docs/architecture.md:25: actuator edge is the principal missing native closed-loop evidence.
+pinned-docs/architecture.md:32: | Gateway | Reservation accounting, admission/rejection, streaming lifecycle and cleanup. | [`gateway.py`](../gateway.py) |
+pinned-docs/architecture.md:33: | Measurement | Scheduled arrivals, actual applications, request/state/diagnostic records. | [`trace_control.py`](../trace_control.py), [`telemetry.py`](../telemetry.py), E1 in [results](benchmark_results.md) |
+pinned-docs/architecture.md:34: | Prediction/planning | Coherent scenario rollouts and policy selection. | [`mpc_lab/model.py`](../mpc_lab/model.py), [`mpc_lab/controller.py`](../mpc_lab/controller.py), E2 frozen planner |
+pinned-docs/architecture.md:38: The public library and frozen team16 prototypes are separate versions. Do not
+pinned-docs/architecture.md:39: combine their settings, interfaces or test totals into one allegedly deployed
+pinned-docs/architecture.md:50: The controlled value is a gateway weighted reservation budget u. Admission
+pinned-docs/architecture.md:53: does not itself submit a request. Gateway release is not proof that cancelled
+pinned-docs/architecture.md:82: final receipt. Pre-return metadata is not proof of completed cleanup. D2-F1
+pinned-docs/architecture.md:84: skip cleanup in one deployment composition. That launcher is not live-eligible
+pinned-docs/architecture.md:87: Admission/resource bounds are not end-to-end latency guarantees, universal
+pinned-docs/architecture.md:88: queueing stability, physical KV safety or production reliability certification.
+pinned-docs/benchmark_results.md:1: # Verified results and benchmark evidence
+pinned-docs/benchmark_results.md:9: Hardware/configuration: RTX 4090, reported 24,564 MiB, driver 595.91.07;
+pinned-docs/benchmark_results.md:10: Qwen3-4B-Instruct-2507, vLLM 0.30.0, Torch 2.13.0+cu130, Python 3.12.3.
+pinned-docs/benchmark_results.md:17: | Shared A | 7,643 | 1,976 | 5,667 | 0 | 572 | 1.906667 | 2.412583 |
+pinned-docs/benchmark_results.md:18: | Shared B | 7,643 | 2,059 | 5,584 | 0 | 736 | 2.453333 | 2.202635 |
+pinned-docs/benchmark_results.md:20: TTFT p99 is conditional on successful requests; rejection is shown alongside
+pinned-docs/benchmark_results.md:21: it. SLO goodput counts eventual successful completions whose first content
+pinned-docs/benchmark_results.md:22: meets the scheduled-arrival TTFT deadline, divided by offered duration.
+pinned-docs/benchmark_results.md:25: These are **scheduled identification captures on different hosts**, not MPC,
+pinned-docs/benchmark_results.md:26: Fixed/OneMove comparisons, causal schedule effects or proof of an optimal cap.
+pinned-docs/benchmark_results.md:31: ### E1 evidence chain and reproduction
+pinned-docs/benchmark_results.md:38: | Trace SHA256 | `62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e` |
+pinned-docs/benchmark_results.md:44: Historical offline reconstruction command, after using the report's extraction
+pinned-docs/benchmark_results.md:51:   --code-root /path/to/recorded-runtime-source
+pinned-docs/benchmark_results.md:54: The runtime commit was not resolvable in the current local object database
+pinned-docs/benchmark_results.md:56: required; the example path is a required input, not a working shipped checkout.
+pinned-docs/benchmark_results.md:57: This is a P0 portability gap. No dependencies were installed and no captures
+pinned-docs/benchmark_results.md:64: | E2 | Frozen policy planner: 130 CPU cases passed per Python in accepted Parent replays; no native inference or actuation qualification. | [Acceptance index](../results/mpc-native-r24/reviews/native-team16-planner-revision02-parent-seal01.json) records PLAN, source hashes and archived command/result paths. | `2b4ed5bc754060cba11c16852b7798b975bc03eb` |
+pinned-docs/benchmark_results.md:65: | E3 | Deployment composition: nine CPU integration cases passed per Python; this predates the subsequent cleanup blocker. | [Acceptance/config index](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01.json), [exact archived command](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01/attempts/mayor-py314.command.json). Absolute paths require relocation; not a portable CLI claim. | `c00d29d2296bda7e249578f2de7c08650a4d79c9` |
+pinned-docs/benchmark_results.md:66: | E4 | Native observation diagnostic: 90 HTTP records, 43 completion tokens and incomplete nonempty coverage (one of two required observations). Not a throughput or prediction benchmark. | [Result/hash index](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01-results.json), [preregistration](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01-preregistration.json), [command/config/raw bundle](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01/). | Results `52b2b244f5904306f730ab6ca26a3d572343e2b2`; preregistration `d6ded2b25a0667028f6ab9f2cc08fe76df1c3315` |
+pinned-docs/benchmark_results.md:67: | E5 | Source-backed D2-F1 cleanup bypass; no observed live orphan incident asserted. Live use of the affected launcher is blocked. | [Mayor disposition](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-parent01.json), [independent review](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-author01/REVIEW.md). No live reproduction command was run. | `26139be5f90ec7386e2c578c95aa331aa0052244` |
+pinned-docs/benchmark_results.md:69: No row above establishes calibrated prediction, actual MPC benefit, production
+pinned-docs/benchmark_results.md:70: deployment, deterministic SLO compliance or a general OS cleanup theorem.
+pinned-docs/benchmark_results.md:81: The historical accepted comparison harness has no separate FIFO arm, throughput
+pinned-docs/benchmark_results.md:83: zero-valued measured results. FIFO is a queue discipline, not automatically a
+pinned-docs/benchmark_results.md:87: Before collection, freeze the strongest Fixed selection on development data
+pinned-docs/benchmark_results.md:88: only; use identical action/resource support, offered requests, prompt/output
+pinned-docs/benchmark_results.md:90: must use the same model/scenario panel and a meaningful best single-transition
+pinned-docs/interview_defense.md:23: CPU/shadow planning exists; current evidence does not establish an integrated
+pinned-docs/interview_defense.md:45: A simpler frozen experimental predictor may demonstrate the engineering loop
+pinned-docs/interview_defense.md:56: weaken the baselines or give MPC privileged future information.
+pinned-docs/interview_defense.md:62: trade-off. Conditional p99 is descriptive, not a service-level guarantee.
+pinned-docs/interview_defense.md:80: E1 provides audited historical native serving measurements under scheduled
+pinned-docs/interview_defense.md:82: observation diagnostic. None establishes a fair native MPC win. A/B were on
+pinned-docs/interview_defense.md:83: different hosts and are not a causal policy comparison.
+pinned-docs/interview_defense.md:89: The accounting, instrumentation, bounded runtime and reproducibility remain
+pinned-docs/interview_defense.md:90: engineering contributions. A negative result is better than an inflated claim.
+pinned-docs/resume_bullets.md:1: # Resume bullets: verified prototype wording
+pinned-docs/resume_bullets.md:10:   pipeline; audited native serving captures replaying 7,643 offered requests
+pinned-docs/resume_bullets.md:11:   over 300 seconds, retaining overload rejections and control-timing evidence.
+pinned-docs/resume_bullets.md:12: - Implemented CPU-validated MPC planning components with versioned-state,
+pinned-docs/resume_bullets.md:13:   deadline and failure checks, documenting the remaining native integration
+pinned-docs/resume_bullets.md:16: Evidence: first bullet E1, including raw trace, collection configuration,
+pinned-docs/resume_bullets.md:17: reproduction command and publication/runtime commits; second bullet E2/E3/E5.
+pinned-docs/resume_bullets.md:26: - Built auditable observation, lifecycle and failure evidence for native LLM
+pinned-docs/resume_bullets.md:27:   serving, distinguishing stale state, unknown application and incomplete
+pinned-docs/resume_bullets.md:28:   cleanup from successful control.
+pinned-docs/resume_bullets.md:30: Evidence: E2/E3/E4/E5 and the [architecture](architecture.md). First-action
+pinned-docs/resume_bullets.md:36:   overload handling and lifecycle telemetry for reproducible serving studies.
+pinned-docs/resume_bullets.md:37: - Developed source-pinned replay and independent validation workflows linking
+pinned-docs/resume_bullets.md:38:   request outcomes, configurations and commands to Git revisions, preserving
+pinned-docs/resume_bullets.md:45: Do not claim MPC speedup, superior goodput, production use, guaranteed p99,
+pinned-docs/resume_bullets.md:46: bounded end-to-end latency, starvation freedom, native sampler convergence or

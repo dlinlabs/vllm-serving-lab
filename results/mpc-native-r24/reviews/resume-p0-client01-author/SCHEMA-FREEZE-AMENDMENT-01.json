@@ -1,0 +1,12 @@
+{
+ "amendment": 1,
+ "amends": "SCHEMA-FREEZE.json sha256 ac6aff7bb5126d9b7e0f92adb89d53a3cc461ccb1e34c6df97833f4ed9ed5f12",
+ "frozen_before": "test_nominal_client.py authoring and any test execution",
+ "trigger": "Mayor P0 serving PROPOSAL 4c4a444a (nominal_protocol.json sha256 d857a4ff...; PROPOSED, not GPU authority): gateway.static_setup 'Fixed cap is the startup MAX_ADMITTED_COST, installed before warmup/offers and held through final drain'; closed-loop-qualification engineering probe 'may use purpose outside core train/eval; do not silently mislabel as heldout'; workload.scheduling 'same absolute host-monotonic offered start for client and controller'.",
+ "deltas": [
+  "static_fixed control_evidence keys become exactly {acknowledged_at, held_verified_at, clock_domain, source}: acknowledged_at < offered_start AND held_verified_at >= max(last observed terminal, offered end, collection_end); both are DRIVER attestations (method stated in source), never produced by the recorder",
+  "replay --purpose: core train/eval (finalizable) OR a raw-only engineering purpose matching ^[a-z][a-z0-9_]*$ that contains neither 'eval' nor 'held'; it must equal trace provenance purpose exactly (no relabel); build_run/finalize REFUSE non-core purposes (raw evidence only, never a core metrics run, never heldout)",
+  "NOT_CLIENT_OWNED/QUALIFIERS text: startup-ENV budget held through final drain; shared absolute START must leave lead time for recorder preflight (binding, tokenizer load and prompt verification, /v1/models); a passed START is refused with zero sends, never retimed"
+ ],
+ "unchanged": "row mapping, fates, anomaly precedence, binding checks, natural SLO fields, all-offered retention, full_wall rule, exit codes, nominal_metrics untouched"
+}

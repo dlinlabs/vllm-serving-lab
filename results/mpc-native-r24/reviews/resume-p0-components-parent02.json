@@ -1,0 +1,42 @@
+{
+  "scope": "CPU component acceptance only; not P0 completion or Native authorization",
+  "predecessor_commit": "814a9b5aa38dd8783ae643270b5aed59e1bc12b7",
+  "planner02": {
+    "archive": "resume-p0-planner02-author",
+    "seal_sha256": "204f7ab96f102dcd6e3f7617b65722437c7f873299bab1551c2e3fb743814b6b",
+    "verified_members_excluding_seal": 125,
+    "source_sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1",
+    "tests_sha256": "0f716b28de50daa79110bb84b82022654ec5586a7b8e7147f4d7dd6fc903988b",
+    "finding": "P0-FIXED-TIME-01",
+    "disposition": "CPU timing defect repaired: Fixed is applicable at guarded current time and ignores MPC-only solve timing while retaining actual expiry, source, clock, ledger and version checks.",
+    "review": "Parent previously read full planner01; now read the exact final source/test diff and report, including both intentional red regressions and construction-deadline correction.",
+    "MPC_OneMove": "Unchanged solver timing and full-panel selection; no claim that CPU controls validate Native predictions.",
+    "strong_fixed": "freeze_fixed remains only a model-ranked reference. Empirical Train cap selection and static installation are still required."
+  },
+  "workload01": {
+    "archive": "resume-p0-workload-author01",
+    "seal_sha256": "ab2fa0b2a413edcec3ea193526a61f51f28534595250d4dc3da1ebb7cd78e80b",
+    "verified_members_excluding_seal": 71,
+    "source_sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4",
+    "tests_sha256": "1c73aba0c9967a36b8e1fc0ac9ecd79cbf817f2d007e891f9fc96790cf5bcfe1",
+    "train": {"offers": 88, "sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"},
+    "eval": {"offers": 104, "sha256": "8961340fb0c15158a93346d1807d7d34747674c604d2eef242faaaaa5e4d4fb0"},
+    "canonical_tapes": "Only archive/tapes-v1/{train.tape.json,eval.tape.json}; scratch contains deliberately damaged test variants, not experiment inputs.",
+    "parent_review": "Full source and tests read; whole frozen author inventory and actual worktree source hashes verified. Eval tape contents were hashed, not displayed or used for forecasting/tuning.",
+    "holdout": "Procedural synthetic draw separation with purpose/domain/membership/provenance checks; public seeds, not OOD or real-trace generalization.",
+    "acceptance_limit": "Generator CPU controls and fake-tokenizer adapter accepted; real-tokenizer/client compatibility remains pending the separately preregistered CPU validation."
+  },
+  "parent_CPU": {
+    "plan": "resume-p0-parent-cpu01-plan.json",
+    "proof": "resume-p0-parent-cpu01",
+    "python": "3.14.4",
+    "attempts": 1,
+    "tests": 35,
+    "elapsed_seconds": 0.828,
+    "exit": 0,
+    "meaning": "8 permit + 15 planner + 12 workload focused controls coexist; selector excludes unsealed runtime and metrics.",
+    "not_proved": ["HTTP integration", "actual loop", "GPU prediction accuracy", "fair measured comparison", "clean-checkout end-to-end reproduction"]
+  },
+  "next_required": "Complete the coordinator, real-tokenizer conversion, actual HTTP/clock/source/safety preflight and independent integration review before a separate bounded Native smoke.",
+  "no_push_merge_or_additional_GPU_rental": true
+}

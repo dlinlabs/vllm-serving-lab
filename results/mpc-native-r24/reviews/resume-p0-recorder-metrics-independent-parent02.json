@@ -1,0 +1,32 @@
+{
+  "schema": "resume-p0-recorder-metrics-independent-acceptance-v2",
+  "status": "PASS_CONDITIONAL_SOURCE_GATE_ONLY",
+  "source_commit": "6113b377846f59f6c519a5b2fc4ba369e7f61fce",
+  "audit": "resume-p0-recorder-metrics-independent02-author/REPORT.json",
+  "original_manifest_sha256": "3dcbc992a13d6ef937c0a6d7464aa3d3dd0d364f9ea4b33ae628b0ac619438e1",
+  "original_regular_files": 36,
+  "original_regular_bytes": 631238,
+  "recorder": {"status": "PASS", "sha256": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95"},
+  "metrics": {"status": "PASS", "sha256": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec"},
+  "scope": "Parent accepts Role4's bounded independent correctness gate for these exact bytes, not actual-host comparability, episode composition, Native qualification or performance.",
+  "findings": {
+    "F1_F2": "Closed only as binding and equality of declared records. Actual-host verification and before-Eval replay-time Train selection evidence remain mandatory.",
+    "F3_F5": "Closed for send causality, complete offered cohort and timestamp/window/envelope validation.",
+    "F6_F7": "Labels closed.",
+    "F8_F9": "Not reassessed; actual prior/model binding and documented nominal stationary-model limitations remain.",
+    "N1": "LOW non-blocking overflow-number parsing can make strict capture serialization fail; caller must preserve a separate failure receipt and never score such a capture. Not silently fixed or claimed absent.",
+    "N2": "LOW non-blocking fixed-arm mislabelling check remains caller-owned; verify actual startup/held budget and cross-check retained rejection bodies.",
+    "observations": "All original O-1 through O-9 and INFO notes remain in the archived report."
+  },
+  "required_driver_obligations": [
+    "Verify actual hardware/assets/backend/gateway/resources/source/generation/clock facts, not self-digests alone.",
+    "Persist every envelope and explicitly record interruption or serialization failure; never score a non-collected or unpersisted capture.",
+    "Pass persisted capture digest to build_run and charge setup through final cleanup, not client-return time.",
+    "Join owner ledger and telemetry using actual request IDs, including explicit unmatched ID-refused outcomes.",
+    "Use disjoint Train/Eval identifiers; stamp frozen Train selection at replay, not by an unsupported post-hoc metric edit.",
+    "Report send-lag percentiles and controller overhead, verify actual fixed budget and backend FCFS, preserve all failures."
+  ],
+  "cpu_audit_limits": "Source review plus one preregistered extracted-function overflow witness on each Python; no author suite reruns and no Native execution.",
+  "next_authority": "Separate Mayor lifecycle preregistration may now proceed; no qualification, Train Fixed or Eval authorization is inherited.",
+  "native_qualified_cycles": 0
+}

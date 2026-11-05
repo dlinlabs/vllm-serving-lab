@@ -1,0 +1,53 @@
+{
+  "schema": "team16-owner-acquisition-mayor-proposal-v1",
+  "execution_permission": false,
+  "status": "REVIEW_AMENDMENTS_AND_BUILD_NEW_OWNED_ADAPTER_BEFORE_NATIVE",
+  "scientific_plan": "PLAN.json",
+  "proposed_native_plan": "PROPOSED_NATIVE_PLAN.json",
+  "proposed_all_offered_ledger": "PROPOSED_OFFERS.json",
+  "unchanged_contract": "InitialCaptureClosure; no exact actual_application_at is introduced.",
+  "required_approvals": [
+    "Separate phase acquisition route: disable prepared-copy-ready only; retain prepared-forward/light and enable exact existing phase/input-post sources.",
+    "Direct serving-PID Gateway ownership with capture-time parent redaction, rather than relabelling safe_exec's child; or a separately reviewed process-proof amendment.",
+    "New bounded source/receipt adapter; the offline callback candidate is not a host launcher."
+  ],
+  "source_exact_launch_ingredients": {
+    "native": "/workspace/pr32-r23/source/experiments/mpc-research/native-r24-prepared-physical13/launch_queue_service.py",
+    "gateway": "/workspace/pr32-r23/source/experiments/mpc-research/native-r24-prepared-physical13/launch_gateway_prefix_service.py gateway",
+    "gateway_original_exec": "/workspace/pr32-r23/venv/bin/python -m uvicorn gateway_prefix_bridge:application --factory --host 127.0.0.1 --port 8080 --workers 1",
+    "gateway_environment": {
+      "MPC_OWNER_LEDGER_ENABLED": "true",
+      "TELEMETRY_JSONL": "<new-private-owned-state>/gateway/gateway-telemetry.jsonl",
+      "TELEMETRY_STATUS_JSON": "<new-private-owned-state>/gateway/gateway-telemetry-status.json"
+    },
+    "telemetry_enable_semantics": "gateway.lifespan enables telemetry after opening TELEMETRY_JSONL. Do not invent a TELEMETRY_ENABLED switch.",
+    "source_layout": "Use the actual unchanged SourceRoot hierarchy. process_clock_provenance resolves prefill_lab/live_http.py via parents[3]; do not flatten helper modules.",
+    "native_package": "Existing pr33-r23-queue-observer source manifest0.5.0 declares both phase and input-post general/endpoint plugins. Verify current installed entrypoints and Source13-first module origins before launch; unknown/missing is a blocker, not install permission.",
+    "tmpdir": "Suggested new /workspace/pr32-r23/owner-state01/t,0700; verify actual ASCII byte length+37<=107 before all services, and pass exactly the same path.",
+    "model": "Use the same immutable Qwen3-4B-Instruct-2507 cache/revision cdbee75f17c01a7cc42f958dc650907174af0554 and exact MODEL_NAME alias already verified by Source13."
+  },
+  "new_adapter_obligations": [
+    "Full original Source13/product/SDK before/after checks; no source or installed package edits.",
+    "One real cap16 warmup; preserve every startup full-queue sample; normalize readiness.frames only as exact copies of the two received full-frame base objects. Preserve full raw frames and warmup response alongside them.",
+    "Read initial empty32/version0/sequence0 Gateway snapshot. Submit exactly one fresh same-budget32 CAS0->1 and retain all raw send/header/receive brackets. No retry, restore or fallback.",
+    "Require command interval upper and confirming version1 public receipt before capture begin; then metadata/begin on the exact frozen capture plan and actual process-bound native_phase collection.",
+    "Native synchronous GETs and Gateway GET/flush must have finite timeouts; raw records must use credential-safe accepted control02 capture semantics. The outer caller owns bounded cancellation/drain of its clients and executor.",
+    "Require actual flush process_identity to equal the original Gateway proof target. Do not forge a startup receipt for a child or replace source process proofs with caller flags.",
+    "Retain the flushed byte-bound ledger prefix, every failed acquisition, all2 offered outcomes and unsent rows. No success-only selection or future receipt use.",
+    "Keep full ghost/zero-work/issued stock. Final two full-empty observations are not persistent quiescence. End/ACK only after actual drain and retained capture; refusal remains failure.",
+    "Preserve260/180/20/3/40/17 budgets and7+30+2+1 teardown. Join all owned PID/start-tick/pidfd/subreaper identities and redactor readers. No5s normal cancellation.",
+    "No auth/header/environment/private-config dumps; redact at capture, scan before public export, and remove private configuration after join."
+  ],
+  "not_required_for_this_component": [
+    "qualified predictive model",
+    "native14 convergence",
+    "full MPC",
+    "whole-sweep comparison"
+  ],
+  "not_changed": [
+    "native14 rejection",
+    "model and prediction qualification gates",
+    "point-only actual-application gate",
+    "whole-loop and comparison acceptance"
+  ]
+}

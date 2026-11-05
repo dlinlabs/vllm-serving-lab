@@ -1,0 +1,20 @@
+{
+  "coordination": "Return to Mayor for the smallest peer-owned API extraction after appropriate independent review; no peer edit or broadcast was performed.",
+  "proposed_names_or_signature": "Not invented here; the owning Role7/Mayor must freeze an additive API before this adapter depends on it.",
+  "smallest_blocker": "The complete raw-v2 engineering recorder exists only behind synchronous CLI _replay_main. Calling it from the required running async episode reaches asyncio.run; calling only public replay does not provide the required raw-v2 capture envelope/persistence.",
+  "smallest_owner_API_requirement": [
+    "Expose the existing raw-capture prepare/build/finalize implementation as public library helpers, or an awaitable high-level raw-capture entry.",
+    "Reuse existing replay/SSE/row mapping; no new recorder implementation is needed.",
+    "Callable inside an existing event loop without asyncio.run or installing/removing owner signal handlers.",
+    "Require the caller's exact future offeredStart, permit original absolute deadline/reserve propagation, and never retime.",
+    "Retain the complete/partial raw-v2 capture and every allocated offered record on exception or cancellation, with joined request tasks and caller-visible failure evidence."
+  ],
+  "status": "NO_GO_SAFE_RAW_V2_COMPOSITION_API_MISSING",
+  "why_not_implemented": [
+    "Copying the capture template and completion/error writer into nominal_episode.py would duplicate the forbidden capture codec.",
+    "Calling private _capture still needs that copied initializer/finalizer; it is not a complete raw-v2 composition entry.",
+    "A process/thread detour would violate the in-process async ownership/cancellation objective and is not authorized.",
+    "The CLI path also owns signal handlers; borrowing it would interfere with Mayor lifecycle ownership.",
+    "build_run/finalize intentionally refuse engineering and must not be used to fake a completed full wall or natural metrics."
+  ]
+}

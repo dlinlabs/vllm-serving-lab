@@ -1,0 +1,30 @@
+{
+  "scope": "DEPENDENCY_AND_ASSET_EVIDENCE_ONLY",
+  "source_commit": "56fd21ea89e5adaf5b42268c52f4a260cac5c25a",
+  "candidate_files": 62,
+  "candidate_bytes": 928889,
+  "candidate_status": "NOT_EXECUTION_AUTHORITY_CALLER_REVIEW_PENDING",
+  "CPU_import_check": {
+    "status": "PASS",
+    "python": "3.12.16",
+    "scope": "Isolated candidate-tree imports and frozen Train prior binding only",
+    "original_tree_module_fallback": false,
+    "actual_host_identity_reconstructed": true,
+    "prior_content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc",
+    "forecast_generation_or_model_fit": false
+  },
+  "existing_model_assets": {
+    "status": "READ_ONLY_HASH_PASS",
+    "regular_files": 13,
+    "bytes": 8060920965,
+    "symlinks_not_followed": [],
+    "manifest_sha256": "c96852e6d1675f9907fb0689613352c190b45a6d701357febff0f616a75364bf",
+    "scope": "All regular files stable during streamed byte hashing at recorded UTC; no weights copied, no model load, inference or GPU context. Not a guarantee of later immutability."
+  },
+  "not_established": [
+    "Native caller all-path persistence correctness",
+    "Real warmup or five-request inference outcomes",
+    "Actual control cycles, applied actions or admission effect",
+    "Train Fixed selection, Eval, metrics comparability or performance"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "auth_values_captured": false,
+  "body_complete": true,
+  "call_settings": {
+    "absolute_deadline": 1361138.132090416,
+    "body_cap_bytes": 1048576,
+    "http_timeout_s": 0.2,
+    "maximum_http_exchanges": 1900
+  },
+  "client_clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+  "client_headers_at": 1361137.646409823,
+  "client_receive_at": 1361137.646592084,
+  "client_send_at": 1361137.644806991,
+  "credential_removed": false,
+  "dispatch_attempted": true,
+  "error_type": null,
+  "http_status": 200,
+  "method": "POST",
+  "path": "/admin/mpc/flush-prefix",
+  "request_body": "{\"expected_run_id\":\"e73ed70410a44bb3a6f59497b74cdba0\",\"expected_sequence\":3}",
+  "request_id": null,
+  "reserved_at": 1361137.644514909,
+  "response_body_base64": "eyJzY2hlbWEiOiJyMjQtZ2F0ZXdheS1mbHVzaGVkLXByZWZpeC12MSIsInNvdXJjZV9zaGEyNTYiOiI5Y2QzYzdkZWUwODFhMzRhOTY1ZjNiYmE0ZGIzNDk0YzAyODNjNzlkN2ZkODQ0OTEyMzgxMWZmYmM2ZTgxY2JiIiwicnVuX2lkIjoiZTczZWQ3MDQxMGE0NGJiM2E2ZjU5NDk3Yjc0Y2RiYTAiLCJjbG9ja19kb21haW4iOiJsaW51eC1tb25vdG9uaWM6MmJjMTU2N2EtNDBhNC00MDFkLWI1YTEtM2FmYjBlZjNiOTU0OnRpbWU6WzQwMjY1NDEwNTVdIiwiZmx1c2hlZF90aHJvdWdoX3NlcXVlbmNlIjozLCJzb3VyY2VfYXQiOjEzNjExMzcuNjQ1MzIxOTE1LCJmbHVzaF9zdGFydGVkX2F0IjoxMzYxMTM3LjY0NTQ0MzI4NiwiZmx1c2hfZmluaXNoZWRfYXQiOjEzNjExMzcuNjQ1NzYwNjY4LCJwcm9jZXNzX2lkZW50aXR5Ijp7InBpZCI6NzA5NTgsInN0YXJ0X3RpY2tzIjoxMzYxMDc0MjgsInBpZF9uYW1lc3BhY2UiOiJwaWQ6WzQwMjY1NDA5NzhdIn0sInNhbXBsZV9maW5pc2hlZF9hdCI6MTM2MTEzNy42NDYwMjY1Nywid3JpdGVfZXJyb3JzIjowLCJkcm9wcGVkIjowLCJzY29wZSI6IlNlcmlhbGl6ZWQgYXBwZW5kIGNvbXBsZXRpb24sIG5vdCBmc3luYyBjcmFzaCBkdXJhYmlsaXR5IG9yIG5hdGl2ZSBjb21tb24tY3V0IHByb29mLiIsIm5hdGl2ZV9tcGNfcGVybWl0dGVkIjpmYWxzZX0=",
+  "response_body_sha256": "65ac385366e020c5d361f2d7714396ec899a54277cb1366a7084e30455b8055c",
+  "response_bytes_captured": 674,
+  "response_headers": {
+    "content-type": "application/json"
+  },
+  "role": "cut-flush",
+  "sequence": 77,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "scheme": "http"
+  }
+}

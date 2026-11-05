@@ -1,0 +1,146 @@
+{
+  "maximum_requested_completion_tokens": 48,
+  "missing_receipt_not_proof_of_no_send": true,
+  "observed_raw_offer_receipts": [
+    {
+      "error_type": null,
+      "http_status": 200,
+      "path": "client/http/059.json",
+      "request_id": null,
+      "role": "one-warmup"
+    },
+    {
+      "error_type": null,
+      "http_status": 200,
+      "path": "client/http/071.json",
+      "request_id": "424b40a4154771f71ee2ba61093aa447",
+      "role": "managed-1"
+    },
+    {
+      "error_type": null,
+      "http_status": 200,
+      "path": "client/http/078.json",
+      "request_id": "3b71d5b1f883c45e68e4931f8e1fab65",
+      "role": "managed-2"
+    }
+  ],
+  "offers": [
+    {
+      "cut": "offer-1-cut.json",
+      "fate": "completed_length",
+      "inflight": {
+        "acquisition_token": null,
+        "actual_application_at": null,
+        "available_at": 1361137.475215685,
+        "available_while_transport_pending": true,
+        "client_receive_at": 1361137.62862366,
+        "client_send_at": 1361137.364265967,
+        "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+        "cut": "offer-1-inflight-cut.json",
+        "cut_file_sha256": "c8c0ac5cbb77431d95ceb495430adf15d9d7ffecadb44720309ce0ab6dc00849",
+        "cut_returned_at": 1361137.475215685,
+        "cut_sha256": "c6bf947d234b3bc30c720eeb79bf1f44db601e170eac1a8530b0315f78737b71",
+        "deployable": false,
+        "dispatch": {
+          "client_send_at": 1361137.364265967,
+          "sequence": 71
+        },
+        "native_id": null,
+        "native_kind": "absent",
+        "native_mpc_permitted": false,
+        "nonempty_overlap": false,
+        "pending_at_trigger": true,
+        "prediction_qualified": false,
+        "qualified_model": false,
+        "request_id": "424b40a4154771f71ee2ba61093aa447",
+        "request_token": null,
+        "scheduled_trigger_at": 1361137.384265967,
+        "schema": "team16-source-bound-inflight-evidence-v1",
+        "scope": "One source-bound target inventory with its collector receipt before the managed terminal receipt; not persistent state or exact action time.",
+        "source_at": 1361137.388083445,
+        "source_within_transport": true,
+        "status": "empty_or_unattributed_stock",
+        "stock_counts": {
+          "frontend_unfinished": 0,
+          "ghosts": 0,
+          "issued_request_ids": 0,
+          "issued_routes": 0,
+          "pending_batches": 0,
+          "running": 0,
+          "waiting": 0,
+          "zero_work_routes": 0
+        },
+        "target_scheduler_or_issued_stock": false,
+        "trigger_at": 1361137.384909211,
+        "trigger_delay_s": 0.02
+      },
+      "max_tokens": 16,
+      "ordinal": 1,
+      "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+      "prompt_tokens": 23,
+      "record": 71,
+      "request_id": "424b40a4154771f71ee2ba61093aa447",
+      "send_intent_at": 1361137.362297533
+    },
+    {
+      "cut": "offer-2-cut.json",
+      "fate": "completed_length",
+      "inflight": {
+        "acquisition_token": null,
+        "actual_application_at": null,
+        "available_at": 1361137.72779834,
+        "available_while_transport_pending": true,
+        "client_receive_at": 1361137.850536466,
+        "client_send_at": 1361137.666853205,
+        "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+        "cut": "offer-2-inflight-cut.json",
+        "cut_file_sha256": "6dbbdc6f0966cc2afe4b53e19ceaf8940dd336e14c46b44fe0b58108b8293d6a",
+        "cut_returned_at": 1361137.72779834,
+        "cut_sha256": "22c3e1fba066faf30f6e08113e3a32cc3a8c46e41f42deed2d596bd8054ad8fb",
+        "deployable": false,
+        "dispatch": {
+          "client_send_at": 1361137.666853205,
+          "sequence": 78
+        },
+        "native_id": "chatcmpl-3b71d5b1f883c45e68e4931f8e1fab65-9e160032",
+        "native_kind": "running",
+        "native_mpc_permitted": false,
+        "nonempty_overlap": true,
+        "pending_at_trigger": true,
+        "prediction_qualified": false,
+        "qualified_model": false,
+        "request_id": "3b71d5b1f883c45e68e4931f8e1fab65",
+        "request_token": null,
+        "scheduled_trigger_at": 1361137.686853205,
+        "schema": "team16-source-bound-inflight-evidence-v1",
+        "scope": "One source-bound target inventory with its collector receipt before the managed terminal receipt; not persistent state or exact action time.",
+        "source_at": 1361137.700061143,
+        "source_within_transport": true,
+        "status": "nonempty_available_while_pending",
+        "stock_counts": {
+          "frontend_unfinished": 1,
+          "ghosts": 0,
+          "issued_request_ids": 1,
+          "issued_routes": 1,
+          "pending_batches": 1,
+          "running": 1,
+          "waiting": 0,
+          "zero_work_routes": 0
+        },
+        "target_scheduler_or_issued_stock": true,
+        "trigger_at": 1361137.687445539,
+        "trigger_delay_s": 0.02
+      },
+      "max_tokens": 16,
+      "ordinal": 2,
+      "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+      "prompt_tokens": 23,
+      "record": 78,
+      "request_id": "3b71d5b1f883c45e68e4931f8e1fab65",
+      "send_intent_at": 1361137.665030902
+    }
+  ],
+  "planned_managed": 2,
+  "planned_warmup": 1,
+  "warmup_send_attempted": true
+}

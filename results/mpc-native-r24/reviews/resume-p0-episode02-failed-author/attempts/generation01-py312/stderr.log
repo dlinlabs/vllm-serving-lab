@@ -1,0 +1,174 @@
+test_caller_cancellation_joins_workers_and_persists_partial_outcomes (test_nominal_episode.NominalEpisodeTests.test_caller_cancellation_joins_workers_and_persists_partial_outcomes) ... ERROR
+test_caller_cancellation_joins_workers_and_persists_partial_outcomes (test_nominal_episode.NominalEpisodeTests.test_caller_cancellation_joins_workers_and_persists_partial_outcomes) ... FAIL
+test_default_off_preparation_and_configuration_refusals_do_not_start (test_nominal_episode.NominalEpisodeTests.test_default_off_preparation_and_configuration_refusals_do_not_start) ... FAIL
+test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results) ... 
+  test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results) (kind='controller_refused') ... FAIL
+  test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results) (kind='recorder_refused') ... FAIL
+  test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results) (kind='recorder_failed') ... FAIL
+test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results) ... FAIL
+test_shared_start_full_outcomes_and_real_controller_feedback (test_nominal_episode.NominalEpisodeTests.test_shared_start_full_outcomes_and_real_controller_feedback) ... FAIL
+test_shared_start_full_outcomes_and_real_controller_feedback (test_nominal_episode.NominalEpisodeTests.test_shared_start_full_outcomes_and_real_controller_feedback) ... FAIL
+
+======================================================================
+ERROR: test_caller_cancellation_joins_workers_and_persists_partial_outcomes (test_nominal_episode.NominalEpisodeTests.test_caller_cancellation_joins_workers_and_persists_partial_outcomes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/locks.py", line 212, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 367, in test_caller_cancellation_joins_workers_and_persists_partial_outcomes
+    await asyncio.wait_for(gateway.burst.wait(), 3)
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py", line 519, in wait_for
+    async with timeouts.timeout(timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+======================================================================
+FAIL: test_caller_cancellation_joins_workers_and_persists_partial_outcomes (test_nominal_episode.NominalEpisodeTests.test_caller_cancellation_joins_workers_and_persists_partial_outcomes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 239, in asyncTearDown
+    self.assertEqual(self.signal_handlers, (
+AssertionError: Tuples differ: (<built-in function default_int_handler>, [17 chars]: 0>) != (functools.partial(<bound method Runner._o[555 chars]: 0>)
+
+First differing element 0:
+<built-in function default_int_handler>
+functools.partial(<bound method Runner._o[531 chars]100>)
+
+Diff is 675 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_default_off_preparation_and_configuration_refusals_do_not_start (test_nominal_episode.NominalEpisodeTests.test_default_off_preparation_and_configuration_refusals_do_not_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 239, in asyncTearDown
+    self.assertEqual(self.signal_handlers, (
+AssertionError: Tuples differ: (<built-in function default_int_handler>, [17 chars]: 0>) != (functools.partial(<bound method Runner._o[555 chars]: 0>)
+
+First differing element 0:
+<built-in function default_int_handler>
+functools.partial(<bound method Runner._o[531 chars]100>)
+
+Diff is 675 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results) (kind='controller_refused')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 335, in test_returned_failure_envelopes_cancel_peer_and_preserve_results
+    self.assertEqual(result["status"], "failed", result)
+AssertionError: 'refused' != 'failed'
+- refused
++ failed
+ : {'schema': 'resume-p0-nominal-engineering-episode-v1', 'status': 'refused', 'entered_at': 933899.998738359, 'offered_start': 933900.247468359, 'deadline': 933906.247468359, 'cleanup_reserve_s': 0.5, 'runtime_clock_domain': 'linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]', 'recorder_clock_domain': 'time.monotonic clock_gettime(CLOCK_MONOTONIC) host=DESKTOP-Q3SLA74 boot_id=bf25e215-1377-4585-a5fa-f5181f96f467', 'runtime_journal': '/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-episode02/attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/controller_refused/runtime-journal.json', 'workers': {}, 'failures': [{'worker': 'coordinator', 'error': {'type': 'EpisodeRefused', 'message': 'runtime_Train_provider_or_policy_changed', 'traceback': 'Traceback (most recent call last):\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 262, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n'}}], 'persistence_errors': [], 'cancel_requested': [], 'admission_effect': None, 'ordered_gateway_ledger': None, 'full_wall': None, 'qualification': None, 'qualification_note': 'engineering collection only; Mayor-owned evidence absent', 'sources': {'nominal_runtime.py': '2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959', 'nominal_client.py': '933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95', 'nominal_metrics.py': '49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec', 'nominal_planner.py': 'e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1', 'nominal_permit.py': '05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503', 'nominal_scenario.py': 'b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc', 'nominal_workload.py': '614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4', 'nominal_services.py': '5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed', 'nominal_episode.py': '562fc8d18ae2ada5966c226704098d0e69432315cca59f16188a09e043c2cfa1', 'public_implementation': '5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea'}, 'joined_at': 933899.999889359, 'all_workers_joined': True, 'offered_request_ids': ['admission-boundary-p0w1-train-0000', 'admission-boundary-p0w1-train-0002', 'admission-boundary-p0w1-train-0007', 'admission-boundary-p0w1-train-0013', 'admission-boundary-p0w1-train-0015'], 'missing_record_ids': ['admission-boundary-p0w1-train-0000', 'admission-boundary-p0w1-train-0002', 'admission-boundary-p0w1-train-0007', 'admission-boundary-p0w1-train-0013', 'admission-boundary-p0w1-train-0015'], 'capture_sha256': 'f9b067652ba0c7b640eb713c14d47322982fc73f75a14fcfde5723ea6f30b101'}
+
+======================================================================
+FAIL: test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results) (kind='recorder_refused')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 335, in test_returned_failure_envelopes_cancel_peer_and_preserve_results
+    self.assertEqual(result["status"], "failed", result)
+AssertionError: 'refused' != 'failed'
+- refused
++ failed
+ : {'schema': 'resume-p0-nominal-engineering-episode-v1', 'status': 'refused', 'entered_at': 933900.010289659, 'offered_start': 933900.258914059, 'deadline': 933906.258914059, 'cleanup_reserve_s': 0.5, 'runtime_clock_domain': 'linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]', 'recorder_clock_domain': 'time.monotonic clock_gettime(CLOCK_MONOTONIC) host=DESKTOP-Q3SLA74 boot_id=bf25e215-1377-4585-a5fa-f5181f96f467', 'runtime_journal': '/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-episode02/attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/recorder_refused/runtime-journal.json', 'workers': {}, 'failures': [{'worker': 'coordinator', 'error': {'type': 'EpisodeRefused', 'message': 'runtime_Train_provider_or_policy_changed', 'traceback': 'Traceback (most recent call last):\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 262, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n'}}], 'persistence_errors': [], 'cancel_requested': [], 'admission_effect': None, 'ordered_gateway_ledger': None, 'full_wall': None, 'qualification': None, 'qualification_note': 'engineering collection only; Mayor-owned evidence absent', 'sources': {'nominal_runtime.py': '2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959', 'nominal_client.py': '933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95', 'nominal_metrics.py': '49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec', 'nominal_planner.py': 'e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1', 'nominal_permit.py': '05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503', 'nominal_scenario.py': 'b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc', 'nominal_workload.py': '614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4', 'nominal_services.py': '5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed', 'nominal_episode.py': '562fc8d18ae2ada5966c226704098d0e69432315cca59f16188a09e043c2cfa1', 'public_implementation': '5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea'}, 'joined_at': 933900.011439159, 'all_workers_joined': True, 'offered_request_ids': ['admission-boundary-p0w1-train-0000', 'admission-boundary-p0w1-train-0002', 'admission-boundary-p0w1-train-0007', 'admission-boundary-p0w1-train-0013', 'admission-boundary-p0w1-train-0015'], 'missing_record_ids': ['admission-boundary-p0w1-train-0000', 'admission-boundary-p0w1-train-0002', 'admission-boundary-p0w1-train-0007', 'admission-boundary-p0w1-train-0013', 'admission-boundary-p0w1-train-0015'], 'capture_sha256': '01c398b59918105e101c74a241d503c64bc4d91fd0d7a3d66979a61f4ef3c9ce'}
+
+======================================================================
+FAIL: test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results) (kind='recorder_failed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 335, in test_returned_failure_envelopes_cancel_peer_and_preserve_results
+    self.assertEqual(result["status"], "failed", result)
+AssertionError: 'refused' != 'failed'
+- refused
++ failed
+ : {'schema': 'resume-p0-nominal-engineering-episode-v1', 'status': 'refused', 'entered_at': 933900.021082659, 'offered_start': 933900.269781859, 'deadline': 933906.269781859, 'cleanup_reserve_s': 0.5, 'runtime_clock_domain': 'linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]', 'recorder_clock_domain': 'time.monotonic clock_gettime(CLOCK_MONOTONIC) host=DESKTOP-Q3SLA74 boot_id=bf25e215-1377-4585-a5fa-f5181f96f467', 'runtime_journal': '/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-episode02/attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/recorder_failed/runtime-journal.json', 'workers': {}, 'failures': [{'worker': 'coordinator', 'error': {'type': 'EpisodeRefused', 'message': 'runtime_Train_provider_or_policy_changed', 'traceback': 'Traceback (most recent call last):\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 262, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n'}}], 'persistence_errors': [], 'cancel_requested': [], 'admission_effect': None, 'ordered_gateway_ledger': None, 'full_wall': None, 'qualification': None, 'qualification_note': 'engineering collection only; Mayor-owned evidence absent', 'sources': {'nominal_runtime.py': '2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959', 'nominal_client.py': '933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95', 'nominal_metrics.py': '49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec', 'nominal_planner.py': 'e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1', 'nominal_permit.py': '05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503', 'nominal_scenario.py': 'b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc', 'nominal_workload.py': '614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4', 'nominal_services.py': '5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed', 'nominal_episode.py': '562fc8d18ae2ada5966c226704098d0e69432315cca59f16188a09e043c2cfa1', 'public_implementation': '5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea'}, 'joined_at': 933900.022153759, 'all_workers_joined': True, 'offered_request_ids': ['admission-boundary-p0w1-train-0000', 'admission-boundary-p0w1-train-0002', 'admission-boundary-p0w1-train-0007', 'admission-boundary-p0w1-train-0013', 'admission-boundary-p0w1-train-0015'], 'missing_record_ids': ['admission-boundary-p0w1-train-0000', 'admission-boundary-p0w1-train-0002', 'admission-boundary-p0w1-train-0007', 'admission-boundary-p0w1-train-0013', 'admission-boundary-p0w1-train-0015'], 'capture_sha256': 'b924d4524f8d8b824ab9a5973b175c02e2135ded7803e1790322c7374c5a9b0f'}
+
+======================================================================
+FAIL: test_returned_failure_envelopes_cancel_peer_and_preserve_results (test_nominal_episode.NominalEpisodeTests.test_returned_failure_envelopes_cancel_peer_and_preserve_results)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 239, in asyncTearDown
+    self.assertEqual(self.signal_handlers, (
+AssertionError: Tuples differ: (<built-in function default_int_handler>, [17 chars]: 0>) != (functools.partial(<bound method Runner._o[556 chars]: 0>)
+
+First differing element 0:
+<built-in function default_int_handler>
+functools.partial(<bound method Runner._o[532 chars]100>)
+
+Diff is 676 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_shared_start_full_outcomes_and_real_controller_feedback (test_nominal_episode.NominalEpisodeTests.test_shared_start_full_outcomes_and_real_controller_feedback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 254, in test_shared_start_full_outcomes_and_real_controller_feedback
+    self.assertEqual(result["status"], "collected", result["failures"])
+AssertionError: 'refused' != 'collected'
+- refused
++ collected
+ : [{'worker': 'coordinator', 'error': {'type': 'EpisodeRefused', 'message': 'runtime_Train_provider_or_policy_changed', 'traceback': 'Traceback (most recent call last):\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 262, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n'}}]
+
+======================================================================
+FAIL: test_shared_start_full_outcomes_and_real_controller_feedback (test_nominal_episode.NominalEpisodeTests.test_shared_start_full_outcomes_and_real_controller_feedback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_episode.py", line 239, in asyncTearDown
+    self.assertEqual(self.signal_handlers, (
+AssertionError: Tuples differ: (<built-in function default_int_handler>, [17 chars]: 0>) != (functools.partial(<bound method Runner._o[556 chars]: 0>)
+
+First differing element 0:
+<built-in function default_int_handler>
+functools.partial(<bound method Runner._o[532 chars]100>)
+
+Diff is 676 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.171s
+
+FAILED (failures=8, errors=1)

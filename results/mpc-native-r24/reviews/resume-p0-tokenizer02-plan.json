@@ -1,0 +1,28 @@
+{
+  "scope": "Explicit local-asset correction after failed offline repository-ID lookup; CPU only",
+  "predecessor_preregistration_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481",
+  "predecessor_attempt": {
+    "directory": "/workspace/pr32-r23/r24-resume-p0-tokenizer01",
+    "exit": 1,
+    "cause": "The exact model assets are installed as a local model directory, not in the default Hugging Face repository-ID cache. AutoTokenizer.from_pretrained(repo_id, local_files_only=True) could not resolve them.",
+    "preserved_local_raw": ".runtime/r24-resume-p0-tokenizer01",
+    "no_output_trace_no_download_no_inference": true
+  },
+  "necessary_for_P0": "Resolve actual installed tokenizer location and validate the offered-tape to client-trace conversion, not improve any benchmark result.",
+  "discovery": {
+    "method": "Read-only selected cache environment and bounded exact-model asset names.",
+    "existing_model_directory": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "observed_files": ["config.json", "tokenizer.json", "tokenizer_config.json"],
+    "raw": "resume-p0-tokenizer01-raw/cache-discovery.* and model-locations.*"
+  },
+  "code_change": "prepare_replay.py gains explicit --tokenizer-path; resolved source is reported. No download, alternative model ID, seed, prompt class, workload or model-parameter changes.",
+  "local_asset_identity_limit": "Directory name alone does not authenticate an upstream repository revision. Hash the existing tokenizer/config files, report tokenizer fingerprint, and require later serving to use these same assets.",
+  "execution_after_this_local_preregistration_commit": true,
+  "remote_directory": "/workspace/pr32-r23/r24-resume-p0-tokenizer02",
+  "command": "timeout -s TERM -k 5 180 env CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1 TOKENIZERS_PARALLELISM=false OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /workspace/pr32-r23/venv/bin/python3.12 -B experiments/mpc-research/resume-mvp/prepare_replay.py --tape input/train.tape.json --purpose train --output train.replay.json --tokenizer-path /workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+  "attempts": 1,
+  "source_authority": "Exact Git blobs in this preregistration commit; uploaded SHA256SUMS checked before execution.",
+  "train_tape_sha256_unchanged": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+  "acceptance": "Original tokenizer01 acceptance unchanged; use and hash explicit existing assets, validate all 88 Train prompts. Preserve stderr/stdout/exit/output, no silent retry.",
+  "eval_or_GPU_or_HTTP_or_download": false
+}

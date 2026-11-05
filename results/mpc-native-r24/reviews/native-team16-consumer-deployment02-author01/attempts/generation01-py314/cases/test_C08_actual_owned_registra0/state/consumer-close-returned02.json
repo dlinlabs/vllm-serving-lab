@@ -1,0 +1,58 @@
+{
+  "CPU_only": true,
+  "actual_application_at": null,
+  "actual_caller_observed_return_at": 910502.347713979,
+  "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+  "original_host_cleanup_cutoff": 910745.019084378,
+  "receipt": {
+    "acquisition_token": null,
+    "actual_actuation_performed": false,
+    "actual_application_at": null,
+    "all_joined": true,
+    "allocation_s": [
+      7,
+      30,
+      2,
+      1
+    ],
+    "authority_invalidated_at": null,
+    "authority_poisoned": false,
+    "candidate_component_pass": false,
+    "cleanup_return_guard_at": 910502.347675179,
+    "component_pass": false,
+    "deadline": 910542.338153679,
+    "decision_at": null,
+    "errors": [],
+    "events": [
+      {
+        "action": "cancel_owned_consumer",
+        "sent": true
+      }
+    ],
+    "exact_application_time_gate": false,
+    "finished_at": 910502.345275779,
+    "native_mpc_permitted": false,
+    "observer_deployable": false,
+    "owned_pid_start_ticks": {
+      "710079": 91050211
+    },
+    "planner_entry_at": null,
+    "postflight": null,
+    "prediction_qualified": false,
+    "publication_refusals": [],
+    "qualified_model": false,
+    "reader": {
+      "captured_bytes": 0,
+      "eof": true,
+      "error_type": null,
+      "joined": true
+    },
+    "release": null,
+    "request_token": null,
+    "returncode": -15,
+    "started_at": 910502.338153679,
+    "status": "complete"
+  },
+  "schema": "team16-actual-consumer02-close-return-v1",
+  "shared_teardown_anchor": 910502.338153679
+}

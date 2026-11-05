@@ -1,0 +1,7 @@
+{
+  "scope": "Small operational port correction after actual lifecycle01 failure",
+  "cause": "Gateway port 8001 is occupied by host infrastructure nginx PID88; confirmed via ss after owned services stopped. Do not stop or alter nginx.",
+  "change": "Dedicated backend18000/gateway18001 across launch argv, upstream URL and readiness GETs; both observed unoccupied. No model/resource/optimization/metric/guard change.",
+  "validation": "One Python3.12 attempt of the six existing mocked controls with explicit port binding assertions; retain stdout/stderr and source pins.",
+  "actual_execution": "Requires new exact-source preregistration before another host attempt; original failed attempt and STOPPED/idle receipts preserved."
+}

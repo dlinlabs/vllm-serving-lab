@@ -1,0 +1,20 @@
+{
+ "frozen_before_content_read": true,
+ "root": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+ "view": [
+  {"n": 1, "path": "sustained_load.py", "sha256": "278906b8b19060c4fb9262a93ad5fe6f7af025d9a29104727293f743c5b96219", "bytes": 16777, "why": "existing root client consume_request: SSE parsing, 503 admission rejection signature, request-id headers, error classes; reuse where usable"},
+  {"n": 2, "path": "trace_workload.py", "sha256": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f", "bytes": 4745, "why": "load_trace / tokenizer_fingerprint / sha256_file reuse"},
+  {"n": 3, "path": "experiments/mpc-research/resume-mvp/prepare_replay.py", "sha256": "91e8e66042da8f2387907b4fb8db98c1117b39af4d041bff9c1690e504ebf666", "bytes": 3063, "why": "Mayor-committed replay preparation (public alias trace.model, tokenizer provenance) bound by tokenizer02 bundle SHA256SUMS"},
+  {"n": 4, "path": "experiments/mpc-research/native-r23/score_http.py", "sha256": "9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d", "bytes": 3914, "why": "unchanged natural SLO row fields"},
+  {"n": 5, "path": "experiments/mpc-research/resume-mvp/nominal_metrics.py", "sha256": "e0119f34437f81dae4c8bb97501a2c0e6d7ec5decfa23f0eb6491db6e6afa58e", "bytes": 56373, "why": "own sealed metrics01 code (imported read-only: ROW_KEYS/validate_run/compute)"},
+  {"n": 6, "path": "run_trace_pilot.py", "sha256": "c02808e7cfb3aade6563620d373b1c16fc6f8af47a549c41ddf901b0cd6ad2bc", "bytes": 29647, "why": "replay/placeholder/drain semantics spans only"},
+  {"n": 7, "path": ".runtime/r24-resume-p0-tokenizer02/host-package-versions.stdout.log", "sha256": "404e6b0d283deecd4ed18e163f46a37a79be8fb7665cf7d98a1a5834c4f3703e", "bytes": 212, "why": "host package versions (httpx/transformers compatibility)"}
+ ],
+ "reserve_only_if_needed_for_journal_mapping": [
+  {"n": 8, "path": ".runtime/r24-resume-p0-nominal-runtime01/REPORT.json", "sha256": "ecbcfe7fd64537fa9eb52168c2aaf4711fa9d7ffae32ae747a231daf258a09c4", "bytes": 6831, "sealed_by": "runtime01 SHA256SUMS 367777a6..."},
+  {"n": 9, "path": ".runtime/r24-resume-p0-nominal-runtime01/INTERFACE.json", "sha256": "375f3acb273dae4a15fd259438c11316ad2bb9810d2d9597dbffc645cdba33a0", "bytes": 4452, "sealed_by": "runtime01 SHA256SUMS 367777a6..."}
+ ],
+ "hash_parse_only_never_viewed": [{"path": ".runtime/r24-resume-p0-tokenizer02/returned/train.replay.json", "sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7", "bytes": 257950, "use": "dry loader/binding validation; Train only"}],
+ "max_view_bytes": 126014,
+ "not_read": ["any Eval tape/replay/outcomes", "gateway.py", "trace_control.py", "peer unsealed runtime/planner/permit/scenario sources", "runtime01 sources/FAILURES/SEMANTIC_PROJECTIONS"]
+}

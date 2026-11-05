@@ -1,0 +1,38 @@
+{
+  "schema": "resume-p0-nominal-runtime-cli-plan-v2",
+  "model": {"id": "gpt-6-astra", "reasoning_effort": "max", "provenance": "retained verified Role6 assignment"},
+  "scope": "Only nominal_runtime.py and test_nominal_runtime.py public edits; local runtime02 evidence. No runtime01 mutation.",
+  "predecessor_seal": "367777a642f776e2f46df58513f447bb6de0cf11d0bb4dd72b36e0723d8fbdc5",
+  "dependencies": {
+    "permit_commit": "6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0",
+    "permit_sha256": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503",
+    "scenario_seal": "dee31c6b3792895fd74462b1efb2551628fbebbc0df928c151b563efb2cbd6ae",
+    "scenario_sha256": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc",
+    "workload_sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4",
+    "canonical_Train": "results/mpc-native-r24/reviews/resume-p0-workload-author01/tapes-v1/train.tape.json",
+    "Train_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+    "serving_proposal_commit": "4c4a444a0194e605ec4c55b6188d76dfeb0d7e83",
+    "serving_proposal_disposition": "Mayor-provided PROPOSED metadata, not imported by runtime or treated as authority",
+    "engineering_probe_disposition": "Mayor-owned f5de0fd0ddff5f0444970445861d4d7fa03bd7fb; not read/tested/duplicated here"
+  },
+  "changes": [
+    "Mutually exclusive --train-tape/--scenario-file; Train requires explicit --forecast-purpose. Freeze prior once with actual clock_domain and use make_scenario(...).causal per fresh decision.",
+    "Static prior content/data/tokenizer/producer source/RNG identity binding excludes prior.available_at; same journal restarts preserve protocol.",
+    "--poll-seconds passes through RuntimeLimits.poll_s.",
+    "Persist bounded full realized CausalScenario before any rollout (PlanningInput), and in Planned; persist ProtocolBound parameters and actual module paths. Preserve refused partial-solve inputs.",
+    "--describe-protocol computes actual protocol/hash/expected identity/five-file source bundle with no client/HTTP/approval read/journal write/wait.",
+    "Bootstrap actual HERE+ROOT before own SDK imports; validate module origins and record paths.",
+    "--start-at is protocol-bound; wait before run() entry. New starts must be nonpast and allow the active episode inside min(CLI-entry+60s, enabled permit expiry). Existing validated same-target journals resume the original episode without a new wait/deadline."
+  ],
+  "controls": [
+    "Offline descriptor stable across newly frozen prior availability; actual five-module bundle; standalone subprocess from outside Root with PYTHONPATH unset, no HTTP/approval/wait.",
+    "Actual Train CLI GET-only loop, poll/shared start, 16 actual planner rollouts; full saved-input comparison and two selected-path offline replays, no RNG regeneration for replay.",
+    "CPU literal-decision timeout/pending restart with fresh Train freeze and identical static protocol/start; count/episode preserved, observed expiry fencing only.",
+    "CLI mutual exclusivity/missing-purpose/defaultOFF/invalid Train/legacy scenario compatibility/start bounds; actual first rollout then intentional second-call failure retains complete planning input."
+  ],
+  "selection": "unittest discover -s experiments/mpc-research/resume-mvp -p test_nominal_runtime.py -k cli02_ -v",
+  "planned_runs": "ONE frozen generation and ONE bounded local Python3.12 test invocation. Four new control methods; do not run the old12 or other suites. Preserve failures, no adaptive resampling/retry.",
+  "budgets": {"test_process_timeout_s": 120, "offline_CLI_child_timeout_s": 15, "forecast_cap": 512, "causal_receipt_byte_cap": 262144},
+  "not_permitted": ["SSH/network/GPU/inference", "real or valid fake approval artifacts", "Eval tape access/regeneration", "model research/fitting", "product/SDK/metrics/legacy changes", "old sealed writes", "agents", "Git", "installs"],
+  "qualification": "CPU-only integration; no Native permission or gate closure. Local Py3.12 is not a claim of execution on host Py3.12.3."
+}

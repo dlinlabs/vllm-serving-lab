@@ -1,0 +1,41 @@
+{
+  "clients_closed": [],
+  "runtime_workers": [],
+  "scope": "CPU clients and one bounded offline CLI child only; no campaign/engine ownership",
+  "standalone_CLI_children": [
+    {
+      "PYTHONPATH_unset": true,
+      "command": [
+        "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+        "-B",
+        "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py",
+        "--url",
+        "http://cpu.invalid",
+        "--journal",
+        "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-runtime02/attempts/generation01-py312/artifacts/test_cli02_describe_is_offline_stable_and_standalone/journal.json",
+        "--train-tape",
+        "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/mpc-native-r24/reviews/resume-p0-workload-author01/tapes-v1/train.tape.json",
+        "--forecast-purpose",
+        "engineering",
+        "--steps",
+        "2",
+        "--episode-seconds",
+        "3",
+        "--poll-seconds",
+        "0.02",
+        "--describe-protocol",
+        "--start-at",
+        "1000000000",
+        "--experimental-nominal-demo",
+        "--nominal-permit",
+        ".runtime/r24-resume-p0-nominal-runtime02/attempts/generation01-py312/artifacts/test_cli02_describe_is_offline_stable_and_standalone/must-not-read.json"
+      ],
+      "cwd": ".runtime/r24-resume-p0-nominal-runtime02/attempts/generation01-py312/artifacts/test_cli02_describe_is_offline_stable_and_standalone/outside-root",
+      "joined": true,
+      "original_identity_gone": true,
+      "pid": 1584862,
+      "returncode": 0,
+      "start_ticks": "92661246"
+    }
+  ]
+}

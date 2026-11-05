@@ -1,0 +1,33 @@
+{
+  "active_CPU_stream_ledgers": [
+    0
+  ],
+  "clients_closed": [
+    true
+  ],
+  "not_a_Native_cleanup_receipt": true,
+  "processes_or_services_started": [],
+  "remaining_loop_tasks": [],
+  "signal_checks": [
+    {
+      "after_handler_ids": [
+        126307574359888,
+        126307675534928
+      ],
+      "before_handler_ids": [
+        126307574359888,
+        126307675534928
+      ],
+      "same_coroutine": true,
+      "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+      "task": "Task-43",
+      "unchanged": true
+    }
+  ],
+  "signal_handlers_unchanged": true,
+  "test_owned_tasks_joined": [],
+  "transports_closed": [
+    true,
+    true
+  ]
+}

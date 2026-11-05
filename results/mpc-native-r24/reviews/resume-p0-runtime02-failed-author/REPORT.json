@@ -1,0 +1,75 @@
+{
+  "Native_permission": false,
+  "accepted_by_Mayor": false,
+  "clients_closed": 3,
+  "completed_at": "2026-11-04T23:27:09.674703+00:00",
+  "current_source_unchanged_from_failed_freeze": true,
+  "known_preparation_supervisor_test_CLI_identities_gone": 4,
+  "minimum_next_step": "Shared strict root-URL canonicalization in protocol and runtime binding, then fresh bounded validation of these same four controls without workload changes.",
+  "model": {
+    "id": "gpt-6-astra",
+    "provenance": "retained verified Role6 assignment",
+    "reasoning_effort": "max"
+  },
+  "old_controls_run": 0,
+  "preserved_binding_count": 28,
+  "qualification": "Description-only positive proof; not an actuated Native or accepted CLI02 loop.",
+  "real_approval_created": false,
+  "retries": 0,
+  "schema": "resume-p0-nominal-runtime02-report-v1",
+  "seal_exclusions": [
+    "SHA256SUMS",
+    "SEAL_RECEIPT.json"
+  ],
+  "selected_new_controls": 4,
+  "source_diff": "SOURCE_DIFF.patch",
+  "source_freeze_sha256": "8313b9df6c604cf1a74c8c74a2f7035c40f2019b2c2005eb1c1e5df9ce920724",
+  "source_generations": 1,
+  "source_ids": {
+    "experiments/mpc-research/resume-mvp/nominal_permit.py": {
+      "bytes": 3902,
+      "sha256": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_planner.py": {
+      "bytes": 21987,
+      "sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_runtime.py": {
+      "bytes": 44975,
+      "sha256": "d3cf02e48b95aa119441dc5b562b8b5b84e27c5b38ee62aaa9eeec615861d27c"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_scenario.py": {
+      "bytes": 8166,
+      "sha256": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_workload.py": {
+      "bytes": 25248,
+      "sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    "experiments/mpc-research/resume-mvp/test_nominal_runtime.py": {
+      "bytes": 53346,
+      "sha256": "ab69a62e2b35f1740d1f4c983a70f371e7b674ead15fd6f1b0b770a96e0b45a9"
+    }
+  },
+  "status": "FAILED_BINDING_BLOCKER_NO_ACTIVATION",
+  "test_attempts": 1,
+  "test_process": {
+    "attempt": 1,
+    "elapsed_s": 0.5653160989750177,
+    "identity_after_wait": null,
+    "joined": true,
+    "old_controls_run": 0,
+    "original_identity": {
+      "pid": 1584844,
+      "start_ticks": "92661227",
+      "state": "R"
+    },
+    "original_identity_gone": true,
+    "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+    "returncode": 1,
+    "scope": "CPU-only, no Native permission",
+    "selected_controls": 4,
+    "timed_out": false
+  },
+  "test_result": "1 PASS / 1 FAIL / 2 ERROR"
+}

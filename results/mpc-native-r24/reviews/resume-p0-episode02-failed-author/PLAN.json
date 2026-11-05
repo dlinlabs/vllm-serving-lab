@@ -1,0 +1,72 @@
+{
+  "schema": "nominal-episode02-plan-v1",
+  "authorization": "Mayor resumed same-task wiring, 2026-11-04T16:50:25.795-08:00",
+  "objective": "One default-OFF in-process engineering composition of accepted runtime03 and frozen client API03. No campaign, model research or Native qualification.",
+  "owned_public_files": [
+    "experiments/mpc-research/resume-mvp/nominal_episode.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_episode.py"
+  ],
+  "dependencies": {
+    "runtime03_source": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959",
+    "runtime03_accepted_reference": "5e9696eca54133ee440314b681f11764a0937744",
+    "client_api03_source": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+    "client_api03_test": "8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66",
+    "client_api03_seal": "b3e6174797f8d466181ebf42e87b5c45133341ff7351265d166d0cfc1dfc8a1b",
+    "client_api03_parent_reference": "6113b377846f59f6c519a5b2fc4ba369e7f61fce",
+    "metrics_source": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+    "NominalServices_source": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+    "conditional": "Recorder/metrics independent Role4 acceptance and Mayor exact-source approval still required; none inferred from this task."
+  },
+  "peer_read_budget": {
+    "maximum_files": 6,
+    "maximum_bytes": 393216,
+    "selected_sources": [
+      "nominal_client.py",
+      "test_nominal_client.py",
+      "nominal_metrics.py",
+      "nominal_services.py"
+    ],
+    "current_full_file_bytes": 191354,
+    "retained": "Own accepted runtime/planner/scenario/permit/workload context and their already-pinned public dependencies.",
+    "not_read_or_used": "native_services_smoke.py, its readiness asyncio.run, unsealed work or new model research."
+  },
+  "probe": {
+    "path": "results/mpc-native-r24/reviews/resume-p0-probes02/inputs/admission-boundary.json",
+    "sha256": "6d938ba18240f3e0f8cb677064849a73316ee7a8dc918526c68cba37f02da6be",
+    "purpose": "engineering",
+    "requests": 5,
+    "duration_s": 5,
+    "schedule": "All five frozen Train class-3072 requests at offset 1.25; no retiming, substitution with four-request probe, regeneration or resampling."
+  },
+  "implementation_contract": [
+    "Synchronous preparation uses prepare_capture and persists its exact raw-v2 preparation envelope before any future start is chosen.",
+    "An explicit future shared start is chosen after local preparation; runtime.start_at must match, with the actual local monotonic clock.",
+    "The caller supplies the existing NominalServices owner interface: original deadline, reserve and check(). No service ownership is created.",
+    "Default-OFF explicit episode opt-in and existing runtime experimental flag/permit remain required; source/config mismatches refuse before HTTP.",
+    "Use only capture_replay and write_capture for client collection/persistence; never copy SSE, row mapping or capture codec.",
+    "Run controller and recorder concurrently. Inspect exceptions plus returned failure/refusal/pending/deadline envelopes, not just task completion.",
+    "Cancel and join both workers on failure/cancellation, preserve partial capture, runtime journal and every observed result/error, and propagate caller cancellation after persistence.",
+    "Use original absolute deadline and reserve, never restart them. Record cooperative cleanup overrun truthfully.",
+    "Do not compute natural metrics or full wall for engineering. Admission effect, ordered owner ledger and post-cleanup full wall remain missing/null and Mayor-owned."
+  ],
+  "validation": {
+    "source_generations": 1,
+    "attempts": 1,
+    "interpreter": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+    "hard_test_process_budget_s": 60,
+    "test_execution_budget_s": 55,
+    "reserved_test_guardian_join_s": 5,
+    "runner": "Only test_nominal_episode.py using unittest; no peer/old/full suites.",
+    "focused_cases": [
+      "Shared future start, real NominalRuntime/planner path plus real client API, original five-offer schedule and full captured outcomes.",
+      "Default-OFF, ready-false and unsupported/past-start/deadline/binding no-start refusals persist exact raw capture.",
+      "Returned controller refusal and recorder refused/failed envelopes cancel the other worker and retain both results.",
+      "Caller cancellation during the burst joins controller/recorder/request tasks and persists partial raw capture and runtime journal."
+    ],
+    "fixtures": "HTTPX MockTransport and literal owner/tokenizer interfaces only. Tokenizer fingerprint hook is explicitly CPU-fixture evidence, not actual tokenizer/model verification. No live authority artifact.",
+    "environment": "unset PYTHONPATH, threads=1, no bytecode/autoload/cache, PYTHONHASHSEED=0, nice -n19, -B",
+    "failure_policy": "Keep exact frozen source and all failures; one attempt, no blind retry or further source generation."
+  },
+  "prohibitions": "No peers/runtime/services/planner/metrics/forecaster/SDK/product edits, agents, Git, installs, Markdown, real-service HTTP, SSH, GPU, threads/processes/service launch by the adapter, signals, Train Fixed/Eval, model changes, adaptive workloads or qualification/winner claims.",
+  "handoff": "Exact API, source/input pins and copies, actual diff, one CPU result with all failures, raw evidence and owned cleanup, limitations, SHA256SUMS; idle."
+}

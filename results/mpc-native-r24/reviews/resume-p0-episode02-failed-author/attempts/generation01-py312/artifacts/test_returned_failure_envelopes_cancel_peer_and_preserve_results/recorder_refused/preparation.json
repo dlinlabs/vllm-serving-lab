@@ -1,0 +1,71 @@
+{
+  "entered_at": 933900.003627359,
+  "error": null,
+  "input_sha256": "f4cada4482322516a456318fd916e91aabfce715039f8b8d4d6f16616ed5e508",
+  "no_HTTP_or_offers": true,
+  "prepared_at": 933900.006030859,
+  "prepared_capture_sha256": "01c398b59918105e101c74a241d503c64bc4d91fd0d7a3d66979a61f4ef3c9ce",
+  "recorder_ready": true,
+  "scenario_binding": {
+    "assumptions": [
+      "Unqualified cpu-lifecycle-v1 / synthetic-unqualified-v1; no Native permission.",
+      "Future lengths sampled from measured Train counts for the pinned tokenizer only.",
+      "Mayor-reported Train tokenizer proof; TRANSFORMERS 5.22.1; proof commit pending at delivery.",
+      "Future output=max_output=128, success=True, service_scale=1, zero transport delays.",
+      "Old output fraction=1 and old success=True; no oracle completion/progress information."
+    ],
+    "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "prior_content": {
+      "count": 88,
+      "duration_s": 5.0,
+      "marks": [
+        [
+          256,
+          128,
+          33
+        ],
+        [
+          1024,
+          128,
+          26
+        ],
+        [
+          3072,
+          128,
+          29
+        ]
+      ],
+      "tokenizer_fingerprint": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+      "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+      "train_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+      "workload_sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    "prior_content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc",
+    "producer_sources": {
+      "nominal_scenario.py": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc",
+      "nominal_workload.py": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    "provider": "frozen-Train-nominal-scenario-v1",
+    "purpose": "engineering",
+    "rng": {
+      "horizon_s": 15.0,
+      "max_offers": 512,
+      "namespace": "resume-p0-nominal-forecast-v1",
+      "runtime": "Python 3.12.16 stdlib random.Random(str, version=2)/expovariate/randrange",
+      "seed": 5105
+    }
+  },
+  "schema": "resume-p0-nominal-engineering-episode-v1",
+  "sources": {
+    "nominal_client.py": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+    "nominal_episode.py": "562fc8d18ae2ada5966c226704098d0e69432315cca59f16188a09e043c2cfa1",
+    "nominal_metrics.py": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+    "nominal_permit.py": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503",
+    "nominal_planner.py": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1",
+    "nominal_runtime.py": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959",
+    "nominal_scenario.py": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc",
+    "nominal_services.py": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+    "nominal_workload.py": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4",
+    "public_implementation": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea"
+  }
+}

@@ -1,0 +1,166 @@
+  179  def describe_protocol(planner, journal_path, *, endpoint, scenario_binding,
+  180                        policy="mpc", limits=RuntimeLimits(), start_at=None):
+  181      """Describe actual frozen bindings without a client, journal write or authority."""
+  182      _require(type(planner) is NominalPlanner, "typed_nominal_planner_required")
+  183      protocol = _protocol(planner.parameters, policy, limits, scenario_binding, endpoint, journal_path, start_at)
+  184      directory = Path(__file__).resolve().parent
+  185      names = ("nominal_permit.py", "nominal_planner.py", "nominal_runtime.py",
+  186               "nominal_scenario.py", "nominal_workload.py")
+  187      bundle = {
+  188          "public_implementation": implementation_hash(),
+  189          "nominal": {name: hashlib.sha256((directory / name).read_bytes()).hexdigest() for name in names},
+  190      }
+  191      source = source_digest()
+  192      _require(digest(bundle) == source, "source_bundle_description_mismatch")
+  193      return {
+  194          "scope": SCOPE, "mode": "protocol_description_only",
+  195          "protocol": protocol, "protocol_sha256": digest(protocol),
+  196          "source_sha256": source, "source_bundle": bundle,
+  197          "expected_identity": asdict(planner.identity), "clock_domain": clock_domain(),
+  198          "module_paths": module_paths(),
+  199          "not_an_approval": True, "HTTP_performed": False, "Native_qualified": False,
+  200      }
+  330  
+  331      def _binding(self):
+  332          _require(self.planner.parameters == self.parameters and self.planner.identity == self.identity
+  333                   and digest(asdict(self.parameters)) == digest(self.protocol["parameters"])
+  334                   and asdict(self.limits) == self.protocol["limits"]
+  335                   and self.policy == self.protocol["policy"]
+  336                   and self.start_at == self.protocol.get("start_at")
+  337                   and str(self.store.path) == self.protocol["journal_path"]
+  338                   and _root_endpoint(self.client.base_url) == self.protocol["endpoint"]
+  339                   and self.client.follow_redirects is False
+  340                   and digest(self.protocol) == self.protocol_sha256,
+  341                   "runtime_configuration_or_parameter_binding_changed")
+  342  
+  385                      complete = True
+  386          except BaseException as exc:
+  387              error = exc
+  388          raw = b"".join(chunks)
+  389          saved = raw.replace(self.admin_key.encode(), b"[REDACTED_AUTH]")
+  390          self._record("HTTP", method=method, path=path, status_code=status,
+  391                       started_at=started, received_at=self.clock(), bytes_received=size,
+  392                       response_complete=complete, redacted=saved != raw,
+  458                       application_known_from_ACK=ack is not None, native_token_application_at=None)
+  459          return {"status": status, "operation_id": command["operation_id"],
+  460                  "cap_application_known": ack is not None, "native_token_application_at": None}
+  461  
+  462      def _authorize(self, snapshot, budget, entered, deadline, *, issued):
+  463          self._binding()
+  464          if not self.enabled or type(self.permit) is not NominalDemoPermit:
+  465              return "nominal_not_authorized"
+  466          current_source = source_digest()
+  467          reason = self.permit.refusal_reason(
+  468              snapshot, enabled=self.enabled, expected_identity=self.identity,
+  469              current_source_sha256=current_source, protocol_sha256=self.protocol_sha256,
+  470              current_clock_domain=clock_domain(), budget=budget, entered_at=entered,
+  471              deadline=deadline, now=self._now(), issued_commands=issued,
+  472          )
+  473          if reason is None and self.state["source_sha256"] not in (None, current_source):
+  474              return "journal_source_binding_changed"
+  475          if reason is None:
+  476              self.state["source_sha256"] = current_source
+  477          return reason
+  478  
+  479      def _decision(self, snapshot, window):
+  480          self._binding()
+  544          _require(StateVersion.from_snapshot(current) == StateVersion.from_snapshot(snapshot)
+  545                   and current.requests == snapshot.requests, "precommit_observation_changed")
+  546          reason = self._authorize(snapshot, action.budget, entered, deadline, issued=before)
+  547          _require(reason is None, reason or "nominal_authorization")
+  548          now = self._now()
+  549          not_after = min(deadline, self.permit.expires_at, snapshot.sampled_at + 0.5, now + 0.1)
+  550          _require(now < not_after <= action.not_after, "first_action_expired")
+  551          command = {
+  552              "schema": SCHEMA, "run_id": snapshot.run_id, "clock_domain": snapshot.clock_domain,
+  553              "identity": asdict(self.identity), "expected_version": snapshot.budget_version,
+  554              "operation_id": f"nominal-{self.state['controller_id']}-{before + 1}",
+  555              "budget": action.budget, "not_after": not_after,
+  556          }
+  557          body = json.dumps(command, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+  558          self.state["issued_commands"] = before + 1
+  559          self.state["pending"] = {"command": command, "ordinal": before + 1, "ack": None}
+  560          self._record("PendingPrepared", ordinal=before + 1, command=command,
+  561                       entered_at=entered, deadline=deadline, not_before=action.not_before,
+  562                       exact_POST_body_sha256=hashlib.sha256(body).hexdigest())
+  563          # Count includes this durable reservation. Recheck that same reservation,
+  564          # not authorization for a second command, after fsync consumed real time.
+  565          reason = self._authorize(snapshot, action.budget, entered, deadline, issued=before)
+  566          _require(reason is None, reason or "nominal_authorization_after_persist")
+  567          self._remaining(not_after)
+  568          post_started = self._now()
+  594              self._binding()
+  595              with self.store.locked():
+  596                  self.state = self.store.read()
+  597                  domain = clock_domain()
+  598                  if self.state is None:
+  599                      _require(self.start_at is None or call_entered >= self.start_at, "shared_start_not_reached")
+  600                      self.state = {
+  601                          "schema": JOURNAL_SCHEMA, "scope": SCOPE, "controller_id": uuid.uuid4().hex,
+  602                          "identity": asdict(self.identity), "clock_domain": domain,
+  626                      except Exception as error:
+  627                          pending = self.state["pending"]
+  628                          ack = pending["ack"] if pending else None
+  629                          row = {"status": "pending" if self.state["pending"] else "refused",
+  630                                 "reason": str(error).replace(self.admin_key, "[REDACTED_AUTH]")[:1024],
+  631                                 "error_type": type(error).__name__,
+  632                                 "cap_change_applied": True if ack else (None if pending else False),
+  633                                 "actual_cap_applied_at": ack["applied_at"] if ack else None,
+  634                                 "native_token_application_at": None}
+  635                      row.update(entered_at=entered, deadline=deadline, outcome_observed_at=self._now())
+  636                      self._record("StepFinished", **row)
+  637                      row["finished_at"] = self._now()
+  638                      row["elapsed_s"] = row["finished_at"] - entered
+  639                      row["deadline_met"] = row["finished_at"] <= deadline
+  640                      steps.append(row)
+  641                      if index + 1 < self.limits.iterations and self.limits.poll_s:
+  642                          remaining = self.state["episode_deadline"] - self._now()
+  643                          if remaining <= 0:
+  644                              break
+  645                          await self.sleeper(min(self.limits.poll_s, remaining))
+  646          except asyncio.CancelledError:
+  647              raise
+  648          except Exception as error:
+  649              failure = type(error).__name__ + ":" + str(error).replace(self.admin_key, "[REDACTED_AUTH]")[:1024]
+  650          pending = self.state["pending"] if self.state else None
+  651          return {
+  652              "scope": SCOPE, "mode": "experimental_nominal_demo" if self.enabled else "GET_only",
+  738  
+  739  
+  740  async def wait_for_start(runtime, *, cli_entered):
+  741      """Wait before run() entry; an existing validated journal resumes its old episode."""
+  742      now = runtime._now()
+  743      receipt = {"requested_start_at": runtime.start_at, "cli_entered_at": cli_entered,
+  744                 "wait_entered_at": now, "resumed_existing_episode": False}
+  745      if runtime.start_at is None:
+  746          return {**receipt, "wait_finished_at": now}
+  747      runtime._binding()
+  748      if runtime.store.path.exists():
+  749          with runtime.store.locked():
+  750              saved = runtime.store.read()
+  751          _require(saved is not None and saved["identity"] == asdict(runtime.identity)
+  752                   and saved["protocol_sha256"] == runtime.protocol_sha256
+  753                   and saved["clock_domain"] == clock_domain()
+  754                   and runtime.start_at <= saved["episode_started_at"] <= now < saved["episode_deadline"],
+  755                   "shared_start_restart_binding_or_episode_invalid")
+  756          return {**receipt, "wait_finished_at": runtime._now(), "resumed_existing_episode": True}
+  757      end = cli_entered + 60.0
+  758      if runtime.enabled:
+  759          _require(type(runtime.permit) is NominalDemoPermit and runtime.permit.approved is True
+  760                   and finite(runtime.permit.not_before) and finite(runtime.permit.expires_at)
+  761                   and 0 <= runtime.permit.not_before <= runtime.start_at < runtime.permit.expires_at
+  762                   and 0 < runtime.permit.expires_at - runtime.permit.not_before <= 60.0,
+  763                   "shared_start_outside_nominal_permit")
+  764          end = min(end, runtime.permit.expires_at)
+  765      _require(finite(cli_entered) and cli_entered <= now <= runtime.start_at
+  766               and runtime.start_at + runtime.limits.episode_s <= end,
+  767               "shared_start_past_or_outside_envelope")
+  768      async with asyncio.timeout(end - now):
+  769          remaining = runtime.start_at - runtime._now()
+  770          if remaining > 0:
+  771              await runtime.sleeper(remaining)
+  772      finished = runtime._now()
+  773      _require(runtime.start_at <= finished and finished + runtime.limits.episode_s <= end,
+  774               "shared_start_wait_exhausted_envelope")
+  775      return {**receipt, "wait_finished_at": finished, "CLI_envelope_deadline": end}
+  776  

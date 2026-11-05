@@ -1,0 +1,150 @@
+{
+  "schema": "resume-p0-nominal-serving-proposal-v2",
+  "status": "PROPOSED_NOT_EXECUTION_AUTHORIZATION",
+  "purpose": "Establish a defensible real serving/control MVP, not optimize until MPC wins.",
+  "final_source_and_independent_acceptance_required": true,
+  "dependency_order": [
+    "runtime_regression_acceptance",
+    "recorder_and_metrics_F1_F5_correction",
+    "independent_recorder_and_metrics_acceptance",
+    "actual_GPU_ownership_startup_shutdown_cleanup",
+    "five_request_Train_closed_loop_qualification",
+    "Train_fixed16_fixed32_selection_and_freeze",
+    "held_out_Eval",
+    "independent_result_reproduction_and_claim_audit"
+  ],
+  "lineage": "Gateway-only nominal unqualified controller of Native vLLM serving; not Native14/G06/G16 qualification.",
+  "deliverables": {
+    "A": "Verified gateway/instrumentation/replay/CPU resume evidence is independent of Native success.",
+    "B": "Native closed-loop validation requires every qualification, comparison, reproduction and independent audit gate; no success claim before all pass."
+  },
+  "restrictions": ["existing authorized GPU only", "Mayor serialized execution", "no push", "no merge", "no rental"],
+  "hardware": {
+    "gpu_uuid": "GPU-8610519d-3680-ae5f-cdfc-40037bfb5013",
+    "model": "NVIDIA GeForce RTX 4090",
+    "lock_paths": [
+      "/workspace/pr32-r23/r24-team16-mayor-gpu.lock",
+      "/workspace/pr32-r23/native-component-GPU-8610519d.lock"
+    ],
+    "exclusive_preflight": "Both existing Mayor/component locks, no foreign GPU workload, no unresolved ownership marker; all owned process identities accounted for after each stage."
+  },
+  "backend": {
+    "local_assets": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "served_alias": "Qwen/Qwen3-4B-Instruct-2507",
+    "tokenizer_fingerprint": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+    "required_common_settings": {
+      "scheduling_policy": "fcfs",
+      "enable_prefix_caching": false,
+      "max_model_len": 8192,
+      "max_num_seqs": 256,
+      "max_num_batched_tokens": 8192,
+      "gpu_memory_utilization": 0.9,
+      "enforce_eager": false,
+      "tensor_parallel_size": 1
+    },
+    "optimization_rule": "Keep the same normal backend optimizations for every arm; no disabling graphs/compilation just to ease startup or improve an MPC comparison.",
+    "identity_proof": "Actual launch argv/config, package/source provenance, local asset hashes and advertised model alias must be captured. CLI help or a directory name is not running-backend proof.",
+    "lifetime": "Use the simplest accepted two-service ownership scope: restart engine and gateway for each episode, with identical backend configuration and recorded startup/warmup/drain/cleanup wall time. No persistent unowned backend or gateway restart outside the owner."
+  },
+  "gateway": {
+    "workers": 1,
+    "admission_mode": "cost_aware",
+    "model_name": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "tokenizer_identity": "Bind actual verified tokenizer fingerprint; require tokenizer_available and zero character-fallback requests.",
+    "budget_support": [16, 32],
+    "queue": "Cost admission rejects rather than introducing a new frontend queue. Backend FCFS is shared by all arms.",
+    "restart_each_episode": true,
+    "static_setup": "Fixed cap is the startup MAX_ADMITTED_COST, installed before warmup/offers and held through final drain; no MPC loop, solver delay or synthetic controller overhead.",
+    "dynamic_initial_cap": "Train-selected cap for evaluation; qualification probe separately declares initial cap 32."
+  },
+  "workload": {
+    "kind": "Synthetic offered workload executed on real GPU; not an Azure/OOD/generalization holdout.",
+    "duration_s": 5,
+    "max_output_tokens": 128,
+    "ignore_eos": false,
+    "train_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+    "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+    "eval_tape_sha256": "8961340fb0c15158a93346d1807d7d34747674c604d2eef242faaaaa5e4d4fb0",
+    "eval_replay": "Measurement harness converts once using the same real tokenizer after controller/config freeze. Controller never receives the tape, future rows or regenerated Eval offers.",
+    "no_retuning_after_eval": true,
+    "warmup": "Three fixed requests, one per prompt class 256/1024/3072, identical for every arm, excluded from offered metrics but included in setup wall time.",
+    "scheduling": "Same absolute host-monotonic offered start for client and controller. Preserve actual send lag and every offered fate; never retime skipped/late requests."
+  },
+  "controller": {
+    "model_version": "cpu-lifecycle-v1",
+    "calibration_version": "synthetic-unqualified-v1",
+    "forecast": "Frozen Train-only 88/5 rate and mark histogram; distinct forecast RNG; no online refit or Eval future. Record actual realized CausalScenario inputs. The uncalibrated rolling stationary 15-second forecast can extend beyond the public five-second workload; disclose this model limitation.",
+    "planning": "Three 1-second slots, eight complete paths over caps 16/32; one nominal realization per decision; MPC and OneMove use the same generator, objective and compute/actuation contracts.",
+    "one_move": "At most one planned transition, including the received-budget prefix, per horizon; replanning does not mean only one change per entire episode.",
+    "objective": "Unqualified model-resolved-success TTFT<=0.5 count with existing hold/switch/budget/path tie-breaks; not the measured natural SLO objective.",
+    "source_age_s_max": 0.5,
+    "entry_to_action_deadline_s_max": 0.5,
+    "solve_budget_s": 0.1,
+    "poll_s": 0.8,
+    "iterations": 6,
+    "episode_s": 5,
+    "commands_max": 8,
+    "permit_duration_s_max": 60,
+    "tail": "Stop replanning after the declared control episode; retain last cap through request drain.",
+    "guards": "No relaxing version/source/clock/expiry/pending fencing or precommit ledger checks to obtain a successful action.",
+    "owner_process": "Use one isolated cooperating Linux process with in-process client/controller work and exactly the two owned service roots. No unrelated child creation; no universal owner-crash cleanup guarantee. Bind the exact preregistered locks and verify STOPPED/known-gone receipts after each episode; retain poison and halt on uncertainty.",
+    "authority": "Separate default-OFF nominal operator permit bound to actual controller source/protocol/run/clock; no fabricated Native calibration permit."
+  },
+  "stages": [
+    {
+      "id": "closed-loop-qualification",
+      "purpose": "Demonstrate consecutive real control cycles and an actual admission-boundary effect. Not a performance comparison.",
+      "episodes": 1,
+      "initial_cap": 32,
+      "trace": "First five already-tokenized Train rows of measured class 3072, all offered at 1.25 seconds in a separate five-second engineering probe. Immutable input results/mpc-native-r24/reviews/resume-p0-probes02/inputs/admission-boundary.json, SHA256 6d938ba18240f3e0f8cb677064849a73316ee7a8dc918526c68cba37f02da6be.",
+      "successor_reason": "The original four-request probe cannot cross cap16 even if every request overlaps under the proposed default CostSpec. Preserve its bytes, do not run it as admission-behavior qualification. Five largest available Train requests are the conditional minimum; actual CostSpec and reservation overlap still require proof.",
+      "probe_plan": "results/mpc-native-r24/reviews/resume-p0-probes02/plan.json",
+      "acceptance": [
+        "Real Native requests with preserved stream outcomes.",
+        "At least two consecutive fully timestamped observation, realized prediction, planning, actual first-action application and fresh reobservation cycles.",
+        "At least one changed applied action demonstrably affects a real admission/rejection decision; match request and control budget versions and reconstruct reserved cost from the ordered owner ledger. Planner output, a cap ACK, sampled state or hold-only execution is insufficient.",
+        "Actual application timestamp within original entry/source/permit bounds.",
+        "No unresolved command or ownership fate at completion."
+      ],
+      "hold_is_not_success": true,
+      "failure_rule": "Preserve failure/inconclusive outcome. No seed search or guard weakening; diagnose a concrete issue before a new preregistered successor."
+    },
+    {
+      "id": "train-fixed",
+      "purpose": "After Native qualification passes, empirically select the strongest supported static cap on Train only, before Eval.",
+      "only_after_qualification": true,
+      "episodes": ["fixed16", "fixed32"],
+      "repetitions": 1,
+      "advance_only_if": "Raw finish reason, stream completion/error, real clocks, tokenization, budget, common resources and required natural SLO fields validate.",
+      "selection": ["higher natural_slo_good", "fewer not-delivered offered requests", "lower cap"],
+      "freeze": "Commit selection and all evidence before any Eval; exhaustive only over supported caps 16/32, not a global capacity claim."
+    },
+    {
+      "id": "held-out-descriptive-comparison",
+      "purpose": "Measure actual MPC, strong OneMove and static references after closed-loop qualification; neutral or negative results are valid.",
+      "only_after_qualification": true,
+      "order_round_1": ["fixed16", "strong_one_move", "fixed32", "mpc"],
+      "order_round_2": ["mpc", "fixed32", "strong_one_move", "fixed16"],
+      "same_eval_tape_every_episode": true,
+      "train_selected_fixed": "Alias to the cap frozen on Train; never select the better Eval cap after observing results.",
+      "FIFO": "A verified FCFS/static32 reference is explicitly an alias, not a fourth distinct algorithm. Without actual backend configuration proof, label unverified.",
+      "stopping": "Exactly two predeclared rounds; no rerunning to improve ranking. Failed episodes stay in the table.",
+      "uncertainty": "Two repetitions of one 104-offer synthetic tape are descriptive, correlated workload replays, not evidence of population significance or robust p99 superiority."
+    }
+  ],
+  "scoring": {
+    "natural_rule_source_sha256": "9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d",
+    "rule": "Unchanged score_http natural rule; no TTFT-only substitute and no invented finish reason.",
+    "denominator": "All offered requests, with all failure/rejection/not-launched/unknown fates.",
+    "metrics": ["TTFT p50/p95/p99 from scheduled and sent origins", "natural SLO attainment/goodput", "request and usage-token throughput", "rejection/failure rates", "prompt-group fairness", "measured controller overhead", "control application/refusal/pending timings"],
+    "quantiles": "Report n/ranks/sample-maximum flags, conditional selection bias and separate missing-first operational penalties; no identified survival-quantile claim.",
+    "wall": "Actual common arm-setup start through final drain/cleanup, plus separately labeled offered-cohort rates. Missing full wall stays null, not a hidden denominator change.",
+    "no_missing_to_zero": true
+  },
+  "failure_and_stop": {
+    "halt": ["foreign GPU interference", "unknown or nonjoined owned process", "unfenced pending command", "tokenizer fallback or source/config mismatch", "unavailable required SLO evidence"],
+    "preserve": "Raw successful and failed artifacts, exact sources/argv/configuration/metrics and local Git commit; private auth/permit material never published.",
+    "no_claims": ["MPC superiority without results", "production deployment", "SLO guarantees", "Native model qualification", "Native Closed-loop MPC Validated before all B gates pass"],
+    "P0_stop": "After verified scoped resume claims, move speculative model/benchmark improvements to P1/P2 rather than delay completion."
+  }
+}

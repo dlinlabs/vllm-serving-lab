@@ -1,0 +1,22 @@
+{
+ "schema": "r24-resume-p0-nominal-client01-plan-v1",
+ "frozen_before_source_content_read": true,
+ "role": "PR32 team16 Role7 (fair benchmark metrics); model claude-opus-5.5 reasoning_effort max; no child agents",
+ "objective": "isolated minimal native replay REQUEST recorder: per-request finish_reason from actual SSE JSON (absent/contradiction explicit), usage + provenance, first/last content, [DONE], HTTP status, fates, request ids, offered+sent clocks/lag; returns STRICT normalized rows accepted unchanged by sealed nominal_metrics (01) validate_run/compute; usable for native fixed16/fixed32 independently of MPC",
+ "owned_files": ["experiments/mpc-research/resume-mvp/nominal_client.py", "experiments/mpc-research/resume-mvp/test_nominal_client.py"],
+ "scope": ".runtime/r24-resume-p0-nominal-client01",
+ "not_modified": ["gateway/product/SDK/mpc_lab", "root run_trace_pilot.py/sustained_load.py/trace_workload.py", "old scorers", "nominal_metrics.py and sealed metrics01 (no metrics amendment without Parent integration review)"],
+ "design": {
+  "schedule": "one asyncio task per offered request sleeping to the absolute offered offset offered_start+arrival_seconds; no rescheduling, no catch-up compression, no drop or cherry-pick; late sends keep their schedule and record lag",
+  "retention": "every offered request has exactly one row: placeholder not_launched until sent; send-path surprises unknown; drain-deadline cancellation cancelled",
+  "finish_reason": "collected from every SSE data JSON choice; exactly one distinct non-null value -> observed; none -> absent (row may be complete, natural SLO not good); conflicting values -> contradiction (stream_error, never complete)",
+  "natural_slo": "unchanged r23 score_http fields (status, finish_reason, requested_ignore_eos from the payload actually sent, stream_done, stream_error) + usage.completion_tokens; no TTFT-only substitute",
+  "model_binding": "explicit typed binding record: served public alias == frozen trace.model (trace.model never changed), absolute local model path, tokenizer sha256 == trace provenance tokenizer_sha256, served names include alias, actual launch argv evidence; default REFUSE without binding; runtime /v1/models must list alias with root == local path before offered start",
+  "full_wall": "client never invents setup/drain: run uses offered_cohort_observed envelope unless the driver supplies a same-clock full-wall record (setup start, final drain end, source)",
+  "no_side_effects": "no budget mutation, permit creation, model server launch or gateway control; CPU tests use httpx.MockTransport only (no sockets/HTTP/GPU)"
+ },
+ "tests": "focused failure-sensitive literal controls per Python (py3.14 ROOT/.venv, py3.12 session venv): SSE edge cases (stop, length, absent finish, contradiction, error event, invalid line, missing [DONE], empty content, usage absent/multiple), 503 admission vs other HTTP, transport error, drain cancellation, not_launched retention, binding refusals, normalized rows accepted by nominal_metrics.compute; attempt dirs, one run per attempt, failures preserved",
+ "dry_validation": "parse-only CPU check of the frozen Train replay (.runtime/r24-resume-p0-tokenizer02/returned/train.replay.json sha 5e418b89...) through the client loader with a literal binding; prompts/rows never printed; Eval never read",
+ "budget": {"selected_source_files_max": 9, "selected_source_bytes_max": 262144, "time": "first checkpoint ~1h"},
+ "prohibited": ["Eval rows/outcomes", "SSH/GPU/network/installs/git", "child agents", "peer unsealed sources", "Markdown"]
+}

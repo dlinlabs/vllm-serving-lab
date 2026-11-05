@@ -1,0 +1,15 @@
+--- candidate/test_consumer01.py
++++ candidate/test_consumer01.py
+@@ -204,8 +204,10 @@
+             owner.begin(ordinal=2, pending_at_trigger=True)
+             result = await direct(owner, await fixture.collect(), kind)
+             assert result["status"] == "refused"
+-            if kind in ("changed_generation", "budget_as_generation"):
+-                assert result["reason"] == "caller_generation_changed"
++            if kind == "budget_as_generation":
++                assert result["reason"] == "frame_generation_not_lease_start"
++            elif kind == "changed_generation":
++                assert result["reason"] in ("caller_generation_changed", "caller_generation_changed_before_BEGIN")
+         finally:
+             cleanup = await finish(owner)
+         assert cleanup["all_joined"] and not cleanup["component_pass"]

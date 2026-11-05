@@ -1,0 +1,34 @@
+{
+  "auth_values_captured": false,
+  "body_complete": false,
+  "call_settings": {
+    "absolute_deadline": 1361253.019335,
+    "body_cap_bytes": 1048576,
+    "http_timeout_s": 0.2,
+    "maximum_http_exchanges": 1900
+  },
+  "client_clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+  "client_headers_at": null,
+  "client_receive_at": 1361091.687077144,
+  "client_send_at": 1361091.686213328,
+  "credential_removed": false,
+  "dispatch_attempted": true,
+  "error_type": "ConnectError",
+  "http_status": null,
+  "method": "GET",
+  "path": "/health",
+  "request_body": null,
+  "request_id": null,
+  "reserved_at": 1361091.68514385,
+  "response_body_base64": "",
+  "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "response_bytes_captured": 0,
+  "response_headers": {},
+  "role": "startup-health-native",
+  "sequence": 11,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "scheme": "http"
+  }
+}

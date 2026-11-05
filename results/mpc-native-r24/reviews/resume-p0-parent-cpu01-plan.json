@@ -1,0 +1,22 @@
+{
+  "scope": "Parent acceptance of frozen nominal permit, repaired planner02 and offered-workload components",
+  "necessary_for_P0": "Prevent unfair Fixed timing and verify component coexistence before actual HTTP integration.",
+  "not_claimed": ["Native qualification", "predictor accuracy", "real closed loop", "strong Fixed selection", "Resume Ready"],
+  "source_sha256": {
+    "nominal_permit.py": "0c2831ebd232ad644b605619d1e2826092f173eb30d5bc57f5bb9e817274f91f",
+    "nominal_planner.py": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1",
+    "nominal_workload.py": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+  },
+  "author_seals_verified": {
+    "workload01": "ab2fa0b2a413edcec3ea193526a61f51f28534595250d4dc3da1ebb7cd78e80b",
+    "planner02": "204f7ab96f102dcd6e3f7617b65722437c7f873299bab1551c2e3fb743814b6b"
+  },
+  "command_cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+  "command": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NOMINAL_WORKLOAD_SCRATCH=<new absolute parent scratch> .venv/bin/python -B -m unittest discover -s experiments/mpc-research/resume-mvp -p 'test_nominal_[pw]*.py' -v",
+  "expected_tests": 35,
+  "selector_excludes_unsealed_runtime_and_metrics": true,
+  "attempts": 1,
+  "timeout_seconds": 120,
+  "changes_if_failed": "Preserve failure and diagnose; no resampling or source rewrite in the sealed author capsules.",
+  "no_GPU_network_or_live_permit": true
+}

@@ -1,0 +1,646 @@
+{
+  "bindings": [
+    {
+      "copy": "inputs/SUCCESSOR-SHA256SUMS",
+      "sha256": "13bc7f834a9bd0cbc0b8c69765642974e4ba8b1bce5f523666e1f7629f5f1393",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/SHA256SUMS"
+    },
+    {
+      "copy": "inputs/reference-consumer/common01.py",
+      "sha256": "bc76431438ad0bfb892deed171f2d04d9d653270326a89e9c4e9dbf5d31176de",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/common01.py"
+    },
+    {
+      "copy": "inputs/reference-consumer/consumer01.py",
+      "sha256": "a47b855dbe18d2b4d959211c1f72987a1f65a5f9f3aca7b284d9f2a1b7367e1f",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/consumer01.py"
+    },
+    {
+      "copy": "inputs/reference-consumer/generation01.py",
+      "sha256": "4747b1e3f8275d1ea204b264c39bc0c8c4e1b8987f7b096f2ca85e7110b7c283",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/generation01.py"
+    },
+    {
+      "copy": "inputs/reference-consumer/ipc01.py",
+      "sha256": "a1b5c7410f0a7bed9629f382ac979ede5ea1e632330bf227883721d368dad4f3",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/ipc01.py"
+    },
+    {
+      "copy": "inputs/reference-consumer/validate01.py",
+      "sha256": "0e46297deed516facdf2dc34a6595d5163eee5d4c521b642c6ee89e36076242e",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/validate01.py"
+    },
+    {
+      "copy": "inputs/reference-consumer/worker01.py",
+      "sha256": "ba353590da4c6f0c39dd3e3c2ce1a10540a3b1429c6bd06d7f08f6f2efa8c219",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/worker01.py"
+    },
+    {
+      "copy": "inputs/reference-consumer/fixture01.py",
+      "sha256": "9259386bcf6910a6d6b6ae3ba6f528b23881d8bbc04df4ad3d385b4556b75cbc",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/fixture01.py"
+    },
+    {
+      "copy": "inputs/reference-composition/composition_common01.py",
+      "sha256": "065306417539cf3004c3419baf9c42aa7789fe76f3d0f1682a72dc2b6827905c",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/composition_common01.py"
+    },
+    {
+      "copy": "inputs/reference-composition/client01.py",
+      "sha256": "3319d1f54eaee3ca2e4047f14342fa4dcaba58284ea94824b9f7e3c91862b8e2",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/client01.py"
+    },
+    {
+      "copy": "inputs/reference-composition/transport01.py",
+      "sha256": "6cbccb30ebfb196f0d9f37872300ca89f631f21763c6fd017f8b11e3de606dfc",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/transport01.py"
+    },
+    {
+      "copy": "inputs/reference-composition/coverage01.py",
+      "sha256": "3d237be147781fb012e0266feddf0a81b6c00733ec0acfec95c657877a0b4772",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/coverage01.py"
+    },
+    {
+      "copy": "inputs/reference-composition/owned01.py",
+      "sha256": "8e2e2da26d591935b8d725855bb20d67ff8fa90f1f80dc0439b3b1170fc7ed68",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/owned01.py"
+    },
+    {
+      "copy": "inputs/reference-composition/launch01.py",
+      "sha256": "443256165274dba1a442fa19789470e6a6f287f464194b4fa7f78d0e6606d78a",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/launch01.py"
+    },
+    {
+      "copy": "inputs/reference-composition/service01.py",
+      "sha256": "f111a5bface2b25a49e364760682acb2422cf67b7d81c4902efe40e8df941e1d",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/service01.py"
+    },
+    {
+      "copy": "inputs/reference-composition/origin_guard/sitecustomize.py",
+      "sha256": "1879138ed53203e977d2ed941b476a3d0970a1f6e2275794438497faecab6a9f",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/origin_guard/sitecustomize.py"
+    },
+    {
+      "copy": "inputs/reference-composition/ORIGIN_POLICY.json",
+      "sha256": "448060ec279d369aed435316e4df88dd80fe2f9da00dd2abb89e49bf060183b8",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/ORIGIN_POLICY.json"
+    },
+    {
+      "copy": "inputs/reference-composition/PROTOCOL.json",
+      "sha256": "e14601411625d29866603a618a63d70b68ba498458ba8dd45d83f13245fdc709",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/PROTOCOL.json"
+    },
+    {
+      "copy": "inputs/reference-consumer/NATIVE_PLAN.json",
+      "sha256": "1e91119fa4c3c2ea4ea228f0b310cb6bfaa0ee88659159f71a63ee13b1b72afa",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/NATIVE_PLAN.json"
+    },
+    {
+      "copy": "inputs/reference-consumer/OFFERS.json",
+      "sha256": "f9695454155124d2625ad569c4ae2c5db3bcc8ad45ecefc3d7ca45e030312261",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/OFFERS.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/DISCOVERY_FAILURES.json",
+      "sha256": "97e0a7b9486e5ebf3804530c16d3452266ff2e322909c932270ee608c0164bc2",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/DISCOVERY_FAILURES.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/INPUTS.json",
+      "sha256": "3ee93fe6df50b2847f6fc7f3ab27f5329a00a71d5ad476f71824114b44ecb765",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/INPUTS.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/MAYOR_PROPOSAL.json",
+      "sha256": "0a84df5bdd5643178ac665cd361ff4c27b8416721b03b1da31ea54c91e4990c5",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/MAYOR_PROPOSAL.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/PLAN.json",
+      "sha256": "df8ea48fc7257453da97b7d3a3c5214d4712279c047bfa7f484e92f556ea08c9",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/PLAN.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/PRE_SOURCE_FREEZE.json",
+      "sha256": "424132e1f0c5906953329601509f788751b2914580c09cb7a03f2acc785b4557",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/PRE_SOURCE_FREEZE.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/PROPOSED_NATIVE_PLAN.json",
+      "sha256": "59a4e12f98a6f3e2b62a964ac20a9b6ac050ad3e97842ea572834cfbb6febe17",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/PROPOSED_NATIVE_PLAN.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/PROPOSED_OFFERS.json",
+      "sha256": "736eb274f2efad525486d7fc441cf8ca4431e9a60e68832e3c37414af53b9bc0",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/PROPOSED_OFFERS.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/REPORT.json",
+      "sha256": "451bd2e3b4bf992c16ebebec970805dffa2f99b3f696d2e61ddcce8ba245a006",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/REPORT.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/SHA256SUMS",
+      "sha256": "532fcd32ee3bef380beec73f44a87e760a3f9e6e50aa973b313b88f0f3abe74b",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/SHA256SUMS"
+    },
+    {
+      "copy": "consumer/inputs/preflight/SUPPLEMENTAL_FREEZE01.json",
+      "sha256": "f4f66b1469447b4887f2e2b717d540222a537cce346933800ee98d2c5387497b",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/SUPPLEMENTAL_FREEZE01.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/SUPPLEMENTAL_INPUTS01.json",
+      "sha256": "269b562cb0c0c95a87b0f1045770df6c18115c0021a3d577c1d41acf4940b4a5",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/SUPPLEMENTAL_INPUTS01.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/freeze_inputs01.py",
+      "sha256": "85127f43110269ca3bd178cd7ab34453a09a3d558f87eed8294bbed6ba90a31e",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/freeze_inputs01.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/freeze_supplement01.py",
+      "sha256": "19ca905bb05aedfba8c9401c23e60f06b16ec2459e8384a1fc9c25cdfb3c2b10",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/freeze_supplement01.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/frozen01.py",
+      "sha256": "90ceca91da8d7a1e2e2d9e1b5a8db8dde236b748883345e819d6bfa29635b16d",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/frozen01.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/bridge01/CONTRACT_FINDINGS.json",
+      "sha256": "9eb4793aa74086656077c5f20e65197fdf468352f192cd9142aea37323e3a46e",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/bridge01/CONTRACT_FINDINGS.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/bridge01/LIMITATIONS.json",
+      "sha256": "327ac69186c81ad84522933070b59806bb443e9859f3f3f0179948ec77c3ad2b",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/bridge01/LIMITATIONS.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/bridge01/REPORT.json",
+      "sha256": "ba2598579485a2a14d52f980a15aacd0a033d70fe5d92809a12d4faf728928b5",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/bridge01/REPORT.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/bridge01/SHA256SUMS",
+      "sha256": "2b2f403534d856811b12997d6222da8e327ba96388facf66fe57cf5868c34a83",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/bridge01/SHA256SUMS"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control-launch02/AMENDMENT02.json",
+      "sha256": "ec78dc5e9e0739568973df7c20de8eea8d8358d687b8f8fe798ca8ea6ff06caa",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control-launch02/AMENDMENT02.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control-launch02/REPORT.json",
+      "sha256": "73522c329a36c68a3f5a022bd9c3b1c2e9752c66e3187b7ce0f150b9c06f8501",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control-launch02/REPORT.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control-launch02/SHA256SUMS",
+      "sha256": "c6e8a257831eb6a28a92b87dffa6417d2dbcfa6c7731f601b528fb8b076cef00",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control-launch02/SHA256SUMS"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control-launch02/inputs/clock02/safe_exec.py",
+      "sha256": "544168e3e4ad64a29c65a705a69ea73387006ef004c28322470d21916cd01416",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control-launch02/inputs/clock02/safe_exec.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control-launch02/launch_common.py",
+      "sha256": "0c42dc4e0426780c766e76280ebae9d21ca47c6055eac9c57fcd428efe0fecad",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control-launch02/launch_common.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control-launch02/launch_native.py",
+      "sha256": "18ceb6ee3ec0066b4e4b23dbf1df5e855ff30f3a7877022623407d857ed79245",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control-launch02/launch_native.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control-launch02/startup-instrumentation.json",
+      "sha256": "bee0f99567802f2cae5cbfcea16d63668fd4558c1ee9163f10dddb6c30aa0ff2",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control-launch02/startup-instrumentation.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control02/AMENDMENT02.json",
+      "sha256": "46a8436eec7cad32070552137baaf60ff43b12766c29cd54c1daab3f2974adfd",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control02/AMENDMENT02.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control02/EXPERIMENT.json",
+      "sha256": "270a42f5c6e3f1a2f6de121e11a350b059f95e557a7238cb95c4a70b14abc0e3",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control02/EXPERIMENT.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control02/INPUTS.json",
+      "sha256": "a109abb66db61d2e66a82c4feca021d533bccffec924c3000d481eebeab57a2f",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control02/INPUTS.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control02/SHA256SUMS",
+      "sha256": "89998403271f5aedb5e067a225096890c2db60a5124e2cb3d7466139b2080c0f",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control02/SHA256SUMS"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control02/freeze_inputs02.py",
+      "sha256": "ea81eb69f2836da94110f3fd66ea058ea1bcf47dc4f2b79fa418e82112a3324d",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control02/freeze_inputs02.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control02/native_probe02.py",
+      "sha256": "f9d1465d1da4707c304975c5a67e1d90464e15f44a8dcb42b2cbb42f0c16688a",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control02/native_probe02.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/control02/prelaunch01.py",
+      "sha256": "c6c603146bc1e529546571477021ce2a59d8af4bc1e9e962d723d75a9a54ce7a",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/control02/prelaunch01.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/native02/http/035.json",
+      "sha256": "b8aff4f79b6ae72ec8493d6ed9355ffe7f4a7372061ac81252d5fe4aae6c12b1",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/native02/http/035.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/native02/http/036.json",
+      "sha256": "ab71d7b097e5068c1dc0e0253630aef185edff3bc9b1298c12409264dd384617",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/native02/http/036.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/native02/http/037.json",
+      "sha256": "3d46fe1fd1f8b6b9dc383289e48d25b54f6b02674ea9bfb13a18ddf183d0ce2b",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/native02/http/037.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/native02/result02.json",
+      "sha256": "ae772979c5b6c12c05acb0da350802401b3b95c1d42b3191cc5185fa42f46e17",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/native02/result02.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/native02/runtime-identity.json",
+      "sha256": "40dd2e421b9364ed2ff8f00cd38552aac5a94f8badf32226a5a79cf39f9656f8",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/native02/runtime-identity.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/reviews/native-team16-verified-model-request01.txt",
+      "sha256": "a653c68e9d5e8ddb03c35894be20e319310fa1532ff0e4104f8c8b74d22e4aca",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/reviews/native-team16-verified-model-request01.txt"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/runtime16/LIMITATIONS.json",
+      "sha256": "6d4acd3bd82e5ad9321dc79d66cb5840db70fa738bca9ba77796665c4fcd4e6f",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/runtime16/LIMITATIONS.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/runtime16/REPORT.json",
+      "sha256": "58f6e95b7c1040fbedc759192317b6e40c45707254369dd192e917274ac0ed97",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/runtime16/REPORT.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/runtime16/SHA256SUMS",
+      "sha256": "8a6654a4f05014df26d47580335b553cd97165ae9dcfb2468ccde97ad6ea0149",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/runtime16/SHA256SUMS"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/capture_owner_closure.py",
+      "sha256": "7d7a43321221a6441318c0d7ff962737559d3ce0bc7a668e0b6109b4917a80ed",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/capture_owner_closure.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/clocked_owner_cut.py",
+      "sha256": "394a9dbb5811ffc53c326e1d1107b70a1d80b3bafe121e116fc0a6d96ac6eea3",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/clocked_owner_cut.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/collect_azure.py",
+      "sha256": "4b92fa2c68d8f6f4586538469aacc3d6d82ef5db817b19f8a690f5e0d2866784",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/collect_azure.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/collect_owner_bootstrap.py",
+      "sha256": "7fcf0d06761bed2dfd9714d9dcdd8b2782f97e847dbe992dae312e173676fdaa",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/collect_owner_bootstrap.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/copy_ready_intervals.py",
+      "sha256": "042daafa9746ac1db0eac6fa21c276eb3f4587b4218296082f0aa8123ffaaf2c",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/copy_ready_intervals.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/engine_handoff.py",
+      "sha256": "dd9059870a48ed56b8c3aceb41b084ac79c2d663f6e8d463cf0d779bc700e65e",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/engine_handoff.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/flushed_owner_prefix.py",
+      "sha256": "d875666da685a0dee90dd8996a780e152d5b5c69f96c8bd5bf060e75db9353b0",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/flushed_owner_prefix.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/gateway_prefix_bridge.py",
+      "sha256": "9cd3c7dee081a34a965f3bba4db3494c0283c79d7fd8449123811ffbc6e81cbb",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/gateway_prefix_bridge.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/input_post_observer.py",
+      "sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/input_post_observer.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/launch_gateway_prefix_service.py",
+      "sha256": "e8c03ccd48e9b9b25c0b0c74199ea5ee10a4f0f0cb2c3c3a5434999f41ac1f0d",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/launch_gateway_prefix_service.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/launch_queue_service.py",
+      "sha256": "dc3de7382af5d020ffb552262feed135c1b0c591838b214528d080242ff931c3",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/launch_queue_service.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/live_owner_prefix.py",
+      "sha256": "af18460a18af6154588b5b56a4416c9a206cebfc8e7f289d08d93dcef7d34fe4",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/live_owner_prefix.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/phase_observer.py",
+      "sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/phase_observer.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_copy_ready_hook.py",
+      "sha256": "b0f386c80521676f0a5d2ea5d3036c60b50836b19f606bc23df1969f99c4e730",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_copy_ready_hook.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_copy_ready_plugin.py",
+      "sha256": "6f72e0c1c41393d1b53a8ece2206cc36ad7cc1875783e78a55ff1d11cbeb5b0b",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_copy_ready_plugin.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_forward_capture.py",
+      "sha256": "6e6813d5c0225e248b6542fdc82aa6e25c62f91067b7eac62454924bab30b267",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_forward_capture.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_forward_hook.py",
+      "sha256": "84a6c54857b9a550d1a7ac8bad3cdb1cbdb745d1080c386ccd1d9e1aac719077",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_forward_hook.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_forward_plugin.py",
+      "sha256": "e3b13496d5d8b34066ac4b0b1d32734a68acdd50ad5757d3d18f17f91e633e93",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_forward_plugin.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_forward_region.py",
+      "sha256": "fc6dcd007f5f8c8215bdd8ff83771848c6775e70e9dc50eaff19d4dbf17e5000",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/prepared_forward_region.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/process_clock_provenance.py",
+      "sha256": "685117d4d8603d6b2cbcf08b3b34d402a1ee8d06e5b8436b67f051f19131c051",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/process_clock_provenance.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/pyproject.toml",
+      "sha256": "de36ad18dbb4d8dcec3cca215668d46f4437327bea6af3f16350f4cda6180bdf",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/pyproject.toml"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/queue_observer.py",
+      "sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/queue_observer.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/research_source_guard.py",
+      "sha256": "5269b620c09b8714ae8d34c4973ebce9b2873a015821f9f062b52d6f3091bd88",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/research_source_guard.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/run_h16.py",
+      "sha256": "e16ba93df05f1e4304f6c0c4af08086550022c9de2fece11e6f8c2ee1007067a",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/run_h16.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/source-closure.json",
+      "sha256": "94fa09623feed131fb24c4c3054483f56387e64d48a59f9de556f4bbefab1de8",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/source-closure.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/source_owner_phases.py",
+      "sha256": "4885e0b994a57a71498a49bdc2559fe8bcce949bbc7c8641b051d7440bf33df7",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/source_owner_phases.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-v2/batch_capture_bridge.py",
+      "sha256": "5d76d994921bb16088cabf9b8f9ebe8843c17f7bacb4b1dc979bf255ad8ccef8",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-v2/batch_capture_bridge.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-v2/launch_batch_service.py",
+      "sha256": "cce5f87c37b5d0a6009d68b6311d8e20f61f066630d7039ea46ebd75a0563d59",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native-v2/launch_batch_service.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/mpc-research/native_observer/pr33_native_observer.py",
+      "sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/mpc-research/native_observer/pr33_native_observer.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/experiments/prefill-vllm-v030-source-map.json",
+      "sha256": "d03f263b50c758b9e02e9e3df929c4c996b96c67d79fa415766bc20c2f80a21c",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/experiments/prefill-vllm-v030-source-map.json"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/gateway.py",
+      "sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/gateway.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/__init__.py",
+      "sha256": "29962543d64e8cdb630a240a999dd9e47ed87cccf4bd03220ca2d82b5d7be09e",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/__init__.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/actuator.py",
+      "sha256": "e31dbe92eb3a27be554db15405af0a6046a6820096e84540812d3ee88afc59d5",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/actuator.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/benchmark.py",
+      "sha256": "c84858d2f4973de890d8eaaba33ca42ec7d5d0e13f5c097feaa829f4d337df99",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/benchmark.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/contracts.py",
+      "sha256": "f39f6b73b41b1433a220f182679852df5c4332d9022ce903dba9863375236e23",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/contracts.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/controller.py",
+      "sha256": "44d705101820d89677035101110c70f890f94f7d82a5a521ec87d5e09dbf08cc",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/controller.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/http_capture.py",
+      "sha256": "0648738704771f80470849b0c0beb671d0f17c9dbc75e4095cff155b20d04be7",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/http_capture.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/identification.py",
+      "sha256": "bae3888768be5508f6a5d57a48eddd80abe9e0942f95e7f57bab824707f560f8",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/identification.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/model.py",
+      "sha256": "eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/model.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/native_state.py",
+      "sha256": "835df8ebaa58c773074e65cedba4627b468d14b560233a7655bf9cd2240b83d6",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/native_state.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_lab/runtime.py",
+      "sha256": "f04c58eb9b5a81e7e1c7a22aaea1cd6b59de88c568ec77d51f1487af4c85b727",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_lab/runtime.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_local/__init__.py",
+      "sha256": "85b345f6455c91c95259e59097b2db800e155512fe54b64e837de80ca72f496f",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_local/__init__.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/mpc_local/contracts.py",
+      "sha256": "3fcc41b883cf57a5fa49e9424139a1b949be4db872c0724155710b447c5016ec",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/mpc_local/contracts.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/prefill_lab/__init__.py",
+      "sha256": "111e3c479dec680d722b09f57349ba00f909c8bafa562fede7370578b1564c1c",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/prefill_lab/__init__.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/prefill_lab/contracts.py",
+      "sha256": "4d5cda37f5d5f765f286476da675f4155fffcce5e8b22d35d8623f8d8429a23f",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/prefill_lab/contracts.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/prefill_lab/live_http.py",
+      "sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/prefill_lab/live_http.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/prefill_lab/plugin.py",
+      "sha256": "7bdb7585047e42e8ec035e543fc6b1f79df425fc6706348989dd0856d42b82e2",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/prefill_lab/plugin.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/prefill_lab/runtime.py",
+      "sha256": "c136380a889d83fba0c0a058657d4c238883c50461fd4934d4162933b00a426c",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/prefill_lab/runtime.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/telemetry.py",
+      "sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/telemetry.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/tests/test_r24_capture_owner_closure.py",
+      "sha256": "a71895ad4c93c103d2a3d044044c29e0d542e05c25df3e11dae773c0c1409e30",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/tests/test_r24_capture_owner_closure.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/inputs/source-tree/tests/test_r24_process_clock_provenance.py",
+      "sha256": "864641627a9e6487caf13c889a74c9d97df4505bb58af797d19a80ebb69352b0",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/inputs/source-tree/tests/test_r24_process_clock_provenance.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/preflight01.py",
+      "sha256": "9cad1c746fdcb326f6fab0edc2a7f1e3da82f29eb74744853b9dc3ed2a748ebd",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/preflight01.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/synthetic01.py",
+      "sha256": "16ae10fe64c0c2e02776665ba8b630a147ac52f735e1c78cb571d49b624b09ed",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/synthetic01.py"
+    },
+    {
+      "copy": "consumer/inputs/preflight/test_preflight01.py",
+      "sha256": "deb1244e30dfb0150b5299a4172fa16f7a8db293a230195d0f7c82476389ed91",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/inputs/preflight/test_preflight01.py"
+    },
+    {
+      "copy": "consumer/inputs/base/owned01.py",
+      "sha256": "9cbaf38d787bf251593e0c2aac3fa0fb124ed889c5b546c74a5e5549d7132824",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/owned01.py"
+    },
+    {
+      "copy": "consumer/inputs/base/common01.py",
+      "sha256": "99c4ad25d2d095ab77cd1c649713cfc63adbbb342afddeb01a4bd1724846618a",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/common01.py"
+    },
+    {
+      "copy": "consumer/inputs/base/acquire01.py",
+      "sha256": "fc5330e58abb40e31b95edd74f682cd23aad2f1f537880ed2407be192c07b95a",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/acquire01.py"
+    },
+    {
+      "copy": "consumer/inputs/base/PROTOCOL.json",
+      "sha256": "76d0cffbd0eb461d1745eb249b45c7decfd01780173559d323d1ef9e850f5baf",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/PROTOCOL.json"
+    },
+    {
+      "copy": "consumer/inputs/base/inputs/host-readonly01.json",
+      "sha256": "5d3ca8976315251a75eb0a19846c01cf996eda2d16d0b0d7e5ca87de14b0744b",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/inputs/host-readonly01.json"
+    },
+    {
+      "copy": "consumer/inputs/base/inputs/launch02/inputs/source13-entry02.py",
+      "sha256": "fe9cf85739aa06ed534eb4871e0152ae9cefb1a7425af44194aad43c56b7fbb4",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/inputs/launch02/inputs/source13-entry02.py"
+    },
+    {
+      "copy": "consumer/inputs/base/inputs/launch02/inputs/source13/h16-original-protocol.json",
+      "sha256": "ab883c90e85b9ec61967499841ce9de5942f11d916372f1b40824866750608da",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/inputs/launch02/inputs/source13/h16-original-protocol.json"
+    },
+    {
+      "copy": "consumer/inputs/base/inputs/launch02/inputs/clock02/probe_common.py",
+      "sha256": "4df0ec5d9b015b54581d581e91c9a3300196e07da9157c3f13a3ee91f4b96697",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/inputs/launch02/inputs/clock02/probe_common.py"
+    },
+    {
+      "copy": "consumer/inputs/base/inputs/launch02/inputs/clock02/probe_entry.py",
+      "sha256": "c0c360f88971d873f51cdb7624f5e077e2b89733d94168ff40baa31fc545d8d2",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/inputs/launch02/inputs/clock02/probe_entry.py"
+    },
+    {
+      "copy": "consumer/inputs/base/inputs/launch02/inputs/clock02/safe_exec.py",
+      "sha256": "544168e3e4ad64a29c65a705a69ea73387006ef004c28322470d21916cd01416",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/inputs/launch02/inputs/clock02/safe_exec.py"
+    },
+    {
+      "copy": "consumer/inputs/base/inputs/launch02/inputs/clock02/inputs/source13/research_source_guard.py",
+      "sha256": "5269b620c09b8714ae8d34c4973ebce9b2873a015821f9f062b52d6f3091bd88",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/partial-composition/inputs/base/inputs/launch02/inputs/clock02/inputs/source13/research_source_guard.py"
+    },
+    {
+      "copy": "inputs/reference-tests/test_consumer01.py",
+      "sha256": "5f0c4062c2f327d5f81a32bd4bd92e85937559b67ffaca41b896c08b8b83f1e3",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/candidate/test_consumer01.py"
+    },
+    {
+      "copy": "inputs/verified-model-request01.txt",
+      "sha256": "a653c68e9d5e8ddb03c35894be20e319310fa1532ff0e4104f8c8b74d22e4aca",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-successor01/evidence/verified-model-request01.txt"
+    }
+  ],
+  "dependency_status": "UNACCEPTED_FOR_DEPLOYMENT_PENDING_INDEPENDENT_DELTA_AND_SEPARATE_MAYOR_DEPLOYMENT_APPROVAL",
+  "only_selected_source_and_literal_guard_closure_copied": true
+}

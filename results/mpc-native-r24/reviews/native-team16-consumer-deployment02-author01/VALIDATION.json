@@ -1,0 +1,147 @@
+{
+  "invalid_approval_negative_only": true,
+  "live_mains_executed": false,
+  "old14_6_42_suites_executed": false,
+  "semantic_projection_equal": true,
+  "valid_approval_created": false,
+  "versions": {
+    "py312": {
+      "generation01": {
+        "C01": {
+          "failure": null,
+          "name": "test_C01_pre_host_authority_and_actual_default_off_call_placement",
+          "seconds": 0.017,
+          "status": "pass"
+        },
+        "C02": {
+          "failure": null,
+          "name": "test_C02_fresh_bootstrap_plan_operation_and_literal_closure",
+          "seconds": 0.257,
+          "status": "pass"
+        },
+        "C03": {
+          "failure": null,
+          "name": "test_C03_literal_source_cwd_module_clock_and_repair_preservation",
+          "seconds": 0.026,
+          "status": "pass"
+        },
+        "C04": {
+          "failure": null,
+          "name": "test_C04_actual_service_route_exec_limits_not_Gateway_budget",
+          "seconds": 0.004,
+          "status": "pass"
+        },
+        "C05": {
+          "failure": null,
+          "name": "test_C05_actual_protocol_original_activation_and_publication",
+          "seconds": 0.006,
+          "status": "pass"
+        },
+        "C06": {
+          "failure": null,
+          "name": "test_C06_real_ordinal2_path_late_consumer_preserves_producer",
+          "seconds": 0.137,
+          "status": "pass"
+        },
+        "C07": {
+          "failure": "ValueError: exclusive_candidate_cwd_required",
+          "name": "test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap",
+          "seconds": 0.014,
+          "status": "fail"
+        },
+        "C08": {
+          "failure": null,
+          "name": "test_C08_actual_owned_registration_shared_anchor_true_close",
+          "seconds": 0.314,
+          "status": "pass"
+        },
+        "C09": {
+          "failure": null,
+          "name": "test_C09_private_config_requires_join_and_decoded_safe_export",
+          "seconds": 0.003,
+          "status": "pass"
+        }
+      },
+      "generation02": {
+        "C07": {
+          "failure": null,
+          "name": "test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap",
+          "seconds": 0.257,
+          "status": "pass"
+        }
+      },
+      "statement": "8 unchanged passes generation01 plus corrected C07 generation02;not a fresh nine-test generation02 suite.",
+      "total_executions": 10,
+      "unique_passing_controls": 9
+    },
+    "py314": {
+      "generation01": {
+        "C01": {
+          "failure": null,
+          "name": "test_C01_pre_host_authority_and_actual_default_off_call_placement",
+          "seconds": 0.013,
+          "status": "pass"
+        },
+        "C02": {
+          "failure": null,
+          "name": "test_C02_fresh_bootstrap_plan_operation_and_literal_closure",
+          "seconds": 0.226,
+          "status": "pass"
+        },
+        "C03": {
+          "failure": null,
+          "name": "test_C03_literal_source_cwd_module_clock_and_repair_preservation",
+          "seconds": 0.022,
+          "status": "pass"
+        },
+        "C04": {
+          "failure": null,
+          "name": "test_C04_actual_service_route_exec_limits_not_Gateway_budget",
+          "seconds": 0.002,
+          "status": "pass"
+        },
+        "C05": {
+          "failure": null,
+          "name": "test_C05_actual_protocol_original_activation_and_publication",
+          "seconds": 0.006,
+          "status": "pass"
+        },
+        "C06": {
+          "failure": null,
+          "name": "test_C06_real_ordinal2_path_late_consumer_preserves_producer",
+          "seconds": 0.137,
+          "status": "pass"
+        },
+        "C07": {
+          "failure": "ValueError: exclusive_candidate_cwd_required",
+          "name": "test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap",
+          "seconds": 0.012,
+          "status": "fail"
+        },
+        "C08": {
+          "failure": null,
+          "name": "test_C08_actual_owned_registration_shared_anchor_true_close",
+          "seconds": 0.365,
+          "status": "pass"
+        },
+        "C09": {
+          "failure": null,
+          "name": "test_C09_private_config_requires_join_and_decoded_safe_export",
+          "seconds": 0.003,
+          "status": "pass"
+        }
+      },
+      "generation02": {
+        "C07": {
+          "failure": null,
+          "name": "test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap",
+          "seconds": 0.233,
+          "status": "pass"
+        }
+      },
+      "statement": "8 unchanged passes generation01 plus corrected C07 generation02;not a fresh nine-test generation02 suite.",
+      "total_executions": 10,
+      "unique_passing_controls": 9
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+ "schema": "r24-resume-p0-recorder-metrics-independent02-plan-v1",
+ "created_utc": "2026-11-05T01:10:12Z",
+ "author": {"role": "PR32 team16 Role4 independent validation", "model_id": "claude-opus-5.5", "reasoning_effort": "max", "child_agents": 0},
+ "scope": "bounded independent RECORDER/METRICS source gate for nominal_client.py 933e4161 (async client03) and nominal_metrics.py 49c76b8b (metrics v2); this plan preregisters the single optional literal witness W01 before execution",
+ "status_at_freeze": "source review of client 1-971, metrics 1-1211, score_http 1-71 and gateway.py 536-580/628-760 completed from pinned snapshots and logged views; REPORT.json not yet written; W01 not yet executed",
+ "witness": {
+  "id": "W01",
+  "path": "witness/w01_strict_json_overflow.py",
+  "sha256": "85af1f509664acbd9a80f467c07a8e6750d99e2a482153b551d35e13ba563c85",
+  "bytes": 6866,
+  "candidate_finding": "N1: _strict_json docstring (client line 131) claims every capture stays writable with allow_nan=False, but an overflow literal (1e999) is not a NaN/Infinity token, parses to +/-inf, is copied verbatim into the capture (e.g. _admission_rejection line 390 max_admitted_cost) and makes _write_new (line 648) raise ValueError before the file is opened",
+  "method": "verify snapshot inputs/nominal_client.py sha256 933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95; AST-extract exactly the top-level FunctionDefs _finite, _reject_constant, _strict_json, _admission_rejection, _write_new and Assigns ADMISSION_DETAIL, GATEWAY_REJECTION_FIELDS (abort on missing or duplicate names); exec them in a namespace holding only json, math, hashlib, os; the module is never imported",
+  "inputs": "literal strings/bytes written in the witness source only; no Native, Train, Eval, trace, journal or network data",
+  "writes": "only witness/out-<tag>/finite_control.json (C8) inside this capsule; C9 must create nothing",
+  "cases": [
+   {"id": "C1_strict_overflow_positive", "call": "_strict_json('{\"a\": 1e999}', 'W01')", "expected": "no exception; a == +inf"},
+   {"id": "C2_strict_overflow_negative", "call": "_strict_json('{\"a\": -1e999}', 'W01')", "expected": "no exception; a == -inf"},
+   {"id": "C3_strict_infinity_token_control", "call": "_strict_json('{\"a\": Infinity}', 'W01')", "expected": "ValueError"},
+   {"id": "C4_strict_nan_token_control", "call": "_strict_json('{\"a\": NaN}', 'W01')", "expected": "ValueError"},
+   {"id": "C5_rejection_finite_control", "call": "_admission_rejection(503, canonical admission body with max_admitted_cost 32.0, estimated_request_cost 40.0)", "expected": "dict; max_admitted_cost == 32.0; estimated_request_cost == 40.0; fields_absent == []"},
+   {"id": "C6_rejection_overflow_max_admitted_cost", "call": "_admission_rejection(503, same body with max_admitted_cost 1e999)", "expected": "dict (still classified as admission rejection); max_admitted_cost == +inf copied verbatim; estimated_request_cost == 40.0"},
+   {"id": "C7_rejection_overflow_cost_sanitized_control", "call": "_admission_rejection(503, same body with estimated_request_cost 1e999)", "expected": "dict; estimated_request_cost is None (sanitized by _finite, line 389); max_admitted_cost == 32.0"},
+   {"id": "C8_write_new_finite_control", "call": "_write_new(witness/out-<tag>/finite_control.json, {'rejection': C5 result})", "expected": "file created; returned sha256 equals sha256 of the file bytes"},
+   {"id": "C9_write_new_overflow", "call": "_write_new(witness/out-<tag>/overflow.json, {'rejection': C6 result})", "expected": "ValueError raised before open; no file created"}
+  ],
+  "runs": [
+   {"tag": "py314", "python": "ROOT/.venv/bin/python3.14", "log": "witness-w01-py314.log"},
+   {"tag": "py312", "python": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12", "log": "witness-w01-py312.log"}
+  ],
+  "invocation": "cd capsule; ./run_logged.sh <log> env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 <python> -B -I witness/w01_strict_json_overflow.py <tag>",
+  "pre_run_check": "logged sha256 pins of PLAN.json and the witness source plus ast.parse-only syntax check (no execution) on both Pythons",
+  "attempt_policy": "exactly one execution attempt per Python, timeout 60 s; outputs and any failure or unmet expectation retained verbatim; no edits to PLAN.json or the witness after freeze; no re-run",
+  "decision_rule": "N1 is reported as confirmed for the extracted functions if C1, C2, C6 and C9 meet expectations on a Python with controls C3, C4, C5, C7 and C8 met; any unmet expectation is reported as observed and N1 is then stated source-only or withdrawn accordingly"
+ },
+ "interpretation_limits": [
+  "W01 exercises extracted pure functions only; it does not execute StreamParse, the HTTP path, telemetry.has_sse_content, capture_replay or the CLI",
+  "a real root gateway emits the 503 body through its JSON response codec and is not shown here to emit overflow literals; N1 concerns malformed or non-canonical producers and the docstring guarantee, not an observed Native event",
+  "no claim about Native behaviour, MPC performance, comparability or any GPU authorization follows from W01"
+ ],
+ "not_done": ["no rerun of the 43 client or 87 metrics tests", "no module import of nominal_client or nominal_metrics", "no HTTP, network, GPU, SSH, git, installs, Markdown or child agents", "no Train or Eval data"]
+}

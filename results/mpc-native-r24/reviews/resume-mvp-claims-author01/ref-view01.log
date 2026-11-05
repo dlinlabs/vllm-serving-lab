@@ -1,0 +1,451 @@
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:1: {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:2:   "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:3:   "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:4:   "load_fidelity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:5:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:6:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:7:     "p99_scheduling_lag": 0.008364396813558411,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:8:     "max_scheduling_lag": 0.01713181147351861
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:9:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:10:   "performance": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:11:     "attempted": 7643,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:12:     "success": 1976,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:13:     "rejected": 5667,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:14:     "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:15:     "client_p99_ttft": 2.4125834047736134,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:16:     "scheduled_p99_ttft": 2.413431863154983,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:17:     "client_p99_e2e": 8.418996846245136,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:18:     "slo_successes": 572,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:19:     "slo_goodput_per_arrival_second": 1.9066666666666667,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:20:     "slo_success_fraction_of_offered": 0.07483972262200707,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:21:     "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:22:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:23:   "gateway_terminal_counts": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:24:     "completed": 1979,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:25:     "rejected": 5667
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:26:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:27:   "failed_without_gateway_record": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:28:   "state_poll_errors": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:29:   "cache_policy_self_reported": "disabled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:30:   "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:31:   "performance_by_input_size": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:32:     "medium_input": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:33:       "attempted": 1424,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:34:       "success": 437,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:35:       "rejected": 987,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:36:       "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:37:       "client_p99_ttft": 2.4098354320577346,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:38:       "scheduled_p99_ttft": 2.410583019540645,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:39:       "client_p99_e2e": 8.512966060673351,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:40:       "slo_successes": 146,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:41:       "slo_goodput_per_arrival_second": 0.4866666666666667,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:42:       "slo_success_fraction_of_offered": 0.10252808988764045,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:43:       "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:44:     },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:45:     "long_input": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:46:       "attempted": 6035,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:47:       "success": 1476,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:48:       "rejected": 4559,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:49:       "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:50:       "client_p99_ttft": 2.4208894032344688,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:51:       "scheduled_p99_ttft": 2.4213105400267523,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:52:       "client_p99_e2e": 8.363001023273682,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:53:       "slo_successes": 405,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:54:       "slo_goodput_per_arrival_second": 1.35,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:55:       "slo_success_fraction_of_offered": 0.06710853355426678,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:56:       "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:57:     },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:58:     "short_input": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:59:       "attempted": 184,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:60:       "success": 63,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:61:       "rejected": 121,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:62:       "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:63:       "client_p99_ttft": 1.812190537833378,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:64:       "scheduled_p99_ttft": 1.812930938228967,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:65:       "client_p99_e2e": 7.846215001459935,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:66:       "slo_successes": 21,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:67:       "slo_goodput_per_arrival_second": 0.07,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:68:       "slo_success_fraction_of_offered": 0.11413043478260869,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:69:       "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:70:     }
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:71:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:72:   "control_fidelity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:73:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:74:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:75:     "budget_mode": "scheduled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:76:     "planned_commands": 10,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:77:     "recorded_commands": 10,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:78:     "gateway_applications": 10,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:79:     "max_budget_lag_limit": 0.05,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:80:     "p99_send_lag": 0.004999341806396842,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:81:     "max_send_lag": 0.005173451965674758,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:82:     "p99_application_lag": 0.026637081189546732,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:83:     "max_application_lag": 0.026862261991482228,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:84:     "p99_acknowledgement_roundtrip": 0.027273701326339505,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:85:     "note": "Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only."
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:86:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:87:   "timing": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:88:     "p99_state_age": 0.006476270112907488,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:89:     "max_state_age": 0.011731987004168332,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:90:     "p99_metrics_roundtrip": 0.026187284858315077,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:91:     "max_state_poll_gap": 1.0468881609849632,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:92:     "p99_event_loop_lag": 0.02848232185817319,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:93:     "max_event_loop_lag": 0.28150876704603434
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:94:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:95:   "diagnostic_integrity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:96:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:97:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:98:     "gateway_mode": "enabled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:99:     "external_mode": "enabled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:100:     "gc_coverage_complete": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:101:     "request_linked_prefill": "unavailable",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:102:     "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:103:     "coverage_start": 293872.61001234,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:104:     "coverage_end": 294179.211890136,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:105:     "gc_spans": 447,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:106:     "cpu_samples": 307,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:107:     "request_summaries": 7646,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:108:     "engine_samples": 307,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:109:     "engine_counter_epochs": 1
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:110:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:111:   "runner_diagnostic_integrity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:112:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:113:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:114:     "source": "runner",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:115:     "gc_coverage_complete": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:116:     "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:117:     "coverage_start": 293872.854406097,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:118:     "coverage_end": 294178.887162587,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:119:     "gc_spans": 3,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:120:     "loop_samples": 28003,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:121:     "max_loop_lag": 0.39855335402535275
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:122:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:123:   "runner_gc_integrity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:124:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:125:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:126:     "policy": "defer",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:127:     "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:128:     "samples": 2909,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:129:     "peak_rss_mib": 899.2734375,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:130:     "max_rss_mib": 1536.0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:131:     "disabled_seconds": 302.8810150260106,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:132:     "measurement_max_runner_loop_lag": 0.021721369004808366,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:133:     "restored": true
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:134:   }
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:135: }
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:1: {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:2:   "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:3:   "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:4:   "load_fidelity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:5:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:6:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:7:     "p99_scheduling_lag": 0.006371616800315675,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:8:     "max_scheduling_lag": 0.015395567810628563
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:9:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:10:   "performance": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:11:     "attempted": 7643,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:12:     "success": 2059,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:13:     "rejected": 5584,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:14:     "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:15:     "client_p99_ttft": 2.202635321232957,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:16:     "scheduled_p99_ttft": 2.203232305971907,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:17:     "client_p99_e2e": 8.175106733852306,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:18:     "slo_successes": 736,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:19:     "slo_goodput_per_arrival_second": 2.453333333333333,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:20:     "slo_success_fraction_of_offered": 0.09629726547167343,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:21:     "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:22:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:23:   "gateway_terminal_counts": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:24:     "completed": 2062,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:25:     "rejected": 5584
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:26:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:27:   "failed_without_gateway_record": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:28:   "state_poll_errors": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:29:   "cache_policy_self_reported": "disabled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:30:   "note": "Integrity and load fidelity do not establish MPC benefit. Source output lengths are not replayed.",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:31:   "performance_by_input_size": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:32:     "medium_input": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:33:       "attempted": 1424,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:34:       "success": 477,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:35:       "rejected": 947,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:36:       "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:37:       "client_p99_ttft": 2.190659657577053,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:38:       "scheduled_p99_ttft": 2.1911378636490557,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:39:       "client_p99_e2e": 8.294359764819966,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:40:       "slo_successes": 188,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:41:       "slo_goodput_per_arrival_second": 0.6266666666666667,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:42:       "slo_success_fraction_of_offered": 0.13202247191011235,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:43:       "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:44:     },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:45:     "long_input": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:46:       "attempted": 6035,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:47:       "success": 1512,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:48:       "rejected": 4523,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:49:       "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:50:       "client_p99_ttft": 2.192559235573865,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:51:       "scheduled_p99_ttft": 2.1930707043595636,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:52:       "client_p99_e2e": 8.12741746998916,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:53:       "slo_successes": 513,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:54:       "slo_goodput_per_arrival_second": 1.71,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:55:       "slo_success_fraction_of_offered": 0.08500414250207125,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:56:       "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:57:     },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:58:     "short_input": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:59:       "attempted": 184,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:60:       "success": 70,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:61:       "rejected": 114,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:62:       "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:63:       "client_p99_ttft": 1.8680599747312976,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:64:       "scheduled_p99_ttft": 1.8712755314819538,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:65:       "client_p99_e2e": 7.2318372368894055,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:66:       "slo_successes": 35,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:67:       "slo_goodput_per_arrival_second": 0.11666666666666667,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:68:       "slo_success_fraction_of_offered": 0.19021739130434784,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:69:       "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:70:     }
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:71:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:72:   "control_fidelity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:73:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:74:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:75:     "budget_mode": "scheduled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:76:     "planned_commands": 10,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:77:     "recorded_commands": 10,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:78:     "gateway_applications": 10,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:79:     "max_budget_lag_limit": 0.05,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:80:     "p99_send_lag": 0.00356682900339365,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:81:     "max_send_lag": 0.0037806399632245302,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:82:     "p99_application_lag": 0.01815008082659915,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:83:     "max_application_lag": 0.018967161944601685,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:84:     "p99_acknowledgement_roundtrip": 0.018895948815043084,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:85:     "note": "Initial budget is acknowledged before measurement; lag metrics cover subsequent steps only."
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:86:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:87:   "timing": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:88:     "p99_state_age": 0.005733044776134189,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:89:     "max_state_age": 0.006963471008930355,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:90:     "p99_metrics_roundtrip": 0.02473283309198449,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:91:     "max_state_poll_gap": 1.2040789820021018,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:92:     "p99_event_loop_lag": 0.02562126406701282,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:93:     "max_event_loop_lag": 0.3432052269927226
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:94:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:95:   "diagnostic_integrity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:96:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:97:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:98:     "gateway_mode": "enabled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:99:     "external_mode": "enabled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:100:     "gc_coverage_complete": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:101:     "request_linked_prefill": "unavailable",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:102:     "note": "Elapsed spans and aggregate engine metrics are not exclusive CPU or per-request GPU attribution.",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:103:     "coverage_start": 263922.102095216,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:104:     "coverage_end": 264229.346953675,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:105:     "gc_spans": 451,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:106:     "cpu_samples": 308,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:107:     "request_summaries": 7646,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:108:     "engine_samples": 307,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:109:     "engine_counter_epochs": 1
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:110:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:111:   "runner_diagnostic_integrity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:112:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:113:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:114:     "source": "runner",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:115:     "gc_coverage_complete": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:116:     "note": "Timing overlap is not exclusive CPU attribution; runner GC/OS scheduling are distinct.",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:117:     "coverage_start": 263922.298064083,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:118:     "coverage_end": 264228.981183335,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:119:     "gc_spans": 4,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:120:     "loop_samples": 28591,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:121:     "max_loop_lag": 0.31729210395133123
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:122:   },
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:123:   "runner_gc_integrity": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:124:     "valid": true,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:125:     "issues": [],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:126:     "policy": "defer",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:127:     "note": "RSS is sampled, not an OS memory ceiling. GC deferral is not a latency guarantee.",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:128:     "samples": 2923,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:129:     "peak_rss_mib": 898.85546875,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:130:     "max_rss_mib": 1536.0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:131:     "disabled_seconds": 303.72412223997526,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:132:     "measurement_max_runner_loop_lag": 0.019851737015414983,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:133:     "restored": true
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:134:   }
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:135: }
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:1: # Shared-client excitation: experiment and evidence index
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:2: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:3: Published 2026-10-18 UTC (2026-10-17 in Los Angeles). The rental GPUs have been
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:4: returned. **C remains uncollected and unscored; MPC has not been evaluated.**
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:5: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:6: ## What changed and why
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:7: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:8: The original per-request HTTP-client excitation A stopped at 210 s: the scheduled
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:9: 96→48 budget application lag was 52.884 ms against the 50 ms limit. The command
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:10: was applied, but the run correctly aborted and remains invalid for a whole-run
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:11: comparison. A 39.960 ms HTTP client construction overlapped that dispatch-to-
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:12: application interval; no gateway GC overlapped it. These are elapsed spans,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:13: not exclusive CPU attribution.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:14: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:15: The opt-in `--shared-upstream-client` mode creates one transport at gateway
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:16: startup, keeps request response/reservation cleanup independent, prevents
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:17: response-cookie carryover, and closes the transport at shutdown. It preserves
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:18: legacy mode and the original gates. Runtime `d0ccb2c` passed the complete native
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:19: Linux CPU/mock suite on two rental hosts: 476 cases on each, no failures/errors/
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:20: skips. That evidence is for the collection runtime, not an assertion that a
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:21: documentation-only publication commit was separately run on a rental GPU.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:22: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:23: ## Experiment ledger
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:24: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:25: All long scheduled captures use the existing Azure development trace,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:26: 7,643 offered requests / 300 s, fixed output cap 128, Qwen3-4B-Instruct-2507,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:27: context 8192, prefix cache disabled, TTFT SLO 0.5 s, unchanged 50 ms load/control
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:28: gates, process sampler, gateway/runner diagnostics and bounded runner GC deferral.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:29: The fixed-96 smokes replay 787 requests over 30 s.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:30: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:31: | Capture | Declaration | Measurement qualification | Outcome / role |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:32: |---|---|---|---|
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:33: | [Original smoke](captures/excitation-v1-smoke-96-r1/report.json) | Runtime smoke; no collection-time binding | Six gates pass | Original runtime check; separate legacy mode |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:34: | [Original A](captures/multilevel-v1-a-r1/report.json) | frozen excitation-v1 | **Invalid / aborted** at 210 s | Failure evidence, excluded from shared-model training |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:35: | [Shared smoke/A](captures/shared-client-a-r1/report.json) | shared-client-qualification-v1 | Six gates pass for both | Development A, 572 SLO successes / 1.907 per second |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:36: | [Fresh-host smoke/B](captures/shared-client-b-r1/report.json) | shared-client-b-v1 | Six gates pass for both | Development B, 736 SLO successes / 2.453 per second |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:37: | Held-out C | Not collected | Not applicable | Retained for a future, separately frozen model test |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:38: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:39: A schedule: `96,64,80,64,48,80,96,48,64,96`.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:40: B schedule: `96,64,48,96,80,48,64,80,64,96`.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:41: Each hold lasts 30 s. Together they contain 18 noninitial changes and cover all
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:42: 12 directed pairs among four levels; they are not hundreds of independent
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:43: actuation experiments. A/B use different rental hosts with the same RTX 4090,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:44: 595.91.07 driver and core runtime versions. Full-run score differences are
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:45: descriptive and do not isolate schedule or host effects.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:46: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:47: ![A/B dynamics](figures/ab-overview.png)
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:48: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:49: ## What the data establish
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:50: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:51: - Both A/B saved reports reproduce exactly from raw files. All 15 recorded
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:52:   runtime/dependency file hashes match `d0ccb2c`; recorded `git_dirty=true`
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:53:   is retained. The [verification record](verification.json) contains every
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:54:   comparison, and original manifests remain unchanged.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:55: - A's 306 and B's 307 snapshots match lifecycle reconstruction for all eight
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:56:   required state fields, with no missing fields, replay issues or mismatches.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:57: - All 7,646 per-run request diagnostic summaries, including three warmups,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:58:   complete cleanup. Per-request construction/close phases are `not_reached`
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:59:   in shared mode, as intended.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:60: - The same 30 s 96→64 cut first reaches reserved cost≤64 after 0.947 s in A
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:61:   versus 2.744 s in B. This is a first crossing, not a validated settling time.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:62: - B has gateway monitor delays of 343 and 233 ms overlapping loop-thread
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:63:   generation-2 GC spans of about 265 and 248 ms. Timing overlap is not exclusive
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:64:   attribution; these do not invalidate the passing load/control gates.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:65: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:66: ## Model findings and limits
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:67: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:68: The published [baseline report](analysis/forecast_summary.md) is explicitly
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:69: development-only. A/B each contribute 600 overlapping 0.5 s rows. Chronological
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:70: and leave-one-run-out validation exclude labels unavailable at the training cut;
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:71: the latter still reuses the same offered arrival trace, not new unseen traffic.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:72: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:73: Five-second chronological pooled MAE (requests, lower is better):
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:74: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:75: | Variant | First-token backlog | SLO successes | Admitted SLO misses |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:76: |---|---:|---:|---:|
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:77: | Persistence | 4.14 | 7.20 | 7.69 |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:78: | Original ridge | 3.64 | 7.49 | 8.42 |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:79: | Phase features, planned cap | 3.71 | 7.81 | 8.52 |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:80: | Drop administrative budget version, planned cap | 3.72 | 6.98 | 7.72 |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:81: | Fixed nonlinear baseline + phase/history, planned cap | 2.96 | 7.93 | 6.96 |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:82: | State×cap interactions, planned cap | 3.24 | 7.50 | 7.58 |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:83: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:84: ![Forecast comparison](figures/forecast-comparison.png)
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:85: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:86: Planned-cap diagnostics use the predeclared schedule, observed state at t, and
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:87: a fixed 50 ms actuation-delay assumption; future actual applications are not
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:88: inputs. Original baseline controls remain `realized_control_conditioned`.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:89: An explicitly labelled future-arrival-summary diagnostic is nondeployable and
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:90: never presented as an online feature. Better short-term forecasts or backlog
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:91: scores do not establish reliable action ranking. Cap-response coefficients in
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:92: the original ridge even change sign across training splits.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:93: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:94: The next candidate is an offline short-step service/state-transition model with
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:95: conservation/nonnegative constraints, plus causal token-service features from
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:96: the already recorded engine counters. Validate multistep rollout and control
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:97: sensitivity on A/B before collecting C. No candidate here passed a final model
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:98: test, and no goodput improvement from closed-loop MPC is claimed.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:99: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:100: Read the [full Chinese analysis](analysis-zh.md), [computed capture facts](facts.json),
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:101: [transition states](transitions.json), and diagnostic JSON/scripts under [analysis/](analysis/).
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:102: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:103: ## Complete raw data and reproduction
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:104: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:105: The [raw-bundle index](raw-bundle/index.json) preserves three byte-identical
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:106: original uploads, split into 52 binary parts (53,739,633 bytes total), containing
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:107: 139 original regular files. It records SHA256 for every part, reconstructed
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:108: archive and extracted file. `captures/`, `setup/` and `native-validation/` are
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:109: convenient browsing subsets, not complete audit inputs.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:110: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:111: ```bash
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:112: python3 results/shared-client-20261018/extract_bundle.py --output-dir /tmp/shared-client-captures
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:113: python3.12 -m venv /tmp/shared-client-analysis-env
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:114: /tmp/shared-client-analysis-env/bin/python -m pip install -r results/shared-client-20261018/requirements-analysis.txt
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:115: /tmp/shared-client-analysis-env/bin/python results/shared-client-20261018/reproduce.py \
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:116:   --raw-root /tmp/shared-client-captures --output-dir /tmp/shared-client-analysis --extended
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:117: /tmp/shared-client-analysis-env/bin/python results/shared-client-20261018/analysis/make_figures.py \
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:118:   --analysis-root /tmp/shared-client-analysis --raw-root /tmp/shared-client-captures \
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:119:   --output-dir /tmp/shared-client-figures
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:120: ```
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:121: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:122: No GPU, vLLM installation or model download is required for offline reproduction.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:123: The source-file check refuses a changed runtime. If main later changes those
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:124: files, use `--code-root` pointing to a clean `d0ccb2c` checkout while keeping this
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:125: published reproduction entry point. Never use `--allow-unqualified` to turn the
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:126: failed original A into a qualified training capture.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:127: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:128: Frozen declarations retain their original hashes. The B declaration source
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:129: commit `ad2a3a826d75340773fc26fe3f492330b5fae8ba` is retained in merge history;
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:130: reproduction does not require keeping a temporary branch alive.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:1: """Rebuild qualified A/B features and development forecasts from verified raw captures."""
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:2: import argparse
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:3: import hashlib
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:4: import json
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:5: import os
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:6: from pathlib import Path
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:7: import subprocess
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:8: import sys
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:9: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:10: HERE = Path(__file__).resolve().parent
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:11: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:12: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:13: def main():
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:14:     parser = argparse.ArgumentParser(description=__doc__)
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:15:     parser.add_argument('--raw-root', required=True, type=Path,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:16:                         help='Output of extract_bundle.py, containing shared-a and shared-b')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:17:     parser.add_argument('--output-dir', required=True, type=Path)
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:18:     parser.add_argument('--code-root', type=Path, default=HERE.parents[1],
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:19:                         help='Checkout with runtime/analysis code matching the recorded hashes')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:20:     parser.add_argument('--extended', action='store_true', help='Also run the exploratory A/B diagnostics')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:21:     args = parser.parse_args()
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:22:     raw, output, code = args.raw_root.resolve(), args.output_dir.resolve(), args.code_root.resolve()
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:23:     if output.exists():
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:24:         parser.error('Use a fresh output directory')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:25:     if any(output == root or root in output.parents for root in (raw, code)):
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:26:         parser.error('Keep analysis output outside the raw and code trees')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:27:     captures = [raw / f'shared-{side}' / 'results' / f'shared-client-{side}-r1' for side in ('a', 'b')]
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:28:     for capture in captures:
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:29:         manifest = json.loads((capture / 'manifest.json').read_text())
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:30:         for name, expected in manifest['code_sha256'].items():
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:31:             path = code / name
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:32:             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:33:                 parser.error(f'{name} differs from captured code; use --code-root at d0ccb2c')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:34:     output.mkdir(parents=True)
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:35:     env = dict(os.environ, OPENBLAS_NUM_THREADS='1', OMP_NUM_THREADS='1', MPLBACKEND='Agg',
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:36:                SHARED_CLIENT_RAW_ROOT=str(raw), SHARED_CLIENT_ANALYSIS_OUTPUT=str(output),
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:37:                SHARED_CLIENT_CODE_ROOT=str(code))
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:38: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:39:     def run(script, *arguments):
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:40:         subprocess.run([sys.executable, str(script), *map(str, arguments)], check=True, cwd=code, env=env)
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:41: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:42:     run(code / 'identification_features.py', *captures, '--output-dir', output / 'features')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:43:     run(code / 'forecast_baselines.py', output / 'features', '--output-dir', output / 'forecast')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:44:     if args.extended:
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:45:         for name in ('diagnose_models.py', 'version_ablation.py', 'nonlinear_diagnostic.py', 'interaction_diagnostic.py'):
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:46:             run(HERE / 'analysis' / name)
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:47:     print(json.dumps(dict(output=str(output), C_used=False, development_only=True)))
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:48: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:49: 
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:50: if __name__ == '__main__':
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:51:     main()

@@ -1,0 +1,72 @@
+{
+  "cleanup_completed": false,
+  "native_ready": true,
+  "pid": 200,
+  "process_group": 200,
+  "readiness": {
+    "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "gateway_run_id": "synthetic-gateway",
+    "same_budget_ack": {
+      "acknowledgment": {
+        "applied_at": 912885.806944737,
+        "budget": 32,
+        "budget_version": 1,
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "operation_id": "opteam16-cut-consumer02",
+        "previous_budget": 32,
+        "run_id": "synthetic-gateway",
+        "schema": "mpc-admission-v1",
+        "status": "applied"
+      },
+      "command": {
+        "budget": 32,
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "expected_version": 0,
+        "identity": {
+          "calibration_version": "unqualified",
+          "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+          "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+          "model_version": "synthetic",
+          "support_hash": "unqualified"
+        },
+        "not_after": 912886.299269237,
+        "operation_id": "opteam16-cut-consumer02",
+        "run_id": "synthetic-gateway",
+        "schema": "mpc-admission-v1"
+      },
+      "status": "applied"
+    },
+    "snapshot": {
+      "budget": 32,
+      "budget_version": 0,
+      "capabilities": [
+        "mpc-budget-cas-expiry-v1"
+      ],
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "complete": true,
+      "cost_spec": {
+        "default_max_tokens": 128,
+        "estimator_version": "gateway-token-estimate-v1",
+        "input_per_token": 0,
+        "intercept": 16,
+        "minimum": 0.1,
+        "output_per_token": 0,
+        "tokenizer_identity": "unqualified"
+      },
+      "identity": {
+        "calibration_version": "unqualified",
+        "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+        "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+        "model_version": "synthetic",
+        "support_hash": "unqualified"
+      },
+      "requests": [],
+      "run_id": "synthetic-gateway",
+      "sampled_at": 912885.799269237,
+      "schema": "mpc-admission-v1",
+      "sequence": 0
+    }
+  },
+  "start_ticks": "40",
+  "started_at": 99
+}

@@ -1,0 +1,96 @@
+{
+  "deadline_monotonic": 927100.982095997,
+  "error_count": 1,
+  "errors": [
+    "body:ValueError"
+  ],
+  "expired": false,
+  "known": [
+    {
+      "pgid": 1611813,
+      "pid": 1611813,
+      "ppid": 1611793,
+      "sid": 1611813,
+      "start_ticks": 92709799
+    },
+    {
+      "pgid": 1611814,
+      "pid": 1611814,
+      "ppid": 1611793,
+      "sid": 1611814,
+      "start_ticks": 92709801
+    },
+    {
+      "pgid": 1611815,
+      "pid": 1611815,
+      "ppid": 1611813,
+      "sid": 1611815,
+      "start_ticks": 92709801
+    }
+  ],
+  "known_identities_gone": true,
+  "lock_paths": [
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/attempts/py312-01/evidence/finally/component.lock",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/attempts/py312-01/evidence/finally/mayor.lock"
+  ],
+  "native_eligibility": false,
+  "owner": {
+    "pgid": 1611793,
+    "pid": 1611793,
+    "ppid": 1611597,
+    "sid": 1611793,
+    "start_ticks": 92709783
+  },
+  "pending_spawn": null,
+  "run_dir": "attempts/py312-01/evidence/finally/run",
+  "schema": "nominal-service-ownership-v1",
+  "service_failure": false,
+  "services": [
+    {
+      "argv": [
+        "<redacted>",
+        "<redacted>",
+        "<redacted>",
+        "<redacted>"
+      ],
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "name": "engine",
+      "redacted_env_entries": 2,
+      "root_identity": {
+        "pgid": 1611813,
+        "pid": 1611813,
+        "ppid": 1611793,
+        "sid": 1611813,
+        "start_ticks": 92709799
+      }
+    },
+    {
+      "argv": [
+        "<redacted>",
+        "<redacted>",
+        "<redacted>",
+        "<redacted>"
+      ],
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "name": "gateway",
+      "redacted_env_entries": 2,
+      "root_identity": {
+        "pgid": 1611814,
+        "pid": 1611814,
+        "ppid": 1611793,
+        "sid": 1611814,
+        "start_ticks": 92709801
+      }
+    }
+  ],
+  "source_sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+  "status": "STOPPED",
+  "universal_OS_proof": false,
+  "unknown": []
+}

@@ -1,0 +1,367 @@
+{
+  "schema": "r24-resume-evidence-audit-a01/report-v1",
+  "capsule": ".runtime/r24-resume-evidence-audit-a01",
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+  "created_utc": "2026-11-04T23:33:17.260503299Z",
+  "report_drafted_after_utc": "2026-11-04T23:46:13Z",
+  "role": "PR32 team16 Role4 Independent Validation: final deliverable-A claim audit (read-only, single pass)",
+  "model": {
+    "model_id": "claude-opus-5.5",
+    "reasoning_effort": "max",
+    "child_agents": 0,
+    "nested_agents": 0,
+    "model_changes": 0
+  },
+  "question": "Are the THREE two-bullet variants in docs/resume_bullets.md safe as implemented gateway/instrumentation/replay/CPU-prototype claims, independently of native MPC success (deliverable B)? Flag any unsupported native/MPC win, production, calibration, SLO-guarantee or clean-checkout-reproduction claim; separate known-missing B from A-blocking wording.",
+  "verdict": {
+    "A_status": "CONDITIONAL_ACCEPT_AFTER_TWO_SMALL_WORDING_CORRECTIONS",
+    "statement": "No explicit unsupported native/MPC win, production, calibration, SLO-guarantee or clean-checkout-reproduction claim exists in the five docs; each is explicitly excluded. Two wording spots remain A-blocking: AI Inference bullet 2 (A1 implied native benchmarking + A2 ambiguous Fixed/OneMove comparisons) and the summary Resume-safe wording bullet 2 (A3 E2/E6 version conflation). After those two edits, no material unsupported wording remains within the 8-file read scope and package A is supported as implemented gateway/instrumentation/replay/CPU-prototype claims independent of B.",
+    "required_corrections": [
+      "A1+A2: docs/resume_bullets.md lines 14-16, combined replacement given in finding A2",
+      "A3: docs/resume_project_summary.md lines 112-114, replacement given in finding A3 (or replace the pair by a pointer to resume_bullets.md)"
+    ],
+    "usable_now_as_written": [
+      "Autonomous Systems / Runtime pair (resume_bullets.md 27-32; optional clarity A9)",
+      "General Software / Distributed Systems pair (resume_bullets.md 41-46)",
+      "AI Inference / Infrastructure bullet 1 (resume_bullets.md 11-13)",
+      "resume_project_summary.md Resume-safe wording bullet 1 (109-111)"
+    ],
+    "not_usable_until_corrected": [
+      "AI Inference / Infrastructure bullet 2 (resume_bullets.md 14-16)",
+      "resume_project_summary.md Resume-safe wording bullet 2 (112-114)"
+    ],
+    "optional_non_blocking": ["A4", "A5", "A6", "A7", "A8", "A9"],
+    "requires_new_native_experiment_for_A": false,
+    "requires_clean_checkout_or_old_runtime_reproduction_for_A": false,
+    "finding_counts": {"HIGH": 0, "MEDIUM": 3, "LOW": 6, "total": 9, "A_blocking": 3},
+    "A_blocking_ids": ["A1", "A2", "A3"]
+  },
+  "scope": {
+    "read_files": 8,
+    "read_bytes": 50089,
+    "budget": "<=8 files and <=64 KiB (65536 B); within budget",
+    "audited_bytes": "current worktree bytes pinned in SOURCE-PINS.sha256 (pin-src01.log, stable at pin-stability01.log and in every later logged grep via sha256sum -c)",
+    "docs_commit_supplied": "98e1174de56b01fd4448259c002d9f32223298ad (Mayor-supplied; equality of pinned bytes with this commit NOT verified, no git)",
+    "historical_vs_current_source_scope": "E1-E5 historical (E2 = frozen team16 policy_planner16.py); E6-E8 current resume-mvp nominal modules; no source module was read in this pass",
+    "not_read": [
+      "link targets (stat existence only)",
+      "results/mpc-native-r24/reviews/resume-p0-metrics-independent-parent01.json (Mayor metrics disposition)",
+      "results/mpc-native-r24/reviews/resume-mvp-claims-parent01.json (initial claim-audit disposition)",
+      "any source/test module, plan file, raw bundle, E6 negative-witness result, unsealed runtime/client/services, Train/Eval content",
+      "my own earlier REPORTs (claims-review01, metrics-independent01) were not re-read; retained context only"
+    ],
+    "no_git_http_network_gpu_ssh_install_doc_edits_or_runtime_tests": true
+  },
+  "inputs": [
+    {"path": "docs/resume_bullets.md", "bytes": 3219, "sha256": "30eefaca94e2037f53a28b1d588d3cbd52ef181698d668f007b38540c302c0d5", "kind": "doc"},
+    {"path": "docs/resume_project_summary.md", "bytes": 9605, "sha256": "299cc5aced7864e279598014b0dc660e3f3089798ab456de1408072e965651ea", "kind": "doc"},
+    {"path": "docs/benchmark_results.md", "bytes": 14764, "sha256": "fcb4a60baea17d8306c45ba020d875487f0091232736168d02c1c41c55a5784b", "kind": "doc"},
+    {"path": "docs/architecture.md", "bytes": 6724, "sha256": "16ed463a378da4a46d5cb7c961ed911ed830d05a2dbff24bf3e61c687d70ebf0", "kind": "doc"},
+    {"path": "docs/interview_defense.md", "bytes": 6395, "sha256": "6f41ff459b42913180eb05e81a8b2503bbc5454cc50e70ad6696e1d2f18d534c", "kind": "doc"},
+    {"path": "results/mpc-native-r24/reviews/resume-p0-components-parent02.json", "bytes": 3264, "sha256": "a2ebee8f6958ccb63b133c07c6950a1a3df8097ce611c628078a5cdeac23bd84", "kind": "evidence_index_E6"},
+    {"path": "results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json", "bytes": 2892, "sha256": "14ced2ecd5f8efaaeb9f13db9449e3b7f152add591d9f381840aae97188d1231", "kind": "evidence_index_E7"},
+    {"path": "results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json", "bytes": 3226, "sha256": "62b1c087e218153f3795221a0bde98a89c03ef92967068cb10049e0e966a5517", "kind": "evidence_index_E8"}
+  ],
+  "link_check": {
+    "method": "metadata-only relative-link existence/type check of the 5 docs (os.stat; targets not opened); logged on both Pythons",
+    "relative_links": 48,
+    "targets_exist_inside_root": 48,
+    "not_ok": 0,
+    "logs": ["link-check-python314-01.log", "link-check-python312-01.log"],
+    "cross_python": "identical except interpreter version line (diff unlogged; disclosed in commands.log MANUAL line)"
+  },
+  "variant_assessment": [
+    {
+      "variant": "AI Inference / Infrastructure",
+      "bullet": 1,
+      "lines": "resume_bullets.md:11-13",
+      "text": "Built an instrumented vLLM admission-control gateway and trace-replay pipeline, retaining request outcomes, overload rejections and control-timing evidence from real-GPU scheduled-budget identification captures.",
+      "status": "SAFE",
+      "basis": "E1 table benchmark_results.md:21-22 (offered, success, rejected, failed, SLO-good counts), recorded/publication commits :47-48; evidence note resume_bullets.md:18-23 says historical captures are not MPC performance and the reconstruction command does not rebuild the outcome table.",
+      "optional": "O1 (in front of vLLM)"
+    },
+    {
+      "variant": "AI Inference / Infrastructure",
+      "bullet": 2,
+      "lines": "resume_bullets.md:14-16",
+      "text": "Implemented CPU-tested finite-horizon admission-policy planning with shared forecast inputs, Fixed/OneMove comparisons and deadline/version guards; corrected a Fixed-policy timing bias before native benchmarking.",
+      "status": "NEEDS_CORRECTION",
+      "findings": ["A1", "A2"],
+      "replacement": "Implemented CPU-tested finite-horizon admission-policy planning with shared forecast inputs, in-model Fixed/OneMove reference candidates and deadline/version guards; corrected a Fixed-policy timing bias found by CPU regression controls."
+    },
+    {
+      "variant": "Autonomous Systems / Runtime",
+      "bullet": 1,
+      "lines": "resume_bullets.md:27-29",
+      "text": "Designed a finite-horizon admission-control prototype with coherent scenario evaluation, first-action replanning interfaces and CPU-tested source/version/deadline guards.",
+      "status": "SAFE",
+      "basis": "Designed/prototype verbs; E8 one immutable panel for all paths (scenario index :26); E2/E6 guards (benchmark_results.md:77, :93; components index :11); note resume_bullets.md:34-35 says first-action interfaces are not a complete native-loop claim."
+    },
+    {
+      "variant": "Autonomous Systems / Runtime",
+      "bullet": 2,
+      "lines": "resume_bullets.md:30-32",
+      "text": "Built a Train-only forecast and reproducible replay-input pipeline, preserving realized model assumptions, tokenizer-validation evidence and explicit limitations instead of claiming calibrated native prediction.",
+      "status": "SAFE_WITH_OPTIONAL_CLARIFICATION",
+      "findings": ["A9"],
+      "basis": "E8 Train-only frozen prior (scenario index :9-16); E7 88/88 token-count validation (tokenizer index :16-20); nominal/uncalibrated limits stated (resume_bullets.md:36-37; benchmark_results.md:97-100). Reproducibility wording: see O2."
+    },
+    {
+      "variant": "General Software / Distributed Systems",
+      "bullet": 1,
+      "lines": "resume_bullets.md:41-42",
+      "text": "Implemented an asynchronous inference gateway with reservation accounting, overload handling and lifecycle telemetry for auditable serving studies.",
+      "status": "SAFE",
+      "basis": "Gateway responsibilities architecture.md:32; E1 real-GPU captures with overload rejections benchmark_results.md:21-22; E4 diagnostic :79; not-production rule resume_bullets.md:48-49. The asynchronous implementation detail itself was not source-verified in this pass."
+    },
+    {
+      "variant": "General Software / Distributed Systems",
+      "bullet": 2,
+      "lines": "resume_bullets.md:43-46",
+      "text": "Developed replay and independent validation workflows linking request outcomes, configurations and commands to recorded source hashes and evidence commits, including reproducible workload generation and real-tokenizer input checks while preserving negative results.",
+      "status": "SAFE",
+      "basis": "E1 ledger benchmark_results.md:47-48; E5 independent negative finding :80; E6 negative witness retained :93; E7 failed first attempt retained :94 and tokenizer index :7; workload generator Parent-accepted components index :16-27; clean-checkout benchmark reproduction excluded resume_bullets.md:49. Reproducibility wording: see O2."
+    }
+  ],
+  "summary_resume_safe_wording_assessment": [
+    {
+      "lines": "resume_project_summary.md:109-111",
+      "text": "Built an instrumented vLLM serving gateway and auditable trace-replay tooling for admission-control and overload analysis, preserving request outcomes and auditable control-timing evidence.",
+      "status": "SAFE"
+    },
+    {
+      "lines": "resume_project_summary.md:112-114",
+      "text": "Implemented a frozen finite-horizon policy planner with CPU-tested exact candidate ordering and deadline/version checks; corrected baseline timing bias while retaining explicit native-integration and comparison limitations.",
+      "status": "NEEDS_CORRECTION",
+      "findings": ["A3"]
+    }
+  ],
+  "explicit_claim_check": {
+    "result": "NONE_FOUND",
+    "method": "full reads of the 5 pinned docs plus logged risky-term grep (risky-term-scan01.log, 79 lines) reviewed line by line; every hit is an exclusion, limitation, definition, historical non-MPC measurement or prospective metric decision",
+    "categories": {
+      "native_or_MPC_win_or_speedup": {"asserted": false, "explicit_exclusions": ["resume_bullets.md:53", "benchmark_results.md:82-83", "resume_project_summary.md:116-117", "interview_defense.md:100-102", "interview_defense.md:118-119"]},
+      "production": {"asserted": false, "explicit_exclusions": ["resume_bullets.md:48-49", "resume_bullets.md:53", "resume_project_summary.md:116", "benchmark_results.md:82-83", "architecture.md:114-115", "interview_defense.md:124"]},
+      "calibration_or_accuracy": {"asserted": false, "explicit_exclusions": ["resume_bullets.md:32", "resume_bullets.md:36-37", "benchmark_results.md:82", "benchmark_results.md:97-100", "architecture.md:89", "resume_project_summary.md:70-73"]},
+      "SLO_or_latency_guarantee": {"asserted": false, "explicit_exclusions": ["resume_bullets.md:53-54", "benchmark_results.md:83", "benchmark_results.md:152", "architecture.md:114-115", "interview_defense.md:77", "resume_project_summary.md:116"]},
+      "clean_checkout_reproduction": {"asserted": false, "explicit_exclusions": ["resume_bullets.md:49", "resume_project_summary.md:66", "benchmark_results.md:60-63", "benchmark_results.md:95", "interview_defense.md:111-112", "interview_defense.md:118-119"]}
+    },
+    "implied_or_ambiguous_wording_found": ["A1 implied native benchmarking", "A2 comparisons read as measured baselines", "A3 one planner described with two versions' results"]
+  },
+  "findings": [
+    {
+      "id": "A1",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "A_blocking": true,
+      "file": "docs/resume_bullets.md",
+      "lines": "14-16 (phrase at 16)",
+      "quoted_text": "corrected a Fixed-policy timing bias before native benchmarking.",
+      "problem": "Temporal presupposition of a native benchmark. None exists: the required comparison table is all Not measured (benchmark_results.md:108-115), line 106 states No new native MPC measurements are available, and B is open (resume_project_summary.md:3, 62, 64). A resume reader takes the phrase as a correction that preceded a performed native benchmark.",
+      "evidence": ["benchmark_results.md:93 E6 is a CPU component correction with negative witness 814a9b5a", "resume-p0-components-parent02.json:3 predecessor_commit 814a9b5aa38dd8783ae643270b5aed59e1bc12b7", "resume-p0-components-parent02.json:12 both intentional red regressions", "resume-p0-components-parent02.json:38 not_proved includes actual loop and fair measured comparison"],
+      "effect": "Implied, currently unsupported native-benchmark claim inside an A bullet.",
+      "smallest_correction": "Replace 'before native benchmarking' by 'found by CPU regression controls' (or delete the phrase).",
+      "disposition_recommendation": "Required before using the AI Inference pair; apply together with A2."
+    },
+    {
+      "id": "A2",
+      "severity": "MEDIUM",
+      "confidence": "MEDIUM_HIGH",
+      "A_blocking": true,
+      "file": "docs/resume_bullets.md",
+      "lines": "15",
+      "quoted_text": "forecast inputs, Fixed/OneMove comparisons and deadline/version guards;",
+      "problem": "'comparisons' reads as empirical baseline comparisons. Evidence supports only in-model candidate scoring: E2 acceptance is exact candidate ordering with full-action Fixed-reference scope (benchmark_results.md:77; interview_defense.md:23); E8 uses one immutable realization/panel for all paths and both policy selections (scenario index :26); Fixed is only a model-ranked reference (benchmark_results.md:93; components index :14). Measured comparisons are Not measured (benchmark_results.md:108-115) and metrics01 comparison claims are blocked pending F1-F5 corrections (benchmark_results.md:102-106).",
+      "evidence": ["benchmark_results.md:77", "benchmark_results.md:93", "benchmark_results.md:102-106", "resume-p0-components-parent02.json:14", "resume-p0-components-parent02.json:38", "resume-p0-scenario-parent01-result.json:26"],
+      "effect": "Ambiguity resolving toward exactly the measured-comparison claim that is currently blocked.",
+      "smallest_correction": "Replace 'Fixed/OneMove comparisons' by 'in-model Fixed/OneMove reference candidates'.",
+      "combined_replacement_with_A1": "Implemented CPU-tested finite-horizon admission-policy planning with shared forecast inputs, in-model Fixed/OneMove reference candidates and deadline/version guards; corrected a Fixed-policy timing bias found by CPU regression controls.",
+      "disposition_recommendation": "Required; same edit as A1."
+    },
+    {
+      "id": "A3",
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "A_blocking": true,
+      "file": "docs/resume_project_summary.md",
+      "lines": "112-114",
+      "quoted_text": "Implemented a frozen finite-horizon policy planner with CPU-tested exact candidate ordering and deadline/version checks; corrected baseline timing bias while retaining explicit native-integration and comparison limitations.",
+      "problem": "Version conflation in a section titled Resume-safe wording. The frozen planner with CPU-tested exact candidate ordering is E2, the historical team16 policy_planner16.py (SHA 164f3947..., commit 2b4ed5bc...; benchmark_results.md:77; architecture.md:35, 54-57). The timing-bias correction is E6 in the current resume-mvp nominal planner (planner02 source e492a254..., components index :8, :10-11; correction commit f645a66a...; benchmark_results.md:93). One sentence attributes both to one planner, contrary to the docs' own separate-version rules (resume_bullets.md:55; architecture.md:39-41). Exact-candidate-ordering acceptance for the corrected nominal planner is not shown in the read scope.",
+      "evidence": ["benchmark_results.md:77", "benchmark_results.md:93", "architecture.md:35", "architecture.md:39-41", "architecture.md:54-57", "resume-p0-components-parent02.json:8", "resume-p0-components-parent02.json:10-11", "resume_bullets.md:55"],
+      "effect": "Presents a combined frozen-and-corrected planner that does not exist as one version; an interviewer question about which code was frozen/tested/corrected exposes it.",
+      "smallest_correction": "Replace the pair with a pointer to the scoped variants in resume_bullets.md, or reword bullet 2: 'Implemented finite-horizon policy-planner prototypes with CPU-tested candidate ordering and deadline/version checks (frozen team16 version, E2) and corrected a Fixed-baseline timing bias in the current nominal planner (E6), retaining explicit native-integration and comparison limitations.'",
+      "disposition_recommendation": "Required before using the summary pair."
+    },
+    {
+      "id": "A4",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "A_blocking": false,
+      "file": "docs/resume_bullets.md",
+      "lines": "18-23, 34-37, 48-49",
+      "quoted_text": "commit; second bullet E2/E6/E8.",
+      "problem": "Evidence notes cite E2 with E6/E8 without restating that E2 is the historical frozen team16 planner while E6-E8 are current resume-mvp components. The split is explicit elsewhere (benchmark_results.md:77 vs 85-95; architecture.md:34-35, 39-50, 54-57; interview_defense.md:23-28) and the no-summing rule is present (resume_bullets.md:55).",
+      "effect": "Traceability gap when the bullets file is read alone.",
+      "smallest_correction": "Append to the evidence notes: '(E2 is the historical frozen team16 planner; E6-E8 are current resume-mvp components.)'",
+      "disposition_recommendation": "Optional."
+    },
+    {
+      "id": "A5",
+      "severity": "LOW",
+      "confidence": "MEDIUM",
+      "A_blocking": false,
+      "file": "docs/benchmark_results.md",
+      "lines": "102-106",
+      "quoted_text": "common-environment identity, frozen selection provenance, complete offered cohorts and timestamp bounds need correction and recheck.",
+      "problem": "The four named blockers correspond to my sealed metrics audit F1, F2, F4, F5; F3 (send earlier than schedule accepted, credited and invisible) is only implicit in 'timestamp bounds'. The Parent disposition (not read) may already group F3 there.",
+      "effect": "Evidence-ledger precision only; the blocker still covers all comparison claims.",
+      "smallest_correction": "'... complete offered cohorts, and send-time and window timestamp bounds need correction and recheck.'",
+      "disposition_recommendation": "Optional; check against the Parent disposition."
+    },
+    {
+      "id": "A6",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "A_blocking": false,
+      "file": "docs/resume_project_summary.md",
+      "lines": "3 (cf. 61)",
+      "quoted_text": "Status: **A: scoped resume evidence package finalized; B: native MPC P0 open**.",
+      "problem": "Says finalized while this final independent A claim audit was pending at the evidence cutoff; line 61 says Final P0 audit remains open.",
+      "effect": "Process-state label ahead of acceptance; not a resume claim.",
+      "smallest_correction": "'A: scoped resume evidence package (final independent claim audit pending)' until Mayor acceptance, then cite the acceptance record.",
+      "disposition_recommendation": "Optional; update on acceptance."
+    },
+    {
+      "id": "A7",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "A_blocking": false,
+      "file": "docs/benchmark_results.md",
+      "lines": "94",
+      "quoted_text": "with the real cached tokenizer.",
+      "problem": "The PASS used the explicit local asset /workspace/pr32-r23/models/Qwen3-4B-Instruct-2507 after the original offline repository-ID lookup failed (tokenizer index :7, :8, :11); 'cached' names the path that failed. The row itself discloses the failed lookup.",
+      "effect": "Minor provenance imprecision; also bears on the B preflight requiring the gateway to load the same explicit asset (tokenizer index :40).",
+      "smallest_correction": "'with the real tokenizer loaded from the explicit local model asset (fingerprint 4daabcf7...)'.",
+      "disposition_recommendation": "Optional."
+    },
+    {
+      "id": "A8",
+      "severity": "LOW",
+      "confidence": "MEDIUM",
+      "A_blocking": false,
+      "file": "docs/interview_defense.md",
+      "lines": "58",
+      "quoted_text": "Fixed holds a development-selected budget.",
+      "problem": "Present tense can be heard as an existing development-selected Fixed baseline; empirical Train Fixed selection is pending and the current E6 Fixed is a model-ranked reference (benchmark_results.md:93; components index :14; resume_project_summary.md:64).",
+      "effect": "Interview answer may overstate baseline maturity if asked about the current implementation.",
+      "smallest_correction": "'Fixed holds one budget selected on development data only (empirical selection still pending; the current E6 Fixed is a model-ranked reference).'",
+      "disposition_recommendation": "Optional."
+    },
+    {
+      "id": "A9",
+      "severity": "LOW",
+      "confidence": "MEDIUM",
+      "A_blocking": false,
+      "file": "docs/resume_bullets.md",
+      "lines": "30-31",
+      "quoted_text": "Built a Train-only forecast and reproducible replay-input pipeline, preserving realized model assumptions,",
+      "problem": "'realized' overlaps E8's own term for per-decision realized scenario inputs, whose retention for replay is still an integration requirement (scenario index :27 exact realized inputs must be retained for replay; :48 Runtime02 CLI must retain actual CausalScenario inputs). What is shown is that the nominal assumptions are frozen and recorded (scenario index :19).",
+      "effect": "Could be read as runtime retention of realized decision inputs already working.",
+      "smallest_correction": "'preserving realized model assumptions' -> 'recording its nominal model assumptions'.",
+      "disposition_recommendation": "Optional; the pair is otherwise usable as written."
+    }
+  ],
+  "version_scope_check": {
+    "explicit_and_correct": [
+      "architecture.md:34-35 public library is not the E2 tested implementation; frozen team16 planner is E2",
+      "architecture.md:39-41 separate versions; do not combine settings, interfaces or test totals",
+      "architecture.md:43-50 selected MVP continuation isolated in experiments/mpc-research/resume-mvp; runtime wiring under integration; legacy launcher not prerequisite",
+      "architecture.md:52-57 E2 SHA 164f3947..., not the public mpc_lab modules",
+      "benchmark_results.md:77 frozen E2 vs 85-95 current nominal MVP components; 87-89 counts not summed across Pythons",
+      "interview_defense.md:23-28",
+      "resume_bullets.md:55"
+    ],
+    "gaps": ["A3", "A4"]
+  },
+  "known_missing_B_correctly_disclosed_not_A_blocking": [
+    {"item": "no native two-cycle real observe-predict-optimize-apply loop", "where": ["resume_project_summary.md:62", "architecture.md:25", "interview_defense.md:121-123"]},
+    {"item": "MPC/Fixed/FIFO/OneMove comparison table unmeasured", "where": ["benchmark_results.md:108-115", "resume_project_summary.md:64"]},
+    {"item": "no empirical Train Fixed selection (E6 Fixed model-ranked)", "where": ["benchmark_results.md:93", "resume_project_summary.md:64", "resume-p0-components-parent02.json:14"]},
+    {"item": "FIFO arm, throughput metric and fairness index absent from historical harness", "where": ["benchmark_results.md:117-118", "interview_defense.md:58-59"]},
+    {"item": "metrics01 comparison/selection blockers F1-F5", "where": ["benchmark_results.md:102-106"]},
+    {"item": "clean-checkout / portable reproduction unverified", "where": ["resume_project_summary.md:66", "interview_defense.md:111-112", "resume_bullets.md:49", "benchmark_results.md:60-63"]},
+    {"item": "D2-F1 launcher blocked; legacy launcher/supervisor not selected", "where": ["benchmark_results.md:80", "resume_project_summary.md:63", "architecture.md:50"]},
+    {"item": "E4 native observation coverage FAIL (1 of 2)", "where": ["benchmark_results.md:79"]},
+    {"item": "Native14 unqualified; P2 backlog; no inheritance by a replacement predictor", "where": ["resume_project_summary.md:56", "resume_project_summary.md:68", "resume_project_summary.md:70-73"]},
+    {"item": "stationary rolling 15 s forecast horizon vs public 5 s window; uncalibrated service assumptions", "where": ["benchmark_results.md:97-100", "architecture.md:93-95", "resume-p0-scenario-parent01-result.json:20-22"]}
+  ],
+  "cross_checks": {
+    "supplied_facts_from_Mayor_prompt": [
+      "A docs commit 98e1174de56b01fd4448259c002d9f32223298ad",
+      "E6 timing correction f645...; E7 real tokenizer CPU 88/88 02b...; E8 scoped 14 CPU 624...",
+      "legacy failed model/supervisor P2/not selected; B has no complete native loops/results",
+      "metrics F1-F5 pending correction blocks comparison claims; stationary forecast mismatch documented"
+    ],
+    "independently_cross_checked_within_read_scope": [
+      "E6 row benchmark_results.md:93 correction commit f645a66a44bcbe0e4894cab4213d7f9349ae1481 matches supplied prefix; negative witness 814a9b5aa38dd8783ae643270b5aed59e1bc12b7 equals components index :3 predecessor_commit",
+      "E7 row :94 commit 02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e equals scenario index :16 real_tokenizer_evidence_commit; successor plan 1e9540caa9dd37f927d5389d05be3d973d234bf7 equals tokenizer index :4 preregistration_commit; replay SHA 5e418b89... equals tokenizer index :14; 88 offers and 88 equal counts at tokenizer index :16-17",
+      "E8 row :95 commit 6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0 matches supplied prefix; 14 passed on Python 3.12.16, 1 attempt, exit 0 (scenario index :38-41); scoped Git materialization (:44)",
+      "Train tape SHA 40bd755b... identical in components index :22 and tokenizer index :13",
+      "E1 table benchmark_results.md:21-22 arithmetic and interview_defense.md:101-102 restatement are consistent (see e1_arithmetic)",
+      "E1 recorded runtime commit d0ccb2c0... (:47) and publication commit aea7694a... (:48), and E2-E5 commits (:77-80), equal the values supplied for my earlier claims audit",
+      "forecast horizon 15 s, score window 5 s, contention tail 10 s (scenario index :20-22) match the documented mismatch"
+    ],
+    "e1_arithmetic": {
+      "window_s": 300,
+      "shared_A": {"offered": 7643, "success": 1976, "rejected": 5667, "failed": 0, "slo_good": 572, "slo_goodput_doc": 1.906667},
+      "shared_B": {"offered": 7643, "success": 2059, "rejected": 5584, "failed": 0, "slo_good": 736, "slo_goodput_doc": 2.453333}
+    },
+    "retained_context_not_reread": [
+      "nominal_workload.py 614ae110... (components index :20; tokenizer index source_sha256 block) equals the pin of my sealed metrics audit (SHA256SUMS digest 43b80aff...)",
+      "test_nominal_scenario.py 5c9c17d3... (scenario index :33) equals that metrics-audit pin",
+      "nominal_scenario.py at metrics-audit pin b15ccb25... has TOKENIZER_FINGERPRINT and TRAIN_REPLAY_SHA256 constants (its lines 36-37) equal to tokenizer index :12 and :14; the E8 index does not pin nominal_scenario.py, so this is consistency for that pinned version only"
+    ],
+    "not_verified": [
+      "commit-to-content binding of any cited commit, including docs commit 98e1174d (no git)",
+      "E1 hardware and TTFT p99 values, E2 130 cases, E3 nine cases, E4 67 s / 90 HTTP / 43 tokens, E6 combined controls (outside the 8-file scope)",
+      "contents of link targets; gateway asynchronous implementation; planner02 red regressions; workload regeneration determinism"
+    ]
+  },
+  "observations_not_counted": [
+    {"id": "O1", "where": "resume_bullets.md:11", "note": "'instrumented vLLM admission-control gateway' could be read as modifying vLLM; optional 'admission-control gateway in front of vLLM' (architecture.md:31 says vLLM algorithms are not project contributions)."},
+    {"id": "O2", "where": "resume_bullets.md:30, :45", "note": "'reproducible' is supported as hash-pinned seeded generation with Parent-accepted generator controls (components index :16-27) and cross-index tape-hash consistency; no independent byte-identical regeneration is cited in the read files; must not be read as clean-checkout benchmark reproduction (excluded at :49)."},
+    {"id": "O3", "where": "resume-p0-tokenizer02-result.json:40", "note": "gateway MODEL_NAME silent character-heuristic tokenizer fallback preflight requirement does not appear in the five docs (logged grep for fallback: no doc hit, anchor-lines02.log); B-side precondition, recommend adding to the B protocol list; not A-blocking."},
+    {"id": "O4", "where": "benchmark_results.md:159-171", "note": "prospective metric decisions (wall-envelope setup/drain rates) are correctly labelled not measurements; metrics01 does not yet produce them (my metrics audit F7; known full-wall null); B-side."}
+  ],
+  "unlogged_actions": [
+    "before capsule creation: ls of docs dir and name-only find of the three index files (metadata only; MANUAL line 1)",
+    "display-only view-tool reads of exactly the 8 pinned files in full after pin-src01/pin-stability01 (MANUAL line 2)",
+    "diff of the two link-check logs; after context compaction one sha256sum -c of SOURCE-PINS (8 OK), grep -n phrase lookups in the 5 pinned docs, view re-reads of selected ranges of the 8 pinned files, ls/cat of own capsule (MANUAL line 3)",
+    "REPORT.json written with the file-create tool (no shell command)"
+  ],
+  "logs": [
+    "pin-src01.log", "pin-stability01.log", "link-check-python314-01.log", "link-check-python312-01.log",
+    "risky-term-scan01.log", "anchor-lines01.log", "anchor-lines02.log",
+    "report-json-check-python314-01.log", "report-json-check-python312-01.log", "drift-recheck01.log"
+  ],
+  "interpreters": {
+    "python314": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 (3.14.4)",
+    "python312": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 (3.12.16)",
+    "flags": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP/OPENBLAS/MKL_NUM_THREADS=1 nice -n19 timeout 60 -B -I"
+  },
+  "limitations": [
+    "Wording judgments estimate resume-reader risk; A1/A2/A9 are interpretation-based, A3 is a factual version mismatch per the docs themselves.",
+    "Audit binds to the pinned worktree bytes only; no git, so equality with 98e1174d and every other cited commit is unverified.",
+    "Eight files only; linked targets stat-checked, not read; Parent metrics and claims dispositions not read.",
+    "Quantities outside the three indices are accepted as Parent-supplied evidence, not re-derived from raw bundles.",
+    "Retained-context cross-checks rely on my sealed prior capsules without re-reading them.",
+    "No runtime test launched; executions were hashing, stat link checks, grep and strict JSON parsing only."
+  ],
+  "nonclaims": [
+    "not Mayor acceptance, not P0 completion, not ResumeReady",
+    "not deliverable-B evidence and not the later B metrics02 recheck",
+    "no MPC win, production use, calibration or SLO guarantee asserted",
+    "Native14 FAIL, E4 coverage FAIL, D2-F1 block and metrics F1-F5 blockers unchanged",
+    "no docs, sources, indices or other capsules edited"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "admission_effect": null,
+  "all_workers_joined": true,
+  "cancel_requested": [],
+  "capture_sha256": "c8bd4dd1640da9c30eaa67adee62841b2c4337f5a510f04d0b56e835c4c9055c",
+  "cleanup_reserve_s": 0.5,
+  "deadline": 933906.198050759,
+  "entered_at": 933899.949810859,
+  "failures": [
+    {
+      "error": {
+        "message": "shared_start_past_or_mismatched",
+        "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 262, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 171, in _eligible\n    _require(prepared.prepared_at <= now < start and runtime.start_at == start,\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: shared_start_past_or_mismatched\n",
+        "type": "EpisodeRefused"
+      },
+      "worker": "coordinator"
+    }
+  ],
+  "full_wall": null,
+  "joined_at": 933899.951463259,
+  "missing_record_ids": [
+    "admission-boundary-p0w1-train-0000",
+    "admission-boundary-p0w1-train-0002",
+    "admission-boundary-p0w1-train-0007",
+    "admission-boundary-p0w1-train-0013",
+    "admission-boundary-p0w1-train-0015"
+  ],
+  "offered_request_ids": [
+    "admission-boundary-p0w1-train-0000",
+    "admission-boundary-p0w1-train-0002",
+    "admission-boundary-p0w1-train-0007",
+    "admission-boundary-p0w1-train-0013",
+    "admission-boundary-p0w1-train-0015"
+  ],
+  "offered_start": 933900.198050759,
+  "ordered_gateway_ledger": null,
+  "persistence_errors": [],
+  "qualification": null,
+  "qualification_note": "engineering collection only; Mayor-owned evidence absent",
+  "recorder_clock_domain": "time.monotonic clock_gettime(CLOCK_MONOTONIC) host=DESKTOP-Q3SLA74 boot_id=bf25e215-1377-4585-a5fa-f5181f96f467",
+  "runtime_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+  "runtime_journal": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-episode02/attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/different_start/runtime-journal.json",
+  "schema": "resume-p0-nominal-engineering-episode-v1",
+  "sources": {
+    "nominal_client.py": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+    "nominal_episode.py": "562fc8d18ae2ada5966c226704098d0e69432315cca59f16188a09e043c2cfa1",
+    "nominal_metrics.py": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+    "nominal_permit.py": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503",
+    "nominal_planner.py": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1",
+    "nominal_runtime.py": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959",
+    "nominal_scenario.py": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc",
+    "nominal_services.py": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+    "nominal_workload.py": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4",
+    "public_implementation": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea"
+  },
+  "status": "refused",
+  "workers": {}
+}

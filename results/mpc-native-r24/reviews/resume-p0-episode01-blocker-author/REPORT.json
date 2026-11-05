@@ -1,0 +1,41 @@
+{
+  "Native_permission": false,
+  "accepted_runtime_sha256": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959",
+  "actual_peer_APIs_and_lines": "API_EVIDENCE.json",
+  "additional_source_bytes": 122281,
+  "additional_source_inputs": 2,
+  "all_input_hashes_unchanged": true,
+  "blocker": "BLOCKER.json",
+  "cleanup": "CLEANUP.json",
+  "completed_at": "2026-11-05T00:20:50.800575+00:00",
+  "control_attempts": 0,
+  "decision": "Honor explicit stop condition rather than duplicate capture codec or invent an unsafe async/ownership bridge.",
+  "limits": "LIMITATIONS.json",
+  "model": {
+    "id": "gpt-6-astra",
+    "provenance": "retained verified Role6 assignment",
+    "reasoning_effort": "max"
+  },
+  "peer_sources": {
+    "experiments/mpc-research/resume-mvp/nominal_client.py": {
+      "bytes": 46357,
+      "sha256": "f369e5ce01a54dcfa9086fe8ee4a1528d7e52d19179db78201e06961da4c7bda"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_metrics.py": {
+      "bytes": 75924,
+      "sha256": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec"
+    }
+  },
+  "probe": "PROBE_REFERENCE.json",
+  "public_files_created_or_edited": [],
+  "qualification": false,
+  "read_budget": "SOURCE_READ_BUDGET.json",
+  "retries": 0,
+  "schema": "nominal-episode01-no-go-report-v1",
+  "seal_exclusions": [
+    "SHA256SUMS",
+    "SEAL_RECEIPT.json"
+  ],
+  "source_pins": "INPUT_PINS.json",
+  "status": "BLOCKED_SAFE_RAW_V2_COMPOSITION_API_MISSING"
+}

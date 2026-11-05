@@ -1,0 +1,68 @@
+{
+  "schema": "nominal-episode04-plan-v1",
+  "task": "Only the diagnosed E03-1 typed pre-worker refusal-classification correction",
+  "predecessor": {
+    "capsule": ".runtime/r24-resume-p0-nominal-episode03",
+    "seal": "07da8f077fc42b636c2bc04fa813a7ffa9d5be4de24deab8b43621062b6bced2",
+    "result": "3 PASS / 1 FAIL; runtime_endpoint_changed raises RuntimeRefused before workers, but adapter returns failed instead of refused.",
+    "all_original_failures": "Preserve episode03 and episode02 (0ecc3f..., eight failures/one error) entirely."
+  },
+  "allowed_public_changes": [
+    "experiments/mpc-research/resume-mvp/nominal_episode.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_episode.py"
+  ],
+  "implementation_change": "Only add runtime_api.RuntimeRefused alongside EpisodeRefused in the existing no-workers exception classification. Retain the not-tasks condition and every other source byte/guard.",
+  "necessary_discrimination": "One added subcase in the existing returned-failure method injects RuntimeRefused from the runtime.run boundary after both worker tasks start. It must remain failed, preserve the exception, cancel/join the recorder and preserve all five not-launched records. Existing controls already cover returned refusals, recorder failures, cancellation, binding/provider/policy guards and actual shared-start composition.",
+  "selected_methods": [
+    "test_shared_start_full_outcomes_and_real_controller_feedback",
+    "test_default_off_preparation_and_configuration_refusals_do_not_start",
+    "test_returned_failure_envelopes_cancel_peer_and_preserve_results",
+    "test_caller_cancellation_joins_workers_and_persists_partial_outcomes"
+  ],
+  "validation": {
+    "source_generations": 1,
+    "attempts": 1,
+    "interpreter": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+    "test_process_wall_budget_s": 60,
+    "normal_wait_s": 55,
+    "cleanup": "TERM/KILL and join only the owned child within the original60s deadline; join owned async tasks, close clients/transports, preserve original PID/start-tick receipts.",
+    "environment": "unset PYTHONPATH; no bytecode/autoload/cache; hashseed0; numerical threads1; nice-n19; -B",
+    "runner": "python3.12 -B -m unittest discover -s experiments/mpc-research/resume-mvp -p test_nominal_episode.py -v",
+    "old_or_peer_suites": false,
+    "failure_policy": "Next distinct defect: preserve exact evidence and stop. No repair, retiming, guard/assertion relaxation, model change or blind retry within this scope."
+  },
+  "read_budget": {
+    "maximum_additional_peer_sources": 6,
+    "maximum_additional_peer_bytes": 393216,
+    "conservative_retained_peer_set_bytes": 200013,
+    "new_peer_content_review": false,
+    "inputs": [
+      "nominal_client.py",
+      "test_nominal_client.py",
+      "nominal_metrics.py",
+      "nominal_services.py",
+      "trace_workload.py (hash-only)",
+      "native-r23/score_http.py (hash-only)"
+    ],
+    "retained": "Accepted runtime/planner/permit/scenario/workload and own episode context."
+  },
+  "unchanged_pins": {
+    "client": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+    "metrics": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+    "probe": "6d938ba18240f3e0f8cb677064849a73316ee7a8dc918526c68cba37f02da6be"
+  },
+  "parent_provenance_only": {
+    "source_gate": "Existing API03/metrics conditional source gates unchanged.",
+    "lifecycle03_source_commit": "939cae8946887465f2dbd1e2318bae2f91a31a56",
+    "lifecycle03_preregistration": "ffb69e2c963bd3af14497bdb2167117c47e9708c",
+    "notice": "Mayor reports actual lifecycle PASS at dedicated18000/18001 with interpreter-bin PATH fix; zero inference/POST/native control qualification. Do not read/change lifecycle code, change CPU fixture ports or assume lease authority."
+  },
+  "boundaries": [
+    "No agents, broadcasts, Git, installs, real HTTP, GPU, SSH, services, signal ownership or lease assumption.",
+    "No peer/product/SDK edits, Markdown, old capsule mutation, source/model/workload tuning or full suite.",
+    "Shared absolute S, original D/reserve, runtime guards and full finally capture persistence remain unchanged.",
+    "Worker/capture/persistence/cancellation errors remain explicit and fail closed; no natural engineering metrics finalization or fabricated full wall.",
+    "CPU composition success is not Native admission-effect, actual-apply/reobserve, comparability or qualification evidence."
+  ],
+  "deliverable": "Frozen source/diff, exact API/pins, one complete bounded attempt with all failures, own cleanup and raw-capture/journal evidence, structured limits and seal, then idle."
+}

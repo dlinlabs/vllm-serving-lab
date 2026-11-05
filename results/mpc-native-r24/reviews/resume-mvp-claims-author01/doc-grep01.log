@@ -1,0 +1,77 @@
+pinned-docs/resume_project_summary.md:3:Status: **research prototype; not Resume Ready for a real closed-loop MPC claim**.
+pinned-docs/resume_project_summary.md:13:control-timing instrumentation, reproducible workload/audit tooling, and
+pinned-docs/resume_project_summary.md:20:reobserves. The actuator changes gateway reservation budget, not the native
+pinned-docs/resume_project_summary.md:29:| Implemented finite-horizon policy-planning components | E2: independently accepted CPU/shadow tests. No native performance claim follows. |
+pinned-docs/resume_project_summary.md:31:| Preserved negative results and release blockers | E4/E5: incomplete native observation coverage and cleanup failure path; neither is relabelled PASS. |
+pinned-docs/resume_project_summary.md:40:baseline, convergence of the Native14 posterior, and production deployment are
+pinned-docs/resume_project_summary.md:45:| P0 | Explain original work, actuator, states, model limitations, objective and constraints without conflating gateway and engine state. | Documented; final independent claim audit pending. |
+pinned-docs/resume_project_summary.md:46:| P0 | One runnable, source-pinned path demonstrating repeated real observation, prediction, optimization, first-action application and reobservation. Retain refusals, timeouts and actual applied-state evidence. | **Missing native end-to-end evidence.** Shadow output and ACK-only evidence do not qualify. |
+pinned-docs/resume_project_summary.md:47:| P0 | Safe bounded operation: queue/admission limits, overload outcomes, stale-state refusal, unknown-command handling, timeout cleanup and private-config handling. | Components tested; **D2-F1 repair/acceptance remains required** for the affected launcher. |
+pinned-docs/resume_project_summary.md:48:| P0 | Comparable descriptive GPU results for MPC, strong development-selected Fixed, FIFO and strong OneMove; same workload, model, resource limits and scoring. | **Not collected.** FIFO identity and missing throughput/fairness reporting require explicit resolution. |
+pinned-docs/resume_project_summary.md:50:| P0 | Portable commands/configurations, raw-to-table reconstruction and exact code/data commits; audit every quantitative resume claim. | Historical bundles exist; clean-checkout MVP reproduction remains unverified. |
+pinned-docs/resume_project_summary.md:51:| P1 | Better decision-relevant forecasts, overhead reduction, broader workload/load coverage and repeatability estimates. | Only if a P0 result justifies the change. |
+pinned-docs/resume_project_summary.md:52:| P2 | Native14 mixing research, full empirical-pool quantiles, new proposal geometry, extensive posterior qualification, large confirmatory campaigns and additional hardware. | Separate research backlog; must not delay P0 or applications. |
+pinned-docs/resume_project_summary.md:56:Native14 qualification, waive safety checks, or be presented as a calibrated
+pinned-docs/resume_project_summary.md:64:   selection, FIFO meaning, workload, resource bounds, metric definitions,
+pinned-docs/resume_project_summary.md:71:   **Resume Ready** only after P0 closes. Move all optional research to P1/P2.
+pinned-docs/resume_project_summary.md:79:## Safe resume wording today
+pinned-docs/resume_project_summary.md:81:- Built an instrumented vLLM serving gateway and reproducible trace-replay
+pinned-docs/resume_project_summary.md:85:  versioned-state, deadline and failure checks; documented the remaining native
+pinned-docs/resume_project_summary.md:89:MPC superiority. Role-specific alternatives are in [resume bullets](resume_bullets.md).
+pinned-docs/resume_project_summary.md:96:| Sampling & Mixing | Estimation reproducibility and numerical limitations; no convergence campaign for P0. |
+pinned-docs/resume_project_summary.md:98:| Independent Validation | Claim ledger, leakage audit, counterexamples and unsupported wording. |
+pinned-docs/resume_project_summary.md:99:| MPC Planner | Objective, horizon, constraints, actions and Fixed/OneMove distinction. |
+pinned-docs/architecture.md:4:the complete native MPC loop is **not yet qualified**.
+pinned-docs/architecture.md:8:    W[Fixed offered workload] --> G[Gateway admission and reservation ledger]
+pinned-docs/architecture.md:13:    V -. experimental native observations .-> T
+pinned-docs/architecture.md:18:    A -. native MPC integration not qualified .-> G
+pinned-docs/architecture.md:25:actuator edge is the principal missing native closed-loop evidence.
+pinned-docs/architecture.md:31:| vLLM | Model execution, native batching and cache management. | External backend; do not claim these algorithms as project contributions. |
+pinned-docs/architecture.md:35:| Runtime/actuation | Observation guards, pending-command handling and first-action coordination. | [`mpc_lab/runtime.py`](../mpc_lab/runtime.py), [`mpc_lab/actuator.py`](../mpc_lab/actuator.py); native qualification pending |
+pinned-docs/architecture.md:36:| Evaluation | All-offered scoring, failure retention and baseline accounting. | [`mpc_lab/benchmark.py`](../mpc_lab/benchmark.py), accepted research evidence; no completed current native comparison |
+pinned-docs/architecture.md:47:Native scheduler/copy-ready information needs its own source-clock and
+pinned-docs/architecture.md:61:same model, objective, resource constraints and scoring population.
+pinned-docs/architecture.md:65:one-step forecast. MPC can consider multiple future actions but executes only
+pinned-docs/architecture.md:70:and E2 for configuration-specific details. Native14 is a separate failed-
+pinned-docs/architecture.md:88:queueing stability, physical KV safety or production reliability certification.
+pinned-docs/benchmark_results.md:1:# Verified results and benchmark evidence
+pinned-docs/benchmark_results.md:3:Status: **no qualified native MPC-versus-baseline performance result**.
+pinned-docs/benchmark_results.md:7:## E1: historical native serving measurements, not MPC
+pinned-docs/benchmark_results.md:31:### E1 evidence chain and reproduction
+pinned-docs/benchmark_results.md:48:python results/shared-client-20261018/reproduce.py \
+pinned-docs/benchmark_results.md:62:| ID | Verified result / limitation | Trace, configuration and command | Exact evidence commit |
+pinned-docs/benchmark_results.md:64:| E2 | Frozen policy planner: 130 CPU cases passed per Python in accepted Parent replays; no native inference or actuation qualification. | [Acceptance index](../results/mpc-native-r24/reviews/native-team16-planner-revision02-parent-seal01.json) records PLAN, source hashes and archived command/result paths. | `2b4ed5bc754060cba11c16852b7798b975bc03eb` |
+pinned-docs/benchmark_results.md:65:| E3 | Deployment composition: nine CPU integration cases passed per Python; this predates the subsequent cleanup blocker. | [Acceptance/config index](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01.json), [exact archived command](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01/attempts/mayor-py314.command.json). Absolute paths require relocation; not a portable CLI claim. | `c00d29d2296bda7e249578f2de7c08650a4d79c9` |
+pinned-docs/benchmark_results.md:66:| E4 | Native observation diagnostic: 90 HTTP records, 43 completion tokens and incomplete nonempty coverage (one of two required observations). Not a throughput or prediction benchmark. | [Result/hash index](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01-results.json), [preregistration](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01-preregistration.json), [command/config/raw bundle](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01/). | Results `52b2b244f5904306f730ab6ca26a3d572343e2b2`; preregistration `d6ded2b25a0667028f6ab9f2cc08fe76df1c3315` |
+pinned-docs/benchmark_results.md:67:| E5 | Source-backed D2-F1 cleanup bypass; no observed live orphan incident asserted. Live use of the affected launcher is blocked. | [Mayor disposition](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-parent01.json), [independent review](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-author01/REVIEW.md). No live reproduction command was run. | `26139be5f90ec7386e2c578c95aa331aa0052244` |
+pinned-docs/benchmark_results.md:76:| Strong development-selected Fixed | Not measured | Not measured | Not measured | Not measured | Not measured | Not measured |
+pinned-docs/benchmark_results.md:87:Before collection, freeze the strongest Fixed selection on development data
+pinned-docs/benchmark_results.md:91:search. Charge controller delays without slowing the offered workload to hide
+pinned-docs/benchmark_results.md:104:- Fairness: predefine workload groups and report per-group offered-normalized
+pinned-docs/interview_defense.md:8:An admission/accounting gateway, workload replay and lifecycle audits, control-
+pinned-docs/interview_defense.md:10:components. vLLM supplies native inference, batching and KV management; those
+pinned-docs/interview_defense.md:16:requests may be admitted. It does not directly set native batch tokens, evict
+pinned-docs/interview_defense.md:21:It evaluates future action sequences against a prediction model and constrained
+pinned-docs/interview_defense.md:23:CPU/shadow planning exists; current evidence does not establish an integrated
+pinned-docs/interview_defense.md:24:native MPC deployment. A future complete-loop claim needs real application and
+pinned-docs/interview_defense.md:38:Native14 did not meet its sampling qualification; its uncertainty is not
+pinned-docs/interview_defense.md:52:Fixed holds a development-selected budget. FIFO specifies service order and
+pinned-docs/interview_defense.md:56:weaken the baselines or give MPC privileged future information.
+pinned-docs/interview_defense.md:80:E1 provides audited historical native serving measurements under scheduled
+pinned-docs/interview_defense.md:81:budgets; E2/E3 provide bounded CPU component evidence. E4 is a partial native
+pinned-docs/interview_defense.md:82:observation diagnostic. None establishes a fair native MPC win. A/B were on
+pinned-docs/interview_defense.md:88:authority or workload sensitivity only where evidence supports the explanation.
+pinned-docs/interview_defense.md:89:The accounting, instrumentation, bounded runtime and reproducibility remain
+pinned-docs/interview_defense.md:92:## What would make this Resume Ready?
+pinned-docs/interview_defense.md:94:The P0 gate in [the project summary](resume_project_summary.md): a reproducible
+pinned-docs/interview_defense.md:95:real loop, safe failure paths, comparable descriptive baseline results and an
+pinned-docs/resume_bullets.md:1:# Resume bullets: verified prototype wording
+pinned-docs/resume_bullets.md:4:not a completed native closed-loop MPC deployment. Evidence IDs refer to
+pinned-docs/resume_bullets.md:10:  pipeline; audited native serving captures replaying 7,643 offered requests
+pinned-docs/resume_bullets.md:13:  deadline and failure checks, documenting the remaining native integration
+pinned-docs/resume_bullets.md:17:reproduction command and publication/runtime commits; second bullet E2/E3/E5.
+pinned-docs/resume_bullets.md:26:- Built auditable observation, lifecycle and failure evidence for native LLM
+pinned-docs/resume_bullets.md:31:interfaces are not a claim that the complete native loop has been demonstrated.
+pinned-docs/resume_bullets.md:36:  overload handling and lifecycle telemetry for reproducible serving studies.
+pinned-docs/resume_bullets.md:46:bounded end-to-end latency, starvation freedom, native sampler convergence or
+pinned-docs/resume_bullets.md:51:percentage until its numerator, denominator, workload, configuration, command,

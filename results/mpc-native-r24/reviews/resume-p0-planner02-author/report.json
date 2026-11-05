@@ -1,0 +1,403 @@
+{
+  "API_change": {
+    "FixedChoice": "MODEL forecast reference only, explicitly documented on FixedChoice/freeze_fixed/fixed_action. It is not empirical GPU Train selection. R7 needs a separate typed path later; no fabricated ForecastPanels.",
+    "MPC_OneMove": "Original entry/solver/full-panel timing expressions and evaluate/select/plan code are unchanged; exact AST checks and original11 controls preserved.",
+    "final_guard": "Checks actual expiry and state again after initial typed result construction, then stamps the final current applicability timestamp. Guards are cooperative; coordinator must still check at actual submit/application.",
+    "not_application_ack": true,
+    "prefix": "Received budget is held only before that current applicability timestamp, never backdated to snapshot/entry and never forced to wait for MPC first_action_at.",
+    "public_signature_changed": false,
+    "retained_guards": [
+      "nonregressing local clock",
+      "entry chronology",
+      "actual action deadline, equality refused",
+      "source age <=0.5s and source-derived expiry bound",
+      "run/clock/model identity",
+      "budget version and ledger sequence",
+      "budget support",
+      "complete immutable ledger and costs/token support"
+    ],
+    "return_times": "FirstAction.not_before == TimedPlan.first_action_at == the last successful current-state/time guard timestamp. FirstAction.not_after remains the caller actual action_deadline.",
+    "signature": "NominalPlanner.fixed_action(snapshot, choice, window, *, clock_domain, read_state, clock=time.monotonic)",
+    "window_semantics": "Fixed uses only entered_at and action_deadline. MPC-only solve_deadline/first_action_at do not impose a validity limit or waiting time.",
+    "zero_rollout_runtime": true
+  },
+  "actual_model_identity": {
+    "calibration_version": "synthetic-unqualified-v1",
+    "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+    "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+    "model_version": "cpu-lifecycle-v1",
+    "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+  },
+  "attempt_history": [
+    {
+      "directory": "attempt-01-red",
+      "log_sha256": "05dc627f84fc8f11a74ac51ae1535749998c1ada85e51f568b1ca403e1381979",
+      "meaning": "Reproduces artificial wait and inherited solver-deadline refusal",
+      "status": "2 intentional FAIL, 0 ERROR on unchanged capsule01 planner"
+    },
+    {
+      "directory": "attempt-02-green",
+      "log_sha256": "7e6ba6775d406e7794635a240450f53bfe8a136bcaaf149e4fa6ab354e1935bd",
+      "meaning": "Not final acceptance; subsequent narrow review found output-construction deadline gap",
+      "status": "14 PASS on initial timing correction"
+    },
+    {
+      "directory": "attempt-03-deadline-red",
+      "log_sha256": "f9f435e943b7760b22d5c16375987a3617bf6747f20e513a044c3c029d9fc1c7",
+      "meaning": "Preserved concrete regression: actual deadline can expire during result construction without a final check",
+      "status": "1 intentional FAIL, 0 ERROR on initial correction"
+    },
+    {
+      "directory": "attempt-04-final-green",
+      "log_sha256": "66de58fc5b1393ec84e5fb1cfa5ff53a03a745b5fb8931f0997b994ff0892f9d",
+      "meaning": "Original11 plus4 new focused methods; includes same two original timing witnesses, common safety guards and post-output deadline guard",
+      "status": "15 PASS on final correction"
+    }
+  ],
+  "attempts_used": 4,
+  "cleanup": [
+    {
+      "joined": true,
+      "original_identity_gone": true,
+      "pid": 1338456,
+      "start_ticks": "92204872"
+    },
+    {
+      "joined": true,
+      "original_identity_gone": true,
+      "pid": 1345084,
+      "start_ticks": "92219048"
+    },
+    {
+      "joined": true,
+      "original_identity_gone": true,
+      "pid": 1351023,
+      "start_ticks": "92228904"
+    },
+    {
+      "joined": true,
+      "original_identity_gone": true,
+      "pid": 1354671,
+      "start_ticks": "92236235"
+    }
+  ],
+  "command_cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+  "completed_at": "2026-11-04T22:12:29.657404+00:00",
+  "exact_commands": {
+    "attempt-01-red": [
+      "env",
+      "-u",
+      "PYTHONPATH",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONHASHSEED=0",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+      "OMP_NUM_THREADS=1",
+      "OPENBLAS_NUM_THREADS=1",
+      "MKL_NUM_THREADS=1",
+      "NUMEXPR_NUM_THREADS=1",
+      "nice",
+      "-n",
+      "19",
+      "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/mpc-research/resume-mvp",
+      "-p",
+      "test_nominal_planner.py",
+      "-v",
+      "-k",
+      "test_fixed_timing_"
+    ],
+    "attempt-02-green": [
+      "env",
+      "-u",
+      "PYTHONPATH",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONHASHSEED=0",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+      "OMP_NUM_THREADS=1",
+      "OPENBLAS_NUM_THREADS=1",
+      "MKL_NUM_THREADS=1",
+      "NUMEXPR_NUM_THREADS=1",
+      "nice",
+      "-n",
+      "19",
+      "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/mpc-research/resume-mvp",
+      "-p",
+      "test_nominal_planner.py",
+      "-v"
+    ],
+    "attempt-03-deadline-red": [
+      "env",
+      "-u",
+      "PYTHONPATH",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONHASHSEED=0",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+      "OMP_NUM_THREADS=1",
+      "OPENBLAS_NUM_THREADS=1",
+      "MKL_NUM_THREADS=1",
+      "NUMEXPR_NUM_THREADS=1",
+      "nice",
+      "-n",
+      "19",
+      "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/mpc-research/resume-mvp",
+      "-p",
+      "test_nominal_planner.py",
+      "-v",
+      "-k",
+      "test_fixed_rechecks_deadline_after_result_construction"
+    ],
+    "attempt-04-final-green": [
+      "env",
+      "-u",
+      "PYTHONPATH",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONHASHSEED=0",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+      "OMP_NUM_THREADS=1",
+      "OPENBLAS_NUM_THREADS=1",
+      "MKL_NUM_THREADS=1",
+      "NUMEXPR_NUM_THREADS=1",
+      "nice",
+      "-n",
+      "19",
+      "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/mpc-research/resume-mvp",
+      "-p",
+      "test_nominal_planner.py",
+      "-v"
+    ]
+  },
+  "final_literal_receipts": [
+    {
+      "applicable_offset": 0.02000000001862645,
+      "current_offset": 0.02000000001862645,
+      "kind": "fixed-timing-future-start",
+      "runtime_rollout_calls": 0,
+      "scope": "literal-CPU-only-not-Native",
+      "solver_first_offset": 0.09999999997671694
+    },
+    {
+      "applicable_offset": 0.010000000009313226,
+      "elapsed_from_entry": 0.15000000002328306,
+      "kind": "fixed-timing-elapsed-solver",
+      "runtime_rollout_calls": 0,
+      "scope": "literal-CPU-only-not-Native",
+      "source_age": 0.010000000009313226
+    },
+    {
+      "budget": 32.0,
+      "kind": "train-fixed",
+      "runtime_rollout_calls": 0,
+      "scope": "literal-CPU-only-not-Native",
+      "totals": [
+        [
+          16.0,
+          "0"
+        ],
+        [
+          32.0,
+          "1"
+        ]
+      ]
+    },
+    {
+      "after_action_good": true,
+      "during_solve_accepted": false,
+      "kind": "causal-prefix",
+      "scope": "literal-CPU-only-not-Native"
+    },
+    {
+      "kind": "mpc-vs-one-move",
+      "mpc_lower": "1",
+      "mpc_path": [
+        16.0,
+        32.0,
+        32.0
+      ],
+      "one_move_lower": "0",
+      "one_move_path": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "rollout_calls": 8,
+      "scope": "literal-CPU-only-not-Native"
+    },
+    {
+      "kind": "delayed-one-move",
+      "lower": "1",
+      "path": [
+        16.0,
+        32.0,
+        32.0
+      ],
+      "scope": "literal-CPU-only-not-Native",
+      "transitions": 1
+    }
+  ],
+  "final_source_ids": {
+    "experiments/mpc-research/mpc-mathematical-specification.md": {
+      "bytes": 13120,
+      "sha256": "4931417a73ed16d949db8e9759173cb42fb5390f5b1b5457c468431f7d4c031d"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_planner.py": {
+      "bytes": 21987,
+      "sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1"
+    },
+    "experiments/mpc-research/resume-mvp/test_nominal_planner.py": {
+      "bytes": 21197,
+      "sha256": "0f716b28de50daa79110bb84b82022654ec5586a7b8e7147f4d7dd6fc903988b"
+    },
+    "gateway.py": {
+      "bytes": 41800,
+      "sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+    },
+    "mpc_lab/__init__.py": {
+      "bytes": 63,
+      "sha256": "29962543d64e8cdb630a240a999dd9e47ed87cccf4bd03220ca2d82b5d7be09e"
+    },
+    "mpc_lab/actuator.py": {
+      "bytes": 12329,
+      "sha256": "e31dbe92eb3a27be554db15405af0a6046a6820096e84540812d3ee88afc59d5"
+    },
+    "mpc_lab/benchmark.py": {
+      "bytes": 14048,
+      "sha256": "c84858d2f4973de890d8eaaba33ca42ec7d5d0e13f5c097feaa829f4d337df99"
+    },
+    "mpc_lab/contracts.py": {
+      "bytes": 6959,
+      "sha256": "f39f6b73b41b1433a220f182679852df5c4332d9022ce903dba9863375236e23"
+    },
+    "mpc_lab/controller.py": {
+      "bytes": 16323,
+      "sha256": "44d705101820d89677035101110c70f890f94f7d82a5a521ec87d5e09dbf08cc"
+    },
+    "mpc_lab/http_capture.py": {
+      "bytes": 11052,
+      "sha256": "0648738704771f80470849b0c0beb671d0f17c9dbc75e4095cff155b20d04be7"
+    },
+    "mpc_lab/identification.py": {
+      "bytes": 8905,
+      "sha256": "bae3888768be5508f6a5d57a48eddd80abe9e0942f95e7f57bab824707f560f8"
+    },
+    "mpc_lab/model.py": {
+      "bytes": 21361,
+      "sha256": "eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec"
+    },
+    "mpc_lab/native_state.py": {
+      "bytes": 4967,
+      "sha256": "835df8ebaa58c773074e65cedba4627b468d14b560233a7655bf9cd2240b83d6"
+    },
+    "mpc_lab/runtime.py": {
+      "bytes": 10743,
+      "sha256": "f04c58eb9b5a81e7e1c7a22aaea1cd6b59de88c568ec77d51f1487af4c85b727"
+    },
+    "prefill_lab/live_http.py": {
+      "bytes": 12223,
+      "sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f"
+    },
+    "results/mpc-native-r24/reviews/native-team16-planner-revision02-author01/policy_planner16.py": {
+      "bytes": 26866,
+      "sha256": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a"
+    },
+    "telemetry.py": {
+      "bytes": 17187,
+      "sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370"
+    }
+  },
+  "final_tests": {
+    "count": 15,
+    "python": "Python 3.14.4",
+    "python312": "Not run; no dual-Python claim",
+    "status": "PASS"
+  },
+  "frozen_attempt_maximum": 4,
+  "initial_plan_sha256": "9689bbd970d5124e248dba9e789b527c16b07c2762b1dbc707bd047e0a54d4bf",
+  "limits": [
+    "CPU literal-receipt engineering controls only, not Native/GPU performance or predictor accuracy",
+    "not an actual actuated receding loop",
+    "no authorization/permit created or claimed",
+    "no empirical strongest Fixed selection",
+    "no Native14/G06/G16 gate closure",
+    "coordinator still owns real HTTP/CAS/unknown-command/actual application/cleanup checks",
+    "caller-supplied scenario provenance declarations still require independent data-split audit"
+  ],
+  "model_assignment": {
+    "authority": "retained Mayor-verified assignment; no new model introspection or actor",
+    "model": "gpt-6-astra",
+    "reasoning": "max"
+  },
+  "not_performed": [
+    "Git",
+    "GPU",
+    "SSH",
+    "network",
+    "actuation",
+    "Native model or approval fabrication",
+    "new agents",
+    "MCMC",
+    "RNG scenario generation",
+    "actual data",
+    "installs",
+    "other source edits",
+    "old capsule writes"
+  ],
+  "owned_sources_only": [
+    "experiments/mpc-research/resume-mvp/nominal_planner.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_planner.py"
+  ],
+  "predecessor": {
+    "all_56_sealed_members_unchanged_before_after": true,
+    "capsule": ".runtime/r24-resume-p0-nominal-planner01",
+    "seal_sha256": "3c834babb11f0f89933917179d358533216e9b137f51f586b904d4dc7fe78793"
+  },
+  "schema": "resume-p0-fixed-timing-repair-report-v1",
+  "source_compatibility": "source-final-compatibility.json",
+  "source_diff": {
+    "final": "source-final.patch",
+    "final_sha256": "6d9f60c9e2bfb5e463c5f88170e7816887c3611a3aedafc173c1131b5cb94d57",
+    "initial": "source.patch"
+  },
+  "status": "CPU_FIXED_TIMING_REPAIR_TESTED_PARENT_REVIEW_PENDING",
+  "unchanged_contract": {
+    "budgets": [
+      16,
+      32
+    ],
+    "calibration": "synthetic-unqualified-v1",
+    "evaluation_window_s": 5,
+    "full_paths": 8,
+    "model": "cpu-lifecycle-v1",
+    "native_gates_unchanged": true,
+    "no_live_permission": true,
+    "objective_unchanged": true,
+    "scenario_count": 1,
+    "slot_s": 1,
+    "source_age_max_s": 0.5,
+    "steps": 3,
+    "tail_s": 10
+  },
+  "unexpected_harness_failures": 0
+}

@@ -1,0 +1,396 @@
+{
+  "cases": [
+    {
+      "active_CPU_stream_ledgers": [
+        0
+      ],
+      "case": "test_caller_cancellation_joins_workers_and_persists_partial_outcomes",
+      "clients_closed": [
+        true
+      ],
+      "not_a_Native_cleanup_receipt": true,
+      "processes_or_services_started": [],
+      "raw_receipt": "attempts/generation01-py312/artifacts/test_caller_cancellation_joins_workers_and_persists_partial_outcomes/OWNED_CLEANUP.json",
+      "remaining_loop_tasks": [],
+      "signal_checks": [
+        {
+          "after_handler_ids": [
+            126307575581408,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307575581408,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "CPU-episode-cancellation-control",
+          "unchanged": true
+        }
+      ],
+      "signal_handlers_unchanged": true,
+      "test_owned_tasks_joined": [
+        true
+      ],
+      "transports_closed": [
+        true,
+        true
+      ]
+    },
+    {
+      "active_CPU_stream_ledgers": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "case": "test_default_off_preparation_and_configuration_refusals_do_not_start",
+      "clients_closed": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "not_a_Native_cleanup_receipt": true,
+      "processes_or_services_started": [],
+      "raw_receipt": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/OWNED_CLEANUP.json",
+      "remaining_loop_tasks": [],
+      "signal_checks": [
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574351728,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-15",
+          "unchanged": true
+        }
+      ],
+      "signal_handlers_unchanged": true,
+      "test_owned_tasks_joined": [],
+      "transports_closed": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "active_CPU_stream_ledgers": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "case": "test_returned_failure_envelopes_cancel_peer_and_preserve_results",
+      "clients_closed": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "not_a_Native_cleanup_receipt": true,
+      "processes_or_services_started": [],
+      "raw_receipt": "attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/OWNED_CLEANUP.json",
+      "remaining_loop_tasks": [],
+      "signal_checks": [
+        {
+          "after_handler_ids": [
+            126307574357488,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574357488,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-20",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574357488,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574357488,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-20",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574357488,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574357488,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-20",
+          "unchanged": true
+        },
+        {
+          "after_handler_ids": [
+            126307574357488,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574357488,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-20",
+          "unchanged": true
+        }
+      ],
+      "signal_handlers_unchanged": true,
+      "test_owned_tasks_joined": [],
+      "transports_closed": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "active_CPU_stream_ledgers": [
+        0
+      ],
+      "case": "test_shared_start_full_outcomes_and_real_controller_feedback",
+      "clients_closed": [
+        true
+      ],
+      "not_a_Native_cleanup_receipt": true,
+      "processes_or_services_started": [],
+      "raw_receipt": "attempts/generation01-py312/artifacts/test_shared_start_full_outcomes_and_real_controller_feedback/OWNED_CLEANUP.json",
+      "remaining_loop_tasks": [],
+      "signal_checks": [
+        {
+          "after_handler_ids": [
+            126307574359888,
+            126307675534928
+          ],
+          "before_handler_ids": [
+            126307574359888,
+            126307675534928
+          ],
+          "same_coroutine": true,
+          "scope": "immediately around await run_episode in one coroutine/Runner invocation",
+          "task": "Task-43",
+          "unchanged": true
+        }
+      ],
+      "signal_handlers_unchanged": true,
+      "test_owned_tasks_joined": [],
+      "transports_closed": [
+        true,
+        true
+      ]
+    }
+  ],
+  "clients_closed": 16,
+  "identities": [
+    {
+      "fresh_original_identity_gone": true,
+      "owner": "initial pinning",
+      "pid": 2090230,
+      "start_ticks": "93602628"
+    },
+    {
+      "fresh_original_identity_gone": true,
+      "owner": "source freezing",
+      "pid": 2095450,
+      "start_ticks": "93613329"
+    },
+    {
+      "fresh_original_identity_gone": true,
+      "owner": "bounded test supervisor",
+      "pid": 2095454,
+      "start_ticks": "93613912",
+      "state": "R"
+    },
+    {
+      "fresh_original_identity_gone": true,
+      "owner": "unittest process",
+      "pid": 2095455,
+      "start_ticks": "93613914",
+      "state": "R"
+    }
+  ],
+  "known_helpers_gone": true,
+  "outer_test_tasks_joined": 1,
+  "same_coroutine_signal_checks": 16,
+  "scope": "Known CPU processes, async tasks, clients and MockTransports only; not actual services/root-leaf/native cleanup.",
+  "transports_closed": 32
+}

@@ -1,0 +1,90 @@
+{
+ "after_runs": "view own outputs; then reserve R-b/R-c (author py314 T01/T02 control-result.json) for comparison; findings; seal",
+ "bounds": {
+  "author_safety_join_seconds": 5,
+  "author_watchdog_seconds": 110,
+  "outer_hard_stop": "timeout -k 5 245 per Python invocation (2 types x 120 s + margin); harness only, outside author argv",
+  "per_control_type_seconds": 120
+ },
+ "decision": "RUN relocated byte-identical author controls T01+T02 (exactly the two authorised control types) once per Python; one generation, one attempt, no retries; every failure preserved",
+ "discrimination_read_before_execution": {
+  "T01": [
+   "monitor_raise_must_disarm / monitor_return_must_disarm: old monitor armed via module-global arm and returned/raised without setitimer(0) (D2-F1 T1) -> these asserts fail on old code (semantic, same function name)",
+   "cleanup_entry_must_disarm + zero alarm_deliveries with a 0.25 s timer pre-armed and a 0.30 s sleep inside the failing publish: tests S1 first-disarm",
+   "anchor publish ENOSPC must not skip actual Owned cleanup (D2-F1 T2); two lifecycle.json EIO must not stop second root/reader/fd closure (owned01 change)",
+   "valid anchor unchanged, deadline anchor+40; errors==3 and capture_complete False retained"
+  ],
+  "T02": [
+   "exhausted valid anchor must still attempt cleanup with no arm gate (D2-F1 T3: old arm(started+40)/arm raise skipped cleanup); arm calls recorded as failure",
+   "c.domain EIO must not bypass cleanup; first-pass SIGKILL to every known identity via witnessed pidfd_send_signal",
+   "held reader => not joined, INCOMPLETE all-offered with exact planned IDs/unknown fates, raw bytes unchanged, DO_NOT_EXPORT, export False, private close refuses, no RETURNED substitution"
+  ],
+  "limits": [
+   "cleanup_owned_stage/release_after_cleanup/incomplete_all_offered do not exist in old code: against old launch01 these parts fail by AttributeError (API absence), so old-vs-new discrimination of S2-S4 is source-reasoned, not executed (running against originals would need an overlay/adapter: not authorised)",
+   "controls call components directly, never main(): outer-finally ordering (setitimer(0) first, unconditional cleanup_owned_stage, postflight/release) is verified by source reading only",
+   "no control exercises a SIGALRM delivered between the except body and the outer finally's first setitimer(0) / first line of cleanup_owned_stage (residual window; not deterministically exercisable without new instrumentation, not authorised)",
+   "synthetic anchor offsets (-30/-8, -244/-41) and a 0.25 s timer stand in for real 180/243/260 s budgets; injected errno failures are representative, not exhaustive; one host/kernel; narrow CPU evidence, not universal OS proof"
+  ]
+ },
+ "eligibility": {
+  "cleanup_only": [
+   "T01: monitor raise/return disarm; cleanup_owned_stage with anchor-publish ENOSPC + 2 lifecycle.json EIO; joins/fds/lock order",
+   "T02: exhausted valid anchor (started-244/anchor-41), c.domain EIO, arm prohibited, held Reader; first-pass SIGKILL, INCOMPLETE all-offered, DO_NOT_EXPORT, export/config-close refusals"
+  ],
+  "cpu_only": "real Owned spawning cpu_dummy01.py (self-lifetime 20 s, SIGTERM ignored), no Native/network/GPU/SSH/model/valid approval; live main never called",
+  "private_paths": "lock=attempt/T0x/CPU_ONLY_NOT_GPU.lock, public=attempt/T0x/public, CONFIG patched to dummy in T02 (close guard raises before CONFIG access); c.PUBLIC/c.STATE/c.LOCK/c.CONFIG are /workspace/pr32-r23 remote paths and are not passed",
+  "reads_in_place": "hash-verified read-only: 8 deployment02 dependencies + selected originals (INPUTS.json), deployment02 OFFERS.json via c.OFFERS, consumer CONTROL_FREEZE hash in monitor",
+  "relocation": "RELOCATION.json: 37 files / 352291 B byte-identical copies (subject manifest == subject current == copy); HERE=Path(__file__).resolve().parent -> relocated/; run_controls cwd==HERE satisfied by cwd=relocated; attempts/ created fresh (exist_ok=False) in own scope; author bytes unaltered; no adapter",
+  "tmp": "count-only grep: 0 tempfile|/tmp|mkdtemp|gettempdir|TMPDIR matches in test/run/load/dummy/owned01, pins02, composition_common01, authorization02; launch01 TMPDIR at L413 is inside main (not called)"
+ },
+ "expected": "T01 PASS and T02 PASS on both Pythons if the author's result reproduces; any other outcome is preserved as observed, never retried or relabelled",
+ "frozen_at_unix": 1793829022.312945,
+ "frozen_before_any_execution": true,
+ "model": "claude-opus-5.5",
+ "postcheck01_sha256": "dbfede197bf270dd7a71b0fd93dbeda3e65f94b9da10b34726979d0ee17a62be",
+ "prohibited": [
+  "retries",
+  "editing relocated author bytes",
+  "in-place execution in sealed subject",
+  "main()/valid approval/SSH/GPU/network/install",
+  "old 42/9/7 suites",
+  "full 136/479 rehash"
+ ],
+ "reasoning": "max",
+ "relocation_json_sha256": "506bb05ca8c59c3c9585f810f3490bbff16dfb047cb44017c44a840240015779",
+ "steps": [
+  {
+   "attempt_dir": "relocated/attempts/generation01-py314",
+   "attempts": 1,
+   "author_argv_unchanged": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BLIS_NUM_THREADS=1 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B run_controls01.py",
+   "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-cleanup-independent01/relocated",
+   "generation": 1,
+   "harness": "set -C && timeout -k 5 245 env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BLIS_NUM_THREADS=1 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B run_controls01.py > ../runs/py314-controls.stdout.log 2> ../runs/py314-controls.stderr.log; echo $? > ../runs/py314-controls.exit",
+   "retries": 0,
+   "step": "py314-controls"
+  },
+  {
+   "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-cleanup-independent01",
+   "harness": "set -C && env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -I -B postcheck01.py relocated/attempts/generation01-py314 relocated runs/py314-postcheck.json > runs/py314-postcheck.stdout.log 2>&1; echo $? > runs/py314-postcheck.exit",
+   "read_only": true,
+   "step": "py314-postcheck"
+  },
+  {
+   "attempt_dir": "relocated/attempts/generation01-py312",
+   "attempts": 1,
+   "author_argv_unchanged": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BLIS_NUM_THREADS=1 nice -n19 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B run_controls01.py",
+   "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-cleanup-independent01/relocated",
+   "generation": 1,
+   "harness": "set -C && timeout -k 5 245 env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BLIS_NUM_THREADS=1 nice -n19 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B run_controls01.py > ../runs/py312-controls.stdout.log 2> ../runs/py312-controls.stderr.log; echo $? > ../runs/py312-controls.exit",
+   "retries": 0,
+   "step": "py312-controls"
+  },
+  {
+   "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-cleanup-independent01",
+   "harness": "set -C && env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -I -B postcheck01.py relocated/attempts/generation01-py312 relocated runs/py312-postcheck.json > runs/py312-postcheck.stdout.log 2>&1; echo $? > runs/py312-postcheck.exit",
+   "read_only": true,
+   "step": "py312-postcheck"
+  }
+ ],
+ "subject_digest_rechecked": "f145546d68934af0b0ec78bee8a78bd4817b53ca694edea8ef91df2731d023f5 (observed again by relocation step)"
+}

@@ -1,0 +1,30 @@
+{
+  "all_first_attempts_preserved": true,
+  "failures": [
+    {
+      "Python": "py314",
+      "classification": "Harness omitted literal required cwd;correct guard refusal,not runtime/Native defect.",
+      "control": "C07",
+      "exit_file": "outputs/generation01-py314.exit",
+      "generation": 1,
+      "log": "outputs/generation01-py314.log",
+      "reason": "ValueError: exclusive_candidate_cwd_required",
+      "resolved_in": 2,
+      "retained": true
+    },
+    {
+      "Python": "py312",
+      "classification": "Harness omitted literal required cwd;correct guard refusal,not runtime/Native defect.",
+      "control": "C07",
+      "exit_file": "outputs/generation01-py312.exit",
+      "generation": 1,
+      "log": "outputs/generation01-py312.log",
+      "reason": "ValueError: exclusive_candidate_cwd_required",
+      "resolved_in": 2,
+      "retained": true
+    }
+  ],
+  "no_third_generation": true,
+  "unexpected_failures_total": 2,
+  "unresolved_test_failures": 0
+}

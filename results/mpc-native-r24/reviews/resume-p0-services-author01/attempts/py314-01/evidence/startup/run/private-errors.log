@@ -1,0 +1,7 @@
+enter
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/frozen/nominal_services.py", line 400, in __enter__
+    raise OwnershipError("known service startup failure")
+nominal_services.OwnershipError: known service startup failure
+service_exit
+nominal_services.OwnershipError: owned service exited

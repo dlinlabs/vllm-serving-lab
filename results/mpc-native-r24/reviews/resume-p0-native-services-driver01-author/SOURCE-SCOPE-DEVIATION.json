@@ -1,0 +1,26 @@
+{
+  "schema": "role3-source-search-scope-deviation-v1",
+  "tool": "functions.rg",
+  "arguments": {
+    "paths": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+    "glob": "gateway.py",
+    "pattern": "MPC_|MAX_ADMITTED_COST|COST_AWARE|SHARED_UPSTREAM_CLIENT|BENCHMARK|TOKENIZER|MODEL_NAME|/health|/metrics|/admin/mpc|ADMISSION|ADMIN_",
+    "output_mode": "content",
+    "-n": true,
+    "head_limit": 180
+  },
+  "intended_target": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/gateway.py",
+  "actual_reported_matching_files": 114,
+  "actual_reported_matches": 8280,
+  "result_shape": "tool compact summary, selected lines and path names; thousands of further matches omitted",
+  "problem": "Directory plus basename glob recursively included archival and peer copies, contrary to requested bounded source scope.",
+  "strict_four_file_search_compliance": false,
+  "raw_tool_record": "Retained in conversation tool history; unsealed returned peer/archival snippets are not recopied into this capsule.",
+  "containment": [
+    "No archival/peer result used for implementation or claimed as new evidence",
+    "No archival/peer result revisited, copied or hashed",
+    "All subsequent source views targeted exact canonical gateway.py and model.py lines1-160",
+    "Canonical copies/hashes are separately identified and do not erase this deviation"
+  ],
+  "acceptance_disposition": "Mayor required; not self-approved"
+}

@@ -1,0 +1,31 @@
+{
+ "schema": "team16-role7-planner-critique-plan-v1",
+ "role": "PR32 team16 role7 Fair Comparison & Benchmark (frozen cross-critique follow-up)",
+ "frozen_before_reading_peer_source": true,
+ "requests": [
+  "parent msg 1: read-only independent fairness/cost/common-panel/objective/strongOneMove/fixed-training critique of .runtime/r24-team16-planner, especially tiny positive weights and timing scope",
+  "parent msg 2: original planner NOT accepted (positive-subnormal product tie (16,16) vs rational oracle (32,32)); no need to duplicate that control",
+  "parent msg 3: review revision01 source_changes.patch and its fairness implications only; no need to duplicate all controls"
+ ],
+ "pinned_inputs_sha256": {
+  "r24-team16-planner/SHA256SUMS": "cd10bed48298d28e26416de5cb34c85c32d4c81bde1bc6c08362766123b6a3b7",
+  "r24-team16-planner/policy_planner16.py": "b360a4655287f476f0492beaeede0fafc1ec7a8635a5835d4606be89cf1fd6c8",
+  "r24-team16-planner/test_policy_planner16.py": "a3d07cbf19172d4b555356f7398501c5f3bc76e3ec73482bee2dfe2757ac4a44",
+  "r24-team16-planner/README.md": "aa35f0d11ce6b22e0360898f9bc6e6effd992d0e4a917d912bf8b69ace24477f",
+  "r24-team16-planner/report.json": "50113af5c77178299f34109e8b88fcd23d3b0f53468193d6a7e6af941352cfcd",
+  "r24-team16-planner/PLAN.json": "1e0b196d05b12c52a0a1bfe5b8e8f624ac872847dd40a29b9576fe626a0bd94e",
+  "r24-team16-planner-revision01/SHA256SUMS": "2051bc18e9fa4c659f77718668f289362f04ab4ab59f1cdfd74348a5733a3926",
+  "r24-team16-planner-revision01/source_changes.patch": "4c11208d9b97f89c4fc2bfeed2d7754370f89a271ea92e77516864fd8ce1b5c9",
+  "r24-team16-planner-revision01/policy_planner16.py": "eb02844885814ebb01150e8db1d29aa90c29d859a5074a265968543b505c4a06",
+  "r24-team16-planner-revision01/test_policy_planner16_numerical_revision.py": "0e0851fec5cce8f07b9efd8c863bd6801232ce68f20f02606ca4960bebfb554d",
+  "r24-team16-planner-revision01/README.md": "ae3b88c95ce0f5933bc3ef9c0921d9d52d4d51fc44c428f3946d347b7767f250"
+ },
+ "method": [
+  "verify both peer seals with sha256sum --check (read-only) before and after",
+  "read the pinned peer source and tests; never edit, copy into place or execute inside peer directories",
+  "bounded executable controls only from this directory: import the frozen peer module by absolute path with -B and PYTHONDONTWRITEBYTECODE=1, both Pythons, new attempt directories, failures preserved",
+  "report only concrete, confidence-backed issues with file:line and control evidence; label confidence; no native qualification, speed or win implied"
+ ],
+ "limits": "no peer edits, no agents/broadcasts, no git/network/GPU/launch, no /tmp, no threshold or baseline changes, no actual-D MCMC",
+ "output": "planner16-critique/{CRITIQUE.md, critique.json, controls, attempts/, SHA256SUMS}; outside the main comparison seal bb646f03df21e95ca4a22ffd607a324dc77ecb2e1fb73e1550b272f6c87e808a"
+}

@@ -1,0 +1,56 @@
+.........FF...FF                                                       [100%]
+=================================== FAILURES ===================================
+____________ Controls.test_10_body_accepts_complete_nonzero_ledger _____________
+
+self = <test_native_services_smoke.Controls testMethod=test_10_body_accepts_complete_nonzero_ledger>
+
+    def test_10_body_accepts_complete_nonzero_ledger(self):
+        code, report, _ = self.exercise("body-ledger", body=lambda **c: c["owner"].check(), traffic=True)
+>       self.assertEqual(code, 0)
+E       AssertionError: 1 != 0
+
+experiments/mpc-research/resume-mvp/test_native_services_smoke.py:298: AssertionError
+__________ Controls.test_11_gpu_idle_failure_not_masked_by_bad_ledger __________
+
+self = <test_native_services_smoke.Controls testMethod=test_11_gpu_idle_failure_not_masked_by_bad_ledger>
+
+    def test_11_gpu_idle_failure_not_masked_by_bad_ledger(self):
+        code, report, _ = self.exercise(
+            "body-two-errors", body=lambda **c: c["owner"].check(),
+            traffic=True, bad_sequence=True, gpu_idle=False)
+        self.assertEqual(code, 1)
+>       self.assertTrue(any("post GPU not proven idle" in e["message"] for e in report["errors"]))
+E       AssertionError: False is not true
+
+experiments/mpc-research/resume-mvp/test_native_services_smoke.py:307: AssertionError
+____ Controls.test_pre_control_error_keeps_not_run_capture_and_zero_offers _____
+
+self = <test_native_nominal_qualification.Controls testMethod=test_pre_control_error_keeps_not_run_capture_and_zero_offers>
+
+    def test_pre_control_error_keeps_not_run_capture_and_zero_offers(self):
+>       report = self.early_exit("pre-control-error")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py:65: in early_exit
+    self.assertEqual(report["offered_requests_from_driver"], 0)
+E   AssertionError: 5 != 0
+_____ Controls.test_preparation_error_keeps_primary_reason_and_zero_offers _____
+
+self = <test_native_nominal_qualification.Controls testMethod=test_preparation_error_keeps_primary_reason_and_zero_offers>
+
+    def test_preparation_error_keeps_primary_reason_and_zero_offers(self):
+>       self.early_exit("prepare-error", {"message": "CPU preparation refused"})
+
+experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py:65: in early_exit
+    self.assertEqual(report["offered_requests_from_driver"], 0)
+E   AssertionError: 5 != 0
+=========================== short test summary info ============================
+FAILED experiments/mpc-research/resume-mvp/test_native_services_smoke.py::Controls::test_10_body_accepts_complete_nonzero_ledger
+FAILED experiments/mpc-research/resume-mvp/test_native_services_smoke.py::Controls::test_11_gpu_idle_failure_not_masked_by_bad_ledger
+FAILED experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py::Controls::test_pre_control_error_keeps_not_run_capture_and_zero_offers
+FAILED experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py::Controls::test_preparation_error_keeps_primary_reason_and_zero_offers
+4 failed, 12 passed, 2 subtests passed in 0.34s

@@ -1,0 +1,56 @@
+{
+  "duration_seconds": 5,
+  "execution": "Not executed, retimed, regenerated or substituted with the old four-request probe.",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "offered_requests": 5,
+  "path": "results/mpc-native-r24/reviews/resume-p0-probes02/inputs/admission-boundary.json",
+  "provenance": {
+    "derivation": "first five Train rows of class 3072 in one offered burst",
+    "kind": "ENGINEERING_PROBE_FROM_FROZEN_TRAIN_REPLAY",
+    "not_a_held_out_or_performance_comparison": true,
+    "probe": "admission-boundary",
+    "purpose": "engineering",
+    "source_request_ids": [
+      "p0w1-train-0000",
+      "p0w1-train-0002",
+      "p0w1-train-0007",
+      "p0w1-train-0013",
+      "p0w1-train-0015"
+    ],
+    "source_train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+    "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5"
+  },
+  "request_shapes": [
+    {
+      "arrival_seconds": 1.25,
+      "input_tokens": 3072,
+      "max_tokens": 128,
+      "trace_id": "admission-boundary-p0w1-train-0000"
+    },
+    {
+      "arrival_seconds": 1.25,
+      "input_tokens": 3072,
+      "max_tokens": 128,
+      "trace_id": "admission-boundary-p0w1-train-0002"
+    },
+    {
+      "arrival_seconds": 1.25,
+      "input_tokens": 3072,
+      "max_tokens": 128,
+      "trace_id": "admission-boundary-p0w1-train-0007"
+    },
+    {
+      "arrival_seconds": 1.25,
+      "input_tokens": 3072,
+      "max_tokens": 128,
+      "trace_id": "admission-boundary-p0w1-train-0013"
+    },
+    {
+      "arrival_seconds": 1.25,
+      "input_tokens": 3072,
+      "max_tokens": 128,
+      "trace_id": "admission-boundary-p0w1-train-0015"
+    }
+  ],
+  "sha256": "6d938ba18240f3e0f8cb677064849a73316ee7a8dc918526c68cba37f02da6be"
+}
