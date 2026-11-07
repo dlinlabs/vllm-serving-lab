@@ -33,19 +33,24 @@ does not cancel requests already admitted.
 ### Current MPC P0 snapshot
 
 The CPU planner, runtime/recorder composition, and actual GPU service
-startup/owned cleanup have component evidence. **Native MPC is still blocked:**
-the engineering caller mishandles nonzero ledger closure and counts planned
-requests as offered on pre-run failures. No qualified native control cycles,
+startup/owned cleanup have component evidence. **The pre-GPU integration gate
+has passed; Native MPC still requires GPU qualification.** Independently reviewed
+fixes preserve nonzero ledger closure, distinguish planned from actually offered
+requests, retain failure receipts, and handle floating-point residue during drain.
+No qualified native control cycles,
 actual admission-effect result, Train baseline freeze, or held-out MPC comparison
 has been collected for this MVP.
 
-See the [current gate and blocker report](results/mpc-native-r24/reviews/resume-p0-publication-status01.json),
-[independent caller review](results/mpc-native-r24/reviews/resume-p0-native-caller-independent01-author/REPORT.json),
+See the [current pre-GPU handoff](results/mpc-native-r24/reviews/resume-p0-pre-gpu-ready02.json),
+[independent correction review](results/mpc-native-r24/reviews/resume-p0-pre-gpu-f1f2-independent02/REPORT.json),
+[original caller failure review](results/mpc-native-r24/reviews/resume-p0-native-caller-independent01-author/REPORT.json),
 [architecture](docs/architecture.md), and [benchmark evidence and limitations](docs/benchmark_results.md).
 This is a hash-bound snapshot of selected local research files, not an import of
 the entire research history; original local commit references are provenance
 metadata. The [export manifest](results/mpc-p0-publication/source-export.json)
-identifies every exported file.
+identifies the original exported files. Subsequent accepted fixes are bound by
+the current handoff's source commit and package manifest; the original export
+manifest is retained unchanged as historical evidence.
 
 To run the scoped CPU/mock controls from a checkout with Python 3.12 and the
 dependencies in `requirements-cpu-tests.txt`:
@@ -54,9 +59,11 @@ dependencies in `requirements-cpu-tests.txt`:
 python experiments/mpc-research/resume-mvp/run_cpu_controls.py
 ```
 
-This command does not start vLLM or use a GPU. Draft regressions for the unresolved
-caller defects are preserved as patches and negative witnesses, not included in
-the accepted test set. Passing the CPU controls does **not** qualify Native MPC.
+This command does not start vLLM or use a GPU. Caller regression tests are now
+included in the accepted test set; original failing witnesses are retained.
+Passing the CPU controls does **not** qualify Native MPC. The frozen package and
+conditional preregistration do not authorize GPU execution or confirm a current
+GPU lease.
 
 The latest batch completed **80 experiments** on one RTX 4090 backend:
 count16, count32, cost16, and cost32 across four arrival seeds and five workloads.

@@ -1,0 +1,38 @@
+{
+  "status": "PRE_GPU_READY_GPU_REQUIRED",
+  "source_commit": "234106cb741a2d66b76c440cad4b0b2a1b26c35b",
+  "B2_commit": "c6dd47cb8393ed76788499dc7d3985aaf41e11cf",
+  "source_pins": {
+    "experiments/mpc-research/resume-mvp/native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+    "experiments/mpc-research/resume-mvp/test_native_services_smoke.py": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3",
+    "experiments/mpc-research/resume-mvp/native_nominal_qualification.py": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+    "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py": "76b7e93688f0ba766456368716ded4cfe1809491c27f32fa5e76e812d2959d83"
+  },
+  "source_package": "resume-p0-pre-gpu-package02/source.tar",
+  "source_package_sha256": "996ed3f0260a42c8ceb1f6ece44400d6b3784a0859adb654eb47f08419b9d772",
+  "source_package_manifest": "resume-p0-pre-gpu-package02/source-manifest.json",
+  "package_proof_seal": "3d3ad4d1e37ba2f068039ee882857d329ba1d430b5876cbf0978754f931bb293",
+  "independent_acceptance": "resume-p0-pre-gpu-acceptance02.json",
+  "conditional_preregistration": "resume-p0-pre-gpu-package02/PREREGISTRATION.json",
+  "gates": {
+    "runtime_recorder_metrics_source_CPU": "PASS",
+    "B2_ledger_and_cleanup_source_CPU": "PASS",
+    "B3_accounting_drain_provenance_source_CPU": "PASS",
+    "independent_source_audit": "PASS",
+    "committed_package_isolation_Train_binding": "PASS",
+    "current_GPU_ownership_and_assets": "BLOCKED_CURRENT_AUTHORIZED_GPU_REQUIRED",
+    "Native_two_cycles_and_admission_effect": "NOT_RUN",
+    "Train_fixed16_fixed32_freeze": "NOT_RUN",
+    "held_out_Eval": "NOT_RUN"
+  },
+  "native_qualified_cycles": 0,
+  "GPU_contacted": false,
+  "GPU_services_started": false,
+  "GPU_rented": false,
+  "merged": false,
+  "next_owner": "Mayor",
+  "next_action": "Stop here. Once a current GPU is authorized, verify live ownership/assets/source/clock/ports then perform the original one-shot 3-warmup + 5-request Train closed-loop qualification. No Eval before qualification and Train freeze.",
+  "resume_claim_limit": "Existing gateway, instrumentation, replay and CPU planner evidence only; no Native MPC success or superiority claim.",
+  "PR": "https://github.com/dlinlabs/vllm-serving-lab/pull/34",
+  "original_failure_evidence_preserved": true
+}
