@@ -1,0 +1,95 @@
+--- before/native_nominal_qualification.py
++++ candidate/native_nominal_qualification.py
+@@ -108,7 +108,8 @@
+         services.checked(all(type(value) in (int, float) and math.isfinite(value) and value >= 0
+                              for value in values), "invalid drain/fallback metric")
+         services.checked(metrics["tokenizer_fallback_requests"] == 0, "tokenizer fallback after traffic")
+-        if all(metrics[name] == 0 for name in DRAIN_FIELDS):
++        if (metrics["current_in_flight"] == 0 and metrics["current_waiting"] == 0
++                and metrics["current_admitted_cost"] <= 1e-9):
+             report.setdefault("caller_drains", {})[phase] = {
+                 "drained": True, "observed_at": time.monotonic(), "readings": attempt}
+             return
+--- before/test_native_nominal_qualification.py
++++ candidate/test_native_nominal_qualification.py
+@@ -21,7 +21,8 @@
+ from nominal_planner import NominalPlanner
+ 
+ 
+-ROOT = Path(os.environ["NATIVE_SMOKE_TEST_OUTPUT"]) / "qualification"
++ROOT = Path(os.environ["NATIVE_SMOKE_TEST_OUTPUT"])
++ROOT = ROOT.with_name(ROOT.name + "-qualification")
+ ROOT.mkdir(parents=True, exist_ok=True)
+ REAL_CLIENT = httpx.AsyncClient
+ REAL_CAPTURE_WRITE = nominal_client.write_capture
+@@ -356,6 +357,70 @@
+                 self.assertTrue(list(fixture.output.glob("*-metrics-*.json")))
+                 self.assertIsNotNone(fixture.report["qualification_caller"]["primary_error"])
+ 
++    def test_drain_tolerates_only_idle_cost_residue(self):
++        for name, cost, in_flight, waiting, idle in (
++            ("epsilon-idle", 2.7755575615628914e-17, 0, 0, True),
++            ("non-negligible-cost", 1e-6, 0, 0, False),
++            ("one-in-flight", 0.0, 1, 0, False),
++            ("one-waiting", 0.0, 0, 1, False),
++        ):
++            with self.subTest(case=name):
++                async def exercise():
++                    output = ROOT / ("drain-residue-" + name)
++                    output.mkdir()
++                    metrics = dict(current_in_flight=in_flight, current_waiting=waiting,
++                                   current_admitted_cost=cost, tokenizer_fallback_requests=0)
++                    report, calls, checks = {"caller_errors": []}, [], []
++
++                    def check():
++                        checks.append(time.monotonic())
++
++                    def handle(request):
++                        self.assertEqual(request.method, "GET")
++                        self.assertEqual(request.url.path, "/metrics")
++                        self.assertTrue(all(value > 0 for value in request.extensions["timeout"].values()))
++                        calls.append(time.monotonic())
++                        return httpx.Response(200, json=metrics)
++
++                    error = None
++                    async with REAL_CLIENT(base_url="http://CPU-drain", trust_env=False,
++                                           transport=httpx.MockTransport(handle)) as client:
++                        started = time.monotonic()
++                        owner = types.SimpleNamespace(deadline=started + 0.6, reserve=0.1, check=check)
++                        try:
++                            await driver.drain(
++                                client, owner=owner, deadline=owner.deadline, reserve=owner.reserve,
++                                output=output, key="", report=report, phase="final")
++                        except (driver.services.ProbeError, TimeoutError) as caught:
++                            error = caught
++                    returned = time.monotonic()
++                    pending = [task.get_name() for task in asyncio.all_tasks()
++                               if task is not asyncio.current_task() and not task.done()]
++                    (output / "DRAIN-CHECK.json").write_text(json.dumps({
++                        "case": name, "metrics": metrics, "expected_idle": idle,
++                        "started": started, "returned": returned, "deadline": owner.deadline,
++                        "cleanup_reserve_s": owner.reserve, "calls": calls, "owner_checks": checks,
++                        "error": None if error is None else driver.error_record(error),
++                        "client_closed": client.is_closed, "remaining_tasks": pending,
++                        "report": report, "native_qualification": False,
++                    }, sort_keys=True, allow_nan=False))
++                    self.assertTrue(client.is_closed)
++                    self.assertEqual(pending, [])
++                    self.assertTrue(checks)
++                    if idle:
++                        self.assertIsNone(error)
++                        self.assertEqual(len(calls), 1)
++                        self.assertEqual(report["caller_drains"]["final"]["readings"], 1)
++                    else:
++                        self.assertIsNotNone(error)
++                        self.assertGreaterEqual(len(calls), 2)
++                        self.assertGreaterEqual(returned, owner.deadline - owner.reserve)
++                        self.assertNotIn("caller_drains", report)
++                        if isinstance(error, driver.services.ProbeError):
++                            self.assertIn("original work deadline exhausted", str(error))
++
++                asyncio.run(exercise())
++
+     def test_protocol_pin_and_positive_remaining_budget_fail_before_traffic(self):
+         for kind in ("protocol-drift", "expired"):
+             with self.subTest(kind=kind):

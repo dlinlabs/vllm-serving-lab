@@ -1,0 +1,24 @@
+{
+  "status": "FINAL_COMPOSED_CPU_PASS_PENDING_INDEPENDENT_F1F2_ACCEPTANCE",
+  "tests_passed": 522,
+  "subtests_passed": 190,
+  "source_pins": {
+    "experiments/mpc-research/resume-mvp/native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+    "experiments/mpc-research/resume-mvp/test_native_services_smoke.py": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3",
+    "experiments/mpc-research/resume-mvp/native_nominal_qualification.py": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+    "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py": "76b7e93688f0ba766456368716ded4cfe1809491c27f32fa5e76e812d2959d83"
+  },
+  "protected_files_unchanged": 60,
+  "source_sha256_postcheck": "PASS",
+  "author_capsule_seal": "0dbfc4601693147588342f28904edbc5a81d8877290463c1237ac39053230efa",
+  "author_capsule_manifest_members": 156,
+  "author_capsule_regular_files": 158,
+  "outside_manifest_files": [
+    "SEAL.json"
+  ],
+  "native_qualified_cycles": 0,
+  "GPU_contacted": false,
+  "Train_freeze": "NOT_RUN",
+  "Eval": "NOT_RUN",
+  "prior_521_generation": "Passed before F1 discovery; does not disprove original failure."
+}

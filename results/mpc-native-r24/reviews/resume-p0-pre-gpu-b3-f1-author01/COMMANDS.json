@@ -1,0 +1,17 @@
+{
+  "corrected_generations": 1,
+  "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "exact_focused_child_command": "attempt/command.json",
+  "metadata_only": "Baseline/freeze/finalization and post-test JSON inspection do not execute caller controls.",
+  "ordered": [
+    "capsule.py baseline",
+    "capsule.py freeze",
+    "capsule.py run",
+    "finalize.py"
+  ],
+  "other_test_generations": 0,
+  "python": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python",
+  "scripts_relative_to": ".runtime/r24-pre-gpu-b3-f1-role6",
+  "verification": "sha256sum --check --quiet SHA256SUMS, then match the manifest SHA with SEAL.json.",
+  "wrapper": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONHASHSEED=0 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BLIS_NUM_THREADS=1 nice -n19 <Python3.12> -B"
+}

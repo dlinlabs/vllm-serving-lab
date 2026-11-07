@@ -1,0 +1,346 @@
+{
+  "schema": "r24-pre-gpu-final-source-acceptance-role4-v1",
+  "status": "FINAL_INDEPENDENT_SOURCE_REVIEW",
+  "written_utc": "2026-11-07T03:10Z",
+  "capsule": ".runtime/r24-pre-gpu-final-review-role4",
+  "capsule_created_utc": "2026-11-07T02:40:11Z",
+  "worktree": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "worktree_ref_supplied_not_verified": {
+    "branch": "snapshot/mpc-p0-evidence-20261105",
+    "head": "832ab593c8666b8bfa3761b3061355a2c94748c8",
+    "note": "Supplied by the Mayor; no Git command was used. All bytes are bound by sha256 below."
+  },
+  "reviewer": {
+    "role": "PR32 team16 Role4 independent validation (measurement, claim and leakage audit)",
+    "model": "Anthropic claude-opus-5.5",
+    "effort": "max",
+    "child_agents": 0,
+    "authority": "Advisory independent source review only. The Mayor alone owns acceptance, integration, commits, B1 authority and GPU authorization."
+  },
+  "verdict": {
+    "overall": "FAIL",
+    "overall_label": "FAIL_PRE_GPU_SOURCE_CORRECTION_REQUIRED",
+    "decision_rule": "CHECKLIST.json decision_rule: FAIL when any MUST row fails; report the smallest exact fix.",
+    "B2_native_services_smoke": "PASS_SOURCE (sealed earlier, bytes unchanged and reverified)",
+    "B3_native_nominal_qualification": "FAIL_SOURCE: one blocking liveness defect F1 in drain(); all other MUST rows B3-1..B3-4 and B3-6..B3-10 PASS",
+    "blocking_findings": ["F1"],
+    "nonblocking_findings": ["F2"],
+    "B1_authority": "CONDITIONAL: external Mayor exact-source preregistration plus fresh GPU facts/lease; never established by CPU/source review",
+    "after_correction": "Source-acceptable (PASS_SOURCE) once the exact F1 fix and its regression control are frozen and the Mayor verifies that the diff against 629caa23/7d087a88 is confined to drain() (plus optional caller_drains residual fields) and one test, with the residue sub-case red on 629caa23 and green after. No other row needs re-review if the diff stays within those bounds. This reviewer does not pre-approve unseen bytes.",
+    "fail_closed_note": "F1 cannot produce a false PASS. It makes a correct run fail (NOT_RUN at the pre-episode drain, or FAILED at the final drain) after spinning until D-R, which wastes the GPU lease.",
+    "native_qualification": false,
+    "gpu_authorized_by_this_report": false,
+    "performance_or_mpc_win_claim": false
+  },
+  "pins": {
+    "reviewed_consumers": {
+      "experiments/mpc-research/resume-mvp/native_nominal_qualification.py": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+      "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py": "7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac",
+      "experiments/mpc-research/resume-mvp/native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+      "experiments/mpc-research/resume-mvp/test_native_services_smoke.py": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3"
+    },
+    "frozen_diffs": {
+      ".runtime/r24-pre-gpu-mayor01/B3-frozen.patch": "9ba8a0c2eb40508fffb92e54234a1b437744efc20eca87e09c5613e734abbe03",
+      ".runtime/r24-pre-gpu-mayor01/B2-frozen.patch": "b22c13dd9b625febba3159bf3a3d328a8be0bc6f7eaad5ea8778709340ce45b7"
+    },
+    "author_capsule_seals_SHA256SUMS_digest": {
+      ".runtime/r24-pre-gpu-b3-role6/SHA256SUMS": "b08511ad3048fdecaf4bbc45eeff198ef0bcc958255b86b96ec681777c037b0e",
+      ".runtime/r24-pre-gpu-b2-role3/SHA256SUMS": "3f7e6804a0d5007201ed4c742a430d5e260d39b60acfe19b4859846eddcaa26f"
+    },
+    "prior_role4_seals_SHA256SUMS_digest": {
+      ".runtime/r24-pre-gpu-review-plan-role4/SHA256SUMS": "05f792ab5a57c48a8b7f6f0022f043177242f04c53cb8823fa62010088eb6fa7",
+      ".runtime/r24-pre-gpu-b2-review-role4/SHA256SUMS": "7b0e6113445578333018b730e24dbce3229ef07abb86556bfa2ff1e993c7cfd3",
+      "CHECKLIST.json": "c17f6a3f73d0ab20e2f2ea663dbf6243033f61157732fce7107665b06f9444f2",
+      "B2 REPORT.json": "2b7056db2af1085e41ac80a4a3dc0e67591e2cf5fdf21750c7e6255f708ae815"
+    },
+    "unchanged_dependencies_hash_verified": {
+      "experiments/mpc-research/resume-mvp/nominal_client.py": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+      "experiments/mpc-research/resume-mvp/nominal_metrics.py": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+      "experiments/mpc-research/resume-mvp/nominal_runtime.py": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959",
+      "experiments/mpc-research/resume-mvp/nominal_permit.py": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503",
+      "experiments/mpc-research/resume-mvp/nominal_episode.py": "935c2679c4b9fffdffb23ce88ca5351f91fa84e25c8c1edccedddaea4e4262a8",
+      "experiments/mpc-research/resume-mvp/nominal_protocol.json": "08d145c8822a71e7acbb3cb0102bec29eda1de081c5af756140aa1fb3a9ee51a",
+      "experiments/mpc-research/resume-mvp/nominal_services.py": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+      "gateway.py": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+    },
+    "old_caller_reconstructed": {
+      "sha256": "1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c",
+      "method": "B3-frozen.patch reverse-applied to the frozen caller; forward re-application is byte-exact (recon01.log, ROUNDTRIP_EXACT)"
+    },
+    "verification_logs": ["pin01.log (start)", "pin02.log (end: 18 files OK, 4 seals strict OK, worktree caller/test byte-identical to inputs/ snapshots)", "recon01.log"]
+  },
+  "integration_evidence_supplied_not_rerun": {
+    "integrated_verification_json_sha256": "2f02ed4ee1d3b2724b38aa60e14613f78a774401f59e7bede2417daf9f5c7175",
+    "status": "PASS_COMPOSED_CPU_ONLY; independent_acceptance PENDING; Native_qualified false; GPU_contacted false",
+    "junit_sha256": "6c779433e4a6a5270365f8757be6b6805ea115ab3beb3ed75c8fee33dbb5e879",
+    "junit_counts": {"tests": 707, "failures": 0, "errors": 0, "skipped": 0},
+    "methods": 521,
+    "subtests": 186,
+    "python": "3.12.16",
+    "exit_code_file_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "command_json_sha256": "a737ebbe06812e14ee0d0677c61c2c21335fea812ecf9c6fea8d42c010caad15",
+    "file_order": "explicit: test_native_services_smoke.py before test_native_nominal_qualification.py (relevant to F2)",
+    "bytecode": "The run used -p no:cacheprovider but not -B; py312 pyc files appeared in resume-mvp/__pycache__ for both consumers and both test modules (pycache-list01.log). See O9.",
+    "reviewer_rerun": false,
+    "interpretation": "CPU/mock coverage only. It is not Native evidence and does not cover F1, because no control serves a nonzero float residue with zero counters."
+  },
+  "role6_author_evidence_supplied": {
+    "seal": "b08511ad3048fdecaf4bbc45eeff198ef0bcc958255b86b96ec681777c037b0e",
+    "manifest_members": 240,
+    "status": "CPU_CONTROLS_PASS_PENDING_MAYOR_INDEPENDENT_ACCEPTANCE",
+    "green": "13/13 methods PASS once, 0.615 s, py3.12.16 only",
+    "red_on_old_bytes": "2 FAIL: AssertionError: 5 != 0 (planned five counted as offered)",
+    "cleanup": "15 mock clients closed; 6 helpers gone",
+    "native_qualification": false,
+    "full_wall": null,
+    "read_as": "metadata only (read-role6-meta01.log); author controls not rerun"
+  },
+  "B2_summary": {
+    "verdict": "PASS_SOURCE",
+    "capsule": ".runtime/r24-pre-gpu-b2-review-role4",
+    "blocking": 0,
+    "observations": "O1-O6 non-blocking, as in the sealed B2 report",
+    "F1_does_not_affect_B2": "smoke validate_ready 189-203 (exact zero admitted cost) runs only in the readiness callback (266), before the body (275-278), with no traffic since the gateway initialised the cost to 0.0 (gateway 232). After the body the smoke checks GPU idleness (312) and the telemetry ledger, not the gateway cost."
+  },
+  "B2_handoffs_resolved_by_B3_source": {
+    "H1": "RESOLVED: the caller never reads report['errors'] and never matches smoke messages; it uses only its own caller_errors key (h1-grep01.log: lines 47, 165, 171, 376).",
+    "H2": "RESOLVED: traffic accounting comes from envelope counts (B3-1), not from the B2 body-ledger equality final == producer.",
+    "H3": "RESOLVED: the caller writes only the report keys caller_errors, episode_planned_requests, episode_trace_requests, warmup_planned_requests, warmup_offered_requests, warmup_sent_requests, offered_requests_from_driver (delegated by smoke 276-277), episode_sent_requests, caller_observations, caller_drains, caller_source_binding, caller_clock_domains, warmup_capture_sha256, engineering_episode, caller_capture_sha256 and qualification_caller. It reads services/ownership.json (203-204) and never writes errors, readiness, post_gpu, telemetry_status, admin_POSTs, telemetry-status.json, post-gpu.json or services/ownership.json (h3-grep01.log)."
+  },
+  "rows": [
+    {
+      "id": "B3-1",
+      "level": "MUST",
+      "status": "PASS",
+      "evidence": "The presets at 165-167 are constants (offered 0, sent 0), not plan-derived. Planned sizes use distinct keys: episode_planned_requests=5, warmup_planned_requests=3, episode_trace_requests=len(trace) (257). The finally at 346-353 always sets offered_requests_from_driver and episode_sent_requests from counts(capture_of(prepared), entered_run), and the warmup_* keys from counts(warmup.capture). counts() 122-131 returns 0 without an envelope before run entry and None (unknown) after entry; records None gives 0; otherwise len(records), and sent counts rows whose sent_at is not None (client 417 send-attempt stamp).",
+      "semantics": "offered = the accepted recorder's offered cohort. Client prepare_records 347-348 allocates one placeholder per offered request before any send, with fate not_launched until sent. offered is not 'transmitted'; transmitted is episode_sent_requests (see O5).",
+      "controls": "Role6: red on old bytes 1b2ad22e (2 FAIL, 5 != 0); green 13/13 on 629caa23 (supplied, py3.12.16).",
+      "note": "None after entry when the envelope is absent is stricter than the checklist's 0 (unknown, not zero). Acceptable."
+    },
+    {
+      "id": "B3-2",
+      "level": "MUST",
+      "status": "PASS_WITH_GAP",
+      "evidence": "One try (183) and finally (333) span all of collect(), including prepare raising. entered_run=True (312) is the last statement before the await at 313, with no await in between. The NOT_RUN receipt is written only when not entered_run (388-390), via services.write with the key (exclusive mode x, textual redaction). The receipt (372-384) carries stage, entered_run, status, prepared_error (strict copy or repr), primary_error, errors, records_allocated, sent, the planned and trace sizes, capture_status, capture_error, deadline, reserve, native_qualification false and full_wall null. The prepared capture is persisted to the distinct exclusive episode-not-run-capture.json via the accepted recorder.write_capture ('xb', fsync), or an explicit absent-capture receipt is written (354-362). warmup-not-run.json is written when warmup was never prepared (363-365). The terminal qualification-caller.json is always attempted (392-393).",
+      "gap": "The PreparedCapture.started flag (client 809, 860-862) is not recorded; the checklist listed it 'if available'. Non-blocking: the episode capture_replay is reachable only through run_episode after entered_run=True, and capture_status, capture_error, records_allocated and sent are taken from the actual envelope. Optional one-line addition: \"capture_started\": getattr(getattr(prepared, \"recorder\", None), \"started\", None).",
+      "controls": "Role6 not-run controls (window-exceeds at stage runtime_binding, prepare error). The NominalRuntime-raise path is covered only by equivalence (same stage runtime_binding), not by a dedicated control."
+    },
+    {
+      "id": "B3-3",
+      "level": "MUST",
+      "status": "PASS",
+      "evidence": "failure() 169-175 keeps the first primary and its traceback; later errors become notes. attempt() 177-181. preserving() 43-50 re-raises only when there is no primary. persist_capture 53-64 writes a .write-error.json receipt, then re-raises the original. The final 'raise primary.with_traceback(primary_tb)' (398-400) keeps object identity, so a BaseException is never converted. Status becomes INTERRUPTED for a non-Exception primary after entry (386-387, 396-397).",
+      "info": "See O6 and O7."
+    },
+    {
+      "id": "B3-4",
+      "level": "MUST",
+      "status": "PASS",
+      "evidence": "source_binding 134-148 does a single read_bytes (136); those bytes are hashed (137) and strictly parsed (147; strict_load 29-40 rejects duplicate keys and non-finite constants). The hash is compared with the smoke startup pin expected['source_pins'][str(protocol_path)] (138-139); the smoke keys these pins by the resolved root (run() 225 resolve(strict=True)), so they match. The resolved Path(__file__) and episode.__file__ are compared with the source-root paths (142-143). The adapter is pinned to ADAPTER_SHA256 935c2679 (16, 145). The binding is written to qualification-source-binding.json (198) before the httpx client is created (214). recheck() 151-154 runs at 225 (before warmup replay), 279, 309 and in the finally (344-345)."
+    },
+    {
+      "id": "B3-5",
+      "level": "MUST",
+      "status": "FAIL",
+      "evidence_pass_parts": "The pre-drain (267-269) runs after warmup validation and before S (281-282). The final drain runs in the finally (334-339), and its failure is recorded as primary or note. GETs are bounded (B3-6). Each reading is persisted as a key-redacted snapshot (observe 93-97). tokenizer_fallback_requests must be exactly 0 (110). Key names are bound to gateway state 226 (current_in_flight), 227 (current_waiting), 232 (current_admitted_cost) and 236 (tokenizer_fallback_requests), served unrounded through snapshot_metrics dict(state) at 388-392.",
+      "failure": "F1: the success predicate at 111 requires current_admitted_cost == 0 exactly. The gateway cost ledger is a floating add/subtract with no idle reset, so a positive residue can persist with zero counters and drain() can never succeed. Witnessed by W1.",
+      "criterion_erratum": "E1"
+    },
+    {
+      "id": "B3-6",
+      "level": "MUST",
+      "status": "PASS",
+      "evidence": "remaining() 67-73 checks owner deadline/reserve identity, calls owner.check(), computes monotonic D - R - now, and refuses a non-finite or <= 0 budget before any GET. observe 80-83 computes timeout = min(2.0, remaining) immediately before the GET, under asyncio.timeout and the httpx timeout. The drain sleep is min(0.05, remaining) (115). The post-drain uses D - R, not the reserve."
+    },
+    {
+      "id": "B3-7",
+      "level": "MUST",
+      "status": "PASS",
+      "evidence": "entered = time.monotonic() (281); S = entered + 1.0 (282). The single S feeds describe_protocol start_at (290-292), NominalRuntime start_at (304-307) and run_episode offered_start (313-314). The permit uses not_before=entered, expires_at=entered+20.0, max_commands=8, approved=True (286, 293-297), identical to the old caller (old 102, 114). The coverage check S + max(episode_s, window) <= min(D-R, expires) at 287 runs before the permit is minted and implies window <= 19 s. remaining() 68-69 enforces D/R identity. collect() is reachable only under --execute: smoke run() returns 2 otherwise (218-219). The authority is recorded as a string only (302).",
+      "gap": "SHOULD L1 (S - now per stage) is not recorded. offered_start and permit_not_before are in runtime-binding.json.",
+      "note": "The warmup keeps its own offered_start = now + 1.0 (227-229), unchanged from old 59. It is not the episode S."
+    },
+    {
+      "id": "B3-8",
+      "level": "MUST",
+      "status": "PASS",
+      "evidence": "strict_copy 25-26 (sort_keys, allow_nan False, round trip) runs inside a try at 317. ValueError or TypeError writes episode-invalid-result.json (key-redacted, repr) and re-raises (318-322). Success requires status collected, no failures, all workers joined, no persistence errors and no missing record ids (323-326)."
+    },
+    {
+      "id": "B3-9",
+      "level": "MUST",
+      "status": "PASS",
+      "evidence": "The warmup capture_replay receives clock_domain=warmup.capture['clock_domain'] (229), the recorder label. The episode capture_replay is inside the accepted adapter 935c2679 (not re-audited). The SDK label expected['clock_domain'] is compared only with the gateway state clock_domain (275) and is passed to the permit (295). Recorder labels are only recorded (222-223, 259). The L5 recommendation remains withdrawn (CHECKLIST l5_erratum)."
+    },
+    {
+      "id": "B3-10",
+      "level": "MUST",
+      "status": "PASS",
+      "evidence": "B3-frozen.patch touches exactly 2 files, the caller and its test (misc-grep01.log). Dependency pins are unchanged (pin01/pin02). New writes go through services.write(..., key): lines 97, 198, 278, 298-303, 319-321, 359-362, 364-365, 390 and 393. smoke write() 42-49 is strict JSON (allow_nan False), exclusive x, fsync, with textual redaction. Captures are written through the accepted recorder.write_capture. The unkeyed model-binding.json write (207-213) predates this change (old 43-50, identical fields) and contains no admin key; the engine argv is at smoke 93-98. Warmup D/R and persistence are unchanged (227-238 versus old 59)."
+    },
+    {
+      "id": "B3-11",
+      "level": "SHOULD",
+      "status": "PARTIAL",
+      "evidence": "Requires status collected and 5 records (327). The journal's issued_commands is not reported. Success still makes no claim about cycles or admission effect."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "BLOCKING_PRE_GPU",
+      "class": "liveness false negative (fail-closed); no false PASS",
+      "confidence": "HIGH: the gateway arithmetic is source-proven and the defect is witnessed on the frozen drain() bytes under both Pythons",
+      "file": "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+      "sha256": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+      "lines": {"DRAIN_FIELDS": "17", "drain": "100-115", "predicate": "111", "pre_drain_call": "267-269", "final_drain_call": "334-339"},
+      "source_evidence": [
+        "gateway.py 0b1a80ad 232: current_admitted_cost starts at 0.0",
+        "gateway.py 456, 467: projected_cost = current_admitted_cost + request_cost; current_admitted_cost = projected_cost",
+        "gateway.py 517-521: current_in_flight = max(0, n - 1); current_admitted_cost = max(0.0, current_admitted_cost - request_cost). There is no reset to exactly 0.0 at idle, and a grep shows no other writes (gateway-cost-grep02.log)",
+        "gateway.py 388-392: /metrics serves dict(state) unrounded",
+        "gateway.py 165, 294, 838: the gateway compares its own cost ledger with math.isclose(rel_tol=1e-12, abs_tol=1e-9)",
+        "native_services_smoke.py 585e606f 81-82, 87: the actual run uses ADMISSION_MODE=cost_aware, MAX_ADMITTED_COST=32, MPC_LAB_ENABLED=true, OUTPUT_TOKEN_COST=0.0052083333, MIN_REQUEST_COST=0.1",
+        "gateway.py 37, 385: request cost is floored at MIN_REQUEST_COST (default 0.1)"
+      ],
+      "mechanism": "When two or more admitted requests overlap, (a + b) - a need not equal b in binary floating point. The remaining subtraction can leave a positive residue; a negative residue is clipped to 0.0 by max(). Example: costs 0.1 and 0.2 admitted together leave 2.7755575615628914e-17 after both finish, in FIFO or LIFO order. Sequential non-overlapping requests return exactly 0.0.",
+      "effect": [
+        "Pre-episode drain, after the 3-request warmup: if a residue is present it never succeeds. Each reading (every <= 50 ms) costs one GET, one evidence file and one in-memory caller_observations entry, until remaining() refuses at D - R. collect() then fails NOT_RUN at stage pre_episode_drain with no episode traffic, consuming the GPU lease.",
+        "Final drain, after a possibly valid 5-request episode: the same spin, after which failure('final_drain') makes the receipt FAILED (or adds a note) even though the episode collected correctly.",
+        "No false PASS: the counters remain exact, and the fallback check is unaffected."
+      ],
+      "actual_run_probability": "UNKNOWN. It depends on how much the warmup and Train probe requests actually overlap and on the actual token-derived costs; the probe inputs were deliberately not read. On synthetic costs, 10 of 120 five-request finish orders and 2 of 20 pairs left a positive residue (W1).",
+      "witness": "W1",
+      "smallest_fix": {
+        "file": "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+        "replace_line_111": "        if all(metrics[name] == 0 for name in DRAIN_FIELDS):",
+        "with_lines": [
+          "        if (metrics[\"current_in_flight\"] == 0 and metrics[\"current_waiting\"] == 0",
+          "                and metrics[\"current_admitted_cost\"] <= 1e-9):"
+        ],
+        "rationale": "The counters stay exact integers, so an admitted or waiting request is never masked. 1e-9 equals the gateway's own abs_tol for cost-ledger completeness (gateway 165/294/838), and MIN_REQUEST_COST is 0.1 (gateway 37/385, smoke 87). The value is already validated as finite and >= 0 at 108-109, so <= 1e-9 is equivalent to abs(x) <= 1e-9. DRAIN_FIELDS stays as it is for the validation at 107.",
+        "optional_same_commit": "Record \"admitted_cost\": metrics[\"current_admitted_cost\"] and \"admitted_cost_abs_tol\": 1e-9 in the caller_drains entry (112-113) so that raw audit sees the residual."
+      },
+      "regression_control": "Add one test to test_native_nominal_qualification.py using the existing MockTransport pattern. (a) Serve /metrics {current_in_flight: 0, current_waiting: 0, current_admitted_cost: 2.7755575615628914e-17, tokenizer_fallback_requests: 0}: drain() must return with caller_drains[phase].readings == 1. This sub-case fails on 629caa23 (spins to the deadline; see W1). (b) Same with cost 1e-6, or current_in_flight 1 with cost 0.0: still busy, refused at the original deadline with no caller_drains entry.",
+      "rereview_scope_after_fix": "Only the diff of drain() (and the optional caller_drains fields) plus the one test. The Mayor can verify this mechanically."
+    },
+    {
+      "id": "F2",
+      "severity": "LOW_NONBLOCKING_TEST_HARNESS",
+      "confidence": "HIGH on mechanism (pathlib Path.mkdir() without exist_ok raises FileExistsError); the trigger depends on module import order. Static reasoning; not executed.",
+      "files": {
+        "experiments/mpc-research/resume-mvp/test_native_services_smoke.py@158c4e32": "18-20: ROOT = Path(os.environ['NATIVE_SMOKE_TEST_OUTPUT']); assert not ROOT.is_absolute(); ROOT.mkdir()",
+        "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py@7d087a88": "24-25: ROOT = Path(os.environ['NATIVE_SMOKE_TEST_OUTPUT']) / 'qualification'; ROOT.mkdir(parents=True, exist_ok=True)"
+      },
+      "effect": "If the qualification test module is imported before the smoke test module in one process with the same NATIVE_SMOKE_TEST_OUTPUT, the smoke module's import-time ROOT.mkdir() raises FileExistsError and causes a collection error. Name-sorted directory collection does this, because test_native_nominal_qualification.py sorts before test_native_services_smoke.py. The Mayor's composed runner lists the smoke test first and passed. There is no source or product effect.",
+      "smallest_fix": "Give the qualification test its own output root (a separate env var, or a sibling directory not nested under the smoke ROOT). Alternatively, record 'smoke test module first, fresh output dir' as a precondition of the portable/package runner."
+    }
+  ],
+  "checklist_errata": [
+    {
+      "id": "E1",
+      "row": "B3-5",
+      "sealed_text": "admitted cost == 0 or a pre-registered |x| <= 1e-9 (I3)",
+      "error": "The '== 0' branch rested on an unverified assumption that the gateway returns its float ledger to exactly 0.0 at idle. Gateway 456/467/517-521 refute that assumption.",
+      "corrected_criterion": "current_in_flight == 0, current_waiting == 0 and tokenizer_fallback_requests == 0 exactly, and current_admitted_cost <= 1e-9.",
+      "disposition": "The author satisfied the sealed letter. The defect is in the runtime behavior, and the reviewer-side checklist error is disclosed here. The sealed CHECKLIST.json is not modified."
+    }
+  ],
+  "observations_nonblocking": [
+    {"id": "O1", "text": "Drain evidence volume (files and report entries) is bounded only by time, not by count. After the F1 fix a drain typically needs one to a few readings. A cap or summary is optional."},
+    {"id": "O2", "text": "The counter check accepts float 0.0 (type in (int, float)). The gateway counters are ints; this is harmless."},
+    {"id": "O3", "text": "The B3-2 gap: the started flag is absent from the not-run receipt. Optional."},
+    {"id": "O4", "text": "SHOULD L1 (S - now per stage) is not recorded."},
+    {"id": "O5", "text": "offered_requests_from_driver counts the episode's allocated offered placeholders (client 347-348), not transmitted requests, and excludes the warmup (separate warmup_* keys). Consumers must not read it as transmitted or as total driver traffic."},
+    {"id": "O6", "text": "If warmup capture persistence fails on the success path, the same error is recorded twice (warmup_capture_persistence via preserving, then warmup_replay via failure), and the receipt stage reads warmup_replay. The first caller_errors entry is the precise one."},
+    {"id": "O7", "text": "A StopIteration from next() at 205 would leave the coroutine as RuntimeError (coroutine StopIteration rule), although the receipt records StopIteration. This is unreachable when smoke ownership contains an engine service."},
+    {"id": "O8", "text": "The unkeyed model-binding.json write (207-213) predates this change and contains no secret."},
+    {"id": "O9", "text": "The caller self-hash reads file bytes, not loaded code. The Mayor's composed runner wrote py312 pyc files into resume-mvp/__pycache__ (no -B), so the package build must exclude __pycache__ and the launch should use -B or PYTHONDONTWRITEBYTECODE=1."},
+    {"id": "O10", "text": "At runtime the caller hash-checks only the caller, adapter and protocol. Client, runtime, permit, planner, metrics, mpc_lab, smoke, services and gateway rely on the package build and the B1 prereg pins."},
+    {"id": "O11", "text": "issued_commands is not reported (B3-11 SHOULD)."}
+  ],
+  "witnesses": [
+    {
+      "id": "W1",
+      "purpose": "Show that the frozen drain() cannot succeed on a zero-counter, positive float-residue /metrics response, and that gateway-style arithmetic produces such residues.",
+      "prereg": {"file": "PREREG-W1.json", "sha256": "ac9c6f11ab2f858df9033ee6b6279fbae6af5b249557c2abfcf3e7a73c5adcd9", "written_before_execution": true},
+      "script": {"file": "witness01.py", "sha256": "60e5dbb8c8ae64d63de9158f7538e0547a1096b7eb7c61ff13db4369dac1fa30"},
+      "runs": [
+        {"python": "3.14.4", "log": "witness01-py314.log", "log_sha256": "e3d732284236908ce2820f2bd6402a45fdebc97128ee7c852f73227985e43416", "result": "witness01-out/py3.14.4/result.json", "result_sha256": "a54a1f6a52dd427fcfb2b618fa4a335ad87bb4a687a241527300726b1a340f7c", "exit_code": 0, "verdict": "CONFIRMED"},
+        {"python": "3.12.16", "log": "witness01-py312.log", "log_sha256": "9ca7b2d7ad442a01a2dd7eb67960a2d41b91d2f374daac65c9460ec55d854101", "result": "witness01-out/py3.12.16/result.json", "result_sha256": "4953fb9591d3bdc55b2a580e368779081f78dec8bece1d7a9de2fa2a7d956118", "exit_code": 0, "verdict": "CONFIRMED"}
+      ],
+      "observations": {
+        "residue_case": "Frozen drain() with httpx MockTransport serving counters 0, fallback 0 and cost 2.7755575615628914e-17 made 10 GETs and wrote 11 evidence files in about 0.50 s of the granted budget, then raised ProbeError('original work deadline exhausted'). No caller_drains entry was recorded.",
+        "zero_control": "The same harness with cost 0.0 drained after 1 reading.",
+        "hypothetical_fixed_predicate": "true on every residue reading",
+        "replica_arithmetic": "SYNTHETIC literal costs, not gateway execution. 0.1 and 0.2 overlapped leave 2.7755575615628914e-17 in FIFO and LIFO order. 10 of 120 five-request finish orders and 2 of 20 pairs leave 4.440892098500626e-16. Sequential non-overlap gives exactly 0.0.",
+        "isolation": "Run with -B -I -X pycache_prefix=<unused capsule dir>, nice -n19, timeout 60, single-thread env, PYTHONPATH unset. No pycache was written. Pins were unchanged before and after."
+      }
+    }
+  ],
+  "preconditions": {
+    "cpu_source_before_gpu": [
+      "P1 (blocking): apply the exact F1 fix at line 111 and add the regression control. Freeze the new caller/test hashes and the diff. The Mayor verifies that the diff is confined to drain() (and the optional caller_drains fields) plus one test, and that the residue sub-case is red on 629caa23 and green after (one qualification-module run on py3.12; py3.14 optional).",
+      "P2: re-bind the corrected caller sha in the B1 prereg and the isolated package. The B2 bytes 585e606f/158c4e32 stay unchanged.",
+      "P3: build the isolated package from the fix commit. It must keep the experiments/mpc-research/resume-mvp layout under --source-root (source_binding 142-143 requires __file__ == root/RELATIVE/native_nominal_qualification.py), include mpc_lab (smoke source_info 103-104 prepends the root) and the probe inputs at results/mpc-native-r24/reviews/resume-p0-probes02/inputs/{warmup.json, admission-boundary.json} (caller 15, 219, 250), exclude __pycache__, and be launched with -B or PYTHONDONTWRITEBYTECODE=1.",
+      "P4: fix F2, or keep the explicit smoke-first order with a fresh output dir in any CPU runner."
+    ],
+    "optional_should_nonblocking": ["receipt capture_started flag (O3)", "L1 S - now per stage (O4)", "journal issued_commands (O11)", "drain evidence cap (O1)"],
+    "gpu_only_or_external": [
+      "G1: B1 live authority. A Mayor exact-source preregistration naming every executed module hash, plus fresh GPU facts and lease. This review is not authority.",
+      "G2: actual startup, readiness, source identity and cleanup with the B2 bytes 585e606f in the packaged run. Lifecycle03 PASS was for earlier bytes.",
+      "G3: actual /metrics after traffic. The DRAIN_FIELDS and tokenizer_fallback_requests keys must be present with finite non-negative values and not be overridden by telemetry.observed_state (gateway 392; not inspected here).",
+      "G4: actual warmup 3/3 complete (stop or length, stream_done, prompt token match), and actual pre-episode and final drains reaching idle within D - R (requires the F1 fix).",
+      "G5: actual episode collected (5 records, all workers joined, no persistence errors). A raw audit must then show at least two consecutive observe -> plan -> apply -> reobserve cycles and an admission-effect ledger. The wrapper does not establish these.",
+      "G6: after the run, telemetry closure and the body ledger (B2), an independent post-GPU idle check, and cleanup within the reserve. full_wall stays null until the Mayor's cleanup evidence.",
+      "G7: admin_POSTs stays null and native_qualification stays false by design. Lifecycle exit 0 is not Native qualification, and any Native eligibility requires a separate raw audit."
+    ]
+  },
+  "nonclaims": [
+    "No Native qualification, MPC win, performance, calibration or SLO claim.",
+    "CPU and mock coverage (Role6 13/13, the Mayor's 521/186, W1) is not Native evidence.",
+    "Native14 remains FAIL; no gate or threshold was changed or relaxed.",
+    "No Eval or Train data, and no probe inputs, were read or evaluated.",
+    "This review does not authorize GPU use; the Mayor owns that decision."
+  ],
+  "limitations": [
+    "Source review covered the 4 consumer files, the 2 frozen diffs and narrow ranges of the accepted client (narrow API ranges) and gateway (140-205 at the checklist stage; here 222-240, 386-412, 450-470, 508-528, 798-806, 926-936 plus grep hits 24, 37, 165, 221, 257, 294, 385, 434-441, 456-467, 511-520, 603-605, 659, 804, 838). The accepted adapter, runtime, permit, client and metrics were not re-audited; their pins are unchanged.",
+    "Neither the Role6 13-method suite nor the Mayor's 521-method composed run was rerun; both are cited as supplied evidence.",
+    "W1 uses httpx MockTransport and replica arithmetic, not gateway execution. The probability of a residue on the actual run is unknown.",
+    "telemetry.observed_state (gateway 392) was not inspected, so a key override of DRAIN_FIELDS in /metrics is UNVERIFIED.",
+    "A second asynchronous interrupt arriving while the finally block runs can skip the remaining caller accounting (CPython signal delivery). This was not tested; the smoke-level report records the interruption (B2).",
+    "Role6 green results were observed only on py3.12.16 (supplied).",
+    "Git tracking of the tests was not verified (no Git). Their imports resolve to in-repo modules (mpc_lab/contracts.py at the root, nominal_* in resume-mvp), with no .runtime imports; .runtime paths appear only as scratch-output env values (selfcontained01.log).",
+    "F2 is static reasoning, not executed."
+  ],
+  "reads": {
+    "full": [
+      "inputs/native_nominal_qualification.py (629caa23)",
+      "inputs/test_native_nominal_qualification.py (7d087a88)",
+      "recon/before caller (1b2ad22e)",
+      "B3-frozen.patch (9ba8a0c2)"
+    ],
+    "ranges_or_greps": [
+      "gateway.py 0b1a80ad (see limitations)",
+      "nominal_client.py 933e4161 (75, 340-360, 417, 647-653, 738, 803-809, 860-862, 891-894)",
+      "native_services_smoke.py 585e606f: sed ranges 42-50, 90-106, 217-226, 260-282 and grep hits (28, 70-87, 152-203, 206-218, 312, 348); its full text was read in the sealed B2 review",
+      "test_native_services_smoke.py 158c4e32 (1-24)",
+      "test_native_nominal_qualification.py drain-value grep (76, 229-230, 309-325, 341-351): controls serve integer 0 or busy values, never zero counters with a nonzero float cost",
+      "Role6 capsule metadata (REPORT, INTERFACE, LIMITATIONS, CONTROL-RESULTS, FAILURES, CLEANUP, SEAL)",
+      "Mayor integrated-cpu01 command.json, pytest.log summary, junit counts, integrated-verification.json",
+      "own CHECKLIST.json and B2 REPORT.json"
+    ]
+  },
+  "not_read": [
+    "Train/Eval data and the probe inputs (warmup.json, admission-boundary.json)",
+    "nominal_episode.py, nominal_runtime.py, nominal_permit.py and nominal_metrics.py sources (pins only)",
+    "telemetry module and the gateway telemetry.observed_state body",
+    "live or unsealed peer files; no peer source edits"
+  ],
+  "disclosures": [
+    "The view tool (unlogged) was also used for full reads of the caller, its test and the before-caller. The logged copies are view-caller-after01.log, view-caller-test-after01.log and view-caller-before01.log.",
+    "My own witness outputs were inspected with system python3 -c and ls without logging.",
+    "PREREG-W1.json, witness01.py, pins-expected.txt, REPORT.json and check_report.py were authored with the editor or a heredoc.",
+    "No Git, network, HTTP to real services, GPU, SSH, installs, Markdown, child agents, or source/peer edits were used. No /tmp was used."
+  ]
+}

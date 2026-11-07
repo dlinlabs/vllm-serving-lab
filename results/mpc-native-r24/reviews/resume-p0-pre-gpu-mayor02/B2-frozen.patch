@@ -1,0 +1,157 @@
+diff --git a/experiments/mpc-research/resume-mvp/native_services_smoke.py b/experiments/mpc-research/resume-mvp/native_services_smoke.py
+index e2b966548..99c2e355b 100644
+--- a/experiments/mpc-research/resume-mvp/native_services_smoke.py
++++ b/experiments/mpc-research/resume-mvp/native_services_smoke.py
+@@ -309,14 +309,29 @@ def run(args, *, body=None):
+             try:
+                 report["post_gpu"] = gpu_receipt(deadline)
+                 write(output / "post-gpu.json", report["post_gpu"])
++                checked(report["post_gpu"]["idle_selected_gpu"], "post GPU not proven idle")
++            except Exception as error:
++                report["errors"].append(dict(type=type(error).__name__, message=str(error)))
++            try:
+                 status = json.loads((output / "telemetry-status.json").read_text())
+                 report["telemetry_status"] = status
++                zero_fields = ("dropped", "write_errors", "mpc_remaining_requests",
++                               "mpc_unflushed_records")
++                if body is None:
++                    zero_fields += ("mpc_final_sequence", "mpc_producer_final_sequence")
+                 checked(status["status"] == "closed" and status["mpc_ledger_complete"] is True
+-                        and all(status[name] == 0 for name in (
+-                            "dropped", "write_errors", "mpc_remaining_requests",
+-                            "mpc_unflushed_records", "mpc_final_sequence", "mpc_producer_final_sequence")),
+-                        "telemetry closure or no-request ledger mismatch")
+-                checked(report["post_gpu"]["idle_selected_gpu"], "post GPU not proven idle")
++                        and all(status[name] == 0 for name in zero_fields),
++                        "telemetry closure or no-request ledger mismatch" if body is None
++                        else "telemetry closure or body ledger mismatch")
++                if body is not None:
++                    final, producer = status["mpc_final_sequence"], status["mpc_producer_final_sequence"]
++                    checked(type(final) is int and final >= 0
++                            and type(producer) is int and producer >= 0 and final == producer,
++                            "telemetry body ledger sequence mismatch")
++                    if "mpc_ledger_rows_written" in status:
++                        rows = status["mpc_ledger_rows_written"]
++                        checked(type(rows) is int and rows == final,
++                                "telemetry body ledger row count mismatch")
+             except Exception as error:
+                 report["errors"].append(dict(type=type(error).__name__, message=str(error)))
+         report["end"] = stamp()
+diff --git a/experiments/mpc-research/resume-mvp/test_native_services_smoke.py b/experiments/mpc-research/resume-mvp/test_native_services_smoke.py
+index f7b475eeb..06984d4fd 100644
+--- a/experiments/mpc-research/resume-mvp/test_native_services_smoke.py
++++ b/experiments/mpc-research/resume-mvp/test_native_services_smoke.py
+@@ -104,7 +104,8 @@ class Controls(unittest.TestCase):
+         finally:
+             sys.path[:] = old_path
+ 
+-    def exercise(self, name, invalid=False, poison=False, interrupt=False, body=None):
++    def exercise(self, name, invalid=False, poison=False, interrupt=False, body=None, *,
++                 telemetry_overrides=None, post_gpu_idle=True):
+         base = ROOT / name
+         base.mkdir()
+         source = (base / "source").resolve()
+@@ -171,10 +172,12 @@ class Controls(unittest.TestCase):
+                                known_identities_gone=not poison, unknown=[], pending_spawn=None,
+                                lock_paths=sorted(driver.LOCKS), evidence_kind="CPU_MOCK_ONLY")
+                 (output / "services/ownership.json").write_text(json.dumps(receipt))
+-                (output / "telemetry-status.json").write_text(json.dumps(dict(
++                status = dict(
+                     status="closed", mpc_ledger_complete=True, dropped=0, write_errors=0,
+                     mpc_remaining_requests=0, mpc_unflushed_records=0, mpc_final_sequence=0,
+-                    mpc_producer_final_sequence=0)))
++                    mpc_producer_final_sequence=0, mpc_ledger_rows_written=0)
++                status.update(telemetry_overrides or {})
++                (output / "telemetry-status.json").write_text(json.dumps(status))
+ 
+             def __enter__(self):
+                 trace.append("owner enter")
+@@ -193,8 +196,10 @@ class Controls(unittest.TestCase):
+ 
+         def gpu(_deadline):
+             test.assertFalse(active[0], "GPU subprocess attempted inside ownership context")
++            post = "owner exit" in trace
+             trace.append("gpu")
+-            return dict(idle_selected_gpu=True, evidence_kind="CPU_MOCK_ONLY")
++            return dict(idle_selected_gpu=post_gpu_idle if post else True,
++                        evidence_kind="CPU_MOCK_ONLY")
+ 
+         def scope(config, actual_output, deadline, ready, key, actual_args):
+             test.assertEqual(key, KEY)
+@@ -291,6 +296,76 @@ class Controls(unittest.TestCase):
+         self.assertEqual(report["errors"][0]["type"], "RuntimeError")
+         self.assertEqual(trace[-2:], ["owner exit", "gpu"])
+ 
++    def test_10_nonzero_body_ledger_closure(self):
++        status = dict(mpc_final_sequence=7, mpc_producer_final_sequence=7,
++                      mpc_ledger_rows_written=7)
++        code, report, trace = self.exercise(
++            "b2-body-complete", body=lambda **ctx: ctx["owner"].check(),
++            telemetry_overrides=status)
++        self.assertEqual(code, 0)
++        self.assertTrue(report["lifecycle_passed"])
++        self.assertEqual(report["errors"], [])
++        self.assertEqual(report["telemetry_status"]["mpc_final_sequence"], 7)
++        self.assertEqual(trace[-2:], ["owner exit", "gpu"])
++
++        def failing_body(**context):
++            context["owner"].check()
++            raise RuntimeError("MOCK NONZERO BODY FAILURE " + KEY)
++
++        code, report, _ = self.exercise(
++            "b2-body-failure", body=failing_body, telemetry_overrides=status)
++        self.assertEqual(code, 1)
++        self.assertFalse(report["lifecycle_passed"])
++        self.assertNotIn("ownership_exit_returned", report)
++        self.assertEqual([row["type"] for row in report["errors"]], ["RuntimeError"])
++
++    def test_11_invalid_body_ledger_closure(self):
++        cases = {
++            "mismatch": dict(mpc_final_sequence=2, mpc_producer_final_sequence=3,
++                             mpc_ledger_rows_written=2),
++            "negative": dict(mpc_final_sequence=-1, mpc_producer_final_sequence=-1,
++                             mpc_ledger_rows_written=-1),
++            "final-bool": dict(mpc_final_sequence=False),
++            "producer-bool": dict(mpc_producer_final_sequence=False),
++            "float": dict(mpc_final_sequence=0.0),
++            "null-producer": dict(mpc_producer_final_sequence=None),
++            "row-count": dict(mpc_ledger_rows_written=1),
++            "remaining-stock": dict(mpc_final_sequence=2, mpc_producer_final_sequence=2,
++                                    mpc_ledger_rows_written=2, mpc_remaining_requests=1),
++        }
++        for name, status in cases.items():
++            with self.subTest(case=name):
++                code, report, trace = self.exercise(
++                    "b2-invalid-" + name, body=lambda **ctx: ctx["owner"].check(),
++                    telemetry_overrides=status)
++                self.assertEqual(code, 1)
++                self.assertFalse(report["lifecycle_passed"])
++                self.assertTrue(report["known_closure_checked"]["closed"])
++                self.assertEqual(trace[-2:], ["owner exit", "gpu"])
++
++    def test_12_no_body_nonzero_ledger_still_refused(self):
++        code, report, _ = self.exercise(
++            "b2-no-body-nonzero", telemetry_overrides=dict(
++                mpc_final_sequence=7, mpc_producer_final_sequence=7,
++                mpc_ledger_rows_written=7))
++        self.assertEqual(code, 1)
++        self.assertFalse(report["lifecycle_passed"])
++        self.assertTrue(any("telemetry closure or no-request ledger mismatch" in row["message"]
++                            for row in report["errors"]))
++
++    def test_13_telemetry_and_post_gpu_failures_both_retained(self):
++        code, report, trace = self.exercise(
++            "b2-two-closure-failures", telemetry_overrides=dict(dropped=1),
++            post_gpu_idle=False)
++        self.assertEqual(code, 1)
++        self.assertFalse(report["lifecycle_passed"])
++        self.assertTrue(report["pre_gpu"]["idle_selected_gpu"])
++        self.assertFalse(report["post_gpu"]["idle_selected_gpu"])
++        self.assertEqual(trace[-2:], ["owner exit", "gpu"])
++        messages = [row["message"] for row in report["errors"]]
++        self.assertTrue(any("telemetry closure" in message for message in messages))
++        self.assertIn("post GPU not proven idle", messages)
++
+ 
+ if __name__ == "__main__":
+     suite = unittest.defaultTestLoader.loadTestsFromTestCase(Controls)

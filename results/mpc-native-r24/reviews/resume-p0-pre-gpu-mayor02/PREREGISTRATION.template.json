@@ -1,0 +1,70 @@
+{
+  "schema": "mpc-native-qualification-conditional-prereg-v1",
+  "status": "PREPARED_NOT_AUTHORIZED_TO_EXECUTE",
+  "source_commit": "PENDING_ACCEPTED_FIX_COMMIT",
+  "source_package_sha256": "PENDING_ACCEPTED_FIX_PACKAGE",
+  "independent_acceptance": "PENDING_FROZEN_DIFF_PASS",
+  "authorization": "User requested pre-GPU work only. Stop here until a current GPU resource and execution authority are confirmed.",
+  "purpose": "One real five-request engineering closed-loop qualification, not model research, Train tuning or Eval.",
+  "attempts": 1,
+  "entrypoint": "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+  "args": ["--execute", "--source-root", "NEW_IMMUTABLE_NAMESPACE/source", "--output-root", "NEW_IMMUTABLE_NAMESPACE/output", "--seconds", "480", "--cleanup-reserve", "30", "--term-grace", "10"],
+  "warmup": {
+    "path": "results/mpc-native-r24/reviews/resume-p0-probes02/inputs/warmup.json",
+    "sha256": "3a893f485e11204088f03cf08415d1e9d56028ce0a7ee476477ad3d24c2808b2",
+    "requests": 3,
+    "metrics_scope": "Excluded from the five-request cohort, included in setup/full wall."
+  },
+  "qualification": {
+    "path": "results/mpc-native-r24/reviews/resume-p0-probes02/inputs/admission-boundary.json",
+    "sha256": "6d938ba18240f3e0f8cb677064849a73316ee7a8dc918526c68cba37f02da6be",
+    "requests": 5,
+    "input_tokens": 3072,
+    "max_tokens": 128,
+    "offered_duration_s": 5,
+    "relative_arrivals": [1.25, 1.25, 1.25, 1.25, 1.25],
+    "policy": "mpc",
+    "initial_admission_budget": 32,
+    "budgets": [16, 32],
+    "shared_S": "One future actual-host monotonic start selected after preparation and warmup drain; never retimed on late entry.",
+    "iterations": 6,
+    "episode_s": 5,
+    "poll_s": 0.8,
+    "source_age_s_max": 0.5,
+    "entry_to_action_deadline_s_max": 0.5,
+    "solve_budget_s": 0.1,
+    "commands_max": 8,
+    "separate_operator_permit": "Bound to exact source/protocol/run/clock; existing window constraints unchanged."
+  },
+  "live_preflight_required": [
+    "A currently available, explicitly authorized GPU; no automatic rental.",
+    "Exact source/entrypoint/adapter/protocol hashes checked on the actual host before traffic.",
+    "Real assets/tokenizer/backend argv and package identity verified, not inferred from historical records.",
+    "Both declared ownership locks acquired; no unresolved owner and no foreign GPU workload.",
+    "Dedicated ports18000/18001 available; unrelated nginx8001 or other infrastructure left untouched.",
+    "Identical normal backend optimizations; no disabling graphs/compilation to ease the test.",
+    "Original deadline, reserve, cleanup and stop conditions preserved."
+  ],
+  "drain_contract": {
+    "current_in_flight": 0,
+    "current_waiting": 0,
+    "tokenizer_fallback_requests": 0,
+    "current_admitted_cost": "Finite, nonnegative, <= 1e-9 with both request counters exactly zero.",
+    "numerical_tolerance_basis": "Existing gateway ledger/closure abs_tol=1e-9; prevents normal floating-point remainder from wasting an otherwise idle run. Not a change to control guards, offered workload or Eval scoring.",
+    "busy_controls": "Cost1e-6 or any request in flight remains busy.",
+    "original_failure_preserved": "resume-p0-pre-gpu-independent01-author/REPORT.json F1 and E1."
+  },
+  "acceptance": [
+    "At least two consecutive timestamped observe/predict/plan/actual-first-action-application/reobserve cycles.",
+    "At least one changed applied cap affects a request admission decision, demonstrated by request/control budget versions and ordered reservation ledger.",
+    "All five scheduled offers retained with sent/not-launched/rejected/failed/unknown fates; no missing-to-zero or successful-request-only denominator.",
+    "Actual application within original source/entry/permit bounds, with no unresolved pending command.",
+    "Post-warmup and post-episode drain and zero tokenizer fallback verified.",
+    "Independent closed/complete ledger validation and GPU idle/STOPPED/known-gone receipts; cleanup failure stays a failure.",
+    "Controller and startup/drain/cleanup overhead recorded without changing offered arrival times."
+  ],
+  "not_success": ["exit code alone", "planner output", "ACK alone", "hold-only run", "budget arithmetic without observed overlap", "CPU mocks", "historical lifecycle PASS"],
+  "failure_rule": "Preserve raw and unscorable outcomes; no automatic retry, seed search, guard weakening or criteria edits.",
+  "Train_and_Eval": "Do not execute either stage before qualification; Train Fixed freeze precedes held-out Eval. Negative performance remains acceptable.",
+  "GPU_contacted_during_preparation": false
+}

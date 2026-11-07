@@ -1,0 +1,53 @@
+{
+  "schema": "mpc-pre-gpu-closure-plan-v1",
+  "base_commit": "832ab593c8666b8bfa3761b3061355a2c94748c8",
+  "request": "Finish all CPU and execution-preparation work with retained high-end agents; notify the user at the first GPU-required stage.",
+  "owners": {
+    "B2_smoke_and_test": "Role3, retained GPT-6 Astra",
+    "B3_qualification_and_test": "Role6, retained GPT-6 Astra",
+    "independent_frozen_diff_acceptance": "Role4, retained Claude Opus 5.5",
+    "integration_source_freeze_and_conditional_preregistration": "Mayor"
+  },
+  "scope": "Existing nominal MPC integration only; no model/sampling research, Eval, new metric criteria or GPU execution.",
+  "acceptance_order": [
+    "Preserve the original B2/B3 negative witnesses.",
+    "Correct the two consumer files with directly dependent accounting/drain/provenance/deadline guards.",
+    "Pass focused CPU controls including the complete mocked caller path and failure persistence.",
+    "Independently accept the frozen diffs and evidence without re-opening accepted core APIs.",
+    "Run one composed snapshot CPU regression using the portable runner.",
+    "Commit exact accepted changes and freeze the source package from that commit.",
+    "Prove isolated package imports and unchanged Train/source binding locally.",
+    "Prepare conditional single-attempt Native execution preregistration, but do not execute."
+  ],
+  "package_inventory_seed": "results/mpc-native-r24/reviews/resume-p0-native-package-candidate01-proof/source-inventory.json",
+  "unchanged_inputs": {
+    "boundary": "results/mpc-native-r24/reviews/resume-p0-probes02/inputs/admission-boundary.json",
+    "boundary_sha256": "6d938ba18240f3e0f8cb677064849a73316ee7a8dc918526c68cba37f02da6be",
+    "train_tape": "results/mpc-native-r24/reviews/resume-p0-workload-author01/tapes-v1/train.tape.json",
+    "train_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"
+  },
+  "future_GPU_execution": {
+    "authorization": "NOT_GRANTED_BY_THIS_PRE_GPU_PLAN",
+    "entrypoint": "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+    "attempts": 1,
+    "warmup_requests": 3,
+    "qualification_requests": 5,
+    "qualification_arrivals_relative_to_shared_S": [1.25, 1.25, 1.25, 1.25, 1.25],
+    "original_seconds": 480,
+    "cleanup_reserve": 30,
+    "term_grace": 10,
+    "initial_cap": 32,
+    "budget_support": [16, 32],
+    "GPU_resource_state": "UNVERIFIED; do not infer current lease or readiness from historical lifecycle evidence.",
+    "preflight": "When GPU is authorized, reverify current resource/assets/source identity, exact two ownership locks, dedicated ports18000/18001, normal backend optimizations and no foreign workload.",
+    "no_automatic_rental": true,
+    "no_automatic_retry": true
+  },
+  "Native_acceptance_unchanged": [
+    "At least two consecutive timestamped observe, realized prediction, plan, first-action application and fresh re-observation cycles.",
+    "At least one changed action affects a real request admission decision, linked to control/request budget versions and reconstructed ordered reservation ledger.",
+    "Every request fate and all overhead/failure/cleanup evidence retained; holds and ACKs alone do not qualify.",
+    "Train Fixed selection only after qualification; held-out Eval only after Train freeze.",
+    "Neutral or negative MPC performance is acceptable and does not justify research expansion."
+  ]
+}

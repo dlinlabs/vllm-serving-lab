@@ -1,0 +1,121 @@
+{
+  "schema": "r24-pre-gpu-f1f2-recheck-prereg/1",
+  "capsule": ".runtime/r24-pre-gpu-f1f2-recheck-prereg-role4",
+  "role": "PR32 team16 Role4 independent validator; verified Anthropic claude-opus-5.5 max; no child agents",
+  "status": "PREREGISTERED_ACCEPTANCE_CRITERIA_ONLY",
+  "verdict": null,
+  "written_before_reading_any_role6_fix_bytes": true,
+  "native_qualification": false,
+  "gpu_authorized": false,
+  "predecessor": {
+    "capsule": ".runtime/r24-pre-gpu-final-review-role4",
+    "seal_sha256": "0f0b0e7cb489bbfa3102bc4dbab5262151095e353e7e1735dd35b647417ac403",
+    "members": 91,
+    "reverified_strict_before_this_prereg": true,
+    "report_sha256": "746626a667b02fff1e2c690d6f2a82a50bc720775423991207355bbf939d6ff5",
+    "witness_w1_sha256": "60e5dbb8c8ae64d63de9158f7538e0547a1096b7eb7c61ff13db4369dac1fa30",
+    "prereg_w1_sha256": "ac9c6f11ab2f858df9033ee6b6279fbae6af5b249557c2abfcf3e7a73c5adcd9",
+    "preserved_unchanged": [
+      "overall FAIL_PRE_GPU_SOURCE_CORRECTION_REQUIRED",
+      "F1 BLOCKING_PRE_GPU",
+      "F2 LOW",
+      "erratum E1: the sealed CHECKLIST B3-5 exact-zero admitted-cost branch was wrong",
+      "B2 PASS_SOURCE in its stated scope",
+      "B1 CONDITIONAL",
+      "G1-G7 GPU-only or external preconditions"
+    ]
+  },
+  "frozen_predecessor_bytes": {
+    "caller_native_nominal_qualification_py": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+    "caller_test_test_native_nominal_qualification_py": "7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac",
+    "smoke_native_services_smoke_py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+    "smoke_test_test_native_services_smoke_py": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3",
+    "gateway_py": "0b1a80ad (accepted, hash-check only)"
+  },
+  "grounding_from_own_sealed_predecessor_logs": [
+    "caller 17: DRAIN_FIELDS = (current_in_flight, current_waiting, current_admitted_cost); exactly three fields, so replacing only line 111 drops no drain field (view-caller-after01.log, anchors01.log)",
+    "caller 107-110: on every reading the three DRAIN_FIELDS plus tokenizer_fallback_requests must be int or float, finite and >= 0, and tokenizer_fallback_requests must be 0, else services.checked refuses; these lines run before the idle predicate at 111 (view-caller-after01.log)",
+    "caller 93-97: observe() persists raw per-reading /metrics evidence in finally (view-caller-after01.log)",
+    "gateway 165 and 838: the gateway checks its own cost ledger with math.isclose(..., rel_tol=1e-12, abs_tol=1e-9); 294 is the same check per predecessor REPORT F1 (gateway-cost-grep02.log, gateway-grep01.log)",
+    "for finite x >= 0, math.isclose(x, 0.0, rel_tol=1e-12, abs_tol=1e-9) is true exactly when x <= 1e-9; check01 tests the boundary on both Pythons",
+    "smoke test 18-20: ROOT = Path(os.environ[NATIVE_SMOKE_TEST_OUTPUT]); assert not ROOT.is_absolute(); ROOT.mkdir() with no parents and no exist_ok (test-head01.log)",
+    "caller test 24-25: ROOT = Path(os.environ[NATIVE_SMOKE_TEST_OUTPUT]) / qualification; ROOT.mkdir(parents=True, exist_ok=True); this creates the smoke ROOT as a parent when imported first (test-head01.log, selfcontained01.log)"
+  ],
+  "scope": {
+    "review_only": [
+      "F1: the drain() idle predicate in native_nominal_qualification.py (629caa23 line 111) and its regression tests",
+      "F2: the qualification test output namespace in test_native_nominal_qualification.py (7d087a88 lines 24-25)"
+    ],
+    "not_reopened": [
+      "B3 rows other than B3-5",
+      "B2 (smoke and smoke test are hash-checked only)",
+      "accepted adapter, client, metrics, runtime, permit and gateway",
+      "Native14, model, sampling, benchmark and Eval"
+    ],
+    "source_budget": "new caller, new caller test and the frozen diff; at most about 128 KiB",
+    "no_live_reads": "No Role6 file is read until the Mayor supplies frozen hashes and a frozen diff."
+  },
+  "inputs_required_from_mayor": [
+    "frozen sha256 of the new caller and of the new caller test",
+    "frozen diff path and sha256 relative to 629caa23 and 7d087a88",
+    "Role6 sealed capsule path and SHA256SUMS digest, including any preserved red control on 629caa23",
+    "whether the runner command.json changes; needed only if F2 introduces a new environment variable"
+  ],
+  "procedure": [
+    "P-a: verify the supplied pins and the unchanged pins (smoke 585e606f, smoke test 158c4e32, gateway 0b1a80ad, adapter 935c2679, client 933e4161, metrics 49c76b8b, runtime 2d7a01db, permit 05b7d0ae) before and after the review",
+    "P-b: copy the frozen bytes into an own capsule; apply the frozen diff to copies of 629caa23 and 7d087a88 and require byte-identical results; reverse-apply it and require the exact predecessors; no Git",
+    "P-c: classify every hunk as F1, F2 or OUT_OF_SCOPE",
+    "P-d: check R1-R10 from source and preserved author controls; run W2 only for a row that cannot be established that way"
+  ],
+  "must": [
+    {"id": "R1", "text": "Diff confinement. Caller hunks touch only drain() (629caa23 100-115), optionally plus one module-level tolerance constant and extra fields in the caller_drains record. Test hunks only add F1 regression tests and change the qualification test output root. Any other behavior-changing hunk is OUT_OF_SCOPE and blocks until the Mayor separately scopes it."},
+    {"id": "R2", "text": "The guard content of 629caa23 107-110 is retained unchanged and still evaluated on every reading before the idle predicate: all three DRAIN_FIELDS plus tokenizer_fallback_requests are int or float, finite and >= 0, and tokenizer_fallback_requests == 0, else refusal."},
+    {"id": "R3", "text": "current_in_flight == 0 and current_waiting == 0 remain exact comparisons; no tolerance or rounding is applied to either counter or to the fallback counter."},
+    {"id": "R4", "text": "The idle cost test is exactly current_admitted_cost <= 1e-9 (inclusive) on the observed value. 1e-9 is a source literal or module constant and is not read from the environment, argv, protocol, permit or any server response. For finite x >= 0 this equals the gateway's own math.isclose(x, 0.0, rel_tol=1e-12, abs_tol=1e-9)."},
+    {"id": "R5", "text": "No other relaxation. Each reading is a fresh /metrics observation through the unchanged observe(); remaining(), the original deadline and reserve, sleep(min(0.05, remaining)) and the NOT_RUN or FAILED handling when idle is never reached are unchanged; raw per-reading evidence persistence (observe 93-97) is unchanged."},
+    {"id": "R6", "text": "Committed, self-contained regression tests (no .runtime fixture imports) drive drain() through the unchanged observe() path with served /metrics bodies: (a) zero counters, fallback 0 and cost 2.7755575615628914e-17 drain with readings == 1; (b) cost 1e-6 with zero counters does not drain and ends in the original-deadline refusal; (c) current_in_flight 1 with cost 0 does not drain; (d) current_waiting 1 with cost 0 does not drain."},
+    {"id": "R7", "text": "Sensitivity. Case R6(a) is shown red on 629caa23, either by a preserved author control or by own W2. A regression test that would also pass on 629caa23 does not satisfy R6(a)."},
+    {"id": "R8", "text": "Smoke 585e606f and smoke test 158c4e32 stay byte-unchanged, so the smoke test ROOT.mkdir() no-clobber behavior is retained."},
+    {"id": "R9", "text": "For the same NATIVE_SMOKE_TEST_OUTPUT value, the qualification test output root is not equal to, an ancestor of or a descendant of the smoke ROOT, and creating it never creates the smoke ROOT path; therefore both import or collection orders succeed in a fresh parent directory."},
+    {"id": "R10", "text": "Recorded drain evidence stays strict-JSON safe: any recorded residual is the observed finite float and any recorded tolerance is 1e-9."}
+  ],
+  "should": [
+    "S1: record admitted_cost and admitted_cost_abs_tol in the caller_drains entry; the raw per-reading evidence already preserves the residual, so absence is not blocking",
+    "S2: boundary tests in which cost 1e-9 drains with readings == 1 and math.nextafter(1e-9, math.inf) does not drain",
+    "S3: a named tolerance constant whose comment cites the gateway abs_tol",
+    "S4: any new F2 environment variable is recorded as a runner precondition"
+  ],
+  "w2_plan_only_if_needed": {
+    "harness": "same pattern as sealed W1 (witness01.py 60e5dbb8): hash-verified copies of the frozen fixed caller and of 629caa23 inside the own capsule, isolated interpreter (-B -I), served /metrics bodies, short original deadline",
+    "cases": [
+      "c1 counters 0, fallback 0, cost 2.7755575615628914e-17",
+      "c2 counters 0, fallback 0, cost 1e-9",
+      "c3 counters 0, fallback 0, cost math.nextafter(1e-9, math.inf)",
+      "c4 counters 0, fallback 0, cost 1e-6",
+      "c5 current_in_flight 1, cost 0",
+      "c6 current_waiting 1, cost 0",
+      "c7 tokenizer_fallback_requests 1",
+      "c8 cost -1e-12"
+    ],
+    "expected_fixed_caller": "c1 and c2 drained with readings == 1; c3-c6 not drained and original-deadline refusal; c7 and c8 refused on the first reading",
+    "expected_629caa23": "c1 and c2 not drained (red); c3-c8 the same as the fixed caller",
+    "bounds": "both Pythons, at most 60 s each, one run, all failures retained"
+  },
+  "verdict_rules": {
+    "PASS_SOURCE_F1F2": "R1-R10 all PASS, pins verified before and after, diff roundtrip exact",
+    "FAIL_SOURCE_F1F2": "any R row fails with concrete evidence; the report gives the smallest exact fix",
+    "UNVERIFIED": "any R row that cannot be established within the stated budget; never converted to PASS",
+    "after_pass": "F1 and F2 close in the reviewed scope only. P2 (corrected caller hash in the B1 prereg) and P3 (package built from the fix commit, no __pycache__, -B launch) remain Mayor CPU actions; G1-G7 remain GPU-only or external; no GPU authorization and no Native qualification follow from it."
+  },
+  "arithmetic_check": "check01.py: (0.1 + 0.2) - 0.1 - 0.2 == 2.7755575615628914e-17; the residue and 1e-9 are isclose to 0.0 under rel_tol=1e-12 and abs_tol=1e-9, and math.nextafter(1e-9, math.inf) is not; strict parse of this file; predecessor seal digest",
+  "nonclaims": [
+    "No verdict on any Role6 bytes; none were read.",
+    "Not GPU authority and not Native qualification; no performance, MPC win, calibration or SLO claim; Native14 FAIL unchanged.",
+    "The 1e-9 idle tolerance is numerical consistency with the gateway's own cost-ledger tolerance. It does not relax a guard, metric, SLO or Eval criterion, because both counters and the fallback counter stay exact."
+  ],
+  "limitations": [
+    "Grounding is limited to own sealed predecessor logs of frozen 629caa23, 7d087a88, 158c4e32 and gateway 0b1a80ad.",
+    "The gateway telemetry.observed_state path was not inspected; whether actual /metrics values match the ledger stays a GPU-run observation (predecessor G rows).",
+    "MIN_REQUEST_COST 0.1 in the smoke configuration is taken from predecessor reads (gateway 37/385, smoke 87)."
+  ]
+}
