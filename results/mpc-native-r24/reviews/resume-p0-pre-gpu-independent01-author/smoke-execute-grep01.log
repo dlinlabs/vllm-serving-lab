@@ -1,0 +1,22 @@
+585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c  native_services_smoke.py
+206:def owner_scope(config, output, deadline, ready, key, args):
+213:                           deadline=deadline, ready=ready, execute=True,
+218:    if not args.execute:
+348:    parser.add_argument("--execute", action="store_true")
+                         "--host", "127.0.0.1", "--port", str(GATEWAY_PORT), "--workers", "1"])
+
+
+def source_info(root):
+    sys.path[:0] = [str(root), str(root / RELATIVE)]
+    for name, module in tuple(sys.modules.items()):
+        if name == "mpc_lab" or name.startswith("mpc_lab.") or name == "prefill_lab" or name.startswith("prefill_lab."):
+def run(args, *, body=None):
+    if not args.execute:
+        return 2
+    checked(args.source_root and args.output_root, "explicit source/output roots required")
+    root, output = Path(args.source_root), Path(args.output_root)
+    checked(root.is_absolute() and output.is_absolute(), "absolute source/output roots required")
+    checked(all(math.isfinite(x) for x in (args.seconds, args.cleanup_reserve, args.term_grace))
+            and 0 < args.term_grace < args.cleanup_reserve < args.seconds, "invalid original budget")
+    root, output = root.resolve(strict=True), output.absolute()
+    os.umask(0o077)

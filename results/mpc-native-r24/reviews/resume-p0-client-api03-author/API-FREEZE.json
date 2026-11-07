@@ -1,0 +1,31 @@
+{
+ "subject": "experiments/mpc-research/resume-mvp/nominal_client.py (original f369e5ce...) additive in-loop raw-v2 capture API",
+ "trigger": "Role6 sealed blocker .runtime/r24-resume-p0-nominal-episode01 (SHA256SUMS c3f9bbcd...): NO_GO_SAFE_RAW_V2_COMPOSITION_API_MISSING",
+ "public_additions": {
+  "prepare_capture": "prepare_capture(*, trace_path, binding_path, arm, purpose, gateway_url, backend_url, request_timeout=120.0, tokenizer_loader=load_tokenizer) -> PreparedCapture",
+  "PreparedCapture": "attributes: capture (the raw-v2 envelope dict, finalized in place), trace (validated trace or None), ready (bool), started (bool)",
+  "capture_replay": "async capture_replay(prepared, *, offered_start, deadline, cleanup_reserve_s, clock_domain, transport=None) -> dict (the same object as prepared.capture)",
+  "write_capture": "write_capture(path, capture) -> str sha256 of the written bytes (the CLI capture.json codec: sorted keys, indent 1, allow_nan False, exclusive create, fsync)",
+  "NOT_RUN_ERROR": "error string of a prepared envelope whose capture_replay was never awaited (status stays 'failed')",
+  "EXIT_CODES": "CLI replay exit codes by status {collected 0, refused 2, interrupted 3, failed 4} (unchanged values)"
+ },
+ "prepare_capture": {
+  "sync": true,
+  "never": ["HTTP", "event loop use", "signal handlers", "offers"],
+  "does": "same envelope initializer and input loading as the CLI (sources, strict trace + binding, loopback URLs, trace provenance purpose), validates arm in RUN_ARMS, purpose by the CLI _purpose rule, request_timeout finite > 0, then the local binding + tokenizer preflight (check_binding, tokenizer from local_model_path, check_tokenizer) before any offered start exists",
+  "refusal": "returns PreparedCapture(ready False) with capture status 'refused' (ClientRefusal) or 'failed' (other Exception) and the error; never raises for them",
+  "config": "entry 'library', gateway_url, backend_url, drain_timeout_s null, request_timeout_s, start_delay_s null, driver_offered_start, caller_deadline, cleanup_reserve_s, caller_clock_domain (null until capture_replay), trace_path, binding_path; program 'nominal_client.prepare_capture', argv null"
+ },
+ "capture_replay": {
+  "loop": "awaited inside the caller's running event loop; never calls asyncio.run; installs/removes no signal handlers; the caller owns interrupts, cancellation and persistence",
+  "single_use": "raises ClientRefusal (envelope untouched) unless prepared is a ready, unused PreparedCapture",
+  "inputs": "offered_start: the caller's exact future absolute time.monotonic() start (never retimed); deadline: the caller's ORIGINAL absolute time.monotonic() deadline; cleanup_reserve_s >= 0 kept free after the drain deadline; clock_domain must equal the envelope clock_domain (nominal_client.clock_domain())",
+  "drain_deadline": "exactly deadline - cleanup_reserve_s; in-flight requests are cancelled there and every request task is joined before return",
+  "refusals_zero_sends": ["non-finite offered_start/deadline/cleanup_reserve_s or negative reserve (non-finite values recorded as null)", "clock_domain differs", "deadline - cleanup_reserve_s < offered_start + trace duration (refused, never truncated)", "offered_start not in (now, now + MAX_START_WAIT_S] at entry (before any HTTP) or after the /v1/models preflight", "offered_start passed when replay starts (records allocated, all not_launched; CLI parity)"],
+  "outcome": "returns the envelope with status collected | refused | failed and error; on CancelledError/KeyboardInterrupt finalizes status 'interrupted' in place then re-raises; other BaseException: 'failed' then re-raise. rows and summary cover every allocated record whenever records exist",
+  "not_done": ["no full wall, control, comparability or metrics at return (build_run unchanged; driver records only)", "no persistence (caller uses write_capture)", "no retry, reschedule, truncation or cherry-pick"]
+ },
+ "cli": "main/replay/finalize argv, signal semantics (_run_cancellable around asyncio.run), exit codes, stdout/stderr lines and capture.json keys unchanged; _replay_main and _capture delegate to the shared helpers (_new_capture, _load_inputs, _preflight_local, _collect, _settle)",
+ "replay": "public replay signature, validation order, return value and behaviour unchanged; it becomes a thin wrapper of _replay(drain_deadline=offered_start + duration + drain_timeout), the identical float the CLI already recorded",
+ "unchanged": ["SCHEMA r24-resume-p0-nominal-client-v2 and envelope keys", "sending, SSE parsing, fates, row mapping, summaries, rejection retention", "build_run (engineering refusal, full wall, control, comparability)", "nominal_metrics.py (49c76b8b...)", "QUALIFIERS / NOT_CLIENT_OWNED text"]
+}

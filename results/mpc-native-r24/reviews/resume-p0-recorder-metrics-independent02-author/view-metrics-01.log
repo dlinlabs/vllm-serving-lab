@@ -1,0 +1,1211 @@
+     1	"""P0 nominal-lineage measured metrics: additive pure calculator plus a run_trace_pilot.py output adapter.
+     2	
+     3	Scope: the UNQUALIFIED nominal demonstrator lineage r24-resume-p0-nominal-v1.  This is NOT the legacy L-T16
+     4	world: the legacy comparison16 scorer is neither modified nor reused, and no G06/G16/Native14 qualification is
+     5	inherited or claimed.  Only measured quantities are reported: no winner, capacity, SLO guarantee or production
+     6	claim.
+     7	
+     8	* ``compute(run)`` -- pure core over strict normalized rows (``ROW_KEYS``); refuses, never repairs, bad input.
+     9	* ``adapt_run_trace_pilot(output_dir, arm=..., purpose=...)`` -- maps one run_trace_pilot.py output directory
+    10	  onto normalized rows with the exact field mapping in ``RAW_MAPPING``; refuses what the raw files cannot
+    11	  support (it never invents events, SLO fields or controller timings).
+    12	* ``select_train_fixed(...)`` -- Train-only empirical fixed16 vs fixed32 choice by unchanged natural-SLO count.
+    13	* ``comparison_table(...)`` -- one measured table per split, without any winner field.
+    14	
+    15	v2 (metrics02 audit corrections): rows are bound to the declared offered cohort (count + ordered request-id digest),
+    16	the offered window and the declared envelope; early sends are refused; selection and tables additionally require
+    17	identical declared comparability facts and bind the frozen Train selection record.
+    18	
+    19	Natural SLO uses the UNCHANGED r23 ``score_http.py`` (sha256 pinned; executed from verified bytes, no bytecode).
+    20	"""
+    21	import argparse
+    22	import hashlib
+    23	import json
+    24	import math
+    25	from pathlib import Path
+    26	import sys
+    27	import types
+    28	
+    29	SCHEMA = 'r24-resume-p0-nominal-metrics-v2'
+    30	SELECTION_SCHEMA = 'r24-resume-p0-nominal-train-selection-v2'
+    31	LINEAGE = 'r24-resume-p0-nominal-v1'
+    32	QUALIFICATION = ('UNQUALIFIED nominal demonstrator: not the legacy L-T16 world; no G06/G16/Native14 qualification '
+    33	                 'inherited or claimed')
+    34	FATES = ('complete', 'rejected', 'http_error', 'stream_error', 'transport_error', 'cancelled', 'not_launched',
+    35	         'unknown')
+    36	FAILURE_FATES = ('http_error', 'stream_error', 'transport_error', 'cancelled')
+    37	PURPOSES = ('train', 'eval')
+    38	CLAIM_SCOPE = {
+    39	    'train': 'Train split: in-sample engineering measurement only; no generalization claim',
+    40	    'eval': 'Eval split: procedural holdout of synthetic draws from one public generator; not an OOD, real-trace or '
+    41	            'Azure holdout',
+    42	}
+    43	ARMS = ('fixed16', 'fixed32', 'train_selected_fixed', 'strong_one_move', 'mpc', 'causal_reactive')
+    44	RUN_ARMS = tuple(arm for arm in ARMS if arm != 'train_selected_fixed')
+    45	FIXED_BUDGETS = {'fixed16': 16.0, 'fixed32': 32.0}
+    46	QUANTILES = (50, 95, 99)
+    47	GROUP_EDGES = (512, 2048)
+    48	GROUPS = ('le512', '513to2048', 'gt2048')
+    49	FIFO_LABEL = 'PENDING_VERIFIED_BACKEND_FCFS_CONFIG'
+    50	FIFO_NOTE = ('FIFO is a queue ordering, not a fourth algorithm, and does not imply any budget; the label stays pending '
+    51	             'until the actual backend FCFS configuration is verified (never derived from a CPU plant)')
+    52	SCORE_HTTP_PATH = Path(__file__).resolve().parent.parent / 'native-r23' / 'score_http.py'
+    53	SCORE_HTTP_SHA256 = '9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d'
+    54	ROW_KEYS = frozenset({'request_id', 'group_tokens', 'max_output_tokens', 'scheduled_at', 'sent_at',
+    55	                      'first_content_at', 'terminal_at', 'fate', 'completion_tokens', 'slo'})
+    56	SLO_KEYS = frozenset({'status', 'finish_reason', 'requested_ignore_eos', 'stream_done', 'stream_error'})
+    57	RUN_KEYS = frozenset({'arm', 'purpose', 'clock_domain', 'offered_start', 'offered_duration_s', 'envelope_start',
+    58	                      'envelope_end', 'envelope_scope', 'rows', 'slo_missing', 'control', 'control_missing',
+    59	                      'provenance'})
+    60	ENVELOPE_SCOPES = {
+    61	    'offered_cohort_observed': 'offered start to the later of offered end and last observed terminal; EXCLUDES pre-offer '
+    62	                               'setup/solver warmup, post-terminal drain and unresolved requests: a lower bound on the '
+    63	                               'full wall, not the full wall',
+    64	    'full_wall': 'caller-recorded actual wall in the run clock domain including setup, solver, HTTP, unresolved '
+    65	                 'requests and final drain',
+    66	}
+    67	PENALIZED_ESTIMAND = ('failure-penalized operational TTFT over ALL offered requests (missing first content = +inf); '
+    68	                      'NOT a survival-analysis identified quantile of right-censored latency')
+    69	CONDITIONAL_ESTIMAND = 'TTFT conditional on fate complete (selection-biased; read with fates and the penalized TTFT)'
+    70	COHORT_LABEL = ('cohort-normalized (includes tail): all-offered cohort count / offered window seconds; not steady-state '
+    71	                'GPU throughput')
+    72	ENVELOPE_LABELS = {
+    73	    'offered_cohort_observed': 'offered-cohort observed envelope: count / (envelope_end - envelope_start); a LOWER '
+    74	                               'bound on the full wall, so these rates are UPPER bounds on full-wall rates',
+    75	    'full_wall': 'driver-recorded full wall: count / (envelope_end - envelope_start)',
+    76	}
+    77	WALL_RATE_DIRECTION = {'offered_cohort_observed': 'upper_bound_on_full_wall_rate', 'full_wall': 'full_wall_rate'}
+    78	TOKEN_RATE_SCOPE = ('delivered rows only (fate complete); undelivered usage is reported separately; the upper bound '
+    79	                    'assumes the endpoint enforces max_tokens per request (not verified here)')
+    80	JAIN_NOTE = ('Jain and min_over_max are unweighted over non-empty group rates without uncertainty: read with k and '
+    81	             'per-group n, never rank arms on them alone')
+    82	EARLY_SEND_TOLERANCE_S = 0.0
+    83	ENVELOPE_TOLERANCE_S = 1e-6
+    84	SCHEDULE_TOLERANCE_S = 1e-6
+    85	COMPARABILITY_FACTS = ('hardware', 'model', 'backend', 'gateway', 'resources', 'code', 'client_generation', 'clock')
+    86	MODEL_FACTS = frozenset({'local_model_path', 'asset_sha256', 'served_alias', 'served_alias_verified',
+    87	                         'tokenizer_sha256'})
+    88	ARM_BUDGET_SETTING = 'MAX_ADMITTED_COST'
+    89	COMPARABILITY_BASIS = ('producer/driver-declared facts compared for canonical equality across arms; not verified '
+    90	                       'against a live system by this module')
+    91	SELECTION_RULE = {'primary': 'natural_slo_good (higher)', 'tie_1': 'all_offered - delivered (lower)',
+    92	                  'tie_2': 'budget (lower)', 'not': 'nominal forecast freeze_fixed', 'data': 'Train split only'}
+    93	SELECTION_KEYS = frozenset({'schema', 'status', 'purpose', 'selected_arm', 'selected_budget', 'decided_by', 'rule',
+    94	                            'candidates', 'offered_trace_sha256', 'request_ids_sha256', 'request_ids',
+    95	                            'comparability_sha256', 'scope', 'selection_sha256'})
+    96	CANDIDATE_KEYS = frozenset({'budget', 'natural_slo_good', 'cohort_slo_goodput_rps', 'not_delivered',
+    97	                            'metrics_sha256'})
+    98	CLAIMS_NOT_MADE = (
+    99	    'no winner or superiority', 'no capacity, SLO guarantee or production claim',
+   100	    'no G06/G16/Native14 qualification', 'hashes are integrity pins, not Train/Eval disjointness or leakage proof',
+   101	    'FIFO label pending verified backend FCFS configuration',
+   102	    'comparability facts are producer/driver-declared and compared, not independently verified here',
+   103	)
+   104	
+   105	
+   106	class MetricsInputError(ValueError):
+   107	    """Normalized input violates the frozen schema: refused, never repaired."""
+   108	
+   109	
+   110	class AdapterRefusal(ValueError):
+   111	    """Raw run_trace_pilot output cannot support the normalized schema: refused, no events invented."""
+   112	
+   113	
+   114	_SCORE_HTTP = None
+   115	
+   116	
+   117	def score_http():
+   118	    """The unchanged r23 natural-SLO scorer, executed only from bytes matching the pinned sha256."""
+   119	    global _SCORE_HTTP
+   120	    if _SCORE_HTTP is None:
+   121	        data = SCORE_HTTP_PATH.read_bytes()
+   122	        if hashlib.sha256(data).hexdigest() != SCORE_HTTP_SHA256:
+   123	            raise RuntimeError('score_http.py differs from the pinned sha256; natural SLO scoring refused')
+   124	        module = types.ModuleType('r23_score_http_pinned')
+   125	        module.__file__ = str(SCORE_HTTP_PATH)
+   126	        exec(compile(data, str(SCORE_HTTP_PATH), 'exec'), module.__dict__)
+   127	        _SCORE_HTTP = module
+   128	    return _SCORE_HTTP
+   129	
+   130	
+   131	def _is_number(value):
+   132	    return type(value) in (int, float) and math.isfinite(value)
+   133	
+   134	
+   135	def _number(value, name):
+   136	    if not _is_number(value):
+   137	        raise MetricsInputError(f'{name} must be a finite int/float (bool refused)')
+   138	    return value
+   139	
+   140	
+   141	def _optional_number(value, name):
+   142	    return None if value is None else _number(value, name)
+   143	
+   144	
+   145	def _nonempty_str(value, name):
+   146	    if not isinstance(value, str) or not value:
+   147	        raise MetricsInputError(f'{name} must be a non-empty string')
+   148	    return value
+   149	
+   150	
+   151	def _is_sha(value):
+   152	    return isinstance(value, str) and len(value) == 64 and all(char in '0123456789abcdef' for char in value)
+   153	
+   154	
+   155	def _digest(value):
+   156	    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'),
+   157	                                     allow_nan=False).encode()).hexdigest()
+   158	
+   159	
+   160	def request_ids_sha256(request_ids):
+   161	    """Ordered offered request-id digest; producers derive it from the frozen offered trace order."""
+   162	    return _digest(list(request_ids))
+   163	
+   164	
+   165	def group_of(tokens):
+   166	    """Predeclared prompt-token groups (edges 512 and 2048 inclusive on the left group)."""
+   167	    if tokens <= GROUP_EDGES[0]:
+   168	        return GROUPS[0]
+   169	    return GROUPS[1] if tokens <= GROUP_EDGES[1] else GROUPS[2]
+   170	
+   171	
+   172	def percentile_block(values, estimand=None):
+   173	    """Nearest-rank ordered[ceil(q*n/100)-1] (integer rank arithmetic); a rank on +inf yields null with a reason."""
+   174	    ordered = sorted(values)
+   175	    n = len(ordered)
+   176	    block = {'n': n, 'method': 'nearest_rank_ceil'}
+   177	    if estimand is not None:
+   178	        block['estimand'] = estimand
+   179	    if not n:
+   180	        for q in QUANTILES:
+   181	            block.update({f'p{q}': None, f'p{q}_rank': None, f'p{q}_is_sample_max': None})
+   182	        block.update(max=None, n_failure_penalty=0, null_reason='no_samples')
+   183	        return block
+   184	    block['n_failure_penalty'] = sum(value == math.inf for value in ordered)
+   185	    for q in QUANTILES:
+   186	        rank = (q * n + 99) // 100
+   187	        value = ordered[rank - 1]
+   188	        block[f'p{q}'] = value if math.isfinite(value) else None
+   189	        block[f'p{q}_rank'] = rank
+   190	        block[f'p{q}_is_sample_max'] = rank == n
+   191	        if not math.isfinite(value):
+   192	            block[f'p{q}_null_reason'] = 'rank_falls_on_failure_penalty'
+   193	    block['max'] = ordered[-1] if math.isfinite(ordered[-1]) else None
+   194	    block['null_reason'] = None
+   195	    return block
+   196	
+   197	
+   198	def _validate_row(row, index):
+   199	    if not isinstance(row, dict) or set(row) != ROW_KEYS:
+   200	        raise MetricsInputError(f'row {index}: keys must be exactly {sorted(ROW_KEYS)}')
+   201	    name = f'row {index}'
+   202	    _nonempty_str(row['request_id'], f'{name} request_id')
+   203	    for key in ('group_tokens', 'max_output_tokens'):
+   204	        if type(row[key]) is not int or row[key] <= 0:
+   205	            raise MetricsInputError(f'{name} {key} must be a positive int')
+   206	    scheduled = _number(row['scheduled_at'], f'{name} scheduled_at')
+   207	    sent, first, terminal = (_optional_number(row[key], f'{name} {key}')
+   208	                             for key in ('sent_at', 'first_content_at', 'terminal_at'))
+   209	    fate = row['fate']
+   210	    if fate not in FATES:
+   211	        raise MetricsInputError(f'{name} fate must be one of {FATES}')
+   212	    tokens = row['completion_tokens']
+   213	    if tokens is not None and (type(tokens) is not int or tokens < 0):
+   214	        raise MetricsInputError(f'{name} completion_tokens must be null or an int >= 0')
+   215	    slo = row['slo']
+   216	    if slo is not None:
+   217	        if not isinstance(slo, dict) or set(slo) != SLO_KEYS:
+   218	            raise MetricsInputError(f'{name} slo keys must be exactly {sorted(SLO_KEYS)}')
+   219	        _nonempty_str(slo['status'], f'{name} slo.status')
+   220	        if slo['finish_reason'] is not None and not isinstance(slo['finish_reason'], str):
+   221	            raise MetricsInputError(f'{name} slo.finish_reason must be null or a string')
+   222	        if any(type(slo[key]) is not bool for key in ('requested_ignore_eos', 'stream_done', 'stream_error')):
+   223	            raise MetricsInputError(f'{name} slo flags must be bool')
+   224	        if (slo['status'] == 'complete') != (fate == 'complete'):
+   225	            raise MetricsInputError(f'{name} slo.status complete must coincide with fate complete')
+   226	    if sent is not None and sent < scheduled - EARLY_SEND_TOLERANCE_S:
+   227	        raise MetricsInputError(f'{name} clock order: early send, sent_at < scheduled_at (tolerance '
+   228	                                f'{EARLY_SEND_TOLERANCE_S} s; never credited)')
+   229	    if first is not None and (sent is None or first < sent or first < scheduled):
+   230	        raise MetricsInputError(f'{name} clock order: first_content_at needs sent_at <= first and scheduled_at <= first')
+   231	    if terminal is not None and (sent is None or terminal < sent or (first is not None and terminal < first)):
+   232	        raise MetricsInputError(f'{name} clock order: terminal_at needs sent_at <= terminal and first <= terminal')
+   233	    if fate == 'not_launched' and not (sent is None and first is None and terminal is None and tokens is None):
+   234	        raise MetricsInputError(f'{name} not_launched carries no send/first/terminal/token observation')
+   235	    if fate == 'complete' and (sent is None or first is None or terminal is None):
+   236	        raise MetricsInputError(f'{name} complete requires sent_at, first_content_at and terminal_at')
+   237	    if fate in ('rejected',) + FAILURE_FATES and (sent is None or terminal is None):
+   238	        raise MetricsInputError(f'{name} {fate} requires sent_at and terminal_at')
+   239	
+   240	
+   241	def _validate_control(run):
+   242	    control, missing = run['control'], run['control_missing']
+   243	    if control is None:
+   244	        _nonempty_str(missing, 'control_missing (required when control is null)')
+   245	        if run['arm'] in FIXED_BUDGETS:
+   246	            raise MetricsInputError('fixed arms require a verified static_fixed control record')
+   247	        return
+   248	    if missing is not None:
+   249	        raise MetricsInputError('control_missing must be null when control is provided')
+   250	    if not isinstance(control, dict):
+   251	        raise MetricsInputError('control must be a dict')
+   252	    kind = control.get('kind')
+   253	    if kind == 'static_fixed':
+   254	        if set(control) != {'kind', 'budget', 'basis'}:
+   255	            raise MetricsInputError('static_fixed control keys must be exactly kind, budget, basis')
+   256	        _nonempty_str(control['basis'], 'control.basis')
+   257	        if run['arm'] not in FIXED_BUDGETS or control['budget'] != FIXED_BUDGETS[run['arm']] \
+   258	                or type(control['budget']) is not float:
+   259	            raise MetricsInputError('static_fixed control must belong to fixed16/fixed32 with its exact float budget')
+   260	    elif kind == 'measured_intervals':
+   261	        if set(control) != {'kind', 'source', 'intervals'}:
+   262	            raise MetricsInputError('measured_intervals control keys must be exactly kind, source, intervals')
+   263	        if run['arm'] in FIXED_BUDGETS:
+   264	            raise MetricsInputError('fixed arms are static: no controller decision intervals')
+   265	        _nonempty_str(control['source'], 'control.source')
+   266	        if not isinstance(control['intervals'], list):
+   267	            raise MetricsInputError('control.intervals must be a list')
+   268	        for index, item in enumerate(control['intervals']):
+   269	            if not isinstance(item, list) or len(item) != 2:
+   270	                raise MetricsInputError(f'control interval {index} must be [start, end]')
+   271	            start, end = (_number(value, f'control interval {index}') for value in item)
+   272	            if end < start:
+   273	                raise MetricsInputError(f'control interval {index} ends before it starts')
+   274	    else:
+   275	        raise MetricsInputError('control.kind must be static_fixed or measured_intervals')
+   276	
+   277	
+   278	def validate_run(run):
+   279	    if not isinstance(run, dict) or set(run) != RUN_KEYS:
+   280	        raise MetricsInputError(f'run keys must be exactly {sorted(RUN_KEYS)}')
+   281	    if run['arm'] not in RUN_ARMS:
+   282	        raise MetricsInputError(f'run arm must be one of {RUN_ARMS} (train_selected_fixed is a table alias)')
+   283	    if run['purpose'] not in PURPOSES:
+   284	        raise MetricsInputError(f'purpose must be one of {PURPOSES}')
+   285	    _nonempty_str(run['clock_domain'], 'clock_domain')
+   286	    offered_start = _number(run['offered_start'], 'offered_start')
+   287	    duration = _number(run['offered_duration_s'], 'offered_duration_s')
+   288	    start, end = _number(run['envelope_start'], 'envelope_start'), _number(run['envelope_end'], 'envelope_end')
+   289	    if duration <= 0 or start > offered_start or end < offered_start + duration:
+   290	        raise MetricsInputError('envelope must cover [offered_start, offered_start + offered_duration_s] with '
+   291	                                'positive duration')
+   292	    if run['envelope_scope'] not in ENVELOPE_SCOPES:
+   293	        raise MetricsInputError(f'envelope_scope must be one of {sorted(ENVELOPE_SCOPES)}')
+   294	    if not isinstance(run['rows'], list):
+   295	        raise MetricsInputError('rows must be a list')
+   296	    for index, row in enumerate(run['rows']):
+   297	        _validate_row(row, index)
+   298	    if len({row['request_id'] for row in run['rows']}) != len(run['rows']):
+   299	        raise MetricsInputError('request_id values must be unique (all-offered denominator)')
+   300	    missing = run['slo_missing']
+   301	    if missing is None:
+   302	        if any(row['slo'] is None for row in run['rows']):
+   303	            raise MetricsInputError('natural SLO fields must be present on every row or on none')
+   304	    else:
+   305	        if (not isinstance(missing, list) or not missing
+   306	                or any(not isinstance(item, str) or not item for item in missing)):
+   307	            raise MetricsInputError('slo_missing must be null or a non-empty list of reasons')
+   308	        if any(row['slo'] is not None for row in run['rows']):
+   309	            raise MetricsInputError('natural SLO fields must be present on every row or on none')
+   310	    _validate_control(run)
+   311	    provenance = run['provenance']
+   312	    if not isinstance(provenance, dict):
+   313	        raise MetricsInputError('provenance must be a dict')
+   314	    _nonempty_str(provenance.get('offered_trace_sha256'), 'provenance.offered_trace_sha256')
+   315	    _validate_cohort(run, provenance)
+   316	    _validate_windows(run, offered_start, duration, start, end)
+   317	    _validate_comparability(provenance.get('comparability'), run)
+   318	    selection = provenance.get('train_selection_sha256')
+   319	    if selection is not None and not _is_sha(selection):
+   320	        raise MetricsInputError('provenance.train_selection_sha256 must be null or a 64-hex sha256')
+   321	
+   322	
+   323	def _validate_cohort(run, provenance):
+   324	    count = provenance.get('offered_count')
+   325	    if type(count) is not int or count < 0:
+   326	        raise MetricsInputError('provenance.offered_count must be an int >= 0 taken from the frozen offered trace')
+   327	    if count != len(run['rows']):
+   328	        raise MetricsInputError(f'all-offered cohort: {len(run["rows"])} rows but provenance.offered_count {count}')
+   329	    digest = provenance.get('offered_request_ids_sha256')
+   330	    if not _is_sha(digest):
+   331	        raise MetricsInputError('provenance.offered_request_ids_sha256 must be a 64-hex sha256')
+   332	    if request_ids_sha256(row['request_id'] for row in run['rows']) != digest:
+   333	        raise MetricsInputError('all-offered cohort: row request ids (in order) differ from '
+   334	                                'provenance.offered_request_ids_sha256')
+   335	
+   336	
+   337	def _validate_windows(run, offered_start, duration, start, end):
+   338	    offered_end = offered_start + duration
+   339	    for index, row in enumerate(run['rows']):
+   340	        if not offered_start <= row['scheduled_at'] <= offered_end:
+   341	            raise MetricsInputError(f'row {index} scheduled_at lies outside the offered window '
+   342	                                    '[offered_start, offered_start + offered_duration_s]')
+   343	        for key in ('sent_at', 'first_content_at', 'terminal_at'):
+   344	            if row[key] is not None and not start <= row[key] <= end:
+   345	                raise MetricsInputError(f'row {index} {key} lies outside the declared envelope '
+   346	                                        '[envelope_start, envelope_end]')
+   347	    if run['envelope_scope'] == 'offered_cohort_observed':
+   348	        last = max([offered_end] + [row['terminal_at'] for row in run['rows'] if row['terminal_at'] is not None])
+   349	        if start != offered_start or abs(end - last) > ENVELOPE_TOLERANCE_S:
+   350	            raise MetricsInputError('offered_cohort_observed envelope must be [offered_start, max(offered_end, last '
+   351	                                    f'terminal_at)] (tolerance {ENVELOPE_TOLERANCE_S} s)')
+   352	
+   353	
+   354	def _contains_key(value, key):
+   355	    if isinstance(value, dict):
+   356	        return key in value or any(_contains_key(item, key) for item in value.values())
+   357	    return isinstance(value, list) and any(_contains_key(item, key) for item in value)
+   358	
+   359	
+   360	def _validate_comparability(record, run):
+   361	    if record is None:
+   362	        return
+   363	    if not isinstance(record, dict) or set(record) != set(COMPARABILITY_FACTS):
+   364	        raise MetricsInputError(f'provenance.comparability keys must be exactly {list(COMPARABILITY_FACTS)}')
+   365	    for key in COMPARABILITY_FACTS:
+   366	        if key == 'clock':
+   367	            _nonempty_str(record[key], 'provenance.comparability.clock')
+   368	        elif not isinstance(record[key], dict) or not record[key]:
+   369	            raise MetricsInputError(f'provenance.comparability.{key} must be a non-empty object')
+   370	    model = record['model']
+   371	    if set(model) != MODEL_FACTS:
+   372	        raise MetricsInputError(f'provenance.comparability.model keys must be exactly {sorted(MODEL_FACTS)}')
+   373	    if not isinstance(model['local_model_path'], str) or not Path(model['local_model_path']).is_absolute():
+   374	        raise MetricsInputError('comparability.model.local_model_path must be an absolute local asset path')
+   375	    if not (_is_sha(model['asset_sha256']) and _is_sha(model['tokenizer_sha256'])):
+   376	        raise MetricsInputError('comparability.model asset_sha256 and tokenizer_sha256 must be 64-hex sha256')
+   377	    _nonempty_str(model['served_alias'], 'comparability.model.served_alias')
+   378	    if model['served_alias_verified'] is not True:
+   379	        raise MetricsInputError('comparability.model.served_alias_verified must be true: an unverified served alias '
+   380	                                'cannot qualify a comparison')
+   381	    generation = record['client_generation']
+   382	    if type(generation.get('ignore_eos')) is not bool:
+   383	        raise MetricsInputError('comparability.client_generation.ignore_eos must be bool')
+   384	    _nonempty_str(generation.get('max_tokens_policy'), 'comparability.client_generation.max_tokens_policy')
+   385	    if _contains_key(record['gateway'], ARM_BUDGET_SETTING):
+   386	        raise MetricsInputError(f'comparability.gateway must not carry the per-arm {ARM_BUDGET_SETTING} (it is the '
+   387	                                'arm control record)')
+   388	    try:
+   389	        _digest(record)
+   390	    except (TypeError, ValueError) as exc:
+   391	        raise MetricsInputError(f'provenance.comparability must be canonical JSON: {exc}') from None
+   392	    if run['slo_missing'] is None and any(row['slo']['requested_ignore_eos'] is not generation['ignore_eos']
+   393	                                          for row in run['rows']):
+   394	        raise MetricsInputError('row slo.requested_ignore_eos differs from comparability.client_generation.ignore_eos')
+   395	
+   396	
+   397	def _rate(count, total):
+   398	    return count / total if total else None
+   399	
+   400	
+   401	def _fate_summary(rows):
+   402	    fates = {fate: 0 for fate in FATES}
+   403	    for row in rows:
+   404	        fates[row['fate']] += 1
+   405	    total = len(rows)
+   406	    failures = sum(fates[fate] for fate in FAILURE_FATES)
+   407	    return {
+   408	        'n_offered': total, 'fates': fates, 'delivered': fates['complete'], 'failures': failures,
+   409	        'rejection_rate': _rate(fates['rejected'], total), 'failure_rate': _rate(failures, total),
+   410	        'not_launched_rate': _rate(fates['not_launched'], total), 'unknown_rate': _rate(fates['unknown'], total),
+   411	        'delivered_fraction': _rate(fates['complete'], total),
+   412	    }
+   413	
+   414	
+   415	def _penalized(rows, origin):
+   416	    return [row['first_content_at'] - row[origin] if row['first_content_at'] is not None else math.inf
+   417	            for row in rows]
+   418	
+   419	
+   420	def _ttft(rows):
+   421	    complete = [row for row in rows if row['fate'] == 'complete']
+   422	    return {
+   423	        'conditional_scheduled': percentile_block(
+   424	            [row['first_content_at'] - row['scheduled_at'] for row in complete], CONDITIONAL_ESTIMAND),
+   425	        'conditional_client_send': percentile_block(
+   426	            [row['first_content_at'] - row['sent_at'] for row in complete], CONDITIONAL_ESTIMAND),
+   427	        'all_offered_penalized_scheduled': percentile_block(_penalized(rows, 'scheduled_at'), PENALIZED_ESTIMAND),
+   428	        'all_offered_penalized_client_send': percentile_block(_penalized(rows, 'sent_at'), PENALIZED_ESTIMAND),
+   429	    }
+   430	
+   431	
+   432	def _natural_slo(run):
+   433	    if run['slo_missing'] is not None:
+   434	        return {
+   435	            'available': False, 'null_reason': 'natural_slo_fields_unavailable', 'missing': list(run['slo_missing']),
+   436	            'substitution': 'none: no TTFT-only or client --ttft-slo substitute', 'natural_slo_good': None,
+   437	            'slo_attainment_fraction': None, 'cohort_slo_goodput_rps': None, 'in_window_slo_goodput_rps': None,
+   438	            'wall_envelope_slo_goodput_rps': None,
+   439	        }, None
+   440	    module = score_http()
+   441	    rows = [{
+   442	        'status': row['slo']['status'], 'finish_reason': row['slo']['finish_reason'],
+   443	        'requested_ignore_eos': row['slo']['requested_ignore_eos'], 'stream_done': row['slo']['stream_done'],
+   444	        'stream_error': row['slo']['stream_error'],
+   445	        'usage': None if row['completion_tokens'] is None else {'completion_tokens': row['completion_tokens']},
+   446	        'scheduled_at': row['scheduled_at'], 'first_content_at': row['first_content_at'],
+   447	        'terminal_at': row['terminal_at'],
+   448	    } for row in run['rows']]
+   449	    scored = module.score(rows, run['offered_duration_s'], offered_start=run['offered_start'],
+   450	                          accounting_started_at=run['envelope_start'], accounting_finished_at=run['envelope_end'])
+   451	    return {
+   452	        'available': True, 'null_reason': None, 'rule': scored['rule'], 'score_http_sha256': SCORE_HTTP_SHA256,
+   453	        'all_offered': scored['all_offered'], 'natural_slo_good': scored['natural_slo_good'],
+   454	        'slo_attainment_fraction': scored['all_offered_good_fraction'],
+   455	        'slo_attainment_fraction_unit': 'dimensionless: natural_slo_good / all_offered',
+   456	        'cohort_slo_goodput_rps': scored['cohort_slo_goodput_rps'], 'cohort_slo_goodput_label': COHORT_LABEL,
+   457	        'in_window_slo_goodput_rps': scored['in_window_slo_goodput_rps'],
+   458	        'wall_envelope_slo_goodput_rps': scored['policy_and_tail_wall_slo_goodput_rps'],
+   459	        'wall_envelope_label': ENVELOPE_LABELS[run['envelope_scope']], 'wall_envelope_scope': run['envelope_scope'],
+   460	        'wall_rate_direction': WALL_RATE_DIRECTION[run['envelope_scope']],
+   461	        'wall_envelope_s': scored['policy_and_tail_wall_s'],
+   462	        'after_offer_tail_and_accounting_s': scored['after_offer_tail_and_accounting_s'],
+   463	        'statuses': scored['statuses'], 'finish_reasons': scored['finish_reasons'],
+   464	        'censored_cap_completions': scored['censored_cap_completions'],
+   465	        'one_token_complete': scored['one_token_complete'],
+   466	    }, [module.natural_good(row) for row in rows]
+   467	
+   468	
+   469	def _throughput(run, rows, envelope_s):
+   470	    duration = run['offered_duration_s']
+   471	    delivered = [row for row in rows if row['fate'] == 'complete']
+   472	    missing = [row for row in delivered if row['completion_tokens'] is None]
+   473	    observed = sum(row['completion_tokens'] for row in delivered if row['completion_tokens'] is not None)
+   474	    upper = observed + sum(row['max_output_tokens'] for row in missing)
+   475	
+   476	    def per_second(window):
+   477	        return {'lower': observed / window, 'upper': upper / window, 'exact': not missing}
+   478	
+   479	    return {
+   480	        'delivered_definition': 'fate complete (client success; includes length-capped completions)',
+   481	        'delivered': len(delivered), 'offered_rps': len(rows) / duration,
+   482	        'cohort_normalized_delivered_rps': len(delivered) / duration, 'cohort_label': COHORT_LABEL,
+   483	        'wall_envelope_delivered_rps': len(delivered) / envelope_s,
+   484	        'wall_envelope_label': ENVELOPE_LABELS[run['envelope_scope']], 'wall_envelope_scope': run['envelope_scope'],
+   485	        'wall_rate_direction': WALL_RATE_DIRECTION[run['envelope_scope']], 'token_rate_scope': TOKEN_RATE_SCOPE,
+   486	        'completion_tokens_observed': observed, 'completion_tokens_missing_usage_rows': len(missing),
+   487	        'completion_tokens_upper_bound': upper,
+   488	        'bounds_rule': 'lower = observed endpoint usage; upper adds max_output_tokens per delivered row lacking usage; '
+   489	                       'no chunk-count or max_tokens substitution as a point value',
+   490	        'cohort_normalized_completion_tokens_per_s': per_second(duration),
+   491	        'wall_envelope_completion_tokens_per_s': per_second(envelope_s),
+   492	        'undelivered_reported_completion_tokens': sum(row['completion_tokens'] for row in rows
+   493	                                                      if row['fate'] != 'complete'
+   494	                                                      and row['completion_tokens'] is not None),
+   495	    }
+   496	
+   497	
+   498	def _groups(rows, good):
+   499	    result = {}
+   500	    for name in GROUPS:
+   501	        members = [index for index, row in enumerate(rows) if group_of(row['group_tokens']) == name]
+   502	        member_rows = [rows[index] for index in members]
+   503	        summary = _fate_summary(member_rows)
+   504	        count = None if good is None else sum(good[index] for index in members)
+   505	        summary.update(
+   506	            natural_slo_good=count,
+   507	            slo_attainment_fraction=None if good is None else _rate(count, len(members)),
+   508	            ttft_conditional_scheduled=percentile_block(
+   509	                [row['first_content_at'] - row['scheduled_at'] for row in member_rows if row['fate'] == 'complete'],
+   510	                CONDITIONAL_ESTIMAND),
+   511	            ttft_all_offered_penalized_scheduled=percentile_block(_penalized(member_rows, 'scheduled_at'),
+   512	                                                                  PENALIZED_ESTIMAND))
+   513	        result[name] = summary
+   514	    return result
+   515	
+   516	
+   517	def _spread(groups, key):
+   518	    used = [name for name in GROUPS if groups[name]['n_offered']]
+   519	    out = {'metric': key, 'groups_used': used, 'k': len(used),
+   520	           'n_offered_by_group': {name: groups[name]['n_offered'] for name in used}, 'worst_min': None,
+   521	           'best_max': None, 'gap': None, 'min_over_max': None, 'jain': None, 'note': JAIN_NOTE}
+   522	    if len(used) < 2:
+   523	        return dict(out, null_reason='fewer_than_two_nonempty_groups')
+   524	    values = [groups[name][key] for name in used]
+   525	    if any(value is None for value in values):
+   526	        return dict(out, null_reason='metric_unavailable')
+   527	    total, low, high = sum(values), min(values), max(values)
+   528	    out.update(worst_min=low, best_max=high, gap=high - low, min_over_max=low / high if high else None,
+   529	               jain=total * total / (len(values) * sum(value * value for value in values)) if total else None,
+   530	               null_reason=None if total else 'all_zero: jain and min_over_max undefined')
+   531	    return out
+   532	
+   533	
+   534	def _fairness(groups):
+   535	    used = [name for name in GROUPS if groups[name]['n_offered']]
+   536	    rejection = {name: groups[name]['rejection_rate'] for name in used}
+   537	    ttft = {name: groups[name]['ttft_conditional_scheduled'] for name in used}
+   538	    numeric = {name: block['p95'] for name, block in ttft.items() if block['p95'] is not None}
+   539	    worst = max(numeric, key=numeric.get) if numeric else None
+   540	    worst_rejection = max(rejection.values()) if rejection else None
+   541	    rejection_groups = [name for name in used if rejection[name] == worst_rejection]
+   542	    return {
+   543	        'scope': 'descriptive across predeclared prompt-token groups; no starvation or fairness guarantee',
+   544	        'slo_attainment_fraction': _spread(groups, 'slo_attainment_fraction'),
+   545	        'delivered_fraction': _spread(groups, 'delivered_fraction'),
+   546	        'worst_group_rejection_rate': worst_rejection,
+   547	        'worst_group_rejection_rate_group': rejection_groups[0] if rejection_groups else None,
+   548	        'worst_group_rejection_rate_n': groups[rejection_groups[0]]['n_offered'] if rejection_groups else None,
+   549	        'worst_group_rejection_rate_tied_groups': rejection_groups,
+   550	        'worst_group_ttft_conditional_scheduled_p95': None if worst is None else numeric[worst],
+   551	        'worst_group_ttft_conditional_scheduled_p95_group': worst,
+   552	        'worst_group_ttft_conditional_scheduled_p95_n': None if worst is None else ttft[worst]['n'],
+   553	        'groups_without_conditional_p95': [name for name in used if name not in numeric],
+   554	    }
+   555	
+   556	
+   557	def _union(intervals):
+   558	    total, current = 0.0, None
+   559	    for start, end in sorted(intervals):
+   560	        if current is None or start > current[1]:
+   561	            if current is not None:
+   562	                total += current[1] - current[0]
+   563	            current = [start, end]
+   564	        else:
+   565	            current[1] = max(current[1], end)
+   566	    return total + (current[1] - current[0] if current is not None else 0.0)
+   567	
+   568	
+   569	def _overhead(run, envelope_s):
+   570	    control = run['control']
+   571	    scope = 'separate from TTFT/E2E/goodput (never added to request latencies); no fabricated solver cost'
+   572	    if control is None:
+   573	        return {'available': False, 'null_reason': run['control_missing'], 'decisions': None, 'union_total_s': None,
+   574	                'union_within_envelope_s': None, 'union_fraction_of_envelope': None, 'durations_s': None,
+   575	                'scope': scope}
+   576	    if control['kind'] == 'static_fixed':
+   577	        return {'available': True, 'kind': 'static_fixed', 'budget': control['budget'], 'basis': control['basis'],
+   578	                'decisions': 0, 'union_total_s': 0.0, 'union_within_envelope_s': 0.0,
+   579	                'union_fraction_of_envelope': 0.0, 'durations_s': percentile_block([]), 'scope': scope}
+   580	    intervals = [tuple(item) for item in control['intervals']]
+   581	    clipped = [(max(start, run['envelope_start']), min(end, run['envelope_end'])) for start, end in intervals]
+   582	    within = _union([item for item in clipped if item[0] <= item[1]])
+   583	    return {'available': True, 'kind': 'measured_intervals', 'source': control['source'],
+   584	            'decisions': len(intervals), 'union_total_s': _union(intervals), 'union_within_envelope_s': within,
+   585	            'union_fraction_of_envelope': within / envelope_s,
+   586	            'durations_s': percentile_block([end - start for start, end in intervals]), 'scope': scope}
+   587	
+   588	
+   589	def _offered_cohort(run):
+   590	    rows, provenance = run['rows'], run['provenance']
+   591	    return {
+   592	        'offered_count': provenance['offered_count'], 'request_ids_sha256': provenance['offered_request_ids_sha256'],
+   593	        'request_shape_sha256': _digest([[row['request_id'], row['group_tokens'], row['max_output_tokens']]
+   594	                                         for row in rows]),
+   595	        'request_ids': [row['request_id'] for row in rows],
+   596	        'relative_scheduled_s': [row['scheduled_at'] - run['offered_start'] for row in rows],
+   597	        'offered_duration_s': run['offered_duration_s'],
+   598	        'basis': 'rows validated against provenance offered_count and ordered request-id digest taken from the '
+   599	                 'frozen offered trace by the producer',
+   600	    }
+   601	
+   602	
+   603	def _comparability(provenance):
+   604	    record = provenance.get('comparability')
+   605	    if record is None:
+   606	        return {'status': 'NOT_RECORDED', 'record': None, 'sha256': None, 'basis': COMPARABILITY_BASIS}
+   607	    return {'status': 'DECLARED', 'record': record, 'sha256': _digest(record), 'basis': COMPARABILITY_BASIS}
+   608	
+   609	
+   610	def compute(run):
+   611	    """Measured metrics for one arm on one offered cohort (strict normalized input)."""
+   612	    validate_run(run)
+   613	    rows = run['rows']
+   614	    envelope_s = run['envelope_end'] - run['envelope_start']
+   615	    natural, good = _natural_slo(run)
+   616	    groups = _groups(rows, good)
+   617	    sent = [row['sent_at'] - row['scheduled_at'] for row in rows if row['sent_at'] is not None]
+   618	    return {
+   619	        'schema': SCHEMA, 'lineage': LINEAGE, 'qualification': QUALIFICATION, 'arm': run['arm'],
+   620	        'purpose': run['purpose'], 'claim_scope': CLAIM_SCOPE[run['purpose']], 'clock_domain': run['clock_domain'],
+   621	        'offered_trace_sha256': run['provenance']['offered_trace_sha256'], 'offered_cohort': _offered_cohort(run),
+   622	        'comparability': _comparability(run['provenance']),
+   623	        'train_selection_sha256': run['provenance'].get('train_selection_sha256'),
+   624	        'windows': {'offered_start': run['offered_start'], 'offered_duration_s': run['offered_duration_s'],
+   625	                    'offered_end': run['offered_start'] + run['offered_duration_s'],
+   626	                    'envelope_start': run['envelope_start'], 'envelope_end': run['envelope_end'],
+   627	                    'envelope_s': envelope_s, 'envelope_scope': run['envelope_scope'],
+   628	                    'envelope_scope_label': ENVELOPE_SCOPES[run['envelope_scope']],
+   629	                    'full_wall_s': envelope_s if run['envelope_scope'] == 'full_wall' else None,
+   630	                    'full_wall_null_reason': None if run['envelope_scope'] == 'full_wall' else
+   631	                    'full wall not recorded: wall-envelope rates use the offered-cohort observed envelope'},
+   632	        'all_offered': len(rows), 'outcomes': _fate_summary(rows), 'ttft_s': _ttft(rows),
+   633	        'send_lag_s': dict(percentile_block(sent, 'sent_at - scheduled_at over sent rows'),
+   634	                           n_not_sent=len(rows) - len(sent), min=min(sent) if sent else None,
+   635	                           n_negative=sum(lag < 0 for lag in sent), early_send_tolerance_s=EARLY_SEND_TOLERANCE_S),
+   636	        'natural_slo': natural, 'throughput': _throughput(run, rows, envelope_s), 'groups': groups,
+   637	        'group_edges': {'le512': '<=512', '513to2048': '513..2048', 'gt2048': '>2048',
+   638	                        'key': 'group_tokens (tokenizer-measured prompt tokens frozen before outcomes)'},
+   639	        'fairness': _fairness(groups), 'controller_overhead': _overhead(run, envelope_s),
+   640	        'fifo_label': FIFO_LABEL, 'fifo_note': FIFO_NOTE, 'provenance': run['provenance'],
+   641	        'claims_not_made': list(CLAIMS_NOT_MADE),
+   642	    }
+   643	
+   644	
+   645	def _decide(candidates):
+   646	    a, b = (candidates[arm] for arm in ('fixed16', 'fixed32'))
+   647	    decided_by = ('primary_natural_slo_good' if a['natural_slo_good'] != b['natural_slo_good'] else
+   648	                  'tie_1_fewer_not_delivered' if a['not_delivered'] != b['not_delivered'] else 'tie_2_lower_budget')
+   649	    selected = min(candidates, key=lambda arm: (-candidates[arm]['natural_slo_good'],
+   650	                                                candidates[arm]['not_delivered'], candidates[arm]['budget']))
+   651	    return selected, decided_by
+   652	
+   653	
+   654	def _binding_error(metrics):
+   655	    """Internal consistency of one compute() result used across arms; None when consistent."""
+   656	    try:
+   657	        cohort, comparability, count = metrics['offered_cohort'], metrics['comparability'], metrics['all_offered']
+   658	        if cohort['offered_count'] != count or len(cohort['request_ids']) != count \
+   659	                or len(cohort['relative_scheduled_s']) != count \
+   660	                or request_ids_sha256(cohort['request_ids']) != cohort['request_ids_sha256']:
+   661	            return 'offered_cohort ids/count/schedule do not match its request-id digest'
+   662	        if comparability['status'] == 'DECLARED' and _digest(comparability['record']) != comparability['sha256']:
+   663	            return 'comparability sha256 does not match its record'
+   664	        _digest(metrics)
+   665	    except (KeyError, TypeError, ValueError) as exc:
+   666	        return f'not a complete canonical {SCHEMA} result ({type(exc).__name__}: {exc})'
+   667	    return None
+   668	
+   669	
+   670	def _cross_arm_refusal(measured):
+   671	    """None when every measured arm has one offered cohort and identical declared comparability facts."""
+   672	    items = list(measured.values())
+   673	    if not items:
+   674	        return None
+   675	
+   676	    def identity(metrics):
+   677	        cohort, windows = metrics['offered_cohort'], metrics['windows']
+   678	        return (metrics['offered_trace_sha256'], metrics['all_offered'], cohort['request_ids_sha256'],
+   679	                cohort['request_shape_sha256'], windows['offered_duration_s'], windows['envelope_scope'])
+   680	
+   681	    first, schedule = items[0], items[0]['offered_cohort']['relative_scheduled_s']
+   682	    if any(identity(metrics) != identity(first) or any(
+   683	            abs(value - other) > SCHEDULE_TOLERANCE_S
+   684	            for value, other in zip(metrics['offered_cohort']['relative_scheduled_s'], schedule))
+   685	           for metrics in items[1:]):
+   686	        return ('measured arms differ in offered trace identity, all-offered count, request ids, request shape, '
+   687	                'relative schedule, duration or envelope scope: incomparable')
+   688	    undeclared = [metrics['arm'] for metrics in items if metrics['comparability']['status'] != 'DECLARED']
+   689	    if undeclared:
+   690	        return (f'comparability UNVERIFIED for {undeclared}: hardware/model assets/verified served alias/backend/'
+   691	                'gateway/resources/code/client generation/clock facts not recorded')
+   692	    reference = first['comparability']['record']
+   693	    differ = [key for key in COMPARABILITY_FACTS
+   694	              if any(_digest(metrics['comparability']['record'][key]) != _digest(reference[key])
+   695	                     for metrics in items[1:])]
+   696	    if differ:
+   697	        return f'incomparable: comparability facts differ {differ}'
+   698	    return None
+   699	
+   700	
+   701	def select_train_fixed(results):
+   702	    """Empirical Train-only fixed16 vs fixed32 choice, frozen before any Eval replay.
+   703	
+   704	    Primary: more natural-SLO good completions (equal offered cohort, so identical to cohort goodput order);
+   705	    tie 1: fewer not-delivered offered requests; tie 2: lower budget.  Refusals are returned, not raised.
+   706	    Both arms need one offered cohort and identical declared comparability facts.  SELECTED binds each candidate's
+   707	    metrics digest and carries its own ``selection_sha256``; freezing it before any Eval replay is a driver/commit
+   708	    protocol obligation that this function cannot observe.
+   709	    """
+   710	    def refused(reason):
+   711	        return {'schema': SELECTION_SCHEMA, 'status': 'REFUSED', 'reason': reason, 'rule': dict(SELECTION_RULE)}
+   712	
+   713	    if not isinstance(results, dict) or set(results) != set(FIXED_BUDGETS):
+   714	        return refused('exactly fixed16 and fixed32 Train measurements are required')
+   715	    for arm, metrics in results.items():
+   716	        if not isinstance(metrics, dict) or metrics.get('schema') != SCHEMA or metrics.get('arm') != arm:
+   717	            return refused(f'{arm}: not a {SCHEMA} result for this arm')
+   718	        if metrics['purpose'] != 'train':
+   719	            return refused(f'{arm}: purpose {metrics["purpose"]!r}; selection uses Train only')
+   720	        overhead = metrics['controller_overhead']
+   721	        if overhead.get('kind') != 'static_fixed' or overhead.get('budget') != FIXED_BUDGETS[arm]:
+   722	            return refused(f'{arm}: not a verified static fixed runtime')
+   723	        if not metrics['natural_slo']['available']:
+   724	            return refused(f'{arm}: natural SLO unavailable ({metrics["natural_slo"]["missing"]}); no TTFT-only '
+   725	                           'substitute')
+   726	        error = _binding_error(metrics)
+   727	        if error:
+   728	            return refused(f'{arm}: {error}')
+   729	    reason = _cross_arm_refusal(results)
+   730	    if reason:
+   731	        return refused(f'fixed16 and fixed32 are not a claim-qualified Train comparison: {reason}')
+   732	    candidates = {arm: {'budget': FIXED_BUDGETS[arm], 'natural_slo_good': metrics['natural_slo']['natural_slo_good'],
+   733	                        'cohort_slo_goodput_rps': metrics['natural_slo']['cohort_slo_goodput_rps'],
+   734	                        'not_delivered': metrics['all_offered'] - metrics['outcomes']['delivered'],
+   735	                        'metrics_sha256': _digest(metrics)}
+   736	                  for arm, metrics in results.items()}
+   737	    selected, decided_by = _decide(candidates)
+   738	    reference = results['fixed16']
+   739	    record = {'schema': SELECTION_SCHEMA, 'status': 'SELECTED', 'purpose': 'train', 'selected_arm': selected,
+   740	              'selected_budget': FIXED_BUDGETS[selected], 'decided_by': decided_by, 'rule': dict(SELECTION_RULE),
+   741	              'candidates': candidates, 'offered_trace_sha256': reference['offered_trace_sha256'],
+   742	              'request_ids_sha256': reference['offered_cohort']['request_ids_sha256'],
+   743	              'request_ids': list(reference['offered_cohort']['request_ids']),
+   744	              'comparability_sha256': reference['comparability']['sha256'],
+   745	              'scope': 'Train in-sample selection; must be frozen before any Eval replay; not a performance claim'}
+   746	    record['selection_sha256'] = _digest(record)
+   747	    return record
+   748	
+   749	
+   750	def _verify_selection(selection):
+   751	    """Raise unless ``selection`` is a complete, self-consistent select_train_fixed v2 record.
+   752	
+   753	    This binds declared digests only: a self-consistent record can still be fabricated, so provenance of the
+   754	    candidate runs remains a driver/commit obligation.
+   755	    """
+   756	    if not isinstance(selection, dict) or selection.get('schema') != SELECTION_SCHEMA:
+   757	        raise MetricsInputError(f'train_selection must be a {SELECTION_SCHEMA} select_train_fixed record')
+   758	    if selection.get('status') == 'REFUSED':
+   759	        if set(selection) != {'schema', 'status', 'reason', 'rule'} or not isinstance(selection['reason'], str) \
+   760	                or not selection['reason'] or selection['rule'] != SELECTION_RULE:
+   761	            raise MetricsInputError('train_selection REFUSED record is incomplete')
+   762	        return
+   763	    if selection.get('status') != 'SELECTED' or set(selection) != SELECTION_KEYS:
+   764	        raise MetricsInputError(f'train_selection SELECTED record keys must be exactly {sorted(SELECTION_KEYS)}')
+   765	    try:
+   766	        digest = _digest({key: value for key, value in selection.items() if key != 'selection_sha256'})
+   767	    except (TypeError, ValueError):
+   768	        raise MetricsInputError('train_selection is not canonical JSON') from None
+   769	    if digest != selection['selection_sha256']:
+   770	        raise MetricsInputError('train_selection selection_sha256 does not match the record (tampered or forged)')
+   771	    candidates = selection['candidates']
+   772	    if selection['purpose'] != 'train' or selection['rule'] != SELECTION_RULE or not isinstance(candidates, dict) \
+   773	            or set(candidates) != set(FIXED_BUDGETS) or any(
+   774	                not isinstance(item, dict) or set(item) != CANDIDATE_KEYS or item['budget'] != FIXED_BUDGETS[arm]
+   775	                or type(item['natural_slo_good']) is not int or type(item['not_delivered']) is not int
+   776	                or not _is_sha(item['metrics_sha256']) for arm, item in candidates.items()):
+   777	        raise MetricsInputError('train_selection purpose, rule or candidates are incomplete')
+   778	    if _decide(candidates) != (selection['selected_arm'], selection['decided_by']) \
+   779	            or selection['selected_budget'] != FIXED_BUDGETS[selection['selected_arm']]:
+   780	        raise MetricsInputError('train_selection decision contradicts its own candidates under the unchanged rule')
+   781	    if not isinstance(selection['request_ids'], list) or not _is_sha(selection['comparability_sha256']) \
+   782	            or request_ids_sha256(selection['request_ids']) != selection['request_ids_sha256']:
+   783	        raise MetricsInputError('train_selection cohort or comparability binding is incomplete')
+   784	
+   785	
+   786	def summarize(metrics):
+   787	    ttft = metrics['ttft_s']
+   788	
+   789	    def q(block):
+   790	        return {key: block[key] for key in ('n', 'p50', 'p95', 'p99', 'p95_is_sample_max', 'p99_is_sample_max',
+   791	                                            'n_failure_penalty')}
+   792	
+   793	    natural, throughput, overhead = metrics['natural_slo'], metrics['throughput'], metrics['controller_overhead']
+   794	    fairness = metrics['fairness']
+   795	    return {
+   796	        'all_offered': metrics['all_offered'], 'envelope_scope': metrics['windows']['envelope_scope'],
+   797	        'fates': metrics['outcomes']['fates'],
+   798	        'rejection_rate': metrics['outcomes']['rejection_rate'], 'failure_rate': metrics['outcomes']['failure_rate'],
+   799	        'not_launched_rate': metrics['outcomes']['not_launched_rate'],
+   800	        'unknown_rate': metrics['outcomes']['unknown_rate'],
+   801	        'ttft_conditional_scheduled': q(ttft['conditional_scheduled']),
+   802	        'ttft_conditional_client_send': q(ttft['conditional_client_send']),
+   803	        'ttft_all_offered_penalized_scheduled': q(ttft['all_offered_penalized_scheduled']),
+   804	        'ttft_all_offered_penalized_client_send': q(ttft['all_offered_penalized_client_send']),
+   805	        'natural_slo_available': natural['available'], 'natural_slo_null_reason': natural['null_reason'],
+   806	        'natural_slo_good': natural['natural_slo_good'], 'slo_attainment_fraction': natural['slo_attainment_fraction'],
+   807	        'cohort_slo_goodput_rps': natural['cohort_slo_goodput_rps'],
+   808	        'wall_envelope_slo_goodput_rps': natural['wall_envelope_slo_goodput_rps'],
+   809	        'cohort_normalized_delivered_rps': throughput['cohort_normalized_delivered_rps'],
+   810	        'wall_envelope_delivered_rps': throughput['wall_envelope_delivered_rps'],
+   811	        'cohort_normalized_completion_tokens_per_s': throughput['cohort_normalized_completion_tokens_per_s'],
+   812	        'wall_envelope_completion_tokens_per_s': throughput['wall_envelope_completion_tokens_per_s'],
+   813	        'jain_slo_attainment': metrics['fairness']['slo_attainment_fraction']['jain'],
+   814	        'jain_delivered_fraction': metrics['fairness']['delivered_fraction']['jain'],
+   815	        'controller_decisions': overhead['decisions'], 'controller_union_within_envelope_s':
+   816	            overhead['union_within_envelope_s'], 'controller_overhead_null_reason': overhead.get('null_reason'),
+   817	        'send_lag_min_s': metrics['send_lag_s']['min'], 'send_lag_n_negative': metrics['send_lag_s']['n_negative'],
+   818	        'wall_rate_direction': throughput['wall_rate_direction'], 'token_rate_scope': throughput['token_rate_scope'],
+   819	        'group_k': fairness['delivered_fraction']['k'],
+   820	        'n_offered_by_group': fairness['delivered_fraction']['n_offered_by_group'],
+   821	        'worst_group_rejection_rate': fairness['worst_group_rejection_rate'],
+   822	        'worst_group_rejection_rate_group': fairness['worst_group_rejection_rate_group'],
+   823	        'worst_group_rejection_rate_n': fairness['worst_group_rejection_rate_n'], 'fairness_note': JAIN_NOTE,
+   824	        'comparability_status': metrics['comparability']['status'],
+   825	        'comparability_sha256': metrics['comparability']['sha256'],
+   826	    }
+   827	
+   828	
+   829	def comparison_table(entries, *, purpose, train_selection=None):
+   830	    """Measured comparison rows for one split; arms absent from ``entries`` are NOT_RUN.  No winner field."""
+   831	    if purpose not in PURPOSES:
+   832	        raise MetricsInputError(f'purpose must be one of {PURPOSES}')
+   833	    if not isinstance(entries, dict) or not set(entries) <= set(RUN_ARMS):
+   834	        raise MetricsInputError(f'entries must map a subset of {RUN_ARMS} (train_selected_fixed is derived)')
+   835	    rows, measured = [], {}
+   836	    for arm in RUN_ARMS:
+   837	        entry = entries.get(arm, {'status': 'NOT_RUN', 'reason': 'not provided'})
+   838	        status = entry.get('status') if isinstance(entry, dict) else None
+   839	        if status == 'MEASURED':
+   840	            metrics = entry.get('metrics')
+   841	            if set(entry) != {'status', 'metrics'} or not isinstance(metrics, dict) or metrics.get('arm') != arm \
+   842	                    or metrics.get('schema') != SCHEMA or metrics.get('purpose') != purpose:
+   843	                raise MetricsInputError(f'{arm}: MEASURED entry needs this arm/split {SCHEMA} metrics')
+   844	            error = _binding_error(metrics)
+   845	            if error:
+   846	                raise MetricsInputError(f'{arm}: {error}')
+   847	            measured[arm] = metrics
+   848	            rows.append({'arm': arm, 'status': status, 'reason': None, 'alias_of': None,
+   849	                         'summary': summarize(metrics)})
+   850	        elif status in ('REFUSED', 'NOT_RUN') and set(entry) == {'status', 'reason'} \
+   851	                and isinstance(entry['reason'], str) and entry['reason']:
+   852	            rows.append({'arm': arm, 'status': status, 'reason': entry['reason'], 'alias_of': None, 'summary': None})
+   853	        else:
+   854	            raise MetricsInputError(f'{arm}: entry status must be MEASURED, REFUSED or NOT_RUN (with reason)')
+   855	    reason = _cross_arm_refusal(measured)
+   856	    if reason:
+   857	        raise MetricsInputError(reason)
+   858	    rows.insert(2, _alias_row(train_selection, purpose, measured, rows))
+   859	    reference = next(iter(measured.values()), None)
+   860	    comparability = {'status': 'NO_MEASURED_ARMS', 'sha256': None, 'record': None, 'basis': COMPARABILITY_BASIS} \
+   861	        if reference is None else {'status': 'DECLARED_IDENTICAL', 'sha256': reference['comparability']['sha256'],
+   862	                                   'record': reference['comparability']['record'], 'basis': COMPARABILITY_BASIS}
+   863	    return {'schema': SCHEMA + '-table', 'lineage': LINEAGE, 'qualification': QUALIFICATION, 'purpose': purpose,
+   864	            'claim_scope': CLAIM_SCOPE[purpose],
+   865	            'offered_trace_sha256': reference and reference['offered_trace_sha256'],
+   866	            'all_offered': reference and reference['all_offered'],
+   867	            'request_ids_sha256': reference and reference['offered_cohort']['request_ids_sha256'],
+   868	            'offered_duration_s': reference and reference['windows']['offered_duration_s'],
+   869	            'envelope_scope': reference and reference['windows']['envelope_scope'], 'comparability': comparability,
+   870	            'rows': rows, 'fifo_label': FIFO_LABEL, 'fifo_note': FIFO_NOTE, 'claims_not_made': list(CLAIMS_NOT_MADE)}
+   871	
+   872	
+   873	def _alias_row(selection, purpose, measured, rows):
+   874	    base = {'arm': 'train_selected_fixed', 'alias_of': None, 'summary': None, 'selection': None}
+   875	    if selection is None:
+   876	        return dict(base, status='NOT_RUN', reason='no Train selection provided')
+   877	    _verify_selection(selection)
+   878	    if selection['status'] == 'REFUSED':
+   879	        return dict(base, status='REFUSED', reason=f'Train selection refused: {selection["reason"]}')
+   880	    target = selection['selected_arm']
+   881	    base.update(alias_of=target, selection={key: selection[key] for key in (
+   882	        'selection_sha256', 'decided_by', 'candidates', 'offered_trace_sha256', 'request_ids_sha256')})
+   883	    if purpose == 'train':
+   884	        for arm in FIXED_BUDGETS:
+   885	            if arm not in measured or _digest(measured[arm]) != selection['candidates'][arm]['metrics_sha256']:
+   886	                raise MetricsInputError(f'Train selection candidates are not the measured {arm} of this Train table')
+   887	    elif measured:
+   888	        reference = next(iter(measured.values()))
+   889	        cohort = reference['offered_cohort']
+   890	        if selection['offered_trace_sha256'] == reference['offered_trace_sha256'] \
+   891	                or selection['request_ids_sha256'] == cohort['request_ids_sha256'] \
+   892	                or set(selection['request_ids']) & set(cohort['request_ids']):
+   893	            raise MetricsInputError('positive Train/Eval reuse signal: the Eval cohort shares the Train trace sha256, '
+   894	                                    'request-id digest or request ids (passing this check is not disjointness proof)')
+   895	        if reference['comparability']['sha256'] != selection['comparability_sha256']:
+   896	            raise MetricsInputError('Eval arms differ from the Train selection comparability facts (sha256)')
+   897	        recorded = {arm: metrics['train_selection_sha256'] for arm, metrics in measured.items()}
+   898	        if any(value is not None and value != selection['selection_sha256'] for value in recorded.values()):
+   899	            raise MetricsInputError('Eval arms record a different train_selection_sha256 than the provided selection')
+   900	        unbound = sorted(arm for arm, value in recorded.items() if value is None)
+   901	        if unbound:
+   902	            return dict(base, status='REFUSED', reason=f'selection provenance UNVERIFIED: Eval arms {unbound} do not '
+   903	                                                       'record train_selection_sha256')
+   904	    source = next(row for row in rows if row['arm'] == target)
+   905	    return dict(base, status='ALIAS' if source['status'] == 'MEASURED' else source['status'],
+   906	                reason=source['reason'], summary=source['summary'],
+   907	                note='alias of a measured static fixed arm, not an independent algorithm')
+   908	
+   909	
+   910	# ----------------------------------------------------------------------------------------------------------------
+   911	# run_trace_pilot.py adapter (raw sources: run_trace_pilot.py c02808e7, sustained_load.py 278906b8,
+   912	# run_budget_pilot.py 86dae681, trace_workload.py 98f6c818, nominal_workload.py 614ae110)
+   913	# ----------------------------------------------------------------------------------------------------------------
+   914	RAW_FILES = ('manifest.json', 'client.json', 'trace.json', 'budget_changes.json')
+   915	RESULT_FIELDS = frozenset({'scheduled_at', 'workload', 'request_id', 'client_request_id', 'stream_complete',
+   916	                           'started_at', 'first_content_at', 'finished_at', 'status', 'ttft', 'end_to_end',
+   917	                           'input_tokens', 'output_tokens', 'total_tokens', 'max_output_tokens', 'error_type',
+   918	                           'error_message', 'error_phase', 'success', 'rejected'})
+   919	LAUNCHED_KEYS = RESULT_FIELDS | {'trace_id', 'expected_input_tokens'}
+   920	PLACEHOLDER_KEYS = frozenset({'trace_id', 'client_request_id', 'request_id', 'scheduled_at', 'started_at',
+   921	                              'first_content_at', 'finished_at', 'status', 'ttft', 'end_to_end', 'stream_complete',
+   922	                              'input_tokens', 'output_tokens', 'max_output_tokens', 'expected_input_tokens',
+   923	                              'success', 'rejected', 'error_type', 'error_message', 'error_phase'})
+   924	TRACE_REQUEST_KEYS = frozenset({'trace_id', 'arrival_seconds', 'input_tokens', 'max_tokens', 'prompt'})
+   925	NOT_LAUNCHED_MESSAGE = 'collection interrupted'
+   926	STREAM_ERROR_TYPES = ('InvalidSSE', 'IncompleteStream', 'EmptyContentStream')
+   927	OFFERED_TAPE_SCHEMA = 'r24-resume-p0-offered-tape-v1'
+   928	SLO_MISSING_RUN_TRACE_PILOT = [
+   929	    'finish_reason: sustained_load.consume_request never records it (stop vs length unknown)',
+   930	    'requested_ignore_eos: not recorded per row (replay uses the code default; not a per-row observation)',
+   931	    'stream_error: no distinct per-row field (only error_type)',
+   932	]
+   933	RAW_MAPPING = {
+   934	    'files': {'manifest.json': 'schema_version 1, status, config=vars(args), measurement_start/end, provenance',
+   935	              'client.json': '{"requests": rows}; row = dataclasses.asdict(RequestResult) + trace_id + '
+   936	                             'expected_input_tokens, or the run_trace_pilot.unlaunched placeholder',
+   937	              'trace.json': 'trace_workload schema_version 1 copy; sha256 must equal manifest.trace_sha256',
+   938	              'budget_changes.json': 'budget actuation records (static fixed: exactly one, acknowledged before '
+   939	                                     'measurement_start)'},
+   940	    'clock_domain': 'runner time.monotonic(); scheduled_at must equal measurement_start + arrival_seconds',
+   941	    'request_id': 'trace_id (client row order must equal trace order)',
+   942	    'group_tokens': 'expected_input_tokens (== trace input_tokens: tokenizer-measured chat-template count)',
+   943	    'max_output_tokens': 'max_output_tokens (== trace max_tokens)',
+   944	    'scheduled_at': 'scheduled_at', 'sent_at': 'started_at (consume_request start, before POST)',
+   945	    'first_content_at': 'first_content_at (first SSE event with content)',
+   946	    'terminal_at': 'finished_at (consume_request finally)',
+   947	    'completion_tokens': 'output_tokens (usage.completion_tokens from the include_usage chunk) or null',
+   948	    'fate': {'complete': 'success true', 'rejected': 'rejected true (HTTP 503 admission-capacity body)',
+   949	             'not_launched': 'placeholder NotLaunched, message "collection interrupted", no observation',
+   950	             'unknown': 'placeholder with any other message (send state unknown) or an unmatched combination',
+   951	             'cancelled': 'error_type CancelledError', 'http_error': 'error_type HTTPStatusError',
+   952	             'stream_error': 'error_type InvalidSSE|IncompleteStream|EmptyContentStream',
+   953	             'transport_error': 'any other error_type (httpx exception class name)'},
+   954	    'slo': 'null for every row: natural SLO refused (see SLO_MISSING_RUN_TRACE_PILOT)',
+   955	    'envelope': 'scope offered_cohort_observed: start = measurement_start; end = max(measurement_end, every '
+   956	                'finished_at); full wall (gateway start, warmup, budget install, final drain) is not one recorded '
+   957	                'monotonic interval, so full_wall_s stays null',
+   958	    'model': 'trace model must be an absolute local path equal to gateway_launch.settings.MODEL_NAME, and '
+   959	             'initial_metrics.tokenizer_available must be true',
+   960	    'control': 'fixed arms only: static --budget verified; closed-loop arms are refused by this adapter',
+   961	}
+   962	ADAPTER_QUALIFIERS = [
+   963	    'command argv is not recorded by run_trace_pilot (config=vars(args) preserved instead)',
+   964	    'cache_policy is self-reported by the runner; the backend prefix-cache launch must be verified separately',
+   965	    'backend launch provenance is not observed by the runner',
+   966	    'analyze_trace_pilot load/control fidelity is not evaluated here; preserve the runner exit status and report',
+   967	    'static budget: runner acknowledgement before measurement_start; gateway-internal application semantics not '
+   968	    'verified by this adapter',
+   969	    'FIFO/FCFS backend ordering unverified (label pending)',
+   970	    'gateway zero character-fallback and cost-spec identity are not verified here (gateway.py unread); only startup '
+   971	    'tokenizer_available and MODEL_NAME == absolute local trace model are checked',
+   972	    'full wall not recorded by run_trace_pilot: wall-envelope rates use the offered-cohort observed envelope, a '
+   973	    'lower bound on the full wall (warmup_start/warmup_end preserved)',
+   974	]
+   975	MANIFEST_PRESERVED = ('schema_version', 'status', 'error', 'config', 'created_at', 'git_commit', 'git_dirty',
+   976	                      'code_sha256', 'packages', 'python', 'gpu', 'models', 'run_id', 'trace_sha256',
+   977	                      'input_trace_sha256', 'replay_plan_sha256', 'control_protocol', 'experiment_protocol',
+   978	                      'gateway_launch', 'backend_launch_provenance', 'package_scope', 'host', 'measurement_start',
+   979	                      'measurement_end', 'warmup_start', 'warmup_end', 'forced_gateway_kill', 'collector_errors',
+   980	                      'initial_metrics', 'post_warmup_metrics', 'final_metrics')
+   981	TAPE_PRESERVED = ('kind', 'offered_tape_schema', 'offered_tape_sha256', 'generator', 'protocol_id', 'purpose',
+   982	                  'source_id', 'tokenizer_sha256', 'measured_equals_requested_count')
+   983	
+   984	
+   985	def _strict_json(data, name):
+   986	    def pairs(items):
+   987	        keys = [key for key, _ in items]
+   988	        if len(keys) != len(set(keys)):
+   989	            raise AdapterRefusal(f'{name}: duplicate JSON object key')
+   990	        return dict(items)
+   991	
+   992	    def constant(token):
+   993	        raise AdapterRefusal(f'{name}: non-finite JSON constant {token}')
+   994	
+   995	    try:
+   996	        return json.loads(data, object_pairs_hook=pairs, parse_constant=constant)
+   997	    except AdapterRefusal:
+   998	        raise
+   999	    except ValueError as exc:
+  1000	        raise AdapterRefusal(f'{name}: not JSON') from exc
+  1001	
+  1002	
+  1003	def _raw_number(value, name, optional=True):
+  1004	    if value is None and optional:
+  1005	        return None
+  1006	    if not _is_number(value):
+  1007	        raise AdapterRefusal(f'{name} must be a finite number')
+  1008	    return value
+  1009	
+  1010	
+  1011	def _map_row(raw, request, start, index):
+  1012	    name = f'client row {index}'
+  1013	    if not isinstance(raw, dict):
+  1014	        raise AdapterRefusal(f'{name}: not an object')
+  1015	    if raw.get('trace_id') != request['trace_id']:
+  1016	        raise AdapterRefusal(f'{name}: trace_id differs from trace order')
+  1017	    if type(raw.get('expected_input_tokens')) is not int or raw['expected_input_tokens'] != request['input_tokens']:
+  1018	        raise AdapterRefusal(f'{name}: expected_input_tokens differs from the trace')
+  1019	    if raw.get('max_output_tokens') != request['max_tokens']:
+  1020	        raise AdapterRefusal(f'{name}: max_output_tokens differs from the trace')
+  1021	    scheduled = _raw_number(raw.get('scheduled_at'), f'{name} scheduled_at', optional=False)
+  1022	    if abs(scheduled - (start + request['arrival_seconds'])) > 1e-6:
+  1023	        raise AdapterRefusal(f'{name}: scheduled_at is not measurement_start + arrival_seconds')
+  1024	    keys = set(raw)
+  1025	    sent = first = terminal = tokens = None
+  1026	    if keys == PLACEHOLDER_KEYS:
+  1027	        if raw['error_type'] != 'NotLaunched' or raw['success'] is not False or raw['rejected'] is not False:
+  1028	            raise AdapterRefusal(f'{name}: placeholder row is not a NotLaunched record')
+  1029	        pristine = (raw['error_message'] == NOT_LAUNCHED_MESSAGE and raw['stream_complete'] is False and
+  1030	                    all(raw[key] is None for key in ('request_id', 'started_at', 'first_content_at', 'finished_at',
+  1031	                                                     'status', 'ttft', 'end_to_end', 'input_tokens', 'output_tokens')))
+  1032	        fate = 'not_launched' if pristine else 'unknown'
+  1033	    elif keys == LAUNCHED_KEYS:
+  1034	        sent, first, terminal = (_raw_number(raw[key], f'{name} {key}')
+  1035	                                 for key in ('started_at', 'first_content_at', 'finished_at'))
+  1036	        ttft = _raw_number(raw['ttft'], f'{name} ttft')
+  1037	        if (ttft is None) != (first is None) or (ttft is not None and (sent is None or abs(ttft - (first - sent)) > 1e-9)):
+  1038	            raise AdapterRefusal(f'{name}: ttft is not first_content_at - started_at')
+  1039	        tokens = raw['output_tokens']
+  1040	        if tokens is not None and (type(tokens) is not int or tokens < 0):
+  1041	            raise AdapterRefusal(f'{name}: output_tokens must be null or an int >= 0')
+  1042	        if type(raw['success']) is not bool or type(raw['rejected']) is not bool:
+  1043	            raise AdapterRefusal(f'{name}: success/rejected must be bool')
+  1044	        error_type = raw['error_type']
+  1045	        if raw['success']:
+  1046	            if raw['rejected'] or error_type is not None or raw['stream_complete'] is not True:
+  1047	                raise AdapterRefusal(f'{name}: inconsistent success record')
+  1048	            fate = 'complete'
+  1049	        elif raw['rejected']:
+  1050	            if error_type is not None or raw['status'] != 503:
+  1051	                raise AdapterRefusal(f'{name}: inconsistent rejection record')
+  1052	            fate = 'rejected'
+  1053	        elif error_type == 'CancelledError':
+  1054	            fate = 'cancelled'
+  1055	        elif error_type == 'HTTPStatusError':
+  1056	            fate = 'http_error'
+  1057	        elif error_type in STREAM_ERROR_TYPES:
+  1058	            fate = 'stream_error'
+  1059	        elif isinstance(error_type, str) and error_type and error_type != 'NotLaunched':
+  1060	            fate = 'transport_error'
+  1061	        else:
+  1062	            fate = 'unknown'
+  1063	    else:
+  1064	        raise AdapterRefusal(f'{name}: raw schema drift (missing {sorted(LAUNCHED_KEYS - keys)}, '
+  1065	                             f'extra {sorted(keys - LAUNCHED_KEYS)})')
+  1066	    return {'request_id': raw['trace_id'], 'group_tokens': raw['expected_input_tokens'],
+  1067	            'max_output_tokens': raw['max_output_tokens'], 'scheduled_at': scheduled, 'sent_at': sent,
+  1068	            'first_content_at': first, 'terminal_at': terminal, 'fate': fate, 'completion_tokens': tokens,
+  1069	            'slo': None}
+  1070	
+  1071	
+  1072	def _static_control(manifest, config, changes, start, arm):
+  1073	    budget = FIXED_BUDGETS[arm]
+  1074	    if config.get('budget_schedule') is not None:
+  1075	        raise AdapterRefusal(f'{arm}: fixed arm must use --budget, not a --budget-schedule')
+  1076	    if type(config.get('budget')) not in (int, float) or float(config['budget']) != budget:
+  1077	        raise AdapterRefusal(f'{arm}: config budget {config.get("budget")!r} != {budget}')
+  1078	    if not isinstance(changes, list) or len(changes) != 1 or not isinstance(changes[0], dict):
+  1079	        raise AdapterRefusal(f'{arm}: static run needs exactly one budget actuation record')
+  1080	    record = changes[0]
+  1081	    sent = _raw_number(record.get('sent'), 'budget record sent', optional=False)
+  1082	    acknowledged = _raw_number(record.get('acknowledged'), 'budget record acknowledged', optional=False)
+  1083	    if not sent <= acknowledged < start or record.get('target') != start:
+  1084	        raise AdapterRefusal(f'{arm}: budget not acknowledged before measurement_start')
+  1085	    if record.get('status', 'acknowledged') != 'acknowledged' or record.get('requested_budget', budget) != budget:
+  1086	        raise AdapterRefusal(f'{arm}: budget actuation record is not an acknowledged {budget} installation')
+  1087	    launch = manifest.get('gateway_launch')
+  1088	    settings = launch.get('settings') if isinstance(launch, dict) else None
+  1089	    if not isinstance(settings, dict) or settings.get('ADMISSION_MODE') != 'cost_aware' \
+  1090	            or settings.get('MAX_ADMITTED_COST') != str(float(config['budget'])):
+  1091	        raise AdapterRefusal(f'{arm}: gateway launch settings do not show cost_aware admission at budget {budget}')
+  1092	    return {'kind': 'static_fixed', 'budget': budget,
+  1093	            'basis': 'static_budget_installed_before_offered_start_verified: config --budget, gateway launch '
+  1094	                     'MAX_ADMITTED_COST and one acknowledged actuation before measurement_start'}
+  1095	
+  1096	
+  1097	def _model_fidelity(manifest, trace):
+  1098	    model = trace.get('model')
+  1099	    if not isinstance(model, str) or not model.startswith('/'):
+  1100	        raise AdapterRefusal(f'trace model {model!r}: protocol requires the absolute local model path (a repo id '
+  1101	                             'MODEL_NAME can silently use the gateway character fallback)')
+  1102	    launch = manifest.get('gateway_launch')
+  1103	    settings = launch.get('settings') if isinstance(launch, dict) else None
+  1104	    if not isinstance(settings, dict) or settings.get('MODEL_NAME') != model:
+  1105	        raise AdapterRefusal('gateway launch MODEL_NAME differs from the trace model')
+  1106	    initial = manifest.get('initial_metrics')
+  1107	    if not isinstance(initial, dict) or initial.get('tokenizer_available') is not True:
+  1108	        raise AdapterRefusal('gateway initial metrics do not show tokenizer_available true')
+  1109	
+  1110	
+  1111	def adapt_run_trace_pilot(output_dir, *, arm, purpose):
+  1112	    """Normalized run for one static fixed arm from a run_trace_pilot.py output directory (see RAW_MAPPING)."""
+  1113	    if arm not in FIXED_BUDGETS:
+  1114	        raise AdapterRefusal(f'{arm!r}: run_trace_pilot hosts only static --budget or a predeclared open-loop '
+  1115	                             '--budget-schedule with a process-internal admin key, so closed-loop arms need the '
+  1116	                             'coordinator journal; this adapter maps fixed16/fixed32 only')
+  1117	    if purpose not in PURPOSES:
+  1118	        raise AdapterRefusal(f'purpose must be one of {PURPOSES}')
+  1119	    out = Path(output_dir)
+  1120	    data, parsed = {}, {}
+  1121	    for name in RAW_FILES:
+  1122	        try:
+  1123	            data[name] = (out / name).read_bytes()
+  1124	        except OSError as exc:
+  1125	            raise AdapterRefusal(f'{name}: unreadable ({type(exc).__name__})') from exc
+  1126	        parsed[name] = _strict_json(data[name], name)
+  1127	    manifest, client, trace, changes = (parsed[name] for name in RAW_FILES)
+  1128	    if not isinstance(manifest, dict) or manifest.get('schema_version') != 1:
+  1129	        raise AdapterRefusal('manifest.json: schema_version must be 1')
+  1130	    if manifest.get('status') != 'collected':
+  1131	        raise AdapterRefusal(f'manifest status {manifest.get("status")!r} != collected '
+  1132	                             f'(error {manifest.get("error")!r}); failed captures are refused, not rescored')
+  1133	    config = manifest.get('config')
+  1134	    if not isinstance(config, dict):
+  1135	        raise AdapterRefusal('manifest.json: config missing')
+  1136	    if hashlib.sha256(data['trace.json']).hexdigest() != manifest.get('trace_sha256'):
+  1137	        raise AdapterRefusal('trace.json sha256 differs from manifest.trace_sha256')
+  1138	    if not isinstance(trace, dict) or trace.get('schema_version') != 1 or not isinstance(trace.get('requests'), list) \
+  1139	            or not trace['requests'] or not _is_number(trace.get('duration_seconds')):
+  1140	        raise AdapterRefusal('trace.json: not a schema_version 1 replay trace')
+  1141	    for index, request in enumerate(trace['requests']):
+  1142	        if not isinstance(request, dict) or set(request) != TRACE_REQUEST_KEYS \
+  1143	                or not _is_number(request['arrival_seconds']) or type(request['input_tokens']) is not int \
+  1144	                or type(request['max_tokens']) is not int:
+  1145	            raise AdapterRefusal(f'trace request {index}: not a schema_version 1 request')
+  1146	    provenance = trace.get('provenance')
+  1147	    if not isinstance(provenance, dict) or provenance.get('offered_tape_schema') != OFFERED_TAPE_SCHEMA:
+  1148	        raise AdapterRefusal(f'trace.json: provenance is not a nominal {OFFERED_TAPE_SCHEMA} replay')
+  1149	    if provenance.get('purpose') != purpose:
+  1150	        raise AdapterRefusal(f'trace provenance purpose {provenance.get("purpose")!r} != declared {purpose!r}')
+  1151	    if config.get('cache_policy') != 'disabled':
+  1152	        raise AdapterRefusal(f'cache_policy {config.get("cache_policy")!r}: protocol requires disabled')
+  1153	    _model_fidelity(manifest, trace)
+  1154	    start = _raw_number(manifest.get('measurement_start'), 'measurement_start', optional=False)
+  1155	    end = _raw_number(manifest.get('measurement_end'), 'measurement_end', optional=False)
+  1156	    if abs((end - start) - trace['duration_seconds']) > 1e-6:
+  1157	        raise AdapterRefusal('measurement window differs from the trace duration')
+  1158	    if not isinstance(client, dict) or set(client) != {'requests'} or not isinstance(client['requests'], list) \
+  1159	            or len(client['requests']) != len(trace['requests']):
+  1160	        raise AdapterRefusal('client.json: request rows do not cover the offered trace one-to-one')
+  1161	    rows = [_map_row(raw, request, start, index)
+  1162	            for index, (raw, request) in enumerate(zip(client['requests'], trace['requests']))]
+  1163	    control = _static_control(manifest, config, changes, start, arm)
+  1164	    error_types = {}
+  1165	    for raw in client['requests']:
+  1166	        error_types[str(raw['error_type'])] = error_types.get(str(raw['error_type']), 0) + 1
+  1167	    run = {
+  1168	        'arm': arm, 'purpose': purpose, 'clock_domain': 'run_trace_pilot runner time.monotonic()',
+  1169	        'offered_start': start, 'offered_duration_s': trace['duration_seconds'], 'envelope_start': start,
+  1170	        'envelope_end': max([end] + [row['terminal_at'] for row in rows if row['terminal_at'] is not None]),
+  1171	        'envelope_scope': 'offered_cohort_observed', 'rows': rows, 'slo_missing': list(SLO_MISSING_RUN_TRACE_PILOT), 'control': control, 'control_missing': None,
+  1172	        'provenance': {
+  1173	            'source': 'run_trace_pilot.py output directory', 'output_dir': str(out),
+  1174	            'raw_file_sha256': {name: hashlib.sha256(data[name]).hexdigest() for name in RAW_FILES},
+  1175	            'offered_trace_sha256': manifest['trace_sha256'],
+  1176	            'offered_count': len(trace['requests']),
+  1177	            'offered_request_ids_sha256': request_ids_sha256(request['trace_id'] for request in trace['requests']),
+  1178	            'offered_tape': {key: provenance.get(key) for key in TAPE_PRESERVED},
+  1179	            'manifest': {key: manifest.get(key) for key in MANIFEST_PRESERVED},
+  1180	            'raw_error_type_counts': error_types,
+  1181	            'client_config_slo_not_used': {'ttft_slo': config.get('ttft_slo'), 'e2e_slo': config.get('e2e_slo')},
+  1182	            'mapping': RAW_MAPPING, 'qualifiers': list(ADAPTER_QUALIFIERS),
+  1183	        },
+  1184	    }
+  1185	    try:
+  1186	        validate_run(run)
+  1187	    except MetricsInputError as exc:
+  1188	        raise AdapterRefusal(f'normalized run invalid: {exc}') from exc
+  1189	    return run
+  1190	
+  1191	
+  1192	def main(argv=None):
+  1193	    parser = argparse.ArgumentParser(description='Measured P0 nominal metrics for one static fixed run_trace_pilot '
+  1194	                                                 'output directory (no winner, no qualification).',
+  1195	                                     allow_abbrev=False)
+  1196	    parser.add_argument('--output-dir', required=True)
+  1197	    parser.add_argument('--arm', required=True, choices=sorted(FIXED_BUDGETS))
+  1198	    parser.add_argument('--purpose', required=True, choices=PURPOSES)
+  1199	    args = parser.parse_args(argv)
+  1200	    try:
+  1201	        metrics = compute(adapt_run_trace_pilot(args.output_dir, arm=args.arm, purpose=args.purpose))
+  1202	    except (AdapterRefusal, MetricsInputError) as exc:
+  1203	        print(json.dumps({'status': 'REFUSED', 'error': f'{type(exc).__name__}: {exc}'}, sort_keys=True),
+  1204	              file=sys.stderr)
+  1205	        return 1
+  1206	    print(json.dumps(metrics, sort_keys=True, indent=1, allow_nan=False))
+  1207	    return 0
+  1208	
+  1209	
+  1210	if __name__ == '__main__':
+  1211	    sys.exit(main())

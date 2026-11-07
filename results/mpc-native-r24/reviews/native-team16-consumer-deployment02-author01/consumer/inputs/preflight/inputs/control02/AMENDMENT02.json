@@ -1,0 +1,61 @@
+{
+  "schema": "team16-control02-before-source-amendment-v1",
+  "status": "CPU preparation only; Mayor review and a new freeze required before any new native attempt",
+  "lineage": {
+    "frozen_originals_commit_reported_by_Mayor": "c7f8e52c03baa392af5b7fa77f23de7ad46a0c50",
+    "control01_seal_sha256": "7f143ba1987ea9084ff05195a04f98221de0b89e23ca0a5e001582b477aa280c",
+    "launcher01_seal_sha256": "727d43dd9b5215da40bb3309bb97026ddab880320822d25933a310861f28b0f2",
+    "native01_raw_archive_sha256_reported_by_Mayor": "506a516a6dc0a6e120efb493c25e08accacdb9003cea545cbd8e6ceac9c03124",
+    "native01_disposition": "FAIL, immutable. Exact old replay must continue to fail final_native_not_drained.",
+    "native01_final_pending_route_identity": "unknown; no post-client full queue was captured",
+    "startup067_068_069": "Keep all three genuine observations. A zero-work pending route followed by two empty observations is startup evidence only, not a reconstruction of final stock."
+  },
+  "unchanged_science": {
+    "command_sequence": ["fresh16", "expired32", "stale32", "fresh32"],
+    "command_ttl_s": 0.5,
+    "rejection_watch_s": 0.75,
+    "client_offers": 8,
+    "completion_cap_per_offer": 16,
+    "startup_warmup_offers": 1,
+    "startup_warmup_completion_cap": 16,
+    "active_s": 20,
+    "final_readonly_s": 3,
+    "outer_soft_s": 260,
+    "startup_s": 180,
+    "teardown_s": 40,
+    "postflight_IO_s": 17,
+    "extra_actuator_inference_retry_restore_or_MPC": false
+  },
+  "terminal_observation_scope_changed": true,
+  "terminal_scope": "After the unchanged active protocol, establish source-observed empty full scheduler, issued queue, ghost inventory and frontend at two complete consecutive sampling intervals inside the already-frozen final3s window. Not persistent absence, GPU-future completion or general hardware quiescence.",
+  "legacy_scalar_evidence": "Always retain the original final public snapshot and final /pr33-native/state receipt, including nonempty pending stock and its scalar criterion failure. Do not relabel or pass old01. New02's distinct bounded end-of-window criterion still requires every scalar count zero at BOTH qualifying full observations, plus genuinely empty full inventories.",
+  "fixed_final_readonly_procedure": {
+    "start": "Anchor one absolute monotonic deadline before final public and legacy native GETs; no reset after either receipt.",
+    "order": ["GET /admin/mpc/state", "GET /pr33-native/state", "GET /pr33-native/queue-state repeated under the declared cap"],
+    "full_queue_first_sample": "Immediately after the two legacy GETs, if time remains.",
+    "full_queue_receipt_to_next_send_delay_s": 0.25,
+    "maximum_full_queue_GETs": 9,
+    "required_consecutive_empty_observations": 2,
+    "early_stop": "Stop on two qualifying empty full observations; otherwise valid nonempty observations reset the consecutive-empty run.",
+    "nonempty": "Preserve every raw frame, including ghost and zero-work routes; no extra inference or actuator to force drain.",
+    "invalid_unknown_refused_late": "Preserve raw or cancelled exchange and explicit static refusal; stop and fail closed. No subsequent good sample can erase invalid evidence.",
+    "deadline": "All sends, source intervals, receives and final observation assessment must be inside the same absolute3s interval. Async timeout plus explicit post-IO clock checks; late receipts cannot qualify.",
+    "bindings": ["exact queue and base observer source hashes", "common client/server clock domain", "unchanged native epoch", "send/source/frontend/receive chronology", "source age at receipt at most0.5s", "full scheduler inventory and queue-count conservation", "complete and no refusal reasons", "all offered/unknown outcomes retained"],
+    "poll_count_or_deadline_exhausted": "Explicit refusal; do not extend3s or tune cadence/count after results."
+  },
+  "launcher_teardown_allocation": {
+    "normal_child_natural_completion_s": 7,
+    "frozen_terminate_owned_grace0_SIGKILL_max_wait_s": 30,
+    "root_process_join_max_s": 2,
+    "scheduling_and_bookkeeping_reserve_s": 1,
+    "total_s": 40,
+    "anchor": "Actual attach-finished receipt; never reset while SDK/source postflight is running.",
+    "normal_policy": "No SIGTERM at5s. Give the child the declared natural completion window, including postflight. If it is still running at7s, record engineering failure and enter owned-only forced cleanup without adding another grace.",
+    "abnormal_policy": "Owned PIDfd cancellation may start immediately for active/startup/external failure, but cooperative waiting is contained in the same initial7s, never added after it.",
+    "success": "Require valid complete child outcome, client returncode0, no error/postflight interruption, original source and SDK postchecks, true phase bounds, all owned helpers joined, private configuration removed and export privacy scan. Unknown/missing output refuses.",
+    "hard_realtime_limitation": "OS scheduling or uninterruptible tasks can defeat elapsed-time termination guarantees. Preserve failure/survivors and refuse export/success; never claim an orphan-free success without joined evidence."
+  },
+  "author_restrictions": ["no GPU", "no network or SSH", "no Git", "no nested agents", "no product or SDK edits", "no edits or native reruns of spent capsules"],
+  "native_mpc_permitted": false,
+  "deployable": false
+}

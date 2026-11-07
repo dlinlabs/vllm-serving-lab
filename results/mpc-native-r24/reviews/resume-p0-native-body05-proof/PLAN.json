@@ -1,0 +1,8 @@
+{
+  "base_commit": "bb367465ecc68bee666d99396b6feaaac931c3cb",
+  "scope": "Native Train engineering caller; not model research or Native execution authority.",
+  "change": "Run the caller-owned async warmup/episode body inside the existing validated synchronous lifecycle context; retain its interruption, cleanup, source and ownership guards. Default CLI remains lifecycle-only. New standalone qualification CLI is default OFF.",
+  "request_accounting": "Three immutable Train warmup requests, then existing five-request admission-boundary probe; preserve raw captures and explicit write-failure receipt. Never set unknown admin POST count to zero.",
+  "cpu": "One Python3.12 runner: existing seven lifecycle controls plus owned-body success/failure, qualification default-OFF and nonfinite capture persistence failure. No actual HTTP, service, model, GPU or SSH.",
+  "execution_held": "Episode04 must pass; exact new source/caller must be accepted and preregistered before Native inference. No Fixed Train or Eval."
+}

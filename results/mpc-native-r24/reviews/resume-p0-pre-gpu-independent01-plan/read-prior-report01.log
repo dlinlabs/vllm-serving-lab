@@ -1,0 +1,151 @@
+{
+ "schema": "r24-role4-native-caller-independent01-report-v1",
+ "written_utc": "2026-11-05T02:33:00Z",
+ "draft_history": "Draft written 02:24Z; revised before seal after the Mayor same-task urgency update (episode04 accepted) and a logged citation verification (verify-client-lines02.log, verify-runtime-lines02.log, drift-recheck01.log). Only B1 disposition, the verdict wording, fix precision and disclosures changed; no finding was dropped.",
+ "status": "FINAL_BOUNDED_SOURCE_ONLY_REVIEW_NOT_ACCEPTANCE",
+ "root": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+ "capsule": ".runtime/r24-resume-p0-native-caller-independent01",
+ "author": {"role": "PR32 team16 Role4 independent validation (measurement/claim/leakage audit)", "model_id": "claude-opus-5.5", "reasoning_effort": "max", "child_agents": 0},
+ "mandate": {
+  "candidate_commit": "a452fc49458a6e0fb1001344a9d61c1ba70ea82f",
+  "question": "NEW caller wiring / failure-accounting review of native_nominal_qualification.collect() plus the optional owned body path of native_services_smoke.run(), before one Native engineering qualification",
+  "bounds_used": "6 input sources, 133006 B (<= 6 / 192 KiB); 0 CPU witnesses (<= 2 allowed); no Git/network/SSH/GPU/installs/Markdown/source edits/child agents; root nominal_episode.py and unsealed episode04 NOT read",
+  "commit_binding": "No Git used. Bytes are bound by sha256 only: qualification 1b2ad22e, smoke 832c252a and client 933e4161 match Mayor-supplied pins; runtime, permit and INTERFACE were pinned by me at review time (membership in a452fc49 not verified). No drift at seal time (drift-recheck01.log)."
+ },
+ "supplied_facts_mayor_not_independently_verified": {
+  "received": "same-task urgency update after the draft",
+  "facts": [
+   "episode04 exact 935c2679 (tests ebecc352 4/4 PASS, twelve workers joined) committed 56fd21e; its prepare/run/handle/owner/construct-runtime interface descriptions mechanically equal the frozen episode03 INTERFACE",
+   "Native service actual startup/source/cleanup PASS (lifecycle03, body None)",
+   "62-file isolated dependency closure and 13 actual model-file hashes committed 7ae8c3a, no GPU context",
+   "caller a452 bytes unchanged (own drift recheck: all 6 input pins still match)"
+  ],
+  "effect_on_review": "The acceptance part of B1 is closed by supplied fact, so B1 is downgraded to a provenance precondition. U1 behaviors remain UNVERIFIED here: interface descriptions are claims, not observed behavior. No other finding changes. Root nominal_episode.py was neither read nor hashed by this review."
+ },
+ "verdict": {
+  "overall": "FAIL_PRE_RUN_CALLER_WIRING_AT_a452fc49 -> NOT_APPROVED_FOR_NATIVE_RUN until B3 is corrected and B2 is corrected or voided by verified gateway telemetry semantics",
+  "critical_path_known_concern": "CONFIRMED: an exception at qualification 78-125 bypasses the adapter's run-time persistence. No request fate can be lost (no records are allocated). FAIL on all-path accounting (B3): report.json states N episode requests offered when 0 were sent, and there is no caller-owned not-run receipt. Durable NOT_RUN episode evidence depends on adapter prepare-time persistence (U1, UNVERIFIED).",
+  "caller_wiring": "FAIL_PRE_RUN: B3 (HIGH) and B2 (code HIGH, effect MEDIUM pending U3). Both are fail-closed; no unsafe path found.",
+  "activation_dependency": "B1 downgraded to PRECONDITION by the Mayor-supplied episode04 acceptance (not independently verified). Residual: no run artifact self-records the adapter or caller bytes.",
+  "checklist": {
+   "bindings_S_permit_protocol_runtime": "PASS_SOURCE (V4, V5, V6); conditional on U1",
+   "future_S_never_retimed": "PASS_SOURCE fail-closed (V3); LOW L1 lead-time waste risk",
+   "clock_domain_distinctions": "episode permit uses source-time expected clock_domain PASS_SOURCE (V5); warmup check tautological LOW L5",
+   "warmup_outcomes_and_persistence": "PASS_SOURCE (V1, V8); LOW L2 exception replacement",
+   "original_absolute_D_R": "warmup PASS_SOURCE (V2); episode pass-through UNVERIFIED (U1, U2)",
+   "startup_and_body_lifecycle_closure": "startup PASS supplied (lifecycle03, body None); body-path closure FAIL_PRE_RUN conditional (B2)",
+   "all_path_capture_accounting": "FAIL (B3); no fate loss (verified)"
+  },
+  "unsafe_path_search": "No caller/body source path found that offers requests or enables POSTs outside the bound S, original D/R, permit, run_id, clock_domain, source and protocol; retimes S; leaks the admin key; or turns a raised body failure into lifecycle_passed=true. Conditional on U1-U6.",
+  "known_concern": "CONFIRMED but no request-fate loss; residual defect is accounting (B3). See known_concern_resolution.",
+  "rereview_scope_if_fixed": "Only the caller/body diff implementing the B3/B2 fixes plus the B1 pre-run hash record; accepted client/metrics/episode04 not reopened."
+ },
+ "pins": {
+  "inputs": [
+   {"path": "experiments/mpc-research/resume-mvp/native_nominal_qualification.py", "sha256": "1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c", "bytes": 7290, "lines": 152, "pin_source": "Mayor pin MATCH"},
+   {"path": "experiments/mpc-research/resume-mvp/native_services_smoke.py", "sha256": "832c252ae0e7fc634a425acebd79edd796833bc93092e03bf1bf48190fc2b54c", "bytes": 18298, "lines": 343, "pin_source": "Mayor prefix 832c252a MATCH"},
+   {"path": "experiments/mpc-research/resume-mvp/nominal_runtime.py", "sha256": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959", "bytes": 45768, "lines": 836, "pin_source": "own review-time pin"},
+   {"path": "experiments/mpc-research/resume-mvp/nominal_client.py", "sha256": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95", "bytes": 54831, "lines": 971, "pin_source": "accepted API03 MATCH; interface ranges only"},
+   {"path": "experiments/mpc-research/resume-mvp/nominal_permit.py", "sha256": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503", "bytes": 3902, "lines": 104, "pin_source": "own review-time pin"},
+   {"path": "results/mpc-native-r24/reviews/resume-p0-episode03-failed-author/INTERFACE.json", "sha256": "b6268efa3e627dc17dc253bf1a1701d866a3e2572fdaa4484028c4a3e0c105f8", "bytes": 2917, "lines": 17, "pin_source": "own review-time pin"}
+  ],
+  "context_hash_only_not_decoded": [
+   {"path": "results/mpc-native-r24/reviews/resume-p0-native-body05-parent01.json", "sha256": "a71922c6700b49cec343edde042b3d5c7050f18f138840eb7106fb7b44d65f42"},
+   {"path": "results/mpc-native-r24/reviews/resume-p0-native-body05-proof/SHA256SUMS", "sha256": "504d774bba078629dd6170c6a492398cb57f2af78d85bd8725ef72db310fdb83", "note": "matches Mayor 504d774b"},
+   {"path": "results/mpc-native-r24/reviews/resume-p0-episode03-failed-author/SHA256SUMS", "sha256": "07da8f077fc42b636c2bc04fa813a7ffa9d5be4de24deab8b43621062b6bced2"}
+  ],
+  "snapshot_files": "inputs/ (6 files, mode 444, verified equal to pins); SOURCE-PINS.sha256, CONTEXT-HASH-ONLY-PINS.sha256, TOOL-PINS.sha256"
+ },
+ "known_concern_resolution": {
+  "concern": "Errors after prepare_episode but before run_episode may bypass the adapter's final capture persistence.",
+  "confirmed": "qualification 73-131 has no try/finally. Any Exception or BaseException at 78-125 (81 prepared.error check; 82-89 limits; 92-100 admin GET, raise_for_status, json, equality, write; 103 start-deadline check; 106 describe_protocol; 110 permit; 116 binding write; 121 NominalRuntime) skips run_episode and therefore the run-time capture.json/episode.json persistence that INTERFACE persistence_design places only inside run_episode.",
+  "verified_no_fate_loss": "Accepted client 933e4161: records are allocated only inside capture_replay -> _collect after the schedule is accepted (client 733-738); capture_replay is single-use (860-862) and is never entered on this path. The in-memory envelope stays status 'failed', error NOT_RUN_ERROR 'not_run: prepared by prepare_capture only (no offers sent)' (client 59, 845), records None (678). No offered-request fate can be lost (consistent with sealed B observation O-9).",
+  "unverified": "Whether durable not-run evidence exists depends on adapter prepare-time persistence of prepared-capture.json and preparation.json. This is the INTERFACE prepare_design claim, which the Mayor states is mechanically equal for accepted episode04; nominal_episode.py was not read.",
+  "residual_defect": "B3: report.json records offered_requests_from_driver = planned trace size before any offer and there is no caller-owned terminal episode receipt."
+ },
+ "blockers": [
+  {
+   "id": "B1",
+   "kind": "activation dependency / provenance",
+   "severity": "PRECONDITION (BLOCKER at draft; acceptance part closed by the Mayor-supplied episode04 acceptance, not independently verified)",
+   "confidence": "HIGH",
+   "evidence": "qualification 28 imports root nominal_episode, which the caller does not pin. Draft-time INTERFACE status was 'FAILED_ONE_CLASSIFICATION_CONTROL_DO_NOT_ACTIVATE'; the Mayor now supplies the accepted episode04 935c2679 at 56fd21e. Self-pinning by run artifacts: runtime describe_protocol (runtime 184-192) and permit source_digest (permit 14-26) hash exactly nominal_permit.py, nominal_planner.py, nominal_runtime.py, nominal_scenario.py and nominal_workload.py plus implementation_hash(). The client pins nominal_client.py, nominal_metrics.py, telemetry.py, trace_workload.py and score_http.py (client 69-71, 685). Smoke pins gateway.py, nominal_protocol.json, nominal_services.py, the smoke file, contracts.py and live_http.py (smoke 118-121). None of these covers nominal_episode.py or native_nominal_qualification.py, unless implementation_hash does (U5).",
+   "effect": "Run evidence alone cannot prove which adapter or caller bytes executed, so this review and the episode04 acceptance extend to a run only through external pre-run pinning.",
+   "smallest_fix": "No code change needed. Immediately before execution, the Mayor's prereg records and checks the full sha256 of root nominal_episode.py (accepted 935c2679...) and native_nominal_qualification.py (1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c). Optional: collect() writes a pre-traffic receipt hashing both."
+  },
+  {
+   "id": "B2",
+   "kind": "body-path lifecycle closure",
+   "severity": "BLOCKER (pre-run interpretability; fail-closed)",
+   "confidence": "code HIGH; effect MEDIUM (gateway telemetry semantics U3 unverified)",
+   "evidence": "Smoke 275-278 adds the body inside the owner scope. The finally block at 314-318 still unconditionally requires mpc_final_sequence == 0 and mpc_producer_final_sequence == 0, with reason 'telemetry closure or no-request ledger mismatch'. The gateway runs with MPC_OWNER_LEDGER_ENABLED=true (smoke 82). The post-GPU idle checked() at 319 is in the same try, after the telemetry check. lifecycle_passed at 323-326 tests only post_gpu truthiness.",
+   "effect": "After real traffic (3 warmup plus episode requests), if these sequences count ledger/telemetry records as the reason text implies: lifecycle_passed=false and exit 1 by construction, even for a correct run. The explicit post-GPU idle assertion is also skipped, so a non-idle GPU would not appear in report.errors; only the raw post_gpu.idle_selected_gpu would show it. Reinterpreting after the run would be a post-hoc criteria change.",
+   "smallest_fix": "Pre-register before the run, then edit native_services_smoke.run() finally (308-321). (1) Move checked(report['post_gpu']['idle_selected_gpu'], ...) from 319 into its own try right after the post-gpu.json write (311) so it is never masked. (2) Keep the six-zero predicate (314-318) unchanged when body is None. (3) For body runs, replace only the two sequence terms with a closure predicate verified from gateway.py telemetry semantics. Candidate: mpc_final_sequence == mpc_producer_final_sequence, with dropped/write_errors/mpc_remaining_requests/mpc_unflushed_records == 0, status closed and mpc_ledger_complete true. If gateway source shows both sequences stay 0 under traffic, only step (1) is needed. This adds a body-specific criterion and does not relax the no-request criteria."
+  },
+  {
+   "id": "B3",
+   "kind": "non-run / failure accounting",
+   "severity": "BLOCKER (critical path: all-path accounting; no fate loss)",
+   "confidence": "HIGH",
+   "evidence": "qualification 78-79 sets report offered_requests_from_driver = len(prepared.recorder.trace requests) before the prepared.error check at 81 and before any offer. There is no try/finally over 73-131. Smoke 231 defaults the field to 0 (meaning no offers) and 277 sets it to None before the body. Smoke 276 sets inference_or_MPC_or_benchmark_result=True before the body runs at all.",
+   "effect": "On every failure between 78 and run_episode entry, and on adapter-preparation errors after the client trace loaded, report.json states N episode requests offered while 0 were sent. No caller-owned episode receipt exists; durable NOT_RUN evidence depends on U1. If prepared.recorder were None, line 78 would raise AttributeError and mask the adapter's preparation error (adapter-dependent).",
+   "smallest_fix": "In native_nominal_qualification.collect(), without changing sends, schedule, S, D/R or fates: (1) Delete the pre-set at 78-80. Set entered_run = False after prepare_episode (73-77). After the prepared.error check (81), set report['episode_trace_requests'] = len(prepared.recorder.trace['requests']) and report['warmup_offered_requests'] = 3. (2) Wrap 81-131 in try/finally and set entered_run = True immediately before awaiting episode.run_episode (126). (3) In the finally, read the in-memory episode envelope, which capture_replay mutates in place (client 863, 886-888): capture = getattr(getattr(prepared, 'recorder', None), 'capture', None). Then set report['offered_requests_from_driver'] = len(capture['records']) if capture and capture['records'] is not None else 0; records are allocated one per offered request only after the accepted schedule (client 486-489, 733-738). (4) If not entered_run, write episode-not-run.json via services.write (key redaction) with: stage, exception type/message, prepared.error, capture status/error, records_allocated 0, sent 0. Unless prepare-time persistence for accepted episode04 is verified, also call persist_capture(recorder, output / 'episode-not-run-capture.json', capture, key) to a distinct exclusive path. Guard these writes so a write failure cannot replace the primary exception (cf. L2), then let the original exception propagate."
+  }
+ ],
+ "findings_low": [
+  {"id": "L1", "severity": "LOW", "confidence": "HIGH", "where": "qualification 101-104; client 104-105, 718-738, 878-879", "finding": "The episode S = entered + 1.0 is fixed before describe_protocol (runs implementation_hash and file hashing twice), the permit, an fsync write, NominalRuntime construction, adapter-internal pre-start steps (U1) and the recorder's /v1/models GET. A passed S is refused with zero sends and never retimed. The risk is a wasted single GPU run, not unsafety.", "fix": "Pre-register a lead consistent with the permit window and record S-now at each stage. Before minting the permit, check S + max(episode_s, episode trace duration) <= min(D-R, permit expires_at)."},
+  {"id": "L2", "severity": "LOW", "confidence": "HIGH", "where": "qualification 55-64; smoke 280-284", "finding": "If persist_capture raises in the warmup finally while a ProbeError/CancelledError/KeyboardInterrupt is propagating, the write error replaces the primary error. Report.errors records only the final exception, and an interrupt can become an ordinary Exception that smoke does not re-raise.", "fix": "Record the primary exception (or __context__) in the report before or alongside the persist failure."},
+  {"id": "L3", "severity": "LOW-MEDIUM", "confidence": "mechanism HIGH; trigger depends on U1", "where": "qualification 128; smoke 42-49, 327", "finding": "The adapter result is stored into report verbatim. The terminal report.json write is unguarded json.dumps(sort_keys=True, allow_nan=False) with no default. Non-JSON types, non-finite floats or mixed key types would make the terminal lifecycle report unwritable, and the exception escapes run() after cleanup.", "fix": "Store a strict-JSON-validated copy (round trip in try, recording a serialization error) or write a minimal fallback report."},
+  {"id": "L4", "severity": "LOW-MEDIUM", "confidence": "HIGH", "where": "client 101 and 106 (NOT_CLIENT_OWNED); qualification 92-99; smoke 192", "finding": "Unmet driver obligations: 'warmup and post-warmup gateway drain before the offered start' (the pre-control GET checks only identity/clock/cost) and 'final gateway drain (in_flight 0, admitted cost 0) and fallback counters after the recorder returns' (no post-episode metrics read). tokenizer_fallback_requests == 0 is verified only at readiness, before traffic. Persisted pre-control-state.json and telemetry allow partial post-hoc audit. The known full-wall gap is not counted as new.", "fix": "Before choosing S and after run_episode, read /metrics and assert current_in_flight, current_waiting and current_admitted_cost == 0 and tokenizer_fallback_requests == 0; persist the result."},
+  {"id": "L5", "severity": "LOW", "confidence": "HIGH", "where": "qualification 60; client 667, 872-873", "finding": "The warmup passes warmup.capture['clock_domain'] back to capture_replay, whose check is equality with that same field, so the check cannot fail. In practice both are clock_domain() of this process.", "fix": "Pass expected['clock_domain'] (source-time, readiness-verified against the gateway at smoke 201-203)."},
+  {"id": "L6", "severity": "LOW", "confidence": "HIGH", "where": "qualification 35; smoke 118-121, 241", "finding": "nominal_protocol.json is re-read with non-strict json.loads and not compared with the sha pinned at startup. Effective limits remain recorded in runtime-binding.json and the journal.", "fix": "Hash the re-read bytes and compare with report['source']['source_pins']."},
+  {"id": "L7", "severity": "LOW", "confidence": "HIGH", "where": "qualification 93", "finding": "The GET timeout min(2.0, D-R-now) can be <= 0, causing an immediate timeout exception inside the B3 window (fail-closed).", "fix": "checked(remaining > 0) first."},
+  {"id": "L8", "severity": "INFO (nonclaim)", "confidence": "HIGH", "where": "qualification 65-71 vs 129-131", "finding": "Episode success trusts adapter result keys (U1); unlike the warmup it does not inspect the episode capture itself. It requires no CapApplied/CapReobserved/issued_commands, so exit 0 is possible with zero POSTs (all hold/refused steps). Never read it as controller cycles or admission effect (consistent with admin_POSTs null and native_qualification false).", "fix": "Optional: check prepared.recorder.capture status == 'collected' and records == offered_count, and report journal issued_commands."},
+  {"id": "L9", "severity": "INFO", "confidence": "HIGH", "where": "qualification 110-120; runtime 740-775; permit 78-99", "finding": "The permit is self-minted approved=True whenever --execute runs; authority is external (string at 119). Window [entered, entered+20] is <= 60. Coverage of S+episode_s is enforced at start only if the adapter calls runtime.wait_for_start (INTERFACE scope_design claim); otherwise each later step is refused 'nominal_expired_or_restarted_deadline'. Both paths are fail-closed.", "fix": "Pre-register episode_s <= 20 - lead and check it in the caller before minting."}
+ ],
+ "verified_wiring_facts": [
+  "V1 Warmup all-path persistence. The try/finally at qualification 55-64 covers the ready check, owner.check and capture_replay. prepare_capture returns refusals instead of raising (client 842-844). capture_replay settles every exception and re-raises non-Exception only after settling (client 882-886). A persist failure writes <name>.write-error.json and re-raises (qualification 15-22), which also handles sealed-B N1 (inf) fail-closed.",
+  "V2 The warmup passes the original absolute D=owner.deadline and R=owner.reserve unchanged (qualification 59-60); drain = D-R, and truncation is refused (client 874-876).",
+  "V3 S is never retimed: the client refuses a passed or too-far S (client 488-489, 734-735, 878-879), runtime.run refuses entry before S (runtime 599), and wait_for_start refuses a past S or out-of-envelope start (runtime 765-767).",
+  "V4 One S binds everything: qualification 102 -> describe_protocol start_at (108) -> protocol sha -> permit protocol_sha256 (113) -> NominalRuntime start_at (124; enforced equal by _binding at runtime 336) -> run_episode offered_start (127).",
+  "V5 The permit is re-validated at every authorization: identity labels, source/protocol sha, run_id and clock_domain against the snapshot and current clock_domain(), window/limits, snapshot age, budget set and command count (permit 55-104; runtime 462-477, 546-566). run_id is the actual post-warmup GET value (qualification 111).",
+  "V6 The post-warmup gateway identity/clock_domain/cost_spec is checked against source-time expected values (qualification 96-99) and persisted redacted (100).",
+  "V7 The output dir is fresh (smoke 227, mkdir without exist_ok), so there is no stale journal or episode resume.",
+  "V8 The warmup outcome check reads the in-place envelope (client 863, 886-888); the status short-circuit avoids None records (client 678).",
+  "V9 The admin key is per run (smoke 253) and redacted by services.write (smoke 44-45); the client sends/records no auth header (client 95-96); the runtime redacts bodies/errors (runtime 389, 630, 649).",
+  "V10 Body exceptions are appended to errors and force lifecycle_passed=false (smoke 280-284, 323-326). KeyboardInterrupt/SystemExit are re-raised after report.json is written."
+ ],
+ "unverified_contracts": [
+  "U1 nominal_episode.py not read. Mayor-supplied: accepted episode04 935c2679 (tests ebecc352 4/4 PASS) committed 56fd21e, with interface descriptions equal to episode03. Behaviors still unverified here: prepare-time persistence; run-time persistence; result keys failures/all_workers_joined/persistence_errors/missing_record_ids; wait_for_start call and cli_entered value; whether the runtime starts when the capture refuses; D/R passed unchanged; clock_domain argument for the episode capture.",
+  "U2 NominalServices (nominal_services.py, HELPER_SHA 5249221b) not read: owner.deadline and owner.reserve (INTERFACE owner_interface claim) were never exercised on hardware because lifecycle03 ran with body None (the Mayor-supplied lifecycle03 PASS does not cover them); owner.check semantics.",
+  "U3 Gateway telemetry-status semantics of mpc_final_sequence/mpc_producer_final_sequence under traffic (gateway.py outside the input budget).",
+  "U4 nominal_protocol.json controller values (episode_s, iterations, deadlines) not read.",
+  "U5 implementation_hash() coverage (mpc_lab/contracts.py) not read.",
+  "U6 Commit membership of the runtime/permit/INTERFACE bytes in a452fc49 (no Git)."
+ ],
+ "prior_context_applicable": {
+  "sealed_B_report": "r24-resume-p0-recorder-metrics-independent02 REPORT.json 83c8c8a9b548c2166e596a039166ba122c5153f54c0021f4031512ab0b73f9a3; SHA256SUMS digest 3dcbc992a13d6ef937c0a6d7464aa3d3dd0d364f9ea4b33ae628b0ac619438e1",
+  "relevant": "N1 (handled by persist_capture, V1); O-2 (domains recorded, not compared; cf. L5); O-3 (D-R are cancellation targets, not a hard return bound); O-6 (zero-send wording covers offered requests only); O-9 (an interrupt outside capture_replay leaves the initial envelope, which for a prepared capture is the accurate NOT_RUN state). O-1..O-9 still apply; criteria not relaxed."
+ },
+ "witnesses": {"count": 0, "rationale": "All findings are source-structural. The remaining effects (U1-U3) would need unsealed or out-of-budget code, which no bounded literal CPU witness could exercise without reading or executing it."},
+ "read_disclosure": {
+  "read_in_full": ["native_nominal_qualification.py", "native_services_smoke.py", "nominal_runtime.py", "nominal_permit.py", "INTERFACE.json"],
+  "client_interface_ranges_only": "def/class/constant index; lines 540-560 and 800-896 (view-client-iface-01.log); 94-110, 526-540, 663-700 and 757-776 (view-client-obligations-01.log); key-name grep (grep-client-keys-01.log)",
+  "own_sealed_prior_context": "Prior B REPORT.json finding/observation titles (ctx-b-observations01.log; exit=1 preserved) and prior check_report.py",
+  "citation_verification_reads_before_seal": "view-tool display of inputs/native_nominal_qualification.py (full), inputs/native_services_smoke.py 38-125, 184-221 and 222-343, and inputs/nominal_permit.py (full); own view-qual-01.log 10-152 and a grep of own view-smoke-01.log; logged awk reads of client 55-72, 92-110, 438-446, 484-492, 660-700, 714-740 and 838-896 (verify-client-lines02.log) and runtime 179-200, 330-342, 385-392, 458-480, 544-568, 594-602, 626-652 and 738-776 (verify-runtime-lines02.log). Result: all cited lines confirmed; one correction applied (runtime 184-196 -> 184-192).",
+  "not_read": ["nominal_episode.py (root or episode04)", "nominal_services.py", "gateway.py", "nominal_protocol.json", "nominal_planner.py", "mpc_lab/*", "parent01/proof/episode03 contents (hash only)", "any Train/Eval/actual capture data"]
+ },
+ "nonclaims": [
+  "Not acceptance. The Mayor owns acceptance, commits and execution/GPU authorization.",
+  "No Native qualification, controller-cycle, admission-effect or MPC-win claim; lifecycle exit 0 is not Native qualification.",
+  "Native14 remains FAIL; no posterior/MPC promotion.",
+  "Adapter not reviewed. Accepted client/metrics not re-audited. Runtime/permit read only for binding/interface semantics, not re-accepted.",
+  "No tests run; the author's 11 CPU controls were not rerun."
+ ],
+ "limitations": [
+  "Source-only review; nothing executed. The B2 and L3 effects are conditional on unverified external semantics (U1, U3).",
+  "INTERFACE.json is a claim document from the failed episode03 author, not verified behavior.",
+  "Unlogged display reads are disclosed in commands.log MANUAL lines."
+ ],
+ "artifacts": ["created.utc", "run_logged.sh", "commands.log", "pin-check01.log", "pin-freeze01.log", "SOURCE-PINS.sha256", "CONTEXT-HASH-ONLY-PINS.sha256", "TOOL-PINS.sha256", "inputs/", "view-qual-01.log", "view-smoke-01.log", "view-interface-01.log", "view-permit-01.log", "view-runtime-01.log", "view-client-iface-01.log", "grep-client-keys-01.log", "view-client-obligations-01.log", "ctx-b-observations01.log", "verify-client-lines02.log", "verify-runtime-lines02.log", "check_report.py", "report-check01-py314.log", "report-check02-py312.log", "drift-recheck01.log", "SHA256SUMS"]
+}

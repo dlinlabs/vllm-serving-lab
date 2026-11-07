@@ -1,0 +1,266 @@
+PINS_OK
+== resume_bullets.md (full)
+     1	# Resume evidence package A: scoped prototype wording
+     2	
+     3	Use **one** pair, not all six bullets. This package is independent of Native
+     4	closed-loop validation (deliverable B): the claims below do not require B to
+     5	succeed. Current scope is an implemented serving gateway and CPU-tested control
+     6	prototype, not a completed native MPC deployment. Evidence IDs refer to
+     7	[benchmark results](benchmark_results.md).
+     8	
+     9	## AI Inference / Infrastructure
+    10	
+    11	- Built an instrumented vLLM admission-control gateway and trace-replay
+    12	  pipeline, retaining request outcomes, overload rejections and control-timing
+    13	  evidence from real-GPU scheduled-budget identification captures.
+    14	- Implemented CPU-tested finite-horizon admission-policy planning with shared
+    15	  forecast inputs, Fixed/OneMove comparisons and deadline/version guards;
+    16	  corrected a Fixed-policy timing bias before native benchmarking.
+    17	
+    18	Evidence: first bullet E1, including trace identity, archived outcomes,
+    19	collection configuration, recorded source hashes and evidence publication
+    20	commit; second bullet E2/E6/E8. The historical feature/forecast reconstruction
+    21	command is not a command that rebuilds the E1 outcome table.
+    22	The historical captures are not MPC performance measurements. E6's
+    23	model-ranked Fixed reference is not an empirically selected strong baseline.
+    24	
+    25	## Autonomous Systems / Runtime
+    26	
+    27	- Designed a finite-horizon admission-control prototype with coherent scenario
+    28	  evaluation, first-action replanning interfaces and CPU-tested
+    29	  source/version/deadline guards.
+    30	- Built a Train-only forecast and reproducible replay-input pipeline, preserving
+    31	  realized model assumptions, tokenizer-validation evidence and explicit
+    32	  limitations instead of claiming calibrated native prediction.
+    33	
+    34	Evidence: E2/E6/E7/E8 and the [architecture](architecture.md). First-action
+    35	interfaces are not a claim that the complete native loop has been demonstrated.
+    36	The forecast is nominal and uncalibrated; its CPU validation is not an
+    37	out-of-sample accuracy result.
+    38	
+    39	## General Software / Distributed Systems
+    40	
+    41	- Implemented an asynchronous inference gateway with reservation accounting,
+    42	  overload handling and lifecycle telemetry for auditable serving studies.
+    43	- Developed replay and independent validation workflows linking request
+    44	  outcomes, configurations and commands to recorded source hashes and evidence
+    45	  commits, including reproducible workload generation and real-tokenizer
+    46	  input checks while preserving negative results.
+    47	
+    48	Evidence: E1/E4/E5/E6/E7/E8. Do not substitute "production deployed" for
+    49	"implemented", or claim full clean-checkout benchmark reproduction.
+    50	
+    51	## Claims explicitly excluded
+    52	
+    53	Do not claim MPC speedup, superior goodput, production use, guaranteed p99,
+    54	bounded end-to-end latency, starvation freedom, native sampler convergence or
+    55	fully validated GPU scheduling. Do not combine CPU test totals across versions.
+    56	
+    57	Deliverable A can be used without a native MPC success claim. Only once
+    58	deliverable B passes may a prototype clause be replaced with its actual result
+    59	and its evidence ID, whether positive, neutral or negative. Do not insert a
+    60	percentage until its numerator, denominator, workload, configuration, command,
+    61	trace and exact commit are reviewable.
+== summary 1-5,38-70,100-114
+     1	# LLM serving control: evidence-driven project summary
+     2	
+     3	Status: **A: scoped resume evidence package finalized; B: native MPC P0 open**.
+     4	Evidence cutoff: 2026-11-04. Negative results are acceptable; unsupported claims are not.
+     5	
+    38	
+    39	| Defensible now | Evidence and boundary |
+    40	|---|---|
+    41	| Instrumented, audited real-GPU serving captures | E1: archived request outcomes, state reconstruction and applied-control timing. These are scheduled identification runs, not MPC runs. |
+    42	| Implemented a frozen policy-planner component | E2: Parent-accepted exact candidate ordering, with full-action Fixed-reference scope and CPU deadline/version checks. Runtime integration is not accepted. |
+    43	| Implemented and tested observation/consumer deployment components | E3: bounded CPU integration evidence; subsequent D2-F1 blocks live release of that composition. |
+    44	| Preserved negative results and release blockers | E4: component coverage FAIL (one of two required observations). E5: source-identified cleanup-bypass path. Neither is relabelled PASS. |
+    45	| Corrected baseline timing and validated replay inputs | E6: Fixed no longer inherits solver-only waiting/deadlines. E7: real-tokenizer Train conversion; this was CPU work, not GPU inference. |
+    46	| Implemented causal Train-only forecast generation | E8: bounded CPU component acceptance; nominal assumptions, not measured native accuracy. |
+    47	
+    48	Trace identities, archive locations, commands, configurations and recorded
+    49	commits are indexed in
+    50	[benchmark results](benchmark_results.md). Historical audits are not represented
+    51	as new replications performed for this document.
+    52	
+    53	## MVP completion gate
+    54	
+    55	Native deliverable B is complete only when all rows below have reviewable evidence. Winning every
+    56	baseline, convergence of the Native14 posterior, and production deployment are
+    57	**not** requirements.
+    58	
+    59	| Priority | Deliverable / acceptance | Current status |
+    60	|---|---|---|
+    61	| P0 | Explain original work, actuator, states, model limitations, objective and constraints without conflating gateway and engine state. | Initial independent claim audit delivered; Mayor corrections incorporated. Final P0 audit remains open. |
+    62	| P0 | One runnable, source-pinned path demonstrating repeated real observation, prediction, optimization, first-action application and reobservation. Retain refusals, timeouts and actual applied-state evidence. | **Missing native end-to-end evidence.** Shadow output and ACK-only evidence do not qualify. |
+    63	| P0 | Safe bounded operation: queue/admission limits, overload outcomes, stale-state refusal, unknown-command handling, timeout cleanup and private-config handling. | New isolated service ownership and runtime integration pending. The legacy D2-F1/R1 launcher remains blocked and is not the selected path. |
+    64	| P0 | Comparable descriptive GPU results for MPC, strong development-selected Fixed, FIFO and strong OneMove; same workload, model, resource limits and scoring. Predeclare evaluation data disjoint from predictor/scenario fitting and all policy tuning/selection. | **Not collected.** Train/Eval generation is frozen; empirical Fixed selection, actual backend-order proof and corrected metric comparability remain open. |
+    65	| P0 | Report TTFT p50/p95/p99, SLO goodput, throughput, rejection, fairness and full controller overhead, with sample counts and failures. | Historical measurements are partial; current MPC table is unfilled. |
+    66	| P0 | Portable commands/configurations, raw-to-table reconstruction and exact code/data commits; audit every quantitative resume claim. | Historical bundles exist; clean-checkout MVP reproduction remains unverified. |
+    67	| P1 | Better decision-relevant forecasts, overhead reduction, broader workload/load coverage and repeatability estimates. | Only if a P0 result justifies the change. |
+    68	| P2 | Native14 mixing research, full empirical-pool quantiles, new proposal geometry, extensive posterior qualification, large confirmatory campaigns and additional hardware. | Separate research backlog; must not delay P0 or applications. |
+    69	
+    70	A replacement simple frozen predictor is permissible only under its own
+   100	
+   101	The E1 Azure trace is development data, not held-out evaluation. A replay of it
+   102	may be an explicitly labelled in-sample engineering pilot, but cannot satisfy
+   103	the held-out comparison row or support a generalization claim. Freeze the Fixed
+   104	selection method and all predictor/scenario/policy settings before evaluation;
+   105	do not tune on evaluation outcomes.
+   106	
+   107	## Resume-safe wording
+   108	
+   109	- Built an instrumented vLLM serving gateway and auditable trace-replay
+   110	  tooling for admission-control and overload analysis, preserving request
+   111	  outcomes and auditable control-timing evidence.
+   112	- Implemented a frozen finite-horizon policy planner with CPU-tested exact
+   113	  candidate ordering and deadline/version checks; corrected baseline timing
+   114	  bias while retaining explicit native-integration and comparison limitations.
+== architecture 28-60,90-96
+    28	
+    29	| Layer | Responsibility | Repository evidence |
+    30	|---|---|---|
+    31	| vLLM | Model execution, native batching and cache management. | External backend; do not claim these algorithms as project contributions. |
+    32	| Gateway | Reservation accounting, admission/rejection, streaming lifecycle and cleanup. | [`gateway.py`](../gateway.py) |
+    33	| Measurement | Scheduled arrivals, actual applications, request/state/diagnostic records. | [`trace_control.py`](../trace_control.py), [`telemetry.py`](../telemetry.py), E1 in [results](benchmark_results.md) |
+    34	| Public prediction/planning library | Experimental scenario rollouts and policy selection. | [`mpc_lab/model.py`](../mpc_lab/model.py), [`mpc_lab/controller.py`](../mpc_lab/controller.py); not the E2 tested implementation |
+    35	| Frozen team16 planner | Exact candidate ordering and numerical/deadline/version controls, within its accepted scope. | E2 frozen `policy_planner16.py`; runtime integration not accepted |
+    36	| Runtime/actuation | Observation guards, pending-command handling and first-action coordination. | [`mpc_lab/runtime.py`](../mpc_lab/runtime.py), [`mpc_lab/actuator.py`](../mpc_lab/actuator.py); native qualification pending |
+    37	| Evaluation | All-offered scoring, failure retention and baseline accounting. | [`mpc_lab/benchmark.py`](../mpc_lab/benchmark.py), accepted research evidence; no completed current native comparison |
+    38	
+    39	The public library and frozen team16 prototypes are separate versions. Do not
+    40	combine their settings, interfaces or test totals into one allegedly deployed
+    41	implementation.
+    42	
+    43	The selected MVP continuation is isolated in
+    44	[`experiments/mpc-research/resume-mvp`](../experiments/mpc-research/resume-mvp):
+    45	`nominal_planner.py` provides typed finite-horizon planning,
+    46	`nominal_scenario.py` generates Train-only nominal forecasts, and
+    47	`nominal_permit.py` supplies a separate default-OFF experimental guard.
+    48	Runtime wiring, request-outcome recording and service ownership are still
+    49	under integration; no native qualification follows from those source files.
+    50	The blocked legacy launcher is not a prerequisite to this isolated path.
+    51	
+    52	Current source links are reading aids, not proof of the implementation measured
+    53	in E1. E1 used the manifest-recorded runtime hashes with `git_dirty=true`;
+    54	attribution to current files requires matching those hashes. E2 tested the
+    55	frozen team16 planner with SHA256
+    56	`164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a`,
+    57	not the public `mpc_lab` modules.
+    58	
+    59	## State and actuator semantics
+    60	
+    90	
+    91	For the isolated nominal MVP (E6/E8), the planner scores model-resolved
+    92	successful requests meeting the TTFT threshold. This proxy is not the measured
+    93	natural-SLO scorer. A frozen Train-only prior generates shared candidate inputs;
+    94	uncalibrated service/output assumptions and stationary arrivals can extend
+    95	beyond the public offered window. The separate measured scorer remains
+    96	unchanged. Neither CPU validation nor causal input selection proves prediction
+== interview 18-30,55-60,95-125
+    18	
+    19	## What makes the design MPC rather than a threshold rule?
+    20	
+    21	It evaluates future action sequences against a prediction model and constrained
+    22	objective, executes the first action and reobserves before replanning.
+    23	CPU-tested planner components exist; E2 accepts exact candidate ordering within
+    24	its full-action Fixed-reference scope, not runtime integration or native MPC.
+    25	A future complete-loop claim needs real application and reobservation receipts.
+    26	The current nominal continuation adds the E6 Fixed-timing correction and E8
+    27	Train-only scenario generation; those are component results, not native-loop
+    28	qualification.
+    29	
+    30	## What is the objective?
+    55	
+    56	## What is the difference from Fixed, FIFO and OneMove?
+    57	
+    58	Fixed holds a development-selected budget. FIFO specifies service order and
+    59	needs an explicit admission/resource policy; otherwise it may duplicate Fixed.
+    60	Strong OneMove searches a best allowed single transition with the same model
+    95	## What do the existing measurements establish?
+    96	
+    97	E1 provides audited historical native serving measurements under scheduled
+    98	budgets; E2/E3 provide bounded CPU component evidence. E4 is a partial native
+    99	observation diagnostic whose component coverage failed. None establishes a fair
+   100	native MPC win. A/B were on different hosts and are not a causal comparison.
+   101	Each offered 7,643 requests in 300 seconds: A rejected 5,667, B rejected 5,584;
+   102	572 and 736, respectively, met the TTFT SLO. Those deliberately varied,
+   103	scheduled-budget overload captures are identification data, not controller
+   104	performance.
+   105	
+   106	## What if MPC loses?
+   107	
+   108	Publish the actual table and scope, then explain model error, overhead, control
+   109	authority or workload sensitivity only where evidence supports the explanation.
+   110	The accounting, instrumentation, bounded runtime components and audit trail
+   111	remain engineering contributions; portable clean-checkout reproduction is
+   112	still a P0 item. A negative result is better than an inflated claim.
+   113	
+   114	## Can this go on a resume before native MPC succeeds?
+   115	
+   116	Yes, using deliverable A's [scoped bullets](resume_bullets.md): implemented
+   117	gateway/accounting, instrumentation, replay and CPU-tested planning, with their
+   118	evidence boundaries. Do not claim a native MPC deployment, measured speedup or
+   119	complete clean-checkout benchmark reproduction.
+   120	
+   121	Deliverable B separately requires two consecutive timestamped real control
+   122	cycles, actual admission-behavior evidence, a Train-frozen strong Fixed
+   123	baseline, held-out comparison, reproduction and independent audit.
+   124	Superiority, production deployment and a universal SLO theorem are not
+   125	prerequisites. B's incompleteness does not block A or applications.
+== benchmark 72-116,160-170
+    72	
+    73	## Other evidence: engineering, not MPC performance
+    74	
+    75	| ID | Verified result / limitation | Trace, configuration and command | Exact evidence commit |
+    76	|---|---|---|---|
+    77	| E2 | Frozen policy planner: 130 CPU cases passed per Python in accepted Parent replays. Acceptance is exact candidate ordering with full-action Fixed-reference scope; runtime integration and native actuation are not accepted. | [Acceptance index](../results/mpc-native-r24/reviews/native-team16-planner-revision02-parent-seal01.json) records PLAN, source hashes and archived command/result paths. | `2b4ed5bc754060cba11c16852b7798b975bc03eb` |
+    78	| E3 | Deployment composition: nine CPU integration cases passed per Python, with bounded acceptance and independent full-composition review still pending at that acceptance; never live-eligible. Later blocked by D2-F1 (E5). | [Acceptance/config index](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01.json), [exact archived command](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01/attempts/mayor-py314.command.json). Absolute paths require relocation; not a portable CLI claim. | `c00d29d2296bda7e249578f2de7c08650a4d79c9` |
+    79	| E4 | Native observation diagnostic, one approximately 67-second GPU run: engineering accepted; component coverage **FAIL** (one of two required nonempty in-flight observations). 90 HTTP records; three generations (one warmup and two managed); 43 completion tokens including 11 warmup tokens. Not a throughput or prediction benchmark. | [Result/hash index](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01-results.json), [preregistration](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01-preregistration.json), [command/config/raw bundle](../results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01/). | Results `52b2b244f5904306f730ab6ca26a3d572343e2b2`; preregistration `d6ded2b25a0667028f6ab9f2cc08fe76df1c3315` |
+    80	| E5 | Source-backed D2-F1 cleanup bypass; no observed live orphan incident asserted. Live use of the affected launcher is blocked. | [Mayor disposition](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-parent01.json), [independent review](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-author01/REVIEW.md). No live reproduction command was run. | `26139be5f90ec7386e2c578c95aa331aa0052244` |
+    81	
+    82	No row above establishes calibrated prediction, actual MPC benefit, production
+    83	deployment, deterministic SLO compliance or a general OS cleanup theorem.
+    84	
+    85	## Current nominal MVP component evidence
+    86	
+    87	These are additional evidence for resume package A, not results for native
+    88	deliverable B. Counts below describe the named CPU controls only; they are not
+    89	summed across Python versions or treated as performance measurements.
+    90	
+    91	| ID | Verified result / boundary | Trace, configuration and command | Exact evidence commit |
+    92	|---|---|---|---|
+    93	| E6 | Fixed-policy solver-wait/deadline bias corrected; Mayor's combined component controls passed. Model-ranked Fixed is not empirical baseline selection. | [Component acceptance](../results/mpc-native-r24/reviews/resume-p0-components-parent02.json), [CPU plan/command](../results/mpc-native-r24/reviews/resume-p0-parent-cpu01-plan.json), [original negative witness result](../results/mpc-native-r24/reviews/resume-p0-nominal-planner01-fixed-delay-result.json). | Correction/evidence `f645a66a44bcbe0e4894cab4213d7f9349ae1481`; negative witness `814a9b5aa38dd8783ae643270b5aed59e1bc12b7` |
+    94	| E7 | All 88 frozen Train prompts matched requested chat-template token counts with the real cached tokenizer. CPU conversion on the existing host, no inference. | [Result](../results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json), [plan/command](../results/mpc-native-r24/reviews/resume-p0-tokenizer02-plan.json), [Train replay](../results/mpc-native-r24/reviews/resume-p0-tokenizer02-raw/returned/train.replay.json). Replay SHA256 `5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7`. The first offline repository-ID lookup failed and is retained in the predecessor evidence. | `02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e`; local-asset successor plan `1e9540caa9dd37f927d5389d05be3d973d234bf7` |
+    95	| E8 | Train-only causal forecast and permit-dependency CPU component accepted; 14 controls passed on Python 3.12.16 from a scoped Git materialization. Not full end-to-end reproduction. | [Acceptance/result](../results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json), [plan/command](../results/mpc-native-r24/reviews/resume-p0-scenario-parent01-plan.json), [frozen forecast source](../experiments/mpc-research/resume-mvp/nominal_scenario.py). | `6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0` |
+    96	
+    97	The nominal forecast uses the frozen Train arrival-rate/mark distribution with
+    98	uncalibrated service assumptions. Its stationary rolling 15-second horizon can
+    99	extend beyond the public five-second workload window. Neither the tokenizer
+   100	checks nor the causal-input controls establish forecast accuracy.
+   101	
+   102	The [independent metrics audit and Mayor disposition](../results/mpc-native-r24/reviews/resume-p0-metrics-independent-parent01.json)
+   103	block claim-qualified Train selection/comparison on metrics01: common-environment
+   104	identity, frozen selection provenance, complete offered cohorts and timestamp
+   105	bounds need correction and recheck. Existing single-run arithmetic controls do
+   106	not override those blockers. No new native MPC measurements are available.
+   107	
+   108	## Required MVP comparison: currently unmeasured
+   109	
+   110	| Policy | TTFT p50/p95/p99 | SLO goodput | Throughput | Rejection | Fairness | Controller overhead |
+   111	|---|---|---|---|---|---|---|
+   112	| Strong development-selected Fixed | Not measured | Not measured | Not measured | Not measured | Not measured | Not measured |
+   113	| Explicit FIFO baseline | Not measured | Not measured | Not measured | Not measured | Not measured | Not measured |
+   114	| Strong OneMove | Not measured | Not measured | Not measured | Not measured | Not measured | Not measured |
+   115	| Receding-horizon MPC | Not measured | Not measured | Not measured | Not measured | Not measured | Not measured |
+   116	
+   160	
+   161	The [Role7 proposal and Mayor disposition](../results/mpc-native-r24/reviews/resume-p0-metrics-contract-parent01.json)
+   162	record definitions pending the single producer/runtime contract. No metric
+   163	implementation or native eligibility is accepted by that proposal.
+   164	
+   165	The earlier contract proposal used boundaries 512 and 2048 tokens; the current
+   166	frozen nominal workload has exact prompt classes 256, 1024 and 3072 tokens,
+   167	verified on Train in E7. Preserve its declared grouping and scorer through
+   168	Eval; do not retrospectively regroup to improve results. Keep SLO
+   169	attainment (good/all offered, unitless) distinct from goodput (good/second).
+   170	Report cohort-normalized rates using the offered window, alongside actual

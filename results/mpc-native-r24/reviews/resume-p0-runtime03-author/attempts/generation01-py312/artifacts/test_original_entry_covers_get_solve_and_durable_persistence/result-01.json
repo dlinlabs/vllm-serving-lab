@@ -1,0 +1,31 @@
+{
+  "Native_qualified": false,
+  "episode_deadline": 103.0,
+  "failure": null,
+  "issued_commands": 0,
+  "ledger_CAS": false,
+  "mode": "experimental_nominal_demo",
+  "native_token_application_at": null,
+  "objective": "gateway-resolved-success-ttft0.5-lower-count-hold-switch-sum-lex-v1",
+  "pending": false,
+  "pending_outcome": null,
+  "protocol_sha256": "569e56237589a2ae781aeb31fcf9007c2320f0edb39fbb206c678ba4c199bdca",
+  "scope": "gateway-nominal-unqualified-v1",
+  "static_Fixed_FIFO_benchmark_implemented": false,
+  "steps": [
+    {
+      "actual_cap_applied_at": null,
+      "cap_change_applied": false,
+      "deadline": 100.5,
+      "deadline_met": true,
+      "elapsed_s": 0.12000000000000455,
+      "entered_at": 100.0,
+      "error_type": "RuntimeRefused",
+      "finished_at": 100.12,
+      "native_token_application_at": null,
+      "outcome_observed_at": 100.12,
+      "reason": "entry_GET_exhausted_solver_window",
+      "status": "refused"
+    }
+  ]
+}

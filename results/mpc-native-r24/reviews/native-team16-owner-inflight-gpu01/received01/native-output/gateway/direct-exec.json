@@ -1,0 +1,21 @@
+{
+  "arguments": [
+    "/workspace/pr32-r23/venv/bin/python",
+    "-m",
+    "uvicorn",
+    "gateway_prefix_bridge:application",
+    "--factory",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8080",
+    "--workers",
+    "1"
+  ],
+  "executable": "/workspace/pr32-r23/venv/bin/python",
+  "pid": 70958,
+  "private_origin_guard_appended": true,
+  "source13_first": true,
+  "spawned_redactor_process": false,
+  "start_ticks": 136107428
+}

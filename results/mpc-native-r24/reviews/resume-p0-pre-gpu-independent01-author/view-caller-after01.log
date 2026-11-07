@@ -1,0 +1,420 @@
+    1  """Default-OFF, Train-only engineering collection; qualification requires raw evidence audit."""
+    2  
+    3  import argparse
+    4  import asyncio
+    5  import hashlib
+    6  import json
+    7  import math
+    8  from pathlib import Path
+    9  import time
+   10  import traceback
+   11  
+   12  import native_services_smoke as services
+   13  
+   14  
+   15  PROBES = Path("results/mpc-native-r24/reviews/resume-p0-probes02/inputs")
+   16  ADAPTER_SHA256 = "935c2679c4b9fffdffb23ce88ca5351f91fa84e25c8c1edccedddaea4e4262a8"
+   17  DRAIN_FIELDS = ("current_in_flight", "current_waiting", "current_admitted_cost")
+   18  
+   19  
+   20  def error_record(error):
+   21      return {"type": type(error).__name__, "message": str(error),
+   22              "traceback": "".join(traceback.format_exception(error))}
+   23  
+   24  
+   25  def strict_copy(value):
+   26      return json.loads(json.dumps(value, sort_keys=True, allow_nan=False))
+   27  
+   28  
+   29  def strict_load(raw):
+   30      def constant(value):
+   31          raise ValueError("nonfinite JSON constant: " + value)
+   32  
+   33      def pairs(items):
+   34          result = {}
+   35          for key, value in items:
+   36              services.checked(key not in result, "duplicate JSON key: " + key)
+   37              result[key] = value
+   38          return result
+   39  
+   40      return strict_copy(json.loads(raw, parse_constant=constant, object_pairs_hook=pairs))
+   41  
+   42  
+   43  def preserving(action, primary, report, stage):
+   44      try:
+   45          return action()
+   46      except BaseException as error:
+   47          report["caller_errors"].append({"stage": stage, "error": error_record(error)})
+   48          if primary is None:
+   49              raise
+   50          primary.add_note(stage + ": " + type(error).__name__ + ": " + str(error))
+   51  
+   52  
+   53  def persist_capture(client, path, capture, key):
+   54      try:
+   55          return client.write_capture(path, capture)
+   56      except BaseException as error:
+   57          try:
+   58              services.write(path.with_suffix(".write-error.json"), {
+   59                  "capture_unscorable": True, "type": type(error).__name__, "message": str(error),
+   60              }, key)
+   61          except BaseException as write_error:
+   62              error.add_note("write-error receipt also failed: " + type(write_error).__name__
+   63                             + ": " + str(write_error))
+   64          raise
+   65  
+   66  
+   67  def remaining(owner, deadline, reserve):
+   68      services.checked(owner.deadline == deadline and owner.reserve == reserve,
+   69                       "original owner deadline/reserve changed")
+   70      owner.check()
+   71      value = deadline - reserve - time.monotonic()
+   72      services.checked(math.isfinite(value) and value > 0, "original work deadline exhausted")
+   73      return value
+   74  
+   75  
+   76  async def observe(client, path, *, owner, deadline, reserve, output, key, report, name):
+   77      evidence = {"path": path, "entered_at": time.monotonic(), "status_code": None, "raw": None}
+   78      primary = None
+   79      try:
+   80          timeout = min(2.0, remaining(owner, deadline, reserve))
+   81          evidence["timeout_s"] = timeout
+   82          async with asyncio.timeout(timeout):
+   83              response = await client.get(path, headers={"x-admin-api-key": key}, timeout=timeout)
+   84          evidence.update(status_code=response.status_code, raw=response.text)
+   85          response.raise_for_status()
+   86          value = strict_load(response.content)
+   87          evidence["value"] = value
+   88          return value
+   89      except BaseException as error:
+   90          primary = error
+   91          evidence["error"] = error_record(error)
+   92          raise
+   93      finally:
+   94          evidence["returned_at"] = time.monotonic()
+   95          report.setdefault("caller_observations", []).append(evidence)
+   96          preserving(lambda: services.write(output / (name + ".json"), evidence, key),
+   97                     primary, report, name + "_persistence")
+   98  
+   99  
+  100  async def drain(client, *, owner, deadline, reserve, output, key, report, phase):
+  101      attempt = 0
+  102      while True:
+  103          attempt += 1
+  104          metrics = await observe(
+  105              client, "/metrics", owner=owner, deadline=deadline, reserve=reserve,
+  106              output=output, key=key, report=report, name=f"{phase}-metrics-{attempt:04d}")
+  107          values = [metrics[name] for name in (*DRAIN_FIELDS, "tokenizer_fallback_requests")]
+  108          services.checked(all(type(value) in (int, float) and math.isfinite(value) and value >= 0
+  109                               for value in values), "invalid drain/fallback metric")
+  110          services.checked(metrics["tokenizer_fallback_requests"] == 0, "tokenizer fallback after traffic")
+  111          if all(metrics[name] == 0 for name in DRAIN_FIELDS):
+  112              report.setdefault("caller_drains", {})[phase] = {
+  113                  "drained": True, "observed_at": time.monotonic(), "readings": attempt}
+  114              return
+  115          await asyncio.sleep(min(0.05, remaining(owner, deadline, reserve)))
+  116  
+  117  
+  118  def capture_of(prepared):
+  119      return getattr(getattr(prepared, "recorder", None), "capture", None)
+  120  
+  121  
+  122  def counts(capture, entered):
+  123      if not isinstance(capture, dict):
+  124          return {"records_allocated": None if entered else 0, "sent": None if entered else 0}
+  125      records = capture.get("records")
+  126      if records is None:
+  127          return {"records_allocated": 0, "sent": 0}
+  128      services.checked(isinstance(records, list), "capture records must be a list or null")
+  129      known = all(isinstance(row, dict) and "sent_at" in row for row in records)
+  130      return {"records_allocated": len(records),
+  131              "sent": sum(row["sent_at"] is not None for row in records) if known else None}
+  132  
+  133  
+  134  def source_binding(root, episode, expected):
+  135      protocol_path = root / services.RELATIVE / "nominal_protocol.json"
+  136      raw = protocol_path.read_bytes()
+  137      protocol_sha = hashlib.sha256(raw).hexdigest()
+  138      services.checked(expected["source_pins"].get(str(protocol_path)) == protocol_sha,
+  139                       "protocol changed since startup source pins")
+  140      caller_path = root / services.RELATIVE / "native_nominal_qualification.py"
+  141      adapter_path = root / services.RELATIVE / "nominal_episode.py"
+  142      services.checked(Path(__file__).resolve() == caller_path and Path(episode.__file__).resolve() == adapter_path,
+  143                       "caller/adapter source-root mismatch")
+  144      pins = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in (caller_path, adapter_path)}
+  145      services.checked(pins[str(adapter_path)] == ADAPTER_SHA256, "accepted episode adapter changed")
+  146      pins[str(protocol_path)] = protocol_sha
+  147      return strict_load(raw), {"source_pins": pins, "caller_sha256": pins[str(caller_path)],
+  148                               "adapter_sha256": pins[str(adapter_path)], "protocol_sha256": protocol_sha}
+  149  
+  150  
+  151  def recheck(binding):
+  152      services.checked(all(hashlib.sha256(Path(path).read_bytes()).hexdigest() == sha
+  153                           for path, sha in binding["source_pins"].items()),
+  154                       "caller/adapter/protocol changed during collection")
+  155  
+  156  
+  157  async def collect(*, owner, root, output, key, report):
+  158      """Caller-owned accounting; collected engineering evidence is never Native qualification."""
+  159      root, output = Path(root).resolve(), Path(output)
+  160      deadline, reserve = owner.deadline, owner.reserve
+  161      primary, primary_tb = None, None
+  162      prepared = warmup = client = recorder = bound = None
+  163      entered_run = False
+  164      stage = "source_preflight"
+  165      report.update(caller_errors=[], episode_planned_requests=5, episode_trace_requests=None,
+  166                    warmup_planned_requests=3, warmup_offered_requests=0,
+  167                    offered_requests_from_driver=0, episode_sent_requests=0)
+  168  
+  169      def failure(where, error):
+  170          nonlocal primary, primary_tb
+  171          report["caller_errors"].append({"stage": where, "error": error_record(error)})
+  172          if primary is None:
+  173              primary, primary_tb = error, error.__traceback__
+  174          elif error is not primary:
+  175              primary.add_note(where + ": " + type(error).__name__ + ": " + str(error))
+  176  
+  177      def attempt(where, action):
+  178          try:
+  179              return action()
+  180          except BaseException as error:
+  181              failure(where, error)
+  182  
+  183      try:
+  184          import httpx
+  185          import nominal_client as recorder
+  186          import nominal_episode as episode
+  187          import nominal_runtime as runtime_api
+  188          from mpc_lab.contracts import CostSpec, ModelParameters
+  189          from nominal_permit import NominalDemoPermit
+  190          from nominal_planner import NominalPlanner
+  191  
+  192          services.checked(all(type(value) in (int, float) and math.isfinite(value)
+  193                               for value in (deadline, reserve)) and reserve >= 0,
+  194                           "finite original deadline/reserve required")
+  195          expected, config = report["source"], report["configuration"]
+  196          remaining(owner, deadline, reserve)
+  197          protocol, bound = source_binding(root, episode, expected)
+  198          services.write(output / "qualification-source-binding.json", bound, key)
+  199          report["caller_source_binding"] = bound
+  200          gateway = f"http://127.0.0.1:{services.GATEWAY_PORT}"
+  201          backend = f"http://127.0.0.1:{services.BACKEND_PORT}"
+  202          stage = "model_binding"
+  203          ownership_path = output / "services/ownership.json"
+  204          ownership = strict_load(ownership_path.read_bytes())
+  205          actual_engine = next(s["argv"] for s in ownership["services"] if s["name"] == "engine")
+  206          services.checked(actual_engine == config["engine"], "owned backend argv mismatch")
+  207          binding_path = output / "model-binding.json"
+  208          services.write(binding_path, {
+  209              "schema": recorder.BINDING_SCHEMA, "served_alias": services.ALIAS,
+  210              "local_model_path": services.MODEL, "tokenizer_sha256": services.TOKENIZER,
+  211              "served_model_names": [services.ALIAS], "backend_argv": actual_engine,
+  212              "backend_argv_source": str(ownership_path) + " (owned actual spawn receipt)",
+  213          })
+  214          client = httpx.AsyncClient(base_url=gateway, trust_env=False, follow_redirects=False)
+  215          warm_error = None
+  216          try:
+  217              stage = "warmup_prepare"
+  218              warmup = recorder.prepare_capture(
+  219                  trace_path=root / PROBES / "warmup.json", binding_path=binding_path,
+  220                  arm="fixed32", purpose="engineering", gateway_url=gateway, backend_url=backend)
+  221              services.checked(warmup.ready, "warmup local preflight failed: " + str(warmup.capture.get("error")))
+  222              report["caller_clock_domains"] = {
+  223                  "SDK_source": expected["clock_domain"], "warmup_recorder": warmup.capture["clock_domain"]}
+  224              remaining(owner, deadline, reserve)
+  225              recheck(bound)
+  226              stage = "warmup_replay"
+  227              await recorder.capture_replay(
+  228                  warmup, offered_start=time.monotonic() + 1.0, deadline=deadline,
+  229                  cleanup_reserve_s=reserve, clock_domain=warmup.capture["clock_domain"])
+  230          except BaseException as error:
+  231              warm_error = error
+  232              raise
+  233          finally:
+  234              capture = getattr(warmup, "capture", None)
+  235              if capture is not None:
+  236                  report["warmup_capture_sha256"] = preserving(
+  237                      lambda: persist_capture(recorder, output / "warmup-capture.json", capture, key),
+  238                      warm_error, report, "warmup_capture_persistence")
+  239          stage = "warmup_validation"
+  240          services.checked(
+  241              warmup.capture["status"] == "collected" and len(warmup.capture["records"]) == 3
+  242              and all(r["fate"] == "complete" and r["stream_done"]
+  243                      and r["finish_reason"] in ("stop", "length") for r in warmup.capture["records"])
+  244              and warmup.capture["summary"]["prompt_tokens_mismatch"] == 0,
+  245              "warmup did not complete with valid outcomes")
+  246          remaining(owner, deadline, reserve)
+  247          stage = "episode_prepare"
+  248          prepared = episode.prepare_episode(
+  249              output_dir=output / "episode", binding_path=binding_path, gateway_url=gateway,
+  250              backend_url=backend, policy="mpc", trace_path=root / PROBES / "admission-boundary.json")
+  251          prepared_error = getattr(prepared, "error", None)
+  252          services.checked(prepared_error is None,
+  253                           "episode local preparation failed: " + str(prepared_error))
+  254          handle = getattr(prepared, "recorder", None)
+  255          services.checked(handle is not None and isinstance(handle.trace, dict),
+  256                           "episode preparation has no recorder/trace")
+  257          report["episode_trace_requests"] = len(handle.trace["requests"])
+  258          services.checked(report["episode_trace_requests"] == 5, "immutable five-request probe required")
+  259          report["caller_clock_domains"]["episode_recorder"] = handle.capture["clock_domain"]
+  260          parameters = ModelParameters(cost_spec=CostSpec(**expected["cost_spec"]))
+  261          planner = NominalPlanner(parameters)
+  262          settings = protocol["controller"]
+  263          limits = runtime_api.RuntimeLimits(
+  264              iterations=settings["iterations"], episode_s=settings["episode_s"],
+  265              decision_s=settings["entry_to_action_deadline_s_max"],
+  266              solve_s=settings["solve_budget_s"], poll_s=settings["poll_s"])
+  267          stage = "pre_episode_drain"
+  268          await drain(client, owner=owner, deadline=deadline, reserve=reserve,
+  269                      output=output, key=key, report=report, phase="pre-episode")
+  270          stage = "pre_control_state"
+  271          state = await observe(
+  272              client, "/admin/mpc/state", owner=owner, deadline=deadline, reserve=reserve,
+  273              output=output, key=key, report=report, name="pre-control-state-observation")
+  274          services.checked(state["identity"] == expected["identity"]
+  275                           and state["clock_domain"] == expected["clock_domain"]
+  276                           and state["cost_spec"] == expected["cost_spec"],
+  277                           "post-warmup source/clock/cost mismatch")
+  278          services.write(output / "pre-control-state.json", state, key)
+  279          recheck(bound)
+  280          stage = "runtime_binding"
+  281          entered = time.monotonic()
+  282          start = entered + 1.0
+  283          window = handle.trace["duration_seconds"]
+  284          services.checked(all(type(value) in (int, float) and math.isfinite(value) and value > 0
+  285                               for value in (window, limits.episode_s)), "invalid episode/window duration")
+  286          expires = entered + 20.0
+  287          services.checked(start + max(limits.episode_s, window) <= min(deadline - reserve, expires),
+  288                           "episode/window exceeds original deadline or permit expiry")
+  289          journal = output / "runtime-journal.json"
+  290          described = runtime_api.describe_protocol(
+  291              planner, journal, endpoint=gateway, scenario_binding=prepared.scenario_binding,
+  292              policy="mpc", limits=limits, start_at=start)
+  293          permit = NominalDemoPermit(
+  294              identity=planner.identity, run_id=state["run_id"],
+  295              clock_domain=expected["clock_domain"], source_sha256=described["source_sha256"],
+  296              protocol_sha256=described["protocol_sha256"],
+  297              not_before=entered, expires_at=expires, max_commands=8, approved=True)
+  298          services.write(output / "runtime-binding.json", {
+  299              "description": described, "offered_start": start, "caller_source_binding": bound,
+  300              "caller_sha256": bound["caller_sha256"], "adapter_sha256": bound["adapter_sha256"],
+  301              "permit_not_before": entered, "permit_expires_at": expires,
+  302              "permit_max_commands": 8, "authority": "separate Mayor exact-source preregistration",
+  303          }, key)
+  304          runtime = runtime_api.NominalRuntime(
+  305              client, planner, prepared.scenario_factory, journal,
+  306              admin_key=key, scenario_binding=prepared.scenario_binding, permit=permit,
+  307              enabled=True, policy="mpc", limits=limits, parameters=parameters, start_at=start)
+  308          services.checked(runtime.protocol_sha256 == described["protocol_sha256"], "runtime protocol binding changed")
+  309          recheck(bound)
+  310          remaining(owner, deadline, reserve)
+  311          stage = "episode_run"
+  312          entered_run = True
+  313          result = await episode.run_episode(
+  314              prepared, runtime, owner=owner, offered_start=start, enabled=True)
+  315          stage = "episode_result_validation"
+  316          try:
+  317              report["engineering_episode"] = strict_copy(result)
+  318          except (ValueError, TypeError) as error:
+  319              preserving(lambda: services.write(output / "episode-invalid-result.json", {
+  320                  "error": error_record(error), "unscorable_result_repr": repr(result)}, key),
+  321                  error, report, "invalid_result_persistence")
+  322              raise
+  323          services.checked(isinstance(result, dict) and result.get("status") == "collected"
+  324                           and not result["failures"] and result["all_workers_joined"]
+  325                           and not result["persistence_errors"] and not result["missing_record_ids"],
+  326                           "engineering episode failed or incomplete; see raw episode evidence")
+  327          services.checked(handle.capture["status"] == "collected" and len(handle.capture["records"]) == 5,
+  328                           "episode raw capture not collected or incomplete")
+  329          remaining(owner, deadline, reserve)
+  330          stage = "completed"
+  331      except BaseException as error:
+  332          failure(stage, error)
+  333      finally:
+  334          if client is not None:
+  335              try:
+  336                  await drain(client, owner=owner, deadline=deadline, reserve=reserve,
+  337                              output=output, key=key, report=report, phase="final")
+  338              except BaseException as error:
+  339                  failure("final_drain", error)
+  340              try:
+  341                  await client.aclose()
+  342              except BaseException as error:
+  343                  failure("client_close", error)
+  344          if bound is not None:
+  345              attempt("final_source_check", lambda: recheck(bound))
+  346          capture = capture_of(prepared)
+  347          allocated = attempt("episode_counts", lambda: counts(capture, entered_run))
+  348          warm_counts = attempt("warmup_counts", lambda: counts(getattr(warmup, "capture", None), False))
+  349          allocated = allocated or {"records_allocated": None, "sent": None}
+  350          report["offered_requests_from_driver"] = allocated["records_allocated"]
+  351          report["episode_sent_requests"] = allocated["sent"]
+  352          report["warmup_offered_requests"] = warm_counts["records_allocated"] if warm_counts else None
+  353          report["warmup_sent_requests"] = warm_counts["sent"] if warm_counts else None
+  354          path = output / ("caller-episode-capture.json" if entered_run else "episode-not-run-capture.json")
+  355          if capture is not None and recorder is not None:
+  356              report["caller_capture_sha256"] = attempt(
+  357                  "episode_capture_persistence", lambda: persist_capture(recorder, path, capture, key))
+  358          else:
+  359              attempt("absent_capture_persistence", lambda: services.write(path, {
+  360                  "schema": "qualification-caller-absent-capture-v1", "raw_v2_capture_available": False,
+  361                  "status": "NOT_RUN" if not entered_run else "UNKNOWN", **allocated,
+  362              }, key))
+  363          if warmup is None:
+  364              attempt("absent_warmup_persistence", lambda: services.write(output / "warmup-not-run.json", {
+  365                  "status": "NOT_RUN", "capture_available": False, "records_allocated": 0, "sent": 0}, key))
+  366          prepared_error = getattr(prepared, "error", None)
+  367          try:
+  368              prepared_error = strict_copy(prepared_error)
+  369          except (ValueError, TypeError) as error:
+  370              failure("prepared_error_serialization", error)
+  371              prepared_error = {"unserializable_error_repr": repr(prepared_error)}
+  372          receipt = {
+  373              "schema": "qualification-caller-terminal-v1", "stage": stage, "entered_run": entered_run,
+  374              "status": "NOT_RUN" if not entered_run else ("FAILED" if primary is not None else "COLLECTED"),
+  375              "prepared_error": prepared_error, "primary_error": error_record(primary) if primary else None,
+  376              "errors": report["caller_errors"], "records_allocated": allocated["records_allocated"],
+  377              "sent": allocated["sent"], "episode_planned_requests": 5,
+  378              "episode_trace_requests": report["episode_trace_requests"],
+  379              "capture_status": capture.get("status") if isinstance(capture, dict) else None,
+  380              "capture_error": capture.get("error") if isinstance(capture, dict) else None,
+  381              "deadline": deadline if type(deadline) in (int, float) and math.isfinite(deadline) else None,
+  382              "cleanup_reserve_s": reserve if type(reserve) in (int, float) and math.isfinite(reserve) else None,
+  383              "native_qualification": False, "full_wall": None,
+  384          }
+  385          report["qualification_caller"] = receipt
+  386          if entered_run and primary is not None and not isinstance(primary, Exception):
+  387              receipt["status"] = "INTERRUPTED"
+  388          if not entered_run:
+  389              attempt("not_run_receipt_persistence",
+  390                      lambda: services.write(output / "episode-not-run.json", receipt, key))
+  391          receipt["primary_error"] = error_record(primary) if primary else None
+  392          attempt("caller_terminal_persistence",
+  393                  lambda: services.write(output / "qualification-caller.json", receipt, key))
+  394          if primary is not None:
+  395              receipt["primary_error"] = error_record(primary)
+  396              if entered_run:
+  397                  receipt["status"] = "FAILED" if isinstance(primary, Exception) else "INTERRUPTED"
+  398      if primary is not None:
+  399          primary.qualification_caller_report = report["qualification_caller"]
+  400          raise primary.with_traceback(primary_tb)
+  401  
+  402  
+  403  def body(**context):
+  404      asyncio.run(collect(**context))
+  405  
+  406  
+  407  def main(argv=None):
+  408      parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+  409      parser.add_argument("--execute", action="store_true")
+  410      parser.add_argument("--source-root")
+  411      parser.add_argument("--output-root")
+  412      parser.add_argument("--seconds", type=float, default=480)
+  413      parser.add_argument("--cleanup-reserve", type=float, default=30)
+  414      parser.add_argument("--term-grace", type=float, default=10)
+  415      args = parser.parse_args(argv)
+  416      return services.run(args, body=body)
+  417  
+  418  
+  419  if __name__ == "__main__":
+  420      raise SystemExit(main())

@@ -1,0 +1,26 @@
+{
+  "auth_values_captured": false,
+  "body_complete": false,
+  "client_clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+  "client_headers_at": null,
+  "client_receive_at": null,
+  "client_send_at": null,
+  "credential_removed": false,
+  "dispatch_attempted": false,
+  "error_type": null,
+  "http_status": null,
+  "method": "POST",
+  "path": "/v1/chat/completions",
+  "request_body": "{\"max_tokens\":16,\"messages\":[{\"content\":\"Count from one to five.\",\"role\":\"user\"}],\"model\":\"Qwen/Qwen3-4B-Instruct-2507\",\"temperature\":0}",
+  "request_id": null,
+  "reserved_at": 1361136.831381161,
+  "response_headers": {},
+  "role": "one-warmup",
+  "scope": "RESERVATION_NOT_PROOF_OF_SOCKET_SEND_OR_NATIVE_RECEIPT",
+  "sequence": 59,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "scheme": "http"
+  }
+}

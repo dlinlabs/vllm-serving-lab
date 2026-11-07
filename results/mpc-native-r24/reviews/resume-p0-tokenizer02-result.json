@@ -1,0 +1,43 @@
+{
+  "scope": "Real-tokenizer CPU validation on the existing authorized GPU host; not GPU inference",
+  "status": "PASS",
+  "preregistration_commit": "1e9540caa9dd37f927d5389d05be3d973d234bf7",
+  "plan": "resume-p0-tokenizer02-plan.json",
+  "raw": "resume-p0-tokenizer02-raw",
+  "original_failed_attempt": "resume-p0-tokenizer01-raw",
+  "attempts_after_explicit_local_asset_correction": 1,
+  "exit": 0,
+  "model_label": "Qwen/Qwen3-4B-Instruct-2507",
+  "actual_tokenizer_source": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+  "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+  "train_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+  "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+  "train_replay_bytes": 257950,
+  "offers": 88,
+  "measured_chat_template_tokens_equal_requested_labels": 88,
+  "replay_schema_validated": true,
+  "all_prompts_retokenized_and_verified": true,
+  "tokenizer_and_config_asset_hashes_unchanged_before_after": true,
+  "parent_checks": "Returned exact bytes/hash, schema, purpose, offered-tape provenance, 88/88 equality, tokenizer fingerprint, before/after assets and local source SHA matches.",
+  "source_sha256": {
+    "prepare_replay.py": "91e8e66042da8f2387907b4fb8db98c1117b39af4d041bff9c1690e504ebf666",
+    "nominal_workload.py": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4",
+    "trace_workload.py": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f"
+  },
+  "host_versions": {
+    "python": "3.12.3",
+    "transformers": "5.22.1",
+    "tokenizers": "0.23.3",
+    "vllm": "0.30.0",
+    "torch": "2.13.0+cu130",
+    "fastapi": "0.136.3",
+    "httpx": "0.28.1",
+    "pydantic": "2.14.2",
+    "uvicorn": "0.54.0"
+  },
+  "version_provenance_limit": "Package metadata read from this host. This attempt did not start or connect to a backend process; installed vLLM is not evidence that a specific backend binary/config was executed.",
+  "no_Eval_read_or_upload_no_download_no_HTTP_no_GPU_inference": true,
+  "new_serving_preflight_requirement": "Root gateway loads tokenizer using MODEL_NAME and can silently fall back to a character heuristic if the repository ID is not in its cache. Configure the explicit verified local model path, expose the matching backend model alias, verify tokenizer_available and zero fallback requests; derive matching immutable CostSpec/model identity. Do not compare policies under an unverified heuristic fallback.",
+  "remaining_P0": ["causal scenario producer", "actual HTTP coordinator integration", "source/clock/permit/safety validation", "real changed-action closed loop", "empirical Train Fixed selection", "held-out descriptive comparison", "portable raw-to-table and final claims audit"],
+  "no_accuracy_superiority_SLO_guarantee_or_Resume_Ready_claim": true
+}

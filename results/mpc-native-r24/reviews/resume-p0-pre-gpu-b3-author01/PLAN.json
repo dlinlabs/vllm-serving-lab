@@ -1,0 +1,29 @@
+{
+  "task": "B3 qualification caller and directly coupled L2/L3/L4/L6/L7/L9/B1 obligations; CPU only",
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "declared_branch": "snapshot/mpc-p0-evidence-20261105",
+  "declared_HEAD": "832ab593c8666b8bfa3761b3061355a2c94748c8",
+  "Git_verification": "User-supplied snapshot; no Git command authorized or used.",
+  "owned_sources": [
+    "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+    "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py"
+  ],
+  "before_caller_sha256": "1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c",
+  "accepted_adapter_sha256": "935c2679c4b9fffdffb23ce88ca5351f91fa84e25c8c1edccedddaea4e4262a8",
+  "red": "Manually adapt only the two qualification-test witnesses from draft-regressions-v2.patch; one two-selector Python3.12 attempt against pinned original caller. No smoke-test patch.",
+  "green": "One frozen targeted caller-test generation, <=60s, existing OFF/nonfinite checks and focused preparation/None/GET/persistence/interrupt/complete/drain/source/deadline/JSON cases. MockTransport only; no old suites, model research or Native execution.",
+  "obligations": [
+    "Planned versus allocated versus sent counts; prepare error first, recorder None safe; caller finally terminal/not-run receipt and distinct raw not-run capture.",
+    "Keep original primary BaseException identity/type including KeyboardInterrupt/CancelledError when cleanup/persistence also fails; secondary errors remain visible.",
+    "Warmup capture persisted for failures/interrupts; terminal adapter result strict-JSON checked before insertion into lifecycle report.",
+    "Bounded pre-S and final/failure /metrics drain: in-flight/waiting/admitted cost all zero, zero tokenizer fallback, raw readings persisted; original owner D/R and check preserved.",
+    "Re-read protocol hash versus startup source_pins; pin accepted adapter and caller before any traffic, recheck, and record exact caller SHA in runtime-binding.json.",
+    "Positive remaining GET timeout; unchanged S=entered+1, 20s/max8 external-Mayor permit; S+max(episode,window) <= both permit expiry and original D-R.",
+    "Preserve different real recorder versus SDK clock labels. Do not apply incorrect L5 substitution."
+  ],
+  "unchanged": "Defaults480/30/10, immutable warmup3/five-Train probe, default OFF, no retiming, no peer/core/SDK/product/gateway/services edits. Role3 smoke and its tests are concurrently owned and are not edited/reviewed unsealed.",
+  "read_scope": "Owned caller/tests and bounded existing review/draft/protocol plus accepted client/episode/runtime/gateway interfaces and frozen review smoke API. No new agents or broad model investigation.",
+  "environment": "Python3.12 supplied venv; PYTHONPATH=resume-mvp:root; unique relative NATIVE_SMOKE_TEST_OUTPUT with existing parents; absolute NATIVE_SMOKE_PROTOCOL; nobytecode/noautoload/threads1/hashseed0/nice-n19/-B.",
+  "prohibitions": ["No GPU/SSH/real network/services/installs/Git/commits/child agents/Markdown or old-checkout operations."],
+  "seal": "Preserve original/red/final sources, commands, results, all failures, actual scoped cleanup, ABI limitations and SHA256SUMS; stop before GPU."
+}

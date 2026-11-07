@@ -1,0 +1,86 @@
+{
+  "active_duration_cap_s": 20,
+  "authority_file": "results/mpc-native-r24/reviews/native-team16-component-gpu-authorization01.json",
+  "body_cap_bytes": 1048576,
+  "cleanup": "Probe closes both HTTP clients and drains every owned offer task. Mayor owns native/gateway process groups and must stop/join the disposable stack even on refusal; do not restore by an unplanned command.",
+  "cleanup_observation_cap_s": 3,
+  "command_path": "/admin/mpc/budget",
+  "command_retry_count": 0,
+  "command_ttl_s": 0.5,
+  "credential_policy": "Never capture environment/config/auth header values. Known private auth value is removed from unexpected echoed bodies/errors before any evidence write.",
+  "deployable": false,
+  "executor": "Mayor only, on the existing isolated Source13 research stack",
+  "existing_upload_reference_only": "/workspace/pr32-r23/r24-native-prepared-physical-upload13",
+  "expired_margin_s": 0.001,
+  "final_queue_max_samples": 9,
+  "final_queue_path": "/pr33-native/queue-state",
+  "final_queue_poll_s": 0.25,
+  "final_queue_required_empty": 2,
+  "gateway_origin": "http://127.0.0.1:8080",
+  "gpu_uuid": "GPU-8610519d-3680-ae5f-cdfc-40037bfb5013",
+  "http_timeout_s": 3,
+  "initial_budget": 32,
+  "max_watch_samples_per_rejection": 9,
+  "maximum_completion_tokens": 128,
+  "maximum_concurrent_offers": 2,
+  "maximum_http_exchanges": 64,
+  "mode": "attach_to_Mayor_owned_stack_only_no_service_launch",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "model_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "native_execution_during_local_preparation": false,
+  "native_mpc_permitted": false,
+  "native_origin": "http://127.0.0.1:8000",
+  "native_state_path": "/pr33-native/state",
+  "observability": {
+    "actual_applied_at": "No exact post-write timestamp. Preserve the raw applied_at claim but report an interval ending at the next actual state snapshot, never acknowledgement as a point application time.",
+    "effect_scope": "Gateway public admission budget, not native scheduler token/batch capacity or throughput improvement.",
+    "native_context": "Legacy before/after state retained; final full scheduler/issued-queue observations in the same3s window. Exact scope and fixed refusal procedure are preregistered in AMENDMENT02.json.",
+    "negative_evidence": "Version-monotone, same-domain, same-run public snapshots plus a bounded post-rejection watch; not proof against arbitrary effects after the watch.",
+    "server_checked_at": "Successful CAS response applied_at is the source-proven pre-write expiry-check sample; rejection responses expose no check time.",
+    "server_received_at": "Not exposed by the immutable endpoint."
+  },
+  "offer_max_tokens": 16,
+  "offers_per_step": 2,
+  "on_failure": "Stop issuing new commands/offers; retain unsent planned rows, all attempted outcomes and raw redacted receipts. Perform read-only bounded final observations. No retry or fallback command.",
+  "prompt": "Answer only with the word ready.",
+  "question": "Do fixed public admission-budget commands apply before their guard deadline, and do expired/stale-version commands leave budget and version unchanged throughout a bounded watch?",
+  "rejection_watch_s": 0.75,
+  "requirements_not_imposed": [
+    "qualified MPC model",
+    "native14 convergence",
+    "52-episode comparison"
+  ],
+  "schema": "team16-short-fixed-native-control-probe-v2",
+  "source13_directory": "experiments/mpc-research/native-r24-prepared-physical13",
+  "source_root": "/workspace/pr32-r23/source",
+  "state_path": "/admin/mpc/state",
+  "steps": [
+    {
+      "budget": 16,
+      "control": "fresh",
+      "expected_http": 200,
+      "name": "fresh16"
+    },
+    {
+      "budget": 32,
+      "control": "expired",
+      "expected_http": 409,
+      "name": "expired32"
+    },
+    {
+      "budget": 32,
+      "control": "stale",
+      "expected_http": 409,
+      "name": "stale32"
+    },
+    {
+      "budget": 32,
+      "control": "fresh",
+      "expected_http": 200,
+      "name": "fresh32"
+    }
+  ],
+  "terminal_observation_amendment": "AMENDMENT02.json",
+  "total_planned_offers": 8,
+  "watch_poll_s": 0.125
+}

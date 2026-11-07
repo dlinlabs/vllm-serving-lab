@@ -1,4 +1,5 @@
 import asyncio
+import hashlib
 import json
 import math
 import os
@@ -7,7 +8,7 @@ import time
 import re
 from contextlib import asynccontextmanager, nullcontext
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, replace
 from http.cookiejar import CookieJar
 from typing import Any, Dict, Optional
 
@@ -35,6 +36,10 @@ OUTPUT_TOKEN_COST = float(os.getenv("OUTPUT_TOKEN_COST", "0.0052083333"))
 MAX_ADMITTED_COST = float(os.getenv("MAX_ADMITTED_COST", "64.0"))
 MIN_REQUEST_COST = float(os.getenv("MIN_REQUEST_COST", "0.1"))
 DEFAULT_MAX_TOKENS = int(os.getenv("DEFAULT_MAX_TOKENS", "128"))
+MPC_LAB_ENABLED = os.getenv("MPC_LAB_ENABLED", "false").strip().lower() in {"true", "1"}
+MPC_OWNER_LEDGER_ENABLED = os.getenv("MPC_OWNER_LEDGER_ENABLED", "false").strip().lower() in {"true", "1"}
+if MPC_OWNER_LEDGER_ENABLED and (not MPC_LAB_ENABLED or ADMISSION_MODE != "cost_aware"):
+    raise RuntimeError("Owner ledger requires MPC lab and cost_aware admission")
 
 if ADMISSION_MODE not in {"baseline", "protected", "cost_aware"}:
     raise RuntimeError(
@@ -66,12 +71,16 @@ except Exception as exc:  # pragma: no cover - environment-dependent fallback
     tokenizer_load_error = f"{type(exc).__name__}: {exc}"
 
 telemetry = Telemetry()
+telemetry.owner_ledger_enabled = MPC_OWNER_LEDGER_ENABLED
 TELEMETRY_JSONL = os.getenv("TELEMETRY_JSONL", "")
 BENCHMARK_REQUEST_IDS = os.getenv("BENCHMARK_REQUEST_IDS", "0") == "1"
 LOOP_LAG_TELEMETRY = os.getenv("LOOP_LAG_TELEMETRY", "0") == "1"
 TELEMETRY_STATUS_JSON = os.getenv('TELEMETRY_STATUS_JSON', '')
 GATEWAY_DIAGNOSTICS = os.getenv('GATEWAY_DIAGNOSTICS', '0') == '1'
 SHARED_UPSTREAM_CLIENT = os.getenv('SHARED_UPSTREAM_CLIENT', '0') == '1'
+PREFILL_RAW_COMPLETIONS = os.getenv('PREFILL_LAB_RAW_COMPLETIONS', '0') == '1'
+if PREFILL_RAW_COMPLETIONS and (not BENCHMARK_REQUEST_IDS or not SHARED_UPSTREAM_CLIENT or ADMISSION_MODE!='protected'):
+    raise RuntimeError('Raw prefill bridge requires benchmark IDs, shared client and fixed protected admission')
 NO_PHASE = nullcontext()
 benchmark_ids = set()
 
@@ -97,6 +106,8 @@ async def lifespan(app):
     shared_client = None
     if GATEWAY_DIAGNOSTICS and not (TELEMETRY_JSONL and TELEMETRY_STATUS_JSON):
         raise RuntimeError('Gateway diagnostics require telemetry log and shutdown status paths')
+    if MPC_OWNER_LEDGER_ENABLED and not (TELEMETRY_JSONL and TELEMETRY_STATUS_JSON):
+        raise RuntimeError("Owner ledger requires telemetry log and shutdown status paths")
     try:
         if SHARED_UPSTREAM_CLIENT:
             shared_client = create_upstream_client()
@@ -117,17 +128,23 @@ async def lifespan(app):
         started = True
         yield
     finally:
+        if MPC_OWNER_LEDGER_ENABLED:
+            async with state_lock:
+                telemetry.owner_ledger_closing = True
         stop.set()
         results = await asyncio.gather(*(t for t in (lag_task, task) if t is not None),
                                        *([shared_client.aclose()] if shared_client is not None else []),
                                        return_exceptions=True)
         if shared_client is not None:
             app.state.upstream_client = None
-        if telemetry.diagnostics is not None:
+        if telemetry.diagnostics is not None or MPC_OWNER_LEDGER_ENABLED:
             async def final_drain():
-                await telemetry.diagnostics.stop()
+                if telemetry.diagnostics is not None:
+                    await telemetry.diagnostics.stop()
                 telemetry.sample(await snapshot_metrics())
                 await telemetry.flush(TELEMETRY_JSONL)
+                if MPC_OWNER_LEDGER_ENABLED and telemetry.records:
+                    await telemetry.flush(TELEMETRY_JSONL)
             results.extend(await asyncio.gather(final_drain(), return_exceptions=True))
         errors = [result for result in results if isinstance(result, BaseException)]
         telemetry.enabled = False
@@ -141,7 +158,51 @@ async def lifespan(app):
             if telemetry.diagnostics is not None:
                 status.update(diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
                               diagnostics=telemetry.diagnostics.health())
+            if MPC_OWNER_LEDGER_ENABLED:
+                complete = (
+                    len(mpc_requests) == state["current_in_flight"]
+                    and math.isclose(math.fsum(mark.cost for mark in mpc_requests.values()),
+                                     state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9)
+                )
+                status.update(
+                    mpc_ledger_schema_version=2, mpc_producer_final_sequence=mpc_sequence,
+                    mpc_remaining_requests=len(mpc_requests), mpc_ledger_complete=complete,
+                    mpc_unflushed_records=len(telemetry.records),
+                )
+                if not complete or state["current_in_flight"]:
+                    status["status"] = "failed"
             def persist_status():
+                if MPC_OWNER_LEDGER_ENABLED:
+                    # Seal after the loop-owned writer has stopped; this is not an fsync guarantee.
+                    digest = hashlib.sha256()
+                    size = 0
+                    last_sequence = 0
+                    ledger_rows = 0
+                    contiguous = True
+                    with Path(TELEMETRY_JSONL).open("rb") as handle:
+                        for line in handle:
+                            digest.update(line)
+                            size += len(line)
+                            row = json.loads(line)
+                            contiguous = contiguous and row.get("run_id") == telemetry.run_id
+                            if row.get("event") == "mpc_ledger":
+                                sequence = row.get("sequence")
+                                contiguous = contiguous and (
+                                    row.get("ledger_schema_version") == 2
+                                    and type(sequence) is int and sequence == last_sequence + 1
+                                )
+                                last_sequence = sequence
+                                ledger_rows += 1
+                    status["mpc_ledger_complete"] = (
+                        status["mpc_ledger_complete"] and contiguous
+                        and last_sequence == status["mpc_producer_final_sequence"]
+                        and not status["mpc_unflushed_records"]
+                    )
+                    if not status["mpc_ledger_complete"]:
+                        status["status"] = "failed"
+                    status.update(telemetry_file_sha256=digest.hexdigest(),
+                                  telemetry_file_bytes=size, mpc_final_sequence=last_sequence,
+                                  mpc_ledger_rows_written=ledger_rows)
                 path = Path(TELEMETRY_STATUS_JSON)
                 temporary = path.with_suffix('.tmp')
                 temporary.write_text(json.dumps(status, allow_nan=False) + '\n')
@@ -174,6 +235,77 @@ state: Dict[str, Any] = {
     "rejected_cost": 0.0,
     "tokenizer_fallback_requests": 0,
 }
+
+mpc_requests = {}
+mpc_operations = {}
+mpc_sequence = 0
+MPC_OPERATION_LIMIT = 1024
+if MPC_LAB_ENABLED:
+    from mpc_lab.contracts import (
+        SCHEMA, GUARDED_CAPABILITY, CostSpec, Identity, RequestMark, Snapshot,
+        digest, implementation_hash,
+    )
+    from mpc_lab.runtime import snapshot_to_dict
+
+    from prefill_lab.live_http import clock_domain as mpc_local_clock_domain
+
+    mpc_clock_domain = mpc_local_clock_domain()
+    mpc_cost_spec = CostSpec(
+        intercept=COST_INTERCEPT,
+        input_per_token=INPUT_TOKEN_COST,
+        output_per_token=OUTPUT_TOKEN_COST,
+        minimum=MIN_REQUEST_COST,
+        default_max_tokens=DEFAULT_MAX_TOKENS,
+        tokenizer_identity=(
+            os.getenv("MPC_TOKENIZER_IDENTITY", "unqualified")
+            + f";model={MODEL_NAME};available={tokenizer is not None};fallback=chars4-chat-v1"
+        ),
+    )
+    mpc_identity = Identity(
+        os.getenv("MPC_MODEL_VERSION", "unqualified"),
+        os.getenv("MPC_CALIBRATION_VERSION", "unqualified"),
+        os.getenv("MPC_SUPPORT_HASH", "unqualified"),
+        mpc_cost_spec.fingerprint,
+        implementation_hash(),
+    )
+
+
+def mpc_now():
+    return time.monotonic()
+
+
+def mpc_changed(request_id=None, change_kind="control", request_cost=None):
+    global mpc_sequence
+    mpc_sequence += 1
+    if MPC_LAB_ENABLED and telemetry.enabled:
+        marks = tuple(mpc_requests.values())
+        reserved = math.fsum(mark.cost for mark in marks)
+        owner_fields = {}
+        if getattr(telemetry, "owner_ledger_enabled", False):
+            owner_fields.update(ledger_schema_version=2, change_kind=change_kind)
+            if request_id is not None:
+                owner_fields.update(request_id=request_id, request_cost=request_cost)
+        telemetry.emit(
+            "mpc_ledger", clock_domain=mpc_clock_domain, identity=asdict(mpc_identity),
+            sequence=mpc_sequence, effective_at=mpc_now(), reserved_cost=reserved,
+            running=len(marks),
+            complete=(
+                len(marks) == state["current_in_flight"]
+                and math.isclose(reserved, state["current_admitted_cost"],
+                                 rel_tol=1e-12, abs_tol=1e-9)
+            ),
+            budget=state["admission_budget"], budget_version=state["budget_version"],
+            **owner_fields,
+        )
+
+
+async def mpc_first_content(request_id):
+    observed_at = mpc_now()
+    async with state_lock:
+        mark = mpc_requests.get(request_id)
+        if mark is not None and mark.first_at is None:
+            mpc_requests[request_id] = replace(mark, first_at=observed_at)
+            mpc_changed(request_id, "first_content", mark.cost)
 
 
 def _message_text(messages: Any) -> str:
@@ -281,6 +413,7 @@ async def snapshot_metrics() -> Dict[str, Any]:
     if telemetry.diagnostics is not None:
         metrics['diagnostics'] = dict(gc=telemetry.diagnostics.gc_state(),
                                      health=telemetry.diagnostics.health(), sampled_at=time.monotonic())
+    if PREFILL_RAW_COMPLETIONS:metrics['prefill_raw_completions']=True
     if SHARED_UPSTREAM_CLIENT:
         metrics['shared_upstream_client'] = True
     return metrics
@@ -294,7 +427,7 @@ class AdmissionDecision:
 
 
 async def begin_request(
-    request_cost: float, used_tokenizer_fallback: bool, phases=None
+    request_cost: float, used_tokenizer_fallback: bool, phases=None, *, mpc_mark=None
 ) -> AdmissionDecision:
     if phases is not None:
         phases.begin('admission_lock_wait')
@@ -311,6 +444,14 @@ async def begin_request(
                 phases.end('admission_lock_wait')
             if used_tokenizer_fallback:
                 state["tokenizer_fallback_requests"] += 1
+            if MPC_OWNER_LEDGER_ENABLED and (
+                mpc_mark is None or not telemetry.enabled
+                or getattr(telemetry, "owner_ledger_closing", False)
+            ):
+                state["rejected_requests"] += 1
+                state["rejected_cost"] += request_cost
+                telemetry.emit("mpc_owner_ledger_refused", reason="owner_mark_or_writer_unavailable")
+                return AdmissionDecision(False, state["admission_budget"], state["budget_version"])
 
             projected_cost = state["current_admitted_cost"] + request_cost
             budget = state["admission_budget"]
@@ -328,6 +469,15 @@ async def begin_request(
                 state["peak_admitted_cost"],
                 projected_cost,
             )
+            if MPC_LAB_ENABLED:
+                if mpc_mark is not None:
+                    identifier, received_at, prompt_tokens, max_tokens = mpc_mark
+                    mpc_requests[identifier] = RequestMark(
+                        identifier, request_cost, prompt_tokens, max_tokens,
+                        received_at, mpc_now(),
+                    )
+                mpc_changed(mpc_mark[0] if mpc_mark is not None else None,
+                            "admission", request_cost)
         return AdmissionDecision(True, budget, version)
 
     async with state_lock:
@@ -358,7 +508,7 @@ async def begin_request(
         raise
 
 
-async def finish_request(request_cost: float) -> None:
+async def finish_request(request_cost: float, *, request_id=None) -> None:
     if ADMISSION_MODE == "baseline":
         return
 
@@ -369,6 +519,9 @@ async def finish_request(request_cost: float) -> None:
                 0.0,
                 state["current_admitted_cost"] - request_cost,
             )
+            if MPC_LAB_ENABLED:
+                mpc_requests.pop(request_id, None)
+                mpc_changed(request_id, "terminal", request_cost)
         return
 
     async with state_lock:
@@ -379,6 +532,29 @@ async def finish_request(request_cost: float) -> None:
 
 @app.post("/v1/chat/completions")
 async def proxy_chat_completions(request: Request):
+    return await _proxy_completions(request, '/v1/chat/completions')
+
+
+async def proxy_raw_completions(request: Request):
+    if not PREFILL_RAW_COMPLETIONS:return JSONResponse({'detail':'not found'},status_code=404)
+    try:
+        payload=json.loads(await request.body());ids=payload['prompt'];extra=payload['vllm_xargs']
+        identifier=request.headers.get('x-benchmark-request-id','')
+        if (set(payload)-{'model','prompt','max_tokens','temperature','ignore_eos','stream','stream_options','request_id','vllm_xargs'}
+                or not re.fullmatch('[0-9a-f]{32}',identifier) or payload['request_id']!=identifier
+                or not isinstance(ids,list) or not ids or any(type(x) is not int or x<0 for x in ids)
+                or payload['max_tokens'] not in (128,256) or len(ids)+payload['max_tokens']>8192
+                or payload['ignore_eos'] is not True or payload['stream'] is not True
+                or type(payload['temperature']) not in (int,float) or payload['temperature']!=0
+                or extra['prefill_lab_trace_id']!=identifier):raise ValueError('Invalid frozen raw request')
+    except (ValueError,KeyError,TypeError):return JSONResponse({'detail':'invalid benchmark raw request'},status_code=422)
+    return await _proxy_completions(request, '/v1/completions')
+
+
+if PREFILL_RAW_COMPLETIONS:app.post('/v1/completions')(proxy_raw_completions)
+
+
+async def _proxy_completions(request, upstream_path):
     request_id = None
     if BENCHMARK_REQUEST_IDS:
         request_id = request.headers.get('x-benchmark-request-id')
@@ -392,6 +568,10 @@ async def proxy_chat_completions(request: Request):
                 return JSONResponse({'detail': 'benchmark ID capacity exceeded'}, status_code=503)
             benchmark_ids.add(request_id)
     request_id = telemetry.received(request_id)
+    mpc_received_at = mpc_now() if MPC_LAB_ENABLED else None
+    if upstream_path=='/v1/completions':
+        from prefill_lab.live_http import clock_domain
+        telemetry.emit('bridge_clock',request_id,clock_domain=clock_domain())
     phases = telemetry.diagnostics.request(request_id) if telemetry.diagnostics is not None else None
     reserved = False
     cleaned = False
@@ -419,7 +599,10 @@ async def proxy_chat_completions(request: Request):
                 finally:
                     if reserved:
                         with phases.phase('reservation_release') if phases else NO_PHASE:
-                            await finish_request(request_cost)
+                            if MPC_LAB_ENABLED:
+                                await finish_request(request_cost, request_id=request_id)
+                            else:
+                                await finish_request(request_cost)
                     telemetry.terminal(request_id, outcome)
                     terminal_recorded = True
                     if outcome == "failed":
@@ -463,6 +646,14 @@ async def proxy_chat_completions(request: Request):
         except (ValueError, UnicodeDecodeError):
             payload = {}
 
+        if MPC_LAB_ENABLED and upstream_path == "/v1/chat/completions" and isinstance(payload, dict):
+            extra = payload.get("vllm_xargs")
+            if extra is None or isinstance(extra, dict):
+                payload = {**payload, "vllm_xargs": {
+                    **(extra or {}), "pr33_gateway_request_id": request_id,
+                }}
+                body = json.dumps(payload).encode()
+
         estimated_input_tokens = estimated_output_tokens = 0
         used_tokenizer_fallback = False
         if ADMISSION_MODE == "cost_aware":
@@ -470,7 +661,13 @@ async def proxy_chat_completions(request: Request):
                 (request_cost, estimated_input_tokens, estimated_output_tokens,
                  used_tokenizer_fallback) = estimate_request_cost(payload)
 
-        decision = await begin_request(request_cost, used_tokenizer_fallback, phases)
+        if MPC_LAB_ENABLED:
+            decision = await begin_request(
+                request_cost, used_tokenizer_fallback, phases,
+                mpc_mark=(request_id, mpc_received_at, estimated_input_tokens, estimated_output_tokens),
+            )
+        else:
+            decision = await begin_request(request_cost, used_tokenizer_fallback, phases)
         if not decision.accepted:
             telemetry.terminal(request_id, "rejected", budget=decision.budget,
                                budget_version=decision.budget_version,
@@ -501,7 +698,7 @@ async def proxy_chat_completions(request: Request):
             with phases.phase('client_construction') if phases else NO_PHASE:
                 client = httpx.AsyncClient()
         upstream_request = client.build_request(
-            method=request.method, url=f"{VLLM_URL}/v1/chat/completions",
+            method=request.method, url=f"{VLLM_URL}{upstream_path}",
             content=body, headers=headers, timeout=60.0,
         )
         with phases.phase('http_send_headers') if phases else NO_PHASE:
@@ -520,7 +717,8 @@ async def proxy_chat_completions(request: Request):
         raise
 
     async def stream_upstream():
-        observer = SSEObserver()
+        observer = SSEObserver(completions=upstream_path=='/v1/completions')
+        mpc_first_marked = False
         is_sse = "text/event-stream" in upstream.headers.get("content-type", "")
         streaming_expected = bool(payload.get("stream")) or is_sse
         outcome = "cancelled"
@@ -531,6 +729,9 @@ async def proxy_chat_completions(request: Request):
                 if is_sse and upstream.is_success:
                     observer.feed(chunk)
                     if observer.has_content:
+                        if MPC_LAB_ENABLED and not mpc_first_marked:
+                            await mpc_first_content(request_id)
+                            mpc_first_marked = True
                         if phases is not None:
                             phases.mark('first_content')
                         telemetry.first_content(request_id)
@@ -567,6 +768,10 @@ async def update_budget(request: Request):
         return JSONResponse(
             {"detail": "budget updates require cost_aware mode"}, status_code=409
         )
+    if MPC_OWNER_LEDGER_ENABLED and (
+        not telemetry.enabled or getattr(telemetry, "owner_ledger_closing", False)
+    ):
+        return JSONResponse({"detail": "owner ledger unavailable"}, status_code=503)
 
     try:
         payload = await request.json()
@@ -583,9 +788,15 @@ async def update_budget(request: Request):
         )
 
     async with state_lock:
+        if MPC_OWNER_LEDGER_ENABLED and (
+            not telemetry.enabled or getattr(telemetry, "owner_ledger_closing", False)
+        ):
+            return JSONResponse({"detail": "owner ledger unavailable"}, status_code=503)
         previous_budget = state["admission_budget"]
         state["admission_budget"] = budget
         state["budget_version"] += 1
+        if MPC_LAB_ENABLED:
+            mpc_changed()
         applied_at = time.monotonic()
         result = {
             "previous_budget": previous_budget,
@@ -596,6 +807,121 @@ async def update_budget(request: Request):
         }
     telemetry.emit("budget_updated", **result)
     # Existing requests retain their reservations, even after a budget reduction.
+    return result
+
+
+def mpc_access(request):
+    if not MPC_LAB_ENABLED:
+        return JSONResponse({"detail": "not found"}, status_code=404)
+    if not ADMIN_API_KEY:
+        return JSONResponse({"detail": "MPC admin disabled"}, status_code=503)
+    supplied = request.headers.get("x-admin-api-key", "")
+    if not secrets.compare_digest(supplied.encode(), ADMIN_API_KEY.encode()):
+        return JSONResponse({"detail": "invalid admin API key"}, status_code=401)
+    if ADMISSION_MODE != "cost_aware":
+        return JSONResponse({"detail": "MPC requires cost_aware mode"}, status_code=409)
+    if any(os.getenv(name, "1") != "1" for name in ("WEB_CONCURRENCY", "UVICORN_WORKERS")):
+        return JSONResponse({"detail": "MPC requires a single worker"}, status_code=409)
+    return None
+
+
+@app.get("/admin/mpc/state")
+async def mpc_snapshot(request: Request):
+    if (failure := mpc_access(request)) is not None:
+        return failure
+    async with state_lock:
+        marks = tuple(mpc_requests.values())
+        complete = (
+            len(marks) == state["current_in_flight"]
+            and math.isclose(
+                math.fsum(mark.cost for mark in marks),
+                state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9,
+            )
+        )
+        snapshot = Snapshot(
+            telemetry.run_id, mpc_clock_domain, mpc_now(),
+            state["admission_budget"], state["budget_version"],
+            marks, mpc_identity, mpc_sequence, complete,
+        )
+        result = snapshot_to_dict(snapshot)
+        result["capabilities"] = [GUARDED_CAPABILITY]
+        result["cost_spec"] = asdict(mpc_cost_spec)
+        return result
+
+
+@app.post("/admin/mpc/budget")
+async def mpc_update_budget(request: Request):
+    if (failure := mpc_access(request)) is not None:
+        return failure
+    if MPC_OWNER_LEDGER_ENABLED and (
+        not telemetry.enabled or getattr(telemetry, "owner_ledger_closing", False)
+    ):
+        return JSONResponse({"detail": "owner ledger unavailable"}, status_code=503)
+    try:
+        payload = await request.json()
+        if not isinstance(payload, dict) or set(payload) != {
+            "schema", "run_id", "clock_domain", "identity", "expected_version",
+            "not_after", "operation_id", "budget",
+        }:
+            raise ValueError("command_fields")
+        if (
+            any(not isinstance(payload[key], str) or not 0 < len(payload[key]) <= 1024
+                for key in ("schema", "run_id", "clock_domain", "operation_id"))
+            or type(payload["expected_version"]) is not int
+            or payload["expected_version"] < 0
+            or type(payload["budget"]) not in (int, float)
+            or not math.isfinite(payload["budget"])
+            or payload["budget"] <= 0
+            or type(payload["not_after"]) not in (int, float)
+            or not math.isfinite(payload["not_after"])
+            or not isinstance(payload["identity"], dict)
+        ):
+            raise ValueError("command_values")
+        command_hash = digest(payload)
+    except (ValueError, TypeError, OverflowError, UnicodeDecodeError):
+        return JSONResponse({"detail": "invalid guarded command"}, status_code=422)
+
+    async with state_lock:
+        if MPC_OWNER_LEDGER_ENABLED and (
+            not telemetry.enabled or getattr(telemetry, "owner_ledger_closing", False)
+        ):
+            return JSONResponse({"detail": "owner ledger unavailable"}, status_code=503)
+        # Identity precedes any comparison of server-clock uptime.
+        if (
+            payload["schema"] != SCHEMA
+            or payload["run_id"] != telemetry.run_id
+            or payload["clock_domain"] != mpc_clock_domain
+            or payload["identity"] != asdict(mpc_identity)
+        ):
+            return JSONResponse({"detail": "command identity mismatch"}, status_code=409)
+        previous = mpc_operations.get(payload["operation_id"])
+        if previous is not None:
+            if previous[0] != command_hash:
+                return JSONResponse({"detail": "operation ID reused"}, status_code=409)
+            return dict(previous[1])
+        if payload["expected_version"] != state["budget_version"]:
+            return JSONResponse({"detail": "stale budget version"}, status_code=409)
+        # Refuse new operations when full; do not silently forget idempotency.
+        if len(mpc_operations) >= MPC_OPERATION_LIMIT:
+            return JSONResponse({"detail": "operation outcome capacity"}, status_code=503)
+        applied_at = mpc_now()
+        if applied_at >= payload["not_after"]:
+            return JSONResponse({"detail": "command expired"}, status_code=409)
+        result = {
+            "schema": SCHEMA, "run_id": telemetry.run_id, "clock_domain": mpc_clock_domain,
+            "operation_id": payload["operation_id"], "status": "applied",
+            "previous_budget": state["admission_budget"], "budget": payload["budget"],
+            "budget_version": state["budget_version"] + 1, "applied_at": applied_at,
+        }
+        state["admission_budget"] = payload["budget"]
+        state["budget_version"] += 1
+        mpc_changed()
+        mpc_operations[payload["operation_id"]] = (command_hash, dict(result))
+    telemetry.emit(
+        "budget_updated", operation_id=result["operation_id"],
+        previous_budget=result["previous_budget"], budget=result["budget"],
+        budget_version=result["budget_version"], applied_at=result["applied_at"],
+    )
     return result
 
 

@@ -1,0 +1,26 @@
+{
+  "current_fix": "One shared strict root canonicalizer is used by protocol creation, current endpoint binding and raw CLI URL validation before HTTPX can normalize a non-root path.",
+  "current_generation": {
+    "attempts": 1,
+    "post_freeze_source_edits": false,
+    "retries": 0,
+    "source_generations": 1,
+    "unexpected_control_failures": 0
+  },
+  "expected_negative_evidence": [
+    "Raw invalid URL, changed origin/path/userinfo/query/fragment and redirect refusals.",
+    "Parser errors for mixed sources, missing permit and missing forecast purpose; retained in raw stderr.",
+    "Intentional second-rollout refusal retains PlanningInput with the realized scenario before aborting.",
+    "Transport timeout/malformed ACK, failed reobservation, source/state mutation, partial-fsync and concurrent-owner fixtures remain retained."
+  ],
+  "immutable_predecessor": {
+    "actual_defect": "Protocol root-URL canonicalization disagreed with raw-string runtime endpoint comparison.",
+    "preserved_failures": ".runtime/r24-resume-p0-nominal-runtime02/FAILURES.json",
+    "preserved_report": ".runtime/r24-resume-p0-nominal-runtime02/REPORT.json",
+    "result": "1 PASS / 1 FAIL / 2 ERROR",
+    "scope": ".runtime/r24-resume-p0-nominal-runtime02",
+    "seal_sha256": "d290c5a7768e62cc3d7b3a8481569b0f8eb488c88913a6dbf3556a57f6c71213"
+  },
+  "raw_stderr": "attempts/generation01-py312/stderr.log",
+  "raw_stdout": "attempts/generation01-py312/stdout.log"
+}

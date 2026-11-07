@@ -1,0 +1,23 @@
+{
+  "status": "PASS_PRE_GPU_SOURCE_AND_CPU_GATES",
+  "scope": "B2 independent PASS plus B3 independent initial all-other-rows PASS and final F1/F2 PASS; not Native qualification",
+  "parent_commit": "c6dd47cb8393ed76788499dc7d3985aaf41e11cf",
+  "source_pins": {
+    "experiments/mpc-research/resume-mvp/native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+    "experiments/mpc-research/resume-mvp/test_native_services_smoke.py": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3",
+    "experiments/mpc-research/resume-mvp/native_nominal_qualification.py": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+    "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py": "76b7e93688f0ba766456368716ded4cfe1809491c27f32fa5e76e812d2959d83"
+  },
+  "composed_tests_passed": 522,
+  "composed_subtests_passed": 190,
+  "independent_final_seal": "e2ce06d50eabf9326fef508b12c774cf6f8df4bcf90840a5443fe20108b25666",
+  "independent_final_manifest_members": 273,
+  "author_final_seal": "0dbfc4601693147588342f28904edbc5a81d8877290463c1237ac39053230efa",
+  "composed_proof_seal": "dfb313f7116976dbaa631b6f661c32f1034a7bc3bcbd487a25b44211bd7112b7",
+  "original_failure": "resume-p0-pre-gpu-independent01-author/REPORT.json remains unchanged",
+  "next": "Build committed package and conditional preregistration, then stop before currently authorized GPU execution",
+  "native_qualified_cycles": 0,
+  "GPU_contacted": false,
+  "Train_freeze": "NOT_RUN",
+  "Eval": "NOT_RUN"
+}

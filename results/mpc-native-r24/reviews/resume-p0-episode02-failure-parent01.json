@@ -1,0 +1,19 @@
+{
+  "schema": "resume-p0-episode02-failure-parent-v1",
+  "status": "FAIL_NOT_DEPLOYABLE",
+  "archive": "resume-p0-episode02-failed-author",
+  "original_manifest_sha256": "0ecc3f73638cc0bcd312962dd077bc987553ee969d40052a5be9ef4df7da6f2e",
+  "regular_files": 113,
+  "regular_bytes": 788610,
+  "supplemental_outside_original_seal": ["SEAL_RECEIPT.json"],
+  "scope_disclosure": "Original manifest verifies its 111 members. The original manifest and separately unsealed supplemental receipt are both preserved, without extending the original seal claim.",
+  "attempts": 1,
+  "retry_count": 0,
+  "result": "Four Python 3.12 methods, eight failures and one derived error; counts include subtests and teardown assertions.",
+  "E02_1": "Raw tuple/list equality rejects unchanged JSON-canonicalized Train binding before workers start. Correct by canonical digest equality, preserving exact provider identity and policy guards.",
+  "E02_2": "Signal baseline outside asyncio.Runner is compared inside another Runner; fix the test invariant around the same awaited operation and within the same coroutine.",
+  "known_effect": "No controller or recorder worker started. Shared-start execution, actual planning and cancellation joins are still unvalidated.",
+  "next": "Role6 episode03 bounded correction and focused CPU validation, no peer edits, guard relaxation, retiming or new model work.",
+  "native_inference_runs": 0,
+  "qualified_native_cycles": 0
+}

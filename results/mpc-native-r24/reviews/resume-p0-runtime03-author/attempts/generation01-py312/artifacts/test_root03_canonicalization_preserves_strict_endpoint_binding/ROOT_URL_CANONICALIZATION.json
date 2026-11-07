@@ -1,0 +1,105 @@
+{
+  "POSTs": 0,
+  "equivalent_roots": [
+    "http://cpu.invalid",
+    "http://cpu.invalid/"
+  ],
+  "real_MockTransport_GETs": 2,
+  "redirects_still_refused": true,
+  "refused_endpoint_changes": [
+    "https://cpu.invalid/",
+    "http://other.invalid/",
+    "http://cpu.invalid:8080/",
+    "http://cpu.invalid/api/",
+    "http://user:password@cpu.invalid/",
+    "http://cpu.invalid/?x=1",
+    "http://cpu.invalid/#fragment"
+  ],
+  "refused_raw_URLs": [
+    {
+      "endpoint": "http://user:password@cpu.invalid",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://@cpu.invalid/",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/?x=1",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/?",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/#fragment",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/#",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/api",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid//",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/.",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/..",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/%2f",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid\\path",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid/\n",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": " http://cpu.invalid/",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "//cpu.invalid/",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http:cpu.invalid",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "ftp://cpu.invalid/",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid:",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid:bad",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    },
+    {
+      "endpoint": "http://cpu.invalid:65536",
+      "reason": "explicit_HTTP_root_endpoint_required"
+    }
+  ],
+  "scope": "CPU-only, no Native qualification"
+}

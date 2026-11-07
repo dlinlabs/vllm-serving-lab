@@ -1,0 +1,33 @@
+{
+  "schema": "r24-gateway-prefix-launch-v1",
+  "source_commit": "104e65a69df73997b977bce2588b655ae714f45d",
+  "original_launcher_sha256": "cce5f87c37b5d0a6009d68b6311d8e20f61f066630d7039ea46ebd75a0563d59",
+  "bridge_source_sha256": "9cd3c7dee081a34a965f3bba4db3494c0283c79d7fd8449123811ffbc6e81cbb",
+  "launcher_sha256": "e8c03ccd48e9b9b25c0b0c74199ea5ee10a4f0f0cb2c3c3a5434999f41ac1f0d",
+  "original_arguments": [
+    "/workspace/pr32-r23/venv/bin/python",
+    "-m",
+    "uvicorn",
+    "gateway:app",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8080",
+    "--workers",
+    "1"
+  ],
+  "actual_arguments": [
+    "/workspace/pr32-r23/venv/bin/python",
+    "-m",
+    "uvicorn",
+    "gateway_prefix_bridge:application",
+    "--factory",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8080",
+    "--workers",
+    "1"
+  ],
+  "scope": "Same owned process, loopback and single worker. Explicit opt-in factory, no stock mutation or model qualification."
+}

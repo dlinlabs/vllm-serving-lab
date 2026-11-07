@@ -1,0 +1,73 @@
+{
+  "schema": "role3-resume-p0-nominal-services-plan-v1",
+  "model_id": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "authority": "Explicit user CPU-only service-ownership helper scope; no actual Native/GPU authority",
+  "owned_public_files": [
+    "experiments/mpc-research/resume-mvp/nominal_services.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_services.py"
+  ],
+  "exclusive_delivery": ".runtime/r24-resume-p0-nominal-services01",
+  "existing_public_lifecycle_source_budget": {
+    "maximum_files": 4,
+    "maximum_bytes": 131072,
+    "contents_read": 0,
+    "filename_probes": [
+      {"pattern": "native-*/**/*{service,launch,lifecycle}*.py", "result": "no matches"},
+      {"pattern": "native-*/**/*cut*consumer*.py", "result": "no matches"}
+    ]
+  },
+  "read_only_proposal_context": {
+    "path": "experiments/mpc-research/resume-mvp/nominal_protocol.json",
+    "supplied_commit": "4c4a444a0194e605ec4c55b6188d76dfeb0d7e83",
+    "status": "PROPOSED_NOT_EXECUTION_AUTHORIZATION",
+    "contents_used": "Common optimization/resource and ownership constraints only; no workload or probe input opened",
+    "exact_gpu_lock_paths_not_named_in_proposal": true,
+    "api_requires_exact_two_Mayor_preregistered_absolute_paths_without_defaults": true
+  },
+  "scope": [
+    "Default-OFF programmatic engine+gateway ownership only",
+    "Two exact caller-preregistered nonblocking locks; durable per-lock RUNNING/pending/POISON gate",
+    "Owner PID/startticks/source marker before spawn; private safe-argv and redacted environment metadata",
+    "Separate sessions, Linux subreaper, pidfd plus PID/starttick checks, bounded discovery of known descendants",
+    "One absolute deadline; work cutoff reserves cleanup inside it; independent non-raising watchdog",
+    "Try all known identities even after individual cleanup failures; join/reap known identities and retain poison on uncertainty",
+    "No automatic poison reset, actuation permit, GPU idle/source/model/config/clock or scientific qualification"
+  ],
+  "controls": {
+    "fresh_frozen_generations": 1,
+    "max_attempts_per_interpreter": 1,
+    "planned_cases": 6,
+    "interpreters": [
+      "ROOT/.venv/bin/python (3.14)",
+      "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python"
+    ],
+    "aggregate_outer_seconds": 110,
+    "cleanup_and_publication_margin_seconds": 10,
+    "CPU_dummies_only": true,
+    "no_HTTP_or_other_network_in_tests": true,
+    "cases": [
+      "Default OFF performs no Popen",
+      "Either exact lock held prevents startup and preserves exclusivity",
+      "Known child startup failure cleans every other known service",
+      "Body failure finally cleans TERM-resistant roots and known descendant, reaps and preserves privacy",
+      "Initially expired deadline prevents spawn; readiness expiration uses original cleanup deadline",
+      "Injected signalling/nonjoin failure produces durable poison; cooperating next helper refuses; test guardian joins owned dummies under the original outer budget"
+    ],
+    "failure_policy": "Freeze code/specs before execution. Preserve every raw failure; do not retry/soften assertions. Deliver precise blockers if one generation cannot establish the limited contract."
+  },
+  "runtime_assumptions": [
+    "Linux procfs, pidfd signalling, subreaper and ordinary local filesystem semantics",
+    "Isolated cooperating owner process; no unrelated children created during the scope",
+    "Bounded cooperative readiness callback; actual caller clips HTTP operations to supplied remaining time",
+    "No promise of hard real-time OS calls, arbitrary callback preemption, owner-crash cleanup or universal process invisibility/escape detection",
+    "Any uncertainty/nonjoin requires STOP/POISON and Mayor reconciliation, not a retry"
+  ],
+  "forbidden": [
+    "Legacy raising SIGALRM launcher",
+    "Unsealed peer contents, old suites or historical inventories",
+    "Network/SSH/GPU/models/MCMC/fullpool experiments, Git/install/agents",
+    "Other public/product/SDK/sealed changes or Markdown documents",
+    "Backend optimization changes, benchmark/campaign logic, permit generation or Native eligibility claims"
+  ]
+}

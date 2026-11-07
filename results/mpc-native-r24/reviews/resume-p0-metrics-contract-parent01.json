@@ -1,0 +1,43 @@
+{
+  "schema": "resume-p0-metrics-contract-parent-v1",
+  "status": "PROPOSAL_REVIEWED_WITH_CORRECTIONS_PRODUCER_CONTRACT_PENDING",
+  "author_model_id": "claude-opus-5.5",
+  "author_reasoning_effort": "max",
+  "source_scope": ".runtime/r24-team16-resume-p0-contract01",
+  "archive": "results/mpc-native-r24/reviews/resume-p0-metrics-contract-author01",
+  "archive_files_including_seal": 7,
+  "seal_sha256": "8a480ab6bcf1f5026cd53a0460f063388d78f70f1cf10a468e862e40ccdb3109",
+  "parent_verification": {
+    "read": ["P0-CONTRACT.md", "p0-contract.json", "PLAN.json", "SHA256SUMS"],
+    "original_and_archive_seals_verified": true,
+    "verification_command": "sha256sum SHA256SUMS && sha256sum -c SHA256SUMS",
+    "author_selected_sources": 8,
+    "author_selected_source_bytes": 158206,
+    "selected_source_inventory_rehashed_by_parent": false,
+    "original_capsule_preserved_without_correction": true
+  },
+  "decisions": {
+    "native_comparison_required_for_p0": true,
+    "additional_cpu_benchmark_table": false,
+    "prompt_token_group_upper_edges": [512, 2048],
+    "slo_rule_changes": false,
+    "ttft_only_secondary_count": false,
+    "rate_reporting": "Keep offered-window cohort-normalized rates and actual wall-envelope rates including setup/drain distinct.",
+    "planner_equality": "MPC and strong OneMove share action/model/scenario support, solver budgets and actuation budgets.",
+    "evaluation_separation": "Predeclare development and evaluation identities, hashes and disjointness. No evaluation fitting, tuning, Fixed selection or future-arrival access."
+  },
+  "corrections": [
+    "FIFO does not imply the largest budget. All constant caps may use the same service ordering.",
+    "CPU plant FIFO does not establish actual native service ordering; gateway.py was not read by the author. A native FIFO alias remains unverified.",
+    "A static-cap32 alias is a proposed definition, not an accepted fourth algorithm or proof of a gateway wait queue.",
+    "Missing-first-content infinity is an operational failure penalty, not an identified survival-analysis quantile.",
+    "SLO attainment is unitless good/all-offered; goodput is good/second.",
+    "Legacy L-T16 model-arm prohibition and the unresolved 52-versus-48 design remain unchanged. A separately scoped nominal MVP needs its own explicit eligibility, not inherited approval.",
+    "The source capsule's b1b61d93 doc commit attribution is a typo; the reviewed documents were committed at db1b61d9385c9efdf6afced34aa51f051fdfd43b."
+  ],
+  "implementation_authorized_by_this_index": false,
+  "metrics_measured": false,
+  "native_qualification": false,
+  "p0_complete": false,
+  "resume_ready": false
+}

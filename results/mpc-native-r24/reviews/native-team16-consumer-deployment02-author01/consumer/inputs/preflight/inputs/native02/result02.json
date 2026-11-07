@@ -1,0 +1,61 @@
+{
+  "GPU_idle_and_ports_free_after": true,
+  "actual_application_deadline_proved": true,
+  "cleanup_cancel_or_force_events": [],
+  "client_HTTP_records": 38,
+  "commands": 4,
+  "component_contract_pass": true,
+  "deployable": false,
+  "elapsed_s": 98.05411312216893,
+  "exact_application_timestamp_observed": false,
+  "final_readonly_elapsed_s": 0.27040998893789947,
+  "freeze_commit": "8af6dd0a0870d6f2f168c1a86d19a21bfa422721",
+  "full_external_source_and_SDK_unchanged": true,
+  "full_final_empty_samples": 2,
+  "indexed_raw_files_verified": 138,
+  "interpretation": "Fixed admission-control component only; no prediction accuracy, sustained hardware quiescence, closed-loop MPC qualification or policy superiority.",
+  "legacy_first_snapshot_pending_batches": 1,
+  "native01_disposition": "FAIL preserved; first-snapshot criterion still fails in02 too.",
+  "native_mpc_permitted": false,
+  "native_offers_completed": 8,
+  "natural_child_cleanup_and_postflight_s": 5.487316283164546,
+  "owned_pids_joined": 20,
+  "per_fresh_command_observed_timing": [
+    {
+      "command": "fresh16",
+      "deadline_slack_ms": 495.0929540209472,
+      "interval": [
+        1340926.589037865,
+        1340926.58960334
+      ],
+      "interval_width_ms": 0.5654750857502222
+    },
+    {
+      "command": "fresh32",
+      "deadline_slack_ms": 496.0520421154797,
+      "interval": [
+        1340928.755172584,
+        1340928.755678047
+      ],
+      "interval_width_ms": 0.5054629873484373
+    }
+  ],
+  "raw_archive_sha256": "ab03ab988e319d19c282af4351a60f11ab0f9a96c2578fd218bf065abdc021c6",
+  "raw_regular_files": 140,
+  "rejected_command_watches": [
+    {
+      "command": "expired32",
+      "observed_s": 0.835538187995553,
+      "samples": 7
+    },
+    {
+      "command": "stale32",
+      "observed_s": 0.8633144099730998,
+      "samples": 7
+    }
+  ],
+  "separate_startup_warmup_offers": 1,
+  "status": "NATIVE_CONTROL02_COMPONENT_PASS_ONLY",
+  "terminal_scope_amended_before_run": true,
+  "whole_teardown_s": 6.575202597072348
+}

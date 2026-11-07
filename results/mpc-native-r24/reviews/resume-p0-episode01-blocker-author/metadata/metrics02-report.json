@@ -1,0 +1,259 @@
+{
+ "schema": "r24-resume-p0-nominal-metrics02-report-v1",
+ "scope": ".runtime/r24-resume-p0-nominal-metrics02",
+ "role": "PR32 team16 Role7 fair benchmark metrics and negative cases",
+ "model": {
+  "id": "claude-opus-5.5",
+  "reasoning_effort": "max"
+ },
+ "status": "SEALED: CPU literal controls 87/87 per Python; NOT accepted until independent Role4 recorder+metrics review; no Native/GPU/HTTP-to-real-service evidence",
+ "objective": "minimal metrics F1-F5 corrections plus F6/F7 labels from the sealed independent audit, minimal client build_run/finalize integration, and verbatim gateway rejection-body retention (Mayor)",
+ "audit_input": {
+  "scope": ".runtime/r24-resume-p0-metrics-independent01",
+  "SHA256SUMS_sha256": "43b80aff6fb02be80a3d79b60fe7c56c9f4bbd3a461477344c79cb3acaf093bb",
+  "entries": 39,
+  "REPORT.json_sha256": "a3fb13a66a43a0bdf652d82333542e80ad23a22d823247bcb031e8aba40589d3",
+  "read": "REPORT.json findings only (no audit view logs)"
+ },
+ "sources": {
+  "experiments/mpc-research/resume-mvp/nominal_metrics.py": {
+   "original_sha256": "e0119f34437f81dae4c8bb97501a2c0e6d7ec5decfa23f0eb6491db6e6afa58e",
+   "final_sha256": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+   "final_lines": 1211,
+   "original_lines": 911
+  },
+  "experiments/mpc-research/resume-mvp/nominal_client.py": {
+   "original_sha256": "ad850c639c911c55c20c388bd6797c4d8606f72ed9f97ea23f5ef80e92379c40",
+   "final_sha256": "f369e5ce01a54dcfa9086fe8ee4a1528d7e52d19179db78201e06961da4c7bda",
+   "final_lines": 824,
+   "original_lines": 771
+  },
+  "experiments/mpc-research/resume-mvp/test_nominal_metrics.py": {
+   "original_sha256": "cca0c280182075e3300a35121cbfae51be272dfa100145420cce167d71f55617",
+   "final_sha256": "b325444ba51f6c56182d317e5147011841d46ed835a95abb06a016a1a9222f78",
+   "final_lines": 561,
+   "original_lines": 383
+  },
+  "experiments/mpc-research/resume-mvp/test_nominal_client.py": {
+   "original_sha256": "753c0ca6a9485a6ac8ccd3706c876b797405026e02f870bdb3168f4d389e76d3",
+   "final_sha256": "fb67d758703b86cc3a0c6705b56fb7e06c596e0e160e75bf471c0cdb911b4613",
+   "final_lines": 560,
+   "original_lines": 489
+  }
+ },
+ "dependency_pins": {
+  "trace_workload.py": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f",
+  "telemetry.py": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370",
+  "experiments/mpc-research/native-r23/score_http.py": "9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d",
+  "gateway.py": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+ },
+ "dependency_pins_note": "hash-read only (not viewed) except gateway.py lines 653-692 viewed for the 503 body; score_http.py natural rule unchanged (9a173ab9...); pins equal before and after each attempt (gateway.py hashed at report time, never imported by these tests)",
+ "frozen_scope_files_sha256": {
+  "STARTED.txt": "6c5e8f49693357bd74a72e3ad520aaa7dfe644994cacb6e1eef7f44ef39fa20b",
+  "ORIGINALS.sha256": "629bcad064f1bf5a7e034cd8734886f047f5bda4b1a0265eefa4b2f167a88b64",
+  "CLIENT01-DISPOSITION.json": "771e436a45419946589fca5e57477f5e9f133474ef9d3454d4b7dcf628d0ad30",
+  "SELECTION.json": "5befd565c06254f338bcd57a07ed1c803e325bef6f8ef19e617d811b24750d35",
+  "SELECTION-REPORT-PIN.txt": "0148bf43484a425cf5d5444a9c1b08594b64a9fb0fe3f0ab8a1c984e49fe352d",
+  "SELECTION-AMENDMENT-01.json": "b7d404c84b44134e1218b31f38a19a08f58bcde2315dc884eee86395e3c9b134",
+  "SELECTION-AMENDMENT-02.json": "085a201b9529e5abf23594b466086e09f0f3cf7354916f198d69d1dde87879ab",
+  "PLAN.json": "5cb58915934de58c3633c52973878d1d90c814442fa1b0378cfffc41a19759bf",
+  "SCHEMA-FREEZE.json": "87c4576fe3bd30b2237c5e54d30cfcd49b0c83ce1edda350181b1350b3b668d7",
+  "PLAN-AMENDMENT-01.json": "a45d2c0a378344e3a8174f38c92243fd8fdec3506ad90c2dd21fa2ae57d25286",
+  "PLAN-ERRATA-01.json": "61b31bdbde92d4ede40cbc0d05c62000f514a566fb1ee719e1385d4237107067",
+  "pytest-empty.ini": "8250d20f42b419af40706490ead78aabab9feba93eab09a3f626e3de5256e1f4",
+  "run_attempt.sh": "a54a3e4033cf89b095953c02c6fbe412409e47642623f2b316c8543ee785ac30"
+ },
+ "content_viewed": [
+  "audit REPORT.json",
+  "ROOT gateway.py lines 653-692",
+  "the four owned files and their originals/",
+  "client01 attempt directory layout (names only)",
+  "this scope"
+ ],
+ "findings": {
+  "F1_HIGH_cross_arm_comparability": {
+   "fix": "provenance.comparability (optional; absent = NOT_RECORDED) with exactly hardware, model, backend, gateway, resources, code, client_generation, clock; model exactly local_model_path (absolute), asset_sha256, served_alias, served_alias_verified (must be true), tokenizer_sha256; client_generation.ignore_eos (bool, must equal every row requested_ignore_eos) and max_tokens_policy; gateway must not carry per-arm MAX_ADMITTED_COST; canonical JSON. Cross-arm identity: trace sha, all-offered count, ordered request-id digest, request-shape digest, duration, envelope scope, relative schedule within 1e-6 (absolute starts may differ); every measured arm DECLARED with identical per-fact digests, else select_train_fixed REFUSED and comparison_table raises",
+   "where": [
+    "nominal_metrics._validate_comparability",
+    "_comparability",
+    "_cross_arm_refusal",
+    "_binding_error",
+    "select_train_fixed",
+    "comparison_table",
+    "nominal_client.build_run(comparability=)",
+    "nominal_client._check_comparability",
+    "finalize --comparability-json"
+   ],
+   "client_cross_check": "declared model served_alias/local_model_path/tokenizer_sha256 must equal the recorder-verified binding evidence (tokenizer fingerprint) and ignore_eos must be False (what the recorder sends); other facts are driver-declared, compared only",
+   "tests": [
+    "test_comparability_facts_validated_and_required_for_selection_and_tables",
+    "test_literal_records_map_to_unchanged_natural_slo_with_all_offered_denominator",
+    "test_cli_replay_then_finalize_fixed_arm_only_with_driver_evidence"
+   ]
+  },
+  "F2_MEDIUM_selection_binding_and_reuse": {
+   "fix": "SELECTED record v2: schema, purpose train, decided_by, rule, candidates with metrics_sha256, trace sha, ordered request ids + digest, comparability_sha256, self digest selection_sha256. Tables verify exact keys, digest and recomputed decision; Train alias requires candidates to be the measured fixed arms; Eval alias refuses any positive reuse signal (same trace sha, same id digest, any shared request id), requires the same comparability sha, and every measured Eval arm must record the same train_selection_sha256 (missing: alias REFUSED UNVERIFIED; different: raise); alias row carries selection sha, decided_by and candidates",
+   "where": [
+    "select_train_fixed",
+    "_decide",
+    "_verify_selection",
+    "_alias_row",
+    "comparison_table"
+   ],
+   "tests": [
+    "test_selection_record_binding_and_eval_alias_reuse_refusals",
+    "test_train_selection_primary_ties_and_refusals",
+    "test_comparison_table_alias_refusals_and_no_winner"
+   ],
+   "limits": "digests bind declared records only; a self-consistent record can still be fabricated; passing reuse checks is not Train/Eval disjointness proof"
+  },
+  "F3_early_send": {
+   "fix": "sent_at < scheduled_at refused (EARLY_SEND_TOLERANCE_S = 0.0); send_lag_s adds min, n_negative, early_send_tolerance_s; summary carries min and n_negative",
+   "where": [
+    "_validate_row",
+    "compute",
+    "summarize"
+   ],
+   "tests": [
+    "test_early_send_is_refused_and_lag_extremes_reported"
+   ]
+  },
+  "F4_offered_cohort_binding": {
+   "fix": "provenance.offered_count (= len(rows)) and offered_request_ids_sha256 (canonical JSON of ids in frozen trace order; must equal row-order digest) required; compute exposes offered_cohort; client replay records the digest from the frozen trace; adapter derives both from the trace",
+   "where": [
+    "request_ids_sha256",
+    "_validate_cohort",
+    "_offered_cohort",
+    "nominal_client._replay_main",
+    "nominal_client.build_run",
+    "adapt_run_trace_pilot provenance"
+   ],
+   "tests": [
+    "test_all_offered_cohort_is_bound_to_offered_count_and_ordered_ids",
+    "test_literal_records_map_to_unchanged_natural_slo_with_all_offered_denominator"
+   ]
+  },
+  "F5_window_and_envelope_binding": {
+   "fix": "every scheduled_at within the offered window; every sent/first/terminal within the declared envelope; offered_cohort_observed must equal [offered_start, max(offered_end, last terminal)] within 1e-6, so an envelope ending before the last terminal is refused",
+   "where": [
+    "_validate_windows"
+   ],
+   "tests": [
+    "test_offered_window_and_declared_envelope_bind_every_observation"
+   ]
+  },
+  "F6_LOW_group_labels": {
+   "fix": "per-group n_offered_by_group, k, Jain note; worst rejection group identity, n and tied groups; summary carries them",
+   "where": [
+    "_spread",
+    "_fairness",
+    "summarize"
+   ],
+   "tests": [
+    "test_group_identity_ties_and_rate_scope_labels"
+   ]
+  },
+  "F7_LOW_rate_labels": {
+   "fix": "scope-dependent wall label and direction (offered_cohort_observed: lower-bound envelope, rates are UPPER bounds on full-wall rates); delivered-only token scope with the endpoint max_tokens premise",
+   "where": [
+    "ENVELOPE_LABELS",
+    "WALL_RATE_DIRECTION",
+    "TOKEN_RATE_SCOPE",
+    "_throughput",
+    "_natural_slo",
+    "summarize"
+   ],
+   "tests": [
+    "test_group_identity_ties_and_rate_scope_labels"
+   ]
+  },
+  "F8_F9": "not in scope: Mayor dispositions forecaster findings; scenario/planner not modified"
+ },
+ "rejection_retention": {
+  "source_of_truth": "ROOT gateway.py 0b1a80ad... lines 653-692 (503 body + x-request-id header)",
+  "classification_rule": "unchanged: 503 + exact detail + estimated_request_cost key",
+  "retained": "detail, estimated_request_cost (finite else null, unchanged), verbatim estimated_input_tokens, estimated_output_tokens, max_admitted_cost, budget_version (null when absent) and fields_absent; record.request_id = x-request-id; every non-success body keeps body_bytes, body_sha256 and body_text (strict UTF-8 and <= 65536 bytes) else body_text_null_reason not_utf8 | over_65536_bytes | body_read_incomplete (read failure, fate transport_error)",
+  "not_recorded": "no auth header sent or stored; gateway admitted/terminal cost/budget/version telemetry and the ordered owner ledger are gateway/driver-owned and joined by x-request-id (Mayor)",
+  "tests": [
+   "test_rejection_body_retention_is_verbatim_and_never_invented",
+   "test_replay_retains_every_fate_payload_and_absolute_schedule"
+  ],
+  "schema": "client capture r24-resume-p0-nominal-client-v2; v1 captures are not finalized by v2 code"
+ },
+ "unchanged": [
+  "score_http natural SLO rule and pin",
+  "fates, all-offered denominators and quantile estimands (missing-first +inf = failure-penalized operational TTFT, not a survival quantile)",
+  "selection rule and tie order",
+  "request sending, absolute schedule, SSE parsing and row mapping",
+  "raw engineering-purpose captures (never finalized as Train/Eval)",
+  "FIFO label pending",
+  "A8 adapter public-alias restriction (deferred)"
+ ],
+ "tests": {
+  "collected_per_python": 87,
+  "test_functions": {
+   "test_nominal_metrics.py": "12 -> 18 (6 new)",
+   "test_nominal_client.py": "14 -> 15 (1 new)"
+  },
+  "per_file_split": "not separately collected",
+  "removed_tests": [],
+  "discrimination": "NOT run: new regressions were not executed against the original metrics01/client01 bytes and no mutation controls were run (bounded delivery); independent review may"
+ },
+ "attempt_protocol": "scripted by run_attempt.sh: one generation per Python, no retries, failures preserved, pins before/after, pinned copies, isolated basetemp; command in each attempts/*/run.sh",
+ "attempts": [
+  {
+   "dir": "attempts/attempt01-py314",
+   "run_sh": "exec env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 120 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -m pytest -q -p no:cacheprovider --noconftest -c /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/pytest-empty.ini --rootdir=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/attempts/attempt01-py314 --basetemp=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/attempts/attempt01-py314/basetemp test_nominal_metrics.py test_nominal_client.py",
+   "run_sh_sha256": "3fef980dd61e482324fe5a0150f317b409d32898bd4773500cc06cc681e87b76",
+   "started": "2026-11-04T23:53:01.466Z",
+   "ended": "2026-11-04T23:53:04.899Z",
+   "exit_code": 0,
+   "result_line": "87 passed in 3.22s",
+   "log_sha256": "d5dc52bdc76abebe07f8c2d01aed7648b1d0d69f5c28b20327959226019a0486",
+   "pins_before_equal_after_and_pycache_unchanged": true,
+   "pinned_copies_equal_final_sources": true,
+   "interpreter": "ROOT/.venv/bin/python3.14 (3.14.4; pytest 9.2.0; httpx 0.28.1)"
+  },
+  {
+   "dir": "attempts/attempt01-py312",
+   "run_sh": "exec env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 120 nice -n19 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B -m pytest -q -p no:cacheprovider --noconftest -c /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/pytest-empty.ini --rootdir=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/attempts/attempt01-py312 --basetemp=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/attempts/attempt01-py312/basetemp test_nominal_metrics.py test_nominal_client.py",
+   "run_sh_sha256": "0996ca84b91d2db918f387faaf484cc1b5638961fbe6ea0c05968a28ee0b24b7",
+   "started": "2026-11-04T23:53:04.945Z",
+   "ended": "2026-11-04T23:53:08.360Z",
+   "exit_code": 0,
+   "result_line": "87 passed in 3.23s",
+   "log_sha256": "efae956977cb6f3729504e41b71975ecb1f54d2efe061f9e9becf4a9ef6d8339",
+   "pins_before_equal_after_and_pycache_unchanged": true,
+   "pinned_copies_equal_final_sources": true,
+   "interpreter": "files/r24-mpc-py312-venv/bin/python3.12 (3.12.16; pytest 9.2.0; httpx 0.28.1)"
+  }
+ ],
+ "failures": "none in attempt01; PLAN.json strict-JSON defect disclosed in PLAN-ERRATA-01.json (original kept)",
+ "disclosures": [
+  "PLAN-ERRATA-01.json: PLAN.json is not strict JSON; two client edits beyond the named plan scope (_replay_main digest, NOT_CLIENT_OWNED lines)",
+  "client01 seal (0ccdbf13...) stays valid only for its own bytes; its outputs are superseded by v2 and are not benchmark or selection evidence"
+ ],
+ "claims_not_made": [
+  "no Native inference, GPU, SSH, network or real-service HTTP",
+  "no winner, superiority, capacity, SLO guarantee or production claim",
+  "no G06/G16/Native14 qualification",
+  "comparability facts are driver-declared and compared, not verified here",
+  "hashes are integrity pins, not Train/Eval disjointness or leakage proof",
+  "no FIFO/FCFS backend claim",
+  "no actual admission-boundary or apply/reobserve evidence"
+ ],
+ "remaining_blockers": {
+  "next_gate": "independent Role4 recorder+metrics acceptance of this seal; no GPU startup before it PASSES",
+  "train_fixed_freeze": "needs a driver-produced comparability record per arm (local path, asset sha256, verified served alias, tokenizer sha, backend/gateway/resources/code/clock, client_generation ignore_eos=false + max_tokens policy) plus driver full_wall and static control evidence; without it select_train_fixed returns REFUSED (UNVERIFIED)",
+  "eval_alias": "the recorder does not record train_selection_sha256, so the Eval train_selected_fixed alias stays REFUSED (UNVERIFIED) until a driver/client successor records it after the Train freeze",
+  "driver_or_mayor_owned": [
+   "gateway telemetry/owner ledger join by x-request-id",
+   "gateway zero-fallback check",
+   "FIFO/FCFS backend verification",
+   "F8/F9 forecaster dispositions"
+  ],
+  "role7_deferred": [
+   "A8 adapter public-alias vs local-asset restriction (adapter path only)"
+  ]
+ }
+}

@@ -1,0 +1,574 @@
+{
+  "Native_actual_admission_effect": null,
+  "Native_ordered_gateway_ledger": null,
+  "cancellation_fates": [
+    "rejected",
+    "cancelled",
+    "cancelled",
+    "cancelled",
+    "cancelled"
+  ],
+  "cancellation_runtime_lock_reacquired": true,
+  "episode_invocations": [
+    {
+      "capture_error": "CancelledError: replay interrupted",
+      "capture_sha256": "be34a779695f4d37cf9028ed5fe26fb20d9da3946d5b761b545421b3d8dc0c53",
+      "capture_status": "interrupted",
+      "failures": [
+        {
+          "error": {
+            "message": "",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 276, in run_episode\n    done, pending = await asyncio.wait(pending, timeout=min(remaining, 0.05),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py\", line 464, in wait\n    return await _wait(fs, timeout, return_when, loop)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py\", line 550, in _wait\n    await waiter\nasyncio.exceptions.CancelledError\n",
+            "type": "CancelledError"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [],
+      "path": "attempts/generation01-py312/artifacts/test_caller_cancellation_joins_workers_and_persists_partial_outcomes/cancel/episode.json",
+      "recorded_fates": [
+        "rejected",
+        "cancelled",
+        "cancelled",
+        "cancelled",
+        "cancelled"
+      ],
+      "runtime_journal_present": true,
+      "status": "interrupted",
+      "workers": {
+        "controller": {
+          "error_type": "CancelledError",
+          "joined": true
+        },
+        "recorder": {
+          "error_type": "CancelledError",
+          "joined": true
+        }
+      }
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "74094f41b2aaf849f5f4bec6dd786af7709d17e7953ab4205f4d7faae300ff72",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "runtime_Train_provider_or_policy_changed",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/binding_changed/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "bbd14284360a86c6f8f965288660374a111aee5523ef3c6e55fbfc00f709bfe3",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "shared_start_past_or_mismatched",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 171, in _eligible\n    _require(prepared.prepared_at <= now < start and runtime.start_at == start,\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: shared_start_past_or_mismatched\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/different_start/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "e0ad068f7b8ca85a26f09bbeafe6f910843f18493589114ce61359486d8bbc92",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "prepared_input_changed_or_reused",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 159, in _eligible\n    _require(not prepared.recorder.started and _inputs(prepared) == prepared.input_sha256,\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: prepared_input_changed_or_reused\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/input_changed/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "49c430e699061b5c9c41ad528ed96db2806006267b2ff7980ab06de7ba7ecf43",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "experimental_episode_disabled",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 157, in _eligible\n    _require(enabled is True, \"experimental_episode_disabled\")\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: experimental_episode_disabled\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/off/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "839c4130e22b29bdcdcbcc6083457a674f5b909e2590390a111e2a5c1cf3df96",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "shared_start_past_or_mismatched",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 171, in _eligible\n    _require(prepared.prepared_at <= now < start and runtime.start_at == start,\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: shared_start_past_or_mismatched\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/past/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "2944e6ddc1051d45d26bcd0f36696363885f4beaaee01cef2e3e27e2a98d2a8a",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "runtime_Train_provider_or_policy_changed",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/policy_changed/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "686ef48257af37a932171a0a365bed054c225bc9093f908776cf89c0b9bfea6a",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "runtime_Train_provider_or_policy_changed",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 182, in _eligible\n    _require(runtime.policy == prepared.policy and runtime.scenario_factory is prepared.scenario_factory\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: runtime_Train_provider_or_policy_changed\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/provider_changed/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "ClientRefusal: served_alias must equal the frozen trace.model (trace.model is never changed)",
+      "capture_sha256": "d48ca7cac97113d8b7d2b6bd431a9bca8eea73731889d768d5225ad77960092d",
+      "capture_status": "refused",
+      "failures": [
+        {
+          "error": {
+            "message": "local_preparation_refused",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 158, in _eligible\n    _require(prepared.error is None and prepared.recorder.ready, \"local_preparation_refused\")\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: local_preparation_refused\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": null,
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/ready_false/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "3664ce0eda8fe775b781326e4bed2dec9e71898e13d3845535c089a863635281",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "runtime_configuration_or_parameter_binding_changed",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 190, in _eligible\n    runtime._binding()\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py\", line 332, in _binding\n    _require(self.planner.parameters == self.parameters and self.planner.identity == self.identity\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py\", line 68, in _require\n    raise RuntimeRefused(reason)\nnominal_runtime.RuntimeRefused: runtime_configuration_or_parameter_binding_changed\n",
+            "type": "RuntimeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/runtime_endpoint_changed/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "failed",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "bfae0d1b0f029775b28edcbe750820fb6acaa1a10baac41228c01671a77ca009",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "error": {
+            "message": "original_work_deadline_truncates_episode",
+            "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 263, in run_episode\n    _eligible(prepared, runtime, owner, offered_start, deadline, reserve, enabled)\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 173, in _eligible\n    _require(deadline - reserve >= start + max(prepared.recorder.trace[\"duration_seconds\"],\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 65, in _require\n    raise EpisodeRefused(reason)\nnominal_episode.EpisodeRefused: original_work_deadline_truncates_episode\n",
+            "type": "EpisodeRefused"
+          },
+          "worker": "coordinator"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/truncated/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "refused",
+      "workers": {}
+    },
+    {
+      "capture_error": "CancelledError: replay interrupted",
+      "capture_sha256": "569ae79bf2d84645a7e40ca22d0c8aeadfbfaf275b8e8f253363fb7e66e07349",
+      "capture_status": "interrupted",
+      "failures": [
+        {
+          "reason": "controller_returned_failure_refusal_pending_or_incomplete",
+          "worker": "controller"
+        }
+      ],
+      "missing_record_ids": [],
+      "path": "attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/controller_refused/episode.json",
+      "recorded_fates": [
+        "not_launched",
+        "not_launched",
+        "not_launched",
+        "not_launched",
+        "not_launched"
+      ],
+      "runtime_journal_present": true,
+      "status": "failed",
+      "workers": {
+        "controller": {
+          "error_type": null,
+          "joined": true
+        },
+        "recorder": {
+          "error_type": "CancelledError",
+          "joined": true
+        }
+      }
+    },
+    {
+      "capture_error": "RuntimeError: CPU model preflight transport implementation failure",
+      "capture_sha256": "9f9747b09c2827108d67192df7061e227799228f63ef7517eb953c593057a667",
+      "capture_status": "failed",
+      "failures": [
+        {
+          "reason": "recorder_returned_failed",
+          "worker": "recorder"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/recorder_failed/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "failed",
+      "workers": {
+        "controller": {
+          "error_type": "CancelledError",
+          "joined": true
+        },
+        "recorder": {
+          "error_type": null,
+          "joined": true
+        }
+      }
+    },
+    {
+      "capture_error": "ClientRefusal: backend served alias root differs from local_model_path",
+      "capture_sha256": "eb7ba12b2ac1cd94a37861860191a374f70984ce0a597a5bdce2f878113d5c4b",
+      "capture_status": "refused",
+      "failures": [
+        {
+          "reason": "recorder_returned_refused",
+          "worker": "recorder"
+        }
+      ],
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "path": "attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/recorder_refused/episode.json",
+      "recorded_fates": null,
+      "runtime_journal_present": false,
+      "status": "failed",
+      "workers": {
+        "controller": {
+          "error_type": "CancelledError",
+          "joined": true
+        },
+        "recorder": {
+          "error_type": null,
+          "joined": true
+        }
+      }
+    },
+    {
+      "capture_error": null,
+      "capture_sha256": "1b6da45873edde02d1cf327ed7f3a82d1e1806934819d1896f6ee9a29ff75266",
+      "capture_status": "collected",
+      "failures": [],
+      "missing_record_ids": [],
+      "path": "attempts/generation01-py312/artifacts/test_shared_start_full_outcomes_and_real_controller_feedback/complete/episode.json",
+      "recorded_fates": [
+        "rejected",
+        "complete",
+        "complete",
+        "complete",
+        "complete"
+      ],
+      "runtime_journal_present": true,
+      "status": "collected",
+      "workers": {
+        "controller": {
+          "error_type": null,
+          "joined": true
+        },
+        "recorder": {
+          "error_type": null,
+          "joined": true
+        }
+      }
+    }
+  ],
+  "full_wall": null,
+  "invocation_count": 15,
+  "invocations_with_two_workers": 5,
+  "no_start_subcases": {
+    "classification_failure": 1,
+    "expected_results": 9
+  },
+  "not_actual_apply_evidence": "Successful case has three actual observe/forecast/plan/hold cycles, live mock request-ledger feedback and no budget POST. No native actuation/admission qualification.",
+  "original_deadline": 935064.2231979,
+  "original_reserve": 0.5,
+  "returned_failure_envelope_cases": [
+    {
+      "cancel_requested": [
+        "recorder"
+      ],
+      "failures": [
+        {
+          "reason": "controller_returned_failure_refusal_pending_or_incomplete",
+          "worker": "controller"
+        }
+      ],
+      "kind": "controller_refused",
+      "status": "failed"
+    },
+    {
+      "cancel_requested": [
+        "controller"
+      ],
+      "failures": [
+        {
+          "reason": "recorder_returned_refused",
+          "worker": "recorder"
+        }
+      ],
+      "kind": "recorder_refused",
+      "status": "failed"
+    },
+    {
+      "cancel_requested": [
+        "controller"
+      ],
+      "failures": [
+        {
+          "reason": "recorder_returned_failed",
+          "worker": "recorder"
+        }
+      ],
+      "kind": "recorder_failed",
+      "status": "failed"
+    }
+  ],
+  "runtime_step_statuses": [
+    "hold",
+    "hold",
+    "hold"
+  ],
+  "shared_start": 935058.2231979,
+  "shared_start_case": {
+    "CPU_budget_commands": [],
+    "offered_start": 935058.2231979,
+    "original_deadline": 935064.2231979,
+    "requests": [
+      {
+        "at": 935059.474079201
+      },
+      {
+        "at": 935059.474578101
+      },
+      {
+        "at": 935059.474907601
+      },
+      {
+        "at": 935059.475207701
+      },
+      {
+        "at": 935059.475486901
+      }
+    ],
+    "reserve": 0.5,
+    "runtime_GETs": [
+      {
+        "active": 0,
+        "at": 935058.2361205,
+        "budget": 16.0,
+        "budget_version": 0,
+        "sequence": 0
+      },
+      {
+        "active": 0,
+        "at": 935058.867753,
+        "budget": 16.0,
+        "budget_version": 0,
+        "sequence": 0
+      },
+      {
+        "active": 4,
+        "at": 935059.511334501,
+        "budget": 16.0,
+        "budget_version": 0,
+        "sequence": 4
+      }
+    ],
+    "scope": "CPU-only real API/planner execution; not tokenizer validation or Native admission proof",
+    "status": "collected",
+    "summary": {
+      "completion_tokens_evidence": {
+        "not_applicable": 1,
+        "usage": 4
+      },
+      "fates": {
+        "cancelled": 0,
+        "complete": 4,
+        "http_error": 0,
+        "not_launched": 0,
+        "rejected": 1,
+        "stream_error": 0,
+        "transport_error": 0,
+        "unknown": 0
+      },
+      "finish_reason_evidence": {
+        "absent": 0,
+        "contradiction": 0,
+        "not_applicable": 1,
+        "observed": 4
+      },
+      "finish_reasons_of_complete": {
+        "stop": 4
+      },
+      "implementation_exceptions": 0,
+      "max_send_lag_s": 0.0022206009598448873,
+      "offered": 5,
+      "prompt_tokens_matched": 4,
+      "prompt_tokens_mismatch": 0,
+      "sent": 5
+    }
+  },
+  "worker_task_receipts_joined": 10
+}

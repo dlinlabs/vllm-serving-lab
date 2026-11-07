@@ -1,0 +1,10 @@
+{
+  "base_commit": "7ae8c3a766d3461f4927bc501c1eabad22ae56f9",
+  "scope": "Small corrective caller change for independently reported B2/B3; no model, sampling, scoring or accepted core changes.",
+  "independent_review_seal": "b96bc805b37aae1f07cebeff450c6e56d5c4523953a77a64dd18aaba953a1b15",
+  "B2_source_verification": "gateway.py140-205 seals contiguous ledger events and requires final_sequence == producer_sequence; real traffic can have nonzero counters. Keep no-body zero-only requirement; check GPU idleness independently of telemetry validation.",
+  "B3_fix": "Separate planned episode count from records allocated after schedule acceptance. Preserve primary errors and caller-owned not-run receipt/capture for failure before run_episode.",
+  "direct_dependent_obligations": "Bounded pre-control/post-episode drain and zero-tokenizer-fallback verification, without changing original deadlines or offered offsets.",
+  "validation": "First reproduce focused B2/B3 failures on unchanged caller source, then one focused CPU regression generation after correction. Retain all logs; no GPU before exact-source acceptance and preregistration.",
+  "clock_warning": "Do not apply review L5 suggestion: recorder clock_domain string and SDK source clock_domain string are different labels for the actual host clock. API03 explicitly requires the recorder capture label; preserve both actual labels instead of falsifying equality."
+}

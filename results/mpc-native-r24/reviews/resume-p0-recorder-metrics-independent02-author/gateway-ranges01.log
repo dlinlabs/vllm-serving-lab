@@ -1,0 +1,178 @@
+   536	
+   537	
+   538	async def proxy_raw_completions(request: Request):
+   539	    if not PREFILL_RAW_COMPLETIONS:return JSONResponse({'detail':'not found'},status_code=404)
+   540	    try:
+   541	        payload=json.loads(await request.body());ids=payload['prompt'];extra=payload['vllm_xargs']
+   542	        identifier=request.headers.get('x-benchmark-request-id','')
+   543	        if (set(payload)-{'model','prompt','max_tokens','temperature','ignore_eos','stream','stream_options','request_id','vllm_xargs'}
+   544	                or not re.fullmatch('[0-9a-f]{32}',identifier) or payload['request_id']!=identifier
+   545	                or not isinstance(ids,list) or not ids or any(type(x) is not int or x<0 for x in ids)
+   546	                or payload['max_tokens'] not in (128,256) or len(ids)+payload['max_tokens']>8192
+   547	                or payload['ignore_eos'] is not True or payload['stream'] is not True
+   548	                or type(payload['temperature']) not in (int,float) or payload['temperature']!=0
+   549	                or extra['prefill_lab_trace_id']!=identifier):raise ValueError('Invalid frozen raw request')
+   550	    except (ValueError,KeyError,TypeError):return JSONResponse({'detail':'invalid benchmark raw request'},status_code=422)
+   551	    return await _proxy_completions(request, '/v1/completions')
+   552	
+   553	
+   554	if PREFILL_RAW_COMPLETIONS:app.post('/v1/completions')(proxy_raw_completions)
+   555	
+   556	
+   557	async def _proxy_completions(request, upstream_path):
+   558	    request_id = None
+   559	    if BENCHMARK_REQUEST_IDS:
+   560	        request_id = request.headers.get('x-benchmark-request-id')
+   561	        if request_id is not None:
+   562	            if not re.fullmatch(r'[0-9a-f]{32}', request_id):
+   563	                return JSONResponse({'detail': 'invalid benchmark request ID'}, status_code=400)
+   564	            if request_id in benchmark_ids:
+   565	                return JSONResponse({'detail': 'duplicate benchmark request ID'}, status_code=409)
+   566	            # Finite experiment-only ID registry; refuse instead of evicting IDs.
+   567	            if len(benchmark_ids) >= 100000:
+   568	                return JSONResponse({'detail': 'benchmark ID capacity exceeded'}, status_code=503)
+   569	            benchmark_ids.add(request_id)
+   570	    request_id = telemetry.received(request_id)
+   571	    mpc_received_at = mpc_now() if MPC_LAB_ENABLED else None
+   572	    if upstream_path=='/v1/completions':
+   573	        from prefill_lab.live_http import clock_domain
+   574	        telemetry.emit('bridge_clock',request_id,clock_domain=clock_domain())
+   575	    phases = telemetry.diagnostics.request(request_id) if telemetry.diagnostics is not None else None
+   576	    reserved = False
+   577	    cleaned = False
+   578	    request_cost = 0.0
+   579	    client = None
+   580	    upstream = None
+   628	                cancellation = exc
+   629	        cleanup_task.result()
+   630	        if cancellation is not None:
+   631	            raise cancellation
+   632	
+   633	    try:
+   634	        with phases.phase('body_read') if phases else NO_PHASE:
+   635	            body = await request.body()
+   636	        headers = {
+   637	            key: value for key, value in request.headers.items()
+   638	            if key.lower() not in {"host", "content-length", "x-admin-api-key", "x-benchmark-request-id"}
+   639	        }
+   640	        headers["x-request-id"] = request_id
+   641	        headers["accept-encoding"] = "identity"
+   642	        try:
+   643	            with phases.phase('json_parse') if phases else NO_PHASE:
+   644	                parsed = json.loads(body)
+   645	                payload = parsed if isinstance(parsed, dict) else {}
+   646	        except (ValueError, UnicodeDecodeError):
+   647	            payload = {}
+   648	
+   649	        if MPC_LAB_ENABLED and upstream_path == "/v1/chat/completions" and isinstance(payload, dict):
+   650	            extra = payload.get("vllm_xargs")
+   651	            if extra is None or isinstance(extra, dict):
+   652	                payload = {**payload, "vllm_xargs": {
+   653	                    **(extra or {}), "pr33_gateway_request_id": request_id,
+   654	                }}
+   655	                body = json.dumps(payload).encode()
+   656	
+   657	        estimated_input_tokens = estimated_output_tokens = 0
+   658	        used_tokenizer_fallback = False
+   659	        if ADMISSION_MODE == "cost_aware":
+   660	            with phases.phase('cost_estimation') if phases else NO_PHASE:
+   661	                (request_cost, estimated_input_tokens, estimated_output_tokens,
+   662	                 used_tokenizer_fallback) = estimate_request_cost(payload)
+   663	
+   664	        if MPC_LAB_ENABLED:
+   665	            decision = await begin_request(
+   666	                request_cost, used_tokenizer_fallback, phases,
+   667	                mpc_mark=(request_id, mpc_received_at, estimated_input_tokens, estimated_output_tokens),
+   668	            )
+   669	        else:
+   670	            decision = await begin_request(request_cost, used_tokenizer_fallback, phases)
+   671	        if not decision.accepted:
+   672	            telemetry.terminal(request_id, "rejected", budget=decision.budget,
+   673	                               budget_version=decision.budget_version,
+   674	                               estimated_input_tokens=estimated_input_tokens,
+   675	                               max_output_tokens=estimated_output_tokens,
+   676	                               request_cost=request_cost)
+   677	            if phases is not None:
+   678	                phases.finish("rejected", cleanup_complete=True)
+   679	            return JSONResponse(
+   680	                {"detail": "request rejected: admission capacity exceeded",
+   681	                 "estimated_request_cost": request_cost,
+   682	                 "estimated_input_tokens": estimated_input_tokens,
+   683	                 "estimated_output_tokens": estimated_output_tokens,
+   684	                 "max_admitted_cost": decision.budget,
+   685	                 "budget_version": decision.budget_version},
+   686	                status_code=503, headers={"x-request-id": request_id},
+   687	            )
+   688	        reserved = True
+   689	        telemetry.admitted(request_id, request_cost=request_cost,
+   690	                           estimated_input_tokens=estimated_input_tokens,
+   691	                           max_output_tokens=estimated_output_tokens,
+   692	                           budget=decision.budget, budget_version=decision.budget_version)
+   693	        if SHARED_UPSTREAM_CLIENT:
+   694	            client = getattr(app.state, 'upstream_client', None)
+   695	            if client is None or client.is_closed:
+   696	                raise RuntimeError('Shared upstream client requires an active application lifespan')
+   697	        else:
+   698	            with phases.phase('client_construction') if phases else NO_PHASE:
+   699	                client = httpx.AsyncClient()
+   700	        upstream_request = client.build_request(
+   701	            method=request.method, url=f"{VLLM_URL}{upstream_path}",
+   702	            content=body, headers=headers, timeout=60.0,
+   703	        )
+   704	        with phases.phase('http_send_headers') if phases else NO_PHASE:
+   705	            telemetry.emit("backend_sent", request_id)
+   706	            upstream = await client.send(upstream_request, stream=True)
+   707	    except httpx.HTTPError as exc:
+   708	        if phases is not None:
+   709	            phases.abort(exc)
+   710	        await safe_cleanup("failed")
+   711	        return JSONResponse({"detail": "upstream request failed"}, status_code=502,
+   712	                            headers={"x-request-id": request_id})
+   713	    except BaseException as exc:
+   714	        if phases is not None:
+   715	            phases.abort(exc)
+   716	        await safe_cleanup("cancelled" if isinstance(exc, asyncio.CancelledError) else "failed")
+   717	        raise
+   718	
+   719	    async def stream_upstream():
+   720	        observer = SSEObserver(completions=upstream_path=='/v1/completions')
+   721	        mpc_first_marked = False
+   722	        is_sse = "text/event-stream" in upstream.headers.get("content-type", "")
+   723	        streaming_expected = bool(payload.get("stream")) or is_sse
+   724	        outcome = "cancelled"
+   725	        try:
+   726	            async for chunk in upstream.aiter_bytes():
+   727	                if phases is not None and chunk:
+   728	                    phases.mark('first_body')
+   729	                if is_sse and upstream.is_success:
+   730	                    observer.feed(chunk)
+   731	                    if observer.has_content:
+   732	                        if MPC_LAB_ENABLED and not mpc_first_marked:
+   733	                            await mpc_first_content(request_id)
+   734	                            mpc_first_marked = True
+   735	                        if phases is not None:
+   736	                            phases.mark('first_content')
+   737	                        telemetry.first_content(request_id)
+   738	                yield chunk
+   739	            complete = upstream.is_success and (
+   740	                not streaming_expected or (observer.done and not observer.invalid)
+   741	            )
+   742	            outcome = "completed" if complete else "failed"
+   743	        except Exception:
+   744	            outcome = "failed"
+   745	            raise
+   746	        finally:
+   747	            await safe_cleanup(outcome)
+   748	
+   749	    return StreamingResponse(
+   750	        stream_upstream(), status_code=upstream.status_code,
+   751	        headers={**{key: value for key, value in upstream.headers.items()
+   752	                    if key.lower() not in {"content-length", "transfer-encoding", "content-encoding", "x-request-id"}},
+   753	                 "x-request-id": request_id},
+   754	        media_type=upstream.headers.get("content-type"),
+   755	        background=BackgroundTask(safe_cleanup, "cancelled"),
+   756	    )
+   757	
+   758	
+   759	@app.post("/admin/budget")
+   760	async def update_budget(request: Request):

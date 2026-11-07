@@ -1,0 +1,34 @@
+{
+  "Native_execution": false,
+  "actual_application_at": null,
+  "events": [
+    {
+      "generation": 1,
+      "kind": "control_history_published",
+      "phase": "CAS_intent"
+    },
+    {
+      "generation": 2,
+      "kind": "control_history_published",
+      "phase": "CAS_receipts"
+    },
+    {
+      "generation": 3,
+      "kind": "control_history_published",
+      "phase": "capture_metadata_received"
+    },
+    {
+      "generation": 4,
+      "kind": "control_history_published",
+      "phase": "capture_begin_received"
+    },
+    {
+      "generation": 5,
+      "kind": "bootstrap_confirmed",
+      "phase": "confirmed"
+    }
+  ],
+  "fixture_raw_unchanged": true,
+  "offers_sha256": "da129b9980b9875dcddf89c7d5649d131da1a53462078b6cf1dccd749301cf77",
+  "plan_sha256": "468d95d00448aa0a1404b6c7d26015f2f66a6e1ab4b07640f7325266bdef3930"
+}

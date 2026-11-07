@@ -1,0 +1,32 @@
+{
+  "scope": "Read-only installed serving CLI metadata, not a serving experiment or release clearance",
+  "host": "Existing authorized GPU host; package metadata reports vllm 0.30.0",
+  "command": "timeout -s TERM -k 5 90 env CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 /workspace/pr32-r23/venv/bin/vllm serve --help=all",
+  "exit": 0,
+  "raw_local_not_in_this_commit": ".runtime/r24-resume-p0-serving-preflight01/vllm-help.{stdout,stderr}.log",
+  "raw_sha256": {
+    "stdout": "3073d6bc0444950e8c8d1af2f1a36cc3b0793b48e53f72b605724d0c9a30baed",
+    "stderr": "faf557810918513c4b5070cf1036688be61e46c468a12223232997f9e6c254c1"
+  },
+  "available_options": [
+    "--served-model-name (multiple API aliases)",
+    "--no-enable-prefix-caching",
+    "--scheduling-policy {fcfs,priority} (CLI default fcfs)",
+    "--max-model-len",
+    "--max-num-batched-tokens",
+    "--max-num-seqs",
+    "--gpu-memory-utilization",
+    "--enforce-eager"
+  ],
+  "not_decided": "Availability of a flag is not adoption of that setting. Do not disable backend optimizations merely to ease startup or claim controller superiority; freeze fair common settings before serving.",
+  "FIFO_limit": "Help describes FCFS arrival ordering; this is not observation of a configured running backend. A static-cap FCFS reference, if verified later, must be disclosed as an alias rather than a fourth distinct algorithm.",
+  "remaining_preflight": [
+    "Frozen complete controller/producer source and independent integration review",
+    "Matching verified tokenizer assets, immutable cost identity and no character fallback",
+    "Actual local clock, guarded HTTP/CAS/unknown-command behavior",
+    "Exclusive GPU ownership and bounded service lifecycle",
+    "Separate one-shot nominal authority and actual changed-action smoke"
+  ],
+  "GPU_model_or_HTTP_server_started": false,
+  "no_Native_gate_qualification_or_P0_completion": true
+}

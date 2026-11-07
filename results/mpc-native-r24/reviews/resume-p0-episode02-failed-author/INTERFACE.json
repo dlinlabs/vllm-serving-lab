@@ -1,0 +1,15 @@
+{
+  "construct_runtime_design": "Use the returned scenario_factory/scenario_binding, exact expected model parameters and caller-owned HTTP client. Bind runtime.start_at to the same future S, enabled=True and a separate valid scoped NominalDemoPermit; no permit is created here.",
+  "current_blocker": "Canonical Train-binding comparison bug plus invalid cross-Runner signal assertion. Neither corrected within this one frozen attempt.",
+  "current_verified_scope": "Exact fixed five-request source, local CPU fixture preparation and pre-worker refusal capture persistence; no successful concurrent episode.",
+  "handle": "PreparedEpisode.directory, recorder, policy, entered_at, prepared_at, sources, scenario_factory, scenario_binding, error, input_sha256, used",
+  "module": "experiments/mpc-research/resume-mvp/nominal_episode.py",
+  "not_implemented": "No CLI, campaign, service launch, observed-Train Fixed/Eval selection, natural metrics finalize or full-wall completion.",
+  "owner_interface": "Existing published NominalServices instance: owner.deadline, owner.reserve (constructor cleanup_reserve) and owner.check(). Context remains synchronous and caller-owned; no smoke-driver readiness asyncio.run is used.",
+  "persistence_design": "Final capture.json through unchanged write_capture, episode.json with both returned results/errors, and the unchanged runtime journal when runtime actually starts. Reraise caller cancellation after persistence.",
+  "prepare": "prepare_episode(*, output_dir, binding_path, gateway_url, backend_url, policy='mpc', trace_path=PROBE, train_path=TRAIN, request_timeout=120.0, tokenizer_loader=nominal_client.load_tokenizer) -> PreparedEpisode",
+  "prepare_design": "Synchronous local peer prepare_capture plus accepted runtime Train-provider preparation; persist prepared-capture.json via peer codec and preparation.json. Choose the shared future start only afterward.",
+  "run": "await run_episode(prepared, runtime, *, owner, offered_start, enabled=False, transport=None)",
+  "scope_design": "Default-OFF opt-in; no subprocess/thread/service/signal ownership. Original D and R go unchanged to capture_replay. A read-only records/preflight barrier precedes runtime wait_for_start and run.",
+  "status": "FAILED_CANDIDATE_DO_NOT_ACTIVATE"
+}

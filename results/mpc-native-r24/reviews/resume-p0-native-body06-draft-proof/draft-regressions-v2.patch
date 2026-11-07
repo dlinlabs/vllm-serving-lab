@@ -1,0 +1,149 @@
+diff --git a/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py b/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+index 158b2f4a0..a1beace50 100644
+--- a/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
++++ b/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+@@ -1,13 +1,18 @@
+ """CPU-only entry and failed-capture persistence controls."""
+ 
++import asyncio
+ import json
+ import os
+ from pathlib import Path
++import time
++import types
+ import unittest
+-from unittest.mock import patch
++from unittest.mock import AsyncMock, patch
+ 
++import httpx
+ import native_nominal_qualification as driver
+ import nominal_client
++import nominal_episode
+ 
+ 
+ ROOT = Path(os.environ["NATIVE_SMOKE_TEST_OUTPUT"]) / "qualification"
+@@ -15,6 +20,63 @@ ROOT.mkdir(parents=True, exist_ok=True)
+ 
+ 
+ class Controls(unittest.TestCase):
++    def early_exit(self, name, prepared_error=None):
++        base = ROOT / name
++        root, output = base / "source", base / "output"
++        (root / driver.services.RELATIVE).mkdir(parents=True)
++        (root / driver.services.RELATIVE / "nominal_protocol.json").write_text(
++            Path(os.environ["NATIVE_SMOKE_PROTOCOL"]).read_text())
++        (output / "services").mkdir(parents=True)
++        argv = ["CPU-vllm", "serve", driver.services.MODEL]
++        (output / "services/ownership.json").write_text(json.dumps({
++            "services": [{"name": "engine", "argv": argv}]}))
++        report = {"source": {"cost_spec": {}, "identity": {}, "clock_domain": "CPU-source-clock"},
++                  "configuration": {"engine": argv}, "offered_requests_from_driver": None}
++        warmup = types.SimpleNamespace(ready=True, capture={
++            "clock_domain": "CPU-recorder-clock", "status": "collected",
++            "records": [{"fate": "complete", "stream_done": True, "finish_reason": "stop"} for _ in range(3)],
++            "summary": {"prompt_tokens_mismatch": 0}})
++        prepared = types.SimpleNamespace(
++            error=prepared_error, recorder=types.SimpleNamespace(
++                trace={"requests": [{"trace_id": f"CPU-{i}"} for i in range(5)]},
++                capture={"status": "failed", "error": "not_run", "records": None}))
++
++        class Client:
++            async def __aenter__(self):
++                return self
++
++            async def __aexit__(self, *_):
++                return False
++
++            async def get(self, *_args, **_kwargs):
++                raise RuntimeError("CPU pre-control GET failure")
++
++        with patch.object(nominal_client, "prepare_capture", return_value=warmup), \
++                patch.object(nominal_client, "capture_replay", new=AsyncMock(return_value=warmup.capture)), \
++                patch.object(nominal_episode, "prepare_episode", return_value=prepared), \
++                patch.object(nominal_episode, "run_episode", new=AsyncMock()) as run_episode, \
++                patch.object(httpx, "AsyncClient", new=lambda **_: Client()):
++            expected = driver.services.ProbeError if prepared_error else RuntimeError
++            with self.assertRaises(expected):
++                asyncio.run(driver.collect(
++                    owner=types.SimpleNamespace(check=lambda: None, deadline=time.monotonic() + 60, reserve=5),
++                    root=root, output=output, key="", report=report))
++            run_episode.assert_not_awaited()
++        self.assertEqual(report["offered_requests_from_driver"], 0)
++        receipt = json.loads((output / "episode-not-run.json").read_text())
++        self.assertEqual(receipt["records_allocated"], 0)
++        self.assertEqual(receipt["sent"], 0)
++        self.assertEqual(receipt["prepared_error"], prepared_error)
++        self.assertTrue((output / "episode-not-run-capture.json").is_file())
++        return report
++
++    def test_pre_control_error_keeps_not_run_capture_and_zero_offers(self):
++        report = self.early_exit("pre-control-error")
++        self.assertEqual(report["episode_trace_requests"], 5)
++
++    def test_preparation_error_keeps_primary_reason_and_zero_offers(self):
++        self.early_exit("prepare-error", {"message": "CPU preparation refused"})
++
+     def test_default_off_never_enters_native_body(self):
+         forbidden = AssertionError("OFF performed an effect")
+         with patch.object(driver, "body", side_effect=forbidden), \
+diff --git a/experiments/mpc-research/resume-mvp/test_native_services_smoke.py b/experiments/mpc-research/resume-mvp/test_native_services_smoke.py
+index f7b475eeb..fe6c4b14f 100644
+--- a/experiments/mpc-research/resume-mvp/test_native_services_smoke.py
++++ b/experiments/mpc-research/resume-mvp/test_native_services_smoke.py
+@@ -104,7 +104,8 @@ class Controls(unittest.TestCase):
+         finally:
+             sys.path[:] = old_path
+ 
+-    def exercise(self, name, invalid=False, poison=False, interrupt=False, body=None):
++    def exercise(self, name, invalid=False, poison=False, interrupt=False, body=None,
++                 traffic=False, bad_sequence=False, gpu_idle=True):
+         base = ROOT / name
+         base.mkdir()
+         source = (base / "source").resolve()
+@@ -173,8 +174,8 @@ class Controls(unittest.TestCase):
+                 (output / "services/ownership.json").write_text(json.dumps(receipt))
+                 (output / "telemetry-status.json").write_text(json.dumps(dict(
+                     status="closed", mpc_ledger_complete=True, dropped=0, write_errors=0,
+-                    mpc_remaining_requests=0, mpc_unflushed_records=0, mpc_final_sequence=0,
+-                    mpc_producer_final_sequence=0)))
++                    mpc_remaining_requests=0, mpc_unflushed_records=0, mpc_final_sequence=3 if traffic else 0,
++                    mpc_producer_final_sequence=4 if bad_sequence else 3 if traffic else 0)))
+ 
+             def __enter__(self):
+                 trace.append("owner enter")
+@@ -194,7 +195,8 @@ class Controls(unittest.TestCase):
+         def gpu(_deadline):
+             test.assertFalse(active[0], "GPU subprocess attempted inside ownership context")
+             trace.append("gpu")
+-            return dict(idle_selected_gpu=True, evidence_kind="CPU_MOCK_ONLY")
++            return dict(idle_selected_gpu=gpu_idle if "owner exit" in trace else True,
++                        evidence_kind="CPU_MOCK_ONLY")
+ 
+         def scope(config, actual_output, deadline, ready, key, actual_args):
+             test.assertEqual(key, KEY)
+@@ -291,6 +293,25 @@ class Controls(unittest.TestCase):
+         self.assertEqual(report["errors"][0]["type"], "RuntimeError")
+         self.assertEqual(trace[-2:], ["owner exit", "gpu"])
+ 
++    def test_10_body_accepts_complete_nonzero_ledger(self):
++        code, report, _ = self.exercise("body-ledger", body=lambda **c: c["owner"].check(), traffic=True)
++        self.assertEqual(code, 0)
++        self.assertTrue(report["lifecycle_passed"])
++        self.assertEqual(report["telemetry_status"]["mpc_final_sequence"], 3)
++
++    def test_11_gpu_idle_failure_not_masked_by_bad_ledger(self):
++        code, report, _ = self.exercise(
++            "body-two-errors", body=lambda **c: c["owner"].check(),
++            traffic=True, bad_sequence=True, gpu_idle=False)
++        self.assertEqual(code, 1)
++        self.assertTrue(any("post GPU not proven idle" in e["message"] for e in report["errors"]))
++        self.assertTrue(any("telemetry" in e["message"] for e in report["errors"]))
++
++    def test_12_no_body_keeps_zero_only_ledger_rule(self):
++        code, report, _ = self.exercise("no-body-traffic", traffic=True)
++        self.assertEqual(code, 1)
++        self.assertFalse(report["lifecycle_passed"])
++
+ 
+ if __name__ == "__main__":
+     suite = unittest.defaultTestLoader.loadTestsFromTestCase(Controls)

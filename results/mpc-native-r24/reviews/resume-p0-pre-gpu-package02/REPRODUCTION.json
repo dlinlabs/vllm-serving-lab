@@ -1,0 +1,19 @@
+{
+  "source_commit": "234106cb741a2d66b76c440cad4b0b2a1b26c35b",
+  "build_command": [
+    "python",
+    "results/mpc-native-r24/reviews/resume-p0-pre-gpu-mayor02/build_package.py",
+    "--source-commit",
+    "234106cb741a2d66b76c440cad4b0b2a1b26c35b",
+    "--output",
+    "cpu-ci-artifacts/pre-gpu-package-FRESH",
+    "--historical-reference",
+    "results/mpc-native-r24/reviews/resume-p0-lifecycle-host03-author/raw/output/report.json"
+  ],
+  "requirements": "Python3.12 and requirements-cpu-tests.txt; fresh nonexistent output under checkout",
+  "expected_tar_sha256": "996ed3f0260a42c8ceb1f6ece44400d6b3784a0859adb654eb47f08419b9d772",
+  "scope": "CPU package isolation and historical identity fixture only; no live GPU or lease proof",
+  "qualification_test_output_namespace": "sibling <NATIVE_SMOKE_TEST_OUTPUT>-qualification",
+  "selected_credential_contact_hygiene": "PASS_HEURISTIC_ONLY",
+  "original_patch_whitespace": "Immutable diff context bytes retained; whitespace check excludes archived *.patch and *.diff only."
+}

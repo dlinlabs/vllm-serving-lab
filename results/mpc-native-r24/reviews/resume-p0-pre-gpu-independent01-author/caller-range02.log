@@ -1,0 +1,60 @@
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  inputs/native_nominal_qualification.py
+async def collect(*, owner, root, output, key, report):
+    """Caller-owned accounting; collected engineering evidence is never Native qualification."""
+    root, output = Path(root).resolve(), Path(output)
+    deadline, reserve = owner.deadline, owner.reserve
+    primary, primary_tb = None, None
+    prepared = warmup = client = recorder = bound = None
+    entered_run = False
+    stage = "source_preflight"
+    report.update(caller_errors=[], episode_planned_requests=5, episode_trace_requests=None,
+                  warmup_planned_requests=3, warmup_offered_requests=0,
+                  offered_requests_from_driver=0, episode_sent_requests=0)
+
+    def failure(where, error):
+        nonlocal primary, primary_tb
+        report["caller_errors"].append({"stage": where, "error": error_record(error)})
+        if primary is None:
+            primary, primary_tb = error, error.__traceback__
+        elif error is not primary:
+            primary.add_note(where + ": " + type(error).__name__ + ": " + str(error))
+
+    def attempt(where, action):
+        try:
+            return action()
+        except BaseException as error:
+            failure(where, error)
+
+    try:
+        import httpx
+        import nominal_client as recorder
+        import nominal_episode as episode
+        import nominal_runtime as runtime_api
+        from mpc_lab.contracts import CostSpec, ModelParameters
+        from nominal_permit import NominalDemoPermit
+        from nominal_planner import NominalPlanner
+
+        services.checked(all(type(value) in (int, float) and math.isfinite(value)
+                             for value in (deadline, reserve)) and reserve >= 0,
+                         "finite original deadline/reserve required")
+        expected, config = report["source"], report["configuration"]
+        remaining(owner, deadline, reserve)
+        protocol, bound = source_binding(root, episode, expected)
+        services.write(output / "qualification-source-binding.json", bound, key)
+        report["caller_source_binding"] = bound
+        gateway = f"http://127.0.0.1:{services.GATEWAY_PORT}"
+        backend = f"http://127.0.0.1:{services.BACKEND_PORT}"
+        stage = "model_binding"
+        ownership_path = output / "services/ownership.json"
+        ownership = strict_load(ownership_path.read_bytes())
+        actual_engine = next(s["argv"] for s in ownership["services"] if s["name"] == "engine")
+        services.checked(actual_engine == config["engine"], "owned backend argv mismatch")
+        binding_path = output / "model-binding.json"
+        services.write(binding_path, {
+            "schema": recorder.BINDING_SCHEMA, "served_alias": services.ALIAS,
+            "local_model_path": services.MODEL, "tokenizer_sha256": services.TOKENIZER,
+            "served_model_names": [services.ALIAS], "backend_argv": actual_engine,
+            "backend_argv_source": str(ownership_path) + " (owned actual spawn receipt)",
+        })
+        client = httpx.AsyncClient(base_url=gateway, trust_env=False, follow_redirects=False)
+        warm_error = None

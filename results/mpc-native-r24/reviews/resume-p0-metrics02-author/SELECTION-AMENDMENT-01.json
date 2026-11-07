@@ -1,0 +1,9 @@
+{
+ "amends": "SELECTION.json (5befd565...)",
+ "reason": "minimal client integration with the revised metrics contract requires updating own sealed-client01 tests that call build_run/finalize",
+ "added_reads": [
+  {"path": "experiments/mpc-research/resume-mvp/test_nominal_client.py", "sha256": "753c0ca6a9485a6ac8ccd3706c876b797405026e02f870bdb3168f4d389e76d3", "bytes": 27455, "read": "spans needed for build_run/finalize/provenance assertions (own file; pinned copy in originals/)"},
+  {"path": "experiments/mpc-research/resume-mvp/nominal_client.py", "sha256": "ad850c639c911c55c20c388bd6797c4d8606f72ed9f97ea23f5ef80e92379c40", "bytes": 0, "read": "additional bounded spans (send loop 372-390 already viewed; finalize/main CLI argument definitions)"}
+ ],
+ "files_total": 6, "bytes_total": 194212, "within_budget": true
+}

@@ -1,0 +1,29 @@
+{
+  "frozen_before_viewing_items_4_to_14": true,
+  "subject_prefix": ".runtime/r24-team16-native-cut-consumer-cleanup-successor01/",
+  "viewed_fixed": [
+    {"n":1,"path":"PLAN.json","sha256":"cbec832f2c2ebfe050c0c76cb63dd3e599a782b244c620fb5f74ff68b8412f2c","bytes":3908,"status":"viewed_first_inspection"},
+    {"n":2,"path":"REPORT.json","sha256":"5a9b72401c346f8823ea9806caf3b85881031f33e42861e606d86deb8cdd0333","bytes":3294,"status":"viewed_first_inspection"},
+    {"n":3,"path":"EXACT_SOURCE_DIFF.patch","sha256":"8b6d4ef3325965159a79e151e9eada645c7f8fb60a4a45bf3b36f023741e7a10","bytes":26825,"status":"viewed_first_inspection"},
+    {"n":4,"path":"candidate/launch01.py","sha256":"9a7dd9206cca7de9faabcf64611a73dee2f0feb575c51fe66f4003a49065e2c0","bytes":29870},
+    {"n":5,"path":"candidate/owned01.py","sha256":"5c4e2c066c985b79d03f06685b5352b0a0a5bdb833c6f1b2ad5d0f7ba3c357f3","bytes":11552},
+    {"n":6,"path":"inputs/deployment/composition_common01.py","sha256":"3881b546c8f8da8839c69a30c3f01507b8a9a9e79de7771223c96c5a623670fe","bytes":13733,"note":"unchanged in-place dependency (c.*)"},
+    {"n":7,"path":"inputs/review/REVIEW.md","sha256":"4692a8ef3a1f6fa25baf4ca1f38fabab360096c667c5539b455596a7b298013a","bytes":13344,"note":"D2-F1 definition; byte-identical to own sealed d2r01 REVIEW.md"},
+    {"n":8,"path":"test_cleanup01.py","sha256":"7851b1efefc541fb3a96c64aa802de6c84493d81d0734e71c250186d19e0d4dd","bytes":19555},
+    {"n":9,"path":"run_controls01.py","sha256":"53242a1e62df400f0ce22bd222766b7f0713a32ed10394a7a878d76a0889dacc","bytes":4291},
+    {"n":10,"path":"COMMANDS.json","sha256":"0e426e266b68e67a639892fff74e0e42da3ff93d05e2fc02aea8eabb29dc04eb","bytes":3471},
+    {"n":11,"path":"cpu_load01.py","sha256":"5d486c0b45c34406abf27d7e63165662a59d5ce17169afbf94a419919d1638d8","bytes":2115},
+    {"n":12,"path":"cpu_dummy01.py","sha256":"8a5816616c5339fcfd897dd5ed8f0821ce3cb111adcfcffb7f0ba8eb017e8dc4","bytes":1955}
+  ],
+  "reserve_slots": 2,
+  "reserve_candidates_in_order": [
+    {"id":"R-a","path":"prepare01.py","sha256":"badb661370880e65eb8c57b5eddc5ade38319d75c6af5b0127366643ff2f248e","bytes":8813,"rule":"only if control commands require prepare01 outputs/behaviour"},
+    {"id":"R-b","path":"attempts/generation01-py314/T01/control-result.json","sha256":"999a3f59f406dcf18aae1b1c2ddc08ed70d10af49a75bad1273b2c70e409fe77","bytes":5439},
+    {"id":"R-c","path":"attempts/generation01-py314/T02/control-result.json","sha256":"da473e5369615e97357146b5aa1e38abc1feade3fdf1bb00e816d4db865d248b","bytes":6193},
+    {"id":"R-d","path":"FAILURES.json","sha256":"3e9c24c2abaf505068f09e949ea95afd1db2e6f31e2bcb6082ed6a1aeedd552c","bytes":4034}
+  ],
+  "reserve_rule": "decide and record RESERVE-DECISION.txt before viewing any reserve file; fill in order R-a(if required), R-b, R-c, R-d",
+  "byte_bound": "fixed 133913 + reserve <= 15006 = <= 148919 <= 524288",
+  "not_viewed_hashread_only": ["inputs/deployment/launch01.py", "inputs/deployment/owned01.py", "deployment02 in-place launch01.py/owned01.py/composition_common01.py", "own d2r01 REVIEW.md", "deployment02 and d2r01 SHA256SUMS digests"],
+  "machine_checked_not_viewed": "EXACT_SOURCE_DIFF split+patch applied to hash-read originals reproduces both candidates byte-exactly (work/)"
+}

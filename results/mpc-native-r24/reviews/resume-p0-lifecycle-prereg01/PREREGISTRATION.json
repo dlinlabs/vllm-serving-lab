@@ -1,0 +1,50 @@
+{
+  "schema": "resume-p0-existing-gpu-lifecycle-prereg-v1",
+  "authority": "MAYOR_SINGLE_LIFECYCLE_COMPONENT_ATTEMPT_ONLY",
+  "p0_question": "Can the exact reviewed ownership helper start the real cached backend and gateway, verify source/CostSpec/tokenizer/readiness, and shut down all owned processes with complete receipts?",
+  "why_needed": "Mocked CPU controls cannot establish actual GPU startup, ownership or cleanup; the independent recorder/metrics prerequisite now passes.",
+  "independent_source_gate": "../resume-p0-recorder-metrics-independent-parent02.json",
+  "source_commit": "6113b377846f59f6c519a5b2fc4ba369e7f61fce",
+  "source_archive_sha256": "bf007372fe35f8a0017aa0787d56046ad1149c66f8b53fa5686376372a1f71fe",
+  "source_archive_bytes": 645120,
+  "source_manifest_sha256": "e5f72fc6dcdddda58a08500e997271bb58c7d3873ab4434b76612f94a1c70241",
+  "source_files": 48,
+  "gpu_uuid": "GPU-8610519d-3680-ae5f-cdfc-40037bfb5013",
+  "existing_resource_last_readonly_check": "2026-11-05T01:32:35Z: same UUID, 1 MiB, 0%, no compute applications",
+  "remote_base": "/workspace/pr32-r23/r24-resume-p0-lifecycle-6113b37701",
+  "remote_source": "/workspace/pr32-r23/r24-resume-p0-lifecycle-6113b37701/source",
+  "remote_output": "/workspace/pr32-r23/r24-resume-p0-lifecycle-6113b37701/output",
+  "argv": [
+    "/workspace/pr32-r23/venv/bin/python3.12",
+    "-B",
+    "/workspace/pr32-r23/r24-resume-p0-lifecycle-6113b37701/source/experiments/mpc-research/resume-mvp/native_services_smoke.py",
+    "--execute",
+    "--source-root", "/workspace/pr32-r23/r24-resume-p0-lifecycle-6113b37701/source",
+    "--output-root", "/workspace/pr32-r23/r24-resume-p0-lifecycle-6113b37701/output",
+    "--seconds", "480",
+    "--cleanup-reserve", "30",
+    "--term-grace", "10"
+  ],
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "UNSET"
+  },
+  "locks": [
+    "/workspace/pr32-r23/r24-team16-mayor-gpu.lock",
+    "/workspace/pr32-r23/native-component-GPU-8610519d.lock"
+  ],
+  "attempts": 1,
+  "original_driver_deadline_seconds": 480,
+  "cleanup_reserve_seconds": 30,
+  "term_grace_seconds": 10,
+  "offered_inference_requests": 0,
+  "admin_budget_posts": 0,
+  "success": "Real readiness identity/tokenizer/cap checks, normal completed scope, STOPPED/known-gone exact-lock receipt, watchdog joined, closed complete zero-request telemetry and no remaining compute app within the original deadline.",
+  "failure": "Any source/version/identity/readiness failure, timeout, interruption, unknown process, incomplete telemetry, missing receipt or residual GPU application is FAIL or unresolved cleanup, never qualification.",
+  "evidence": "Preserve stdout/stderr, driver exit, source manifest, events, pre/post GPU snapshots, service ownership and telemetry closure, including all failed paths.",
+  "stop_rules": "No blind retry. Diagnose exact defect from raw receipts. No new rental, source/product/SDK edits on the old remote tree, Push, Merge, user inference, model research, Train Fixed or Eval.",
+  "not_authorized": "This is not a two-cycle MPC test, admission-effect proof, benchmark or Native completion."
+}

@@ -1,0 +1,207 @@
+{
+  "all_refused_before_workers": true,
+  "client_request_records_allocated": 0,
+  "count": 12,
+  "episodes": [
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "3607cffc8015d713055d72f429ef69f1f8393ddb37ec00229671789c95d11d9c",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_caller_cancellation_joins_workers_and_persists_partial_outcomes/cancel/episode.json",
+      "reason": "runtime_Train_provider_or_policy_changed",
+      "sha256": "289f808fcbfdbedb1eaa9077aa6488b1ef8236651ec74a2f2f34c045828acd9b",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "c8bd4dd1640da9c30eaa67adee62841b2c4337f5a510f04d0b56e835c4c9055c",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/different_start/episode.json",
+      "reason": "shared_start_past_or_mismatched",
+      "sha256": "424dd1547357194ffdb75b6590c7d9dd417efb291405b6daa6bf080d8687cd27",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "00f627f3c301c6795d079df4cbf47dbce34551297395b9a7d391f28df286d3d6",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/input_changed/episode.json",
+      "reason": "prepared_input_changed_or_reused",
+      "sha256": "47c9d05889aeb32beaa16574275e167c81ca53304c903fe05e6d1d8b26698f38",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "d8228796dbd016a7e4b77253a1ae336b336401059a08ed28affeb329425211d3",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/off/episode.json",
+      "reason": "experimental_episode_disabled",
+      "sha256": "845bcdc490d4b24bdad36d5f2a8693a8781aa669a6808a73181e6a0901a7a164",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "2b9c53c5ed9aa6041dde3ead4151a3eaeb5d7a4561183c5498703fdcd753b556",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/past/episode.json",
+      "reason": "shared_start_past_or_mismatched",
+      "sha256": "3c8851e076903be0e95d09f2a88da28f83f01740f296dd3acae5fb6caf5af96f",
+      "workers": {}
+    },
+    {
+      "capture_error": "ClientRefusal: served_alias must equal the frozen trace.model (trace.model is never changed)",
+      "capture_sha256": "57473fb9445b4b6caad319bae99e3e68414584b861748ebae95a11b50d851ee8",
+      "capture_status": "refused",
+      "missing_record_ids": null,
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/ready_false/episode.json",
+      "reason": "local_preparation_refused",
+      "sha256": "0b83660140b961783b5d98474c4105f2b34978991b5d48c8aa076e9025880128",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "d5019a33758fbb99cbbf6bd78c9addb8a71886e1b7dfd1dbd9d4154ea64e62f5",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/runtime_endpoint_changed/episode.json",
+      "reason": "runtime_Train_provider_or_policy_changed",
+      "sha256": "0f2766144b715a0c359ec746c6e3d92883de654a4acc095a1919d7fef2198038",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "d4182825711fc6944ee10e2ea7afdf53705fe84801bf565f36395aca86d165db",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_default_off_preparation_and_configuration_refusals_do_not_start/truncated/episode.json",
+      "reason": "original_work_deadline_truncates_episode",
+      "sha256": "9fdc92894f3ba6cc1d538329f791c7b4df40fb9b7f9afb89f7cbd9bc3f9ee553",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "f9b067652ba0c7b640eb713c14d47322982fc73f75a14fcfde5723ea6f30b101",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/controller_refused/episode.json",
+      "reason": "runtime_Train_provider_or_policy_changed",
+      "sha256": "4abc3471dc36eb0ef60d1ea2ebdf422f7ab52d2cfe2be09327ae1e9bfc668b4f",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "b924d4524f8d8b824ab9a5973b175c02e2135ded7803e1790322c7374c5a9b0f",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/recorder_failed/episode.json",
+      "reason": "runtime_Train_provider_or_policy_changed",
+      "sha256": "47895c3cb74bf7cc3a197e0dcef879c7f74aaee9747aaf93cf9e14200bec4885",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "01c398b59918105e101c74a241d503c64bc4d91fd0d7a3d66979a61f4ef3c9ce",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_returned_failure_envelopes_cancel_peer_and_preserve_results/recorder_refused/episode.json",
+      "reason": "runtime_Train_provider_or_policy_changed",
+      "sha256": "4579dd4e04fa8a812a49f672e3d7f84adb620c1eb3d95c64d117f7ec95cf4fde",
+      "workers": {}
+    },
+    {
+      "capture_error": "not_run: prepared by prepare_capture only (no offers sent)",
+      "capture_sha256": "21c91a30c204d501097a2875dd5c3ab14c3b9ea7376c2231c9c7535c3035c70c",
+      "capture_status": "failed",
+      "missing_record_ids": [
+        "admission-boundary-p0w1-train-0000",
+        "admission-boundary-p0w1-train-0002",
+        "admission-boundary-p0w1-train-0007",
+        "admission-boundary-p0w1-train-0013",
+        "admission-boundary-p0w1-train-0015"
+      ],
+      "offered_count": 5,
+      "path": "attempts/generation01-py312/artifacts/test_shared_start_full_outcomes_and_real_controller_feedback/complete/episode.json",
+      "reason": "runtime_Train_provider_or_policy_changed",
+      "sha256": "e47bb7bf680c43f3ad5c0c78efd465e3cca9e60c1737734e85fbbb5bc993ad89",
+      "workers": {}
+    }
+  ],
+  "meaning": "Local preparation/refusal persistence ran; intended concurrent runtime/replay paths never started.",
+  "runtime_journals_created": 0
+}

@@ -1,0 +1,17 @@
+1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c  recon/before/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+17:        return client.write_capture(path, capture)
+19:        services.write(path.with_suffix(".write-error.json"), {
+49:    binding_path = output / "model-binding.json"
+50:    services.write(binding_path, binding)
+59:            warmup, offered_start=time.monotonic() + 1.0, deadline=owner.deadline,
+100:        services.write(output / "pre-control-state.json", state, key)
+102:        start = entered + 1.0
+114:            not_before=entered, expires_at=entered + 20.0, max_commands=8, approved=True,
+116:        services.write(output / "runtime-binding.json", {
+117:            "description": described, "offered_start": start,
+118:            "permit_not_before": entered, "permit_expires_at": entered + 20.0,
+119:            "permit_max_commands": 8, "authority": "separate Mayor exact-source preregistration",
+127:            prepared, runtime, owner=owner, offered_start=start, enabled=True)
+== B2 REPORT H text
+['author', 'b3_handoff_not_b2_defects', 'capsule', 'controls_summary', 'criteria', 'diff_scope', 'limitations', 'line_anchors_new_smoke', 'nonclaims', 'not_read', 'observations', 'pins', 'reads', 'rows', 'schema', 'status', 'verdict', 'witnesses', 'worktree', 'worktree_ref_supplied_not_verified', 'written_utc']
+KEY b3_handoff_not_b2_defects ["H1: Body-run closure failures now use 'telemetry closure or body ledger mismatch', 'telemetry body ledger sequence mismatch' or 'telemetry body ledger row count mismatch'. The idle error is now appended before the telemetry error. The caller must not match the old no-body message or depend on the order of errors.", "H2: final == producer == 0 passes B2 on a body run (CHECKLIST b2_note). That is not traffic evidence; B3-1 envelope counts and the raw audit decide.", "H3: The body receives the mutable report dict and the output path (278, pre-existing interface). The B3 review must confirm the caller does not write errors, readiness, post_gpu or telemetry_status, nor write or replace telemetry-status.json, post-gpu.json or services/ownership.json."]

@@ -1,0 +1,29 @@
+585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c  native_services_smoke.py
+178:                       body=response.text[:65536], body_truncated=len(response.text) > 65536))
+217:def run(args, *, body=None):
+275:            if body is not None:
+278:                body(owner=owner, root=root, output=output, key=key, report=report)
+326:                if body is not None:
+                raise
+            except Exception as error:
+                event(dict(kind="readiness_retry", at=stamp(), error_type=type(error).__name__))
+                time.sleep(min(.5, max(0, cutoff - time.monotonic())))
+                return False
+            event(dict(kind="readiness_values", at=stamp(), values=values))
+            validate_ready(values, expected)
+            report["readiness"] = dict(at=stamp(), values=values)
+            return True
+
+        event(dict(kind="ownership_enter_begin", at=stamp()))
+        scope = owner_scope(config, output, deadline, ready, key, args)
+        with scope as owner:
+            owner.check()
+            report["ready_body"] = stamp()
+            if body is not None:
+                report.update(inference_or_MPC_or_benchmark_result=True,
+                              offered_requests_from_driver=None, admin_POSTs=None)
+                body(owner=owner, root=root, output=output, key=key, report=report)
+        report["ownership_exit_returned"] = stamp()
+    except BaseException as error:
+        report["errors"].append(dict(type=type(error).__name__, message=str(error)))
+        event(dict(kind="failure", at=stamp(), type=type(error).__name__, message=str(error)))

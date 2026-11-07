@@ -1,0 +1,174 @@
+{
+  "CLI_capture_path": {
+    "entry": "main -> _replay_main -> asyncio.run(_run_cancellable(_capture(...)))",
+    "input_population_lines": [
+      713,
+      731
+    ],
+    "nested_loop_lines": [
+      732,
+      733
+    ],
+    "observed_calls": [
+      "ClientRefusal",
+      "SOURCES.items",
+      "_capture",
+      "_finite",
+      "_loopback",
+      "_run_cancellable",
+      "_strict_load",
+      "_write_new",
+      "args.output_dir.mkdir",
+      "asyncio.run",
+      "clock_domain",
+      "hashlib.sha256",
+      "hashlib.sha256(binding_data).hexdigest",
+      "hashlib.sha256(data).hexdigest",
+      "isinstance",
+      "json.dumps",
+      "len",
+      "nm.request_ids_sha256",
+      "normalized_row",
+      "os.getpid",
+      "print",
+      "provenance.get",
+      "socket.gethostname",
+      "str",
+      "summarize_records",
+      "trace.get",
+      "tw.sha256_file",
+      "tw.validate_trace",
+      "type",
+      "uuid.uuid4"
+    ],
+    "outcome_mapping_persistence_lines": [
+      734,
+      747
+    ],
+    "raw_construction_lines": [
+      690,
+      710
+    ],
+    "signal_ownership_lines": [
+      750,
+      767
+    ]
+  },
+  "build_run_not_a_substitute": {
+    "accepted_purposes": [
+      "train",
+      "eval"
+    ],
+    "engineering": "Explicit ClientRefusal; build_run constructs natural metrics input, not a raw-v2 engineering capture.",
+    "lines": [
+      542,
+      551
+    ]
+  },
+  "evidence_kind": "Static frozen-source inspection/AST verification, not an executed failing experiment.",
+  "missing_part": "No public raw-v2 capture preparation/build/finalization or awaitable high-level capture API. The only complete raw-v2 envelope and status/error/persistence path is owned by _replay_main.",
+  "private_capture": "_capture is async but requires the caller to supply the client-owned capture/config envelope and leaves outer status/error/rows/summary/fsync to _replay_main.",
+  "public_API": {
+    "build_run": {
+      "arguments": "capture, *, control=None, control_missing=None, control_evidence=None, full_wall=None, capture_sha256=None, comparability=None",
+      "async": false,
+      "lines": [
+        542,
+        605
+      ]
+    },
+    "check_binding": {
+      "arguments": "trace, binding",
+      "async": false,
+      "lines": [
+        170,
+        212
+      ]
+    },
+    "check_served_models": {
+      "arguments": "binding, models, max_model_len",
+      "async": false,
+      "lines": [
+        215,
+        229
+      ]
+    },
+    "check_tokenizer": {
+      "arguments": "trace, binding, tokenizer",
+      "async": false,
+      "lines": [
+        232,
+        241
+      ]
+    },
+    "clock_domain": {
+      "arguments": "",
+      "async": false,
+      "lines": [
+        532,
+        539
+      ]
+    },
+    "load_tokenizer": {
+      "arguments": "path",
+      "async": false,
+      "lines": [
+        244,
+        247
+      ]
+    },
+    "main": {
+      "arguments": "argv=None, *, transport=None, tokenizer_loader=load_tokenizer",
+      "async": false,
+      "lines": [
+        787,
+        820
+      ]
+    },
+    "normalized_row": {
+      "arguments": "record",
+      "async": false,
+      "lines": [
+        493,
+        503
+      ]
+    },
+    "prepare_records": {
+      "arguments": "trace, offered_start, run_id",
+      "async": false,
+      "lines": [
+        341,
+        356
+      ]
+    },
+    "replay": {
+      "arguments": "client, trace, records, *, gateway_url, offered_start, drain_timeout",
+      "async": true,
+      "lines": [
+        464,
+        490
+      ]
+    },
+    "summarize_records": {
+      "arguments": "records",
+      "async": false,
+      "lines": [
+        506,
+        529
+      ]
+    }
+  },
+  "raw_capture_initializer": [
+    {
+      "line": 689,
+      "owner": "_replay_main"
+    }
+  ],
+  "source": "experiments/mpc-research/resume-mvp/nominal_client.py",
+  "source_sha256": "f369e5ce01a54dcfa9086fe8ee4a1528d7e52d19179db78201e06961da4c7bda",
+  "usable_library_parts": {
+    "binding_preflight": "check_binding / check_tokenizer / check_served_models are reusable.",
+    "mapping": "normalized_row / summarize_records are reusable; there is no need to duplicate SSE parsing or row mapping.",
+    "per_request": "prepare_records creates all-offered placeholders; await replay fills them in place and cancels/gathers its request tasks."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "task": "Smallest F1 drain predicate correction and tightly coupled F2 test namespace isolation",
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "before_caller_sha256": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+  "before_test_sha256": "7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac",
+  "role4_capsule": ".runtime/r24-pre-gpu-final-review-role4",
+  "role4_manifest_sha256": "0f0b0e7cb489bbfa3102bc4dbab5262151095e353e7e1735dd35b647417ac403",
+  "role4_manifest_members": 91,
+  "preserved_negative": "Verify and copy all 91 sealed Role4 members plus its manifest unchanged, including REPORT findings F1/F2, E1 erratum, preregistration and both Python W1 negative logs/receipts. No rerun or mutation of the original evidence.",
+  "allowed_public_diff": [
+    "native_nominal_qualification.py: only the drain success predicate, requiring exact zero in-flight/waiting and finite nonnegative admitted cost <=1e-9; existing fallback==0 and all other guards remain unchanged.",
+    "test_native_nominal_qualification.py: only ROOT isolation into a deterministic sibling of NATIVE_SMOKE_TEST_OUTPUT and one focused drain method.",
+    "No optional receipt fields, unrelated fixes or peer edits."
+  ],
+  "focused_generation": {
+    "interpreter": "Existing Python3.12 venv only",
+    "attempts": 1,
+    "max_seconds": 60,
+    "public_method": "Controls.test_drain_tolerates_only_idle_cost_residue",
+    "drain_subcases": [
+      "Zero in-flight/waiting/fallback and cost2.7755575615628914e-17: return on first reading.",
+      "Zero counters/fallback and cost1e-6: remain busy until original bounded D-R.",
+      "One in-flight, zero waiting/cost/fallback: remain busy until original bounded D-R.",
+      "One waiting, zero in-flight/cost/fallback: remain busy until original bounded D-R."
+    ],
+    "import_control": "In the same fresh CPU worker, import the qualification test first and the unchanged smoke test second. Confirm the qualification import creates only its sibling output namespace and leaves the smoke ROOT absent until smoke import; no peer test methods run.",
+    "network": "HTTPX MockTransport only; no real sockets/services/GPU. Worker rejects actual connect/name-resolution/subprocess audit events.",
+    "not_rerun": "The existing 13 caller controls, composed521/186 controls and all other historical suites/rows are not repeated."
+  },
+  "environment": "PYTHONPATH=resume-mvp:root; unique relative NATIVE_SMOKE_TEST_OUTPUT with existing parent but no shared root; absolute protocol; -B/nobytecode/noautoload/hashseed0/threads1/nice-n19; empty project-local pycache lookup prefix.",
+  "evidence": "Freeze original and corrected bytes/hashes before controls; retain all stdout/stderr/raw metric attempts/results; verify scoped client/task/process cleanup and stable source pins; seal report/diff/pins/limitations.",
+  "prohibitions": ["No GPU, real network, SSH, Git, installs, model changes, child agents, peer edits or Markdown."],
+  "authority": "CPU correction only; Mayor owns exact-source acceptance, integrated generation and any later Native qualification."
+}

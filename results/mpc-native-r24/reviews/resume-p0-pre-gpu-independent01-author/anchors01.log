@@ -1,0 +1,90 @@
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  inputs/native_nominal_qualification.py
+16:ADAPTER_SHA256 = "935c2679c4b9fffdffb23ce88ca5351f91fa84e25c8c1edccedddaea4e4262a8"
+17:DRAIN_FIELDS = ("current_in_flight", "current_waiting", "current_admitted_cost")
+20:def error_record(error):
+25:def strict_copy(value):
+29:def strict_load(raw):
+43:def preserving(action, primary, report, stage):
+46:    except BaseException as error:
+50:        primary.add_note(stage + ": " + type(error).__name__ + ": " + str(error))
+53:def persist_capture(client, path, capture, key):
+56:    except BaseException as error:
+67:def remaining(owner, deadline, reserve):
+76:async def observe(client, path, *, owner, deadline, reserve, output, key, report, name):
+80:        timeout = min(2.0, remaining(owner, deadline, reserve))
+82:        async with asyncio.timeout(timeout):
+86:        value = strict_load(response.content)
+89:    except BaseException as error:
+93:    finally:
+100:async def drain(client, *, owner, deadline, reserve, output, key, report, phase):
+111:        if all(metrics[name] == 0 for name in DRAIN_FIELDS):
+115:        await asyncio.sleep(min(0.05, remaining(owner, deadline, reserve)))
+118:def capture_of(prepared):
+122:def counts(capture, entered):
+134:def source_binding(root, episode, expected):
+136:    raw = protocol_path.read_bytes()
+138:    services.checked(expected["source_pins"].get(str(protocol_path)) == protocol_sha,
+142:    services.checked(Path(__file__).resolve() == caller_path and Path(episode.__file__).resolve() == adapter_path,
+145:    services.checked(pins[str(adapter_path)] == ADAPTER_SHA256, "accepted episode adapter changed")
+151:def recheck(binding):
+157:async def collect(*, owner, root, output, key, report):
+164:    stage = "source_preflight"
+175:            primary.add_note(where + ": " + type(error).__name__ + ": " + str(error))
+180:        except BaseException as error:
+198:        services.write(output / "qualification-source-binding.json", bound, key)
+202:        stage = "model_binding"
+205:        actual_engine = next(s["argv"] for s in ownership["services"] if s["name"] == "engine")
+214:        client = httpx.AsyncClient(base_url=gateway, trust_env=False, follow_redirects=False)
+215:        warm_error = None
+217:            stage = "warmup_prepare"
+226:            stage = "warmup_replay"
+229:                cleanup_reserve_s=reserve, clock_domain=warmup.capture["clock_domain"])
+230:        except BaseException as error:
+231:            warm_error = error
+233:        finally:
+237:                    lambda: persist_capture(recorder, output / "warmup-capture.json", capture, key),
+238:                    warm_error, report, "warmup_capture_persistence")
+239:        stage = "warmup_validation"
+247:        stage = "episode_prepare"
+251:        prepared_error = getattr(prepared, "error", None)
+255:        services.checked(handle is not None and isinstance(handle.trace, dict),
+258:        services.checked(report["episode_trace_requests"] == 5, "immutable five-request probe required")
+267:        stage = "pre_episode_drain"
+268:        await drain(client, owner=owner, deadline=deadline, reserve=reserve,
+270:        stage = "pre_control_state"
+280:        stage = "runtime_binding"
+281:        entered = time.monotonic()
+282:        start = entered + 1.0
+286:        expires = entered + 20.0
+287:        services.checked(start + max(limits.episode_s, window) <= min(deadline - reserve, expires),
+297:            not_before=entered, expires_at=expires, max_commands=8, approved=True)
+311:        stage = "episode_run"
+312:        entered_run = True
+313:        result = await episode.run_episode(
+315:        stage = "episode_result_validation"
+317:            report["engineering_episode"] = strict_copy(result)
+327:        services.checked(handle.capture["status"] == "collected" and len(handle.capture["records"]) == 5,
+330:        stage = "completed"
+331:    except BaseException as error:
+333:    finally:
+336:                await drain(client, owner=owner, deadline=deadline, reserve=reserve,
+338:            except BaseException as error:
+339:                failure("final_drain", error)
+341:                await client.aclose()
+342:            except BaseException as error:
+345:            attempt("final_source_check", lambda: recheck(bound))
+347:        allocated = attempt("episode_counts", lambda: counts(capture, entered_run))
+348:        warm_counts = attempt("warmup_counts", lambda: counts(getattr(warmup, "capture", None), False))
+354:        path = output / ("caller-episode-capture.json" if entered_run else "episode-not-run-capture.json")
+360:                "schema": "qualification-caller-absent-capture-v1", "raw_v2_capture_available": False,
+361:                "status": "NOT_RUN" if not entered_run else "UNKNOWN", **allocated,
+364:            attempt("absent_warmup_persistence", lambda: services.write(output / "warmup-not-run.json", {
+366:        prepared_error = getattr(prepared, "error", None)
+374:            "status": "NOT_RUN" if not entered_run else ("FAILED" if primary is not None else "COLLECTED"),
+387:            receipt["status"] = "INTERRUPTED"
+390:                    lambda: services.write(output / "episode-not-run.json", receipt, key))
+393:                lambda: services.write(output / "qualification-caller.json", receipt, key))
+397:                receipt["status"] = "FAILED" if isinstance(primary, Exception) else "INTERRUPTED"
+400:        raise primary.with_traceback(primary_tb)
+403:def body(**context):
+407:def main(argv=None):

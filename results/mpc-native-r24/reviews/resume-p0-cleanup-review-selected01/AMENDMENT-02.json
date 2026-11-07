@@ -1,0 +1,8 @@
+{
+ "disclosed_reviewer_harness_error": "py314-postcheck and py312-postcheck were launched in the SAME parallel tool batch as their control steps, contrary to the frozen sequential order. Timestamps prove they ran BEFORE the controls (py312 postcheck checked_at 921290.148 < T01 started_at 921290.229; py314 postcheck mtime 13:50:30.118 < controls exit 13:50:30.207). Their outputs (runs/py3xx-postcheck.json, all_gone with 0 identities/0 JSON files) are PRESERVED but are NOT post-run ownership evidence.",
+ "frozen_at_unix": 1793829170.0675457,
+ "frozen_before_supplementary_check": true,
+ "limitation": "runs ~50+ s after T02 finished_at 921291.256, i.e. after cpu_dummy01's 20 s self-lifetime: it can show identities are gone now, but cannot by itself distinguish cleanup kill/join from self-exit; primary join evidence is the in-run control assertions and harness-safety.json",
+ "not_a_control_retry": true,
+ "supplementary": "one sequential read-only run of the unchanged frozen postcheck01.py (sha256 dbfede19...) on attempts/generation01-py312 with scope relocated/ (scope scan covers both Pythons), output runs/py312-postcheck-sequential.json; py314 attempt spawned no processes (failed at run_controls01.py:26 before any spawn)"
+}

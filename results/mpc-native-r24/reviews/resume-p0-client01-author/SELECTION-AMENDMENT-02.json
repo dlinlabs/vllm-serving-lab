@@ -1,0 +1,6 @@
+{
+ "amends": "SELECTION-AMENDMENT-01.json",
+ "reason": "nominal_client imports telemetry (has_sse_content reuse); import executes module top-level code, so scan only non-indented top-level statements (no function/class bodies) for import-time side effects",
+ "path": "telemetry.py", "sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370",
+ "scan": "grep -n of lines starting with a non-space character, excluding def/class/decorator/import/comment/docstring continuation"
+}

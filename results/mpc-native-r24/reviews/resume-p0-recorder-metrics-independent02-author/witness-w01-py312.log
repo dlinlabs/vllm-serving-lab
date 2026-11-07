@@ -1,0 +1,132 @@
+{
+ "all_expectations_met": true,
+ "cases": [
+  {
+   "expectation_met": true,
+   "expected": "no exception; a == +inf",
+   "id": "C1_strict_overflow_positive",
+   "observed": {
+    "raised": null,
+    "value": "{'a': inf}"
+   }
+  },
+  {
+   "expectation_met": true,
+   "expected": "no exception; a == -inf",
+   "id": "C2_strict_overflow_negative",
+   "observed": {
+    "raised": null,
+    "value": "{'a': -inf}"
+   }
+  },
+  {
+   "expectation_met": true,
+   "expected": "ValueError",
+   "id": "C3_strict_infinity_token_control",
+   "observed": {
+    "message": "non-finite JSON constant Infinity",
+    "raised": "ValueError",
+    "value": "None"
+   }
+  },
+  {
+   "expectation_met": true,
+   "expected": "ValueError",
+   "id": "C4_strict_nan_token_control",
+   "observed": {
+    "message": "non-finite JSON constant NaN",
+    "raised": "ValueError",
+    "value": "None"
+   }
+  },
+  {
+   "expectation_met": true,
+   "expected": "dict; max_admitted_cost == 32.0; estimated_request_cost == 40.0; fields_absent == []",
+   "id": "C5_rejection_finite_control",
+   "observed": {
+    "raised": null,
+    "value": "{'detail': 'request rejected: admission capacity exceeded', 'estimated_request_cost': 40.0, 'estimated_input_tokens': 100, 'estimated_output_tokens': 64, 'max_admitted_cost': 32.0, 'budget_version': 3, 'fields_absent': []}"
+   }
+  },
+  {
+   "expectation_met": true,
+   "expected": "dict (classified as admission rejection); max_admitted_cost == +inf copied verbatim",
+   "id": "C6_rejection_overflow_max_admitted_cost",
+   "observed": {
+    "raised": null,
+    "value": "{'detail': 'request rejected: admission capacity exceeded', 'estimated_request_cost': 40.0, 'estimated_input_tokens': 100, 'estimated_output_tokens': 64, 'max_admitted_cost': inf, 'budget_version': 3, 'fields_absent': []}"
+   }
+  },
+  {
+   "expectation_met": true,
+   "expected": "dict; estimated_request_cost is None (sanitized); max_admitted_cost == 32.0",
+   "id": "C7_rejection_overflow_cost_sanitized_control",
+   "observed": {
+    "raised": null,
+    "value": "{'detail': 'request rejected: admission capacity exceeded', 'estimated_request_cost': None, 'estimated_input_tokens': 100, 'estimated_output_tokens': 64, 'max_admitted_cost': 32.0, 'budget_version': 3, 'fields_absent': []}"
+   }
+  },
+  {
+   "expectation_met": true,
+   "expected": "file created; returned sha256 == sha256(file bytes)",
+   "id": "C8_write_new_finite_control",
+   "observed": {
+    "raised": null,
+    "value": "{'returned': '35562eeedd5964c4b6fb3163756c0b2396047f9ebba981ee48b389437886fd29', 'file_sha256': '35562eeedd5964c4b6fb3163756c0b2396047f9ebba981ee48b389437886fd29'}"
+   }
+  },
+  {
+   "expectation_met": true,
+   "expected": "ValueError raised before open; no file created",
+   "id": "C9_write_new_overflow",
+   "observed": {
+    "message": "Out of range float values are not JSON compliant: inf",
+    "raised": "ValueError",
+    "value": "None"
+   }
+  }
+ ],
+ "executable": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+ "extracted_spans": [
+  [
+   "ADMISSION_DETAIL",
+   49,
+   49
+  ],
+  [
+   "GATEWAY_REJECTION_FIELDS",
+   51,
+   52
+  ],
+  [
+   "_finite",
+   122,
+   123
+  ],
+  [
+   "_reject_constant",
+   126,
+   127
+  ],
+  [
+   "_strict_json",
+   130,
+   137
+  ],
+  [
+   "_admission_rejection",
+   380,
+   393
+  ],
+  [
+   "_write_new",
+   647,
+   653
+  ]
+ ],
+ "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+ "snapshot": "inputs/nominal_client.py",
+ "snapshot_sha256": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+ "tag": "py312",
+ "witness": "W01"
+}

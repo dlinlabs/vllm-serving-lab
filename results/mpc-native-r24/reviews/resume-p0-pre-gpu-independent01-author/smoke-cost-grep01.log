@@ -1,0 +1,9 @@
+585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c  native_services_smoke.py
+152:    result["idle_selected_gpu"] = (
+170:                ("metrics", f"http://127.0.0.1:{GATEWAY_PORT}/metrics"),
+189:def validate_ready(values, expected):
+192:    checked(metrics["tokenizer_available"] is True and metrics["tokenizer_fallback_requests"] == 0
+198:            "failed_requests", "current_in_flight", "current_waiting", "current_admitted_cost")),
+252:        checked(report["pre_gpu"]["idle_selected_gpu"], "selected GPU not proven idle")
+266:            validate_ready(values, expected)
+312:                checked(report["post_gpu"]["idle_selected_gpu"], "post GPU not proven idle")

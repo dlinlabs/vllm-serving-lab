@@ -1,0 +1,69 @@
+PLAN-WITNESS01 (preregistered before any execution) -- r24-resume-p0-metrics-independent01
+Reviewer: Role4 independent validation, Anthropic claude-opus-5.5, reasoning effort max, no child agents.
+
+Purpose
+  Executable confirmation, on a few LITERAL synthetic rows, of code-behaviour claims that the source review
+  derived from the pinned bytes of nominal_metrics.py (sha256 e0119f34...6afa58e):
+    W1 -> early send: _validate_row has no scheduled_at <= sent_at check; an early-sent row is accepted,
+          receives natural-SLO credit (TTFT measured from scheduled_at), and send_lag_s exposes no
+          minimum / negative-lag count.
+    W2 -> comparability identity: select_train_fixed and comparison_table accept two fixed arms with the SAME
+          request id, sha and count whose provenance differs in host/gpu/model, whose clock_domain differs and
+          whose rows differ in requested_ignore_eos (client generation setting outside the offered-trace sha);
+          no refusal, no comparability-status key and no comparability/hardware wording is emitted.
+    W3 -> selection provenance: comparison_table(purpose=eval) accepts a SELECTED Train selection whose
+          offered_trace_sha256 EQUALS the Eval table identity, and the table output does not carry the
+          selection provenance (decided_by / candidates / selection trace sha).
+          Secondary flags recorded separately: (a) a hand-made minimal {'status':'SELECTED','selected_arm':'fixed32'}
+          dict is accepted and aliased; (b) the two compared Eval arms carry DIFFERENT request-id sets under one
+          sha and one count and are still accepted (offered-cohort binding).
+    W4 -> window binding: compute accepts, under scope offered_cohort_observed, one row scheduled before
+          offered_start and one row whose terminal_at lies after envelope_end; the pre-window row is credited as
+          in-window natural-SLO goodput and wall-envelope rates use the declared 5 s envelope although the scope
+          label defines the envelope as ending at the later of offered end and last observed terminal (10 s here).
+
+Inputs (frozen; hashes in WITNESS-PINS.sha256)
+  witness-src/resume-mvp/nominal_metrics.py  = byte copy of pinned-src/nominal_metrics.py (e0119f34...)
+  witness-src/native-r23/score_http.py       = byte copy of pinned-src/score_http.py     (9a173ab9...)
+  witness_metrics01.py                       = this witness (stdlib only; verifies both hashes before import)
+  Layout mirrors ROOT so nominal_metrics.SCORE_HTTP_PATH resolves to the pinned score_http copy.
+  11 literal rows total (W1: 3, W2: 2, W3: 4, W4: 2). No real, Train, Eval, Native, journal or trace data.
+
+Commands (exactly one attempt per interpreter, cwd = capsule, no retries, no edits after freeze)
+  ./run_logged.sh witness-py314-01.log env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -I witness_metrics01.py
+  ./run_logged.sh witness-py312-01.log env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B -I witness_metrics01.py
+
+Preregistered predicates (evaluated inside the script; printed as JSON)
+  W1.confirmed = compute() accepts the run AND natural_slo_good == 3 AND (first_content_at - sent_at) of the
+                 early row (0.625 s) > rule ttft_limit_s (0.5) AND send_lag_s p50 == p95 == p99 == max == 0.0
+                 AND send_lag_s has no key named min or containing negative/early/before.
+                 Also recorded (not part of the predicate): conditional_client_send p99 vs conditional_scheduled p99.
+  W2.confirmed = select_train_fixed status SELECTED, selected_arm fixed16, decided_by primary_natural_slo_good
+                 AND comparison_table(purpose=train) returns without refusal AND the table contains no key
+                 containing host/gpu/hardware/comparab/ignore_eos/model/resource AND no table string (key or value)
+                 containing comparab/hardware AND the two input provenances differ AND the clock domains differ.
+  W3.confirmed = Train selection SELECTED AND comparison_table(purpose=eval, train_selection=...) returns without
+                 refusal AND selection offered_trace_sha256 == table offered_trace_sha256 AND alias row status ALIAS
+                 with alias_of == selected_arm AND no table key contains decided_by/candidates/selection/selected.
+  W3 secondary (separate booleans, not part of W3.confirmed):
+                 forged_minimal_selection_accepted = the minimal hand-made dict yields alias status ALIAS of fixed32;
+                 f3_cross_arm_request_id_mismatch_accepted = Eval request-id sets differ, counts equal, table accepted.
+  W4.confirmed = compute() accepts the run AND max terminal_at (20.0) > envelope_end (15.0) AND min scheduled_at
+                 (3.0) < offered_start (10.0) AND natural_slo_good == 1 AND in_window_slo_goodput_rps == 1/5.0
+                 AND wall_envelope_delivered_rps == 2/5.0 AND envelope_scope_label contains
+                 'later of offered end and last observed terminal'.
+
+Interpretation
+  confirmed true  -> supports the corresponding finding as a code-behaviour fact on literal rows only.
+  confirmed false, REFUSED or ERROR -> the corresponding finding is withdrawn or downgraded in REPORT.json;
+  the log is preserved unchanged. Exit 0 = script completed; 2 = pin/path mismatch; other = harness failure.
+  Python-version disagreement is reported as such, never resolved by rerunning.
+
+Nonclaims
+  Not Native/GPU behaviour, not a test suite, not mutation testing, not a rerun of the author 40x2 suite,
+  not acceptance. Synthetic hashes (w1.., w2.., w3.., w4..) are labels, not real trace digests. A confirmed
+  predicate shows only that the pinned module ACCEPTS such input; whether any real producer emits it is unverified.
+
+Pre-freeze authoring note
+  This plan and witness_metrics01.py were revised in place before any hashing or execution (W2 same request id
+  plus clock-domain difference, W3 secondary flags, W4 added) after re-reading numbered pinned-source logs.

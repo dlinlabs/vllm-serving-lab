@@ -1,0 +1,52 @@
+{
+  "schema": "nominal-episode01-bounded-plan-v1",
+  "authorization": "Mayor same-task bounded follow-up 2026-11-04T16:06:48.849-08:00",
+  "objective": "Small default-OFF in-process engineering episode composition, conditional on safe sealed peer APIs; not a new experiment, campaign or qualification.",
+  "accepted_runtime": {
+    "parent_commit_reference_only": "5e9696eca54133ee440314b681f11764a0937744",
+    "source_sha256": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959",
+    "runtime03_seal": "b116dbaa005a27a14fec3ca1cb553cd3b01d3e389ad3adebde5aecb185b9dc1b"
+  },
+  "owned_public_files_if_safe_API_exists": [
+    "experiments/mpc-research/resume-mvp/nominal_episode.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_episode.py"
+  ],
+  "peer_read_budget": {
+    "maximum_additional_source_files": 6,
+    "maximum_additional_source_bytes": 393216,
+    "metadata": "Read sealed client/metrics reports, Parent candidate index, frozen probe references and sealed NominalServices handoff only.",
+    "source_inputs": "Prefer nominal_client.py and nominal_metrics.py public replay/check/prepare/build APIs; inspect additional sealed dependencies only when required.",
+    "forbidden": "Do not read unsealed native_services_smoke.py or other unsealed Role3 work."
+  },
+  "go_no_go": {
+    "go": "A safe in-process public peer API provides bounded replay, all offered fates/raw-v2 capture and cancellation ownership without duplicating peer codecs.",
+    "no_go": "If that API is absent, seal the precise smallest caller/API blocker; do not edit peers, duplicate their SSE/row mapper/capture codec or run a replacement client."
+  },
+  "required_adapter_boundaries": [
+    "Explicit experimental opt-in; dependency acceptance and Mayor exact-source approval remain separate prerequisites.",
+    "Inside Mayor-owned NominalServices only; no service spawning, subprocess, SSH, GPU or independent campaign owner.",
+    "Same clock and one future absolute offeredStart shared by runtime and recorder; preload/check Train/tokenizer/source/binding before start.",
+    "Reject a past start rather than retime. Preserve original absolute deadlines and cleanup reserve.",
+    "Run controller and five-request engineering replay concurrently; cancel and join both on failure and retain partial outcomes, raw-v2 capture and runtime journal.",
+    "Do not invoke natural metrics finalize for engineering or claim full-wall completion before Mayor cleanup.",
+    "Missing admission/ledger evidence remains missing/null; ACK never becomes admission-effect or qualification evidence.",
+    "No changes to accepted runtime/planner/scenario/permit/services or independently reviewed client/metrics."
+  ],
+  "validation_if_implemented": {
+    "source_generations": 1,
+    "attempts": 1,
+    "maximum_CPU_attempt_seconds": 60,
+    "interpreter": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+    "selected_suite": "Only focused test_nominal_episode.py; no prior or peer suites.",
+    "cases": [
+      "Shared future start, bounded concurrent CPU replay/controller and complete all-offered outcomes.",
+      "Default-OFF and missing/invalid/past-start or binding refusal before work.",
+      "Injected failure and cancellation preserve partial evidence and join both owned tasks."
+    ],
+    "transport": "Synthetic httpx.MockTransport only; no external HTTP.",
+    "environment": "unset PYTHONPATH, threads=1, no bytecode/autoload/cache, PYTHONHASHSEED=0, nice -n19, -B",
+    "on_failure": "Retain exact frozen source and all failures; no retry or adaptive change."
+  },
+  "handoff": "Exact API and source pins, source copies/diff if implemented, commands/results or precise no-go blocker, partial/cleanup evidence, limitations and verified SHA256SUMS.",
+  "prohibitions": "No agents, broadcasts, model changes, network, GPU, SSH, Git, installs, Markdown, full-suite testing, service/campaign driver, Train Fixed/Eval work or new modeling/sampling."
+}

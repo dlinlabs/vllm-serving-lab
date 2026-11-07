@@ -1,0 +1,14 @@
+test_07_virtualenv_tool_resolution (test_native_services_smoke.Controls.test_07_virtualenv_tool_resolution) ... FAIL
+
+======================================================================
+FAIL: test_07_virtualenv_tool_resolution (test_native_services_smoke.Controls.test_07_virtualenv_tool_resolution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_native_services_smoke.py", line 46, in test_07_virtualenv_tool_resolution
+    self.assertEqual(shutil.which("ninja", path=path), str(ninja))
+AssertionError: None != '/home/daniel_lin/gt/pr32/mayor/mpc-local[80 chars]inja'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

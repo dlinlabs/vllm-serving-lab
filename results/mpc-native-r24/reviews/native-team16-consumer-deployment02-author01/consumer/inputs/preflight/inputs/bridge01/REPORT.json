@@ -1,0 +1,76 @@
+{
+  "actual_application_at": null,
+  "all8_client_outcomes_and_separate_warmup_intent_preserved": true,
+  "attempts": "ATTEMPTS.json",
+  "baseline": "2 unchanged-contract controls passed each Python before bridge implementation",
+  "code_pins": "FINAL_CODE_PINS.json",
+  "deployable": false,
+  "deterministic_replay_and_views_sha256": {
+    "first_full_stock.json": "11d3d705dc904cfa1cb6c5ed8f3cfb27837ec9772a9c2e3ac6fd3bb6d2a2e7e5",
+    "future_second_receipt.json": "0302104e2a45b839ed14dc765e64df036d2fb92958c9024b816f0f65e59f396e",
+    "index.json": "d34540a487f389337db1bbb38e736c323a5a8f5f6c3bca1883634f16ba0aa6db",
+    "legacy_pending.json": "119ba745fbbd571c982ec6bc167f79f39644522d3ba2179654b8d92428627618",
+    "point_time_only.json": "1dac4ee50589b79a757570754854eb31ae611a86fd005cf1888c77aac9ef82d8",
+    "prior-native02-replay.json": "e359411b045cede15039f98d58c66fbed1b0b3b2f2efbd3152f47120efab2f3e",
+    "second_full_stock.json": "f275014c63dfa57b922b1ba17502699b49ceda053789e752762a16e729c7c7fe",
+    "stale_fresh16_binding.json": "1b5efd450d63cf3085e13a66af51f4d3a1bd983d7e6f6c64b2146fbcb6320570"
+  },
+  "exact_prior_Native02_replay_each_python": true,
+  "failures": "FAILURES.json",
+  "final_dual_python": {
+    "312": {
+      "attempt": "bridge-py312-final01",
+      "elapsed_s": 0.7256792980479077,
+      "errors": 0,
+      "failures": 0,
+      "output": "attempts/bridge-py312-final01/output.log",
+      "owned_process_joined": true,
+      "phase": "bridge",
+      "result_sha256": "e739f28e5a6ecdb68a73087a025119d03c20b9a9fce6add8d84cb9a7d2881b7c",
+      "returncode": 0,
+      "source_freeze_sha256": "4d1d74dd4ebf63595bf0f456196fe1c299fb1481c3c5540dbf3a8745601f19fc",
+      "tests": 32
+    },
+    "314": {
+      "attempt": "bridge-py314-final01",
+      "elapsed_s": 0.6746366979787126,
+      "errors": 0,
+      "failures": 0,
+      "output": "attempts/bridge-py314-final01/output.log",
+      "owned_process_joined": true,
+      "phase": "bridge",
+      "result_sha256": "b1745dcb7fc531b23b8f4d47a0c7e1997431e5f29ae073d17ec6ddfbd95130a8",
+      "returncode": 0,
+      "source_freeze_sha256": "4d1d74dd4ebf63595bf0f456196fe1c299fb1481c3c5540dbf3a8745601f19fc",
+      "tests": 32
+    }
+  },
+  "implementation": "bridge01.bridge_observation; default-off, no native/model/action interface",
+  "input_bindings": {
+    "bindings": 171,
+    "inputs_sha256": "0b9b81375a676819a6941c9008fe29d14b74893531ba359639bb072879408715",
+    "originals_checked": true,
+    "protocol_sha256": "36e4e91410e00ac58720a50b0a81f30786fdb37b9615a52ada52793f52228cd7"
+  },
+  "input_pins_after": {
+    "bindings": 171,
+    "inputs_sha256": "0b9b81375a676819a6941c9008fe29d14b74893531ba359639bb072879408715",
+    "originals_checked": true,
+    "protocol_sha256": "36e4e91410e00ac58720a50b0a81f30786fdb37b9615a52ada52793f52228cd7"
+  },
+  "model_or_native_closed_loop_qualification": false,
+  "native_mpc_permitted": false,
+  "new_native_executions": 0,
+  "original_artifacts_product_SDK_unchanged": true,
+  "parent_runtime_acceptance_commit_reported": "09fcf951dba37b00feffbbc8d14d22ef865fea0b",
+  "prior_fixed_component_acceptance_commit_reported": "25a6ef60bba38712f1f226df9b4ef29f0818c023",
+  "schema": "team16-offline-native-evidence-bridge-report-v1",
+  "source_answer": {
+    "exact_time_only_consumer": "refused",
+    "full_runtime_planning_path": "refused: missing clocked phase/closure/ledger evidence and unchanged qualification",
+    "proposed_amendment": "documented only; not implemented or authorized",
+    "reported_NativeState_after_interval_and_receipt": "representable without inventing an application point",
+    "source_exact_findings": "CONTRACT_FINDINGS.json"
+  },
+  "status": "sealed_CPU_candidate_for_Mayor_review"
+}

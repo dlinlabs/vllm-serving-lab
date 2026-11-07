@@ -1,0 +1,96 @@
+{
+  "Mayor_acceptance_pending": true,
+  "ack_is_exact_application_timestamp": false,
+  "client_offers": 8,
+  "commands": 4,
+  "completion_cap_each": 16,
+  "deployable": false,
+  "exact_Mayor_command": "cd /workspace/pr32-r23/r24-team16-native-control-launch02 && /workspace/pr32-r23/venv/bin/python -I -B launch_entry.py --execute-on-existing-gpu",
+  "fixed_final_polling": {
+    "max_full_GETs": 9,
+    "receipt_to_next_send_delay_s": 0.25,
+    "required_consecutive_empty": 2
+  },
+  "inputs": {
+    "amendment_sha256": "ec78dc5e9e0739568973df7c20de8eea8d8358d687b8f8fe798ca8ea6ff06caa",
+    "bindings": 36,
+    "client_binding_sha256": "ecb64ddd148752b370e73e732e1321f89a2ddfafe5018b5df93adb77b74f17b1",
+    "input_sha256": "5aca3a0f8e6b71858dcf7812dc6321e3a3f972fbe4aac32a5fe8f41da5c22568"
+  },
+  "legacy_application_intervals": "Both fresh per-command interval upper bounds precede TTL; original global gate stays false",
+  "legacy_final_route_identity": "unknown; startup zero-work route is not final-route proof",
+  "legacy_native01_status": "FAIL; old replay exactly reproduces final_native_not_drained",
+  "legacy_scalar_failure_retained": true,
+  "limitations": "README.txt",
+  "max_combined_requested_completion_tokens": 144,
+  "native02_executed": false,
+  "native_mpc_permitted": false,
+  "no_author_GPU_network_SSH_Git_installs_nested_agents": true,
+  "old_capsules_commit_reported_by_Mayor": "c7f8e52c03baa392af5b7fa77f23de7ad46a0c50",
+  "original_raw_archive_sha256_reported_by_Mayor": "506a516a6dc0a6e120efb493c25e08accacdb9003cea545cbd8e6ceac9c03124",
+  "persistent_absence_or_GPU_future_completion_proved": false,
+  "pre_source_freeze": "PRE_SOURCE_FREEZE.json",
+  "preregistration": "AMENDMENT02.json",
+  "product_SDK_or_old_capsules_modified": false,
+  "remaining_owned_helpers": 0,
+  "role": "control02-owned-launcher",
+  "root_teardown_allocation_s": {
+    "frozen_owned_reap": 30,
+    "natural_or_abnormal_cooperative": 7,
+    "reserve": 1,
+    "root_join": 2,
+    "total": 40
+  },
+  "runnable_sha256": {
+    "AMENDMENT02.json": "ec78dc5e9e0739568973df7c20de8eea8d8358d687b8f8fe798ca8ea6ff06caa",
+    "CLIENT_BINDING02.json": "ecb64ddd148752b370e73e732e1321f89a2ddfafe5018b5df93adb77b74f17b1",
+    "INPUTS.json": "5aca3a0f8e6b71858dcf7812dc6321e3a3f972fbe4aac32a5fe8f41da5c22568",
+    "MAYOR-LAUNCH.txt": "42a18d38d8db2f4d272a93bb526831fb7c17b75119a6801b2ba7725ed1f8b320",
+    "README.txt": "9ae570e272bfe524c2dafcaf717fd8f9cfcdeb4dd3848f45caa2df41f8342bb8",
+    "bootstrap02.py": "39349dbd9284686598641c1ea30d81fc49a7f5a6ca17f1eaf822bd624cc6560d",
+    "finish02.py": "a5d8d6405cf78fdac96d83a4584f495f65abe5e00131224062dd97584df5073a",
+    "freeze_inputs.py": "cdebd7e822e46fff4123dc2745cbe5135ac2e80eaf9fa15f837047ee97c90de8",
+    "launch_common.py": "0c42dc4e0426780c766e76280ebae9d21ca47c6055eac9c57fcd428efe0fecad",
+    "launch_entry.py": "b7ef42f782a3c52977227683781e1db1b77de8728da1edbe7b261f7f9734dc10",
+    "launch_native.py": "18ceb6ee3ec0066b4e4b23dbf1df5e855ff30f3a7877022623407d857ed79245",
+    "pytest.ini": "e426e9d19abc292755ba0193e87e40a93f26b61e87db8e131fe90288610e9aa7",
+    "run_local.py": "037025e0763557ac96c1c7aecf8300dd11c014acb5227af90a1d6f7b28e03eed",
+    "test_launch.py": "9235ae9ca1ad1d7224a02f196210a7d95a8836060e5145b0fef3d6f0aa76c649",
+    "test_legacy01.py": "cc8e1eca7622016522dfd9ad5ef5d82eed6c8bec08b86d53020ea68623511fb1",
+    "validate.sh": "837b9ace974ab9dbeb6616a4d09b53c8537e5d9aa8e740cd477896038ee610b7"
+  },
+  "schema": "team16-control02-CPU-repair-delivery-v1",
+  "separate_startup_warmup": 1,
+  "source_copies_and_lineage": "INPUTS.json",
+  "status": "SEALED_CPU_REPAIR_CANDIDATE_MAYOR_REVIEW_REQUIRED",
+  "terminal_observation_scope_amended": true,
+  "terminal_proof": "Two complete source/clock/epoch-bound empty full scheduler+issued-queue intervals inside same final3s; all scalar counts zero at both",
+  "unchanged_TTL_s": 0.5,
+  "unchanged_limits_s": {
+    "IO": 17,
+    "client_active": 20,
+    "final_readonly": 3,
+    "outer_soft": 260,
+    "startup": 180,
+    "teardown": 40
+  },
+  "unchanged_watch_s": 0.75,
+  "validation": [
+    {
+      "elapsed_s": 1.5401317030191422,
+      "exit_code": 0,
+      "failures": [],
+      "name": "py314-final01",
+      "result": "attempts/py314-final01/result.json",
+      "tests": 32
+    },
+    {
+      "elapsed_s": 1.905459503061138,
+      "exit_code": 0,
+      "failures": [],
+      "name": "py312-final01",
+      "result": "attempts/py312-final01/result.json",
+      "tests": 32
+    }
+  ]
+}

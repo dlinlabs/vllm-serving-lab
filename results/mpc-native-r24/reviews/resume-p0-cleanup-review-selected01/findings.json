@@ -1,0 +1,344 @@
+{
+ "accounting": {
+  "cap_bytes": 524288,
+  "copied_not_viewed": "RELOCATION.json",
+  "frozen_byte_bound": 148919,
+  "full_inventory_rehash": false,
+  "hashread": "HASHREAD.txt",
+  "metadata_only": "manifest names/sizes, extracted freeze keys/INPUTS paths, count-only greps",
+  "not_viewed": [
+   "R-a prepare01.py",
+   "R-d FAILURES.json"
+  ],
+  "old_suites_rerun": false,
+  "partial_view_counted_full": [
+   "inputs/review/REVIEW.md"
+  ],
+  "viewed_bytes": 145545,
+  "viewed_fixed": [
+   "PLAN.json",
+   "REPORT.json",
+   "EXACT_SOURCE_DIFF.patch",
+   "candidate/launch01.py",
+   "candidate/owned01.py",
+   "inputs/deployment/composition_common01.py",
+   "inputs/review/REVIEW.md",
+   "test_cleanup01.py",
+   "run_controls01.py",
+   "COMMANDS.json",
+   "cpu_load01.py",
+   "cpu_dummy01.py"
+  ],
+  "viewed_reserve": [
+   "R-b",
+   "R-c"
+  ],
+  "viewed_subject_files": 14
+ },
+ "assumptions": [
+  "single Linux host/kernel; CPython 3.12.16 independent run only",
+  "synthetic anchors (-30/-8, -244/-41) and 0.25 s timer stand in for 180/243/260",
+  "injected errnos representative not exhaustive",
+  "pidfd + /proc start-ticks identity within same PID/time namespace",
+  "only own ITIMER_REAL SIGALRM considered; external same-uid signals outside threat model"
+ ],
+ "author_results_compared": {
+  "R_b": {
+   "bytes": 5439,
+   "id": "R-b",
+   "path": "attempts/generation01-py314/T01/control-result.json",
+   "sha256": "999a3f59f406dcf18aae1b1c2ddc08ed70d10af49a75bad1273b2c70e409fe77"
+  },
+  "R_c": {
+   "bytes": 6193,
+   "id": "R-c",
+   "path": "attempts/generation01-py314/T02/control-result.json",
+   "sha256": "da473e5369615e97357146b5aa1e38abc1feade3fdf1bb00e816d4db865d248b"
+  }
+ },
+ "controls": {
+  "authorized": "<=2 author control types per Python, <=120 s per type, one generation/attempt, no retries",
+  "outer_bound": "timeout -k 5 245",
+  "postchecks": {
+   "amendment": "AMENDMENT-02.json",
+   "parallel_batch_runs_not_post_run_evidence": [
+    "runs/py314-postcheck.json",
+    "runs/py312-postcheck.json"
+   ],
+   "sequential": {
+    "all_gone": true,
+    "file": "runs/py312-postcheck-sequential.json",
+    "limitation": "ran after the dummies 20 s self-lifetime; in-run harness-safety all_owned_gone ~1 s after start is primary",
+    "recorded_identities": 6
+   }
+  },
+  "py312": {
+   "T01": {
+    "anchor_resolution": "recorded_shared_anchor_preserved",
+    "deadline_minus_anchor": 40.0,
+    "elapsed_seconds": 0.9894568009767681,
+    "error_count": 3,
+    "identity_states": [
+     "old_identity_gone",
+     "old_identity_gone",
+     "old_identity_gone"
+    ],
+    "joined_in_budget": true,
+    "reap_deadline_minus_anchor": 37.0,
+    "sha256": "48ee08dd5a41eff5ded9a9c010c2a9a587e3f2507a1751f70e7ab6676e033157",
+    "status": "PASS"
+   },
+   "T02": {
+    "IO_minus_hard": 17.0,
+    "anchor_resolution": "recorded_shared_anchor_preserved",
+    "arm_calls": [],
+    "elapsed_seconds": 0.03695119998883456,
+    "error_reasons": [
+     "recorded_cleanup_budget_exhausted_no_reset",
+     "[Errno 5] CPU injected proc-clock read failure"
+    ],
+    "fates": [
+     "unobserved",
+     "unobserved"
+    ],
+    "hard_minus_anchor": 40.0,
+    "identity_states": [
+     "same_identity_present",
+     "same_identity_present"
+    ],
+    "missing_returned_receipt_not_substituted": true,
+    "private_config_retained": true,
+    "sha256": "ea8ce29fddb371f6c0c2d6aae08d8fd13fc6aee54066df7b656ecf8bbaa11cb3",
+    "signals": [
+     15,
+     9,
+     9
+    ],
+    "status": "PASS"
+   },
+   "exit": 0,
+   "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+   "runner_pid": 1298035,
+   "runner_start_ticks": 92129015,
+   "summary": {
+    "controls": 2,
+    "failed": 0,
+    "generation": 1,
+    "old_suites_run": false,
+    "passed": 2,
+    "python": "py312",
+    "retries": 0,
+    "scientific_or_Native_success_claim": false,
+    "source_freeze_sha256": "14e87631a078dc8d315eaf5cb7dbc4f74b545460abc63a2b2e764a3687c87262"
+   }
+  },
+  "py314": {
+   "amendment": "AMENDMENT-01.json",
+   "detail": "run_controls01.py:26 attempt.mkdir FileNotFoundError: relocated/attempts absent (reviewer copied regular files only); load()/verify_inputs passed; 0 controls, 0 processes",
+   "exit": 1,
+   "status": "HARNESS_FAIL_NOT_CANDIDATE_DEFECT"
+  },
+  "relocation": {
+   "byte_identical": true,
+   "bytes": 352291,
+   "files": 37,
+   "record": "RELOCATION.json"
+  },
+  "retries": 0
+ },
+ "criteria": [
+  {
+   "id": "C1",
+   "result": "YES",
+   "spans": [
+    "launch01 L75-107 (try L76, finally setitimer0 L106-107)",
+    "L454-455",
+    "stage L204/L237/L249-250",
+    "inner finally L510-512"
+   ],
+   "text": "all monitor exits disarm; outer finally disarms first"
+  },
+  {
+   "id": "C2",
+   "result": "YES_EXCEPT_R1",
+   "spans": [
+    "stage anchor validation try/except BaseException L212-226",
+    "exhausted no-reset L227-230",
+    "publish+c.domain wrapped L231-235",
+    "owned.cleanup try/except/finally L238-252",
+    "no arm() in stage",
+    "main except L451-453"
+   ],
+   "text": "anchor/clock/arming errors cannot bypass owned cleanup"
+  },
+  {
+   "id": "C3",
+   "result": "YES",
+   "spans": [
+    "owned01 L213-218 wrapped",
+    "wait L199-202",
+    "reader join L203-204",
+    "fd close L207-209",
+    "leaf fds L225-227",
+    "capture_complete L237"
+   ],
+   "text": "root lifecycle write failure cannot stop remaining wait/join/fd closure"
+  },
+  {
+   "id": "C4",
+   "result": "YES",
+   "spans": [
+    "stage hard L206, deadline L227",
+    "owned L168 deadline, L193 reap==30, L195 reap min(anchor+37,deadline-3), L196 join min(deadline-1,now+2)",
+    "reap first pass L115-118, post-deadline break before sleep L148-151",
+    "IO L278",
+    "budget classification L274-276"
+   ],
+   "text": "original started+243 / IO 260 / +17 / 7-30-2-1, no additional grace, no anchor reset"
+  },
+  {
+   "id": "C5",
+   "result": "YES",
+   "spans": [
+    "INCOMPLETE all-offered L279-286",
+    "DO_NOT_EXPORT L287-294",
+    "close_private_config join guard L351",
+    "persist_close only in joined postflight L480"
+   ],
+   "text": "unknown/incomplete fates on nonjoin; private key retention; no RETURNED substitution"
+  },
+  {
+   "id": "C6",
+   "result": "HONOURED",
+   "spans": [],
+   "text": "narrow CPU claim, not universal OS proof"
+  }
+ ],
+ "discrimination": {
+  "T01": "monitor raise/return disarm assertions fail on old monitor (same function, semantic); stage parts absent in old code (API absence)",
+  "T02": "exhausted anchor + arm prohibited + c.domain EIO + held reader; old finally called arm (prohibited); stage API absent in old code",
+  "executed_against_old_code": false,
+  "frozen_in": "CONTROL-DECISION.json",
+  "limit": "controls call components directly, never main(); outer-finally wiring verified by source reading only"
+ },
+ "findings": [
+  {
+   "caveat": "CPython implementation detail, not verified: signal.signal() checks pending signals before changing handler, so SIG_IGN-first alone may not close the window",
+   "executed": false,
+   "hardening": [
+    "preferred: call-free teardown flag assignment first in outer finally, checked by alarm, re-enabled only around postflight arm(io_deadline) block L466-492",
+    "weaker: absorb one TimeoutError around disarm preamble (misses later cross-thread-delivered handler)"
+   ],
+   "id": "R1",
+   "kind": "residual_narrowed_not_regression",
+   "reachability": "requires few-bytecode coincidence with 180 s expiry on a non-alarm exception path; correlated with L430/L443 started+180 lateness refusals; monitor path safe (raises inside monitor finally, caught L451)",
+   "severity": "LOW",
+   "summary": "startup ITIMER (arm started+180 L394) armed during pre-monitor try body; if it expires after the last main-thread eval-breaker check in the except body (L452-453) and before L455 setitimer(0) takes effect, the Python alarm handler (L19-20) raises TimeoutError at L455 post-call or (cross-thread delivery) L456/L204-L211 before stage try L212; cleanup_owned_stage skipped (D2-F1-class orphan/no receipt; fail-closed). Same window class at L511 skips release only (flock released at exit)."
+  },
+  {
+   "id": "I1",
+   "kind": "pre_existing",
+   "severity": "INFO",
+   "summary": "lock released with survivors (L512 or exit); spent namespace L385-386 protects only this launcher; no PDEATHSIG/subreaper so uncatchable launcher death orphans own-session services; D-state processes unproven"
+  },
+  {
+   "id": "I2",
+   "kind": "residual",
+   "severity": "INFO",
+   "summary": "owned01 per-root loop isolates only lifecycle write; non-TimeoutExpired raise from wait/stdout.close/os.close/Reader.join skips remaining roots; caught at stage L247-248 -> nonjoined, INCOMPLETE + DO_NOT_EXPORT, fail-closed; SIGKILL pass already done; leaf fds may stay open until exit"
+  },
+  {
+   "id": "I3",
+   "kind": "pre_existing_fail_closed",
+   "severity": "INFO",
+   "summary": "joined run whose postflight refuses at L467-L469 has no all-offered.json (raw/refusals retained); pre-try c.domain failure L399 spends namespace (L388-389) without receipt, no owned processes; DO_NOT_EXPORT fallback L507-509 lacks IO guard; IO timer armed L467 remains armed through L494-L510 (outside D2-F1 scope, not analysed further)"
+  }
+ ],
+ "own_frozen_artifacts": {
+  "AMENDMENT-01.json": "35967cbd115e5d04b40095ecec8c5368c96a2455fa6cf6cfd5db5fc8e2bdd007",
+  "AMENDMENT-02.json": "493f737e34ca82885a2b22b40eddd52bab349977337f854860470e1fab40ec63",
+  "CONTROL-DECISION.json": "bb4c99c70c56ad207dffff807bd4a0f4ea7bd0155c05ac5dafe1a2f7310f5224",
+  "HASHREAD.txt": "ca321c94347176faacfdcbfd91f032a786b24474f2007ddf19fbb32de35c2570",
+  "PINS-first-trio.txt": "42d2c03523e7ed74a54ce93cd3bfbd02c8f2344833e90833cfcf95308e5ec9a7",
+  "PLAN.json": "9d1e750f5afe3f40ccae5ed7eca3b23e58996c5f6a35cbda84aea19460bb67ef",
+  "RELOCATION.json": "506bb05ca8c59c3c9585f810f3490bbff16dfb047cb44017c44a840240015779",
+  "RESERVE-DECISION.txt": "13a942d82563be5d92fcb4f6063a510b8f2cdbf8a271ea451214870254f4391e",
+  "SELECTION.json": "2e3321551edb82ee0c76b57aeb44d6ec4283d60cb346c21c8f4070124c1b7347",
+  "STARTED.txt": "1ebff03b687de32b4e2857808ab010b6c141d8565bb04770465a4542c7bcaa74",
+  "postcheck01.py": "dbfede197bf270dd7a71b0fd93dbeda3e65f94b9da10b34726979d0ee17a62be",
+  "work/relocation-names.json": "a8200beb14aab21e1459c864927746189f2e42a30b78d3cb071d329742662f60"
+ },
+ "pin_notes": {
+  "author_control_source_freeze_sha256": "14e87631a078dc8d315eaf5cb7dbc4f74b545460abc63a2b2e764a3687c87262",
+  "d2r01_seal": "inputs/review/SHA256SUMS == b13e5b29 own d2r01 digest",
+  "deployment02_seal": "inputs/deployment/SHA256SUMS == 407bc2e8 deployment02 digest",
+  "diff_exact": "EXACT_SOURCE_DIFF.patch applied by machine to hash-read originals reproduces both candidates byte-exactly (work/)"
+ },
+ "pins": {
+  "COMMANDS.json": "0e426e266b68e67a639892fff74e0e42da3ff93d05e2fc02aea8eabb29dc04eb",
+  "EXACT_SOURCE_DIFF.patch": "8b6d4ef3325965159a79e151e9eada645c7f8fb60a4a45bf3b36f023741e7a10",
+  "PLAN.json": "cbec832f2c2ebfe050c0c76cb63dd3e599a782b244c620fb5f74ff68b8412f2c",
+  "REPORT.json": "5a9b72401c346f8823ea9806caf3b85881031f33e42861e606d86deb8cdd0333",
+  "candidate/launch01.py": "9a7dd9206cca7de9faabcf64611a73dee2f0feb575c51fe66f4003a49065e2c0",
+  "candidate/owned01.py": "5c4e2c066c985b79d03f06685b5352b0a0a5bdb833c6f1b2ad5d0f7ba3c357f3",
+  "cpu_dummy01.py": "8a5816616c5339fcfd897dd5ed8f0821ce3cb111adcfcffb7f0ba8eb017e8dc4",
+  "cpu_load01.py": "5d486c0b45c34406abf27d7e63165662a59d5ce17169afbf94a419919d1638d8",
+  "inputs/deployment/SHA256SUMS": "407bc2e88426f4997064fd7f62d09651af74a2c18c6e4989267f48a601a16ae8",
+  "inputs/deployment/launch01.py": "21eb1939bd93c89754ff70b130387a52408ce08e5fc20ab78780d02cadb53f2a",
+  "inputs/deployment/owned01.py": "8e2e2da26d591935b8d725855bb20d67ff8fa90f1f80dc0439b3b1170fc7ed68",
+  "inputs/review/SHA256SUMS": "b13e5b29a5312dd4dee09e0d6ebc2abd6bbdd83b3b560ad1468381c5288522d6",
+  "run_controls01.py": "53242a1e62df400f0ce22bd222766b7f0713a32ed10394a7a878d76a0889dacc",
+  "test_cleanup01.py": "7851b1efefc541fb3a96c64aa802de6c84493d81d0734e71c250186d19e0d4dd"
+ },
+ "prohibitions_observed": [
+  "no git",
+  "no SSH/GPU/network",
+  "no main()/valid approval",
+  "no installs",
+  "no actual arrays/private exports",
+  "no subject/original/product/SDK writes",
+  "no child agents",
+  "no /tmp writes"
+ ],
+ "reviewer": {
+  "child_agents": 0,
+  "model": "claude-opus-5.5",
+  "reasoning": "max",
+  "role": "Role7"
+ },
+ "schema": "team16-resume-p0-cleanup-independent-review-v1",
+ "scope": ".runtime/r24-resume-p0-cleanup-independent01",
+ "subject": {
+  "author_model": "not recorded in viewed REPORT/PLAN; not checked",
+  "author_role": "Role6",
+  "files_including_seal": 137,
+  "manifest_entries": 136,
+  "path": ".runtime/r24-team16-native-cut-consumer-cleanup-successor01",
+  "sha256sums_digest": "f145546d68934af0b0ec78bee8a78bd4817b53ca694edea8ef91df2731d023f5"
+ },
+ "verdict": {
+  "author_py314_results_structurally_match_own_py312": true,
+  "conditions": [
+   "Mayor R1 disposition: accept as documented residual or require surgical successor (non-raising alarm during teardown)",
+   "Mayor/Parent byte and inventory acceptance of the two-file overlay (no Parent inventory by reviewer)",
+   "separate Mayor approval/freeze/prereg for any Native/G06/loop/composition use"
+  ],
+  "d2f1_repair": "EFFECTIVE_AT_SOURCE_LEVEL_FOR_T1_T2_T3_WITH_LOW_RESIDUAL_R1",
+  "eligibility": "ELIGIBLE_FOR_MAYOR_INTEGRATION_REVIEW_AS_CPU_VALIDATED_NARROWING_OF_D2F1",
+  "independent_reproduction": {
+   "py312": "2/2 PASS",
+   "py314": "NOT_OBTAINED_reviewer_harness_precondition_failure_preserved_not_retried"
+  },
+  "not_claimed": [
+   "universal OS cleanup proof",
+   "G06",
+   "G16",
+   "Native14",
+   "Native qualification",
+   "actual loop completion",
+   "component pass",
+   "model/MPC/performance",
+   "launch permission"
+  ]
+ }
+}

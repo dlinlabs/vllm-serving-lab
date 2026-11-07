@@ -1,0 +1,81 @@
+ROLE3 B2: BODY TELEMETRY CLOSURE AND INDEPENDENT POST-GPU VALIDATION
+
+Retained Mayor-verified gpt-6-astra/max. Work is only in:
+  /home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105
+Supplied publication branch/head (not Git-rechecked):
+  snapshot/mpc-p0-evidence-20261105
+  832ab593c8666b8bfa3761b3061355a2c94748c8
+
+Changed public paths:
+  experiments/mpc-research/resume-mvp/native_services_smoke.py
+    before 832c252ae0e7fc634a425acebd79edd796833bc93092e03bf1bf48190fc2b54c
+    after  585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c
+  experiments/mpc-research/resume-mvp/test_native_services_smoke.py
+    before 05e2fcd7914aa037a7f58c332ffcb3ddf9327d075a292d6fdc5909a331cab3ec
+    after  158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3
+
+Read-only context was limited to gateway.py lines140-205. The existing gateway
+writer establishes contiguous ledger sequence, final/producer equality and
+closure completeness. This repair does not reread/scan a real telemetry ledger
+or change the gateway. The draft patch and peer/Role6 sources were not opened.
+
+Surgical behavior change, only in run's post-ownership closed branch:
+* Body closure retains status=closed, complete=True, dropped/write-errors/
+  remaining/unflushed zero, but permits nonzero final/producer sequences.
+* Both sequences must be actual nonnegative ints (not bool/float/null), equal.
+  When rows-written is present, it must be an int equal to final sequence.
+  No new mandatory rows-written field is introduced.
+* Without a body, the EXACT original six-zero condition remains: the four health
+  counters plus final and producer sequence. Its equality semantics are unchanged.
+* Post-GPU receipt/idle validation and telemetry validation have independent
+  exception recording. A telemetry error cannot suppress the post-idle error.
+  A GPU-check error likewise does not prevent inspecting the retained telemetry.
+* Default OFF, readiness, ownership cleanup, original deadline, normal-completion
+  requirement, body exception failure and KeyboardInterrupt propagation are
+  unchanged. No interpretation of a body return value was added.
+
+Witness fixture correction:
+GPU preflight is ALWAYS idle. A nonidle fixture value is possible only when the
+query occurs after the recorded owner exit. Thus the combined-failure witness
+reaches shutdown and is not an invalid preflight refusal.
+
+Preserved original negative, attempts/red01:
+The four new B2 controls ran against the exact original driver SHA832c252a...
+before any driver edit. Result: 4 test methods, 6 failure entries (four are
+invalid-value subtest failures), 0 errors, exit1; unittest0.198s.
+Observed failures:
+  valid nonzero body closure incorrectly refused;
+  final bool, producer bool, zero-valued float and inconsistent row count accepted;
+  telemetry failure masked the separate post-GPU nonidle error.
+The no-body nonzero refusal control passed on the original as required.
+Mismatch/negative/null/remaining-stock rejection baselines are also retained.
+
+One corrected targeted run, attempts/green01:
+Python3.12.16, original9 + new4 =13 controls PASS, 0 failures/errors, exit0;
+unittest0.332s. The invalid-body test contains8 focused status subcases.
+The nonzero-body control also confirms a raised body failure stays failed despite
+valid nonzero telemetry closure. Original interrupt/body/cleanup/OFF controls pass.
+Witness test bytes are IDENTICAL between red and green; there was no assertion
+weakening or retry. Exact source/protocol/spec freezes precede both attempts.
+The failed original attempt, logs, subtest tracebacks, reports, commands, exits
+and JUnit remain intact. Each runner had one original60s limit, never reset.
+
+Only the supplied Python3.12 environment was used. Both attempts used the exact
+new root/resume-mvp PYTHONPATH and absolute protocol path with unique RELATIVE
+NATIVE_SMOKE_TEST_OUTPUT directories. Bytecode/plugins were disabled, native
+thread counts1, nice19. Commands and full relevant environment are retained.
+
+No actual services, model/source-identity execution, HTTP, GPU, NVML, network,
+SSH, installs, agents or Git operations occurred. The only spawned helpers were
+the two bounded test interpreter processes; their runners and recorded children
+are checked joined/gone during final evidence verification. No old checkout or
+sealed delivery was edited or used for execution.
+
+Limits / remaining issues:
+B2 is repaired and CPU-mock verified only, pending Mayor acceptance/integration.
+B3 caller/result handling is untouched and outside this delivery; Role6 owns it.
+No broader caller audit, Native readiness, control cycles, admission effect,
+actual ledger integrity, host cleanup or qualification follows from mock counts.
+The existing body's report flags and lifecycle outcome are not new proof of
+semantic body/Native success. No runtime/model/scientific gate is lifted.
+STOP before any GPU/network/SSH work; no independent execution authority is made.

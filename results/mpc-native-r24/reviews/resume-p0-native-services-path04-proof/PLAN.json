@@ -1,0 +1,8 @@
+{
+  "scope": "Minimal service PATH correction after lifecycle02 native FlashInfer warmup failed to locate already-installed Ninja1.13.2.",
+  "base_commit": "62a209eee1e164b5fffc133c9804ad3074d25d1e",
+  "reproduce": "New mocked test resolves a tool installed beside the configured interpreter when inherited host PATH omits that virtualenv.",
+  "controls": "Run new test once before correction (expected FAIL), then all seven CPU controls once with correction on Python3.12. Preserve both generations.",
+  "correction": "Prepend interpreter bin to child PATH; keep inherited executable paths. No dependency installation, backend optimization, model, scoring, guard or GPU ownership change.",
+  "authority": "CPU only; any later real host attempt needs separate exact-source preregistration."
+}

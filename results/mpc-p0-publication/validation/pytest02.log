@@ -1,0 +1,74 @@
+..................................................................................................... [ 19%]
+.............FF.F............... [ 26%]
+........................................................................ [ 40%]
+........................................................................ [ 54%]
+........................................................................ [ 68%]
+........................................................................ [ 83%]
+........................................................................ [ 97%]
+.............                                                            [100%]
+=================================== FAILURES ===================================
+___________ OutputsTest.test_load_tape_purpose_and_integrity_guards ____________
+
+self = <test_nominal_workload.OutputsTest testMethod=test_load_tape_purpose_and_integrity_guards>
+
+    def test_load_tape_purpose_and_integrity_guards(self):
+>       base = scratch('load')
+               ^^^^^^^^^^^^^^^
+
+experiments/mpc-research/resume-mvp/test_nominal_workload.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'load'
+
+    def scratch(name):
+        base = os.environ.get('NOMINAL_WORKLOAD_SCRATCH')
+        if not base:
+>           raise RuntimeError('NOMINAL_WORKLOAD_SCRATCH must name an absolute capsule scratch directory')
+E           RuntimeError: NOMINAL_WORKLOAD_SCRATCH must name an absolute capsule scratch directory
+
+experiments/mpc-research/resume-mvp/test_nominal_workload.py:39: RuntimeError
+______________ OutputsTest.test_write_verify_and_single_manifest _______________
+
+self = <test_nominal_workload.OutputsTest testMethod=test_write_verify_and_single_manifest>
+
+    def test_write_verify_and_single_manifest(self):
+>       out = scratch('outputs') / 'tapes'
+              ^^^^^^^^^^^^^^^^^^
+
+experiments/mpc-research/resume-mvp/test_nominal_workload.py:190: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'outputs'
+
+    def scratch(name):
+        base = os.environ.get('NOMINAL_WORKLOAD_SCRATCH')
+        if not base:
+>           raise RuntimeError('NOMINAL_WORKLOAD_SCRATCH must name an absolute capsule scratch directory')
+E           RuntimeError: NOMINAL_WORKLOAD_SCRATCH must name an absolute capsule scratch directory
+
+experiments/mpc-research/resume-mvp/test_nominal_workload.py:39: RuntimeError
+_____ CliTest.test_frozen_cli_no_overrides_no_clobber_and_tamper_detection _____
+
+self = <test_nominal_workload.CliTest testMethod=test_frozen_cli_no_overrides_no_clobber_and_tamper_detection>
+
+    def test_frozen_cli_no_overrides_no_clobber_and_tamper_detection(self):
+>       base = scratch('cli')
+               ^^^^^^^^^^^^^^
+
+experiments/mpc-research/resume-mvp/test_nominal_workload.py:291: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'cli'
+
+    def scratch(name):
+        base = os.environ.get('NOMINAL_WORKLOAD_SCRATCH')
+        if not base:
+>           raise RuntimeError('NOMINAL_WORKLOAD_SCRATCH must name an absolute capsule scratch directory')
+E           RuntimeError: NOMINAL_WORKLOAD_SCRATCH must name an absolute capsule scratch directory
+
+experiments/mpc-research/resume-mvp/test_nominal_workload.py:39: RuntimeError
+=========================== short test summary info ============================
+FAILED experiments/mpc-research/resume-mvp/test_nominal_workload.py::OutputsTest::test_load_tape_purpose_and_integrity_guards
+FAILED experiments/mpc-research/resume-mvp/test_nominal_workload.py::OutputsTest::test_write_verify_and_single_manifest
+FAILED experiments/mpc-research/resume-mvp/test_nominal_workload.py::CliTest::test_frozen_cli_no_overrides_no_clobber_and_tamper_detection
+3 failed, 503 passed, 155 subtests passed in 20.44s

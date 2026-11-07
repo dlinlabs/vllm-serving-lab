@@ -1,0 +1,42 @@
+--- generation01/run_controls02.py
++++ generation02/run_controls02.py
+@@ -17,6 +17,7 @@
+ def main():
+     parser = argparse.ArgumentParser(allow_abbrev=False)
+     parser.add_argument("--output", type=Path, required=True)
++    parser.add_argument("--selector", choices=("C07",))
+     args = parser.parse_args()
+     output = args.output.resolve()
+     c.require(output.is_relative_to(HERE / "attempts") and not output.exists(),
+@@ -30,15 +31,19 @@
+     c.write(output / "invocation.json", dict(
+         argv=sys.argv, version=sys.version, executable=sys.executable, started_at=started,
+         source_freeze_sha256=c.sha(HERE / "CONTROL_FREEZE.json"),
+-        no_live_entrypoint_invoked=True, expected_focused_controls=9,
++        no_live_entrypoint_invoked=True, expected_focused_controls=1 if args.selector else 9,
++        selected_control=args.selector,
+         PYTHONPATH_unset="PYTHONPATH" not in os.environ,
+         dont_write_bytecode=sys.dont_write_bytecode,
+         plugins_disabled=os.environ.get("PYTEST_DISABLE_PLUGIN_AUTOLOAD") == "1"))
+     c.verify_code()
+     import pytest
++    selected = str(HERE / "test_deployment02.py")
++    if args.selector == "C07":
++        selected += "::test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap"
+     code = int(pytest.main([
+         "-q", "--tb=short", "-p", "no:cacheprovider", "--basetemp", str(output / "cases"),
+-        "--junitxml", str(output / "junit.xml"), str(HERE / "test_deployment02.py")]))
++        "--junitxml", str(output / "junit.xml"), selected]))
+     c.verify_code()
+     signal.setitimer(signal.ITIMER_REAL, 0)
+     helpers = []
+--- generation01/test_deployment02.py
++++ generation02/test_deployment02.py
+@@ -358,6 +358,7 @@
+ 
+ 
+ def test_C07_new_wire_exact_source_bytes_and_genuine_mock_overlap(monkeypatch,tmp_path):
++    monkeypatch.chdir(c.PREFLIGHT)
+     async def scenario():
+         fixture = await new_fixture(monkeypatch,tmp_path / "fixture")
+         case = fixture.case

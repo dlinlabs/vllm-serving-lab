@@ -1,0 +1,62 @@
+{
+  "active_finished_at": 910501.794951578,
+  "active_started_at": 910501.542613478,
+  "actual_application_at": null,
+  "capture_retention": {
+    "CPU_spy": true
+  },
+  "component_pass": false,
+  "component_pass_provisional_until_actual_consumer_returned_close": true,
+  "consumer_handoff_received": false,
+  "consumer_publication_refusals": [],
+  "coverage_complete": false,
+  "coverage_scope": "Prior2of2 metric retained descriptively,not this consumer question's success gate;no retry/substitution.",
+  "decision_at": null,
+  "engineering_pass": true,
+  "failures": [],
+  "finished_at": 910501.794963478,
+  "initial_closure": {
+    "CPU_call_placement_only": true
+  },
+  "native_mpc_permitted": false,
+  "nonempty_overlap_count": 0,
+  "observer_deployable": false,
+  "offers": [
+    {
+      "cut": "CPU-only",
+      "fate": "completed_length",
+      "inflight": {
+        "consumer": {},
+        "nonempty_overlap": false
+      },
+      "max_tokens": 16,
+      "ordinal": 1,
+      "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+      "prompt_tokens": 17,
+      "record": null,
+      "request_id": "e81e60e95e0bbdacba572fefbbd591b9",
+      "send_intent_at": 910501.794705878
+    },
+    {
+      "cut": "CPU-only",
+      "fate": "completed_length",
+      "inflight": {
+        "consumer": {
+          "status": "refused"
+        },
+        "nonempty_overlap": false
+      },
+      "max_tokens": 16,
+      "ordinal": 2,
+      "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+      "prompt_tokens": 17,
+      "record": null,
+      "request_id": "8fbc40ce9c6f9da0721622d3a03af523",
+      "send_intent_at": 910501.794880678
+    }
+  ],
+  "planner_entry_at": null,
+  "prediction_qualified": false,
+  "qualified_model": false,
+  "schema": "team16-cut-consumer-result-v1"
+}

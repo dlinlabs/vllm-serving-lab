@@ -1,0 +1,56 @@
+{
+  "schema": "resume-p0-awaitable-recorder-candidate-parent-v1",
+  "observed_utc": "2026-11-05T00:51:52Z",
+  "base_head": "394ea3d781b58c8dfa1983ed189147693a59c8fc",
+  "status": "CPU_AUTHOR_TESTED_INDEPENDENT_REVIEW_IN_PROGRESS",
+  "scope": "Small recorder API extraction addressing episode01's exact integration blocker; not completed episode wiring or Native qualification.",
+  "source_sha256": {
+    "nominal_client.py": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+    "test_nominal_client.py": "8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66",
+    "unchanged_nominal_metrics.py": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec"
+  },
+  "author_archive": "resume-p0-client-api03-author",
+  "original_manifest_sha256": "b3e6174797f8d466181ebf42e87b5c45133341ff7351265d166d0cfc1dfc8a1b",
+  "regular_files_including_manifest": 98,
+  "regular_bytes": 429423,
+  "omitted_pytest_current_symlinks": 6,
+  "archive_verification": "Parent copied all original regular bytes and checked the original seal in the destination; no links copied or followed. Original SYMLINKS.txt and REPORT-ERRATA-01.json retained.",
+  "owner_cpu_validation": {
+    "interpreter": "Python 3.12.16",
+    "tests": 43,
+    "original_tests": 41,
+    "new_tests": 2,
+    "attempts": 1,
+    "retries": 0,
+    "result": "43 passed in 6.42s",
+    "scope": "Literal CPU controls only. Python 3.14 received a parse check, not a second suite."
+  },
+  "api": {
+    "prepare_capture": "Synchronous local loading and binding/tokenizer checks before choosing the common offered start; inspect prepared.ready and failure envelope.",
+    "capture_replay": "Await inside caller loop using exact offered_start, original deadline, cleanup reserve and clock domain; no signal ownership or nested asyncio.run.",
+    "write_capture": "Caller persists prepared.capture on every outcome using the shared raw-v2 codec.",
+    "failure_contract": "Returned refused/failed envelopes are not success. Cancellation and KeyboardInterrupt finalize partial capture and re-raise; caller must persist it.",
+    "full_wall": "Not finalized at client return; lifecycle caller measures through cleanup."
+  },
+  "disclosures": [
+    "Original report mistakenly lists two pre-existing test helper classes as new; REPORT-ERRATA-01.json corrects the list without rewriting report.json.",
+    "The post-allocation past-start refusal and KeyboardInterrupt paths were not executed by the owner.",
+    "CLI parity is tested by existing cases and envelope key sets, not full byte-for-byte output equality.",
+    "Parent checked delivery metadata, seals and source pins, not a duplicate implementation review."
+  ],
+  "independent_review": {
+    "owner": "Role4",
+    "state": "GO sent for this final client revision plus unchanged metrics02",
+    "required": "Separate recorder/metrics PASS or FAIL, F1-F5 closure and async ownership/cancellation/accounting correctness."
+  },
+  "episode_composition": {
+    "owner": "Role6",
+    "state": "CPU-only episode02 continuation assigned against these exact frozen dependencies",
+    "remaining": "Implement and validate actual shared-start runtime/recorder composition without changing controller guards or duplicating the codec."
+  },
+  "gpu_gate": "No actual startup until independent recorder/metrics PASS. Existing GPU may be returned; do not assume future availability or acquire a new rental.",
+  "native_inference_runs": 0,
+  "qualified_native_cycles": 0,
+  "pushed": false,
+  "merged": false
+}

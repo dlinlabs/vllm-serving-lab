@@ -1,0 +1,37 @@
+{
+  "auth_values_captured": false,
+  "body_complete": true,
+  "call_settings": {
+    "absolute_deadline": 910681.509124846,
+    "body_cap_bytes": 1048576,
+    "http_timeout_s": 19.99973429995589,
+    "maximum_http_exchanges": 1900
+  },
+  "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+  "client_headers_at": 910661.520030646,
+  "client_receive_at": 910661.520058346,
+  "client_send_at": 910661.509394846,
+  "credential_removed": false,
+  "dispatch_attempted": true,
+  "error_type": null,
+  "http_status": 200,
+  "method": "POST",
+  "path": "/v1/chat/completions",
+  "request_body": "{\"max_tokens\":16,\"messages\":[{\"content\":\"Count upwards from 1, separated by spaces. Continue counting without commentary.\",\"role\":\"user\"}],\"model\":\"Qwen/Qwen3-4B-Instruct-2507\",\"stream\":false,\"temperature\":0}",
+  "request_id": "8fbc40ce9c6f9da0721622d3a03af523",
+  "reserved_at": 910661.509292446,
+  "response_body_base64": "eyJpZCI6ImNoYXRjbXBsLThmYmM0MGNlOWM2ZjlkYTA3MjE2MjJkM2EwM2FmNTIzIiwibW9kZWwiOiJRd2VuL1F3ZW4zLTRCLUluc3RydWN0LTI1MDciLCJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoibGVuZ3RoIn1dLCJ1c2FnZSI6eyJjb21wbGV0aW9uX3Rva2VucyI6MTZ9fQ==",
+  "response_body_sha256": "6b3f58b0ad520239c9cff1061a6d8a7808cc4a64ed3b3498e6d0062e67fb4d0e",
+  "response_bytes_captured": 160,
+  "response_headers": {
+    "content-type": "application/json",
+    "x-request-id": "8fbc40ce9c6f9da0721622d3a03af523"
+  },
+  "role": "managed-2",
+  "sequence": 3,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "scheme": "http"
+  }
+}

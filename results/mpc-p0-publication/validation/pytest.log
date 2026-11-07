@@ -1,0 +1,12 @@
+
+==================================== ERRORS ====================================
+_ ERROR collecting experiments/mpc-research/resume-mvp/test_native_services_smoke.py _
+experiments/mpc-research/resume-mvp/test_native_services_smoke.py:20: in <module>
+    ROOT.mkdir()
+../../../../.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [Errno 2] No such file or directory: '.runtime/mpc-publication-cpu'
+=========================== short test summary info ============================
+ERROR experiments/mpc-research/resume-mvp/test_native_services_smoke.py - Fil...
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.97s

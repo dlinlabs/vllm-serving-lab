@@ -1,0 +1,58 @@
+0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570  gateway.py
+  222  
+  223  state: Dict[str, Any] = {
+  224      "admission_budget": MAX_ADMITTED_COST,
+  225      "budget_version": 0,
+  226      "current_in_flight": 0,
+  227      "current_waiting": 0,
+  228      "accepted_requests": 0,
+  229      "rejected_requests": 0,
+  230      "failed_requests": 0,
+  231      "max_waiting": 0,
+  232      "current_admitted_cost": 0.0,
+  233      "peak_admitted_cost": 0.0,
+  234      "accepted_cost": 0.0,
+  235      "rejected_cost": 0.0,
+  236      "tokenizer_fallback_requests": 0,
+  237  }
+  238  
+  239  mpc_requests = {}
+  240  mpc_operations = {}
+  386  
+  387  
+  388  async def snapshot_metrics() -> Dict[str, Any]:
+  389      async with state_lock:
+  390          metrics = dict(state)
+  391          metrics['state_sampled_at'] = time.monotonic()
+  392          metrics.update(telemetry.observed_state(metrics['state_sampled_at']))
+  393  
+  394      metrics.update(
+  395          {
+  396              "telemetry_run_id": telemetry.run_id,
+  397              "telemetry_dropped_records": telemetry.dropped,
+  398              "telemetry_write_errors": telemetry.write_errors,
+  399              "admission_mode": ADMISSION_MODE,
+  400              "max_in_flight": MAX_IN_FLIGHT,
+  401              "max_waiting_capacity": MAX_WAITING,
+  402              "max_admitted_cost": metrics["admission_budget"],
+  403              "initial_admission_budget": MAX_ADMITTED_COST,
+  404              "cost_intercept": COST_INTERCEPT,
+  405              "input_token_cost": INPUT_TOKEN_COST,
+  406              "output_token_cost": OUTPUT_TOKEN_COST,
+  407              "tokenizer_model": MODEL_NAME,
+  408              "tokenizer_available": tokenizer is not None,
+  409              "tokenizer_load_error": tokenizer_load_error,
+  410              "gateway_diagnostics": telemetry.diagnostics is not None,
+  411          }
+  412      )
+  926  
+  927  
+  928  @app.get("/metrics")
+  929  async def metrics():
+  930      return await snapshot_metrics()
+  931  
+  932  
+  933  if __name__ == "__main__":
+  934      import uvicorn
+  935  
+  936      uvicorn.run(app, host="0.0.0.0", port=8080)

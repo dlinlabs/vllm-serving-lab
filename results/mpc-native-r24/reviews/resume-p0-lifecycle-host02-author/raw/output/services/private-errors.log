@@ -1,0 +1,9 @@
+service_exit
+nominal_services.OwnershipError: owned service exited
+enter
+Traceback (most recent call last):
+  File "/workspace/pr32-r23/r24-resume-p0-lifecycle-b70f70e102/source/experiments/mpc-research/resume-mvp/nominal_services.py", line 397, in __enter__
+    self.check()
+  File "/workspace/pr32-r23/r24-resume-p0-lifecycle-b70f70e102/source/experiments/mpc-research/resume-mvp/nominal_services.py", line 304, in check
+    raise OwnershipError("service scope stopped or work deadline exhausted")
+nominal_services.OwnershipError: service scope stopped or work deadline exhausted

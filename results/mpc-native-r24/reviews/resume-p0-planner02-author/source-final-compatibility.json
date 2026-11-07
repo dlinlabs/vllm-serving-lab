@@ -1,0 +1,31 @@
+{
+  "MPC_solver_conditions_unchanged": true,
+  "original_test_methods_unchanged": {
+    "test_clock_identity_and_mid_solve_versions_refuse": true,
+    "test_expired_backdated_and_incomplete_entry_refuses_before_forecast": true,
+    "test_frozen_model_identity_cannot_outlive_changed_parameters": true,
+    "test_full_action_train_fixed_selection_has_no_runtime_solver_tax": true,
+    "test_future_or_unbound_scenario_and_mislabeled_objective_refuse": true,
+    "test_incomplete_duplicate_and_wrong_objective_panels_refuse": true,
+    "test_partial_forecast_and_solver_failure_never_return_a_winner": true,
+    "test_post_forecast_deadline_and_clock_regression_refuse": true,
+    "test_real_forecast_holds_received_budget_until_applicable_time": true,
+    "test_real_full_panel_distinguishes_mpc_from_strong_one_move": true,
+    "test_real_one_move_can_delay_its_only_transition": true
+  },
+  "original_two_red_controls_unchanged": {
+    "test_fixed_timing_ignores_future_solver_start_without_backdating": true,
+    "test_fixed_timing_survives_elapsed_solver_deadline_with_fresh_state": true
+  },
+  "scope": "Source-only structural comparisons, not application executions",
+  "unchanged_planner_method_ASTs": {
+    "__init__": true,
+    "_decision": true,
+    "_input": true,
+    "_panel": true,
+    "_result": true,
+    "evaluate": true,
+    "plan": true,
+    "select": true
+  }
+}

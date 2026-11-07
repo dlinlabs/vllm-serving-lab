@@ -1,0 +1,22 @@
+{
+ "amends": "CONTROL-DECISION.json (sha256 bb4c99c70c56ad207dffff807bd4a0f4ea7bd0155c05ac5dafe1a2f7310f5224, unchanged)",
+ "change_for_py312_only": "mkdir -m 700 relocated/attempts (empty directory; no author bytes changed, no file added); then the frozen py312-controls and py312-postcheck steps unchanged, first and only py312 attempt",
+ "classification": "REVIEWER relocation-harness precondition omission: relocation copied regular files only, while the author's run directory had a pre-existing attempts/ directory (subject manifest names attempts/generation01-*/..., outputs/prepare01.* logs). Not an author-control result, not a candidate cleanup defect, not PASS and not control FAIL.",
+ "consequence": "at most a one-Python (py312) independent reproduction; asymmetry reported, never relabelled as dual-Python",
+ "frozen_at_unix": 1793829091.3044543,
+ "frozen_before_py312_execution": true,
+ "observed_py314_attempt1": {
+  "controls_executed": 0,
+  "exit": "1",
+  "failure": "run_controls01.py:26 attempt.mkdir(exist_ok=False) FileNotFoundError: relocated/attempts/ parent absent",
+  "postcheck": {
+   "all_gone": true,
+   "sha256": "ef3a5992c23df4a0fdfeab6ebdd86b63638950a3564f7f05f1ca37bfa5015dbb"
+  },
+  "processes_spawned": 0,
+  "reached_after": "load() at run_controls01.py:24 returned => author verify_inputs accepted all relocated copies, selected-source and 8 in-place dependency hashes",
+  "stderr_sha256": "260dc2da657c2c5dc0daa3ea73e2a3bec99d2f5c8187b1c759634303e71a6489",
+  "stdout_bytes": 0
+ },
+ "rule_applied": "no retries: py314 is NOT rerun; py314 independent reproduction = NOT OBTAINED (author py314 PASS remains author-only evidence)"
+}

@@ -1,0 +1,24 @@
+{
+  "actual_application_at": null,
+  "consumer": {
+    "error_type": "ValueError",
+    "reason": "CPU_whole80ms_expired_no_rebase",
+    "status": "refused"
+  },
+  "cut": "offer-2-inflight-cut.json",
+  "cut_file_sha256": "f47e86409140baf195a14ea7de98fb5e3cc8c37b17e9172346ac5a3a40f5d7ae",
+  "cut_returned_at": 910501.933067278,
+  "dispatch": {
+    "client_send_at": 910501.821842878,
+    "sequence": 1
+  },
+  "native_mpc_permitted": false,
+  "nonempty_overlap": false,
+  "pending_at_trigger": true,
+  "request_id": "8fbc40ce9c6f9da0721622d3a03af523",
+  "scheduled_trigger_at": 910501.841842878,
+  "schema": "team16-inflight-cut-attempt-v1",
+  "status": "CPU_call_placement_not_physical_overlap",
+  "trigger_at": 910501.842253078,
+  "trigger_delay_s": 0.02
+}

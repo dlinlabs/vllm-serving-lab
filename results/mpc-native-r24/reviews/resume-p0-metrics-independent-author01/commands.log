@@ -1,0 +1,77 @@
+# MANUAL 2026-11-04T22:52:06Z: capsule created by claude-opus-5.5 max (Role4 independent P0 metrics/leakage audit). Tools run_logged.sh, pin_sources.sh and SELECTED-SOURCES.txt written before any source content read. Expected paths for test/scenario/workload files assumed under resume-mvp; pin script fails closed if missing.
+# 2026-11-04T22:52:09Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+./pin_sources.sh > pin-src01.log 2>&1
+exit=0
+# 2026-11-04T22:52:14Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+bash -c p=\"\$1\"\;\ test\ -f\ \"\$p\"\ \&\&\ test\ \!\ -L\ \"\$p\"\ \|\|\ \{\ echo\ MISSING_OR_SYMLINK\;\ exit\ 3\;\ \}\;\ stat\ -c\ \"STAT\ %n\ size=%s\ mode=%a\ mtime=%y\"\ \"\$p\"\;\ sha256sum\ \"\$p\"\;\ cp\ -p\ --update=none\ \"\$p\"\ pinned-meta-report.json\ \&\&\ chmod\ 444\ pinned-meta-report.json\ \&\&\ sha256sum\ pinned-meta-report.json _ /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/report.json > pin-meta01.log 2>&1
+exit=0
+# 2026-11-04T22:52:22Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+true > view-.log 2>&1
+exit=0
+# 2026-11-04T22:52:22Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+true > view-.log 2>&1
+exit=1
+# 2026-11-04T22:52:22Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+true > view-.log 2>&1
+exit=1
+# 2026-11-04T22:52:22Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+true > view-.log 2>&1
+exit=1
+# 2026-11-04T22:52:22Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+true > view-.log 2>&1
+exit=1
+# 2026-11-04T22:52:22Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+true > view-.log 2>&1
+exit=1
+# MANUAL 2026-11-04T22:52:31Z: attempt view-probe FAILED by my shell bug: loop used view-$n01.log so n01 expanded empty; first true created empty view-.log (exit 0), next five hit set -C noclobber (exit 1). No source read. view-.log preserved as failure evidence; redoing with explicit names.
+# 2026-11-04T22:52:31Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+awk \{printf\ \"%d:\ %s\\n\"\,\ FNR\,\ \$0\} pinned-src/nominal_metrics.py > view-metrics-01.log 2>&1
+exit=0
+# 2026-11-04T22:52:31Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+awk \{printf\ \"%d:\ %s\\n\"\,\ FNR\,\ \$0\} pinned-src/test_nominal_metrics.py > view-tests-01.log 2>&1
+exit=0
+# 2026-11-04T22:52:31Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+awk \{printf\ \"%d:\ %s\\n\"\,\ FNR\,\ \$0\} pinned-src/score_http.py > view-score-01.log 2>&1
+exit=0
+# 2026-11-04T22:52:31Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+awk \{printf\ \"%d:\ %s\\n\"\,\ FNR\,\ \$0\} pinned-src/nominal_scenario.py > view-scenario-01.log 2>&1
+exit=0
+# 2026-11-04T22:52:31Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+awk \{printf\ \"%d:\ %s\\n\"\,\ FNR\,\ \$0\} pinned-src/nominal_workload.py > view-workload-01.log 2>&1
+exit=0
+# 2026-11-04T22:52:31Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+awk \{printf\ \"%d:\ %s\\n\"\,\ FNR\,\ \$0\} pinned-src/test_nominal_scenario.py > view-scentest-01.log 2>&1
+exit=0
+# 2026-11-04T22:52:31Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -I -c import\ json\,sys\;d=json.load\(open\(\'pinned-meta-report.json\'\)\)\;print\(json.dumps\(d\,indent=1\,sort_keys=False\)\) > view-meta-01.log 2>&1
+exit=0
+# MANUAL 2026-11-04T23:05:08Z: display-only unlogged inspections of capsule-owned files after view logs: view-tool reads of view-metrics/score/scenario/workload/tests/scentest logs; find -printf listing, cat SOURCE-PINS.sha256, tail commands.log, cat run_logged.sh SELECTED-SOURCES.txt TOOL-PINS.sha256 and sha256sum -c TOOL-PINS (OK). No source outside pinned copies read. Next: preregister witness01 (plan, script, witness-src copies) before any execution.
+# 2026-11-04T23:05:13Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+bash -c set\ -eu\;\ mkdir\ witness-src\ witness-src/resume-mvp\ witness-src/native-r23\;\ cp\ pinned-src/nominal_metrics.py\ witness-src/resume-mvp/nominal_metrics.py\;\ cp\ pinned-src/score_http.py\ witness-src/native-r23/score_http.py\;\ chmod\ 444\ witness-src/resume-mvp/nominal_metrics.py\ witness-src/native-r23/score_http.py\;\ sha256sum\ witness-src/resume-mvp/nominal_metrics.py\ witness-src/native-r23/score_http.py\;\ ls\ -lR\ witness-src > witness-src-copy01.log 2>&1
+exit=0
+# 2026-11-04T23:11:40Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 nice -n19 timeout 60 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -I -c import\ ast\,sys\;\ ast.parse\(open\(sys.argv\[1\]\,encoding=\"utf-8\"\).read\(\)\)\;\ print\(\"ast-ok\"\,\ sys.argv\[1\]\) witness_metrics01.py > witness-prefreeze-ast01.log 2>&1
+exit=0
+# MANUAL 2026-11-04T23:11:48Z: PLAN-WITNESS01.txt and witness_metrics01.py were authored then revised in place BEFORE any hashing or execution (W2 same request id plus clock-domain difference; W3 forged-selection and cross-arm id flags; W4 window binding; docstring) after display-only re-reads of numbered capsule view logs (metrics 1-19, 20-911; score 1-71; scenario 36-177; tests 140-176, 320-383). Only execution so far: logged static ast.parse of the witness file. Now freezing.
+# 2026-11-04T23:11:48Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+bash -c set\ -eu\;\ set\ -C\;\ sha256sum\ PLAN-WITNESS01.txt\ witness_metrics01.py\ witness-src/resume-mvp/nominal_metrics.py\ witness-src/native-r23/score_http.py\ \>\ WITNESS-PINS.sha256\;\ chmod\ 444\ WITNESS-PINS.sha256\;\ cat\ WITNESS-PINS.sha256\;\ stat\ -c\ \"%a\ %s\ %n\"\ PLAN-WITNESS01.txt\ witness_metrics01.py\ WITNESS-PINS.sha256\ witness-src/resume-mvp/nominal_metrics.py\ witness-src/native-r23/score_http.py\;\ sha256sum\ -c\ --strict\ WITNESS-PINS.sha256 > witness-freeze01.log 2>&1
+exit=0
+# 2026-11-04T23:11:54Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -I witness_metrics01.py > witness-py314-01.log 2>&1
+exit=0
+# 2026-11-04T23:11:54Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B -I witness_metrics01.py > witness-py312-01.log 2>&1
+exit=0
+# 2026-11-04T23:13:03Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+bash -c diff\ \<\(grep\ -v\ \"\\\"python\\\":\ \"\ witness-py314-01.log\)\ \<\(grep\ -v\ \"\\\"python\\\":\ \"\ witness-py312-01.log\)\ \&\&\ echo\ IDENTICAL_EXCEPT_PYTHON_VERSION_LINE\;\ grep\ -n\ \"\\\"python\\\":\ \"\ witness-py314-01.log\ witness-py312-01.log\;\ sha256sum\ witness-py314-01.log\ witness-py312-01.log > witness-crosspy-diff01.log 2>&1
+exit=0
+# 2026-11-04T23:20:07Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -I -c $'import json, hashlib, sys\nfrom collections import Counter\nb = open("REPORT.json", "rb").read()\ndef hook(pairs):\n    keys = [k for k, _ in pairs]\n    if len(keys) != len(set(keys)):\n        raise ValueError("duplicate keys")\n    return dict(pairs)\ndef bad(c):\n    raise ValueError("nonfinite " + c)\nd = json.loads(b.decode("utf-8"), object_pairs_hook=hook, parse_constant=bad)\nf = d["findings"]\nreq = {"id", "title", "severity", "confidence", "file", "lines", "effect", "reproducer", "liveness", "disposition_recommendation"}\nassert all(req <= set(x) for x in f), "finding keys"\nprint("python", sys.version.split()[0])\nprint("report_sha256", hashlib.sha256(b).hexdigest(), "bytes", len(b))\nprint("schema", d["schema"], "model", d["model"]["id"], d["model"]["reasoning_effort"], "child_agents", d["model"]["child_agents"])\nprint("findings", len(f), sorted(Counter(x["severity"] for x in f).items()), [x["id"] for x in f])\nprint("STRICT_JSON_OK")' > report-json-check-python314-01.log 2>&1
+exit=0
+# 2026-11-04T23:20:07Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B -I -c $'import json, hashlib, sys\nfrom collections import Counter\nb = open("REPORT.json", "rb").read()\ndef hook(pairs):\n    keys = [k for k, _ in pairs]\n    if len(keys) != len(set(keys)):\n        raise ValueError("duplicate keys")\n    return dict(pairs)\ndef bad(c):\n    raise ValueError("nonfinite " + c)\nd = json.loads(b.decode("utf-8"), object_pairs_hook=hook, parse_constant=bad)\nf = d["findings"]\nreq = {"id", "title", "severity", "confidence", "file", "lines", "effect", "reproducer", "liveness", "disposition_recommendation"}\nassert all(req <= set(x) for x in f), "finding keys"\nprint("python", sys.version.split()[0])\nprint("report_sha256", hashlib.sha256(b).hexdigest(), "bytes", len(b))\nprint("schema", d["schema"], "model", d["model"]["id"], d["model"]["reasoning_effort"], "child_agents", d["model"]["child_agents"])\nprint("findings", len(f), sorted(Counter(x["severity"] for x in f).items()), [x["id"] for x in f])\nprint("STRICT_JSON_OK")' > report-json-check-python312-01.log 2>&1
+exit=0
+# 2026-11-04T23:20:12Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-metrics-independent01
+bash -c cd\ /home/daniel_lin/gt/pr32/mayor/mpc-local-r21\ \&\&\ sha256sum\ -c\ .runtime/r24-resume-p0-metrics-independent01/SOURCE-PINS.sha256\ \&\&\ sha256sum\ .runtime/r24-resume-p0-nominal-metrics01/report.json\ \&\&\ cd\ .runtime/r24-resume-p0-metrics-independent01\ \&\&\ sha256sum\ -c\ WITNESS-PINS.sha256\ \&\&\ sha256sum\ -c\ TOOL-PINS.sha256 > drift-recheck01.log 2>&1
+exit=0
+# MANUAL 2026-11-04T23:20:33Z: REPORT.json authored with the create tool then edited in place 5 times BEFORE its chmod 444 freeze (source byte total corrected to 127891; F1 adapter-path wording and W2 ignore_eos detail sharpened; unlogged-actions list corrected; not_read list restricted to known module names) after display-only pre-freeze citation checks of capsule-owned copies listed in REPORT unlogged_or_display_only_actions; also display-only cmp view-meta-01.log vs pinned-meta-report.json (SAME), wc -l (447), grep of gap ids, cat run_logged.sh. REPORT sha a3fb13a66a43a0bdf652d82333542e80ad23a22d823247bcb031e8aba40589d3 passed logged strict JSON checks on py3.14.4 and py3.12.16. Logged drift-recheck01: six source pins, witness pins and tool pins OK; meta report d7e8a9d6 unchanged. Unlogged find for pycache or pyc after drift check: none. No source, doc, test, git, network, GPU, SSH or other-capsule writes; no child agents. Sealing now by claude-opus-5.5 max (Role4 independent validation); not acceptance.

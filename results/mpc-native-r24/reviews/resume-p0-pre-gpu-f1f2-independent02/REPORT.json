@@ -1,0 +1,159 @@
+{
+  "schema": "r24-pre-gpu-f1f2-final-review/1",
+  "capsule": ".runtime/r24-pre-gpu-f1f2-final-review-role4",
+  "reviewer": "PR32 team16 Role4 independent validator; verified Anthropic claude-opus-5.5 max; no child agents",
+  "worktree": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "worktree_ref_supplied_not_verified": "branch snapshot/mpc-p0-evidence-20261105; no Git used",
+  "prereg": {
+    "capsule": ".runtime/r24-pre-gpu-f1f2-recheck-prereg-role4",
+    "seal_sha256": "4737fc5e1a1a485c03321d414d86e9c3f7b2966e9882a67c163999e5c1bec731",
+    "prereg_json_sha256": "011165b578bc3e85894344c7f5e4400bd85d5d152e7aa25e8a284e7c6869b462",
+    "criteria_changed_after_reading_fix": false
+  },
+  "verdict": {
+    "overall": "PASS_SOURCE_F1F2",
+    "F1": "CLOSED_IN_SOURCE",
+    "F2": "CLOSED_IN_SOURCE",
+    "must_rows": "R1-R10 all PASS",
+    "role4_reviewed_scope_cpu_source_blockers": [],
+    "native_qualification": false,
+    "gpu_authorized": false,
+    "performance_claim": false,
+    "meaning": "The frozen correction fixes F1 and F2 exactly as preregistered and changes nothing else. This closes the Role4 CPU/source blocker only. It is not GPU authority, not Native qualification and not evidence of actual cycles or admission effect."
+  },
+  "predecessor_preserved": {
+    "capsule": ".runtime/r24-pre-gpu-final-review-role4",
+    "seal_sha256": "0f0b0e7cb489bbfa3102bc4dbab5262151095e353e7e1735dd35b647417ac403",
+    "members": 91,
+    "unchanged": "Strict seal verification passed before (pin01) and after (pin02). Its F1 FAIL, F2 LOW and erratum E1 bytes stay as sealed; this report supersedes only their open status, not their content."
+  },
+  "pins": {
+    "verified_before_and_after": "pin01.log and pin02.log, sha256sum -c --strict on pins-expected.txt (17 entries) plus strict seal checks",
+    "caller_new": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+    "caller_test_new": "76b7e93688f0ba766456368716ded4cfe1809491c27f32fa5e76e812d2959d83",
+    "caller_old": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+    "caller_test_old": "7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac",
+    "role6_correction_diff": "eda50b2a681ed52f4e0a8acb2fef492a0dbc797149538cca291e7b9ceaa6c7b0",
+    "role6_f1_capsule_seal": "0dbfc4601693147588342f28904edbc5a81d8877290463c1237ac39053230efa (156 entries, strict OK)",
+    "role6_b3_capsule_seal": "b08511ad3048fdecaf4bbc45eeff198ef0bcc958255b86b96ec681777c037b0e (240 entries, strict OK)",
+    "unchanged": {
+      "native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+      "test_native_services_smoke.py": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3",
+      "nominal_client.py": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+      "nominal_metrics.py": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+      "nominal_runtime.py": "2d7a01dbd335297439d31ec00d144db4d4a771b190d8b47a03e1ddd3a5f80959",
+      "nominal_permit.py": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503",
+      "nominal_episode.py": "935c2679c4b9fffdffb23ce88ca5351f91fa84e25c8c1edccedddaea4e4262a8",
+      "nominal_protocol.json": "08d145c8822a71e7acbb3cb0102bec29eda1de081c5af756140aa1fb3a9ee51a",
+      "nominal_services.py": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+      "gateway.py": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+    },
+    "hashed_not_reviewed": {
+      ".runtime/r24-pre-gpu-mayor01/B3-final-frozen.patch": "428919a14eaf2c2188b36a137918b3e938df4f6122800f0948ba2fd1fddac171",
+      ".runtime/r24-pre-gpu-mayor01/metrics-contract-source-check.json": "8be57a92ca8d12e28c15d70ff78bc54a8a67904f388634189671fa511758f87a"
+    }
+  },
+  "diff_mechanics": {
+    "own_diff": "mydiff01.log (caller) and mydiff02.log (test), diff -u of hash-verified copies in inputs/old and inputs/new",
+    "identical_to_role6_diff": "hunkcompare01.log: CALLER-HUNK-IDENTICAL; its test comparison differed only by an off-by-one in my own sed range (retained). hunkcompare02.log: TEST-HUNKS-IDENTICAL with the corrected range.",
+    "roundtrip": "roundtrip01.log: patch -p1 applies correction.diff to 629caa23/7d087a88 and gives 9018acee/76b7e936 byte-exact; patch -R gives the predecessors byte-exact. No Git.",
+    "hunks": [
+      "caller @@ -108,7 +108,8 @@ (F1): only old line 111 is replaced, by new lines 111-112 inside drain()",
+      "test @@ -21,7 +21,8 @@ (F2): only the ROOT assignment, new lines 24-26",
+      "test @@ -356,6 +357,70 @@ (F1 regression): one added method test_drain_tolerates_only_idle_cost_residue, new lines 360-422"
+    ]
+  },
+  "rows": [
+    {"id": "R1", "status": "PASS", "evidence": "Three hunks, all classified F1 or F2; none OUT_OF_SCOPE. The caller hunk adds no constant and does not change the caller_drains record. The test hunks change only the ROOT assignment and add one method."},
+    {"id": "R2", "status": "PASS", "evidence": "New caller 107-110 equal old 107-110 (context lines of the single hunk) and still run on every reading before the predicate. W2 c7 (tokenizer_fallback_requests 1) and c8 (cost -1e-12) are refused on the first reading for the fixed and old callers on both Pythons."},
+    {"id": "R3", "status": "PASS", "evidence": "New caller 111: metrics[\"current_in_flight\"] == 0 and metrics[\"current_waiting\"] == 0; the fallback check at 110 stays == 0. W2 c5 (in_flight 1) and c6 (waiting 1) with cost 0 never drain."},
+    {"id": "R4", "status": "PASS", "evidence": "New caller 112: and metrics[\"current_admitted_cost\"] <= 1e-9 (inline literal, inclusive, observed value; no environment, argv, protocol, permit or server input). Because 108-109 already require finite and >= 0, this equals gateway math.isclose(x, 0.0, rel_tol=1e-12, abs_tol=1e-9) (prereg check01, both Pythons). W2: c2 (1e-9) drains with 1 reading; c3 (1.0000000000000003e-09) and c4 (1e-6) do not."},
+    {"id": "R5", "status": "PASS", "evidence": "No hunk touches observe(), remaining(), the sleep at new 116, collect() or any NOT_RUN/FAILED path. W2 non-idle cases on both callers: 10 readings, then ProbeError 'original work deadline exhausted' after about 0.50 s (deadline now + 0.6 s, reserve 0.1 s); an 11th evidence file persists that error (raised by remaining() at line 72 via observe() line 80) and no 11th GET is made."},
+    {"id": "R6", "status": "PASS", "evidence": "Test 360-422 drives driver.drain() through the unchanged observe() with httpx.MockTransport /metrics bodies. epsilon 2.7755575615628914e-17: error None, one GET, readings 1. 1e-6, in_flight 1, waiting 1: an error, at least 2 GETs, return at or after D - R, no caller_drains, and the deadline message when ProbeError. Imports only committed modules (test 3-21); no .runtime import (test-surface01.log). Author run: 4/4 subcases PASS, py3.12 only."},
+    {"id": "R7", "status": "PASS", "evidence": "Own W2 on 629caa23: c1 (the same four-field body) ends in ProbeError after 10 readings on both Pythons, so the epsilon subcase's assertIsNone(error) cannot pass on the old bytes. Role6 executed no red control (BASELINE.json controls_executed 0), so W2 supplies this row. The author's test method itself was not executed against 629caa23."},
+    {"id": "R8", "status": "PASS", "evidence": "pin01 and pin02: smoke 585e606f and smoke test 158c4e32 unchanged; correction.diff has no smoke hunk."},
+    {"id": "R9", "status": "PASS", "evidence": "Test 24-26: ROOT = Path(env); ROOT = ROOT.with_name(ROOT.name + \"-qualification\"); ROOT.mkdir(parents=True, exist_ok=True). For a relative value with a normal final name, the result has the same parent, a different name and the same depth, so it is not equal to, an ancestor of or a descendant of the smoke ROOT; parents=True creates only shared ancestors. An empty or '.' final name makes with_name raise ValueError, a loud failure. Author attempt/IMPORT-ORDER.json (qualification first): smoke ROOT absent after the qualification import, then created by the smoke import. Smoke-first order was not run; by construction the unchanged smoke module (158c4e32) sets up its ROOT before any qualification code runs, and the later sibling mkdir cannot equal or contain that ROOT."},
+    {"id": "R10", "status": "PASS", "evidence": "The caller_drains record at new 113-114 is unchanged (keys drained, observed_at, readings). W2 extra observation: the record serializes with allow_nan=False, and the persisted first reading keeps the residue text 2.7755575615628914e-17, as does Role6 epsilon evidence final-metrics-0001.json."}
+  ],
+  "should": [
+    {"id": "S1", "status": "NOT_DONE_NONBLOCKING", "note": "The residual is not copied into caller_drains; the raw per-reading evidence keeps it exactly."},
+    {"id": "S2", "status": "NOT_IN_COMMITTED_TEST_NONBLOCKING", "note": "The inclusive boundary (1e-9 drains, next float above does not) is shown only by own W2 c2/c3 on both Pythons."},
+    {"id": "S3", "status": "NOT_DONE_NONBLOCKING", "note": "1e-9 is an inline literal without a comment citing gateway abs_tol."},
+    {"id": "S4", "status": "PASS", "note": "No new environment variable; see O-a for the moved output path."}
+  ],
+  "observations_nonblocking": [
+    {"id": "O-a", "text": "Qualification test outputs move from <NATIVE_SMOKE_TEST_OUTPUT>/qualification to the sibling <NATIVE_SMOKE_TEST_OUTPUT>-qualification (for the earlier integrated runner value .runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/native, per own sealed predecessor log mayor-integration-meta01.log line 61: .../scratch/native-qualification). Evidence collection or packaging that looked in the old place must follow."},
+    {"id": "O-b", "text": "exist_ok=True reuses an existing sibling root, while the new method's output.mkdir() has no exist_ok, so a rerun into the same parent fails loudly. Use a fresh parent per CPU generation; this is fail-closed."},
+    {"id": "O-c", "text": "The non-idle subcases accept TimeoutError as well as ProbeError; both are fail-closed non-drain outcomes. W2 observed only ProbeError."},
+    {"id": "O-d", "text": "Analytic expectation, not measured: after k admit/finish operations with ledger magnitude at most L, the float residue is at most about k * L * 1.1e-16, far below 1e-9 for warmup plus a five-request episode. A residue above 1e-9 with zero counters would still fail closed at the original deadline, as intended for a leaked ledger."}
+  ],
+  "witness_w2": {
+    "prereg": "sealed PREREG.json w2_plan_only_if_needed; cases and expectations unchanged",
+    "script_sha256": "36ff2d0c510761dcfddbe1c4d6d4da5cd7198ff20b326bd2f5d07a221f65296f (recorded in commands.log before execution)",
+    "status_py3_14_4": "CONFIRMED (w2-py314.log, w2-out/py3.14.4/result.json)",
+    "status_py3_12_16": "CONFIRMED (w2-py312.log, w2-out/py3.12.16/result.json)",
+    "fixed_9018acee": "c1 drained 1 reading; c2 drained 1; c3-c6 deadline refusal after 10 readings; c7 fallback refusal and c8 invalid refusal on reading 1",
+    "old_629caa23": "c1 and c2 deadline refusal after 10 readings (red); c3-c8 the same as the fixed caller",
+    "bounds": "CPU/mock only, httpx.MockTransport, no sockets; one run per interpreter; about 5 s each; -B -I, PYTHONPATH unset, single-thread env, nice -n19, timeout 60; no pycache created"
+  },
+  "role6_author_evidence_supplied": {
+    "REPORT.json": "9150e07ec9846e43565c0b922113077edf8c138240af46433f05e98b95b86508",
+    "attempt/CONTROL-RESULTS.json": "64b261c24dd9faacd8ecfe12f703934c9096f3c56840493449d25ab9384786a6",
+    "attempt/IMPORT-ORDER.json": "6125c0942b955916507de697f8ce1cefbe3599892a00edfaa42c1def4cc4a01a",
+    "LIMITATIONS.json": "f783a29cc0d7e0143249770ab2d387848105da67ffc396794731e6773177aa8b",
+    "FREEZE.json": "9cd41a509f701b4b4ed07935a41d3f9cce7da975597f9746c29e3043af6d468d",
+    "status_claimed": "F1_F2_FOCUSED_CPU_PASS_PENDING_MAYOR_EXACT_SOURCE_ACCEPTANCE; one method with 4 subcases plus one reverse-import control; py3.12 only",
+    "use": "Author controls are read as metadata and are consistent with this review; acceptance rests on own diff, roundtrip, source rows and W2."
+  },
+  "combined_pre_gpu_source_disposition": {
+    "B2": "PASS_SOURCE (Role4 seal 7b0e6113; bytes 585e606f/158c4e32 unchanged)",
+    "B3": "B3-5 moves from FAIL to PASS through the F1 correction. The other B3 rows keep their sealed 0f0b0e7c dispositions and were not re-reviewed: B3-2 PASS_WITH_GAP (optional started flag), B3-11 PARTIAL (SHOULD), all others PASS.",
+    "F2": "closed by the sibling test namespace; P4 is no longer needed",
+    "B1": "CONDITIONAL on the Mayor's exact-source preregistration and fresh GPU facts",
+    "role4_cpu_source_blockers_remaining": []
+  },
+  "remaining_cpu_actions_mayor": [
+    "P2: bind caller 9018acee and caller test 76b7e936 (instead of 629caa23/7d087a88) in the B1 preregistration and the isolated package; smoke bytes stay 585e606f/158c4e32",
+    "P3 (unchanged): build the isolated package from the fix commit with the experiments/mpc-research/resume-mvp layout, mpc_lab and the two probe inputs, no __pycache__, launched with -B or PYTHONDONTWRITEBYTECODE=1",
+    "Mayor's single composed CPU generation on the final bytes is Mayor evidence; Role4 did not run or review it"
+  ],
+  "gpu_only_or_external": [
+    "G1: B1 live authority from a Mayor exact-source preregistration naming every executed module hash, plus fresh GPU facts and lease. This review is not authority.",
+    "G2: actual startup, readiness, source identity and cleanup with smoke 585e606f in the packaged run.",
+    "G3: actual /metrics after traffic with the drain and fallback keys present, finite and non-negative. The Parent's source-only metrics-contract-source-check.json (8be57a92) addresses the observed_state override concern; Role4 hashed it but did not review it.",
+    "G4: actual warmup 3/3 complete, and actual pre-episode and final drains reaching idle within D - R. The F1 source fix makes this reachable; it does not show it.",
+    "G5: actual episode collected (5 records, workers joined, no persistence errors), then a raw audit showing at least two consecutive observe, plan, apply, reobserve cycles and an admission-effect ledger.",
+    "G6: post-run telemetry closure and body ledger, an independent post-GPU idle check, and cleanup within the reserve; full_wall stays null until the Mayor's cleanup evidence.",
+    "G7: admin_POSTs stays null and native_qualification stays false by design; lifecycle exit 0 is not Native qualification."
+  ],
+  "nonclaims": [
+    "Not GPU authority and not Native qualification.",
+    "No MPC win, performance, calibration or SLO claim; Native14 FAIL unchanged.",
+    "The 1e-9 idle tolerance matches the gateway's own cost-ledger tolerance. Counters and the fallback counter stay exact, so no guard, metric, SLO or Eval criterion is relaxed.",
+    "CPU/mock witnesses show source behavior only, not actual gateway traffic."
+  ],
+  "limitations": [
+    "Scope is R1-R10 only. Other B3 rows, B2, the accepted core and the gateway were hash-checked, not re-reviewed.",
+    "The author's new test method was not executed by Role4 on either caller; R6 rests on source reading plus the author's py3.12 run, and R7 on W2 plus the test's assertions.",
+    "R9 is established for relative values with a normal final name (the runner's value qualifies); values with '..' components were not analyzed, and the smoke test's own handling of such values was not reviewed here.",
+    "W2 uses literal synthetic /metrics bodies; it does not measure actual residue magnitudes.",
+    "The Mayor's B3-final-frozen.patch and composed CPU generation were not reviewed; the Parent's metrics-contract-source-check.json was hashed only.",
+    "The worktree ref was supplied, not verified with Git."
+  ],
+  "reads": [
+    "own sealed predecessor logs and inputs (r24-pre-gpu-final-review-role4), own sealed prereg",
+    "Role6 sealed correction.diff in full (includes the whole added test method); new caller 1-16, import/constant grep and 100-117; new test import grep 3-29, sed 22-27, 358-362 and 420-425, and the def list",
+    "Role6 metadata: BASELINE, REPORT, CONTROL-RESULTS, IMPORT-ORDER, LIMITATIONS, FREEZE; epsilon evidence final-metrics-0001.json and DRAIN-CHECK.json",
+    "smoke write() 42-54 for the empty-key redaction behavior used by the new test"
+  ],
+  "not_read": [
+    "any live or unsealed peer file",
+    "Train or Eval data and probe inputs",
+    "B3-final-frozen.patch and metrics-contract-source-check.json contents"
+  ],
+  "disclosures": [
+    "REPORT.json, w2.py and check_report.py are editor-authored; pins-expected.txt was written by heredoc.",
+    "role6-meta01.log was read with the view tool.",
+    "Logged shell reads and executions are in commands.log through run_logged.sh. Read-only inspection commands run without run_logged.sh (structure checks of REPORT.json and w2-out results and evidence files, Role6 capsule file-existence checks, greps of own logs and of own sealed predecessor REPORT.json and mayor-integration-meta01.log) are disclosed in MANUAL lines; REPORT.json and role6-meta01.log 205-235 were also read with the view tool."
+  ]
+}

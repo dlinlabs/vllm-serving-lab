@@ -1,0 +1,56 @@
+{
+  "schema": "resume-evidence-a-independent-closure-v1",
+  "status": "PASS_AFTER_EXACT_INDEPENDENTLY_APPROVED_WORDING_CORRECTIONS",
+  "milestone": "A only: Resume Ready scoped evidence package. Native deliverable B remains incomplete.",
+  "original_docs_commit": "98e1174de56b01fd4448259c002d9f32223298ad",
+  "independent_owner": "Role4",
+  "independent_report": "resume-evidence-audit-a02-author/REPORT.json",
+  "independent_seal_sha256": "94ba07f2fe624ee37f9411976ca4d128d062dee692e6dcd5de5d54d37f5c89f4",
+  "predecessor_report": "resume-evidence-audit-a01-author/REPORT.json",
+  "predecessor_seal_sha256": "1d819ec0d7be41db23eaf51ab58b0b35ff9161a5d7822d54972c28e1412a3fb6",
+  "input_binding": "Parent verified all eight audit input SHA256 pins against both the original committed Git blobs at 98e1174d and the worktree before editing. The auditor could not run Git; this closes that specific provenance limitation.",
+  "per_bullet_disposition": [
+    {"id": "V1-b1", "original": "PASS", "final": "PASS", "action": "Use exact FAI-1 from the independent final variants."},
+    {"id": "V1-b2", "original": "FAIL", "final": "PASS", "action": "Use exact FAI-2: model-evaluated references, no implied native benchmarking, supported regression-test clause. Closes A1/A2."},
+    {"id": "V2-b1", "original": "PASS", "final": "PASS", "action": "Use exact FAU-1, scoped to current CPU-tested components rather than an integrated native loop."},
+    {"id": "V2-b2", "original": "PASS", "final": "PASS", "action": "Use exact FAU-2: hash-pinned replay and recorded nominal assumptions. Incorporates optional A9 tightening."},
+    {"id": "V3-b1", "original": "FAIL", "final": "PASS", "action": "Use the exact approved corrected_text: streaming, not the package-unsupported asynchronous wording. Closes A10."},
+    {"id": "V3-b2", "original": "PASS", "final": "PASS", "action": "Retain the original passing text."},
+    {"id": "S-b1", "original": "PASS", "final": "PASS", "action": "Retain the original passing summary bullet."},
+    {"id": "S-b2", "original": "FAIL", "final": "PASS", "action": "Use exact approved corrected_text separating planner prototypes and the current nominal planner timing repair. Closes A3."}
+  ],
+  "final_variants": "docs/resume_bullets.md contains the exact independently proposed FAI-1/FAI-2 and FAU-1/FAU-2 pairs, apart from Markdown line wrapping.",
+  "version_notes": "Evidence notes now separate current E6-E8 nominal components from the older E2 frozen planner. No totals are summed across versions.",
+  "quantitative_claims": {
+    "resume_bullet_numeric_claims": 0,
+    "ledger": "The original independent REPORT.json retains every documentation figure with its trace, test or commit reference and verification qualifier.",
+    "interpretation": "DOC_STATED_SOURCE_CITED is not a new independent raw-data replication. Historical figures do not become new native MPC results."
+  },
+  "archive": {
+    "predecessor_regular_files_including_manifest": 17,
+    "predecessor_regular_bytes": 84244,
+    "final_regular_files_including_manifest": 15,
+    "final_regular_bytes": 166712,
+    "symlinks": 0,
+    "preservation": "Both complete original regular-file generations and original manifests preserved without rewriting."
+  },
+  "acceptance_basis": "Apply the independent conditional acceptance and its exact approved text, then mechanically compare every final bullet with that approved or originally passing text. This is not a claim that the auditor reran a review of the edited files.",
+  "remaining_audit_limits": [
+    "Auditor did not re-derive E1-E5 from raw data or read gateway.py.",
+    "Historical dirty-runtime commit d0ccb2 remains not locally resolvable; full clean-checkout reproduction is not claimed.",
+    "Personal attribution of the work was not independently audited.",
+    "Optional low-severity documentation notes remain visible in the original report; they are not silently erased."
+  ],
+  "excluded_claims": [
+    "Native MPC superiority or measured baseline comparison",
+    "Production deployment or SLO/latency guarantees",
+    "Calibrated native prediction",
+    "Completed native closed-loop validation",
+    "Full clean-checkout benchmark reproduction"
+  ],
+  "native_qualification_dependency": false,
+  "new_experiment_required_for_A": false,
+  "new_native_experiments": 0,
+  "pushed": false,
+  "merged": false
+}

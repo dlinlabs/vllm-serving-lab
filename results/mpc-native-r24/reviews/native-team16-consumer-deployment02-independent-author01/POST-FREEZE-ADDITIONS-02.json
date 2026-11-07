@@ -1,0 +1,28 @@
+{
+  "added_at_unix_ns": 1793822827096082585,
+  "additions": [
+    {
+      "bytes": 14615,
+      "manifest_sha256": "fe9cf85739aa06ed534eb4871e0152ae9cefb1a7425af44194aad43c56b7fbb4",
+      "path": "consumer/inputs/base/inputs/launch02/inputs/source13-entry02.py",
+      "reason": "Q-own: c.owner() helper used by owned01 (enable_subreaper/remember/snapshot/alive); needed to state whether launcher remember() discovers an unregistered consumer worker between client Popen and register_leaf, and what survives if launcher cleanup is skipped (D2-F1).",
+      "sha256": "fe9cf85739aa06ed534eb4871e0152ae9cefb1a7425af44194aad43c56b7fbb4"
+    }
+  ],
+  "additions_used_total": 3,
+  "limits": {
+    "additions": 4,
+    "bytes": 4194304,
+    "files": 40
+  },
+  "pinned_before_content_read": true,
+  "pins_sha256": "0df6743ee77563504745c1e6f95636488fd04c141907ba116939e61f3757a398",
+  "previous_additions_sha256": "7d9b263c22684fea88fafcd5d08dd05a69d1af5271aa93b6c09d49b35fb10bc5",
+  "problems": [],
+  "python": "3.14.4",
+  "schema": "team16-d2r01-post-freeze-additions-v1",
+  "sequence": 2,
+  "subject_manifest_sha256": "407bc2e88426f4997064fd7f62d09651af74a2c18c6e4989267f48a601a16ae8",
+  "total_bytes": 396016,
+  "total_files": 39
+}

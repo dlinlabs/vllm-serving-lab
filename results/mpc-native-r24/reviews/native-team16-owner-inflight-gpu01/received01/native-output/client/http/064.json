@@ -1,0 +1,36 @@
+{
+  "auth_values_captured": false,
+  "body_complete": true,
+  "call_settings": {
+    "absolute_deadline": 1361157.205756355,
+    "body_cap_bytes": 1048576,
+    "http_timeout_s": 0.2,
+    "maximum_http_exchanges": 1900
+  },
+  "client_clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+  "client_headers_at": 1361137.21584687,
+  "client_receive_at": 1361137.216161552,
+  "client_send_at": 1361137.213295521,
+  "credential_removed": false,
+  "dispatch_attempted": true,
+  "error_type": null,
+  "http_status": 200,
+  "method": "POST",
+  "path": "/admin/mpc/budget",
+  "request_body": "{\"budget\":32,\"clock_domain\":\"linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]\",\"expected_version\":0,\"identity\":{\"calibration_version\":\"unfitted-not-validated\",\"cost_hash\":\"cf8162ea687a697d698f26d0bd663fdb9a2f172dce71add05d267ac3dfb43833\",\"implementation_hash\":\"5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea\",\"model_version\":\"native-id-unfitted-v1\",\"support_hash\":\"7e6d49ca4a15ab8630fed9a7fa150eb3ab8f2e1a7b0d9585cc8a6c48f666498d\"},\"not_after\":1361137.701306701,\"operation_id\":\"team16-owner-inflight01-bootstrap32\",\"run_id\":\"e73ed70410a44bb3a6f59497b74cdba0\",\"schema\":\"mpc-admission-v1\"}",
+  "request_id": null,
+  "reserved_at": 1361137.212931688,
+  "response_body_base64": "eyJzY2hlbWEiOiJtcGMtYWRtaXNzaW9uLXYxIiwicnVuX2lkIjoiZTczZWQ3MDQxMGE0NGJiM2E2ZjU5NDk3Yjc0Y2RiYTAiLCJjbG9ja19kb21haW4iOiJsaW51eC1tb25vdG9uaWM6MmJjMTU2N2EtNDBhNC00MDFkLWI1YTEtM2FmYjBlZjNiOTU0OnRpbWU6WzQwMjY1NDEwNTVdIiwib3BlcmF0aW9uX2lkIjoidGVhbTE2LW93bmVyLWluZmxpZ2h0MDEtYm9vdHN0cmFwMzIiLCJzdGF0dXMiOiJhcHBsaWVkIiwicHJldmlvdXNfYnVkZ2V0IjozMi4wLCJidWRnZXQiOjMyLCJidWRnZXRfdmVyc2lvbiI6MSwiYXBwbGllZF9hdCI6MTM2MTEzNy4yMTUzMDM0MjZ9",
+  "response_body_sha256": "4e0ca81ce53d1ad7777627c2628da59b099e5842ab1dbcb902f3a1e1353f3c36",
+  "response_bytes_captured": 318,
+  "response_headers": {
+    "content-type": "application/json"
+  },
+  "role": "same-budget-CAS",
+  "sequence": 64,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "scheme": "http"
+  }
+}

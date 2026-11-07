@@ -1,0 +1,61 @@
+test_10_nonzero_body_ledger_closure (test_native_services_smoke.Controls.test_10_nonzero_body_ledger_closure) ... FAIL
+test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) ... 
+  test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) (case='final-bool') ... FAIL
+  test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) (case='producer-bool') ... FAIL
+  test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) (case='float') ... FAIL
+  test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) (case='row-count') ... FAIL
+test_12_no_body_nonzero_ledger_still_refused (test_native_services_smoke.Controls.test_12_no_body_nonzero_ledger_still_refused) ... ok
+test_13_telemetry_and_post_gpu_failures_both_retained (test_native_services_smoke.Controls.test_13_telemetry_and_post_gpu_failures_both_retained) ... FAIL
+
+======================================================================
+FAIL: test_10_nonzero_body_ledger_closure (test_native_services_smoke.Controls.test_10_nonzero_body_ledger_closure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/test_native_services_smoke.py", line 305, in test_10_nonzero_body_ledger_closure
+    self.assertEqual(code, 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) (case='final-bool')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/test_native_services_smoke.py", line 341, in test_11_invalid_body_ledger_closure
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) (case='producer-bool')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/test_native_services_smoke.py", line 341, in test_11_invalid_body_ledger_closure
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) (case='float')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/test_native_services_smoke.py", line 341, in test_11_invalid_body_ledger_closure
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_11_invalid_body_ledger_closure (test_native_services_smoke.Controls.test_11_invalid_body_ledger_closure) (case='row-count')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/test_native_services_smoke.py", line 341, in test_11_invalid_body_ledger_closure
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_13_telemetry_and_post_gpu_failures_both_retained (test_native_services_smoke.Controls.test_13_telemetry_and_post_gpu_failures_both_retained)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/test_native_services_smoke.py", line 367, in test_13_telemetry_and_post_gpu_failures_both_retained
+    self.assertIn("post GPU not proven idle", messages)
+AssertionError: 'post GPU not proven idle' not found in ['telemetry closure or no-request ledger mismatch']
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.198s
+
+FAILED (failures=6)

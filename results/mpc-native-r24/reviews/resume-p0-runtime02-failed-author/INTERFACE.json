@@ -1,0 +1,20 @@
+{
+  "Train_binding_design": "One prior freeze per invocation; static prior/data/tokenizer/producer source/RNG identity excludes available_at. Provider returns make_scenario(...).causal. No Eval tape or workload regeneration API.",
+  "entry": "<same-host-python> -B <frozenRoot>/experiments/mpc-research/resume-mvp/nominal_runtime.py",
+  "forecast_receipt_limit": "Only full CausalScenario plus static prior/RNG/source binding is retained, not the complete NominalForecast wrapper/prior.available_at receipt.",
+  "host_binding": "Generate description on the actual controller host/interpreter: clock_domain, RNG Python version and absolute journal path are bound.",
+  "new_arguments": [
+    "--train-tape <canonical train.tape.json> (mutually exclusive with --scenario-file)",
+    "--forecast-purpose train|evaluation|engineering (required with Train)",
+    "--poll-seconds <0..1>",
+    "--start-at <absolute same-host monotonic target>",
+    "--describe-protocol"
+  ],
+  "offline_description_verified": "Actual protocol/hash/five-module source bundle, expected identity and module paths; no client/HTTP/approval read/journal write/wait. Stable across new prior availability; standalone from outside Root with PYTHONPATH unset passed.",
+  "remaining_blocker": "Correct endpoint canonicalization under a fresh explicit source freeze/control authorization.",
+  "replay_design": "ProtocolBound stores parameters; PlanningInput saves bounded full CausalScenario/window before rollouts; Planned repeats full scenario beside its digest. These new paths are NOT validated by this failed attempt.",
+  "runtime_not_verified": "The real-loop, full journal replay, scheduled/pending restart and partial-solve controls failed early on endpoint binding. Do not promote source-level wiring to successful execution.",
+  "scope": "Runtime protocol hash is not a substitute for the separate proposed campaign protocol hash or Mayor approval.",
+  "shared_start_design": "Wait before run entry; initial target must be nonpast and leave the episode inside min(CLI-entry+60, enabled permit expiry). Existing matching same-target journal resumes old episode. New run uses actual entry, never backdates to target.",
+  "status": "FAILED_CANDIDATE_DO_NOT_ACTIVATE"
+}

@@ -1,0 +1,155 @@
+{
+  "active_finished_at": 1361137.885214735,
+  "active_started_at": 1361137.205756355,
+  "actual_application_at": null,
+  "capture_retention": {
+    "ack_record": 89,
+    "capture_sha256": "3499262d9a13190173d44d13909228d9ef522f67c93606eb93913ef31e31b373"
+  },
+  "component_pass": false,
+  "coverage_complete": false,
+  "coverage_scope": "Both prescribed target stocks source-bound and available while their own HTTP outcomes were pending; misses never resampled.",
+  "engineering_pass": true,
+  "failures": [],
+  "finished_at": 1361138.178717555,
+  "initial_closure": {
+    "baseline_publications": {
+      "chatcmpl-84208f324a0ae58e-b3ebf403": {
+        "put_finished_at": 1361136.862943687,
+        "put_started_at": 1361136.862918287
+      }
+    },
+    "capture_id": "nv2-team16-owner-inflight01-fixed32",
+    "capture_started_at": 1361137.261150188,
+    "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+    "gateway_run_id": "e73ed70410a44bb3a6f59497b74cdba0",
+    "initial_cut_at": 1361137.314639347,
+    "initial_sequence": 1,
+    "native_run_id": "11e5ed3ea0f344039fec366d2fa6e018",
+    "native_sources": {
+      "core_source_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5",
+      "input_post_source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+      "queue_observer_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93",
+      "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b"
+    }
+  },
+  "native_mpc_permitted": false,
+  "nonempty_overlap_count": 1,
+  "offers": [
+    {
+      "cut": "offer-1-cut.json",
+      "fate": "completed_length",
+      "inflight": {
+        "acquisition_token": null,
+        "actual_application_at": null,
+        "available_at": 1361137.475215685,
+        "available_while_transport_pending": true,
+        "client_receive_at": 1361137.62862366,
+        "client_send_at": 1361137.364265967,
+        "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+        "cut": "offer-1-inflight-cut.json",
+        "cut_file_sha256": "c8c0ac5cbb77431d95ceb495430adf15d9d7ffecadb44720309ce0ab6dc00849",
+        "cut_returned_at": 1361137.475215685,
+        "cut_sha256": "c6bf947d234b3bc30c720eeb79bf1f44db601e170eac1a8530b0315f78737b71",
+        "deployable": false,
+        "dispatch": {
+          "client_send_at": 1361137.364265967,
+          "sequence": 71
+        },
+        "native_id": null,
+        "native_kind": "absent",
+        "native_mpc_permitted": false,
+        "nonempty_overlap": false,
+        "pending_at_trigger": true,
+        "prediction_qualified": false,
+        "qualified_model": false,
+        "request_id": "424b40a4154771f71ee2ba61093aa447",
+        "request_token": null,
+        "scheduled_trigger_at": 1361137.384265967,
+        "schema": "team16-source-bound-inflight-evidence-v1",
+        "scope": "One source-bound target inventory with its collector receipt before the managed terminal receipt; not persistent state or exact action time.",
+        "source_at": 1361137.388083445,
+        "source_within_transport": true,
+        "status": "empty_or_unattributed_stock",
+        "stock_counts": {
+          "frontend_unfinished": 0,
+          "ghosts": 0,
+          "issued_request_ids": 0,
+          "issued_routes": 0,
+          "pending_batches": 0,
+          "running": 0,
+          "waiting": 0,
+          "zero_work_routes": 0
+        },
+        "target_scheduler_or_issued_stock": false,
+        "trigger_at": 1361137.384909211,
+        "trigger_delay_s": 0.02
+      },
+      "max_tokens": 16,
+      "ordinal": 1,
+      "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+      "prompt_tokens": 23,
+      "record": 71,
+      "request_id": "424b40a4154771f71ee2ba61093aa447",
+      "send_intent_at": 1361137.362297533
+    },
+    {
+      "cut": "offer-2-cut.json",
+      "fate": "completed_length",
+      "inflight": {
+        "acquisition_token": null,
+        "actual_application_at": null,
+        "available_at": 1361137.72779834,
+        "available_while_transport_pending": true,
+        "client_receive_at": 1361137.850536466,
+        "client_send_at": 1361137.666853205,
+        "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+        "cut": "offer-2-inflight-cut.json",
+        "cut_file_sha256": "6dbbdc6f0966cc2afe4b53e19ceaf8940dd336e14c46b44fe0b58108b8293d6a",
+        "cut_returned_at": 1361137.72779834,
+        "cut_sha256": "22c3e1fba066faf30f6e08113e3a32cc3a8c46e41f42deed2d596bd8054ad8fb",
+        "deployable": false,
+        "dispatch": {
+          "client_send_at": 1361137.666853205,
+          "sequence": 78
+        },
+        "native_id": "chatcmpl-3b71d5b1f883c45e68e4931f8e1fab65-9e160032",
+        "native_kind": "running",
+        "native_mpc_permitted": false,
+        "nonempty_overlap": true,
+        "pending_at_trigger": true,
+        "prediction_qualified": false,
+        "qualified_model": false,
+        "request_id": "3b71d5b1f883c45e68e4931f8e1fab65",
+        "request_token": null,
+        "scheduled_trigger_at": 1361137.686853205,
+        "schema": "team16-source-bound-inflight-evidence-v1",
+        "scope": "One source-bound target inventory with its collector receipt before the managed terminal receipt; not persistent state or exact action time.",
+        "source_at": 1361137.700061143,
+        "source_within_transport": true,
+        "status": "nonempty_available_while_pending",
+        "stock_counts": {
+          "frontend_unfinished": 1,
+          "ghosts": 0,
+          "issued_request_ids": 1,
+          "issued_routes": 1,
+          "pending_batches": 1,
+          "running": 1,
+          "waiting": 0,
+          "zero_work_routes": 0
+        },
+        "target_scheduler_or_issued_stock": true,
+        "trigger_at": 1361137.687445539,
+        "trigger_delay_s": 0.02
+      },
+      "max_tokens": 16,
+      "ordinal": 2,
+      "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+      "prompt_tokens": 23,
+      "record": 78,
+      "request_id": "3b71d5b1f883c45e68e4931f8e1fab65",
+      "send_intent_at": 1361137.665030902
+    }
+  ],
+  "schema": "team16-owner-inflight-result-v1"
+}

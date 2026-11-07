@@ -1,0 +1,19 @@
+{
+  "before": {
+    "bindings": 77,
+    "input_sha256": "3ee93fe6df50b2847f6fc7f3ab27f5329a00a71d5ad476f71824114b44ecb765",
+    "originals": true,
+    "protocol_sha256": "df8ea48fc7257453da97b7d3a3c5214d4712279c047bfa7f484e92f556ea08c9"
+  },
+  "bindings": [
+    {
+      "bytes": 32966,
+      "copy": "inputs/source-tree/experiments/mpc-research/native-r24-prepared-physical13/collect_azure.py",
+      "sha256": "4b92fa2c68d8f6f4586538469aacc3d6d82ef5db817b19f8a690f5e0d2866784",
+      "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/mpc-native-r23/runtime/r24-native-prepared-physical-source13-prospective02.tar.gz::collect_azure.py"
+    }
+  ],
+  "no_protocol_or_original_input_change": true,
+  "reason": "Both first development attempts had29PASS+1 harness missing-file failure. The original copy-ready declaration hashes collect_azure.py; it never imports or runs it. Its hash was already committed by the frozen Source13 closure.",
+  "schema": "team16-owner-acquisition-supplement-v1"
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "role3-pre-gpu-b2-plan-v1",
+  "model_id": "gpt-6-astra",
+  "reasoning_effort": "max",
+  "identity_basis": "retained Mayor-verified model; no delegation or model change",
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "publication_branch_supplied": "snapshot/mpc-p0-evidence-20261105",
+  "head_supplied_not_git_rechecked": "832ab593c8666b8bfa3761b3061355a2c94748c8",
+  "owned_public_paths": [
+    "experiments/mpc-research/resume-mvp/native_services_smoke.py",
+    "experiments/mpc-research/resume-mvp/test_native_services_smoke.py"
+  ],
+  "baseline_driver_sha256": "832c252ae0e7fc634a425acebd79edd796833bc93092e03bf1bf48190fc2b54c",
+  "baseline_test_sha256": "05e2fcd7914aa037a7f58c332ffcb3ddf9327d075a292d6fdc5909a331cab3ec",
+  "protocol_sha256": "08d145c8822a71e7acbb3cb0102bec29eda1de081c5af756140aa1fb3a9ee51a",
+  "read_only_context": "gateway.py lines140-205 only; no gateway edit or whole-file hash",
+  "scope": [
+    "Body traffic may close with equal nonnegative integer final/producer ledger sequences",
+    "Closed/complete status and dropped/write-errors/remaining/unflushed zero remain required",
+    "If body status supplies rows-written, it must be an integer equal to final sequence",
+    "No-body path retains the exact original six-zero condition",
+    "Post-GPU idle validation/error is independent of telemetry validation/error",
+    "Retain body failure, normal completion requirement, KeyboardInterrupt propagation, cleanup and default-OFF behavior"
+  ],
+  "controls": {
+    "python": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python",
+    "planned_attempts": [
+      "red01: four added B2 controls on byte-exact original driver, expected negative",
+      "green01: original nine plus four added B2 controls once after surgical repair"
+    ],
+    "per_attempt_original_runner_budget_seconds": 60,
+    "source_and_test_freeze_before_each_attempt": true,
+    "witness_tests_unchanged_between_red_and_green": true,
+    "cases": [
+      "Nonzero complete body closure accepted; body exception still fails",
+      "Mismatched, negative, boolean/noninteger sequences, inconsistent rows or remaining stock refused",
+      "No-body nonzero sequence still refused",
+      "Telemetry failure and post-GPU nonidle failure both retained"
+    ],
+    "fixture_rule": "Preflight GPU is always idle; only a GPU query after owner exit can be nonidle",
+    "environment": "PYTHONPATH=root:root/experiments/mpc-research/resume-mvp; supplied absolute protocol; new relative output namespace per attempt; -B/nice19/thread1/plugins-off",
+    "all_services_HTTP_GPU_assets_model_identity_mocked": true,
+    "failure_policy": "Retain original failures and every attempt; no threshold weakening or broad old suites"
+  },
+  "not_in_scope": [
+    "B3 or Role6 caller",
+    "Peer files or old mpc-local-r21",
+    "Git operations, commits, agents, network, SSH, GPU, actual services, model loads, installs",
+    "Native cycles/readiness/qualification claims from mocked counts"
+  ]
+}

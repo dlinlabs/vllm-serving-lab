@@ -1,0 +1,84 @@
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  inputs/native_nominal_qualification.py
+"""Default-OFF, Train-only engineering collection; qualification requires raw evidence audit."""
+
+import argparse
+import asyncio
+import hashlib
+import json
+import math
+from pathlib import Path
+import time
+import traceback
+
+import native_services_smoke as services
+
+
+
+
+def error_record(error):
+    return {"type": type(error).__name__, "message": str(error),
+            "traceback": "".join(traceback.format_exception(error))}
+
+
+def strict_copy(value):
+    return json.loads(json.dumps(value, sort_keys=True, allow_nan=False))
+
+
+def strict_load(raw):
+    def constant(value):
+        raise ValueError("nonfinite JSON constant: " + value)
+
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            services.checked(key not in result, "duplicate JSON key: " + key)
+            result[key] = value
+        return result
+
+    return strict_copy(json.loads(raw, parse_constant=constant, object_pairs_hook=pairs))
+
+
+def preserving(action, primary, report, stage):
+    try:
+        return action()
+    except BaseException as error:
+        report["caller_errors"].append({"stage": stage, "error": error_record(error)})
+        if primary is None:
+            raise
+        primary.add_note(stage + ": " + type(error).__name__ + ": " + str(error))
+
+
+def persist_capture(client, path, capture, key):
+    try:
+        return client.write_capture(path, capture)
+    except BaseException as error:
+        try:
+            services.write(path.with_suffix(".write-error.json"), {
+                "capture_unscorable": True, "type": type(error).__name__, "message": str(error),
+            }, key)
+        except BaseException as write_error:
+            error.add_note("write-error receipt also failed: " + type(write_error).__name__
+                           + ": " + str(write_error))
+def source_binding(root, episode, expected):
+    protocol_path = root / services.RELATIVE / "nominal_protocol.json"
+    raw = protocol_path.read_bytes()
+    protocol_sha = hashlib.sha256(raw).hexdigest()
+    services.checked(expected["source_pins"].get(str(protocol_path)) == protocol_sha,
+                     "protocol changed since startup source pins")
+    caller_path = root / services.RELATIVE / "native_nominal_qualification.py"
+    adapter_path = root / services.RELATIVE / "nominal_episode.py"
+    services.checked(Path(__file__).resolve() == caller_path and Path(episode.__file__).resolve() == adapter_path,
+                     "caller/adapter source-root mismatch")
+    pins = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in (caller_path, adapter_path)}
+    services.checked(pins[str(adapter_path)] == ADAPTER_SHA256, "accepted episode adapter changed")
+    pins[str(protocol_path)] = protocol_sha
+    return strict_load(raw), {"source_pins": pins, "caller_sha256": pins[str(caller_path)],
+                             "adapter_sha256": pins[str(adapter_path)], "protocol_sha256": protocol_sha}
+
+
+def recheck(binding):
+    services.checked(all(hashlib.sha256(Path(path).read_bytes()).hexdigest() == sha
+                         for path, sha in binding["source_pins"].items()),
+                     "caller/adapter/protocol changed during collection")
+
+

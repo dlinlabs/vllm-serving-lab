@@ -1,0 +1,102 @@
+MATCH experiments/mpc-research/resume-mvp/nominal_client.py type=regular file bytes_mode=54831 644 lines=971 sha256=933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95 expected=933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95
+MATCH experiments/mpc-research/resume-mvp/test_nominal_client.py type=regular file bytes_mode=41180 644 lines=696 sha256=8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66 expected=8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66
+MATCH experiments/mpc-research/resume-mvp/nominal_metrics.py type=regular file bytes_mode=75924 644 lines=1211 sha256=49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec expected=49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec
+MATCH experiments/mpc-research/resume-mvp/test_nominal_metrics.py type=regular file bytes_mode=36856 644 lines=561 sha256=b325444ba51f6c56182d317e5147011841d46ed835a95abb06a016a1a9222f78 expected=b325444ba51f6c56182d317e5147011841d46ed835a95abb06a016a1a9222f78
+MATCH experiments/mpc-research/native-r23/score_http.py type=regular file bytes_mode=3914 644 lines=71 sha256=9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d expected=9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d
+MATCH gateway.py type=regular file bytes_mode=41800 644 lines=936 sha256=0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570 expected=0b1a80ad
+== api03 seal
+b3e6174797f8d466181ebf42e87b5c45133341ff7351265d166d0cfc1dfc8a1b  SHA256SUMS
+97
+total 128
+dr-x------   4 daniel_lin daniel_lin  4096 Nov  4 16:48 .
+drwxr-xr-x 263 daniel_lin daniel_lin 20480 Nov  4 16:51 ..
+-r--r--r--   1 daniel_lin daniel_lin  4758 Nov  4 16:31 API-FREEZE.json
+-r--r--r--   1 daniel_lin daniel_lin   538 Nov  4 16:23 ORIGINALS.sha256
+-r--r--r--   1 daniel_lin daniel_lin  2140 Nov  4 16:31 PLAN.json
+-r--r--r--   1 daniel_lin daniel_lin  1068 Nov  4 16:48 REPORT-ERRATA-01.json
+-r--r--r--   1 daniel_lin daniel_lin 12728 Nov  4 16:48 SHA256SUMS
+-r--r--r--   1 daniel_lin daniel_lin    25 Nov  4 16:23 STARTED.txt
+-r--r--r--   1 daniel_lin daniel_lin  1308 Nov  4 16:48 SYMLINKS.txt
+dr-x------   3 daniel_lin daniel_lin  4096 Nov  4 16:45 attempts
+-r--r--r--   1 daniel_lin daniel_lin   414 Nov  4 16:47 make_report.log
+-r--r--r--   1 daniel_lin daniel_lin 18555 Nov  4 16:47 make_report.py
+dr-x------   2 daniel_lin daniel_lin  4096 Nov  4 16:23 originals
+-r--r--r--   1 daniel_lin daniel_lin     9 Nov  4 16:31 pytest-empty.ini
+-r--r--r--   1 daniel_lin daniel_lin 16103 Nov  4 16:47 report.json
+-r-xr-xr-x   1 daniel_lin daniel_lin  2047 Nov  4 16:43 run_attempt.sh
+-r--r--r--   1 daniel_lin daniel_lin   424 Nov  4 16:43 static-check.txt
+== api03 selected entries
+6c314f785de79c3061fe68cbfdda2ee8fea9b61c8c61b0ef7e65f895b988f88f  API-FREEZE.json
+fa7740141d24964824006f8c389420b7cee41bc585e276164445c2534ab06f7a  REPORT-ERRATA-01.json
+933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95  attempts/attempt01/pinned/nominal_client.py
+8158dda343ec5e2582b3d8b491a0a79e74e27253c3ba3043b208ffc85785af66  attempts/attempt01/pinned/test_nominal_client.py
+f369e5ce01a54dcfa9086fe8ee4a1528d7e52d19179db78201e06961da4c7bda  originals/nominal_client.py
+fb67d758703b86cc3a0c6705b56fb7e06c596e0e160e75bf471c0cdb911b4613  originals/test_nominal_client.py
+c63600c47a21fd74414e0108da79bff941034767bec3febbdfbdb8980a6964ed  report.json
+== metrics02 seal
+b02a11ab8f43a02d0aaef4cb75a6c0db1f890a460bf5bd108f23ed006d360d8c  SHA256SUMS
+269
+total 168
+dr-x------   4 daniel_lin daniel_lin  4096 Nov  4 15:57 .
+drwxr-xr-x 263 daniel_lin daniel_lin 20480 Nov  4 16:51 ..
+-r--r--r--   1 daniel_lin daniel_lin  2423 Nov  4 15:24 CLIENT01-DISPOSITION.json
+-r--------   1 daniel_lin daniel_lin   348 Nov  4 15:24 ORIGINALS.sha256
+-r--r--r--   1 daniel_lin daniel_lin  1758 Nov  4 15:38 PLAN-AMENDMENT-01.json
+-r--r--r--   1 daniel_lin daniel_lin  1808 Nov  4 15:56 PLAN-ERRATA-01.json
+-r--r--r--   1 daniel_lin daniel_lin  2196 Nov  4 15:33 PLAN.json
+-r--r--r--   1 daniel_lin daniel_lin  4554 Nov  4 15:33 SCHEMA-FREEZE.json
+-r--r--r--   1 daniel_lin daniel_lin   825 Nov  4 15:33 SELECTION-AMENDMENT-01.json
+-r--r--r--   1 daniel_lin daniel_lin  1167 Nov  4 15:37 SELECTION-AMENDMENT-02.json
+-r--r--r--   1 daniel_lin daniel_lin   200 Nov  4 15:24 SELECTION-REPORT-PIN.txt
+-r--r--r--   1 daniel_lin daniel_lin  2052 Nov  4 15:24 SELECTION.json
+-r--r--r--   1 daniel_lin daniel_lin 38107 Nov  4 15:57 SHA256SUMS
+-r--r--r--   1 daniel_lin daniel_lin    25 Nov  4 15:23 STARTED.txt
+-r--r--r--   1 daniel_lin daniel_lin  3634 Nov  4 15:57 SYMLINKS.txt
+dr-x------   4 daniel_lin daniel_lin  4096 Nov  4 15:53 attempts
+-r--r--r--   1 daniel_lin daniel_lin    84 Nov  4 15:57 make_report.log
+-r--r--r--   1 daniel_lin daniel_lin 15462 Nov  4 15:57 make_report.py
+dr-x------   2 daniel_lin daniel_lin  4096 Nov  4 15:24 originals
+-r--------   1 daniel_lin daniel_lin     9 Nov  4 15:52 pytest-empty.ini
+-r--r--r--   1 daniel_lin daniel_lin 16133 Nov  4 15:57 report.json
+-r-xr-xr-x   1 daniel_lin daniel_lin  1993 Nov  4 15:52 run_attempt.sh
+61b31bdbde92d4ede40cbc0d05c62000f514a566fb1ee719e1385d4237107067  PLAN-ERRATA-01.json
+0d4a5b99c14a02472737abac93b28235c87730f7a4cc9e29f2437722d510e74d  report.json
+== independent01 seal
+43b80aff6fb02be80a3d79b60fe7c56c9f4bbd3a461477344c79cb3acaf093bb  SHA256SUMS
+total 384
+drwxr-xr-x   4 daniel_lin daniel_lin  4096 Nov  4 15:20 .
+drwxr-xr-x 263 daniel_lin daniel_lin 20480 Nov  4 16:51 ..
+-r--r--r--   1 daniel_lin daniel_lin  6324 Nov  4 15:11 PLAN-WITNESS01.txt
+-r--r--r--   1 daniel_lin daniel_lin 33161 Nov  4 15:19 REPORT.json
+-r--r--r--   1 daniel_lin daniel_lin   670 Nov  4 14:52 SELECTED-SOURCES.txt
+-r--r--r--   1 daniel_lin daniel_lin  3454 Nov  4 15:20 SHA256SUMS
+-r--r--r--   1 daniel_lin daniel_lin   734 Nov  4 14:52 SOURCE-PINS.sha256
+-r--r--r--   1 daniel_lin daniel_lin   326 Nov  4 14:52 TOOL-PINS.sha256
+-r--r--r--   1 daniel_lin daniel_lin   383 Nov  4 15:11 WITNESS-PINS.sha256
+-r--r--r--   1 daniel_lin daniel_lin 12136 Nov  4 15:20 commands.log
+-r--r--r--   1 daniel_lin daniel_lin    31 Nov  4 14:52 created.utc
+-r--r--r--   1 daniel_lin daniel_lin   694 Nov  4 15:20 drift-recheck01.log
+-r--r--r--   1 daniel_lin daniel_lin   419 Nov  4 14:52 pin-meta01.log
+-r--r--r--   1 daniel_lin daniel_lin  2528 Nov  4 14:52 pin-src01.log
+-r-xr-xr-x   1 daniel_lin daniel_lin   910 Nov  4 14:52 pin_sources.sh
+-r--r--r--   1 daniel_lin daniel_lin 25290 Nov  4 14:41 pinned-meta-report.json
+drwxr-xr-x   2 daniel_lin daniel_lin  4096 Nov  4 14:52 pinned-src
+-r--r--r--   1 daniel_lin daniel_lin   322 Nov  4 15:20 report-json-check-python312-01.log
+-r--r--r--   1 daniel_lin daniel_lin   321 Nov  4 15:20 report-json-check-python314-01.log
+-r-xr-xr-x   1 daniel_lin daniel_lin   323 Nov  4 14:52 run_logged.sh
+-r--r--r--   1 daniel_lin daniel_lin     0 Nov  4 14:52 view-.log
+-r--r--r--   1 daniel_lin daniel_lin 25290 Nov  4 14:52 view-meta-01.log
+-r--r--r--   1 daniel_lin daniel_lin 60820 Nov  4 14:52 view-metrics-01.log
+-r--r--r--   1 daniel_lin daniel_lin  8943 Nov  4 14:52 view-scenario-01.log
+-r--r--r--   1 daniel_lin daniel_lin  9880 Nov  4 14:52 view-scentest-01.log
+-r--r--r--   1 daniel_lin daniel_lin  4189 Nov  4 14:52 view-score-01.log
+-r--r--r--   1 daniel_lin daniel_lin 26834 Nov  4 14:52 view-tests-01.log
+-r--r--r--   1 daniel_lin daniel_lin 27620 Nov  4 14:52 view-workload-01.log
+-r--r--r--   1 daniel_lin daniel_lin   300 Nov  4 15:13 witness-crosspy-diff01.log
+-r--r--r--   1 daniel_lin daniel_lin   703 Nov  4 15:11 witness-freeze01.log
+-r--r--r--   1 daniel_lin daniel_lin    28 Nov  4 15:11 witness-prefreeze-ast01.log
+-r--r--r--   1 daniel_lin daniel_lin  3620 Nov  4 15:11 witness-py312-01.log
+-r--r--r--   1 daniel_lin daniel_lin  3619 Nov  4 15:11 witness-py314-01.log
+drwxr-xr-x   4 daniel_lin daniel_lin  4096 Nov  4 15:05 witness-src
+-r--r--r--   1 daniel_lin daniel_lin   567 Nov  4 15:05 witness-src-copy01.log
+-r--r--r--   1 daniel_lin daniel_lin 15267 Nov  4 15:11 witness_metrics01.py

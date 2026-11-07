@@ -1,0 +1,263 @@
+--- capsule01/experiments/mpc-research/resume-mvp/nominal_planner.py
++++ successor02-final/experiments/mpc-research/resume-mvp/nominal_planner.py
+@@ -15,6 +15,8 @@
+ 
+ Clock/read_state callbacks must be trustworthy, bounded and in the snapshot's
+ local monotonic clock domain. Guards are cooperative, not hard preemption.
++Fixed runtime uses the actual action expiry and current guarded time, not the
++MPC solver deadline or its scheduled future first-action time.
+ The coordinator must recheck state/expiry, honor not_before, obtain its OWN
+ authorization and record actual application. No HTTP, actuation or RNG is here.
+ """
+@@ -107,6 +109,8 @@
+ 
+ @dataclass(frozen=True)
+ class DecisionWindow:
++    """Fixed uses only entered_at/action_deadline, not the two MPC-only times."""
++
+     entered_at: float
+     solve_deadline: float
+     first_action_at: float
+@@ -167,6 +171,8 @@
+ 
+ @dataclass(frozen=True)
+ class FixedChoice:
++    """A MODEL forecast reference, never an empirically selected GPU policy."""
++
+     budget: float
+     identity: Identity
+     training_panel_sha256: tuple[str, ...]
+@@ -212,13 +218,16 @@
+         self, snapshot: Snapshot, identity: Identity, window: DecisionWindow,
+         clock_domain: str, read_state: Callable[[], StateVersion],
+         clock: Callable[[], float], parameters: ModelParameters,
++        *, solver: bool = True,
+     ):
+         _require(type(window) is DecisionWindow, "invalid_decision_window")
+         _require(callable(read_state) and callable(clock), "missing_guard_callbacks")
+         self.snapshot, self.identity, self.window = snapshot, identity, window
+         self.clock_domain, self.read_state, self.clock = clock_domain, read_state, clock
+         self.parameters, self.ledger_checked = parameters, False
+-        _require(all(_number(v) for v in asdict(window).values()), "invalid_decision_window")
++        self.solver = solver
++        times = asdict(window).values() if solver else (window.entered_at, window.action_deadline)
++        _require(all(_number(v) for v in times), "invalid_decision_window")
+         self.last = window.entered_at
+ 
+     def _time(self) -> float:
+@@ -245,15 +254,25 @@
+                 )
+             self.ledger_checked = True
+         w = self.window
+-        _require(
+-            w.entered_at < w.solve_deadline <= w.entered_at + CONFIG.max_wall_s
+-            and w.solve_deadline <= w.first_action_at < w.action_deadline
+-            and w.action_deadline <= self.snapshot.sampled_at + MAX_SOURCE_AGE_S,
+-            "invalid_decision_window",
+-        )
+-        _require(now < w.solve_deadline, "solve_deadline_exhausted")
++        if self.solver:
++            _require(
++                w.entered_at < w.solve_deadline <= w.entered_at + CONFIG.max_wall_s
++                and w.solve_deadline <= w.first_action_at < w.action_deadline
++                and w.action_deadline <= self.snapshot.sampled_at + MAX_SOURCE_AGE_S,
++                "invalid_decision_window",
++            )
++            _require(now < w.solve_deadline, "solve_deadline_exhausted")
++            applicable_at = w.first_action_at
++        else:
++            _require(
++                w.entered_at < w.action_deadline
++                and w.action_deadline <= self.snapshot.sampled_at + MAX_SOURCE_AGE_S,
++                "invalid_decision_window",
++            )
++            _require(now < w.action_deadline, "action_deadline_exhausted")
++            applicable_at = now
+         _require(self.snapshot.budget in BUDGETS, "unsupported_received_budget")
+-        times = tuple(w.first_action_at + i * CONFIG.slot_s for i in range(3))
++        times = tuple(applicable_at + i * CONFIG.slot_s for i in range(3))
+         _require(all(a < b for a, b in zip(times, times[1:])), "nonadvancing_action_times")
+         return now
+ 
+@@ -451,7 +470,11 @@
+         )
+ 
+     def freeze_fixed(self, training: tuple[ForecastPanel, ...]) -> FixedChoice:
+-        """Train-only reference selection; never select a benchmark cap on Eval."""
++        """Freeze a MODEL-only Train reference, never select on Eval.
++
++        Empirical GPU Train selection needs a separate typed path, not invented
++        ForecastPanels passed through this model-reference interface.
++        """
+         _require(type(training) is tuple and 1 <= len(training) <= 16, "bounded_train_panels_required")
+         totals = {budget: Fraction(0) for budget in BUDGETS}
+         hashes = []
+@@ -471,8 +494,15 @@
+         clock_domain: str, read_state: Callable[[], StateVersion],
+         clock: Callable[[], float] = time.monotonic,
+     ) -> NominalDecision:
+-        """Runtime Fixed does not run or wait for the comparative model solver."""
+-        guard = _Guard(snapshot, self.identity, window, clock_domain, read_state, clock, self.parameters)
++        """Immediately applicable MODEL-reference Fixed; no solver wait/deadline.
++
++        not_before is the final successful guard's current time, not an ACK or
++        a measured application time. Only entry and actual action expiry apply.
++        """
++        guard = _Guard(
++            snapshot, self.identity, window, clock_domain, read_state, clock, self.parameters,
++            solver=False,
++        )
+         guard.check()
+         _require(
+             type(choice) is FixedChoice and choice.identity == self.identity
+@@ -491,10 +521,15 @@
+         )
+         expected = min(choice.candidate_totals, key=lambda row: (-row[1], Fraction(row[0])))[0]
+         _require(choice.budget == expected, "fixed_choice_mismatch")
++        window = replace(window, first_action_at=guard._time())
+         plan = TimedPlan((choice.budget,) * 3, snapshot.budget, snapshot.sampled_at, window.first_action_at)
+         decision = self._decision("fixed", plan, snapshot, window, None, None, 0)
+-        guard.check()
+-        return decision
++        applicable_at = guard.check()
++        return replace(
++            decision,
++            plan=replace(plan, first_action_at=applicable_at),
++            first_action=replace(decision.first_action, not_before=applicable_at),
++        )
+ 
+     @staticmethod
+     def _decision(policy, plan, snapshot, window, lower, upper, evaluated):
+--- capsule01/experiments/mpc-research/resume-mvp/test_nominal_planner.py
++++ successor02-final/experiments/mpc-research/resume-mvp/test_nominal_planner.py
+@@ -271,6 +271,130 @@
+         with self.assertRaisesRegex(n.PlanningRefused, "v1_parameters_not_frozen"):
+             n.NominalPlanner(changed)
+ 
++    def model_fixed_reference(self):
++        snapshot, source, window, _, kwargs = self.case(
++            offers=(FutureOffer("good", 0.2, 0, 3300, 1),), purpose="train",
++        )
++        panel = self.planner.evaluate(snapshot, source, window, **kwargs)
++        return self.planner.freeze_fixed((panel,))
++
++    def test_fixed_timing_ignores_future_solver_start_without_backdating(self):
++        choice = self.model_fixed_reference()
++        snapshot, _, window, _, kwargs = self.case()
++        now = window.entered_at + 0.02
++        with patch.object(n, "rollout", side_effect=AssertionError("Fixed must not solve")) as forecast:
++            decision = self.planner.fixed_action(
++                snapshot, choice, window, clock=lambda: now, **kwargs,
++            )
++        forecast.assert_not_called()
++        self.receipt(
++            "fixed-timing-future-start", applicable_offset=decision.first_action.not_before - snapshot.sampled_at,
++            current_offset=now - snapshot.sampled_at,
++            solver_first_offset=window.first_action_at - snapshot.sampled_at,
++            runtime_rollout_calls=forecast.call_count,
++        )
++        self.assertEqual(decision.first_action.not_before, now)
++        self.assertEqual(decision.plan.first_action_at, now)
++        self.assertLess(decision.first_action.not_before, window.first_action_at)
++        self.assertEqual(decision.first_action.not_after, window.action_deadline)
++        prefix = now - snapshot.sampled_at
++        self.assertEqual(decision.plan.budget_at(prefix - 0.001), snapshot.budget)
++        self.assertEqual(decision.plan.budget_at(prefix), choice.budget)
++
++    def test_fixed_timing_survives_elapsed_solver_deadline_with_fresh_state(self):
++        choice = self.model_fixed_reference()
++        snapshot, source, window, _, kwargs = self.case()
++        now = window.entered_at + 0.15
++        snapshot = replace(snapshot, sampled_at=now - 0.01)
++        self.assertGreater(now, window.solve_deadline)
++        self.assertLess(now, window.action_deadline)
++        with patch.object(n, "rollout", side_effect=AssertionError("Fixed must not solve")) as forecast:
++            try:
++                decision = self.planner.fixed_action(
++                    snapshot, choice, window, clock=lambda: now, **kwargs,
++                )
++            except n.PlanningRefused as exc:
++                self.fail("Fixed incorrectly inherited the expired MPC solver deadline: " + str(exc))
++        forecast.assert_not_called()
++        self.receipt(
++            "fixed-timing-elapsed-solver", elapsed_from_entry=now - window.entered_at,
++            source_age=now - snapshot.sampled_at,
++            applicable_offset=decision.first_action.not_before - snapshot.sampled_at,
++            runtime_rollout_calls=forecast.call_count,
++        )
++        self.assertEqual(decision.first_action.not_before, now)
++        self.assertEqual(decision.plan.first_action_at, now)
++        self.assertEqual(decision.first_action.not_after, window.action_deadline)
++        for policy in ("mpc", "one_move"):
++            with self.subTest(policy=policy), patch.object(n, "rollout") as forecast:
++                with self.assertRaisesRegex(n.PlanningRefused, "solve_deadline_exhausted"):
++                    self.planner.plan(
++                        snapshot, source, window, policy=policy, clock=lambda: now, **kwargs,
++                    )
++                forecast.assert_not_called()
++
++    def test_fixed_keeps_actual_expiry_source_and_state_guards(self):
++        choice = self.model_fixed_reference()
++        for mode, reason in (
++            ("expired", "action_deadline_exhausted"),
++            ("late-read", "action_deadline_exhausted"),
++            ("stale", "stale_snapshot"),
++            ("version", "state_version_changed"),
++            ("clock-domain", "clock_domain_mismatch"),
++            ("clock-regression", "nonmonotonic_clock"),
++            ("identity", "identity_mismatch"),
++            ("ledger", "ledger_cost_mismatch"),
++        ):
++            with self.subTest(mode=mode):
++                snapshot, _, window, state, kwargs = self.case()
++                now = [window.entered_at + 0.02]
++                if mode == "expired":
++                    now[0] = window.action_deadline
++                elif mode == "stale":
++                    snapshot = replace(snapshot, sampled_at=snapshot.sampled_at - 0.6)
++                elif mode == "version":
++                    state[0] = replace(state[0], budget_version=state[0].budget_version + 1)
++                elif mode == "clock-domain":
++                    kwargs["clock_domain"] = "another-clock"
++                elif mode == "identity":
++                    snapshot = replace(
++                        snapshot, identity=replace(snapshot.identity, calibration_version="qualified"),
++                    )
++                elif mode == "ledger":
++                    snapshot = replace(snapshot, requests=(
++                        RequestMark("bad-cost", 100.0, 0, 1, snapshot.sampled_at, snapshot.sampled_at),
++                    ))
++                else:
++                    def delayed_state():
++                        now[0] = window.action_deadline if mode == "late-read" else window.entered_at - 0.01
++                        return state[0]
++                    kwargs["read_state"] = delayed_state
++                with patch.object(n, "rollout") as forecast:
++                    with self.assertRaisesRegex(n.PlanningRefused, reason):
++                        self.planner.fixed_action(
++                            snapshot, choice, window, clock=lambda: now[0], **kwargs,
++                        )
++                    forecast.assert_not_called()
++
++    def test_fixed_rechecks_deadline_after_result_construction(self):
++        choice = self.model_fixed_reference()
++        snapshot, _, window, _, kwargs = self.case()
++        now = [window.entered_at + 0.02]
++        original = n.NominalPlanner._decision
++
++        def late_result(*args):
++            decision = original(*args)
++            now[0] = window.action_deadline
++            return decision
++
++        with patch.object(n.NominalPlanner, "_decision", side_effect=late_result):
++            with patch.object(n, "rollout") as forecast:
++                with self.assertRaisesRegex(n.PlanningRefused, "action_deadline_exhausted"):
++                    self.planner.fixed_action(
++                        snapshot, choice, window, clock=lambda: now[0], **kwargs,
++                    )
++                forecast.assert_not_called()
++
+ 
+ if __name__ == "__main__":
+     unittest.main()

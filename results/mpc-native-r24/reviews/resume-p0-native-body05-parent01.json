@@ -1,0 +1,16 @@
+{
+  "schema": "resume-p0-native-engineering-caller-candidate-v1",
+  "source_base_commit": "bb367465ecc68bee666d99396b6feaaac931c3cb",
+  "CPU_entry_lifecycle_persistence": "PASS",
+  "native_collect_body": "NOT_EXECUTED",
+  "source_acceptance": "CANDIDATE_PENDING_BOUNDED_CALLER_WIRING_REVIEW",
+  "evidence_directory": "resume-p0-native-body05-proof",
+  "evidence_sha256": "504d774bba078629dd6170c6a492398cb57f2af78d85bd8725ef72db310fdb83",
+  "regular_files": 65,
+  "tests": "11 PASS plus2 subtests, one Python3.12 generation; no actual HTTP/model/GPU",
+  "purpose": "Compose already-accepted components under the real owner context, not another model or sampling iteration.",
+  "request_plan": "Immutable three-request warmup256/1024/3072, then existing five-request Train-only engineering boundary probe. Shared future start chosen after local preparation; original deadline/reserve and all source/clock/permit/version guards remain.",
+  "accounting": "Raw capture on every warmup path; unscorable receipt on write failure; episode owns all request fates and worker joins. Unknown control POST count stays null. Lifecycle final report ends after owned cleanup; adapter full_wall remains null, not falsely finalized.",
+  "qualification": "Not auto-declared by caller exit0 or lifecycle_passed. Mayor must reconstruct actual cycles, ledger, actions, admission effect and outcomes from raw evidence; holds/ACKs alone fail.",
+  "next": "Accept sealed episode04, complete bounded caller wiring review, commit exact full package and separate preregistration before one Native qualification. No Fixed Train/Eval."
+}

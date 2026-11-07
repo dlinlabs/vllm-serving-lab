@@ -1,0 +1,44 @@
+{
+  "schema": "resume-p0-service-ownership-parent-v1",
+  "base_commit": "dcdb6fe8f880997e7c8096453bbce79316f6eb13",
+  "status": "CPU_COMPONENT_ACCEPTED_ACTUAL_HOST_BINDING_PENDING",
+  "owner": "Role3 retained gpt-6-astra/max",
+  "author_capsule": ".runtime/r24-resume-p0-nominal-services01",
+  "archive": "results/mpc-native-r24/reviews/resume-p0-services-author01",
+  "author_seal_sha256": "5103e0974eab4a52e208a5c3a0e26ae9d83355c8626ba1dd0d4d50af53e31a1a",
+  "archive_files": 123,
+  "archive_bytes": 163135,
+  "source_sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+  "tests_sha256": "528a534e6805eb3c0c772821d0cc728b840530611eb460b6e1453f6dd555f467",
+  "parent_review": "Full 442-line helper, 285-line tests, delivery and API read. Root source/test bytes match sealed delivery; all original sealed members verified. No rerun of already-green author CPU controls.",
+  "controls": {
+    "per_python": 6,
+    "interpreters": ["3.14.4", "3.12.16"],
+    "attempts_per_python": 1,
+    "failed_test_attempts": 0,
+    "service_descendant_identities": 18,
+    "fresh_service_and_supervisor_identities_gone": 21,
+    "monitor_threads_joined": true,
+    "negative_cases": "Default-OFF, both lock conflicts, startup failure, body/descendant cleanup, original deadline and injected signal-denial POISON/refusal are preserved."
+  },
+  "scope": {
+    "default_off": true,
+    "exact_service_names": ["engine", "gateway"],
+    "production_lock_paths": [
+      "/workspace/pr32-r23/r24-team16-mayor-gpu.lock",
+      "/workspace/pr32-r23/native-component-GPU-8610519d.lock"
+    ],
+    "owner": "Dedicated cooperating process, no unrelated direct children. Use in-process request/controller work.",
+    "cleanup": "Original absolute deadline with preregistered cleanup reserve, pidfd/starttick identity, subreaper and bounded discovery; unknown/failed/nonjoined ownership retains poison.",
+    "episode_lifetime": "Restart both service roots each episode; preserve common backend settings and charge actual setup/warmup/drain/cleanup wall time."
+  },
+  "limitations": [
+    "No actual-host model startup, lock acquisition, shutdown or poison qualification has run.",
+    "No universal OS/process-tree, owner-crash, callback or blocking-filesystem hard-real-time guarantee.",
+    "The author test guardian cleaned only intentionally denied owned dummies under an independently frozen aggregate deadline; it is not a production grace reset.",
+    "Actual driver must verify exact lock binding, GPU/source/clock/assets/configuration, bounded readiness and final receipts before any Native result is accepted.",
+    "Private actual-host logs/auth material must not be blindly archived or committed."
+  ],
+  "native_qualified": false,
+  "B_complete": false
+}

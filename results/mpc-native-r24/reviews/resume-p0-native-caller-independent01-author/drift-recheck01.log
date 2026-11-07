@@ -1,0 +1,24 @@
+== ROOT source pins
+experiments/mpc-research/resume-mvp/native_nominal_qualification.py: OK
+experiments/mpc-research/resume-mvp/native_services_smoke.py: OK
+experiments/mpc-research/resume-mvp/nominal_runtime.py: OK
+experiments/mpc-research/resume-mvp/nominal_client.py: OK
+experiments/mpc-research/resume-mvp/nominal_permit.py: OK
+results/mpc-native-r24/reviews/resume-p0-episode03-failed-author/INTERFACE.json: OK
+== ROOT context hash-only pins
+results/mpc-native-r24/reviews/resume-p0-native-body05-parent01.json: OK
+results/mpc-native-r24/reviews/resume-p0-native-body05-proof/SHA256SUMS: OK
+results/mpc-native-r24/reviews/resume-p0-episode03-failed-author/SHA256SUMS: OK
+== snapshot set vs pins
+SNAPSHOT_SET_MATCH
+== tool pins
+run_logged.sh: OK
+created.utc: OK
+== sizes
+    17   2917 inputs/INTERFACE.json
+   152   7290 inputs/native_nominal_qualification.py
+   343  18298 inputs/native_services_smoke.py
+   971  54831 inputs/nominal_client.py
+   104   3902 inputs/nominal_permit.py
+   836  45768 inputs/nominal_runtime.py
+  2423 133006 total

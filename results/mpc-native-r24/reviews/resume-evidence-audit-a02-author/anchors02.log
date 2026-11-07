@@ -1,0 +1,214 @@
+PINS_OK
+== resume-p0-components-parent02.json
+     1	{
+     2	  "scope": "CPU component acceptance only; not P0 completion or Native authorization",
+     3	  "predecessor_commit": "814a9b5aa38dd8783ae643270b5aed59e1bc12b7",
+     4	  "planner02": {
+     5	    "archive": "resume-p0-planner02-author",
+     6	    "seal_sha256": "204f7ab96f102dcd6e3f7617b65722437c7f873299bab1551c2e3fb743814b6b",
+     7	    "verified_members_excluding_seal": 125,
+     8	    "source_sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1",
+     9	    "tests_sha256": "0f716b28de50daa79110bb84b82022654ec5586a7b8e7147f4d7dd6fc903988b",
+    10	    "finding": "P0-FIXED-TIME-01",
+    11	    "disposition": "CPU timing defect repaired: Fixed is applicable at guarded current time and ignores MPC-only solve timing while retaining actual expiry, source, clock, ledger and version checks.",
+    12	    "review": "Parent previously read full planner01; now read the exact final source/test diff and report, including both intentional red regressions and construction-deadline correction.",
+    13	    "MPC_OneMove": "Unchanged solver timing and full-panel selection; no claim that CPU controls validate Native predictions.",
+    14	    "strong_fixed": "freeze_fixed remains only a model-ranked reference. Empirical Train cap selection and static installation are still required."
+    15	  },
+    16	  "workload01": {
+    17	    "archive": "resume-p0-workload-author01",
+    18	    "seal_sha256": "ab2fa0b2a413edcec3ea193526a61f51f28534595250d4dc3da1ebb7cd78e80b",
+    19	    "verified_members_excluding_seal": 71,
+    20	    "source_sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4",
+    21	    "tests_sha256": "1c73aba0c9967a36b8e1fc0ac9ecd79cbf817f2d007e891f9fc96790cf5bcfe1",
+    22	    "train": {"offers": 88, "sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"},
+    23	    "eval": {"offers": 104, "sha256": "8961340fb0c15158a93346d1807d7d34747674c604d2eef242faaaaa5e4d4fb0"},
+    24	    "canonical_tapes": "Only archive/tapes-v1/{train.tape.json,eval.tape.json}; scratch contains deliberately damaged test variants, not experiment inputs.",
+    25	    "parent_review": "Full source and tests read; whole frozen author inventory and actual worktree source hashes verified. Eval tape contents were hashed, not displayed or used for forecasting/tuning.",
+    26	    "holdout": "Procedural synthetic draw separation with purpose/domain/membership/provenance checks; public seeds, not OOD or real-trace generalization.",
+    27	    "acceptance_limit": "Generator CPU controls and fake-tokenizer adapter accepted; real-tokenizer/client compatibility remains pending the separately preregistered CPU validation."
+    28	  },
+    29	  "parent_CPU": {
+    30	    "plan": "resume-p0-parent-cpu01-plan.json",
+    31	    "proof": "resume-p0-parent-cpu01",
+    32	    "python": "3.14.4",
+    33	    "attempts": 1,
+    34	    "tests": 35,
+    35	    "elapsed_seconds": 0.828,
+    36	    "exit": 0,
+    37	    "meaning": "8 permit + 15 planner + 12 workload focused controls coexist; selector excludes unsealed runtime and metrics.",
+    38	    "not_proved": ["HTTP integration", "actual loop", "GPU prediction accuracy", "fair measured comparison", "clean-checkout end-to-end reproduction"]
+    39	  },
+    40	  "next_required": "Complete the coordinator, real-tokenizer conversion, actual HTTP/clock/source/safety preflight and independent integration review before a separate bounded Native smoke.",
+    41	  "no_push_merge_or_additional_GPU_rental": true
+    42	}
+== resume-p0-tokenizer02-result.json
+     1	{
+     2	  "scope": "Real-tokenizer CPU validation on the existing authorized GPU host; not GPU inference",
+     3	  "status": "PASS",
+     4	  "preregistration_commit": "1e9540caa9dd37f927d5389d05be3d973d234bf7",
+     5	  "plan": "resume-p0-tokenizer02-plan.json",
+     6	  "raw": "resume-p0-tokenizer02-raw",
+     7	  "original_failed_attempt": "resume-p0-tokenizer01-raw",
+     8	  "attempts_after_explicit_local_asset_correction": 1,
+     9	  "exit": 0,
+    10	  "model_label": "Qwen/Qwen3-4B-Instruct-2507",
+    11	  "actual_tokenizer_source": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    12	  "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+    13	  "train_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+    14	  "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+    15	  "train_replay_bytes": 257950,
+    16	  "offers": 88,
+    17	  "measured_chat_template_tokens_equal_requested_labels": 88,
+    18	  "replay_schema_validated": true,
+    19	  "all_prompts_retokenized_and_verified": true,
+    20	  "tokenizer_and_config_asset_hashes_unchanged_before_after": true,
+    21	  "parent_checks": "Returned exact bytes/hash, schema, purpose, offered-tape provenance, 88/88 equality, tokenizer fingerprint, before/after assets and local source SHA matches.",
+    22	  "source_sha256": {
+    23	    "prepare_replay.py": "91e8e66042da8f2387907b4fb8db98c1117b39af4d041bff9c1690e504ebf666",
+    24	    "nominal_workload.py": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4",
+    25	    "trace_workload.py": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f"
+    26	  },
+    27	  "host_versions": {
+    28	    "python": "3.12.3",
+    29	    "transformers": "5.22.1",
+    30	    "tokenizers": "0.23.3",
+    31	    "vllm": "0.30.0",
+    32	    "torch": "2.13.0+cu130",
+    33	    "fastapi": "0.136.3",
+    34	    "httpx": "0.28.1",
+    35	    "pydantic": "2.14.2",
+    36	    "uvicorn": "0.54.0"
+    37	  },
+    38	  "version_provenance_limit": "Package metadata read from this host. This attempt did not start or connect to a backend process; installed vLLM is not evidence that a specific backend binary/config was executed.",
+    39	  "no_Eval_read_or_upload_no_download_no_HTTP_no_GPU_inference": true,
+    40	  "new_serving_preflight_requirement": "Root gateway loads tokenizer using MODEL_NAME and can silently fall back to a character heuristic if the repository ID is not in its cache. Configure the explicit verified local model path, expose the matching backend model alias, verify tokenizer_available and zero fallback requests; derive matching immutable CostSpec/model identity. Do not compare p
+    41	  "remaining_P0": ["causal scenario producer", "actual HTTP coordinator integration", "source/clock/permit/safety validation", "real changed-action closed loop", "empirical Train Fixed selection", "held-out descriptive comparison", "portable raw-to-table and final claims audit"],
+    42	  "no_accuracy_superiority_SLO_guarantee_or_Resume_Ready_claim": true
+    43	}
+== resume-p0-scenario-parent01-result.json
+     1	{
+     2	  "scope": "Causal nominal forecast component and permit dependency acceptance; not real closed-loop acceptance",
+     3	  "status": "CPU_COMPONENT_ACCEPTED",
+     4	  "plan": "resume-p0-scenario-parent01-plan.json",
+     5	  "author_archive": "resume-p0-scenario01-author",
+     6	  "author_seal_sha256": "dee31c6b3792895fd74462b1efb2551628fbebbc0df928c151b563efb2cbd6ae",
+     7	  "verified_members_excluding_seal": 30,
+     8	  "parent_review": "Full 177-line factory, tests and report read. Frozen Train bytes and module hashes checked by the factory; no per-decision tape reads or workload regeneration.",
+     9	  "frozen_prior": {
+    10	    "train_only": true,
+    11	    "offers": 88,
+    12	    "duration_s": 5,
+    13	    "rate_per_s": 17.6,
+    14	    "prompt_output_counts": [[256,128,33],[1024,128,26],[3072,128,29]],
+    15	    "content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc",
+    16	    "real_tokenizer_evidence_commit": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e"
+    17	  },
+    18	  "forecast": {
+    19	    "assumptions": "Stationary nominal Poisson arrivals, independent sampled Train marks, maximum output 128, old output fraction 1, success true, unit service scale and zero transport delays.",
+    20	    "horizon_s": 15,
+    21	    "score_window_s": 5,
+    22	    "contention_tail_s": 10,
+    23	    "cap": 512,
+    24	    "over_cap": "Refuse without truncation or resampling.",
+    25	    "causality": "Prior frozen before source snapshot; availability measured after generation/hash, then freshness rechecked.",
+    26	    "same_decision": "One immutable realization/panel for all paths and both policy selections.",
+    27	    "between_runs": "Seed includes actual source state/run/time. Distinct policy episodes need not receive identical random realizations; exact realized inputs must be retained for replay.",
+    28	    "not_measured": "This is not a fitted Native arrival/service law or proof of prediction accuracy."
+    29	  },
+    30	  "parent_changes": {
+    31	    "nominal_permit.py_sha256": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503",
+    32	    "test_nominal_permit.py_sha256": "c8ef7d7bf7cc7a9f169d3d6db42e61f00e4f8c7fc2b142a9b90fd1b7019d1ec9",
+    33	    "test_nominal_scenario.py_sha256": "5c9c17d32ba4be946a28f2f3c035d6d17c39b1051a5d8faa37fbb0ad73cc4da5",
+    34	    "meaning": "Bind both new forecast dependencies; verify invalidation of a previously matching permit; use committed Train fixture."
+    35	  },
+    36	  "parent_control": {
+    37	    "proof": "resume-p0-scenario-parent01",
+    38	    "python": "3.12.16",
+    39	    "attempts": 1,
+    40	    "passed": 14,
+    41	    "exit": 0,
+    42	    "elapsed_s": 0.035,
+    43	    "log_sha256": "70b443082f255b4ce7830d3056669882c1bccd8d506d3c8320037f6c94e40045",
+    44	    "source": "Scoped Git materialization: exact four staged source/test blobs plus specified files from 23c5e1df9b6d36bc086e8e6e06c09cfaa50fc68e.",
+    45	    "not_full_reproduction": "No experimental runtime02, HTTP, Eval data or GPU inference used; not complete P0 benchmark reproduction."
+    46	  },
+    47	  "integration_pending": [
+    48	    "Runtime02 CLI must use this factory and pacing, retain actual CausalScenario inputs, and expose protocol without self-authorizing.",
+    49	    "All final action-bearing dependencies and actual protocol must be frozen before separate live approval.",
+    50	    "Native model accuracy and legacy qualification gates remain unchanged."
+    51	  ],
+    52	  "Native_or_Resume_Ready": false
+    53	}
+== benchmark 1-71
+     1	# Recorded results and benchmark evidence
+     2	
+     3	Status: **no qualified native MPC-versus-baseline performance result**.
+     4	Historical serving measurements, CPU tests and current component diagnostics
+     5	are intentionally separate. No new experiment was run to write this document.
+     6	
+     7	## E1: historical native serving measurements, not MPC
+     8	
+     9	Hardware/configuration as recorded by the runner: RTX 4090, reported 24,564 MiB,
+    10	driver 595.91.07; configured model Qwen3-4B-Instruct-2507; runner environment
+    11	vLLM 0.30.0, Torch 2.13.0+cu130, Python 3.12.3. The manifests explicitly say
+    12	these package records are not proof of the remote backend version and do not
+    13	observe backend launch provenance; the historical report states the same core
+    14	runtime versions.
+    15	Both captures replay the same Azure-derived arrivals/input lengths with
+    16	synthetic prompts, output cap 128, context 8192 and 300-second arrival windows.
+    17	Source output lengths are not replayed. TTFT SLO is 0.5 seconds.
+    18	
+    19	| Capture | Offered | Completed success | Rejected | Failed | SLO-good completions | SLO goodput (req/s) | Client TTFT p99 (s) |
+    20	|---|---:|---:|---:|---:|---:|---:|---:|
+    21	| Shared A | 7,643 | 1,976 | 5,667 | 0 | 572 | 1.906667 | 2.412583 |
+    22	| Shared B | 7,643 | 2,059 | 5,584 | 0 | 736 | 2.453333 | 2.202635 |
+    23	
+    24	TTFT p99 is conditional on successful requests; rejection is shown alongside
+    25	it. SLO goodput counts eventual successful completions whose first content
+    26	meets the scheduled-arrival TTFT deadline, divided by offered duration.
+    27	The arrival window is not total wall time including startup/drain.
+    28	
+    29	These are **scheduled identification captures on different hosts**, with
+    30	different protocol declarations, budget-schedule orders, replay-plan hashes
+    31	and gateway virtual-environment paths. They are not MPC, Fixed/OneMove
+    32	comparisons, causal schedule effects or proof of an optimal cap.
+    33	Historical integrity/load/control qualification does not mean every request
+    34	met its SLO. Recorded `git_dirty=true` is retained; source hashes, not a claim
+    35	of a pristine checkout, support the archived runtime identity.
+    36	
+    37	### E1 evidence chain and reconstruction limits
+    38	
+    39	| Item | Exact evidence |
+    40	|---|---|
+    41	| Reports | [A report](../results/shared-client-20261018/captures/shared-client-a-r1/report.json), [B report](../results/shared-client-20261018/captures/shared-client-b-r1/report.json) |
+    42	| Configuration and trace identity | [A manifest](../results/shared-client-20261018/captures/shared-client-a-r1/manifest.json), [B manifest](../results/shared-client-20261018/captures/shared-client-b-r1/manifest.json) |
+    43	| Complete raw archives and file hashes | [Raw-bundle index](../results/shared-client-20261018/raw-bundle/index.json); browsing subsets are not complete raw captures |
+    44	| Trace SHA256 | `62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e` |
+    45	| Archived independent audits | [verification.json](../results/shared-client-20261018/verification.json) |
+    46	| Exact collection declarations and commands | [Historical report](../results/shared-client-20261018/report.md), [A runbook](../experiments/shared-client-qualification-v1.md), [B runbook](../experiments/shared-client-b-v1.md) |
+    47	| Recorded runtime commit | `d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586` |
+    48	| Evidence publication commit | `aea7694a0af2d1dadc883b4b9e33d1a9bdb61098` |
+    49	
+    50	Historical offline feature/forecast reconstruction command, after using the
+    51	report's extraction helper and recorded analysis environment:
+    52	
+    53	```bash
+    54	python results/shared-client-20261018/reproduce.py \
+    55	  --raw-root /tmp/shared-client-captures \
+    56	  --output-dir /tmp/shared-client-analysis --extended \
+    57	  --code-root /path/to/recorded-runtime-source
+    58	```
+    59	
+    60	This command does not regenerate the E1 outcome table. `reproduce.py` checks
+    61	the 15 manifest-recorded runtime files, then runs `identification_features.py`
+    62	and `forecast_baselines.py` from `--code-root` without checking their hashes.
+    63	It is not a fully source-pinned reproduction path. E1 table reconstruction
+    64	evidence is the archived raw-to-report comparison in `verification.json`,
+    65	not a fresh replay performed for these documents.
+    66	
+    67	The runtime commit was not resolvable in the current local object database
+    68	during this documentation audit. A source tree matching the archived hashes is
+    69	required; the example path is a required input, not a working shipped checkout.
+    70	This is a P0 portability gap. No dependencies were installed and no captures
+    71	were re-extracted/replayed for this documentation change.

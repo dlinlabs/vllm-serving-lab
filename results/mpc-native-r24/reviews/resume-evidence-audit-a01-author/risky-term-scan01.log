@@ -1,0 +1,79 @@
+PINS_OK
+docs/resume_bullets.md:4:closed-loop validation (deliverable B): the claims below do not require B to
+docs/resume_bullets.md:6:prototype, not a completed native MPC deployment. Evidence IDs refer to
+docs/resume_bullets.md:18:Evidence: first bullet E1, including trace identity, archived outcomes,
+docs/resume_bullets.md:30:- Built a Train-only forecast and reproducible replay-input pipeline, preserving
+docs/resume_bullets.md:32:  limitations instead of claiming calibrated native prediction.
+docs/resume_bullets.md:36:The forecast is nominal and uncalibrated; its CPU validation is not an
+docs/resume_bullets.md:45:  commits, including reproducible workload generation and real-tokenizer
+docs/resume_bullets.md:48:Evidence: E1/E4/E5/E6/E7/E8. Do not substitute "production deployed" for
+docs/resume_bullets.md:49:"implemented", or claim full clean-checkout benchmark reproduction.
+docs/resume_bullets.md:53:Do not claim MPC speedup, superior goodput, production use, guaranteed p99,
+docs/resume_bullets.md:55:fully validated GPU scheduling. Do not combine CPU test totals across versions.
+docs/resume_project_summary.md:13:**B — Native Closed-loop MPC Validation:** incomplete. Require at least two
+docs/resume_project_summary.md:16:a preregistered held-out comparison, reproduction and independent audit.
+docs/resume_project_summary.md:23:of vLLM, balancing completed-request SLO goodput, overload rejection and latency.
+docs/resume_project_summary.md:32:trajectories, optimizes over a finite horizon, executes the first action and
+docs/resume_project_summary.md:43:| Implemented and tested observation/consumer deployment components | E3: bounded CPU integration evidence; subsequent D2-F1 blocks live release of that composition. |
+docs/resume_project_summary.md:45:| Corrected baseline timing and validated replay inputs | E6: Fixed no longer inherits solver-only waiting/deadlines. E7: real-tokenizer Train conversion; this was CPU work, not GPU inference. |
+docs/resume_project_summary.md:55:Native deliverable B is complete only when all rows below have reviewable evidence. Winning every
+docs/resume_project_summary.md:56:baseline, convergence of the Native14 posterior, and production deployment are
+docs/resume_project_summary.md:65:| P0 | Report TTFT p50/p95/p99, SLO goodput, throughput, rejection, fairness and full controller overhead, with sample counts and failures. | Historical measurements are partial; current MPC table is unfilled. |
+docs/resume_project_summary.md:66:| P0 | Portable commands/configurations, raw-to-table reconstruction and exact code/data commits; audit every quantitative resume claim. | Historical bundles exist; clean-checkout MVP reproduction remains unverified. |
+docs/resume_project_summary.md:67:| P1 | Better decision-relevant forecasts, overhead reduction, broader workload/load coverage and repeatability estimates. | Only if a P0 result justifies the change. |
+docs/resume_project_summary.md:72:Native14 qualification, waive safety checks, or be presented as a calibrated
+docs/resume_project_summary.md:92:   **Native Closed-loop MPC Validated** only after B closes. Package A and
+docs/resume_project_summary.md:116:These are prototype claims, not production deployment, guaranteed latency, or
+docs/resume_project_summary.md:117:MPC superiority. Role-specific alternatives are in [resume bullets](resume_bullets.md).
+docs/resume_project_summary.md:126:| Sampling & Mixing | Estimation reproducibility and numerical limitations; no convergence campaign for P0. |
+docs/resume_project_summary.md:127:| Model Improvement | Only validated improvements that change or explain controller decisions. |
+docs/resume_project_summary.md:130:| Closed-loop Runtime | Actual first-action loop and bounded failure/cleanup behavior. |
+docs/benchmark_results.md:17:Source output lengths are not replayed. TTFT SLO is 0.5 seconds.
+docs/benchmark_results.md:19:| Capture | Offered | Completed success | Rejected | Failed | SLO-good completions | SLO goodput (req/s) | Client TTFT p99 (s) |
+docs/benchmark_results.md:24:TTFT p99 is conditional on successful requests; rejection is shown alongside
+docs/benchmark_results.md:25:it. SLO goodput counts eventual successful completions whose first content
+docs/benchmark_results.md:34:met its SLO. Recorded `git_dirty=true` is retained; source hashes, not a claim
+docs/benchmark_results.md:54:python results/shared-client-20261018/reproduce.py \
+docs/benchmark_results.md:60:This command does not regenerate the E1 outcome table. `reproduce.py` checks
+docs/benchmark_results.md:63:It is not a fully source-pinned reproduction path. E1 table reconstruction
+docs/benchmark_results.md:78:| E3 | Deployment composition: nine CPU integration cases passed per Python, with bounded acceptance and independent full-composition review still pending at that acceptance; never live-eligible. Later blocked by D2-F1 (E5). | [Acceptance/config index](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01.json), [exact archived command](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01/attempts/mayor-py314.command.json). Absolute paths require relocation; not a portable CLI claim. | `c00d29d2296bda7e249578f2de7c08650a4d79c9` |
+docs/benchmark_results.md:80:| E5 | Source-backed D2-F1 cleanup bypass; no observed live orphan incident asserted. Live use of the affected launcher is blocked. | [Mayor disposition](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-parent01.json), [independent review](../results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-author01/REVIEW.md). No live reproduction command was run. | `26139be5f90ec7386e2c578c95aa331aa0052244` |
+docs/benchmark_results.md:82:No row above establishes calibrated prediction, actual MPC benefit, production
+docs/benchmark_results.md:83:deployment, deterministic SLO compliance or a general OS cleanup theorem.
+docs/benchmark_results.md:94:| E7 | All 88 frozen Train prompts matched requested chat-template token counts with the real cached tokenizer. CPU conversion on the existing host, no inference. | [Result](../results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json), [plan/command](../results/mpc-native-r24/reviews/resume-p0-tokenizer02-plan.json), [Train replay](../results/mpc-native-r24/reviews/resume-p0-tokenizer02-raw/returned/train.replay.json). Replay SHA256 `5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7`. The first offline repository-ID lookup failed and is retained in the predecessor evidence. | `02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e`; local-asset successor plan `1e9540caa9dd37f927d5389d05be3d973d234bf7` |
+docs/benchmark_results.md:95:| E8 | Train-only causal forecast and permit-dependency CPU component accepted; 14 controls passed on Python 3.12.16 from a scoped Git materialization. Not full end-to-end reproduction. | [Acceptance/result](../results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json), [plan/command](../results/mpc-native-r24/reviews/resume-p0-scenario-parent01-plan.json), [frozen forecast source](../experiments/mpc-research/resume-mvp/nominal_scenario.py). | `6240906706d26c4ce8e5f2a9e70f5e54ac9d52d0` |
+docs/benchmark_results.md:98:uncalibrated service assumptions. Its stationary rolling 15-second horizon can
+docs/benchmark_results.md:110:| Policy | TTFT p50/p95/p99 | SLO goodput | Throughput | Rejection | Fairness | Controller overhead |
+docs/benchmark_results.md:127:search. Charge controller delays without slowing the offered workload to hide
+docs/benchmark_results.md:144:- SLO goodput: successful, SLO-meeting completions divided by the fixed offered
+docs/benchmark_results.md:151:  SLO attainment/rejection. Define any Jain index, zero-denominator convention
+docs/benchmark_results.md:152:  and group sample counts prospectively; no starvation guarantee follows.
+docs/benchmark_results.md:157:superiority. Do not turn that scope into a PASS on an older confirmatory gate.
+docs/benchmark_results.md:168:Eval; do not retrospectively regroup to improve results. Keep SLO
+docs/architecture.md:25:actuator edge is the principal missing native closed-loop evidence.
+docs/architecture.md:40:combine their settings, interfaces or test totals into one allegedly deployed
+docs/architecture.md:75:The reference specification maximizes expected completed SLO-good request count
+docs/architecture.md:89:accuracy or calibrated uncertainty.
+docs/architecture.md:93:natural-SLO scorer. A frozen Train-only prior generates shared candidate inputs;
+docs/architecture.md:94:uncalibrated service/output assumptions and stationary arrivals can extend
+docs/architecture.md:114:Admission/resource bounds are not end-to-end latency guarantees, universal
+docs/architecture.md:115:queueing stability, physical KV safety or production reliability certification.
+docs/interview_defense.md:17:active requests or guarantee the backend has stopped cancelled computation.
+docs/interview_defense.md:22:objective, executes the first action and reobserves before replanning.
+docs/interview_defense.md:33:meeting the TTFT SLO over a fixed offered cohort. Rejected and failed requests
+docs/interview_defense.md:34:cannot improve the score by disappearing. Tail/unresolved credit and tie
+docs/interview_defense.md:36:The nominal MVP uses model-resolved successful TTFT counts as an uncalibrated
+docs/interview_defense.md:37:planning proxy; actual natural-SLO measurements use the separately pinned
+docs/interview_defense.md:38:scorer. They must not be described as the same validated objective.
+docs/interview_defense.md:45:calibrated. A source-faithful model or retrospective replay is not a validated
+docs/interview_defense.md:53:justify accuracy guarantees. Advanced mixing/quantiles belong in P2 unless
+docs/interview_defense.md:75:Successful-request latency can improve simply by rejecting hard requests.
+docs/interview_defense.md:76:All-offered SLO goodput, rejection, throughput and group outcomes expose that
+docs/interview_defense.md:77:trade-off. Conditional p99 is descriptive, not a service-level guarantee.
+docs/interview_defense.md:100:native MPC win. A/B were on different hosts and are not a causal comparison.
+docs/interview_defense.md:102:572 and 736, respectively, met the TTFT SLO. Those deliberately varied,
+docs/interview_defense.md:111:remain engineering contributions; portable clean-checkout reproduction is
+docs/interview_defense.md:118:evidence boundaries. Do not claim a native MPC deployment, measured speedup or
+docs/interview_defense.md:119:complete clean-checkout benchmark reproduction.
+docs/interview_defense.md:123:baseline, held-out comparison, reproduction and independent audit.
+docs/interview_defense.md:124:Superiority, production deployment and a universal SLO theorem are not

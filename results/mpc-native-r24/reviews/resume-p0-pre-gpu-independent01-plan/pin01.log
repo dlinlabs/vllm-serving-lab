@@ -1,0 +1,16 @@
+== prior sealed original vs Mayor copy
+8800a1d6ba7cb037b4ac255204827a1cca83930f77f293726bf5d83a9e6f2593  /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-native-caller-independent01/REPORT.json
+b96bc805b37aae1f07cebeff450c6e56d5c4523953a77a64dd18aaba953a1b15  /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-native-caller-independent01/SHA256SUMS
+8800a1d6ba7cb037b4ac255204827a1cca83930f77f293726bf5d83a9e6f2593  ../../results/mpc-native-r24/reviews/resume-p0-native-caller-independent01-author/REPORT.json
+b96bc805b37aae1f07cebeff450c6e56d5c4523953a77a64dd18aaba953a1b15  ../../results/mpc-native-r24/reviews/resume-p0-native-caller-independent01-author/SHA256SUMS
+== copy seal self-consistency
+COPY_SEAL_CONSISTENT
+== copy file set equals SHA256SUMS entries plus SHA256SUMS
+COPY_FILESET_EXACT
+0
+== authorized inputs (worktree)
+0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570  gateway.py
+933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95  experiments/mpc-research/resume-mvp/nominal_client.py
+  936 41800 gateway.py
+  971 54831 experiments/mpc-research/resume-mvp/nominal_client.py
+ 1907 96631 total

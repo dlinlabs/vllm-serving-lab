@@ -1,0 +1,323 @@
+{
+  "all_attempt_failures": [],
+  "api": {
+    "freeze_train_prior": {
+      "line": 98,
+      "signature": "train_path: str | Path, *, purpose: str, clock_domain: str, clock: Callable[[], float]=time.monotonic"
+    },
+    "make_scenario": {
+      "line": 124,
+      "signature": "prior: TrainPrior, snapshot: Snapshot, *, purpose: str, clock: Callable[[], float]=time.monotonic"
+    }
+  },
+  "cleanup": {
+    "joined": true,
+    "original_identity_gone": true,
+    "pid": 1437100,
+    "start_ticks": "92387537"
+  },
+  "completed_at": "2026-11-04T22:38:25.859752+00:00",
+  "forecast_contract": {
+    "availability": "actual final clock after forecast/hash generation; no copying source time as availability; end freshness and clock-regression checks",
+    "decision_key": "namespace, seed, immutable prior content hash, complete StateVersion, source sampled_at; never policy/candidate path",
+    "future_output": "128=max_output; success true; zero transport; service_scale1; all unqualified",
+    "horizon_s": 15,
+    "max_offers": 512,
+    "namespace": "resume-p0-nominal-forecast-v1",
+    "overcap": "atomic refusal, no resampling/truncation",
+    "past_updates": "None in v1; no oracle progress/output/completion",
+    "purpose": "Train prior only; forecast purpose train/evaluation/engineering labels never authorize Eval tape access",
+    "reuse": "One immutable returned causal scenario and evaluated panel shared by MPC and OneMove",
+    "rng": "stdlib random.Random string seed version2; expovariate/randrange, no workload SHA/Decimal RNG calls",
+    "score_window_s": 5,
+    "seed": 5105,
+    "seed_choice": "Fixed before first forecast execution; arbitrary engineering value, not selected for scores",
+    "tail_s": 10
+  },
+  "frozen_prior_receipt": {
+    "kind": "frozen-train-prior",
+    "prior": {
+      "available_at": 923875.440732845,
+      "clock_domain": "literal-cpu-monotonic",
+      "count": 88,
+      "duration_s": 5.0,
+      "marks": [
+        [
+          256,
+          128,
+          33
+        ],
+        [
+          1024,
+          128,
+          26
+        ],
+        [
+          3072,
+          128,
+          29
+        ]
+      ],
+      "tokenizer_fingerprint": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+      "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+      "train_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+      "workload_sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    "prior_content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc",
+    "scope": "Train-only nominal CPU; tokenizer proof supplied by Mayor, not rerun"
+  },
+  "initial_plan_sha256": "a4ba9630cae028bb2762e8fc4df22bc2e97ed07fcf8200f96f42fb78bb9c3748",
+  "integration_calls": [
+    "prior = freeze_train_prior(train_path, purpose=\"train\", clock_domain=actual_clock_domain)  # once, before decision snapshots",
+    "forecast = make_scenario(prior, fresh_snapshot, purpose=\"evaluation\")  # actual same-domain time.monotonic by default",
+    "panel = planner.evaluate(fresh_snapshot, forecast.causal, window, clock_domain=actual_clock_domain, read_state=trusted_current_state)",
+    "mpc = planner.select(panel, policy=\"mpc\", clock_domain=actual_clock_domain, read_state=trusted_current_state)",
+    "one_move = planner.select(panel, policy=\"one_move\", clock_domain=actual_clock_domain, read_state=trusted_current_state)"
+  ],
+  "integration_notes": [
+    "Reuse the same forecast.causal and panel; do not generate or choose scenarios separately per policy/candidate path.",
+    "The entered_at/solver/action deadline window remains coordinator-owned and must include scenario-generation overhead.",
+    "Use canonical imports from the same resume-mvp module directory; no duplicate CausalScenario/StateVersion classes.",
+    "Factory validation binds snapshot/clock and source freshness, but planner/coordinator still own expected model identity, current-version/CAS/actual-application/permission checks.",
+    "No optional online prior adaptation in v1; the immutable Train prior is not reread/refit at each decision."
+  ],
+  "limitations": [
+    "Measured lengths refer only to Mayor-reported Train tokenizer proof at the pinned fingerprint; generated future lengths remain nominal draws, not Eval/backend-cost measurements.",
+    "Poisson arrival process and independent length marks are an uncalibrated nominal forecast, not an identified Native predictive law.",
+    "Actual coordinator source_digest adoption, real transport/current state, approval and application evidence remain outside these two files.",
+    "No peer unsealed coordinator was read; no claim was made that its implementation was independently inspected."
+  ],
+  "mandatory_source_digest_handoff": {
+    "integration_completed_here": false,
+    "new_required_source_digest_modules": [
+      "experiments/mpc-research/resume-mvp/nominal_scenario.py",
+      "experiments/mpc-research/resume-mvp/nominal_workload.py"
+    ],
+    "not_edited": "Role6/source_digest/other runtime files; no unsealed peer files read",
+    "public_implementation_hash_limit": "mpc_lab ModelParameters.identity does not include these experimental modules. Do not treat it alone as a complete controller source seal.",
+    "reason": "nominal_scenario actually imports nominal_workload for frozen Train schema/constants. Coordinator three-module source_digest is insufficient once this factory is imported.",
+    "required_new_source_hashes": {
+      "experiments/mpc-research/resume-mvp/nominal_scenario.py": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc",
+      "experiments/mpc-research/resume-mvp/nominal_workload.py": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    }
+  },
+  "model_assignment": {
+    "authority": "retained Mayor-verified assignment; no model change or new introspection",
+    "model": "gpt-6-astra",
+    "reasoning": "max"
+  },
+  "module_lines": 177,
+  "no_actions_performed": [
+    "Git",
+    "GPU",
+    "SSH",
+    "network",
+    "Eval tape or rows or outcomes",
+    "Eval/workload seed regeneration",
+    "model fitting",
+    "MCMC",
+    "agent delegation",
+    "dependency installs",
+    "product/SDK/old sealed source writes",
+    "tokenizer rerun",
+    "Native approval"
+  ],
+  "owned_source_files": [
+    "experiments/mpc-research/resume-mvp/nominal_scenario.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_scenario.py"
+  ],
+  "parent_source_acceptance": {
+    "authority": "Mayor supplied references; no Git commands run",
+    "planner02_workload_commit": "f645a66a44bcbe0e4894cab4213d7f9349ae1481",
+    "tokenizer_local_path_prereg_commit": "1e9540caa9dd37f927d5389d05be3d973d234bf7"
+  },
+  "preservation": {
+    "all_18_selected_inputs_match_before_after": true,
+    "old_capsule_writes": false,
+    "only_two_requested_source_files_created": true,
+    "planner02_seal_sha256": "204f7ab96f102dcd6e3f7617b65722437c7f873299bab1551c2e3fb743814b6b"
+  },
+  "prior": {
+    "count": 88,
+    "duration_s": 5,
+    "freeze_once_before_decisions": true,
+    "joint_prompt_max_output_counts": [
+      [
+        256,
+        128,
+        33
+      ],
+      [
+        1024,
+        128,
+        26
+      ],
+      [
+        3072,
+        128,
+        29
+      ]
+    ],
+    "per_decision_tape_load_or_refit": false,
+    "rate_per_s": 17.6,
+    "train_path": ".runtime/r24-resume-p0-workload01/tapes-v1/train.tape.json",
+    "train_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"
+  },
+  "qualification": {
+    "accuracy_or_performance_claim": false,
+    "actual_gpu_loop_executed": false,
+    "actuation_authorized": false,
+    "live_tokenizer_asset_binding_verified_here": false,
+    "native_qualified": false,
+    "nominal_model": "cpu-lifecycle-v1 / synthetic-unqualified-v1"
+  },
+  "real_cpu_integration_receipt": {
+    "availability_after_sample_s": 0.0010490999557077885,
+    "kind": "real-cpu-panel",
+    "offers": 253,
+    "rollout_calls": 8,
+    "scope": "nominal forecast integration only; not Native performance",
+    "seed_material": "[\"resume-p0-nominal-forecast-v1\",5105,\"f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc\",{\"budget\":16.0,\"budget_version\":3,\"clock_domain\":\"literal-cpu-monotonic\",\"identity\":{\"calibration_version\":\"synthetic-unqualified-v1\",\"cost_hash\":\"4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7\",\"implementation_hash\":\"5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea\",\"model_version\":\"cpu-lifecycle-v1\",\"support_hash\":\"720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95\"},\"run_id\":\"literal-forecast-run\",\"sequence\":7},923875.450810645]",
+    "source_sha256": "313dc174e5c05f3372029766c702a178c07b08a56c65016bebe9a49627bed0c7"
+  },
+  "replay_metadata": {
+    "fields": [
+      "causal",
+      "prior",
+      "rng_seed_material",
+      "rng_runtime",
+      "producer_sources",
+      "assumptions"
+    ],
+    "offline_only_warning": "Replaying a seed does not make an old observation fresh or authorize a historical clock as live input.",
+    "source_sha256_definition": "Digest of prior including its availability/domain, exact seed material, RNG runtime, producer source hashes, generated Scenario and assumptions. Factory execution availability is recorded separately in causal.available_at; source bytes/data are not backdated."
+  },
+  "schema": "resume-p0-nominal-scenario-delivery-v1",
+  "source_ids": {
+    ".runtime/r24-resume-p0-workload01/tapes-v1/train.tape.json": {
+      "bytes": 12752,
+      "sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_planner.py": {
+      "bytes": 21987,
+      "sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_scenario.py": {
+      "bytes": 8166,
+      "sha256": "b15ccb25c4db2164a6bd44f3a4ec956a8e2aff1cfaa37040459948c4d7d477fc"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_workload.py": {
+      "bytes": 25248,
+      "sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+    },
+    "experiments/mpc-research/resume-mvp/test_nominal_scenario.py": {
+      "bytes": 9126,
+      "sha256": "a5e0f50ab792fcc68e9714b0cc8383f84bf6e324ed095fb6d672fbc88508b056"
+    },
+    "gateway.py": {
+      "bytes": 41800,
+      "sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+    },
+    "mpc_lab/__init__.py": {
+      "bytes": 63,
+      "sha256": "29962543d64e8cdb630a240a999dd9e47ed87cccf4bd03220ca2d82b5d7be09e"
+    },
+    "mpc_lab/actuator.py": {
+      "bytes": 12329,
+      "sha256": "e31dbe92eb3a27be554db15405af0a6046a6820096e84540812d3ee88afc59d5"
+    },
+    "mpc_lab/benchmark.py": {
+      "bytes": 14048,
+      "sha256": "c84858d2f4973de890d8eaaba33ca42ec7d5d0e13f5c097feaa829f4d337df99"
+    },
+    "mpc_lab/contracts.py": {
+      "bytes": 6959,
+      "sha256": "f39f6b73b41b1433a220f182679852df5c4332d9022ce903dba9863375236e23"
+    },
+    "mpc_lab/controller.py": {
+      "bytes": 16323,
+      "sha256": "44d705101820d89677035101110c70f890f94f7d82a5a521ec87d5e09dbf08cc"
+    },
+    "mpc_lab/http_capture.py": {
+      "bytes": 11052,
+      "sha256": "0648738704771f80470849b0c0beb671d0f17c9dbc75e4095cff155b20d04be7"
+    },
+    "mpc_lab/identification.py": {
+      "bytes": 8905,
+      "sha256": "bae3888768be5508f6a5d57a48eddd80abe9e0942f95e7f57bab824707f560f8"
+    },
+    "mpc_lab/model.py": {
+      "bytes": 21361,
+      "sha256": "eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec"
+    },
+    "mpc_lab/native_state.py": {
+      "bytes": 4967,
+      "sha256": "835df8ebaa58c773074e65cedba4627b468d14b560233a7655bf9cd2240b83d6"
+    },
+    "mpc_lab/runtime.py": {
+      "bytes": 10743,
+      "sha256": "f04c58eb9b5a81e7e1c7a22aaea1cd6b59de88c568ec77d51f1487af4c85b727"
+    },
+    "prefill_lab/live_http.py": {
+      "bytes": 12223,
+      "sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f"
+    },
+    "telemetry.py": {
+      "bytes": 17187,
+      "sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370"
+    }
+  },
+  "status": "CPU_CAUSAL_FACTORY_IMPLEMENTED_TESTED_PARENT_REVIEW_PENDING",
+  "tests": {
+    "attempts": 1,
+    "command": [
+      "env",
+      "-u",
+      "PYTHONPATH",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONHASHSEED=0",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+      "OMP_NUM_THREADS=1",
+      "OPENBLAS_NUM_THREADS=1",
+      "MKL_NUM_THREADS=1",
+      "NUMEXPR_NUM_THREADS=1",
+      "nice",
+      "-n",
+      "19",
+      "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "experiments/mpc-research/resume-mvp",
+      "-p",
+      "test_nominal_scenario.py",
+      "-v"
+    ],
+    "controls": [
+      "repeatability with truthful later availability and no per-decision tape reads",
+      "independent RNG namespace / changed source decision / immutable prior",
+      "wrong purpose and filename refusal before I/O",
+      "future prior/source, stale source, cross-clock and clock-regression refusals",
+      "513th offer and zero-gap refusal without truncation/resampling",
+      "one genuine factory scenario reused across eight actual CPU rollouts and both policy selections"
+    ],
+    "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+    "errors": 0,
+    "failed_methods": 0,
+    "log_sha256": "8fdeb2f150e09d844cede5203a12dd5decdffcd76947a2050a3f809c066746b7",
+    "other_python": "Not run; no dual-Python claim",
+    "passed_methods": 5,
+    "python": "Python 3.14.4"
+  },
+  "tokenizer_evidence": {
+    "asset_path_on_existing_host": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+    "basis": "Mayor reported CPU-only cached-tokenizer validation, proof commit pending; replay/asset not reread or executed here",
+    "historical_lookup_failure": "Initial offline repo-ID lookup failure was reported by Mayor and preserved there; not rerun or attributed to this task",
+    "meaning": "All88 Train chat-template counts equal requested256/1024/3072 for this asset fingerprint only; future sampled lengths remain nominal, not Eval/backend-cost proof",
+    "tokenizer_fingerprint": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+    "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+    "transformers": "5.22.1"
+  }
+}

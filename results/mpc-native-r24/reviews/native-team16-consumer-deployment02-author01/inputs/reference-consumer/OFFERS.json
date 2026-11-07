@@ -1,0 +1,38 @@
+{
+  "fixed_budget": 32,
+  "payload": {
+    "max_tokens": 16,
+    "messages": [
+      {
+        "content": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+        "role": "user"
+      }
+    ],
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "stream": false,
+    "temperature": 0
+  },
+  "rows": [
+    {
+      "fate": "not_offered",
+      "max_tokens": 16,
+      "ordinal": 1,
+      "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+      "request_id": "f53fe941c1a921b080b5f82193cf5c82"
+    },
+    {
+      "fate": "not_offered",
+      "max_tokens": 16,
+      "ordinal": 2,
+      "prompt": "Count upwards from 1, separated by spaces. Continue counting without commentary.",
+      "request_id": "d295f5ff94fe468d10feaf79210da79e"
+    }
+  ],
+  "schema": "team16-owner-inflight-offers-v1",
+  "status": "PROSPECTIVE_NOT_EXECUTED",
+  "warmup": {
+    "fate": "not_offered",
+    "max_tokens": 16,
+    "offers": 1
+  }
+}

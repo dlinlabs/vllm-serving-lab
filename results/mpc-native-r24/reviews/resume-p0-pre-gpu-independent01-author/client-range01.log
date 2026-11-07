@@ -1,0 +1,40 @@
+933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95  nominal_client.py
+  640      try:
+  641          data = Path(path).read_bytes()
+  642          return _strict_json(data, str(path)), data
+  643      except (OSError, ValueError) as exc:
+  644          raise ClientRefusal(f'{path}: unreadable or non-strict JSON: {type(exc).__name__}: {exc}') from exc
+  645  
+  646  
+  647  def _write_new(path, value):
+  648      data = (json.dumps(value, sort_keys=True, indent=1, allow_nan=False) + '\n').encode()
+  649      with open(path, 'xb') as handle:
+  650          handle.write(data)
+  651          handle.flush()
+  652          os.fsync(handle.fileno())
+  653      return hashlib.sha256(data).hexdigest()
+  654  
+  803  class PreparedCapture:
+  804      """``prepare_capture`` result: the raw-v2 envelope (``capture``) and its validated trace; single use."""
+  805  
+  806      __slots__ = ('capture', 'trace', 'ready', 'started')
+  807  
+  808      def __init__(self, capture):
+  809          self.capture, self.trace, self.ready, self.started = capture, None, False, False
+  810  
+  811  
+  812  def prepare_capture(*, trace_path, binding_path, arm, purpose, gateway_url, backend_url, request_timeout=120.0,
+  850  async def capture_replay(prepared, *, offered_start, deadline, cleanup_reserve_s, clock_domain, transport=None):
+  851      """Await one complete raw-v2 capture inside the caller's running loop (no asyncio.run, no signal handlers).
+  852  
+  853      ``offered_start`` is the caller's exact future absolute time.monotonic() start (never retimed); in-flight requests
+  891  def write_capture(path, capture):
+  892      """Persist a capture with the CLI capture.json codec (sorted keys, indent 1, no NaN, exclusive create, fsync);
+  893      returns the sha256 of the written bytes."""
+  894      return _write_new(path, capture)
+  895  
+  896  
+  897  async def _run_cancellable(coroutine):
+  898      task = asyncio.ensure_future(coroutine)
+  899      loop = asyncio.get_running_loop()
+  900      installed = []

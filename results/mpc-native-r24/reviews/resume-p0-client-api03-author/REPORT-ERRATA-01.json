@@ -1,0 +1,27 @@
+{
+ "schema": "r24-resume-p0-nominal-client-api03-report-errata-v1",
+ "report.json_sha256": "c63600c47a21fd74414e0108da79bff941034767bec3febbdfbdb8980a6964ed",
+ "field": "tests.added",
+ "defect": "make_report.py collected pre-existing names from FunctionDef nodes only, so the pre-existing classes FakeBackend and FakeTokenizer were listed as added; report.json bytes kept unchanged",
+ "listed": [
+  "FakeBackend",
+  "FakeTokenizer",
+  "lib_prepare",
+  "lib_replay",
+  "test_library_capture_inside_running_loop_keeps_caller_clock_and_cli_envelope",
+  "CloseFails",
+  "test_library_cancellation_and_failure_keep_every_allocated_offer_after_joining_requests"
+ ],
+ "corrected": [
+  "lib_prepare",
+  "lib_replay",
+  "test_library_capture_inside_running_loop_keeps_caller_clock_and_cli_envelope",
+  "CloseFails",
+  "test_library_cancellation_and_failure_keep_every_allocated_offer_after_joining_requests"
+ ],
+ "not_added_but_listed": [
+  "FakeBackend",
+  "FakeTokenizer"
+ ],
+ "other_fields": "unaffected (sources, definitions, attempts and status computed independently)"
+}

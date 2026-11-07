@@ -1,0 +1,9 @@
+933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95  nominal_client.py
+75:    'sent_at': 'time.monotonic() immediately before client.stream (send-attempt start, before connection '
+353:        'scheduled_at': offered_start + request['arrival_seconds'], 'sent_at': None, 'send_lag_s': None,
+417:    record['sent_at'] = time.monotonic()
+418:    record['send_lag_s'] = record['sent_at'] - record['scheduled_at']
+514:        'sent_at': record['sent_at'], 'first_content_at': record['first_content_at'],
+809:        self.capture, self.trace, self.ready, self.started = capture, None, False, False
+860:    if not isinstance(prepared, PreparedCapture) or not prepared.ready or prepared.started:
+862:    prepared.started = True

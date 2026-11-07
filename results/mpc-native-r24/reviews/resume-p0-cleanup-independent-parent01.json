@@ -1,0 +1,26 @@
+{
+  "scope": "Bounded legacy cleanup review disposition; not nominal MVP runtime acceptance",
+  "status": "LEGACY_RELEASE_BLOCKED_R1_OPEN; new gateway-only nominal path does not use this launcher",
+  "author_subject_seal_sha256": "f145546d68934af0b0ec78bee8a78bd4817b53ca694edea8ef91df2731d023f5",
+  "independent_review_seal_sha256": "653f4ab52951cb6d59ff13c6c11b20811cc772bd5bf35fa1ba0aaaaad0d17bdf",
+  "selected_archive": "resume-p0-cleanup-review-selected01",
+  "selected_archive_seal_sha256": "354c64ad177a631fd844136e2c84891f2be93d55341392cbe5215f9dd13d3c9e",
+  "archival_scope": "26 selected review/source-diff/log members verified against the original review inventory, plus AUTHOR-SHA256SUMS and a new subset seal. NOT the entire 111-member review or 136-member author capsule.",
+  "privacy": "No CPU_DUMMY.private.json fixture or other private configuration payload copied. Full originals retained in their existing local .runtime capsules.",
+  "review_bounds": "Reviewer reports 14 content reads/145545 bytes; separate hash reads and 37 relocated copies/352291 bytes are not additional content review or a full historical inventory audit.",
+  "accepted_evidence": {
+    "source": "Targeted source-level narrowing of three cleanup triggers; original time and command bounds unchanged.",
+    "py312": "Two independent focused controls passed.",
+    "py314": "Harness setup FAILED before controls: empty attempts directory was not created. Zero control children, no retry. Not independent two-Python PASS.",
+    "postchecks": "Original parallel checks ran too early and are not post-run proof. Sequential replacement ran after dummy self-exit deadline; principal proof is the in-run assertions/harness safety.",
+    "unknown_and_nonjoin": "Unknown/nonjoined outcomes and private retention remain failure-sensitive, not reclassified as success."
+  },
+  "unresolved": [
+    "R1 LOW: source-only, untested startup SIGALRM race before disarm in outer finally can still skip cleanup.",
+    "Survivor/unlock and no PDEATHSIG/subreaper limitations remain.",
+    "Other non-lifecycle cleanup exceptions are not a universal OS-cleanup proof."
+  ],
+  "metadata_correction": "The review's author-model-not-recorded note is incorrect: the subject PLAN/REPORT declare gpt-6-astra/max, consistent with the retained Mayor-verified assignment. Original sealed review remains unchanged.",
+  "no_further_legacy_research": "P2 unless the nominal path actually imports or launches this affected component. Legacy live clearance remains blocked, not waived.",
+  "no_Native_authorization_or_gate_closure": true
+}

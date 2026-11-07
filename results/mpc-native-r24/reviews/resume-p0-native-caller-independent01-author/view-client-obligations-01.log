@@ -1,0 +1,90 @@
+     1	    f'non-success bodies retained verbatim when strict UTF-8 and <= {MAX_RETAINED_BODY_BYTES} bytes (else length + '
+     2	    'sha256 only); admission rejections keep every gateway body field plus x-request-id; no auth header is sent or '
+     3	    'recorded',
+     4	]
+     5	NOT_CLIENT_OWNED = [
+     6	    'backend launch and actual argv capture (binding.backend_argv/backend_argv_source)',
+     7	    'gateway launch with MODEL_NAME == local_model_path; tokenizer_available; zero character fallback; CostSpec',
+     8	    'warmup and post-warmup gateway drain before the offered start',
+     9	    'static fixed budget as startup MAX_ADMITTED_COST before warmup/offers: acknowledged before offered_start and '
+    10	    'verified held through final drain (control + control_evidence)',
+    11	    'one shared absolute host-monotonic offered START with lead time for the recorder preflight (binding, tokenizer '
+    12	    'load, prompt verification, /v1/models); a passed START is refused with zero sends, never retimed',
+    13	    'final gateway drain (in_flight 0, admitted cost 0) and fallback counters after the recorder returns',
+    14	    'full wall record {start, end, clock_domain, source} covering setup, solver, HTTP, unresolved and final drain',
+    15	    'controller decision intervals (coordinator journal) for non-fixed arms',
+    16	    'FIFO/FCFS backend ordering verification',
+    17	    'gateway admitted/terminal cost, budget and budget_version telemetry and the ordered owner ledger (joined to '
+    18	        return out
+    19	
+    20	    lags = [record['send_lag_s'] for record in records if record['send_lag_s'] is not None]
+    21	    finish = {}
+    22	    for record in records:
+    23	        if record['fate'] == 'complete':
+    24	            finish[str(record['finish_reason'])] = finish.get(str(record['finish_reason']), 0) + 1
+    25	    return {
+    26	        'offered': len(records), 'sent': len(lags), 'fates': counts('fate', nm.FATES),
+    27	        'finish_reason_evidence': counts('finish_reason_evidence', FINISH_EVIDENCE),
+    28	        'finish_reasons_of_complete': finish,
+    29	        'completion_tokens_evidence': counts('completion_tokens_evidence', ()),
+    30	        'prompt_tokens_mismatch': sum(record['prompt_tokens_match'] is False for record in records),
+    31	        'prompt_tokens_matched': sum(record['prompt_tokens_match'] is True for record in records),
+    32	        'implementation_exceptions': sum(record['fate_reason'] in ('implementation_exception',
+    33	def _new_capture(arm, purpose, program, argv, config):
+    34	    """The raw-v2 capture envelope (status 'failed' until an outcome is recorded); shared by the CLI and library."""
+    35	    return {
+    36	        'schema': SCHEMA, 'status': 'failed', 'error': None, 'arm': arm, 'purpose': purpose,
+    37	        'run_id': str(uuid.uuid4()), 'clock_domain': clock_domain(), 'program': program, 'argv': argv,
+    38	        'config': config,
+    39	        'host': socket.gethostname(), 'pid': os.getpid(), 'python': sys.version, 'httpx': httpx.__version__,
+    40	        'sources_sha256': None,
+    41	        'payload_template': {'model': None, 'messages': [{'role': 'user', 'content': '<trace prompt>'}],
+    42	                             'temperature': 0, 'max_tokens': '<trace max_tokens>', 'stream': True,
+    43	                             'stream_options': {'include_usage': True}, 'ignore_eos': IGNORE_EOS},
+    44	        'trace_sha256': None, 'trace_provenance': None, 'binding': None, 'binding_sha256': None,
+    45	        'binding_evidence': None, 'models_response': None, 'offered_count': None, 'offered_request_ids_sha256': None,
+    46	        'offered_duration_s': None,
+    47	        'offered_start': None, 'offered_end': None, 'drain_deadline': None, 'collection_end': None,
+    48	        'records': None, 'rows': None, 'summary': None, 'mapping': ROW_MAPPING, 'qualifiers': QUALIFIERS,
+    49	        'not_client_owned': NOT_CLIENT_OWNED,
+    50	    }
+    51	
+    52	
+    53	def _load_inputs(capture, trace_path, binding_path, gateway_url, backend_url, purpose, url_names):
+    54	    """Strict trace/binding/URL/purpose loading into the envelope; returns the validated trace."""
+    55	    capture['sources_sha256'] = {name: tw.sha256_file(path) for name, path in SOURCES.items()}
+    56	    loaded, data = _strict_load(trace_path)
+    57	    try:
+    58	        trace = tw.validate_trace(loaded)
+    59	    except (ValueError, KeyError, TypeError, AttributeError) as exc:
+    60	        raise ClientRefusal(f'trace refused: {type(exc).__name__}: {exc}') from exc
+    61	    capture['trace_sha256'] = hashlib.sha256(data).hexdigest()
+    62	    provenance = trace.get('provenance') if isinstance(trace.get('provenance'), dict) else {}
+    63	    capture['trace_provenance'] = {key: provenance.get(key) for key in TAPE_KEYS}
+    64	    capture['payload_template']['model'] = trace['model']
+    65	    capture['offered_count'], capture['offered_duration_s'] = len(trace['requests']), trace['duration_seconds']
+    66	    capture['offered_request_ids_sha256'] = nm.request_ids_sha256(request['trace_id']
+    67	                                                                  for request in trace['requests'])
+    68	    capture['binding'], binding_data = _strict_load(binding_path)
+    69	    capture['binding_sha256'] = hashlib.sha256(binding_data).hexdigest()
+    70	    capture['config']['gateway_url'] = _loopback(gateway_url, url_names[0])
+    71	def _settle(capture, ending=None):
+    72	    """Status/error from the exception that ended a capture (None: collected), then rows and summary of every
+    73	    allocated record; returns the CLI exit code of that status."""
+    74	    if ending is None:
+    75	        capture['status'], capture['error'] = 'collected', None
+    76	    elif isinstance(ending, ClientRefusal):
+    77	        capture['status'], capture['error'] = 'refused', f'ClientRefusal: {ending}'
+    78	    elif isinstance(ending, (asyncio.CancelledError, KeyboardInterrupt)):
+    79	        capture['status'], capture['error'] = 'interrupted', f'{type(ending).__name__}: replay interrupted'
+    80	    else:
+    81	        capture['status'], capture['error'] = 'failed', f'{type(ending).__name__}: {str(ending)[:300]}'
+    82	    if capture['records'] is not None:
+    83	        capture['rows'] = [normalized_row(record) for record in capture['records']]
+    84	        capture['summary'] = summarize_records(capture['records'])
+    85	    return EXIT_CODES[capture['status']]
+    86	
+    87	
+    88	def _replay_main(args, argv, transport, tokenizer_loader):
+    89	    try:
+    90	        args.output_dir.mkdir(mode=0o700)

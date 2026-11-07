@@ -1,0 +1,905 @@
+diff --git a/experiments/mpc-research/resume-mvp/native_nominal_qualification.py b/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+index 379e74373..27f5df283 100644
+--- a/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
++++ b/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+@@ -2,134 +2,402 @@
+ 
+ import argparse
+ import asyncio
++import hashlib
+ import json
++import math
+ from pathlib import Path
+ import time
++import traceback
+ 
+ import native_services_smoke as services
+ 
+ 
+ PROBES = Path("results/mpc-native-r24/reviews/resume-p0-probes02/inputs")
++ADAPTER_SHA256 = "935c2679c4b9fffdffb23ce88ca5351f91fa84e25c8c1edccedddaea4e4262a8"
++DRAIN_FIELDS = ("current_in_flight", "current_waiting", "current_admitted_cost")
++
++
++def error_record(error):
++    return {"type": type(error).__name__, "message": str(error),
++            "traceback": "".join(traceback.format_exception(error))}
++
++
++def strict_copy(value):
++    return json.loads(json.dumps(value, sort_keys=True, allow_nan=False))
++
++
++def strict_load(raw):
++    def constant(value):
++        raise ValueError("nonfinite JSON constant: " + value)
++
++    def pairs(items):
++        result = {}
++        for key, value in items:
++            services.checked(key not in result, "duplicate JSON key: " + key)
++            result[key] = value
++        return result
++
++    return strict_copy(json.loads(raw, parse_constant=constant, object_pairs_hook=pairs))
++
++
++def preserving(action, primary, report, stage):
++    try:
++        return action()
++    except BaseException as error:
++        report["caller_errors"].append({"stage": stage, "error": error_record(error)})
++        if primary is None:
++            raise
++        primary.add_note(stage + ": " + type(error).__name__ + ": " + str(error))
+ 
+ 
+ def persist_capture(client, path, capture, key):
+     try:
+         return client.write_capture(path, capture)
+     except BaseException as error:
+-        services.write(path.with_suffix(".write-error.json"), {
+-            "capture_unscorable": True, "type": type(error).__name__, "message": str(error),
+-        }, key)
++        try:
++            services.write(path.with_suffix(".write-error.json"), {
++                "capture_unscorable": True, "type": type(error).__name__, "message": str(error),
++            }, key)
++        except BaseException as write_error:
++            error.add_note("write-error receipt also failed: " + type(write_error).__name__
++                           + ": " + str(write_error))
+         raise
+ 
+ 
+-async def collect(*, owner, root, output, key, report):
+-    import httpx
+-    import nominal_client as recorder
+-    import nominal_episode as episode
+-    import nominal_runtime as runtime_api
+-    from mpc_lab.contracts import CostSpec, ModelParameters
+-    from nominal_permit import NominalDemoPermit
+-    from nominal_planner import NominalPlanner
+-
+-    expected, config = report["source"], report["configuration"]
+-    protocol = json.loads((root / services.RELATIVE / "nominal_protocol.json").read_text())
+-    gateway = f"http://127.0.0.1:{services.GATEWAY_PORT}"
+-    backend = f"http://127.0.0.1:{services.BACKEND_PORT}"
++def remaining(owner, deadline, reserve):
++    services.checked(owner.deadline == deadline and owner.reserve == reserve,
++                     "original owner deadline/reserve changed")
+     owner.check()
+-    ownership_path = output / "services/ownership.json"
+-    ownership = json.loads(ownership_path.read_text())
+-    actual_engine = next(s["argv"] for s in ownership["services"] if s["name"] == "engine")
+-    services.checked(actual_engine == config["engine"], "owned backend argv mismatch")
+-    binding = {
+-        "schema": recorder.BINDING_SCHEMA, "served_alias": services.ALIAS,
+-        "local_model_path": services.MODEL, "tokenizer_sha256": services.TOKENIZER,
+-        "served_model_names": [services.ALIAS], "backend_argv": actual_engine,
+-        "backend_argv_source": str(ownership_path) + " (owned actual spawn receipt)",
+-    }
+-    binding_path = output / "model-binding.json"
+-    services.write(binding_path, binding)
+-    warmup = recorder.prepare_capture(
+-        trace_path=root / PROBES / "warmup.json", binding_path=binding_path,
+-        arm="fixed32", purpose="engineering", gateway_url=gateway, backend_url=backend,
+-    )
++    value = deadline - reserve - time.monotonic()
++    services.checked(math.isfinite(value) and value > 0, "original work deadline exhausted")
++    return value
++
++
++async def observe(client, path, *, owner, deadline, reserve, output, key, report, name):
++    evidence = {"path": path, "entered_at": time.monotonic(), "status_code": None, "raw": None}
++    primary = None
+     try:
+-        services.checked(warmup.ready, "warmup local preflight failed")
+-        owner.check()
+-        await recorder.capture_replay(
+-            warmup, offered_start=time.monotonic() + 1.0, deadline=owner.deadline,
+-            cleanup_reserve_s=owner.reserve, clock_domain=warmup.capture["clock_domain"],
+-        )
+-    finally:
+-        report["warmup_capture_sha256"] = persist_capture(
+-            recorder, output / "warmup-capture.json", warmup.capture, key)
+-    services.checked(
+-        warmup.capture["status"] == "collected" and len(warmup.capture["records"]) == 3
+-        and all(r["fate"] == "complete" and r["stream_done"]
+-                and r["finish_reason"] in ("stop", "length") for r in warmup.capture["records"])
+-        and warmup.capture["summary"]["prompt_tokens_mismatch"] == 0,
+-        "warmup did not complete with valid outcomes",
+-    )
+-    owner.check()
+-    prepared = episode.prepare_episode(
+-        output_dir=output / "episode", binding_path=binding_path,
+-        gateway_url=gateway, backend_url=backend, policy="mpc",
+-        trace_path=root / PROBES / "admission-boundary.json",
+-    )
+-    report["offered_requests_from_driver"] = len(prepared.recorder.trace["requests"]) \
+-        if prepared.recorder.trace is not None else None
+-    report["warmup_offered_requests"] = 3
+-    services.checked(prepared.error is None, "episode local preparation failed")
+-    parameters = ModelParameters(cost_spec=CostSpec(**expected["cost_spec"]))
+-    planner = NominalPlanner(parameters)
+-    settings = protocol["controller"]
+-    limits = runtime_api.RuntimeLimits(
+-        iterations=settings["iterations"], episode_s=settings["episode_s"],
+-        decision_s=settings["entry_to_action_deadline_s_max"],
+-        solve_s=settings["solve_budget_s"], poll_s=settings["poll_s"],
+-    )
+-    async with httpx.AsyncClient(base_url=gateway, trust_env=False, follow_redirects=False) as client:
+-        owner.check()
+-        response = await client.get("/admin/mpc/state", headers={"x-admin-api-key": key},
+-                                    timeout=min(2.0, owner.deadline - owner.reserve - time.monotonic()))
++        timeout = min(2.0, remaining(owner, deadline, reserve))
++        evidence["timeout_s"] = timeout
++        async with asyncio.timeout(timeout):
++            response = await client.get(path, headers={"x-admin-api-key": key}, timeout=timeout)
++        evidence.update(status_code=response.status_code, raw=response.text)
+         response.raise_for_status()
+-        state = response.json()
++        value = strict_load(response.content)
++        evidence["value"] = value
++        return value
++    except BaseException as error:
++        primary = error
++        evidence["error"] = error_record(error)
++        raise
++    finally:
++        evidence["returned_at"] = time.monotonic()
++        report.setdefault("caller_observations", []).append(evidence)
++        preserving(lambda: services.write(output / (name + ".json"), evidence, key),
++                   primary, report, name + "_persistence")
++
++
++async def drain(client, *, owner, deadline, reserve, output, key, report, phase):
++    attempt = 0
++    while True:
++        attempt += 1
++        metrics = await observe(
++            client, "/metrics", owner=owner, deadline=deadline, reserve=reserve,
++            output=output, key=key, report=report, name=f"{phase}-metrics-{attempt:04d}")
++        values = [metrics[name] for name in (*DRAIN_FIELDS, "tokenizer_fallback_requests")]
++        services.checked(all(type(value) in (int, float) and math.isfinite(value) and value >= 0
++                             for value in values), "invalid drain/fallback metric")
++        services.checked(metrics["tokenizer_fallback_requests"] == 0, "tokenizer fallback after traffic")
++        if all(metrics[name] == 0 for name in DRAIN_FIELDS):
++            report.setdefault("caller_drains", {})[phase] = {
++                "drained": True, "observed_at": time.monotonic(), "readings": attempt}
++            return
++        await asyncio.sleep(min(0.05, remaining(owner, deadline, reserve)))
++
++
++def capture_of(prepared):
++    return getattr(getattr(prepared, "recorder", None), "capture", None)
++
++
++def counts(capture, entered):
++    if not isinstance(capture, dict):
++        return {"records_allocated": None if entered else 0, "sent": None if entered else 0}
++    records = capture.get("records")
++    if records is None:
++        return {"records_allocated": 0, "sent": 0}
++    services.checked(isinstance(records, list), "capture records must be a list or null")
++    known = all(isinstance(row, dict) and "sent_at" in row for row in records)
++    return {"records_allocated": len(records),
++            "sent": sum(row["sent_at"] is not None for row in records) if known else None}
++
++
++def source_binding(root, episode, expected):
++    protocol_path = root / services.RELATIVE / "nominal_protocol.json"
++    raw = protocol_path.read_bytes()
++    protocol_sha = hashlib.sha256(raw).hexdigest()
++    services.checked(expected["source_pins"].get(str(protocol_path)) == protocol_sha,
++                     "protocol changed since startup source pins")
++    caller_path = root / services.RELATIVE / "native_nominal_qualification.py"
++    adapter_path = root / services.RELATIVE / "nominal_episode.py"
++    services.checked(Path(__file__).resolve() == caller_path and Path(episode.__file__).resolve() == adapter_path,
++                     "caller/adapter source-root mismatch")
++    pins = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in (caller_path, adapter_path)}
++    services.checked(pins[str(adapter_path)] == ADAPTER_SHA256, "accepted episode adapter changed")
++    pins[str(protocol_path)] = protocol_sha
++    return strict_load(raw), {"source_pins": pins, "caller_sha256": pins[str(caller_path)],
++                             "adapter_sha256": pins[str(adapter_path)], "protocol_sha256": protocol_sha}
++
++
++def recheck(binding):
++    services.checked(all(hashlib.sha256(Path(path).read_bytes()).hexdigest() == sha
++                         for path, sha in binding["source_pins"].items()),
++                     "caller/adapter/protocol changed during collection")
++
++
++async def collect(*, owner, root, output, key, report):
++    """Caller-owned accounting; collected engineering evidence is never Native qualification."""
++    root, output = Path(root).resolve(), Path(output)
++    deadline, reserve = owner.deadline, owner.reserve
++    primary, primary_tb = None, None
++    prepared = warmup = client = recorder = bound = None
++    entered_run = False
++    stage = "source_preflight"
++    report.update(caller_errors=[], episode_planned_requests=5, episode_trace_requests=None,
++                  warmup_planned_requests=3, warmup_offered_requests=0,
++                  offered_requests_from_driver=0, episode_sent_requests=0)
++
++    def failure(where, error):
++        nonlocal primary, primary_tb
++        report["caller_errors"].append({"stage": where, "error": error_record(error)})
++        if primary is None:
++            primary, primary_tb = error, error.__traceback__
++        elif error is not primary:
++            primary.add_note(where + ": " + type(error).__name__ + ": " + str(error))
++
++    def attempt(where, action):
++        try:
++            return action()
++        except BaseException as error:
++            failure(where, error)
++
++    try:
++        import httpx
++        import nominal_client as recorder
++        import nominal_episode as episode
++        import nominal_runtime as runtime_api
++        from mpc_lab.contracts import CostSpec, ModelParameters
++        from nominal_permit import NominalDemoPermit
++        from nominal_planner import NominalPlanner
++
++        services.checked(all(type(value) in (int, float) and math.isfinite(value)
++                             for value in (deadline, reserve)) and reserve >= 0,
++                         "finite original deadline/reserve required")
++        expected, config = report["source"], report["configuration"]
++        remaining(owner, deadline, reserve)
++        protocol, bound = source_binding(root, episode, expected)
++        services.write(output / "qualification-source-binding.json", bound, key)
++        report["caller_source_binding"] = bound
++        gateway = f"http://127.0.0.1:{services.GATEWAY_PORT}"
++        backend = f"http://127.0.0.1:{services.BACKEND_PORT}"
++        stage = "model_binding"
++        ownership_path = output / "services/ownership.json"
++        ownership = strict_load(ownership_path.read_bytes())
++        actual_engine = next(s["argv"] for s in ownership["services"] if s["name"] == "engine")
++        services.checked(actual_engine == config["engine"], "owned backend argv mismatch")
++        binding_path = output / "model-binding.json"
++        services.write(binding_path, {
++            "schema": recorder.BINDING_SCHEMA, "served_alias": services.ALIAS,
++            "local_model_path": services.MODEL, "tokenizer_sha256": services.TOKENIZER,
++            "served_model_names": [services.ALIAS], "backend_argv": actual_engine,
++            "backend_argv_source": str(ownership_path) + " (owned actual spawn receipt)",
++        })
++        client = httpx.AsyncClient(base_url=gateway, trust_env=False, follow_redirects=False)
++        warm_error = None
++        try:
++            stage = "warmup_prepare"
++            warmup = recorder.prepare_capture(
++                trace_path=root / PROBES / "warmup.json", binding_path=binding_path,
++                arm="fixed32", purpose="engineering", gateway_url=gateway, backend_url=backend)
++            services.checked(warmup.ready, "warmup local preflight failed: " + str(warmup.capture.get("error")))
++            report["caller_clock_domains"] = {
++                "SDK_source": expected["clock_domain"], "warmup_recorder": warmup.capture["clock_domain"]}
++            remaining(owner, deadline, reserve)
++            recheck(bound)
++            stage = "warmup_replay"
++            await recorder.capture_replay(
++                warmup, offered_start=time.monotonic() + 1.0, deadline=deadline,
++                cleanup_reserve_s=reserve, clock_domain=warmup.capture["clock_domain"])
++        except BaseException as error:
++            warm_error = error
++            raise
++        finally:
++            capture = getattr(warmup, "capture", None)
++            if capture is not None:
++                report["warmup_capture_sha256"] = preserving(
++                    lambda: persist_capture(recorder, output / "warmup-capture.json", capture, key),
++                    warm_error, report, "warmup_capture_persistence")
++        stage = "warmup_validation"
++        services.checked(
++            warmup.capture["status"] == "collected" and len(warmup.capture["records"]) == 3
++            and all(r["fate"] == "complete" and r["stream_done"]
++                    and r["finish_reason"] in ("stop", "length") for r in warmup.capture["records"])
++            and warmup.capture["summary"]["prompt_tokens_mismatch"] == 0,
++            "warmup did not complete with valid outcomes")
++        remaining(owner, deadline, reserve)
++        stage = "episode_prepare"
++        prepared = episode.prepare_episode(
++            output_dir=output / "episode", binding_path=binding_path, gateway_url=gateway,
++            backend_url=backend, policy="mpc", trace_path=root / PROBES / "admission-boundary.json")
++        prepared_error = getattr(prepared, "error", None)
++        services.checked(prepared_error is None,
++                         "episode local preparation failed: " + str(prepared_error))
++        handle = getattr(prepared, "recorder", None)
++        services.checked(handle is not None and isinstance(handle.trace, dict),
++                         "episode preparation has no recorder/trace")
++        report["episode_trace_requests"] = len(handle.trace["requests"])
++        services.checked(report["episode_trace_requests"] == 5, "immutable five-request probe required")
++        report["caller_clock_domains"]["episode_recorder"] = handle.capture["clock_domain"]
++        parameters = ModelParameters(cost_spec=CostSpec(**expected["cost_spec"]))
++        planner = NominalPlanner(parameters)
++        settings = protocol["controller"]
++        limits = runtime_api.RuntimeLimits(
++            iterations=settings["iterations"], episode_s=settings["episode_s"],
++            decision_s=settings["entry_to_action_deadline_s_max"],
++            solve_s=settings["solve_budget_s"], poll_s=settings["poll_s"])
++        stage = "pre_episode_drain"
++        await drain(client, owner=owner, deadline=deadline, reserve=reserve,
++                    output=output, key=key, report=report, phase="pre-episode")
++        stage = "pre_control_state"
++        state = await observe(
++            client, "/admin/mpc/state", owner=owner, deadline=deadline, reserve=reserve,
++            output=output, key=key, report=report, name="pre-control-state-observation")
+         services.checked(state["identity"] == expected["identity"]
+                          and state["clock_domain"] == expected["clock_domain"]
+                          and state["cost_spec"] == expected["cost_spec"],
+                          "post-warmup source/clock/cost mismatch")
+         services.write(output / "pre-control-state.json", state, key)
++        recheck(bound)
++        stage = "runtime_binding"
+         entered = time.monotonic()
+         start = entered + 1.0
+-        services.checked(start + limits.episode_s < owner.deadline - owner.reserve,
+-                         "insufficient original work deadline")
++        window = handle.trace["duration_seconds"]
++        services.checked(all(type(value) in (int, float) and math.isfinite(value) and value > 0
++                             for value in (window, limits.episode_s)), "invalid episode/window duration")
++        expires = entered + 20.0
++        services.checked(start + max(limits.episode_s, window) <= min(deadline - reserve, expires),
++                         "episode/window exceeds original deadline or permit expiry")
+         journal = output / "runtime-journal.json"
+         described = runtime_api.describe_protocol(
+             planner, journal, endpoint=gateway, scenario_binding=prepared.scenario_binding,
+-            policy="mpc", limits=limits, start_at=start,
+-        )
++            policy="mpc", limits=limits, start_at=start)
+         permit = NominalDemoPermit(
+             identity=planner.identity, run_id=state["run_id"],
+             clock_domain=expected["clock_domain"], source_sha256=described["source_sha256"],
+             protocol_sha256=described["protocol_sha256"],
+-            not_before=entered, expires_at=entered + 20.0, max_commands=8, approved=True,
+-        )
++            not_before=entered, expires_at=expires, max_commands=8, approved=True)
+         services.write(output / "runtime-binding.json", {
+-            "description": described, "offered_start": start,
+-            "permit_not_before": entered, "permit_expires_at": entered + 20.0,
++            "description": described, "offered_start": start, "caller_source_binding": bound,
++            "caller_sha256": bound["caller_sha256"], "adapter_sha256": bound["adapter_sha256"],
++            "permit_not_before": entered, "permit_expires_at": expires,
+             "permit_max_commands": 8, "authority": "separate Mayor exact-source preregistration",
+         }, key)
+         runtime = runtime_api.NominalRuntime(
+             client, planner, prepared.scenario_factory, journal,
+             admin_key=key, scenario_binding=prepared.scenario_binding, permit=permit,
+-            enabled=True, policy="mpc", limits=limits, parameters=parameters, start_at=start,
+-        )
++            enabled=True, policy="mpc", limits=limits, parameters=parameters, start_at=start)
++        services.checked(runtime.protocol_sha256 == described["protocol_sha256"], "runtime protocol binding changed")
++        recheck(bound)
++        remaining(owner, deadline, reserve)
++        stage = "episode_run"
++        entered_run = True
+         result = await episode.run_episode(
+             prepared, runtime, owner=owner, offered_start=start, enabled=True)
+-        report["engineering_episode"] = result
+-        services.checked(not result["failures"] and result["all_workers_joined"]
++        stage = "episode_result_validation"
++        try:
++            report["engineering_episode"] = strict_copy(result)
++        except (ValueError, TypeError) as error:
++            preserving(lambda: services.write(output / "episode-invalid-result.json", {
++                "error": error_record(error), "unscorable_result_repr": repr(result)}, key),
++                error, report, "invalid_result_persistence")
++            raise
++        services.checked(isinstance(result, dict) and result.get("status") == "collected"
++                         and not result["failures"] and result["all_workers_joined"]
+                          and not result["persistence_errors"] and not result["missing_record_ids"],
+                          "engineering episode failed or incomplete; see raw episode evidence")
+-    owner.check()
++        services.checked(handle.capture["status"] == "collected" and len(handle.capture["records"]) == 5,
++                         "episode raw capture not collected or incomplete")
++        remaining(owner, deadline, reserve)
++        stage = "completed"
++    except BaseException as error:
++        failure(stage, error)
++    finally:
++        if client is not None:
++            try:
++                await drain(client, owner=owner, deadline=deadline, reserve=reserve,
++                            output=output, key=key, report=report, phase="final")
++            except BaseException as error:
++                failure("final_drain", error)
++            try:
++                await client.aclose()
++            except BaseException as error:
++                failure("client_close", error)
++        if bound is not None:
++            attempt("final_source_check", lambda: recheck(bound))
++        capture = capture_of(prepared)
++        allocated = attempt("episode_counts", lambda: counts(capture, entered_run))
++        warm_counts = attempt("warmup_counts", lambda: counts(getattr(warmup, "capture", None), False))
++        allocated = allocated or {"records_allocated": None, "sent": None}
++        report["offered_requests_from_driver"] = allocated["records_allocated"]
++        report["episode_sent_requests"] = allocated["sent"]
++        report["warmup_offered_requests"] = warm_counts["records_allocated"] if warm_counts else None
++        report["warmup_sent_requests"] = warm_counts["sent"] if warm_counts else None
++        path = output / ("caller-episode-capture.json" if entered_run else "episode-not-run-capture.json")
++        if capture is not None and recorder is not None:
++            report["caller_capture_sha256"] = attempt(
++                "episode_capture_persistence", lambda: persist_capture(recorder, path, capture, key))
++        else:
++            attempt("absent_capture_persistence", lambda: services.write(path, {
++                "schema": "qualification-caller-absent-capture-v1", "raw_v2_capture_available": False,
++                "status": "NOT_RUN" if not entered_run else "UNKNOWN", **allocated,
++            }, key))
++        if warmup is None:
++            attempt("absent_warmup_persistence", lambda: services.write(output / "warmup-not-run.json", {
++                "status": "NOT_RUN", "capture_available": False, "records_allocated": 0, "sent": 0}, key))
++        prepared_error = getattr(prepared, "error", None)
++        try:
++            prepared_error = strict_copy(prepared_error)
++        except (ValueError, TypeError) as error:
++            failure("prepared_error_serialization", error)
++            prepared_error = {"unserializable_error_repr": repr(prepared_error)}
++        receipt = {
++            "schema": "qualification-caller-terminal-v1", "stage": stage, "entered_run": entered_run,
++            "status": "NOT_RUN" if not entered_run else ("FAILED" if primary is not None else "COLLECTED"),
++            "prepared_error": prepared_error, "primary_error": error_record(primary) if primary else None,
++            "errors": report["caller_errors"], "records_allocated": allocated["records_allocated"],
++            "sent": allocated["sent"], "episode_planned_requests": 5,
++            "episode_trace_requests": report["episode_trace_requests"],
++            "capture_status": capture.get("status") if isinstance(capture, dict) else None,
++            "capture_error": capture.get("error") if isinstance(capture, dict) else None,
++            "deadline": deadline if type(deadline) in (int, float) and math.isfinite(deadline) else None,
++            "cleanup_reserve_s": reserve if type(reserve) in (int, float) and math.isfinite(reserve) else None,
++            "native_qualification": False, "full_wall": None,
++        }
++        report["qualification_caller"] = receipt
++        if entered_run and primary is not None and not isinstance(primary, Exception):
++            receipt["status"] = "INTERRUPTED"
++        if not entered_run:
++            attempt("not_run_receipt_persistence",
++                    lambda: services.write(output / "episode-not-run.json", receipt, key))
++        receipt["primary_error"] = error_record(primary) if primary else None
++        attempt("caller_terminal_persistence",
++                lambda: services.write(output / "qualification-caller.json", receipt, key))
++        if primary is not None:
++            receipt["primary_error"] = error_record(primary)
++            if entered_run:
++                receipt["status"] = "FAILED" if isinstance(primary, Exception) else "INTERRUPTED"
++    if primary is not None:
++        primary.qualification_caller_report = report["qualification_caller"]
++        raise primary.with_traceback(primary_tb)
+ 
+ 
+ def body(**context):
+diff --git a/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py b/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+index 158b2f4a0..dab682a0e 100644
+--- a/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
++++ b/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+@@ -1,20 +1,407 @@
+-"""CPU-only entry and failed-capture persistence controls."""
++"""CPU-only caller accounting, guarded MockTransport observations and persistence controls."""
+ 
++import asyncio
++from contextlib import ExitStack
++from dataclasses import asdict
++import hashlib
+ import json
+ import os
+ from pathlib import Path
++import time
++import types
+ import unittest
+-from unittest.mock import patch
++from unittest.mock import AsyncMock, patch
+ 
++import httpx
+ import native_nominal_qualification as driver
+ import nominal_client
++import nominal_episode
++import nominal_runtime
++from mpc_lab.contracts import ModelParameters
++from nominal_planner import NominalPlanner
+ 
+ 
+ ROOT = Path(os.environ["NATIVE_SMOKE_TEST_OUTPUT"]) / "qualification"
+ ROOT.mkdir(parents=True, exist_ok=True)
++REAL_CLIENT = httpx.AsyncClient
++REAL_CAPTURE_WRITE = nominal_client.write_capture
++REAL_WRITE = driver.services.write
++
++
++class CallerFixture:
++    """Literal capture/episode boundaries; real caller, binding, codec and MockTransport GETs."""
++
++    def __init__(self, case, name):
++        self.case = case
++        self.output = ROOT / name
++        (self.output / "services").mkdir(parents=True)
++        self.protocol_path = Path(os.environ["NATIVE_SMOKE_PROTOCOL"]).resolve()
++        self.root = self.protocol_path.parents[3]
++        self.argv = ["CPU-vllm", "serve", driver.services.MODEL]
++        (self.output / "services/ownership.json").write_text(json.dumps({
++            "services": [{"name": "engine", "argv": self.argv}]}))
++        parameters = ModelParameters()
++        self.report = {"source": {
++            "cost_spec": asdict(parameters.cost_spec), "identity": asdict(NominalPlanner(parameters).identity),
++            "clock_domain": nominal_runtime.clock_domain(),
++            "source_pins": {str(self.protocol_path): hashlib.sha256(self.protocol_path.read_bytes()).hexdigest()}},
++            "configuration": {"engine": self.argv}}
++        self.owner = types.SimpleNamespace(deadline=time.monotonic() + 480, reserve=30, check=self.check)
++        self.original_deadline = self.owner.deadline
++        self.clients, self.calls, self.metrics, self.observed_starts = [], [], [], []
++        self.prepare_error = self.state_error = self.warmup_error = self.episode_error = None
++        self.fail_writes, self.fail_capture_writes = set(), set()
++        self.warmup_calls = self.episode_calls = self.checks = 0
++        self.expire_after_metrics = None
++        self.bad_result = None
++        self.record_count = 5
++        domain = nominal_client.clock_domain()
++        self.warmup = types.SimpleNamespace(ready=True, capture={
++            "scope": "CPU-only fixture", "clock_domain": domain, "status": "failed",
++            "error": nominal_client.NOT_RUN_ERROR, "records": None})
++        self.prepared = types.SimpleNamespace(
++            error=None, recorder=types.SimpleNamespace(
++                capture={"scope": "CPU-only fixture", "clock_domain": domain, "status": "failed",
++                         "error": nominal_client.NOT_RUN_ERROR, "records": None},
++                trace={"duration_seconds": 5, "requests": [{"trace_id": f"CPU-{i}"} for i in range(5)]}),
++            scenario_binding={"scope": "CPU-only caller boundary"}, scenario_factory=lambda _: None)
++
++    def check(self):
++        self.checks += 1
++        if self.expire_after_metrics is not None and sum(call["path"] == "/metrics" for call in self.calls) >= self.expire_after_metrics:
++            raise driver.services.ProbeError("CPU original owner work budget exhausted")
++
++    @staticmethod
++    def zero_metrics():
++        return dict(current_in_flight=0, current_waiting=0, current_admitted_cost=0,
++                    tokenizer_fallback_requests=0)
++
++    def handle(self, request):
++        self.case.assertTrue((self.output / "qualification-source-binding.json").is_file())
++        self.case.assertTrue(all(value > 0 for value in request.extensions["timeout"].values()))
++        self.calls.append({"path": request.url.path, "timeout": request.extensions["timeout"]})
++        if request.url.path == "/metrics":
++            value = self.metrics.pop(0) if self.metrics else self.zero_metrics()
++            return httpx.Response(200, json=value)
++        self.case.assertEqual(request.url.path, "/admin/mpc/state")
++        if self.state_error is not None:
++            raise self.state_error
++        return httpx.Response(200, json={
++            **{name: self.report["source"][name] for name in ("identity", "clock_domain", "cost_spec")},
++            "run_id": "CPU-only-qualified-caller-fixture"})
++
++    def client(self, **kwargs):
++        value = REAL_CLIENT(transport=httpx.MockTransport(self.handle), **kwargs)
++        self.clients.append(value)
++        return value
++
++    async def warmup_replay(self, prepared, **kwargs):
++        self.warmup_calls += 1
++        self.case.assertTrue((self.output / "qualification-source-binding.json").is_file())
++        self.case.assertEqual(kwargs["deadline"], self.original_deadline)
++        self.case.assertEqual(kwargs["cleanup_reserve_s"], 30)
++        self.case.assertEqual(kwargs["clock_domain"], prepared.capture["clock_domain"])
++        self.case.assertNotEqual(kwargs["clock_domain"], self.report["source"]["clock_domain"])
++        prepared.capture.update(
++            status="collected", error=None,
++            records=[{"fate": "complete", "stream_done": True, "finish_reason": "stop",
++                      "sent_at": time.monotonic()} for _ in range(3)],
++            summary={"prompt_tokens_mismatch": 0})
++        if self.warmup_error is not None:
++            prepared.capture["status"] = "interrupted"
++            raise self.warmup_error
++        return prepared.capture
++
++    def episode_prepare(self, **kwargs):
++        self.case.assertEqual(kwargs["trace_path"], self.root / driver.PROBES / "admission-boundary.json")
++        if self.prepare_error is not None:
++            raise self.prepare_error
++        return self.prepared
++
++    async def episode_run(self, prepared, runtime, *, owner, offered_start, enabled):
++        self.episode_calls += 1
++        self.case.assertTrue(enabled)
++        self.case.assertIs(owner, self.owner)
++        self.case.assertEqual(runtime.start_at, offered_start)
++        self.case.assertEqual(runtime.permit.expires_at - runtime.permit.not_before, 20)
++        self.case.assertEqual(runtime.permit.max_commands, 8)
++        self.case.assertEqual(offered_start, runtime.permit.not_before + 1)
++        self.case.assertLessEqual(offered_start + 5, min(owner.deadline - owner.reserve, runtime.permit.expires_at))
++        binding = json.loads((self.output / "runtime-binding.json").read_text())
++        self.case.assertEqual(binding["description"]["protocol_sha256"], runtime.protocol_sha256)
++        self.case.assertEqual(binding["caller_sha256"], hashlib.sha256(Path(driver.__file__).read_bytes()).hexdigest())
++        self.case.assertEqual(binding["adapter_sha256"], driver.ADAPTER_SHA256)
++        self.observed_starts.append(offered_start)
++        fates = ("complete", "rejected", "unknown", "complete", "not_launched")
++        prepared.recorder.capture.update(status="collected", error=None, records=[
++            {"trace_id": f"CPU-{i}", "fate": fates[i],
++             "scheduled_at": offered_start + 1.25, "sent_at": offered_start + 1.25 if i < 4 else None}
++            for i in range(self.record_count)])
++        if self.episode_error is not None:
++            prepared.recorder.capture["status"] = "interrupted"
++            raise self.episode_error
++        return self.bad_result if self.bad_result is not None else {
++            "status": "collected", "failures": [], "all_workers_joined": True,
++            "persistence_errors": [], "missing_record_ids": [], "qualification": None}
++
++    def write(self, path, *args, **kwargs):
++        if path.name in self.fail_writes:
++            raise OSError("CPU receipt write failure: " + path.name)
++        return REAL_WRITE(path, *args, **kwargs)
++
++    def capture_write(self, path, capture):
++        if path.name in self.fail_capture_writes:
++            raise OSError("CPU raw capture write failure: " + path.name)
++        return REAL_CAPTURE_WRITE(path, capture)
++
++    def run(self):
++        async def invoke():
++            try:
++                await driver.collect(owner=self.owner, root=self.root, output=self.output,
++                                     key="CPU-key", report=self.report)
++            except BaseException as error:
++                return error
++            finally:
++                self.case.assertTrue(all(client.is_closed for client in self.clients))
++                self.case.assertEqual([task for task in asyncio.all_tasks()
++                                       if task is not asyncio.current_task() and not task.done()], [])
++            return None
++
++        with ExitStack() as stack:
++            for target, name, value in (
++                (httpx, "AsyncClient", self.client),
++                (httpx.AsyncHTTPTransport, "handle_async_request", AsyncMock(side_effect=AssertionError("real HTTP forbidden"))),
++                (nominal_client, "prepare_capture", lambda **_: self.warmup),
++                (nominal_client, "capture_replay", self.warmup_replay),
++                (nominal_client, "write_capture", self.capture_write),
++                (nominal_episode, "prepare_episode", self.episode_prepare),
++                (nominal_episode, "run_episode", self.episode_run),
++                (driver.services, "write", self.write),
++            ):
++                stack.enter_context(patch.object(target, name, new=value))
++            error = asyncio.run(invoke())
++        (self.output / "CPU-CALLER-CHECK.json").write_text(json.dumps({
++            "error": None if error is None else driver.error_record(error),
++            "calls": self.calls, "checks": self.checks, "warmup_calls": self.warmup_calls,
++            "episode_calls": self.episode_calls, "clients_closed": [c.is_closed for c in self.clients],
++            "remaining_tasks": [], "real_HTTP_or_services": False,
++            "report": self.report,
++        }, sort_keys=True, allow_nan=False))
++        return error
+ 
+ 
+ class Controls(unittest.TestCase):
++    def early_exit(self, name, prepared_error=None):
++        protocol_path = Path(os.environ["NATIVE_SMOKE_PROTOCOL"]).resolve()
++        root, output = protocol_path.parents[3], ROOT / name
++        (output / "services").mkdir(parents=True)
++        argv = ["CPU-vllm", "serve", driver.services.MODEL]
++        (output / "services/ownership.json").write_text(json.dumps({
++            "services": [{"name": "engine", "argv": argv}]}))
++        report = {"source": {
++            "cost_spec": {}, "identity": {}, "clock_domain": "CPU-source-clock",
++            "source_pins": {str(protocol_path): hashlib.sha256(protocol_path.read_bytes()).hexdigest()}},
++            "configuration": {"engine": argv}, "offered_requests_from_driver": None}
++        warmup = types.SimpleNamespace(ready=True, capture={
++            "clock_domain": "CPU-recorder-clock", "status": "collected", "error": None,
++            "records": [{"fate": "complete", "stream_done": True, "finish_reason": "stop",
++                         "sent_at": time.monotonic()} for _ in range(3)],
++            "summary": {"prompt_tokens_mismatch": 0}})
++        prepared = types.SimpleNamespace(
++            error=prepared_error, recorder=types.SimpleNamespace(
++                trace={"duration_seconds": 5, "requests": [{"trace_id": f"CPU-{i}"} for i in range(5)]},
++                capture={"clock_domain": "CPU-recorder-clock", "status": "failed",
++                         "error": "not_run", "records": None}))
++
++        class Client:
++            async def __aenter__(self):
++                return self
++
++            async def __aexit__(self, *_):
++                return False
++
++            async def aclose(self):
++                pass
++
++            async def get(self, path, **_kwargs):
++                if path == "/metrics":
++                    return httpx.Response(200, request=httpx.Request("GET", "http://CPU/metrics"), json={
++                        "current_in_flight": 0, "current_waiting": 0,
++                        "current_admitted_cost": 0, "tokenizer_fallback_requests": 0})
++                raise RuntimeError("CPU pre-control GET failure")
++
++        with patch.object(nominal_client, "prepare_capture", return_value=warmup), \
++                patch.object(nominal_client, "capture_replay", new=AsyncMock(return_value=warmup.capture)), \
++                patch.object(nominal_episode, "prepare_episode", return_value=prepared), \
++                patch.object(nominal_episode, "run_episode", new=AsyncMock()) as run_episode, \
++                patch.object(httpx, "AsyncClient", new=lambda **_: Client()):
++            expected = driver.services.ProbeError if prepared_error else RuntimeError
++            with self.assertRaises(expected):
++                asyncio.run(driver.collect(
++                    owner=types.SimpleNamespace(check=lambda: None, deadline=time.monotonic() + 480, reserve=30),
++                    root=root, output=output, key="", report=report))
++            run_episode.assert_not_awaited()
++        self.assertEqual(report["offered_requests_from_driver"], 0)
++        receipt = json.loads((output / "episode-not-run.json").read_text())
++        self.assertEqual(receipt["records_allocated"], 0)
++        self.assertEqual(receipt["sent"], 0)
++        self.assertEqual(receipt["prepared_error"], prepared_error)
++        self.assertTrue((output / "episode-not-run-capture.json").is_file())
++        return report
++
++    def test_pre_control_error_keeps_not_run_capture_and_zero_offers(self):
++        report = self.early_exit("pre-control-error")
++        self.assertEqual(report["episode_trace_requests"], 5)
++
++    def test_preparation_error_keeps_primary_reason_and_zero_offers(self):
++        self.early_exit("prepare-error", {"message": "CPU preparation refused"})
++
++    def test_prepare_exception_and_none_recorder_keep_not_run_reason(self):
++        for kind in ("raised", "no-recorder"):
++            with self.subTest(kind=kind):
++                fixture = CallerFixture(self, kind)
++                primary = RuntimeError("CPU prepare raised original reason")
++                if kind == "raised":
++                    fixture.prepare_error = primary
++                else:
++                    fixture.prepared.error = {"message": "CPU local preparation refused"}
++                    fixture.prepared.recorder = None
++                error = fixture.run()
++                if kind == "raised":
++                    self.assertIs(error, primary)
++                else:
++                    self.assertIsInstance(error, driver.services.ProbeError)
++                    self.assertIn("CPU local preparation refused", str(error))
++                receipt = json.loads((fixture.output / "episode-not-run.json").read_text())
++                self.assertEqual((receipt["records_allocated"], receipt["sent"]), (0, 0))
++                self.assertEqual(fixture.report["offered_requests_from_driver"], 0)
++                self.assertEqual(fixture.episode_calls, 0)
++                absent = json.loads((fixture.output / "episode-not-run-capture.json").read_text())
++                self.assertFalse(absent["raw_v2_capture_available"])
++
++    def test_get_failure_survives_capture_and_error_receipt_write_failures(self):
++        fixture = CallerFixture(self, "get-plus-write-error")
++        primary = RuntimeError("CPU original GET failure")
++        fixture.state_error = primary
++        fixture.fail_capture_writes.add("episode-not-run-capture.json")
++        fixture.fail_writes.add("episode-not-run-capture.write-error.json")
++        self.assertIs(fixture.run(), primary)
++        self.assertTrue(any("write" in str(row) for row in fixture.report["caller_errors"]))
++        self.assertIn("write-error receipt also failed", str(fixture.report["caller_errors"]))
++        self.assertEqual(fixture.report["offered_requests_from_driver"], 0)
++        self.assertEqual(fixture.report["episode_trace_requests"], 5)
++        receipt = json.loads((fixture.output / "episode-not-run.json").read_text())
++        self.assertEqual(receipt["primary_error"]["message"], str(primary))
++
++    def test_warmup_interrupts_survive_capture_persistence_failure(self):
++        for name, primary in (("warmup-KI", KeyboardInterrupt("CPU original warmup interrupt")),
++                              ("warmup-cancel", asyncio.CancelledError("CPU original warmup cancellation"))):
++            with self.subTest(name=name):
++                fixture = CallerFixture(self, name)
++                fixture.warmup_error = primary
++                fixture.fail_capture_writes.add("warmup-capture.json")
++                self.assertIs(fixture.run(), primary)
++                self.assertEqual(fixture.episode_calls, 0)
++                self.assertEqual(fixture.report["offered_requests_from_driver"], 0)
++                self.assertTrue((fixture.output / "warmup-capture.write-error.json").is_file())
++                self.assertTrue((fixture.output / "episode-not-run.json").is_file())
++
++    def test_complete_collect_keeps_counts_domains_bindings_and_all_drain_readings(self):
++        fixture = CallerFixture(self, "complete")
++        zero = fixture.zero_metrics()
++        fixture.metrics = [{**zero, "current_in_flight": 1, "current_admitted_cost": 3.2}, zero,
++                           {**zero, "current_waiting": 1}, zero]
++        self.assertIsNone(fixture.run())
++        self.assertEqual(fixture.report["warmup_offered_requests"], 3)
++        self.assertEqual(fixture.report["episode_trace_requests"], 5)
++        self.assertEqual(fixture.report["offered_requests_from_driver"], 5)
++        self.assertEqual(fixture.report["episode_sent_requests"], 4)
++        self.assertEqual(fixture.report["qualification_caller"]["status"], "COLLECTED")
++        raw = json.loads((fixture.output / "caller-episode-capture.json").read_text())
++        self.assertEqual(raw, fixture.prepared.recorder.capture)
++        self.assertIn("unknown", [row["fate"] for row in raw["records"]])
++        self.assertEqual(len(list(fixture.output.glob("*-metrics-*.json"))), 4)
++        self.assertEqual(fixture.report["caller_drains"]["pre-episode"]["readings"], 2)
++        self.assertEqual(fixture.report["caller_drains"]["final"]["readings"], 2)
++        self.assertEqual(fixture.report["qualification_caller"]["deadline"], fixture.original_deadline)
++        self.assertIsNone(fixture.report["qualification_caller"]["full_wall"])
++
++    def test_episode_cancel_preserves_allocated_partial_counts_and_primary(self):
++        fixture = CallerFixture(self, "episode-cancel")
++        primary = asyncio.CancelledError("CPU episode interrupted after allocation")
++        fixture.episode_error, fixture.record_count = primary, 2
++        self.assertIs(fixture.run(), primary)
++        self.assertEqual(fixture.report["episode_planned_requests"], 5)
++        self.assertEqual(fixture.report["offered_requests_from_driver"], 2)
++        self.assertEqual(fixture.report["episode_sent_requests"], 2)
++        self.assertEqual(fixture.report["qualification_caller"]["status"], "INTERRUPTED")
++        raw = json.loads((fixture.output / "caller-episode-capture.json").read_text())
++        self.assertEqual(len(raw["records"]), 2)
++
++    def test_drain_and_fallback_failure_close_without_losing_readings(self):
++        for kind in ("pre-fallback", "post-fallback", "busy-until-budget"):
++            with self.subTest(kind=kind):
++                fixture = CallerFixture(self, kind)
++                zero = fixture.zero_metrics()
++                if kind == "pre-fallback":
++                    fixture.metrics = [{**zero, "tokenizer_fallback_requests": 1}]
++                elif kind == "post-fallback":
++                    fixture.metrics = [zero, {**zero, "tokenizer_fallback_requests": 1}]
++                else:
++                    fixture.metrics = [{**zero, "current_in_flight": 1}] * 2
++                    fixture.expire_after_metrics = 2
++                error = fixture.run()
++                self.assertIsInstance(error, driver.services.ProbeError)
++                self.assertEqual(fixture.episode_calls, int(kind == "post-fallback"))
++                self.assertTrue(list(fixture.output.glob("*-metrics-*.json")))
++                self.assertIsNotNone(fixture.report["qualification_caller"]["primary_error"])
++
++    def test_protocol_pin_and_positive_remaining_budget_fail_before_traffic(self):
++        for kind in ("protocol-drift", "expired"):
++            with self.subTest(kind=kind):
++                fixture = CallerFixture(self, kind)
++                if kind == "protocol-drift":
++                    fixture.report["source"]["source_pins"][str(fixture.protocol_path)] = "0" * 64
++                else:
++                    fixture.owner.deadline = time.monotonic() - 1
++                    fixture.original_deadline = fixture.owner.deadline
++                self.assertIsInstance(fixture.run(), driver.services.ProbeError)
++                self.assertEqual(fixture.calls, [])
++                self.assertEqual(fixture.warmup_calls, 0)
++                self.assertEqual(fixture.report["episode_sent_requests"], 0)
++
++    def test_oversized_window_refuses_before_permit_or_episode(self):
++        for kind in ("window-exceeds-permit", "window-exceeds-owner"):
++            with self.subTest(kind=kind):
++                fixture = CallerFixture(self, kind)
++                if kind == "window-exceeds-permit":
++                    fixture.prepared.recorder.trace["duration_seconds"] = 20
++                else:
++                    fixture.owner.deadline = time.monotonic() + 34
++                    fixture.original_deadline = fixture.owner.deadline
++                error = fixture.run()
++                self.assertIsInstance(error, driver.services.ProbeError)
++                self.assertIn("permit expiry", str(error))
++                self.assertEqual(fixture.episode_calls, 0)
++                self.assertFalse((fixture.output / "runtime-binding.json").exists())
++
++    def test_non_json_result_and_terminal_write_failure_fail_closed(self):
++        for kind in ("nonfinite-result", "mixed-keys", "terminal-write"):
++            with self.subTest(kind=kind):
++                fixture = CallerFixture(self, kind)
++                if kind == "nonfinite-result":
++                    fixture.bad_result = {"untrusted": float("inf")}
++                elif kind == "mixed-keys":
++                    fixture.bad_result = {1: "not-string", "other": "mixed"}
++                else:
++                    fixture.fail_writes.add("qualification-caller.json")
++                error = fixture.run()
++                self.assertIsNotNone(error)
++                json.dumps(fixture.report, sort_keys=True, allow_nan=False)
++                self.assertEqual(fixture.report["qualification_caller"]["status"], "FAILED")
++                self.assertEqual(fixture.report["offered_requests_from_driver"], 5)
++                self.assertTrue((fixture.output / "caller-episode-capture.json").is_file())
++
+     def test_default_off_never_enters_native_body(self):
+         forbidden = AssertionError("OFF performed an effect")
+         with patch.object(driver, "body", side_effect=forbidden), \

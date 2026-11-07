@@ -1,0 +1,303 @@
+{
+  "schema": "r24-resume-mvp-claims-review01/report-v1",
+  "status": "CLAIM_AUDIT_DELIVERED_10_FINDINGS_NOT_ACCEPTANCE",
+  "reviewer": {
+    "provider": "Anthropic",
+    "model_id": "claude-opus-5.5",
+    "reasoning_effort": "max",
+    "role": "Role4 Independent Validation (claim/leakage audit)",
+    "nested_agents": 0
+  },
+  "scope": {
+    "task": "One focused read-only claim audit of the five Mayor-drafted P0 resume docs (evidence cutoff 2026-11-04, DRAFT, not Resume Ready).",
+    "capsule": ".runtime/r24-resume-mvp-claims-review01",
+    "capsule_created_utc": "2026-11-04T21:04:19.542084368Z",
+    "doc_pins_before_reading": "DOC-PINS.sha256 + byte copies in pinned-docs/ were written by pin_docs.sh (pin-docs01.log) before doc-view01.log; logged drift re-check at end: all 5 OK (drift-docs01.log), mtimes unchanged (drift-docs01-stat.log).",
+    "anchors": "Doc anchors are pinned-docs/<doc>:<line> of the pinned bytes. Reference anchors are file:line for text files and JSON pointer paths for JSON indices."
+  },
+  "doc_pins": [
+    {"doc": "docs/resume_project_summary.md", "bytes": 7225, "sha256": "1981586694c2d0d7c54953100d684e4bb7e02e1ac28553f48a9b6fe1e6f8ac04"},
+    {"doc": "docs/architecture.md", "bytes": 4956, "sha256": "be89d12b9cd42a5c725fa26b9e751dc76238c6ffc8043a0ceada552978f2d579"},
+    {"doc": "docs/benchmark_results.md", "bytes": 8485, "sha256": "415737cdfeb53de04507f358a691d08e291b029d92322f9b0b69510aad9d1aa1"},
+    {"doc": "docs/interview_defense.md", "bytes": 4614, "sha256": "8ee821c7b6be59686c5e03314cafd9350869112fd1a70a18dc6908f7fe103bdc"},
+    {"doc": "docs/resume_bullets.md", "bytes": 2576, "sha256": "3472ccef2bba89a9417697ffc6c588c1feead0ac4741dcf7123de7ecaa15db0c"}
+  ],
+  "references": {
+    "cap": "10 files, 139374 bytes total (limit 1048576); pinned in REF-PINS.sha256 before content reads; drift re-check OK (drift-refs01.log)",
+    "files": [
+      {"id": "E1-A-report", "path": "results/shared-client-20261018/captures/shared-client-a-r1/report.json", "bytes": 4706, "sha256": "62cf7720e7bd8f3484bb25a7de582b308bc40c72c0f09fb3408aa2c676c170b3", "read": "full, line-numbered (ref-view01.log)"},
+      {"id": "E1-B-report", "path": "results/shared-client-20261018/captures/shared-client-b-r1/report.json", "bytes": 4721, "sha256": "516a0fceec29e561ad888b1ab7434d4319c77df4eb20496be342788c3b0bfed4", "read": "full, line-numbered (ref-view01.log)"},
+      {"id": "E1-A-manifest", "path": "results/shared-client-20261018/captures/shared-client-a-r1/manifest.json", "bytes": 12285, "sha256": "8e0fdd8fbf56efd5c7995d4aa01952b10dcb66187c6e5879f28aca7e50a9a3cf", "read": "full cat -n (ref-view02.log)"},
+      {"id": "E1-B-manifest", "path": "results/shared-client-20261018/captures/shared-client-b-r1/manifest.json", "bytes": 12222, "sha256": "abcac0d25a124c6e2414cce57bac2b344a4eb28c724be2024e7ac2319f08f88e", "read": "diff against A manifest (ref-view02.log; diff exit 1 = files differ)"},
+      {"id": "E1-report-md", "path": "results/shared-client-20261018/report.md", "bytes": 7708, "sha256": "c5a4327dceac49f19e857bf525b52c0039bfc95747fd80b0832940cbc758bfe0", "read": "full, line-numbered (ref-view01.log)"},
+      {"id": "E1-reproduce", "path": "results/shared-client-20261018/reproduce.py", "bytes": 2575, "sha256": "6a62b8c3f4075d51b07f71f27464e65cea145c3145dc46a3b0ebad4a63a87b1b", "read": "full, line-numbered (ref-view01.log)"},
+      {"id": "E2", "path": "results/mpc-native-r24/reviews/native-team16-planner-revision02-parent-seal01.json", "bytes": 44896, "sha256": "d9830e64de74f4682846e5508d77edf7f3808b955a0e44735f04e60eb49ebaf2", "read": "key/value outline (ref-view04.log; lists walked to first 40 items, copies has 105; values cut at 300 chars)"},
+      {"id": "E3", "path": "results/mpc-native-r24/reviews/native-team16-consumer-deployment02-parent01.json", "bytes": 3627, "sha256": "4b065a61e730aaeb12d3995b29fbf05cc49874079d00588365a59c51a8614566", "read": "complete key/value outline (ref-view03.log)"},
+      {"id": "E4", "path": "results/mpc-native-r24/reviews/native-team16-owner-inflight-gpu01-results.json", "bytes": 38933, "sha256": "c59d03d00503dfb3dd7080d457bee6d35290ee8192bcd9b06bfa60725630a7d3", "read": "key/value outline (ref-view04.log; same truncation rules)"},
+      {"id": "E5", "path": "results/mpc-native-r24/reviews/native-team16-consumer-deployment02-independent-parent01.json", "bytes": 7701, "sha256": "700f7ccdb2e8cd67b13ee227289ec770e3d9d4f2978debcc96a5083edaf83837", "read": "complete key/value outline (ref-view03.log)"}
+    ]
+  },
+  "verdict": "No checked figure in the five docs contradicts its cited source: all E1 table values, the E1 configuration values, the E2/E3/E4 counts and the E5 description match. The docs' main disclaimers are present: not MPC, real loop missing, A/B noncausal, FIFO/throughput/fairness gaps, no SLO guarantee and a portability gap. Ten wording/protocol findings remain. One is high: the P0 gate has no evaluation-vs-development separation (leakage). Four are medium: reproducibility wording, reproduction-command scope and pinning, a CPU-vs-native and cleanup bullet, and E2 scope/shadow wording. Five are low: version attribution, E1 configuration provenance, bullet denominators, E3/E4 status precision and readiness labels.",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high (prospective P0 protocol gap; no current result affected)",
+      "confidence": "high that the requirement is absent from all five docs (logged grep doc-grep01.log: no held/in-sample/disjoint/unseen/leak terms)",
+      "category": "leakage / selection bias",
+      "doc_anchors": [
+        "resume_project_summary.md:48 'Comparable descriptive GPU results for MPC, strong development-selected Fixed, FIFO and strong OneMove; same workload, model, resource limits and scoring.'",
+        "resume_project_summary.md:63-64 'Freeze one MVP protocol: ... baseline selection, FIFO meaning, workload, ...'",
+        "benchmark_results.md:87-91 'freeze the strongest Fixed selection on development data only; use identical ... offered requests ... OneMove must use the same model/scenario panel'",
+        "interview_defense.md:44-46 'A simpler frozen experimental predictor may demonstrate the engineering loop'",
+        "interview_defense.md:55-56 'Do not weaken the baselines or give MPC privileged future information.'"
+      ],
+      "evidence": [
+        "report.md:3-4 'C remains uncollected and unscored; MPC has not been evaluated.'",
+        "report.md:25 'All long scheduled captures use the existing Azure development trace,'",
+        "report.md:34-37 original A 'excluded from shared-model training'; A/B role 'Development'; 'Held-out C | Not collected | ... Retained for a future, separately frozen model test'",
+        "report.md:68-71 'development-only ... still reuses the same offered arrival trace, not new unseen traffic.'",
+        "reproduce.py:47 prints C_used=False, development_only=True",
+        "A manifest:4 trace results/trace-experiment-96-r1/trace.json; :31 trace_sha256 62f3f182...4e2e; :55 role 'development'"
+      ],
+      "issue": "The docs never name the scored P0 workload or require it to be disjoint from the data used to fit the predictor, build scenario panels, select Fixed or tune MPC/OneMove. Every long scheduled capture cited (report.md:25) uses the Azure development trace, which was used for A/B identification and development forecasting. Replaying that trace for the comparison would score MPC, and any baseline tuned on the trace, in-sample. A scenario panel built from A/B captures of the same trace would carry near-copies of the evaluation's own future arrivals: privileged future information that interview_defense.md:55-56 forbids but that no gate operationally excludes. In addition, A/B are time-varying schedules (report.md:39-40), not Fixed runs, so 'development-selected Fixed' needs a declared selection procedure.",
+      "corrective_wording": "Add to summary row L48 and to benchmark_results L87: 'Predeclare the scored workload and keep it disjoint from every input used to fit the predictor, build scenario panels, select Fixed or tune MPC/OneMove (e.g., the reserved held-out C or a predeclared, previously unused trace window). Scenario panels may use only information available at each decision time, never the scored workload's own future arrivals. Declare how Fixed is selected (development GPU runs or model ranking) and on which data. If the development Azure trace is reused for an engineering pilot, label every result: in-sample on the development trace; no generalization claim.'"
+    },
+    {
+      "id": "F2",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "unsupported resume phrasing / portable reproduction",
+      "doc_anchors": [
+        "resume_project_summary.md:13 'reproducible workload/audit tooling'",
+        "resume_project_summary.md:81 'reproducible trace-replay tooling'",
+        "resume_bullets.md:36 'lifecycle telemetry for reproducible serving studies.'",
+        "resume_bullets.md:37-38 'linking request outcomes, configurations and commands to Git revisions'",
+        "interview_defense.md:89-90 'The accounting, instrumentation, bounded runtime and reproducibility remain engineering contributions.'",
+        "resume_project_summary.md:33-34 'Full traces, commands, configurations and exact commits are indexed'"
+      ],
+      "evidence": [
+        "benchmark_results.md:54-57 'The runtime commit was not resolvable in the current local object database ... This is a P0 portability gap.'",
+        "resume_project_summary.md:50 'clean-checkout MVP reproduction remains unverified.'",
+        "A manifest:34 git_commit d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586; :75 git_dirty true",
+        "reproduce.py:30-33 refuses unless code bytes match recorded hashes ('use --code-root at d0ccb2c')",
+        "report.md:51-54 historical: saved reports reproduce exactly from raw files; 15 recorded file hashes match d0ccb2c; git_dirty=true retained",
+        "benchmark_results.md:38 trace is identified by SHA256 only, not linked"
+      ],
+      "issue": "Resume-facing text states reproducibility and Git-revision linkage as achieved, while the same doc set records a P0 portability gap, a dirty and currently unresolvable runtime commit, and unverified clean-checkout reproduction. What exists is historical, hash-pinned raw-to-report verification. E1 outcomes are linked to recorded source hashes plus a dirty commit ID that cannot currently be checked out, not to a checkoutable Git revision. The evidence index identifies the trace by SHA256 (benchmark_results.md:38); whether the full trace file is published was not checked.",
+      "corrective_wording": "summary L13: 'auditable, source-hash-pinned workload/audit tooling'. summary L81: 'Built an instrumented vLLM serving gateway and source-hash-pinned trace-replay tooling ...'. bullets L36: '... lifecycle telemetry for auditable serving studies.' bullets L37-39: '... linking request outcomes, configurations and commands to recorded source hashes and evidence commits ...'. interview L89-90: '... instrumentation, bounded runtime and audit trail remain engineering contributions; portable clean-checkout reproduction is still a P0 item.' summary L33-34: 'Trace identities (SHA256), commands, configurations and recorded commits are indexed ...'. Restore 'reproducible' only after summary L50 closes."
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "confidence": "high for reproduce.py control flow; bounded because identification_features.py, forecast_baselines.py and verification.json were not read",
+      "category": "portable reproduction / quantitative provenance",
+      "doc_anchors": [
+        "benchmark_results.md:31 '### E1 evidence chain and reproduction'",
+        "benchmark_results.md:44-52 'Historical offline reconstruction command ... reproduce.py --raw-root ... --extended --code-root /path/to/recorded-runtime-source'",
+        "resume_bullets.md:16-17 'Evidence: first bullet E1, including raw trace, collection configuration, reproduction command ...'"
+      ],
+      "evidence": [
+        "reproduce.py:1 'Rebuild qualified A/B features and development forecasts from verified raw captures.'",
+        "reproduce.py:30-33 checks only manifest['code_sha256'] entries",
+        "A manifest:58-73 code_sha256 lists 15 runtime files (run_trace_pilot.py ... requirements-v1.txt); identification_features.py and forecast_baselines.py are absent",
+        "reproduce.py:42-43 run code/identification_features.py and code/forecast_baselines.py from --code-root; :44-46 with --extended run four analysis diagnostics (diagnose_models.py, version_ablation.py, nonlinear_diagnostic.py, interaction_diagnostic.py) from the published directory; :47 prints one JSON line with the output path, C_used=False and development_only=True",
+        "report.md:51-54 attributes exact raw-to-report reproduction to the verification record, a different artefact"
+      ],
+      "issue": "The command presented as the E1 reproduction rebuilds features and development forecasts. Neither its stated purpose (reproduce.py:1) nor its invoked scripts (reproduce.py:42-46) include a step that regenerates the E1 outcome table (offered/success/rejected/SLO/p99 from report.json). It also hash-checks only the 15 recorded runtime files and then executes two analysis scripts taken from --code-root without a hash check. 'Source-pinned' therefore does not cover the code this command runs.",
+      "corrective_wording": "benchmark_results L44: 'Historical offline feature/forecast reconstruction (does not regenerate the E1 outcome table; reproduce.py hash-checks the 15 recorded runtime files only, while identification_features.py and forecast_baselines.py are taken unpinned from --code-root). E1 table evidence: raw-to-report comparison in verification.json.' Pin the two analysis scripts by SHA256 or publication commit before calling this path source-pinned."
+    },
+    {
+      "id": "F4",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "CPU-vs-native / failure-claim truthfulness",
+      "doc_anchors": [
+        "resume_bullets.md:26-28 'Built auditable observation, lifecycle and failure evidence for native LLM serving, distinguishing stale state, unknown application and incomplete cleanup from successful control.'",
+        "resume_bullets.md:30 'Evidence: E2/E3/E4/E5 and the architecture.'",
+        "architecture.md:82-84 'D2-F1 currently shows how a pending alarm or failed cleanup-anchor publication can skip cleanup'"
+      ],
+      "evidence": [
+        "E2 /integration 'Runtime integration, comparison exact-key/time mapping, acquisition/CAS/TTL and native gates are not accepted here.'; /native_launch_permitted false",
+        "E3 /fresh_Parent_results CPU tests 9 per Python; /actual_entrypoint_or_valid_approval_created false",
+        "E4 /status 'ACCEPTED_NATIVE_ENGINEERING_AND_ONE_TRUE_INFLIGHT_CUT_COMPONENT_COVERAGE_FAIL'; /component_pass false; /actual_nonempty_overlap_count 1 vs /prescribed_overlap_target 2; /Native_experiments 1; /elapsed_s 67.32; /captured_requests 2",
+        "E5 /failure_path 'Pending monitor alarm or anchor publish/clock error can prevent owned.cleanup; flock can subsequently be released with owned processes potentially alive.'; /finding_basis 'Source control flow, not an observed live orphan incident.'"
+      ],
+      "issue": "Of the four cited items, only E4 involves real GPU serving. It is one 67 s run with two captured requests, and its component coverage FAILED (1 of 2). E2 and E3 are CPU-only. E5 is a source-backed path in which cleanup is skipped and the ownership lock can be released while owned processes may remain alive. 'for native LLM serving ... distinguishing ... incomplete cleanup from successful control' reads as a capability demonstrated on live serving, which the evidence does not establish. E5 is a counterexample to robust cleanup handling in that composition, though not to truthful failure reporting. 'Native' is internal jargon. architecture.md:82-84 omits the lock-release consequence and the clock-error trigger.",
+      "corrective_wording": "bullets L26-28: 'Prototyped failure-classification tooling for vLLM serving (stale state, unknown command application, incomplete cleanup); CPU-validated, with a GPU coverage diagnostic that failed (1 of 2 required observations) and an open, source-identified cleanup-bypass blocker preserved as negative results.' architecture L82-84: '... a pending alarm, cleanup-anchor publication or clock error can skip cleanup, after which the exclusive lock can be released while owned processes may still be alive (source-backed; no observed orphan).'"
+    },
+    {
+      "id": "F5",
+      "severity": "medium",
+      "confidence": "high that the cited E2 index, as outlined, contains no 'shadow' term and that the wording is broader than the E2 label; medium on the exact meaning of 'FULL_ACTION_FIXED_REFERENCE_ONLY' (E2 PLAN/README were outside the cap; the outline is truncated as stated)",
+      "category": "CPU-vs-native / scope of accepted planner",
+      "doc_anchors": [
+        "resume_project_summary.md:29 'Implemented finite-horizon policy-planning components | E2: independently accepted CPU/shadow tests.'",
+        "resume_project_summary.md:84-85 'Implemented and CPU-validated finite-horizon MPC planning components with versioned-state, deadline and failure checks'",
+        "resume_bullets.md:12-13 'Implemented CPU-validated MPC planning components with versioned-state, deadline and failure checks'",
+        "interview_defense.md:23 'CPU/shadow planning exists'"
+      ],
+      "evidence": [
+        "E2 /status 'PARENT_ACCEPTED_EXACT_ORDERING_AND_FULL_ACTION_FIXED_REFERENCE_ONLY'",
+        "E2 /scope 'Exact rational ordering of frozen binary inputs; float metrics display only; Train uses exact per-panel means and all shared constant candidates incl24.'",
+        "E2 /integration 'Only planner numerical dependency can advance. Runtime integration ... and native gates are not accepted here.'",
+        "E2 /preserved_controls 'Original102 and unchanged Role7 ten controls plus18 revision02 cases, including common-term absorption, deadlines and versions.'; /tests_each_python 130",
+        "logged case-insensitive count grep over the E2-E5 outlines (ref-grep01.log, exit 1): 0 matches for shadow|horizon|onemove|objective in ref-view03.log and ref-view04.log"
+      ],
+      "issue": "The cited acceptance covers a frozen numerical planner component: exact ordering with a full-action Fixed-reference scope, and runtime integration explicitly not accepted. No 'shadow' evidence appears in the cited E2 index as outlined, and the docs cite no other evidence ID for it. 'Finite-horizon MPC planning components' may exceed the accepted label.",
+      "corrective_wording": "summary L29: 'Implemented a frozen finite-horizon policy-planner component | E2: Parent-accepted exact candidate ordering (full-action Fixed-reference scope), 130 CPU tests per Python; not runtime-integrated; no native performance claim.' Remove 'shadow' from summary L29 and interview L23 unless a separate evidence ID is added. summary L84-86 and bullets L12-14: 'Implemented a frozen finite-horizon policy planner with exact candidate ordering and deadline/version checks, CPU-tested (130 cases per Python); runtime integration and baseline comparison remain open.' Mayor to confirm from the E2 PLAN whether multi-action MPC planning is inside the accepted scope."
+    },
+    {
+      "id": "F6",
+      "severity": "low",
+      "confidence": "high that the attribution caveat is missing; current file hashes not checked",
+      "category": "version conflation",
+      "doc_anchors": [
+        "architecture.md:32 'Gateway | ... | gateway.py'",
+        "architecture.md:33 'Measurement | ... | trace_control.py, telemetry.py, E1 in results'",
+        "architecture.md:34 'Prediction/planning | ... | mpc_lab/model.py, mpc_lab/controller.py, E2 frozen planner'"
+      ],
+      "evidence": [
+        "A manifest:58-73 E1 runtime hashes, e.g. gateway.py f05006c28af341a1..., trace_control.py 8d0d2ad169847e3e..., telemetry.py 315123d4234076297f...; :75 git_dirty true",
+        "benchmark_results.md:54-56 'A source tree matching the archived hashes is required; the example path is a required input, not a working shipped checkout.'",
+        "E2 /copies[0..39] (as outlined) sources are team16 files (policy_planner16.py, run_attempt.py, freeze_inputs.py, tests); /source_sha256 164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a",
+        "architecture.md:38-40 'The public library and frozen team16 prototypes are separate versions. Do not combine their settings, interfaces or test totals'"
+      ],
+      "issue": "The evidence column places today's files beside E1 and E2 as if they are what was measured or tested. E1 measured the hash-recorded dirty d0ccb2c runtime, and the docs do not state whether the linked current files equal those hashes (not checked here). E2 tested a team16 planner, not the public mpc_lab modules listed in the same cell. This contradicts the docs' own separate-version rule.",
+      "corrective_wording": "Add under architecture L29-36: 'E1 measured the recorded runtime (manifest code_sha256; git_dirty=true). Current files are linked for reading, and E1 applies to them only if their SHA256 equals the manifest entries. E2 tested the team16 frozen planner (policy_planner16.py, source_sha256 164f3947...), not the public mpc_lab modules.' Split row L34 into public-library and team16-E2 rows."
+    },
+    {
+      "id": "F7",
+      "severity": "low",
+      "confidence": "high on manifest text",
+      "category": "quantitative/config provenance; noncausal A/B",
+      "doc_anchors": [
+        "benchmark_results.md:9-10 'Hardware/configuration: RTX 4090, reported 24,564 MiB, driver 595.91.07; Qwen3-4B-Instruct-2507, vLLM 0.30.0, Torch 2.13.0+cu130, Python 3.12.3.'",
+        "benchmark_results.md:25 'These are scheduled identification captures on different hosts'"
+      ],
+      "evidence": [
+        "A manifest:105 package_scope 'Runner Python environment; not proof of a remote backend version'; :106 backend_launch_provenance 'Not observed by this runner; archive and verify backend launch records separately'",
+        "report.md:39-40 A schedule 96,64,80,64,48,80,96,48,64,96 and B schedule 96,64,48,96,80,48,64,80,64,96: the same four levels in different orders (the designed contrast)",
+        "A/B diff: :7 budget schedule ident-multilevel-30s-v1-a vs -v1-b; :25-26 and :51-54 protocol experiments/shared-client-qualification-v1.json sha256 1f649ebd... vs /workspace/shared-client-b-v1.json (shared-client-b-v1) sha256 6610d383...; :49 replay_plan_sha256 8ab5faa4... vs 52e5ae3f...; :81 host 54bca65c0a11 vs dab372752013; :212 gateway executable /workspace/vllm-shared-client/.venv/bin/python vs /workspace/vllm-serving-lab/.venv/bin/python",
+        "No A/B diff at trace_sha256 (:31), python (:33), git_commit (:34), packages (:36-37), code_sha256 (:58-73), git_dirty (:75) or gpu (:76)",
+        "report.md:43-45 'different rental hosts with the same RTX 4090, 595.91.07 driver and core runtime versions ... do not isolate schedule or host effects.'"
+      ],
+      "issue": "The version line comes from the runner environment. The cited manifests explicitly say it is not proof of the backend vLLM version and that backend launch provenance was not observed. The historical report's 'same core runtime versions' rests on records outside the cited manifests. Besides host and the designed budget-schedule order, A/B also differ in protocol declaration (path and SHA256), replay-plan SHA256 and gateway virtual-environment path. The noncausal caveat is correct but incomplete. Trace identity is equal, so 'same arrivals/input lengths' is supported, but the replay plans are not byte-identical; the cause was not verified.",
+      "corrective_wording": "benchmark L9-10: 'Hardware/configuration as recorded by the runner: RTX 4090, 24,564 MiB, driver 595.91.07; runner environment vLLM 0.30.0, Torch 2.13.0+cu130, Python 3.12.3 (manifest: not proof of backend version; historical report states the same core runtime versions).' L25: '... on different hosts, with different protocol declarations, budget-schedule orders, replay-plan hashes and gateway virtual environments; not ...'"
+    },
+    {
+      "id": "F8",
+      "severity": "low",
+      "confidence": "high",
+      "category": "unsupported resume phrasing / scheduled-vs-MPC / denominators",
+      "doc_anchors": [
+        "resume_bullets.md:9-11 'audited native serving captures replaying 7,643 offered requests over 300 seconds, retaining overload rejections and control-timing evidence.'",
+        "interview_defense.md:80-83 'E1 provides audited historical native serving measurements under scheduled budgets ...'"
+      ],
+      "evidence": [
+        "A report.json:11-14,18 attempted 7643, success 1976, rejected 5667, failed 0, slo_successes 572; B report.json:11-14,18 7643, 2059, 5584, 0, 736",
+        "report.json:75 budget_mode 'scheduled'; A manifest:55 role 'development'",
+        "derived arithmetic from those values: rejected/offered A 5667/7643=74.15%, B 5584/7643=73.06%; SLO-good/offered A 572/7643=7.48%, B 736/7643=9.63%"
+      ],
+      "issue": "The 7,643 count is per capture, and there are two captures. 'Native' is internal jargon (here it means real GPU vLLM, not Native14). The bullet does not say the captures were scheduled-budget identification runs rather than a controller. The obvious interview follow-up numbers, about 74% of offered requests rejected and 7.5-9.6% of offered requests meeting the SLO under deliberately varied budgets, are missing from interview_defense.",
+      "corrective_wording": "bullets L9-11: 'Built an instrumented vLLM admission-control gateway and trace-replay pipeline; ran two audited scheduled-budget identification captures on a real GPU, each replaying 7,643 offered requests over 300 s and retaining every rejection and control-timing record.' Add to interview L80-83: 'Under deliberately varied scheduled budgets on an overload trace, A/B rejected 74.1%/73.1% of offered requests, and 7.5%/9.6% of offered requests met the 0.5 s TTFT SLO. This is identification data, not controller performance.'"
+    },
+    {
+      "id": "F9",
+      "severity": "low",
+      "confidence": "high",
+      "category": "E3/E4 status precision and denominators",
+      "doc_anchors": [
+        "benchmark_results.md:65 'Deployment composition: nine CPU integration cases passed per Python; this predates the subsequent cleanup blocker.'",
+        "benchmark_results.md:66 'Native observation diagnostic: 90 HTTP records, 43 completion tokens and incomplete nonempty coverage (one of two required observations).'",
+        "resume_project_summary.md:31 'incomplete native observation coverage'"
+      ],
+      "evidence": [
+        "E3 /status 'BOUNDED_DEPLOYMENT_SOURCE_CPU_ACCEPTED_INDEPENDENT_DELTA_AND_FULL_COMPOSITION_PENDING'; /remaining includes 'Independent complete deployment callgraph/approval/privacy/ownership review'",
+        "E5 /original_engineering_acceptance_is_live_eligibility false",
+        "E4 /engineering_pass true; /component_pass false; /generations[0] role 'one-warmup' completion_tokens 11 finish 'stop'; /generations[1] 'managed-1' and /generations[2] 'managed-2' completion_tokens 16 each, finish 'length'; /actual_completion_tokens 43; /HTTP_records 90; /captured_requests 2; /attempts 1; /elapsed_s 67.32; /interpretation '1/2 is NOT a component PASS'"
+      ],
+      "issue": "E3's own acceptance was bounded: independent full-composition review was pending and the acceptance never conferred live eligibility, even before D2-F1. 'Predates the blocker' implies a cleaner state. E4's recorded verdict is component coverage FAIL, which 'incomplete' softens. The 90 and 43 counts lack denominators: 3 generations, and the 43 tokens include 11 warmup tokens.",
+      "corrective_wording": "benchmark L65: '... nine CPU integration cases passed per Python (bounded acceptance; independent full-composition review pending; never live-eligible); later blocked by D2-F1 (E5).' L66: 'Native observation diagnostic, one 67 s GPU run: engineering accepted; component coverage FAIL (1 of 2 required nonempty in-flight observations); 90 HTTP records; 3 generations (1 warmup + 2 managed); 43 completion tokens including 11 warmup.' summary L31: 'E4 component coverage FAIL (1 of 2) and E5 cleanup-bypass path; neither is relabelled PASS.'"
+    },
+    {
+      "id": "F10",
+      "severity": "low",
+      "confidence": "high",
+      "category": "readiness / self-certification labels",
+      "doc_anchors": [
+        "resume_project_summary.md:3 'Status: research prototype; not Resume Ready for a real closed-loop MPC claim.'",
+        "resume_project_summary.md:79 '## Safe resume wording today'",
+        "resume_bullets.md:1 '# Resume bullets: verified prototype wording'",
+        "benchmark_results.md:1 '# Verified results and benchmark evidence'"
+      ],
+      "evidence": [
+        "resume_project_summary.md:45 'Documented; final independent claim audit pending.'",
+        "resume_project_summary.md:70-71 'declare Resume Ready only after P0 closes.'",
+        "findings F2, F4, F5 and F8 affect that wording"
+      ],
+      "issue": "'Safe ... today' and 'verified' self-certify the wording before the pending independent audit. L3's qualifier 'for a real closed-loop MPC claim' implies readiness for other claims, whereas L70-71 makes Resume Ready a whole-package gate.",
+      "corrective_wording": "summary L3: 'Status: DRAFT research prototype; not Resume Ready (P0 open).' summary L79: '## Candidate resume wording (subject to independent claim audit)'. bullets L1: '# Resume bullets: candidate prototype wording (audit pending)'. benchmark L1: '# Recorded results and evidence (no P0 comparison collected)'."
+    }
+  ],
+  "verified_consistent": [
+    "E1 table (benchmark_results:17-18) equals A/B report.json:11-18: offered 7,643; success 1,976/2,059; rejected 5,667/5,584; failed 0; SLO-good 572/736; goodput 572/300=1.906667 and 736/300=2.453333; client p99 2.412583/2.202635 s.",
+    "SLO definition (benchmark_results:21-22) matches report.json:21. The p99 column is labelled 'Client TTFT p99' and conditional on successes (benchmark_results:20); the scheduled-origin p99 differs by less than 1 ms (2.413432 vs 2.412583; 2.203232 vs 2.202635).",
+    "Trace SHA (benchmark_results:38) equals A manifest:31, with no A/B difference. Output cap 128, context 8192, SLO 0.5 s and prefix cache disabled match report.md:25-28 and manifest :14/:18.",
+    "Scheduled-not-MPC and noncausal A/B disclaimers are present (benchmark_results:25-26; interview_defense:82-83; report.md:43-45).",
+    "The missing real loop is disclosed (summary:46; architecture:18,23-25; interview_defense:23-25). The gateway budget is distinguished from the engine budget (summary:20-21; architecture:50-54).",
+    "FIFO/throughput/fairness gaps are disclosed as unmeasured, not zero (benchmark_results:81-85). Note: E1 report.json already has per-input-size groups (A :32-69) usable as descriptive group outcomes, but no fairness index.",
+    "SLO is not presented as a guarantee (resume_bullets:45-47; interview_defense:62; architecture:87-88; benchmark_results:69-70).",
+    "E2 130 tests per Python (/tests_each_python; 102+10+18 per /preserved_controls); E3 9/9 per Python with 0 failures (/fresh_Parent_results); E4 90 HTTP records, 43 tokens, 1 of 2 (/HTTP_records, /actual_completion_tokens, /actual_nonempty_overlap_count); E5 row matches /finding_basis, /status and /Native_execution_permission false."
+  ],
+  "claims_not_checked": [
+    "Every Git commit cited (E1 aea7694a..., recorded runtime d0ccb2c0... (docs disclose it is unresolvable), E2 2b4ed5bc..., E3 c00d29d2..., E4 52b2b244.../d6ded2b2..., E5 26139be5...): no git per scope.",
+    "Doc link resolution: Parent-owned.",
+    "Outside the 10-file cap and not read: verification.json, raw-bundle/index.json, runbooks, E3 command JSON, E4 preregistration, E5 REVIEW.md, the math specification, current gateway.py/trace_control.py/telemetry.py/mpc_lab sources and their hashes, identification_features.py, forecast_baselines.py, E2 PLAN/README, and the presence of the trace file.",
+    "The basis for 'audited' and for the 476-case suite beyond report.md text; the reference-specification objective and whether E2 uses it; the historical scorer's lack of FIFO/throughput/fairness; any shadow evidence outside E2; E2 copies[40..104]."
+  ],
+  "attempts": [
+    "pin-docs01 rc0",
+    "doc-view01 rc0",
+    "pin-refs01 rc0",
+    "ref-view01 rc0",
+    "ref-view02 rc1 (diff exit 1 = A/B manifests differ; expected, not a failure)",
+    "ref-view03 rc0",
+    "ref-view04 rc0",
+    "doc-grep01 rc0",
+    "drift-docs01 rc0",
+    "drift-refs01 rc0",
+    "drift-docs01-stat rc0",
+    "anchor-check01 rc0 (doc quote/line verification over doc-view01.log)",
+    "ref-anchor-check01 rc0 (E1 report/report.md/reproduce.py line anchors)",
+    "ref-anchor-check02 rc0 (A manifest line anchors)",
+    "ref-anchor-check03 rc0 (E2-E5 JSON pointers)",
+    "ref-grep01 rc1 (count grep: 0 matches in both outlines; exit 1 means no match, expected)",
+    "preserve-draft01 rc0 (pre-check draft kept as superseded-REPORT-draft01.json)",
+    "report-check01 rc0 (JSON valid, 10 findings; exposed the verdict severity-count mismatch, then corrected)",
+    "report-check02 rc0 (JSON valid; severities 1 high, 4 medium, 5 low; verdict counts match)",
+    "drift-docs02 rc0 and drift-refs02 rc0 (final pre-seal re-check: 5 docs and 10 references unchanged)",
+    "report-check03: final logged JSON check after adding these two entries"
+  ],
+  "draft_corrections": "A pre-check draft of this report (sha256 503587113c3f7b80424de6df27e60f4a8dc273a41d4461e95bfde4613cf66b7e) is preserved as superseded-REPORT-draft01.json. After the logged anchor checks it was corrected in place: interview anchors 56 to 55-56 and 89 to 89-90; reproduce.py:47 described fully; trace publication marked not checked; shadow evidence bounded to the outlined E2 index (ref-grep01); E4 generation roles cited; A/B schedule-order evidence added; F6 over-read about the shipped checkout withdrawn; verdict bounded to checked figures; verdict severity count corrected to 1 high, 4 medium, 5 low to match the per-finding grades (caught by report-check01). No finding was added, removed or re-graded.",
+  "unlogged_actions_disclosure": [
+    "About 21:03Z, before the capsule: metadata-only stat of the 5 docs (also noted in the first MANUAL line).",
+    "Before pin-refs01 (21:06:46Z, exact time not recorded): metadata-only stat of 18 candidate reference files; no content read.",
+    "One unlogged sha256sum invocation with output redirected to /dev/null during setup; its exact arguments cannot be recovered from preserved logs.",
+    "json_outline.py was written by heredoc and set to 444 in the same shell command as its first logged use (21:08Z); creation was not separately logged.",
+    "pin_refs.sh and json_outline.py are not in TOOL-PINS.sha256; every file is in the final SHA256SUMS.",
+    "Display-only sed/grep/awk/cut/head/cat/ls of capsule-owned logs and pins, including after the draft: sed of ref-view02.log lines 380-end and ref-view04.log lines 478-510, and grep of ref-view01.log for report.md:38-42.",
+    "Display-only reads (editor view tool) of the five capsule-owned pinned-docs copies to re-check quotes; line numbers were then verified by the logged anchor-check01.",
+    "The tool harness auto-saved oversized display outputs to harness-managed temporary files; they were not read or used."
+  ],
+  "limitations": [
+    "Read-only wording-versus-evidence audit. No runtime tests, experiments, GPU, network, git or installs. No edits to docs, sources or other capsules.",
+    "JSON indices were read through a key/value outliner, and E2/E4 views are truncated as stated. Findings F3, F5 and F6 carry the bounded premises stated in their confidence fields.",
+    "Derived percentages are plain arithmetic on pinned report.json counts, not new measurements."
+  ],
+  "nonclaims": [
+    "Not P0 completion, not Resume Ready, not Mayor acceptance and not native experiment eligibility.",
+    "No MPC benefit, superiority, production, SLO-guarantee or calibrated-prediction claim.",
+    "Native14 FAIL, E4 coverage 1 of 2 FAIL, G06/G16 pending and the D2-F1 blocker are unchanged.",
+    "The held fixed-floor recovery01 scope was not resumed or modified."
+  ]
+}

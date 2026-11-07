@@ -1,0 +1,33 @@
+{
+  "all_workers_joined": true,
+  "fates": [
+    "rejected",
+    "cancelled",
+    "cancelled",
+    "cancelled",
+    "cancelled"
+  ],
+  "runtime_lock_reacquired": true,
+  "service_or_Native_cleanup_claim": false,
+  "status": "interrupted",
+  "workers": {
+    "controller": {
+      "error": {
+        "message": "",
+        "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 207, in _worker\n    return await call(), None\n           ^^^^^^^^^^^^\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 202, in _controller\n    return {\"startup\": startup, \"runtime\": await runtime.run()}\n                                           ^^^^^^^^^^^^^^^^^^^\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_runtime.py\", line 645, in run\n    await self.sleeper(min(self.limits.poll_s, remaining))\n  File \"/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py\", line 665, in sleep\n    return await future\n           ^^^^^^^^^^^^\nasyncio.exceptions.CancelledError\n",
+        "type": "CancelledError"
+      },
+      "joined": true,
+      "result": null
+    },
+    "recorder": {
+      "error": {
+        "message": "",
+        "traceback": "Traceback (most recent call last):\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_episode.py\", line 207, in _worker\n    return await call(), None\n           ^^^^^^^^^^^^\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_client.py\", line 880, in capture_replay\n    await _collect(capture, trace, capture['binding'], transport, capture['config']['request_timeout_s'],\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_client.py\", line 741, in _collect\n    await _replay(client, trace, records, gateway_url=capture['config']['gateway_url'],\n  File \"/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_client.py\", line 497, in _replay\n    await asyncio.sleep(offered_end - now)\n  File \"/home/daniel_lin/.local/share/uv/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/asyncio/tasks.py\", line 665, in sleep\n    return await future\n           ^^^^^^^^^^^^\nasyncio.exceptions.CancelledError\n",
+        "type": "CancelledError"
+      },
+      "joined": true,
+      "result": null
+    }
+  }
+}

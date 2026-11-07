@@ -1,0 +1,23 @@
+0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570  gateway.py
+165:                                     state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9)
+227:    "current_waiting": 0,
+232:    "current_admitted_cost": 0.0,
+233:    "peak_admitted_cost": 0.0,
+236:    "tokenizer_fallback_requests": 0,
+294:                and math.isclose(reserved, state["current_admitted_cost"],
+402:            "max_admitted_cost": metrics["admission_budget"],
+446:                state["tokenizer_fallback_requests"] += 1
+456:            projected_cost = state["current_admitted_cost"] + request_cost
+467:            state["current_admitted_cost"] = projected_cost
+468:            state["peak_admitted_cost"] = max(
+469:                state["peak_admitted_cost"],
+486:        outstanding = state["current_in_flight"] + state["current_waiting"]
+492:        state["current_waiting"] += 1
+493:        state["max_waiting"] = max(state["max_waiting"], state["current_waiting"])
+500:            state["current_waiting"] -= 1
+507:            state["current_waiting"] = max(0, state["current_waiting"] - 1)
+518:            state["current_admitted_cost"] = max(
+520:                state["current_admitted_cost"] - request_cost,
+684:                 "max_admitted_cost": decision.budget,
+804:            "current_admitted_cost": state["current_admitted_cost"],
+838:                state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9,

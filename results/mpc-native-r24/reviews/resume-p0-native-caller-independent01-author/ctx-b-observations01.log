@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "<string>", line 5, in <module>
+AttributeError: 'str' object has no attribute 'get'
+83c8c8a9b548c2166e596a039166ba122c5153f54c0021f4031512ab0b73f9a3
+new_findings N1 | _strict_json accepts overflow float literals such as 1e999 as +/-inf and verbatim-copy paths keep them, so a capture can become unwritable under allow_nan=False, contradicting the docstring at client 
+new_findings N2 | the static_fixed arm budget is not cross-checked against the recorder's own retained gateway 503 max_admitted_cost and budget_version
+observations O-1 | malformed but valid SSE JSON can raise AttributeError in StreamParse; the outcome becomes fate unknown and, inside the cancel/transport handlers, the original cause is lost
+observations O-2 | observed host, clock_domain and client sources_sha256 are recorded but never compared across arms
+observations O-3 | deadline and reserve are cancellation targets, not a hard return bound
+observations O-4 | gateway request-id contract for the ledger join
+observations O-5 | Eval reuse/comparability checks can raise for the whole table on benign overlaps
+observations O-6 | zero-send wording holds for offered requests only
+observations O-7 | positive send lag is ungated and only min/n_negative reach the table summary
+observations O-8 | library build_run accepts capture_sha256=None
+observations O-9 | an interrupt delivered outside the capture_replay frame leaves the initial envelope
+observations INFO-1 | terminal_at includes end-of-stream cleanup
+observations INFO-2 | no client-side pool queueing; sent_at precedes connection setup

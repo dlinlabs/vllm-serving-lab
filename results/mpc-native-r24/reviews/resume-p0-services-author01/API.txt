@@ -1,0 +1,86 @@
+NominalServices: CPU-tested ownership helper, not a Native authorization
+
+Retained Mayor-verified identity: gpt-6-astra / max.
+Public files:
+  experiments/mpc-research/resume-mvp/nominal_services.py
+  experiments/mpc-research/resume-mvp/test_nominal_services.py
+
+Programmatic interface (illustrative, not an executable serving configuration):
+
+  engine = Service("engine", preregistered_engine_argv, explicit_engine_env)
+  gateway = Service("gateway", preregistered_gateway_argv, explicit_gateway_env)
+  with NominalServices(
+      (engine, gateway),
+      lock_paths=(exact_mayor_gpu_lock, exact_mayor_component_lock),
+      run_dir=new_owned_directory,
+      deadline=original_absolute_host_monotonic_deadline,
+      ready=bounded_readiness_callback,
+      execute=True,
+      cleanup_reserve=preregistered_cleanup_reserve,
+      term_grace=preregistered_term_grace,
+  ) as owner:
+      owner.check()
+      caller_owned_work()
+      owner.check()
+
+Default execute=False refuses before Popen, file locks or run-directory creation.
+There is deliberately no CLI, model command factory, permission file, workload
+reader, renderer configuration, benchmark loop or protocol authority.
+The exact two absolute lock paths are mandatory: nominal_protocol.json does not
+name them. The caller must supply the actual preregistered Mayor pair, not choose
+substitute per-run locks. CPU controls use private dummy lock files only.
+
+Contract and bounds:
+* Linux procfs, pidfd_open/pidfd_send_signal/P_PIDFD and child-subreaper support
+  are required. The owner must be an isolated cooperating process, without other
+  direct children initially or unrelated child creation during the scope.
+  Run unrelated clients outside this owner process, or use in-process clients.
+* ready(owner, remaining_work_seconds) returns truthy only when both services
+  are actually ready. It must bound every operation by the supplied remainder.
+  Network readiness is supplied by the later real caller; none was run here.
+* One absolute deadline covers both services. Work ends at deadline minus
+  cleanup_reserve; TERM/KILL and joins must fit inside the original deadline.
+  Defaults are reserve=1.0s and TERM grace=.25s, not validated GPU settings.
+  A .02s polling watchdog never raises SIGALRM or another asynchronous exception
+  into the caller. Cleanup leaves up to .1s of the reserve for final publication.
+* Both lock-side markers are fsynced RUNNING before a Popen. The pending service
+  intent is published before its spawn. Roots have separate new sessions.
+  Known identities contain PID/starttick/PPID/PGID/SID, with stable pidfds for
+  signalling and descendant reaping. The inventory is limited to 128 identities.
+* All known services are attempted independently even after a signal failure.
+  STOPPED means known identities were verified gone; it does not mean an episode
+  succeeded. Startup, body and deadline exceptions remain failures.
+* Unknown/adopted unattributed identities, incomplete spawns, failed cleanup or
+  nonjoined state conservatively retain POISON/RUNNING/pending evidence. No
+  reset API is provided. A future cooperating helper refuses these states,
+  including after a separate operator has killed the remaining processes.
+* The outer test guardian is test infrastructure, not a production cleanup grace
+  reset. Its independent already-frozen aggregate deadline permitted cleanup of
+  the intentionally denied dummy after the helper correctly returned POISON.
+
+Privacy:
+argv/env pass through unchanged: no optimization, resource or baseline alteration.
+Service.safe_argv is optional and must match or redact each actual argument.
+Omission redacts every argv token. The caller must not label a secret token safe.
+Only CUDA_VISIBLE_DEVICES, OMP_NUM_THREADS, OPENBLAS_NUM_THREADS,
+MKL_NUM_THREADS, NUMEXPR_NUM_THREADS and PYTHONDONTWRITEBYTECODE values enter
+metadata. Other environment entries are counted, not dumped. Logs and errors
+are private, mode0600 before the historical evidence is sealed read-only.
+The actual preregistered configuration/source attestation remains Mayor-owned.
+
+Explicit limitations:
+This is not a universal OS/process-tree proof. Procfs snapshots can miss escaped
+descendants; unattributed adopted children are not blindly signalled. Subreaper
+state is process-wide. The helper is inappropriate for a shared arbitrary child
+process supervisor. Blocking OS/fsync/Popen operations and callbacks that violate
+the cooperative budget are not hard-real-time bounded by Python.
+Owner crash is not fully cleaned up: there is no pdeath wrapper. Durable unresolved
+markers prevent silent cooperative rerun but do not kill all survivors after a
+crash. Lock paths/directories and marker preservation require trusted cooperation.
+
+Mayor must independently accept source, bind the exact production locks, verify
+real GPU/source/clock/config/idle state, supply actual readiness and preregistered
+commands/budgets, and authorize any host execution. Python3.12.3/vLLM0.30.0
+service startup and real GPU cleanup remain unexecuted. Driver startup/final-drain
+wall times and client/controller START must be measured by the real driver.
+No Native eligibility, calibration, SLO, deployment, benchmark or MPC claim follows.

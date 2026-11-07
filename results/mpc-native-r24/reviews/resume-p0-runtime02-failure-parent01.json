@@ -1,0 +1,36 @@
+{
+  "schema": "resume-p0-runtime-failure-parent-v1",
+  "base_commit": "98e1174de56b01fd4448259c002d9f32223298ad",
+  "status": "FAILED_CPU_INTEGRATION_NOT_NATIVE_QUALIFIED",
+  "owner": "Role6 retained gpt-6-astra/max",
+  "author_capsule": ".runtime/r24-resume-p0-nominal-runtime02",
+  "archive": "results/mpc-native-r24/reviews/resume-p0-runtime02-failed-author",
+  "author_seal_sha256": "d290c5a7768e62cc3d7b3a8481569b0f8eb488c88913a6dbf3556a57f6c71213",
+  "original_snapshot": {
+    "files": 49,
+    "bytes": 357342,
+    "author_manifest_excludes": ["SHA256SUMS", "SEAL_RECEIPT.json"],
+    "receipt_scope": "The original receipt is preserved but excluded by the author's seal; it is not silently treated as a sealed member."
+  },
+  "controls": {
+    "python": "3.12.16",
+    "attempts": 1,
+    "pass": 1,
+    "fail": 1,
+    "error": 2,
+    "exit": 1,
+    "raw_stdout": "attempts/generation01-py312/stdout.log",
+    "raw_stderr": "attempts/generation01-py312/stderr.log",
+    "all_owned_helpers_joined": true
+  },
+  "exact_blocker": "The offline protocol adds a trailing slash to a root URL, while runtime binding compares the raw HTTPX base URL string. Equivalent root endpoints then fail runtime_configuration_or_parameter_binding_changed before the loop.",
+  "smallest_correction_authorized": "Role6 runtime03: share strict root-origin canonicalization between protocol construction and endpoint validation; retain rejection of userinfo/query/fragment/non-root paths or changed origins. Validate focused new controls and core runtime regressions, preserving this original failed capsule.",
+  "native_evidence": {
+    "cycles": 0,
+    "applied_actions": 0,
+    "request_outcomes": 0,
+    "meaning": "No Native test ran in this attempt; zeros are attempt counts, not measured benchmark rates."
+  },
+  "separate_deliverables": "This blocks Native B, not the independently scoped gateway/replay/CPU resume evidence A.",
+  "nonclaims": ["No Native authority", "No closed-loop PASS", "No admission-behavior evidence", "No superiority or SLO guarantee"]
+}

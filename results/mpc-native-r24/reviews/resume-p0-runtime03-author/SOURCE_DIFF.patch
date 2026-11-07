@@ -1,0 +1,168 @@
+--- runtime02/nominal_runtime.py
++++ experiments/mpc-research/resume-mvp/nominal_runtime.py
+@@ -27,6 +27,7 @@
+ import sys
+ import time
+ from typing import Callable
++from urllib.parse import urlsplit
+ import uuid
+ 
+ HERE = Path(__file__).resolve().parent
+@@ -133,13 +134,30 @@
+                  "invalid_runtime_deadlines")
+ 
+ 
++def _root_endpoint(value):
++    """Validate the supplied root spelling before HTTPX can normalize a path."""
++    reason = "explicit_HTTP_root_endpoint_required"
++    _require(isinstance(value, (str, httpx.URL)), reason)
++    raw = str(value)
++    _require(not any(char.isspace() or ord(char) < 32 or ord(char) == 127 for char in raw)
++             and not any(char in raw for char in ("?", "#", "\\")), reason)
++    try:
++        parts = urlsplit(raw)
++        port = parts.port
++        endpoint = httpx.URL(raw)
++    except (ValueError, httpx.InvalidURL) as exc:
++        raise RuntimeRefused(reason) from exc
++    _require(parts.scheme in ("http", "https") and parts.netloc
++             and parts.username is None and parts.password is None
++             and parts.path in ("", "/") and not parts.netloc.endswith(":")
++             and (port is None or 0 <= port <= 65535)
++             and endpoint.host and endpoint.is_absolute_url and endpoint.raw_path == b"/", reason)
++    return str(endpoint.copy_with(path="/"))
++
++
+ def _protocol(parameters, policy, limits, scenario_binding, endpoint, journal_path, start_at=None):
+     module_paths()
+-    endpoint = httpx.URL(endpoint)
+-    _require(endpoint.scheme in ("http", "https") and endpoint.host
+-             and not endpoint.username and not endpoint.password
+-             and endpoint.path in ("", "/") and not endpoint.query and not endpoint.fragment,
+-             "explicit_HTTP_root_endpoint_required")
++    endpoint = _root_endpoint(endpoint)
+     _require(type(parameters) is ModelParameters and type(limits) is RuntimeLimits
+              and policy in ("mpc", "one_move"), "typed_nominal_protocol_required")
+     _require(start_at is None or finite(start_at) and start_at >= 0, "invalid_shared_start")
+@@ -147,7 +165,7 @@
+         "scope": SCOPE, "runtime": JOURNAL_SCHEMA, "planner_contract": CONTRACT_SHA256,
+         "objective": OBJECTIVE_ID, "parameters": asdict(parameters), "policy": policy,
+         "limits": asdict(limits), "scenario_binding": scenario_binding,
+-        "endpoint": str(endpoint.copy_with(path="/")), "journal_path": str(Path(journal_path).absolute()),
++        "endpoint": endpoint, "journal_path": str(Path(journal_path).absolute()),
+         "max_commands": 8, "source_age_s": 0.5, "command_ttl_s": 0.1,
+         "precommit_observation_equality": True, "ledger_CAS": False,
+         "Fixed_FIFO": "separate_static_preoffer_setup_not_implemented",
+@@ -317,7 +335,7 @@
+                  and self.policy == self.protocol["policy"]
+                  and self.start_at == self.protocol.get("start_at")
+                  and str(self.store.path) == self.protocol["journal_path"]
+-                 and str(self.client.base_url) == self.protocol["endpoint"]
++                 and _root_endpoint(self.client.base_url) == self.protocol["endpoint"]
+                  and self.client.follow_redirects is False
+                  and digest(self.protocol) == self.protocol_sha256,
+                  "runtime_configuration_or_parameter_binding_changed")
+@@ -781,6 +799,7 @@
+     if not args.describe_protocol and args.experimental_nominal_demo and (
+             args.nominal_permit is None or (args.scenario_file is None and args.train_tape is None)):
+         parser.error("experimental POST requires a separate nominal permit and causal scenario file or Train tape")
++    endpoint = _root_endpoint(args.url)
+     cost = CostSpec(**_strict(args.cost_spec_file.read_bytes())) if args.cost_spec_file else CostSpec()
+     planner = NominalPlanner(ModelParameters(cost_spec=cost))
+     if args.train_tape:
+@@ -790,7 +809,7 @@
+     limits = RuntimeLimits(iterations=args.steps, episode_s=args.episode_seconds, poll_s=args.poll_seconds)
+     if args.describe_protocol:
+         print(json.dumps(describe_protocol(
+-            planner, args.journal, endpoint=args.url, scenario_binding=binding,
++            planner, args.journal, endpoint=endpoint, scenario_binding=binding,
+             policy=args.policy, limits=limits, start_at=args.start_at,
+         ), sort_keys=True, allow_nan=False))
+         return
+@@ -799,7 +818,7 @@
+     _require(bool(key), "ADMIN_API_KEY_required")
+ 
+     async def execute():
+-        async with httpx.AsyncClient(base_url=args.url, follow_redirects=False, trust_env=False) as client:
++        async with httpx.AsyncClient(base_url=endpoint, follow_redirects=False, trust_env=False) as client:
+             runtime = NominalRuntime(
+                 client, planner, factory, args.journal, admin_key=key, scenario_binding=binding,
+                 permit=permit, enabled=args.experimental_nominal_demo, policy=args.policy,
+--- runtime02/test_nominal_runtime.py
++++ experiments/mpc-research/resume-mvp/test_nominal_runtime.py
+@@ -318,6 +318,75 @@
+         self.assertEqual(len({command["operation_id"] for command in gateway.posts}), 3)
+         self.assertIsNone(result["pending_outcome"])
+ 
++    async def test_root03_canonicalization_preserves_strict_endpoint_binding(self):
++        gateway = self.gateway(Clock())
++        runtime = self.runtime(gateway, enabled=False, permit=False)
++
++        def protocol(endpoint):
++            return r._protocol(runtime.parameters, runtime.policy, runtime.limits,
++                               runtime.protocol["scenario_binding"], endpoint, runtime.store.path)
++
++        valid = ("http://cpu.invalid", "http://cpu.invalid/")
++        for index, endpoint in enumerate(valid):
++            with self.subTest(valid=endpoint):
++                self.assertEqual(digest(protocol(endpoint)), runtime.protocol_sha256)
++                runtime.client.base_url = endpoint
++                with self.literal():
++                    result = await self.execute(runtime)
++                self.assertIsNone(result["failure"])
++                self.assertEqual(gateway.gets, index + 1)
++                self.assertFalse(result["steps"][0]["cap_change_applied"])
++                self.assertEqual(result["issued_commands"], 0)
++        self.assertEqual(gateway.posts, [])
++
++        refused = (
++            "http://user:password@cpu.invalid", "http://@cpu.invalid/",
++            "http://cpu.invalid/?x=1", "http://cpu.invalid/?",
++            "http://cpu.invalid/#fragment", "http://cpu.invalid/#",
++            "http://cpu.invalid/api", "http://cpu.invalid//",
++            "http://cpu.invalid/.", "http://cpu.invalid/..",
++            "http://cpu.invalid/%2f", "http://cpu.invalid\\path",
++            "http://cpu.invalid/\n", " http://cpu.invalid/",
++            "//cpu.invalid/", "http:cpu.invalid", "ftp://cpu.invalid/",
++            "http://", "http://cpu.invalid:", "http://cpu.invalid:bad",
++            "http://cpu.invalid:65536",
++        )
++        refusals = []
++        with mock.patch.object(r.httpx, "AsyncClient", side_effect=AssertionError("no client for invalid URL")), \
++                mock.patch.dict(os.environ, {"ADMIN_API_KEY": CPU_KEY}):
++            for endpoint in refused:
++                with self.subTest(refused=endpoint):
++                    with self.assertRaisesRegex(r.RuntimeRefused, "explicit_HTTP_root_endpoint_required"):
++                        protocol(endpoint)
++                    with self.assertRaisesRegex(r.RuntimeRefused, "explicit_HTTP_root_endpoint_required") as stopped:
++                        r.main(["--url", endpoint, "--journal", str(self.directory / "never-created.json")])
++                    refusals.append({"endpoint": endpoint, "reason": str(stopped.exception)})
++        self.assertFalse((self.directory / "never-created.json").exists())
++
++        changes = (
++            "https://cpu.invalid/", "http://other.invalid/", "http://cpu.invalid:8080/",
++            "http://cpu.invalid/api/", "http://user:password@cpu.invalid/",
++            "http://cpu.invalid/?x=1", "http://cpu.invalid/#fragment",
++        )
++        for endpoint in changes:
++            with self.subTest(changed=endpoint):
++                runtime.client.base_url = endpoint
++                with self.assertRaises(r.RuntimeRefused):
++                    runtime._binding()
++        runtime.client.base_url = valid[0]
++        runtime.client.follow_redirects = True
++        with self.assertRaisesRegex(r.RuntimeRefused, "runtime_configuration_or_parameter_binding_changed"):
++            runtime._binding()
++        runtime.client.follow_redirects = False
++        runtime._binding()
++        self.assertEqual(gateway.gets, 2)
++        self.assertEqual(gateway.posts, [])
++        self.write("ROOT_URL_CANONICALIZATION.json", {
++            "equivalent_roots": valid, "real_MockTransport_GETs": gateway.gets,
++            "refused_raw_URLs": refusals, "refused_endpoint_changes": changes,
++            "redirects_still_refused": True, "POSTs": 0, "scope": "CPU-only, no Native qualification",
++        })
++
+     async def test_default_off_missing_permit_and_hold_are_not_application(self):
+         for name, enabled, permit, hold in (
+             ("off", False, True, False), ("missing", True, False, False), ("hold", True, True, True),

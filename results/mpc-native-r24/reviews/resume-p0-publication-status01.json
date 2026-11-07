@@ -1,0 +1,38 @@
+{
+  "schema": "mpc-p0-publication-status-v1",
+  "source_commit_before_publication": "7ae8c3a766d3461f4927bc501c1eabad22ae56f9",
+  "purpose": "Publish a reviewable current-state snapshot, not approval to execute Native MPC.",
+  "milestone_A": "SCOPED_RESUME_READY",
+  "milestone_B": "BLOCKED",
+  "CPU_runtime_and_recorder_composition": "PASS_CPU_ONLY",
+  "actual_GPU_services_startup_and_owned_cleanup": "PASS_COMPONENT_ONLY",
+  "qualified_native_control_cycles": 0,
+  "actual_admission_effect": "UNMEASURED",
+  "Train_fixed_freeze": "NOT_STARTED",
+  "held_out_Eval": "NOT_STARTED",
+  "native_caller_independent_review": {
+    "status": "FAIL_PRE_RUN",
+    "archive": "resume-p0-native-caller-independent01-author",
+    "seal_sha256": "b96bc805b37aae1f07cebeff450c6e56d5c4523953a77a64dd18aaba953a1b15",
+    "B2": "Body traffic can increment ledger counters; the caller incorrectly requires zero. A telemetry error can also mask the separate post-GPU idle assertion.",
+    "B3": "The caller counts planned episode requests as offered before run entry and lacks caller-owned durable not-run accounting on early failure.",
+    "owner": "Mayor",
+    "next": "Implement narrow corrections, pass focused regressions and diff-only independent acceptance, then separately preregister the five-request Native qualification."
+  },
+  "draft_regression_evidence": {
+    "archive": "resume-p0-native-body06-draft-proof",
+    "status": "NEGATIVE_WITNESSES_NOT_ACCEPTED_FIXES",
+    "first_generation": "4 failed, 12 passed, 2 subtests passed. The idle test incorrectly made the pre-start GPU non-idle, so that failure did not witness the intended post-cleanup assertion.",
+    "corrected_generation": "4 failed, 12 passed, 2 subtests passed. The fixture now preserves idle startup and makes only the post-cleanup GPU non-idle; B2 and B3 failures reproduce.",
+    "source_changes": "NONE. Draft changes are retained as patches, not active failing regression files. Existing accepted test bytes are preserved.",
+    "native_HTTP_or_GPU": false
+  },
+  "publication_policy": {
+    "format": "Draft PR from main containing current code, P0 evidence, and directly cited historical audits.",
+    "reason": "Original research branch contains 674 commits, about 6.5 GB and blobs exceeding the GitHub 100 MiB limit.",
+    "not_included": "Entire research history, unrelated sampling campaigns, model weights, personal resume/contact details and unrelated untracked agent work.",
+    "provenance": "Original local source commits remain provenance metadata, not reachable commits in the snapshot PR. Exported bytes are hash-bound by the publication manifest; the new PR commit is the public snapshot identity.",
+    "no_merge": true,
+    "no_new_GPU_execution": true
+  }
+}

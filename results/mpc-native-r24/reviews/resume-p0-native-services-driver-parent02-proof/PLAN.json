@@ -1,0 +1,10 @@
+{
+  "scope": "CPU-only lifecycle-driver correction; no HTTP, GPU, SSH, services or inference",
+  "original_driver_sha256": "00a63a85701872bbb0a8f6d6ff39c75983d686a07f488b52ae60c31780aaebc5",
+  "original_test_sha256": "10d27477b1566644a47ce4d72156f665034241efe02e6e215107e5d0d65c5ada",
+  "finding": "An interruption after readiness propagates past except Exception, but finally can publish lifecycle_passed=true after cleanup without normal scope completion.",
+  "required_change": "Retain interruption evidence and propagation, require normal scope completion before PASS; preserve all existing startup and cleanup semantics.",
+  "discrimination": "Add one mocked interruption regression; run only it against the unchanged original driver and preserve its expected failing output.",
+  "correction_validation": "Run the five original mocked controls plus the new interruption regression once on Python 3.12.16, within 60 seconds.",
+  "no_changes": "Accepted services helper, runtime, client, metrics, planner, model and product code remain untouched."
+}

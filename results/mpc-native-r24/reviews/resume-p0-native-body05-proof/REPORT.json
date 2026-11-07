@@ -1,0 +1,26 @@
+{
+  "scope": "CPU_VALIDATED_ENTRY_LIFECYCLE_AND_PERSISTENCE_ONLY",
+  "tests": 11,
+  "subtests": 2,
+  "failures": 0,
+  "errors": 0,
+  "python": "3.12.16",
+  "generation": 1,
+  "actual_HTTP_services_model_tokenizer_GPU_calls": 0,
+  "verified": [
+    "Seven original lifecycle controls remain passing",
+    "Optional caller body runs only inside ready owned scope",
+    "Body failure is not PASS and preserves known cleanup plus redaction",
+    "New qualification CLI remains default OFF",
+    "Nonfinite capture serialization preserves an explicit unscorable error receipt and rethrows"
+  ],
+  "source_sha256": {
+    "native_services_smoke.py": "832c252ae0e7fc634a425acebd79edd796833bc93092e03bf1bf48190fc2b54c",
+    "test_native_services_smoke.py": "05e2fcd7914aa037a7f58c332ffcb3ddf9327d075a292d6fdc5909a331cab3ec",
+    "native_nominal_qualification.py": "1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c",
+    "test_native_nominal_qualification.py": "ddc8a07689ba1f72d099dee471e70023c8d58d017580321aa549b00487dad41c"
+  },
+  "crosscheck_not_execution": "Actual lifecycle03 admin state has run_id/identity/cost_spec/clock_domain and actual model entry has root/max_model_len; episode03 successful CPU output has failures/all_workers_joined/persistence_errors/missing_record_ids. Original warmup remains256/1024/3072 at0/1/2s.",
+  "not_validated": "The new collect() native body has not run. These controls do not establish native MPC, warmup outcomes, actuation, request accounting on GPU, metrics comparability, prediction accuracy or qualification.",
+  "remaining": "Accept sealed episode04, freeze all exact source and immutable Train inputs, perform bounded caller wiring review, preregister one real Train-only engineering attempt. No Fixed Train/Eval or superiority claim."
+}

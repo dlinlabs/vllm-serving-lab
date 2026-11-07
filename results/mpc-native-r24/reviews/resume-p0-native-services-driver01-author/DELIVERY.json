@@ -1,0 +1,141 @@
+{
+  "Native_B_or_model_qualification": false,
+  "actual_host_bootstrap_or_HTTP_or_GPU_or_service_validation": false,
+  "actual_offered_inference_or_admin_POSTs": 0,
+  "aggregate_control_wall_seconds": 0.33100900100544095,
+  "attempts_per_interpreter": 1,
+  "callback_added": false,
+  "closure_checked_monotonic": 930272.78607247,
+  "failed_test_attempts": 0,
+  "full_real_source_model_identity_path_executed": false,
+  "generation": 1,
+  "host_execution_held": true,
+  "inprocess_handoff": "Mayor uses accepted public NominalServices directly after independent gates",
+  "interpreters": {
+    "py312": {
+      "cases": {
+        "poison": {
+          "mocked_lifecycle_passed": false,
+          "real_host_validation": false
+        },
+        "source-mismatch": {
+          "mocked_lifecycle_passed": false,
+          "real_host_validation": false
+        },
+        "success": {
+          "mocked_lifecycle_passed": true,
+          "real_host_validation": false
+        }
+      },
+      "errors": 0,
+      "failures": 0,
+      "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+      "tests": 5
+    },
+    "py314": {
+      "cases": {
+        "poison": {
+          "mocked_lifecycle_passed": false,
+          "real_host_validation": false
+        },
+        "source-mismatch": {
+          "mocked_lifecycle_passed": false,
+          "real_host_validation": false
+        },
+        "success": {
+          "mocked_lifecycle_passed": true,
+          "real_host_validation": false
+        }
+      },
+      "errors": 0,
+      "failures": 0,
+      "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+      "tests": 5
+    }
+  },
+  "model_id": "gpt-6-astra",
+  "old_helper_unchanged": true,
+  "process_closure": [
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1752707,
+      "start_ticks": 92975325
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1752708,
+      "start_ticks": 92975327
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1752709,
+      "start_ticks": 92975344
+    }
+  ],
+  "reasoning_effort": "max",
+  "schema": "role3-native-services-driver-delivery-v1",
+  "source_bindings": [
+    {
+      "path": "frozen/native_services_smoke.py",
+      "sha256": "00a63a85701872bbb0a8f6d6ff39c75983d686a07f488b52ae60c31780aaebc5"
+    },
+    {
+      "path": "../../experiments/mpc-research/resume-mvp/native_services_smoke.py",
+      "sha256": "00a63a85701872bbb0a8f6d6ff39c75983d686a07f488b52ae60c31780aaebc5"
+    },
+    {
+      "path": "frozen/test_native_services_smoke.py",
+      "sha256": "10d27477b1566644a47ce4d72156f665034241efe02e6e215107e5d0d65c5ada"
+    },
+    {
+      "path": "../../experiments/mpc-research/resume-mvp/test_native_services_smoke.py",
+      "sha256": "10d27477b1566644a47ce4d72156f665034241efe02e6e215107e5d0d65c5ada"
+    },
+    {
+      "path": "inputs/nominal_protocol.json",
+      "sha256": "08d145c8822a71e7acbb3cb0102bec29eda1de081c5af756140aa1fb3a9ee51a"
+    },
+    {
+      "path": "inputs/nominal_services.py",
+      "sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed"
+    },
+    {
+      "path": "inputs/gateway.py",
+      "sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+    },
+    {
+      "path": "inputs/model-lines1-160.txt",
+      "sha256": "c5a0b7a4b30916f648f6ab5beb790eaf3719a6f94933fb16659a9899dd3b9bcc"
+    },
+    {
+      "path": "COMMANDS.txt",
+      "sha256": "c2446c79dd205e1205ae21cb901147fa7f3523c1efb4119115f3874e30de4deb"
+    },
+    {
+      "path": "PLAN.json",
+      "sha256": "8e49ba626f0b4954b60931bc161da5f6a5118c02e46acfc9a9a56dc925e10e29"
+    },
+    {
+      "path": "prepare.py",
+      "sha256": "eedc68451ad778167189ac57bce47ee7f60e3f1b88ed2c0b35f1a4e184937900"
+    },
+    {
+      "path": "run_controls.py",
+      "sha256": "31fe463f3f6d3c0d3fac7fdac3226b6f3c1f1ea38abac0a2c6a7388d26618814"
+    }
+  ],
+  "source_lines": {
+    "native_services_smoke.py": 333,
+    "test_native_services_smoke.py": 252
+  },
+  "source_scope_deviation_preserved": true,
+  "source_sha256": {
+    "native_services_smoke.py": "00a63a85701872bbb0a8f6d6ff39c75983d686a07f488b52ae60c31780aaebc5",
+    "test_native_services_smoke.py": "10d27477b1566644a47ce4d72156f665034241efe02e6e215107e5d0d65c5ada"
+  },
+  "status": "CPU_MOCK_CONTROLS_PASS_ONLY_PENDING_MAYOR_REVIEW_AND_SCOPE_DEVIATION_DISPOSITION",
+  "strict_source_search_budget_compliance": false
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "mpc-pre-gpu-b2-acceptance-v1",
+  "status": "PASS_CPU_AND_INDEPENDENT_SOURCE_ONLY",
+  "base_commit": "832ab593c8666b8bfa3761b3061355a2c94748c8",
+  "source_sha256": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+  "test_sha256": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3",
+  "author_capsule": "resume-p0-pre-gpu-b2-author01",
+  "author_manifest_sha256": "3f7e6804a0d5007201ed4c742a430d5e260d39b60acfe19b4859846eddcaa26f",
+  "author_regular_files": 311,
+  "author_controls": "13 PASS; original four-control/six-failure negative generation retained",
+  "independent_review": "resume-p0-pre-gpu-independent01-author/REPORT.json",
+  "independent_manifest_sha256": "0f0b0e7cb489bbfa3102bc4dbab5262151095e353e7e1735dd35b647417ac403",
+  "independent_verdict": "B2 PASS; B3 remains FAIL_F1 on its separate caller",
+  "behavior": [
+    "Body traffic permits equal nonnegative integer producer/final sequences while preserving closed/complete and zero pending/error conditions.",
+    "Original no-body zero-only condition and default OFF remain unchanged.",
+    "Post-GPU idle and telemetry failures are independently retained.",
+    "Startup/body/cleanup failures and interruption behavior are preserved."
+  ],
+  "not_accepted": "New actual-host lifecycle, Native control cycles, admission effect, Train selection, Eval or performance.",
+  "GPU_contacted": false
+}

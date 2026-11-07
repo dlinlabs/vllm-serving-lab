@@ -1,0 +1,1199 @@
+{
+  "entrypoint": "policy_planner16.PolicyPlanner16",
+  "execution": {
+    "GPU_use": 0,
+    "PYTHONPATH_unset": true,
+    "actual_D_MCMC_transitions": 0,
+    "agents": 0,
+    "before_fix_py312_outer_extra_environment": {
+      "NUMEXPR_MAX_THREADS": "1"
+    },
+    "broadcasts": 0,
+    "environment_overrides": {
+      "BLIS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONHASHSEED": "0",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "git_operations": 0,
+    "live_CAS_HTTP_actuation": 0,
+    "network_experiments": 0,
+    "nice": 19,
+    "owned_running_helpers": [],
+    "owned_test_children_synchronously_joined": true,
+    "post_seal_read_only_verification": "run_verify_delivery_with_both_prescribed_pythons",
+    "product_native_runtime_or_comparison_peer_edits": 0,
+    "pytest_plugin_autoload_and_cache_disabled": true,
+    "python_B": true,
+    "threads_per_numerical_library": 1
+  },
+  "findings": {
+    "I1": {
+      "affected_policies": [
+        "mpc",
+        "strong_one_move",
+        "training_fixed_selection"
+      ],
+      "before_accepted_path": [
+        16,
+        16
+      ],
+      "below_dominant_term_ulp_not_native_performance_evidence": true,
+      "classification": "decision_ordering_defect",
+      "keys": [
+        "natural_slo_good",
+        "cohort_wall"
+      ],
+      "mechanism": "float_sum_absorbs_exact_positive_terms_into_nonzero_common_term",
+      "new_acceptance_tests_require_exact_path_not_blanket_refusal": true,
+      "oracle_path": [
+        32,
+        32
+      ],
+      "weights": [
+        "32*math.ulp(0.0)",
+        "2**-60"
+      ]
+    },
+    "I2": {
+      "actual_comparison_already_locks_all_arms_to": [
+        16,
+        32
+      ],
+      "actual_inflated_native_win_claimed": false,
+      "before_frozen_budget": 16,
+      "classification": "conditional_shared_action_set_baseline_weakening",
+      "repair": "enumerate_every_contract_constant_and_bind_canonical_candidate_set",
+      "strongest_constant_budget": 24,
+      "witness_budgets": [
+        16,
+        24,
+        32
+      ]
+    },
+    "I3": {
+      "classification": "existing_runtime_integration_constraint_not_new_planner_defect",
+      "default_acquisition_clock_characterization_retained": true,
+      "requirement": "actual_same_domain_dequeue_clock_or_external_queue_IPC_delivery_TTL"
+    },
+    "I4": {
+      "classification": "existing_comparison_integration_constraint_not_new_planner_defect",
+      "requirement": "Actual fixed arms apply frozen constants independently of model success/cost; retain holds, failures, timing and all offers in denominators."
+    }
+  },
+  "frozen_inputs": {
+    "all_previous_pinned_seals_and_files_unchanged": true,
+    "count": 532,
+    "critique_seal_sha256": "d85e68185c85bb149ea4e80489577a11af6b4ed3e078221468c42819d104216f",
+    "manifest": "INPUT_SHA256SUMS",
+    "manifest_sha256": "a03093629479e6a46cdada8dd9e7af6c13fdcc3653bc345f5fdbe8ada9797b0a",
+    "plan_sha256": "2b3b070023facb7be42493ffeb6e00a53be659ff82897b545d5014756eea82b7",
+    "predecessor_seal_sha256": "2051bc18e9fa4c659f77718668f289362f04ab4ab59f1cdfd74348a5733a3926"
+  },
+  "inherited_product_rounding_evidence": {
+    "original_parent_oracle_unchanged_and_passing": true,
+    "parent_attempt03_is_valid_algorithm_counterexample": true,
+    "parent_attempts01_02_are_not_algorithm_failures": true,
+    "parent_logs": [
+      {
+        "classification": "import_collection_harness_error_not_algorithm_evidence",
+        "file": ".runtime/r24-team16-planner-revision01/parent-evidence/native-team16-planner-parent-numerical-py314-01.log",
+        "sha256": "0c6e626dee5b97e46c746191397f65db681211cd33fce14bbf3737ed1b1c7522"
+      },
+      {
+        "classification": "missing_fixture_setup_harness_error_not_algorithm_evidence",
+        "file": ".runtime/r24-team16-planner-revision01/parent-evidence/native-team16-planner-parent-numerical-py314-02.log",
+        "sha256": "03c6b5265da6f3d31d776af7300b115858f2f3d7a62238578afdf963a6e21d30"
+      },
+      {
+        "classification": "valid_wrong_plan_algorithm_defect_assertion",
+        "file": ".runtime/r24-team16-planner-revision01/parent-evidence/native-team16-planner-parent-numerical-py314-03.log",
+        "sha256": "78186d0d01505455987f1374ece77c6e757eb70e52b419a5ff8deeaf04fc795e"
+      }
+    ],
+    "previous_report": ".runtime/r24-team16-planner-revision01/report.json",
+    "previous_report_sha256": "95cd9fac55bf53d843ab2a18244a00be6426974f6cbf43af491e92a1491c7b0c"
+  },
+  "native_qualification": {
+    "accepted_posterior_supplied": false,
+    "blockers": [
+      "No accepted converged native posterior or qualified native MPC model.",
+      "Missing shared normalized native/client joint law and no-copy/transport/physical uncertainty closure.",
+      "Missing qualified public-only filtering and untouched-heldout PIT/calibration.",
+      "Missing native action-response qualification and real comparative evidence.",
+      "Role6 must integrate acquisition/IPC/return/source-version guards; this package has no live CAS/HTTP.",
+      "Role7 and the parent must independently cross-review and accept the common-arm comparison."
+    ],
+    "deployable": false,
+    "max_rhat": 3.6750452719276576,
+    "min_bulk_ess": 4.336133031401349,
+    "min_tail_ess": 10.94451798214706,
+    "native14": "REJECTED",
+    "native_advantage_claimed": false,
+    "native_mpc_permitted": false,
+    "synthetic_controls_predict_native_wins": false,
+    "unchanged_thresholds": {
+      "max_rhat": 1.01,
+      "min_bulk_ess": 400,
+      "min_tail_ess": 400
+    }
+  },
+  "parent_acceptance": false,
+  "parent_evidence_provenance": {
+    "all_cross_role_proofs_independently_revalidated": false,
+    "commit_reported_by_parent": "a5f676aa1fcc035eb6225c4a7c218722471c81c8",
+    "git_verification_performed": false,
+    "map": "results/mpc-native-r24/reviews/native-team16-numerical-crossreview-parent-seal01.json",
+    "map_sha256": "3eacfc7e7ca4ac2e31b1d89bb703f72912fffa9859af59047481dfb5d1585ad1",
+    "parent_reported_planner_revision01_counts_per_python": {
+      "intentional_defect_failures": 7,
+      "passes": 3
+    },
+    "planner_only_proof_copies_verified": 80,
+    "unrelated_role2_source_or_proofs_read": false
+  },
+  "refusal_cases": [
+    "Previous zero/nonfinite or inexact underflowed weighted objective product.",
+    "Previous invalid, partial, mixed-source or mutated complete common panel.",
+    "Previous stale/reused source or changed observation version.",
+    "Wrong/missing cached exact objective keys during train-panel validation.",
+    "Frozen candidate set omits a shared action or contract configuration differs.",
+    "Exact arithmetic/sorting pushes entry+solver+actuation beyond deadline.",
+    "Observation version changes during exact arithmetic or output preparation."
+  ],
+  "remaining_blockers": [
+    "Synthetic exact-order controls do not qualify real native MPC, predict wins or identify an unpredictability cause.",
+    "Native14 remains rejected under unchanged 1.01/400/400 gates; no accepted posterior is supplied.",
+    "Shared normalized native/client law, public-only filter, heldout calibration/PIT and native action response remain unqualified.",
+    "Role6/Role7 must meet I3/I4 integration requirements; no peer implementation was changed.",
+    "Parent independently reviews, accepts, integrates and commits; this delivery is not acceptance."
+  ],
+  "repair": {
+    "all_positive_weight_worlds_in_accepted_plan_exact_keys": true,
+    "bounds": {
+      "first_action_source_age_limit_s": 0.5,
+      "fixed_named_arms": [
+        16,
+        32
+      ],
+      "max_budgets": 3,
+      "max_complete_panel_cells": 1296,
+      "max_scenarios": 16,
+      "objective": "Maximize weighted all-offered natural-SLO-good count; minimize weighted HTTP cohort wall, transitions from received budget, path sum, lexicographic path.",
+      "steps": [
+        2,
+        4
+      ],
+      "strong_one_move": "All paths with at most one transition including the received-budget transition, including delayed moves.",
+      "thresholds": {
+        "bulk_ess_min": 400,
+        "rhat_max": 1.01,
+        "tail_ess_min": 400
+      },
+      "train_selected_fixed": "Strongest constant over the full shared contract action set, frozen before heldout evaluation."
+    },
+    "complete_validation_before_sort_and_best_row_replacement": true,
+    "corrected_prior_claim": "Preserved entries and exact weight ratios did not prevent prior float sums from erasing a positive world's decision influence.",
+    "exact_key_encoding": [
+      "reduced_numerator_decimal_string",
+      "positive_denominator_decimal_string"
+    ],
+    "exact_scope": "positive_frozen_weights_and_finite_frozen_per_world_numeric_metrics",
+    "exact_within_panel_training_aggregation": true,
+    "explicit_fixed16_fixed32_and_legacy_caller_choice_interface_retained": true,
+    "floating_objectives_and_candidate_summaries": "display_only_not_ordering_keys",
+    "no_world_deleted_or_ratio_changed_to_break_ties": true,
+    "old_product_underflow_and_boundary_refusals_retained": true,
+    "old_training_artifacts_rejected_by_new_arithmetic_contract": true,
+    "original_mathematical_objective_and_strong_baselines_preserved": true,
+    "physical_real_arithmetic_or_universal_input_acceptance_claimed": false,
+    "ranking_arithmetic": "exact-rational-frozen-binary-inputs-v1",
+    "source_version_and_full_cooperative_deadline_guards_retained": true
+  },
+  "role": 5,
+  "schema": "r24-team16-planner-numerical-revision02-delivery-v1",
+  "scope": ".runtime/r24-team16-planner-revision02",
+  "source_changes": {
+    "exact_diff": "source_changes.patch",
+    "exact_diff_sha256": "58b1a9746ec642b2fd2c73b15819078df9d49bd59a2cfa1b9db050e89d302a6d",
+    "implementation_files_changed": [
+      "policy_planner16.py"
+    ],
+    "new_focused_tests_sha256": "8cbcc883bce785c7cc3364e82b2424cb1d94f60b9dd4ac34e5bf68bd49d0ce7b",
+    "previous_102_controls_byte_identical": true,
+    "previous_planner_sha256": "eb02844885814ebb01150e8db1d29aa90c29d859a5074a265968543b505c4a06",
+    "revised_planner_sha256": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a",
+    "role7_controls_byte_identical": true,
+    "role7_controls_sha256": "f60c9ddab18e040eb81e69fb735c83683db1a7e6265fd7d362ef36730aa8ea0f",
+    "unchanged_copied_files": {
+      "run_attempt.py": "840cf583a70034db7f4f74ec169b6613899597a210406b2ee384b08f68d30404",
+      "test_parent_numerical_review.py": "61dd075793c6d78cdd6151d95e0a35ab5ac4983114d926bc2f58ecdd447d4ebe",
+      "test_policy_planner16.py": "a3d07cbf19172d4b555356f7398501c5f3bc76e3ec73482bee2dfe2757ac4a44",
+      "test_policy_planner16_numerical_revision.py": "0e0851fec5cce8f07b9efd8c863bd6801232ce68f20f02606ca4960bebfb554d",
+      "test_predecessor_witnesses.py": "b86d67f539dee141dabef9b93924b80a88bb2722c40fc790bf7b73ac87a478d9"
+    }
+  },
+  "status": "sealed_synthetic_exact_ordering_repair_pending_parent_acceptance",
+  "validation": {
+    "after_fix": {
+      "python312_passed": 130,
+      "python314_passed": 130
+    },
+    "after_fix_attempts": [
+      "after-fix-py314-attempt01",
+      "after-fix-py312-attempt01"
+    ],
+    "algorithmic_fixtures_use_frozen_clock": true,
+    "all_attempts": {
+      "after-fix-py312-attempt01": {
+        "command": {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+            "-B",
+            "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-planner-revision02/run_tests.py",
+            "derived"
+          ],
+          "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+          "env_overrides": {
+            "BLIS_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONHASHSEED": "0",
+            "VECLIB_MAXIMUM_THREADS": "1"
+          },
+          "env_unset": [
+            "PYTHONPATH"
+          ],
+          "input_pins_verified_before": 532,
+          "label": "after-fix-py312-attempt01",
+          "runner_sha256": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+          "source_snapshot_sha256": {
+            "freeze_inputs.py": "d28377e3069589907c6a764cf30f62908d6c5f0520005578df82381cb5f01894",
+            "policy_planner16.py": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a",
+            "run_attempt.py": "840cf583a70034db7f4f74ec169b6613899597a210406b2ee384b08f68d30404",
+            "run_tests.py": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+            "test_parent_numerical_review.py": "61dd075793c6d78cdd6151d95e0a35ab5ac4983114d926bc2f58ecdd447d4ebe",
+            "test_policy_planner16.py": "a3d07cbf19172d4b555356f7398501c5f3bc76e3ec73482bee2dfe2757ac4a44",
+            "test_policy_planner16_numerical_revision.py": "0e0851fec5cce8f07b9efd8c863bd6801232ce68f20f02606ca4960bebfb554d",
+            "test_policy_planner16_revision02.py": "8cbcc883bce785c7cc3364e82b2424cb1d94f60b9dd4ac34e5bf68bd49d0ce7b",
+            "test_predecessor_witnesses.py": "b86d67f539dee141dabef9b93924b80a88bb2722c40fc790bf7b73ac87a478d9",
+            "test_role7_planner_controls.py": "f60c9ddab18e040eb81e69fb735c83683db1a7e6265fd7d362ef36730aa8ea0f"
+          },
+          "started_unix_s": 1793769710.1330872,
+          "suite": "derived"
+        },
+        "counts": {
+          "error": 0,
+          "failed": 0,
+          "passed": 130,
+          "skipped": 0
+        },
+        "failed_tests": [],
+        "output_log": "attempts/after-fix-py312-attempt01/output.log",
+        "result": {
+          "input_pins_verified_after": 532,
+          "output_sha256": "1f67f9e3cb99fa4d981761486dc8bf872ab7e8bfe5fc3bd3ce8e785af936801e",
+          "returncode": 0,
+          "wall_s": 2.8955421070568264
+        },
+        "role7_observations": []
+      },
+      "after-fix-py314-attempt01": {
+        "command": {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+            "-B",
+            "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-planner-revision02/run_tests.py",
+            "derived"
+          ],
+          "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+          "env_overrides": {
+            "BLIS_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONHASHSEED": "0",
+            "VECLIB_MAXIMUM_THREADS": "1"
+          },
+          "env_unset": [
+            "PYTHONPATH"
+          ],
+          "input_pins_verified_before": 532,
+          "label": "after-fix-py314-attempt01",
+          "runner_sha256": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+          "source_snapshot_sha256": {
+            "freeze_inputs.py": "d28377e3069589907c6a764cf30f62908d6c5f0520005578df82381cb5f01894",
+            "policy_planner16.py": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a",
+            "run_attempt.py": "840cf583a70034db7f4f74ec169b6613899597a210406b2ee384b08f68d30404",
+            "run_tests.py": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+            "test_parent_numerical_review.py": "61dd075793c6d78cdd6151d95e0a35ab5ac4983114d926bc2f58ecdd447d4ebe",
+            "test_policy_planner16.py": "a3d07cbf19172d4b555356f7398501c5f3bc76e3ec73482bee2dfe2757ac4a44",
+            "test_policy_planner16_numerical_revision.py": "0e0851fec5cce8f07b9efd8c863bd6801232ce68f20f02606ca4960bebfb554d",
+            "test_policy_planner16_revision02.py": "8cbcc883bce785c7cc3364e82b2424cb1d94f60b9dd4ac34e5bf68bd49d0ce7b",
+            "test_predecessor_witnesses.py": "b86d67f539dee141dabef9b93924b80a88bb2722c40fc790bf7b73ac87a478d9",
+            "test_role7_planner_controls.py": "f60c9ddab18e040eb81e69fb735c83683db1a7e6265fd7d362ef36730aa8ea0f"
+          },
+          "started_unix_s": 1793769709.9640105,
+          "suite": "derived"
+        },
+        "counts": {
+          "error": 0,
+          "failed": 0,
+          "passed": 130,
+          "skipped": 0
+        },
+        "failed_tests": [],
+        "output_log": "attempts/after-fix-py314-attempt01/output.log",
+        "result": {
+          "input_pins_verified_after": 532,
+          "output_sha256": "9dd73714660932414fb87c022ce7be96522e3a0dcc337e80cb5f8c120caab8d9",
+          "returncode": 0,
+          "wall_s": 2.639513903995976
+        },
+        "role7_observations": []
+      },
+      "before-fix-py312-attempt01": {
+        "command": {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+            "-B",
+            "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-planner-revision02/run_tests.py",
+            "witnesses"
+          ],
+          "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+          "env_overrides": {
+            "BLIS_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONHASHSEED": "0",
+            "VECLIB_MAXIMUM_THREADS": "1"
+          },
+          "env_unset": [
+            "PYTHONPATH"
+          ],
+          "input_pins_verified_before": 532,
+          "label": "before-fix-py312-attempt01",
+          "runner_sha256": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+          "source_snapshot_sha256": {
+            "freeze_inputs.py": "d28377e3069589907c6a764cf30f62908d6c5f0520005578df82381cb5f01894",
+            "policy_planner16.py": "eb02844885814ebb01150e8db1d29aa90c29d859a5074a265968543b505c4a06",
+            "run_attempt.py": "840cf583a70034db7f4f74ec169b6613899597a210406b2ee384b08f68d30404",
+            "run_tests.py": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+            "test_parent_numerical_review.py": "61dd075793c6d78cdd6151d95e0a35ab5ac4983114d926bc2f58ecdd447d4ebe",
+            "test_policy_planner16.py": "a3d07cbf19172d4b555356f7398501c5f3bc76e3ec73482bee2dfe2757ac4a44",
+            "test_policy_planner16_numerical_revision.py": "0e0851fec5cce8f07b9efd8c863bd6801232ce68f20f02606ca4960bebfb554d",
+            "test_predecessor_witnesses.py": "b86d67f539dee141dabef9b93924b80a88bb2722c40fc790bf7b73ac87a478d9",
+            "test_role7_planner_controls.py": "f60c9ddab18e040eb81e69fb735c83683db1a7e6265fd7d362ef36730aa8ea0f"
+          },
+          "started_unix_s": 1793769344.1002326,
+          "suite": "witnesses"
+        },
+        "counts": {
+          "error": 0,
+          "failed": 7,
+          "passed": 3,
+          "skipped": 0
+        },
+        "failed_tests": [
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-mpc]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-strong_one_move]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-mpc]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-strong_one_move]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-mpc]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-strong_one_move]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_B_train_selected_fixed_covers_every_constant_policy_of_shared_action_set"
+        ],
+        "output_log": "attempts/before-fix-py312-attempt01/output.log",
+        "result": {
+          "input_pins_verified_after": 532,
+          "output_sha256": "25417b52d153066d5f96ba807da980ed492814652d635fb4c1f20cdcaf9be643",
+          "returncode": 1,
+          "wall_s": 1.1202837970340624
+        },
+        "role7_observations": [
+          {
+            "control": "A0_exact_subnormal_draw_zero_common_term_positive_control",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x0.000000000001cp-1022"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "mpc",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x0.0000000000008p-1022"
+            ],
+            "selected": [
+              32,
+              32
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A0_exact_subnormal_draw_zero_common_term_positive_control",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x0.000000000001cp-1022"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "strong_one_move",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x0.0000000000008p-1022"
+            ],
+            "selected": [
+              32,
+              32
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A1_exact_subnormal_draw_nonzero_common_wall",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "mpc",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x0.0000000000008p-1022"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A1_exact_subnormal_draw_nonzero_common_wall",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "strong_one_move",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x0.0000000000008p-1022"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A2_normal_2pow-60_draw_nonzero_common_wall",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "mpc",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x1.0000000000000p-62"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A2_normal_2pow-60_draw_nonzero_common_wall",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "strong_one_move",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x1.0000000000000p-62"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A3_normal_2pow-60_draw_primary_natural_good_key",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "mpc",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x1.0000000000000p-62"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A3_normal_2pow-60_draw_primary_natural_good_key",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "strong_one_move",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x1.0000000000000p-62"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "chosen": [
+              16,
+              16
+            ],
+            "control": "B_three_budget_train_selected_fixed",
+            "error": null,
+            "executed": [
+              "model_plan_only",
+              [
+                16,
+                16
+              ]
+            ],
+            "mpc_best": [
+              24,
+              24
+            ],
+            "strongest_constant": [
+              24,
+              24
+            ]
+          },
+          {
+            "control": "C_acquisition_queue_delay_scope",
+            "default_first_action_source_age_s": 0.14999999999999963,
+            "default_solver_elapsed_s": 0.0,
+            "default_status": "model_plan_only",
+            "explicit_refusals": [
+              "policy16_full_entry_solver_actuation_deadline"
+            ],
+            "explicit_status": "refused",
+            "explicit_timing_refused": true,
+            "queue_delay_s": 10.0
+          }
+        ]
+      },
+      "before-fix-py314-attempt01": {
+        "command": {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+            "-B",
+            "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-planner-revision02/run_tests.py",
+            "witnesses"
+          ],
+          "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+          "env_overrides": {
+            "BLIS_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONHASHSEED": "0",
+            "VECLIB_MAXIMUM_THREADS": "1"
+          },
+          "env_unset": [
+            "PYTHONPATH"
+          ],
+          "input_pins_verified_before": 532,
+          "label": "before-fix-py314-attempt01",
+          "runner_sha256": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+          "source_snapshot_sha256": {
+            "freeze_inputs.py": "d28377e3069589907c6a764cf30f62908d6c5f0520005578df82381cb5f01894",
+            "policy_planner16.py": "eb02844885814ebb01150e8db1d29aa90c29d859a5074a265968543b505c4a06",
+            "run_attempt.py": "840cf583a70034db7f4f74ec169b6613899597a210406b2ee384b08f68d30404",
+            "run_tests.py": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+            "test_parent_numerical_review.py": "61dd075793c6d78cdd6151d95e0a35ab5ac4983114d926bc2f58ecdd447d4ebe",
+            "test_policy_planner16.py": "a3d07cbf19172d4b555356f7398501c5f3bc76e3ec73482bee2dfe2757ac4a44",
+            "test_policy_planner16_numerical_revision.py": "0e0851fec5cce8f07b9efd8c863bd6801232ce68f20f02606ca4960bebfb554d",
+            "test_predecessor_witnesses.py": "b86d67f539dee141dabef9b93924b80a88bb2722c40fc790bf7b73ac87a478d9",
+            "test_role7_planner_controls.py": "f60c9ddab18e040eb81e69fb735c83683db1a7e6265fd7d362ef36730aa8ea0f"
+          },
+          "started_unix_s": 1793769344.0341954,
+          "suite": "witnesses"
+        },
+        "counts": {
+          "error": 0,
+          "failed": 7,
+          "passed": 3,
+          "skipped": 0
+        },
+        "failed_tests": [
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-mpc]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A1_exact_subnormal_draw_nonzero_common_wall-strong_one_move]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-mpc]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A2_normal_2pow-60_draw_nonzero_common_wall-strong_one_move]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-mpc]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_A_tiny_positive_draw_refuses_or_keeps_rational_oracle_choice[A3_normal_2pow-60_draw_primary_natural_good_key-strong_one_move]",
+          ".runtime/r24-team16-planner-revision02/test_role7_planner_controls.py::test_B_train_selected_fixed_covers_every_constant_policy_of_shared_action_set"
+        ],
+        "output_log": "attempts/before-fix-py314-attempt01/output.log",
+        "result": {
+          "input_pins_verified_after": 532,
+          "output_sha256": "cea435bb056fbd422de3c396f465e1c4b42e03dee8d1690444660ceb830a32d0",
+          "returncode": 1,
+          "wall_s": 1.039657796965912
+        },
+        "role7_observations": [
+          {
+            "control": "A0_exact_subnormal_draw_zero_common_term_positive_control",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x0.000000000001cp-1022"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "mpc",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x0.0000000000008p-1022"
+            ],
+            "selected": [
+              32,
+              32
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A0_exact_subnormal_draw_zero_common_term_positive_control",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x0.0000000000020p-1022"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x0.000000000001cp-1022"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "strong_one_move",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x0.0000000000008p-1022"
+            ],
+            "selected": [
+              32,
+              32
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A1_exact_subnormal_draw_nonzero_common_wall",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "mpc",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x0.0000000000008p-1022"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A1_exact_subnormal_draw_nonzero_common_wall",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "strong_one_move",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x0.0000000000008p-1022"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A2_normal_2pow-60_draw_nonzero_common_wall",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "mpc",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x1.0000000000000p-62"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A2_normal_2pow-60_draw_nonzero_common_wall",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x0.0p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "strong_one_move",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x1.0000000000000p-62"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A3_normal_2pow-60_draw_primary_natural_good_key",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "mpc",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x1.0000000000000p-62"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "control": "A3_normal_2pow-60_draw_primary_natural_good_key",
+            "float_good_wall": {
+              "(16, 16)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(16, 32)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 16)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ],
+              "(32, 32)": [
+                "0x1.0000000000000p+0",
+                "0x1.0000000000000p+0"
+              ]
+            },
+            "oracle": [
+              32,
+              32
+            ],
+            "policy": "strong_one_move",
+            "refusals": [],
+            "scaled_weights": [
+              "0x1.0000000000000p-2",
+              "0x1.0000000000000p-62"
+            ],
+            "selected": [
+              16,
+              16
+            ],
+            "status": "model_plan_only"
+          },
+          {
+            "chosen": [
+              16,
+              16
+            ],
+            "control": "B_three_budget_train_selected_fixed",
+            "error": null,
+            "executed": [
+              "model_plan_only",
+              [
+                16,
+                16
+              ]
+            ],
+            "mpc_best": [
+              24,
+              24
+            ],
+            "strongest_constant": [
+              24,
+              24
+            ]
+          },
+          {
+            "control": "C_acquisition_queue_delay_scope",
+            "default_first_action_source_age_s": 0.14999999999999963,
+            "default_solver_elapsed_s": 0.0,
+            "default_status": "model_plan_only",
+            "explicit_refusals": [
+              "policy16_full_entry_solver_actuation_deadline"
+            ],
+            "explicit_status": "refused",
+            "explicit_timing_refused": true,
+            "queue_delay_s": 10.0
+          }
+        ]
+      }
+    },
+    "all_observed_failures_preserved": true,
+    "before_fix": {
+      "python312": {
+        "failed": 7,
+        "passed": 3
+      },
+      "python314": {
+        "failed": 7,
+        "passed": 3
+      }
+    },
+    "before_fix_attempts": [
+      "before-fix-py314-attempt01",
+      "before-fix-py312-attempt01"
+    ],
+    "final_tested_sha256": {
+      "freeze_inputs.py": "d28377e3069589907c6a764cf30f62908d6c5f0520005578df82381cb5f01894",
+      "policy_planner16.py": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a",
+      "run_attempt.py": "840cf583a70034db7f4f74ec169b6613899597a210406b2ee384b08f68d30404",
+      "run_tests.py": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+      "test_parent_numerical_review.py": "61dd075793c6d78cdd6151d95e0a35ab5ac4983114d926bc2f58ecdd447d4ebe",
+      "test_policy_planner16.py": "a3d07cbf19172d4b555356f7398501c5f3bc76e3ec73482bee2dfe2757ac4a44",
+      "test_policy_planner16_numerical_revision.py": "0e0851fec5cce8f07b9efd8c863bd6801232ce68f20f02606ca4960bebfb554d",
+      "test_policy_planner16_revision02.py": "8cbcc883bce785c7cc3364e82b2424cb1d94f60b9dd4ac34e5bf68bd49d0ce7b",
+      "test_predecessor_witnesses.py": "b86d67f539dee141dabef9b93924b80a88bb2722c40fc790bf7b73ac87a478d9",
+      "test_role7_planner_controls.py": "f60c9ddab18e040eb81e69fb735c83683db1a7e6265fd7d362ef36730aa8ea0f"
+    },
+    "native_solver_speed_or_performance_claim": false,
+    "new_focused_breakdown": {
+      "accepted_exact_absorption_order": 6,
+      "canonical_full_action_set_training": 3,
+      "exact_arithmetic_and_sort_deadline_refusals": 2,
+      "exact_training_and_frozen_heldout": 3,
+      "partial_candidate_artifact_refusal": 1,
+      "primary_good_count_over_secondary_wall": 1,
+      "tampered_exact_key_refusal": 1,
+      "version_change_during_exact_ordering": 1
+    },
+    "new_focused_cases": 18,
+    "new_revision_harness_errors": 0,
+    "unchanged_previous_controls": 102,
+    "unchanged_role7_controls": 10
+  }
+}

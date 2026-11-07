@@ -1,0 +1,35 @@
+{
+  "status": "PASS_SOURCE_ONLY_NO_DRAIN_KEY_OVERRIDE",
+  "telemetry_proxy_keys": [
+    "active_requests",
+    "awaiting_first_content",
+    "oldest_awaiting_first_seconds",
+    "streaming_requests"
+  ],
+  "drain_keys": [
+    "current_admitted_cost",
+    "current_in_flight",
+    "current_waiting",
+    "tokenizer_fallback_requests"
+  ],
+  "snapshot_metrics_static_overlay_keys": [
+    "admission_mode",
+    "cost_intercept",
+    "gateway_diagnostics",
+    "initial_admission_budget",
+    "input_token_cost",
+    "max_admitted_cost",
+    "max_in_flight",
+    "max_waiting_capacity",
+    "output_token_cost",
+    "telemetry_dropped_records",
+    "telemetry_run_id",
+    "telemetry_write_errors",
+    "tokenizer_available",
+    "tokenizer_load_error",
+    "tokenizer_model"
+  ],
+  "gateway_sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570",
+  "telemetry_sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370",
+  "scope": "No actual /metrics observation or GPU authority; resolves only key-overwrite source question."
+}

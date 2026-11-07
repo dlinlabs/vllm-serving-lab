@@ -1,0 +1,38 @@
+1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c  recon/before/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+    gateway = f"http://127.0.0.1:{services.GATEWAY_PORT}"
+    backend = f"http://127.0.0.1:{services.BACKEND_PORT}"
+    owner.check()
+    ownership_path = output / "services/ownership.json"
+    ownership = json.loads(ownership_path.read_text())
+    actual_engine = next(s["argv"] for s in ownership["services"] if s["name"] == "engine")
+    services.checked(actual_engine == config["engine"], "owned backend argv mismatch")
+    binding = {
+        "schema": recorder.BINDING_SCHEMA, "served_alias": services.ALIAS,
+        "local_model_path": services.MODEL, "tokenizer_sha256": services.TOKENIZER,
+        "served_model_names": [services.ALIAS], "backend_argv": actual_engine,
+        "backend_argv_source": str(ownership_path) + " (owned actual spawn receipt)",
+    }
+    binding_path = output / "model-binding.json"
+    services.write(binding_path, binding)
+    warmup = recorder.prepare_capture(
+        trace_path=root / PROBES / "warmup.json", binding_path=binding_path,
+== smoke write() and engine argv
+585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c  /home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/native_services_smoke.py
+def write(path, value, secret="", append=False):
+    text = json.dumps(value, sort_keys=True, allow_nan=False)
+    if secret:
+        text = text.replace(secret, "<redacted>")
+    with path.open("a" if append else "x") as stream:
+        stream.write(text + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+
+                       TELEMETRY_JSONL=str(output / "telemetry.jsonl"),
+                       TELEMETRY_STATUS_JSON=str(output / "telemetry-status.json"))
+    return dict(lock_paths=list(LOCKS), safe_environment=dict(engine=env, gateway=gateway_env),
+                engine=[str(Path(sys.executable).parent / "vllm"), "serve", MODEL,
+                        "--served-model-name", ALIAS, "--host", "127.0.0.1", "--port", str(BACKEND_PORT),
+                        "--scheduling-policy", "fcfs", "--no-enable-prefix-caching",
+                        "--max-model-len", "8192", "--max-num-seqs", "256",
+                        "--max-num-batched-tokens", "8192", "--gpu-memory-utilization", "0.9",
+                        "--tensor-parallel-size", "1"],

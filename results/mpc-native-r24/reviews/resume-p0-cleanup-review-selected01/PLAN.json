@@ -1,0 +1,30 @@
+{
+  "scope": ".runtime/r24-resume-p0-cleanup-independent01",
+  "role": "Role7 independent D2-F1 cleanup-repair review (claude-opus-5.5, max); no child actors",
+  "subject": {
+    "path": ".runtime/r24-team16-native-cut-consumer-cleanup-successor01",
+    "SHA256SUMS_digest_expected": "f145546d68934af0b0ec78bee8a78bd4817b53ca694edea8ef91df2731d023f5",
+    "manifest_entries": 136,
+    "inventory_rule": "names+stat sizes only; no full 136 or old 479 rehash"
+  },
+  "order": [
+    "1 inspect manifest names (done) and PLAN/REPORT/diff (first-inspection trio, pinned below before viewing)",
+    "2 freeze remaining content selection (SELECTION.json) before viewing",
+    "3 source review vs D2-F1 criteria",
+    "4 read control discrimination before any execution; freeze CONTROL-DECISION.json (commands or refusal)",
+    "5 at most two author control types per Python, <=120 s per type, one generation/attempt in own outputs dir, no retries, only if cleanup-only and relocatable without altering author bytes",
+    "6 seal FINDINGS + pins + controls/results; stop"
+  ],
+  "budgets": {"viewed_content_files_max": 14, "viewed_content_bytes_max": 524288, "control_types_per_python_max": 2, "seconds_per_control_type_max": 120, "attempts": 1, "retries": 0},
+  "accounting": "HASHREAD (bytes read only to compute sha256) is reported separately from VIEWED (content read by reviewer)",
+  "criteria": [
+    "C1 every monitor exit path and first finally disarms",
+    "C2 anchor/clock/arming errors cannot bypass owned cleanup",
+    "C3 root lifecycle write failure cannot stop remaining wait/join/FD closure",
+    "C4 original started+243 / hard 260 bound unchanged, no additional grace, 7-30-2-1 allocation unchanged",
+    "C5 unknown/incomplete fates retained; private key retention and non-join rules unchanged",
+    "C6 narrow CPU claim only, not universal OS proof"
+  ],
+  "prohibited": ["main/valid approval", "SSH", "GPU", "network", "installs", "actual arrays/traces/journals", "private exports", "git", "nested agents", "editing subject/original/sealed bytes", "old 42/9/7 tests", "unrelated consumer/scientific checks", "new adapters"],
+  "python": {"py314": "ROOT/.venv/bin/python3.14", "py312": "session files r24-mpc-py312-venv/bin/python3.12", "env": "env -u PYTHONPATH, threads=1, PYTHONDONTWRITEBYTECODE=1, -B, nice -n 19"}
+}

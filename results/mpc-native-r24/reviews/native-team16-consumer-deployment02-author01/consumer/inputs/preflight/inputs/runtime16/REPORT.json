@@ -1,0 +1,151 @@
+{
+  "authorization_sha256": "8013511ac2c7a58c73a0f1286fe4250363520bbda2e3912602219c6099fdf605",
+  "deployable": false,
+  "effective_authorization": "INTEGRATION_AMENDMENT04_REVISION02.json",
+  "final_code_pins_sha256": "700c64ca2139e6117b7bbe7161ef50e34a328bcfbb5d8f2877eb6fa1b78ca158",
+  "final_semantics": {
+    "absolute_public_tick_deadline_through_IPC_and_journals": true,
+    "actual_application_or_CAS_receipt": null,
+    "canonical_full_set_frozen_choice_without_evaluation_selection": true,
+    "distinct_acquisition_snapshot_and_request_generation": true,
+    "exact_ordering_keys_not_display_float_reranking": true,
+    "explicit_common_clock_and_post_journal_shadow_source_TTL": true,
+    "fresh_permitted_observation_replan_first_action_only": true,
+    "real_spawn_parent_invalidation_notification_and_final_parent_guard": true,
+    "synthetic_full_panel_fixed_arms_are_not_native_fixed_actuators": true
+  },
+  "final_validation": {
+    "py312": {
+      "classification": "synthetic_CPU_validation_pass_not_acceptance",
+      "code_pins": "integration-attempts/integration-py312-final01/code-pins.json",
+      "exit_code": 0,
+      "failures": [],
+      "input_bindings": [
+        2045,
+        2045
+      ],
+      "log": "logs/integration-py312-final01.log",
+      "modules": {
+        "test_integration01": 27,
+        "test_runtime16": 62
+      },
+      "name": "integration-py312-final01",
+      "passed": 89,
+      "python": "py312",
+      "remaining_owned_children": [],
+      "remaining_threads": [
+        "MainThread"
+      ],
+      "result": "integration-attempts/integration-py312-final01/result.json",
+      "run_id": "final01",
+      "suite": "integration",
+      "tests": 89,
+      "tracker_cleanup": {
+        "elapsed_s": 0.00377209996804595,
+        "forced": false,
+        "joined": true,
+        "owned_by_dedicated_runner": true,
+        "pid": 2422646
+      },
+      "wall_s": 79.98846358701121
+    },
+    "py314": {
+      "classification": "synthetic_CPU_validation_pass_not_acceptance",
+      "code_pins": "integration-attempts/integration-py314-final01/code-pins.json",
+      "exit_code": 0,
+      "failures": [],
+      "input_bindings": [
+        2045,
+        2045
+      ],
+      "log": "logs/integration-py314-final01.log",
+      "modules": {
+        "test_integration01": 27,
+        "test_runtime16": 62
+      },
+      "name": "integration-py314-final01",
+      "passed": 89,
+      "python": "py314",
+      "remaining_owned_children": [],
+      "remaining_threads": [
+        "MainThread"
+      ],
+      "result": "integration-attempts/integration-py314-final01/result.json",
+      "run_id": "final01",
+      "suite": "integration",
+      "tests": 89,
+      "tracker_cleanup": {
+        "elapsed_s": 0.004239500034600496,
+        "forced": false,
+        "joined": true,
+        "owned_by_dedicated_runner": true,
+        "pid": 2422644
+      },
+      "wall_s": 74.07158830203116
+    }
+  },
+  "helpers": {
+    "active_recorded_owned_pids": [],
+    "final_test_processes_require_no_children_and_MainThread_only": true,
+    "non_json_evidence_preserved": [
+      {
+        "path": "attempts/integration-py312-development03/test_shadow_monitor_check_jour0/check-0001.json",
+        "sha256": "62e8b4ffb8925a2d57100e38c2e54d79adf4ead421305e0f341db42424f1bdf0"
+      },
+      {
+        "path": "attempts/integration-py314-final01/test_shadow_monitor_check_jour0/check-0001.json",
+        "sha256": "62e8b4ffb8925a2d57100e38c2e54d79adf4ead421305e0f341db42424f1bdf0"
+      },
+      {
+        "path": "attempts/runtime-py314-baselinebefore03/test-output/test_shadow_monitor_check_jour0/check-0001.json",
+        "sha256": "62e8b4ffb8925a2d57100e38c2e54d79adf4ead421305e0f341db42424f1bdf0"
+      },
+      {
+        "path": "attempts/runtime-py314-baselinebefore02/test-output/test_shadow_monitor_check_jour0/check-0001.json",
+        "sha256": "62e8b4ffb8925a2d57100e38c2e54d79adf4ead421305e0f341db42424f1bdf0"
+      },
+      {
+        "path": "attempts/integration-py314-development03/test_shadow_monitor_check_jour0/check-0001.json",
+        "sha256": "62e8b4ffb8925a2d57100e38c2e54d79adf4ead421305e0f341db42424f1bdf0"
+      },
+      {
+        "path": "attempts/integration-py312-final01/test_shadow_monitor_check_jour0/check-0001.json",
+        "sha256": "62e8b4ffb8925a2d57100e38c2e54d79adf4ead421305e0f341db42424f1bdf0"
+      },
+      {
+        "path": "attempts/runtime-py312-baselinebefore02/test-output/test_shadow_monitor_check_jour0/check-0001.json",
+        "sha256": "62e8b4ffb8925a2d57100e38c2e54d79adf4ead421305e0f341db42424f1bdf0"
+      }
+    ],
+    "recorded_owned_pids_checked_absent": 543,
+    "scope": "Only recorded PIDs owned by these validation attempts were inspected. Untrusted raw protocol-row PID claims were not treated as ownership. No shared or unrelated process was signalled."
+  },
+  "inherited_runtime_input_bindings_verified": 258,
+  "limitations": "LIMITATIONS.json",
+  "native14": "REJECTED",
+  "native_mpc_permitted": false,
+  "native_prerequisites": "NATIVE_PREREQUISITES.json",
+  "original_and_copy_bindings_verified": 2045,
+  "original_plan_sha256": "a7eb079ec02d7ef549fb479d9987ba10a9fa80bbefac19637d74c9a17ac76399",
+  "original_reference_findings": [
+    "Remaining relative TTL was renewed after handoff delay; final loop release still refused.",
+    "Monitor journal was outside the loop's original public-tick planning budget.",
+    "Acknowledged delayed process exit exceeded 0.15-second grace and was terminated but joined.",
+    "Original scheduled checked_at sampled callback entry, not post-guard/post-journal completion; it was never a native application receipt."
+  ],
+  "policy_commands": 0,
+  "reference_acceptance": {
+    "commits_are_parent_reported_no_git_verification": true,
+    "integration_runtime_comparison_native_model_deployment": false,
+    "planner_revision02": "LIMITED CPU exact-frozen-binary reference; parent commit 2b4ed5bc754060cba11c16852b7798b975bc03eb",
+    "runtime16": "LIMITED planner15-compatible shadow reference; parent commit c11115afdcf375818977d0e8740f73d6229f6042"
+  },
+  "schema": "team16-runtime-integration01-final-candidate-v1",
+  "source_sha256": {
+    "owner16.py": "f9af078661edb5bf003618bc4df23f797e0376a6aba6b2b95c16ba1ea3b74939",
+    "policy_planner16.py": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a",
+    "receding16.py": "84364a9e43f10879582935ac801deebc1c441e4d2c55eec082c4db9e48c579f0",
+    "shadow_monitor16.py": "ed43a012221e8c9779a8b22a99770a490e7cf89ccfe97f3ff770bfc8a66fe7ba"
+  },
+  "status": "SEALED_DELIVERY_CANDIDATE_NOT_PARENT_INTEGRATION_ACCEPTANCE"
+}

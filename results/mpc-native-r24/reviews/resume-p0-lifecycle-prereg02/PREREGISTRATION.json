@@ -1,0 +1,33 @@
+{
+  "schema": "resume-p0-existing-gpu-lifecycle-corrective-prereg-v2",
+  "authority": "MAYOR_SINGLE_CORRECTED_LIFECYCLE_COMPONENT_ATTEMPT_ONLY",
+  "inherits": "../resume-p0-lifecycle-prereg01/PREREGISTRATION.json",
+  "reason_for_new_attempt": "Diagnosed original startup failure: infrastructure nginx PID88 owns8001. Do not modify it; use observed-free dedicated18000/18001 after six focused CPU controls pass.",
+  "not_a_blind_retry": true,
+  "source_commit": "b70f70e17e64d71a12649d2fc9226b70860c4fa5",
+  "source_archive_sha256": "b8af8f7a35f48a169ff63b865561db791b9c635a349d295b6fa59307a1e5c55f",
+  "source_archive_bytes": 645120,
+  "source_manifest_sha256": "888b9b758149efb4ff613ab476aaf9711503259a48133ad7e6b628c4f12edf1e",
+  "source_files": 48,
+  "driver_sha256": "70de7480c5e827a081babbbec7bc61e1f567285aa5c2669d68bd0434de8f4ec2",
+  "remote_base": "/workspace/pr32-r23/r24-resume-p0-lifecycle-b70f70e102",
+  "remote_source": "/workspace/pr32-r23/r24-resume-p0-lifecycle-b70f70e102/source",
+  "remote_output": "/workspace/pr32-r23/r24-resume-p0-lifecycle-b70f70e102/output",
+  "backend_url": "http://127.0.0.1:18000",
+  "gateway_url": "http://127.0.0.1:18001",
+  "argv": [
+    "/workspace/pr32-r23/venv/bin/python3.12", "-B",
+    "/workspace/pr32-r23/r24-resume-p0-lifecycle-b70f70e102/source/experiments/mpc-research/resume-mvp/native_services_smoke.py",
+    "--execute",
+    "--source-root", "/workspace/pr32-r23/r24-resume-p0-lifecycle-b70f70e102/source",
+    "--output-root", "/workspace/pr32-r23/r24-resume-p0-lifecycle-b70f70e102/output",
+    "--seconds", "480", "--cleanup-reserve", "30", "--term-grace", "10"
+  ],
+  "attempts": 1,
+  "original_driver_deadline_seconds": 480,
+  "cleanup_reserve_seconds": 30,
+  "term_grace_seconds": 10,
+  "unchanged": "Same authorized existing GPU, exact two locks, cached model/tokenizer, normal backend optimizations/resources, identity checks and startup/cleanup criteria. Independent recorder/metrics accepted bytes unchanged.",
+  "scope": "Lifecycle only, zero offered inference requests, zero admin control POSTs; no MPC qualification, Train Fixed or Eval.",
+  "stop_rules": "Preserve every failed path and cleanup receipt. No new rental, infrastructure-process termination, Push, Merge, criteria relaxation or blind repeat."
+}

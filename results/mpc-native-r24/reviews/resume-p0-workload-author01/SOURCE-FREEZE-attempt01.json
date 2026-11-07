@@ -1,0 +1,29 @@
+{
+  "schema": "r24-resume-p0-workload01-source-freeze-v1",
+  "attempt": "attempt01",
+  "frozen_before": "any execution of nominal_workload.py or test_nominal_workload.py (only ast.parse syntax check was run)",
+  "plan_freeze_sha256": "22d10938fb6bc1bbbbbf7442b349a7e921e2cc187654c2aeb66c7d017812eef7",
+  "sources": {
+    "experiments/mpc-research/resume-mvp/nominal_workload.py": {"bytes": 25248, "sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4", "snapshot": "nominal_workload.py.attempt01.txt"},
+    "experiments/mpc-research/resume-mvp/test_nominal_workload.py": {"bytes": 19418, "sha256": "1c73aba0c9967a36b8e1fc0ac9ecd79cbf817f2d007e891f9fc96790cf5bcfe1", "snapshot": "test_nominal_workload.py.attempt01.txt"}
+  },
+  "input_pins_before_runs": {
+    "trace_workload.py": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f",
+    "run_trace_pilot.py": "c02808e7cfb3aade6563620d373b1c16fc6f8af47a549c41ddf901b0cd6ad2bc"
+  },
+  "test_count_declared": 12,
+  "test_names": [
+    "RngSpecTest.test_uniform_source_matches_written_spec",
+    "RngSpecTest.test_known_answer_transforms",
+    "GenerationTest.test_repeatability_and_order_independence",
+    "GenerationTest.test_time_range_counts_values_and_window_rule",
+    "GenerationTest.test_split_separation_and_invariance",
+    "GenerationTest.test_max_offers_refusal_boundary",
+    "GenerationTest.test_tape_schema_and_canonical_bytes",
+    "OutputsTest.test_write_verify_and_single_manifest",
+    "OutputsTest.test_load_tape_purpose_and_integrity_guards",
+    "ReplayAdapterTest.test_adapter_validates_and_records_measured_counts",
+    "CliTest.test_frozen_cli_no_overrides_no_clobber_and_tamper_detection",
+    "ProtocolValidationTest.test_invalid_protocols_and_namespace_collisions_refused"
+  ]
+}

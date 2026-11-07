@@ -1,0 +1,541 @@
+     1	{
+     2	  "schema_version": 1,
+     3	  "config": {
+     4	    "trace": "results/trace-experiment-96-r1/trace.json",
+     5	    "output_dir": "results/shared-client-a-r1",
+     6	    "budget": 96.0,
+     7	    "budget_schedule": "results/budget-schedules/ident-multilevel-30s-v1-a.json",
+     8	    "vllm_url": "http://127.0.0.1:8000",
+     9	    "warmup_requests": 3,
+    10	    "max_pending": 1000,
+    11	    "request_timeout": 120,
+    12	    "drain_timeout": 120,
+    13	    "startup_timeout": 120,
+    14	    "ttft_slo": 0.5,
+    15	    "e2e_slo": null,
+    16	    "max_scheduling_lag": 0.05,
+    17	    "max_budget_lag": 0.05,
+    18	    "cache_policy": "disabled",
+    19	    "gateway_diagnostics": true,
+    20	    "engine_observations": false,
+    21	    "runner_diagnostics": true,
+    22	    "runner_gc_policy": "defer",
+    23	    "runner_max_rss_mib": 1536.0,
+    24	    "sampler_mode": "process",
+    25	    "protocol": "experiments/shared-client-qualification-v1.json",
+    26	    "protocol_run": "shared-client-a-r1",
+    27	    "shared_upstream_client": true
+    28	  },
+    29	  "created_at": 1792281967.1311026,
+    30	  "status": "collected",
+    31	  "trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+    32	  "input_trace_sha256": "62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e",
+    33	  "python": "3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0]",
+    34	  "git_commit": "d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586",
+    35	  "packages": {
+    36	    "vllm": "0.30.0",
+    37	    "torch": "2.13.0+cu130",
+    38	    "transformers": "5.20.1",
+    39	    "fastapi": "0.136.3",
+    40	    "httpx": "0.28.1",
+    41	    "httpcore": "1.0.9",
+    42	    "uvicorn": "0.54.0",
+    43	    "psutil": "7.2.2",
+    44	    "prometheus-client": "0.26.0",
+    45	    "numpy": "2.3.5",
+    46	    "matplotlib": "3.11.2"
+    47	  },
+    48	  "control_protocol": "trace-identification-v1",
+    49	  "replay_plan_sha256": "8ab5faa456806961e45842b653574fd019567c0ebd1a42b8d78c3b2e4a96a04b",
+    50	  "experiment_protocol": {
+    51	    "path": "experiments/shared-client-qualification-v1.json",
+    52	    "protocol": "shared-client-qualification-v1",
+    53	    "sha256": "1f649ebd712a88a2fa750cd8293964e9fa30a5d66f8a204a33b61b5245d1868c",
+    54	    "run": "shared-client-a-r1",
+    55	    "role": "development",
+    56	    "acceptance_status": null
+    57	  },
+    58	  "code_sha256": {
+    59	    "run_trace_pilot.py": "c02808e7cfb3aade6563620d373b1c16fc6f8af47a549c41ddf901b0cd6ad2bc",
+    60	    "trace_workload.py": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f",
+    61	    "trace_control.py": "8d0d2ad169847e3e5ff02dfe53d8fba459403df741cf7c30d0b4da96ee962687",
+    62	    "gateway.py": "f05006c28af341a13ce626a1a07eebb286f997ab6a805f3614b3c127c37d682b",
+    63	    "telemetry.py": "315123d4234076297f9c63259596810a687d467c3fc0aadc2e8419152f8e6c18",
+    64	    "sustained_load.py": "278906b8b19060c4fb9262a93ad5fe6f7af025d9a29104727293f743c5b96219",
+    65	    "run_budget_pilot.py": "86dae6812b46a73388f6b10b67b199a97fbd3528035f8e15dc336a5d623cb435",
+    66	    "diagnostic_sampling.py": "4e477dbf5597eaa5803ae6cbf25c1ffc5860afea9ebe397fd1d224ad468dfbc6",
+    67	    "runner_diagnostics.py": "123cd2fba49d37b8f14e5347fa6b9badfddfdb563d97fbb03a9d879fb504c94a",
+    68	    "runner_gc_control.py": "9f7c858814d8370e5b2695dbeb3ff6962f55cbd964fbca369f33146289544d8b",
+    69	    "analyze_budget_pilot.py": "b21dc3b7cc169ef3ff7ad7e8b89ef8febc55175bbcbac01c8c772542828e7a48",
+    70	    "analyze_trace_pilot.py": "4c9a093e78db98a603ad9ffd361e072e1e627f4c109d0140616b3a7f75512820",
+    71	    "analyze_trace_dynamics.py": "cde99f55dcd93c07be20e1b8989b4ccd3443a887f97820f3f313ccacf30407be",
+    72	    "experiment_protocol.py": "db640e4a7b2ed681e15e7628db224a766683331d5aa7fec989c11ba7d1ca59dc",
+    73	    "requirements-v1.txt": "c20e94f682d2553227fc03cb236b8b8ef06bcf89d1ed8af3b87efaf434049190"
+    74	  },
+    75	  "git_dirty": true,
+    76	  "gpu": "NVIDIA GeForce RTX 4090, 595.91.07, 24564 MiB",
+    77	  "investigation_protocol": "periodic-peaks-v1",
+    78	  "diagnostics_schema_version": 1,
+    79	  "gateway_diagnostics_requested": true,
+    80	  "runner_process_id": 11471,
+    81	  "host": "54bca65c0a11",
+    82	  "sampler": {
+    83	    "enabled": true,
+    84	    "mode": "process",
+    85	    "interval_seconds": 1.0,
+    86	    "resources": [
+    87	      "gateway_current_rss_cpu",
+    88	      "runner_current_rss_cpu",
+    89	      "host_cpu"
+    90	    ],
+    91	    "gpu": "not_collected",
+    92	    "request_linked_engine_trace": "not_collected",
+    93	    "worker": {
+    94	      "started": true,
+    95	      "stopped": true,
+    96	      "forced_termination": false,
+    97	      "unexpected_exit": false,
+    98	      "process_id": 11628,
+    99	      "exitcode": 0,
+   100	      "stop_requested_at": 294178.717150227,
+   101	      "ready_at": 293873.147085095,
+   102	      "start_method": "spawn"
+   103	    }
+   104	  },
+   105	  "package_scope": "Runner Python environment; not proof of a remote backend version",
+   106	  "backend_launch_provenance": "Not observed by this runner; archive and verify backend launch records separately",
+   107	  "models": {
+   108	    "object": "list",
+   109	    "data": [
+   110	      {
+   111	        "id": "Qwen/Qwen3-4B-Instruct-2507",
+   112	        "object": "model",
+   113	        "created": 1792281967,
+   114	        "owned_by": "vllm",
+   115	        "root": "Qwen/Qwen3-4B-Instruct-2507",
+   116	        "parent": null,
+   117	        "max_model_len": 8192,
+   118	        "permission": [
+   119	          {
+   120	            "id": "modelperm-af3b5012834b226f",
+   121	            "object": "model_permission",
+   122	            "created": 1792281967,
+   123	            "allow_create_engine": false,
+   124	            "allow_sampling": true,
+   125	            "allow_logprobs": true,
+   126	            "allow_search_indices": false,
+   127	            "allow_view": true,
+   128	            "allow_fine_tuning": false,
+   129	            "organization": "*",
+   130	            "group": null,
+   131	            "is_blocking": false
+   132	          }
+   133	        ]
+   134	      }
+   135	    ]
+   136	  },
+   137	  "run_id": "849e8134ee794c60b6a224a4f46a8655",
+   138	  "initial_metrics": {
+   139	    "admission_budget": 96.0,
+   140	    "budget_version": 0,
+   141	    "current_in_flight": 0,
+   142	    "current_waiting": 0,
+   143	    "accepted_requests": 0,
+   144	    "rejected_requests": 0,
+   145	    "failed_requests": 0,
+   146	    "max_waiting": 0,
+   147	    "current_admitted_cost": 0.0,
+   148	    "peak_admitted_cost": 0.0,
+   149	    "accepted_cost": 0.0,
+   150	    "rejected_cost": 0.0,
+   151	    "tokenizer_fallback_requests": 0,
+   152	    "state_sampled_at": 293872.771894115,
+   153	    "awaiting_first_content": 0,
+   154	    "oldest_awaiting_first_seconds": 0,
+   155	    "streaming_requests": 0,
+   156	    "active_requests": 0,
+   157	    "telemetry_run_id": "849e8134ee794c60b6a224a4f46a8655",
+   158	    "telemetry_dropped_records": 0,
+   159	    "telemetry_write_errors": 0,
+   160	    "admission_mode": "cost_aware",
+   161	    "max_in_flight": 4,
+   162	    "max_waiting_capacity": 2,
+   163	    "max_admitted_cost": 96.0,
+   164	    "initial_admission_budget": 96.0,
+   165	    "cost_intercept": 0.259,
+   166	    "input_token_cost": 0.000758,
+   167	    "output_token_cost": 0.0052083333,
+   168	    "tokenizer_model": "Qwen/Qwen3-4B-Instruct-2507",
+   169	    "tokenizer_available": true,
+   170	    "tokenizer_load_error": null,
+   171	    "gateway_diagnostics": true,
+   172	    "diagnostics": {
+   173	      "gc": {
+   174	        "enabled": true,
+   175	        "thresholds": [
+   176	          700,
+   177	          10,
+   178	          10
+   179	        ],
+   180	        "counts": [
+   181	          166,
+   182	          0,
+   183	          18
+   184	        ]
+   185	      },
+   186	      "health": {
+   187	        "callback_capacity": 4096,
+   188	        "callbacks_produced": 2,
+   189	        "callbacks_received": 0,
+   190	        "buffered_callbacks": 2,
+   191	        "inflight_callbacks": 0,
+   192	        "callback_errors": 0,
+   193	        "pending_spans": 0,
+   194	        "unmatched_boundaries": 0,
+   195	        "gc_spans": 0,
+   196	        "cpu_samples": 1,
+   197	        "closed": false,
+   198	        "quiesced": false,
+   199	        "registration_missing": false,
+   200	        "undelivered_callbacks": 2,
+   201	        "lost_callbacks": null,
+   202	        "complete": false
+   203	      },
+   204	      "sampled_at": 293872.771936416
+   205	    },
+   206	    "shared_upstream_client": true
+   207	  },
+   208	  "gateway_diagnostics_observed": true,
+   209	  "shared_upstream_client_observed": true,
+   210	  "gateway_launch": {
+   211	    "process_id": 11557,
+   212	    "executable": "/workspace/vllm-shared-client/.venv/bin/python",
+   213	    "entrypoint": "gateway.py",
+   214	    "settings": {
+   215	      "ADMISSION_MODE": "cost_aware",
+   216	      "MAX_ADMITTED_COST": "96.0",
+   217	      "MODEL_NAME": "Qwen/Qwen3-4B-Instruct-2507",
+   218	      "GATEWAY_DIAGNOSTICS": "1",
+   219	      "BENCHMARK_REQUEST_IDS": "1",
+   220	      "LOOP_LAG_TELEMETRY": "1",
+   221	      "SHARED_UPSTREAM_CLIENT": "1"
+   222	    }
+   223	  },
+   224	  "runner_diagnostics": {
+   225	    "schema_version": 1,
+   226	    "enabled": true,
+   227	    "process_id": 11471,
+   228	    "interval_seconds": 0.01
+   229	  },
+   230	  "warmup_start": 293873.193408527,
+   231	  "post_warmup_metrics": {
+   232	    "admission_budget": 96.0,
+   233	    "budget_version": 0,
+   234	    "current_in_flight": 0,
+   235	    "current_waiting": 0,
+   236	    "accepted_requests": 3,
+   237	    "rejected_requests": 0,
+   238	    "failed_requests": 0,
+   239	    "max_waiting": 0,
+   240	    "current_admitted_cost": 0.0,
+   241	    "peak_admitted_cost": 0.6097673312,
+   242	    "accepted_cost": 1.8293019936000001,
+   243	    "rejected_cost": 0.0,
+   244	    "tokenizer_fallback_requests": 0,
+   245	    "state_sampled_at": 293875.176193487,
+   246	    "awaiting_first_content": 0,
+   247	    "oldest_awaiting_first_seconds": 0,
+   248	    "streaming_requests": 0,
+   249	    "active_requests": 0,
+   250	    "telemetry_run_id": "849e8134ee794c60b6a224a4f46a8655",
+   251	    "telemetry_dropped_records": 0,
+   252	    "telemetry_write_errors": 0,
+   253	    "admission_mode": "cost_aware",
+   254	    "max_in_flight": 4,
+   255	    "max_waiting_capacity": 2,
+   256	    "max_admitted_cost": 96.0,
+   257	    "initial_admission_budget": 96.0,
+   258	    "cost_intercept": 0.259,
+   259	    "input_token_cost": 0.000758,
+   260	    "output_token_cost": 0.0052083333,
+   261	    "tokenizer_model": "Qwen/Qwen3-4B-Instruct-2507",
+   262	    "tokenizer_available": true,
+   263	    "tokenizer_load_error": null,
+   264	    "gateway_diagnostics": true,
+   265	    "diagnostics": {
+   266	      "gc": {
+   267	        "enabled": true,
+   268	        "thresholds": [
+   269	          700,
+   270	          10,
+   271	          10
+   272	        ],
+   273	        "counts": [
+   274	          145,
+   275	          5,
+   276	          18
+   277	        ]
+   278	      },
+   279	      "health": {
+   280	        "callback_capacity": 4096,
+   281	        "callbacks_produced": 12,
+   282	        "callbacks_received": 12,
+   283	        "buffered_callbacks": 0,
+   284	        "inflight_callbacks": 0,
+   285	        "callback_errors": 0,
+   286	        "pending_spans": 0,
+   287	        "unmatched_boundaries": 0,
+   288	        "gc_spans": 6,
+   289	        "cpu_samples": 3,
+   290	        "closed": false,
+   291	        "quiesced": false,
+   292	        "registration_missing": false,
+   293	        "undelivered_callbacks": 0,
+   294	        "lost_callbacks": null,
+   295	        "complete": false
+   296	      },
+   297	      "sampled_at": 293875.176247418
+   298	    },
+   299	    "shared_upstream_client": true
+   300	  },
+   301	  "warmup_end": 293875.177478359,
+   302	  "runner_gc_control": {
+   303	    "schema_version": 1,
+   304	    "policy": "defer",
+   305	    "max_rss_bytes": 1610612736,
+   306	    "max_disabled_seconds": 421.0,
+   307	    "rss_interval_seconds": 0.1,
+   308	    "max_rss_poll_gap_seconds": 0.5
+   309	  },
+   310	  "measurement_start": 293875.62118185003,
+   311	  "measurement_end": 294175.62118185003,
+   312	  "final_metrics": {
+   313	    "admission_budget": 96.0,
+   314	    "budget_version": 10,
+   315	    "current_in_flight": 0,
+   316	    "current_waiting": 0,
+   317	    "accepted_requests": 1979,
+   318	    "rejected_requests": 5667,
+   319	    "failed_requests": 0,
+   320	    "max_waiting": 0,
+   321	    "current_admitted_cost": 4.75175454539567e-14,
+   322	    "peak_admitted_cost": 95.99949779519997,
+   323	    "accepted_cost": 3790.256104896003,
+   324	    "rejected_cost": 12710.6969138208,
+   325	    "tokenizer_fallback_requests": 0,
+   326	    "state_sampled_at": 294178.716075497,
+   327	    "awaiting_first_content": 0,
+   328	    "oldest_awaiting_first_seconds": 0,
+   329	    "streaming_requests": 0,
+   330	    "active_requests": 0,
+   331	    "telemetry_run_id": "849e8134ee794c60b6a224a4f46a8655",
+   332	    "telemetry_dropped_records": 0,
+   333	    "telemetry_write_errors": 0,
+   334	    "admission_mode": "cost_aware",
+   335	    "max_in_flight": 4,
+   336	    "max_waiting_capacity": 2,
+   337	    "max_admitted_cost": 96.0,
+   338	    "initial_admission_budget": 96.0,
+   339	    "cost_intercept": 0.259,
+   340	    "input_token_cost": 0.000758,
+   341	    "output_token_cost": 0.0052083333,
+   342	    "tokenizer_model": "Qwen/Qwen3-4B-Instruct-2507",
+   343	    "tokenizer_available": true,
+   344	    "tokenizer_load_error": null,
+   345	    "gateway_diagnostics": true,
+   346	    "diagnostics": {
+   347	      "gc": {
+   348	        "enabled": true,
+   349	        "thresholds": [
+   350	          700,
+   351	          10,
+   352	          10
+   353	        ],
+   354	        "counts": [
+   355	          68,
+   356	          0,
+   357	          11
+   358	        ]
+   359	      },
+   360	      "health": {
+   361	        "callback_capacity": 4096,
+   362	        "callbacks_produced": 894,
+   363	        "callbacks_received": 894,
+   364	        "buffered_callbacks": 0,
+   365	        "inflight_callbacks": 0,
+   366	        "callback_errors": 0,
+   367	        "pending_spans": 0,
+   368	        "unmatched_boundaries": 0,
+   369	        "gc_spans": 447,
+   370	        "cpu_samples": 304,
+   371	        "closed": false,
+   372	        "quiesced": false,
+   373	        "registration_missing": false,
+   374	        "undelivered_callbacks": 0,
+   375	        "lost_callbacks": null,
+   376	        "complete": false
+   377	      },
+   378	      "sampled_at": 294178.716106778
+   379	    },
+   380	    "shared_upstream_client": true
+   381	  }
+   382	}
+=== DIFF A vs B manifest ===
+5c5
+<     "output_dir": "results/shared-client-a-r1",
+---
+>     "output_dir": "results/shared-client-b-r1",
+7c7
+<     "budget_schedule": "results/budget-schedules/ident-multilevel-30s-v1-a.json",
+---
+>     "budget_schedule": "results/budget-schedules/ident-multilevel-30s-v1-b.json",
+25,26c25,26
+<     "protocol": "experiments/shared-client-qualification-v1.json",
+<     "protocol_run": "shared-client-a-r1",
+---
+>     "protocol": "/workspace/shared-client-b-v1.json",
+>     "protocol_run": "shared-client-b-r1",
+29c29
+<   "created_at": 1792281967.1311026,
+---
+>   "created_at": 1792301954.5602033,
+49c49
+<   "replay_plan_sha256": "8ab5faa456806961e45842b653574fd019567c0ebd1a42b8d78c3b2e4a96a04b",
+---
+>   "replay_plan_sha256": "52e5ae3fd59660f8ae013da50c8f6b8bf8d3400f08fdcd4b4695a70d787ba795",
+51,54c51,54
+<     "path": "experiments/shared-client-qualification-v1.json",
+<     "protocol": "shared-client-qualification-v1",
+<     "sha256": "1f649ebd712a88a2fa750cd8293964e9fa30a5d66f8a204a33b61b5245d1868c",
+<     "run": "shared-client-a-r1",
+---
+>     "path": "/workspace/shared-client-b-v1.json",
+>     "protocol": "shared-client-b-v1",
+>     "sha256": "6610d3839bb16db0c8b18e90dc11718d9adc2ae7f56ed1be82bbe024e6a4625f",
+>     "run": "shared-client-b-r1",
+80,81c80,81
+<   "runner_process_id": 11471,
+<   "host": "54bca65c0a11",
+---
+>   "runner_process_id": 6341,
+>   "host": "dab372752013",
+98c98
+<       "process_id": 11628,
+---
+>       "process_id": 6494,
+100,101c100,101
+<       "stop_requested_at": 294178.717150227,
+<       "ready_at": 293873.147085095,
+---
+>       "stop_requested_at": 264228.808041645,
+>       "ready_at": 263922.56896001,
+113c113
+<         "created": 1792281967,
+---
+>         "created": 1792301954,
+120c120
+<             "id": "modelperm-af3b5012834b226f",
+---
+>             "id": "modelperm-9d248b0e5305c6d2",
+122c122
+<             "created": 1792281967,
+---
+>             "created": 1792301954,
+137c137
+<   "run_id": "849e8134ee794c60b6a224a4f46a8655",
+---
+>   "run_id": "ede4761c7d484bda9117b7c3b1d8e0bb",
+152c152
+<     "state_sampled_at": 293872.771894115,
+---
+>     "state_sampled_at": 263922.224541896,
+157c157
+<     "telemetry_run_id": "849e8134ee794c60b6a224a4f46a8655",
+---
+>     "telemetry_run_id": "ede4761c7d484bda9117b7c3b1d8e0bb",
+204c204
+<       "sampled_at": 293872.771936416
+---
+>       "sampled_at": 263922.224588595
+211,212c211,212
+<     "process_id": 11557,
+<     "executable": "/workspace/vllm-shared-client/.venv/bin/python",
+---
+>     "process_id": 6423,
+>     "executable": "/workspace/vllm-serving-lab/.venv/bin/python",
+227c227
+<     "process_id": 11471,
+---
+>     "process_id": 6341,
+230c230
+<   "warmup_start": 293873.193408527,
+---
+>   "warmup_start": 263922.617416609,
+245c245
+<     "state_sampled_at": 293875.176193487,
+---
+>     "state_sampled_at": 263924.523959054,
+250c250
+<     "telemetry_run_id": "849e8134ee794c60b6a224a4f46a8655",
+---
+>     "telemetry_run_id": "ede4761c7d484bda9117b7c3b1d8e0bb",
+297c297
+<       "sampled_at": 293875.176247418
+---
+>       "sampled_at": 263924.523986294
+301c301
+<   "warmup_end": 293875.177478359,
+---
+>   "warmup_end": 263924.52504895,
+310,311c310,311
+<   "measurement_start": 293875.62118185003,
+<   "measurement_end": 294175.62118185003,
+---
+>   "measurement_start": 263924.95093256404,
+>   "measurement_end": 264224.95093256404,
+317,318c317,318
+<     "accepted_requests": 1979,
+<     "rejected_requests": 5667,
+---
+>     "accepted_requests": 2062,
+>     "rejected_requests": 5584,
+321,324c321,324
+<     "current_admitted_cost": 4.75175454539567e-14,
+<     "peak_admitted_cost": 95.99949779519997,
+<     "accepted_cost": 3790.256104896003,
+<     "rejected_cost": 12710.6969138208,
+---
+>     "current_admitted_cost": 0.0,
+>     "peak_admitted_cost": 95.99508376959996,
+>     "accepted_cost": 3952.6214318752004,
+>     "rejected_cost": 12548.3315868416,
+326c326
+<     "state_sampled_at": 294178.716075497,
+---
+>     "state_sampled_at": 264228.806209908,
+331c331
+<     "telemetry_run_id": "849e8134ee794c60b6a224a4f46a8655",
+---
+>     "telemetry_run_id": "ede4761c7d484bda9117b7c3b1d8e0bb",
+356,357c356,357
+<           0,
+<           11
+---
+>           4,
+>           9
+362,363c362,363
+<         "callbacks_produced": 894,
+<         "callbacks_received": 894,
+---
+>         "callbacks_produced": 902,
+>         "callbacks_received": 902,
+369,370c369,370
+<         "gc_spans": 447,
+<         "cpu_samples": 304,
+---
+>         "gc_spans": 451,
+>         "cpu_samples": 305,
+378c378
+<       "sampled_at": 294178.716106778
+---
+>       "sampled_at": 264228.806240148

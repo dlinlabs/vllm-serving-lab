@@ -1,0 +1,39 @@
+{
+  "scope": "F1 drain liveness correction and F2 qualification-test output namespace isolation only",
+  "source_interface": "All entry points, default OFF, deadlines/reserve, shared S, permit20s/max8 and source/entry/control guards are unchanged.",
+  "corrected_drain_criterion": {
+    "current_in_flight": "exactly 0",
+    "current_waiting": "exactly 0",
+    "current_admitted_cost": "finite, nonnegative, <=1e-9",
+    "tokenizer_fallback_requests": "exactly 0",
+    "rationale": "Matches the existing unchanged gateway ledger absolute tolerance. Positive binary-float residue no longer consumes the entire D-R when actual counters are idle.",
+    "audit": "Every raw metric reading remains preserved, including the nonzero accepted residue; no optional receipt/schema fields were added.",
+    "erratum": "Supersedes only earlier exact-admitted-cost-zero wording, as acknowledged by Role4 E1 in prior-role4/REPORT.json."
+  },
+  "test_output_namespace": {
+    "input": "NATIVE_SMOKE_TEST_OUTPUT must identify a fresh unique relative smoke directory whose parent exists.",
+    "qualification": "Sibling named <smoke-directory-name>-qualification; never creates the smoke directory.",
+    "smoke": "Unchanged source/test and exclusive ROOT.mkdir() behavior.",
+    "reverse_order": "The focused worker actually imported qualification first, smoke second; both distinct sibling namespaces were created successfully."
+  },
+  "controls": {
+    "new_public_methods": 1,
+    "public_drain_subcases": 4,
+    "private_import_order_methods": 1,
+    "executed_methods_total": 2,
+    "corrected_generations": 1,
+    "not_rerun": "Other 13 caller controls, peer methods and Mayor's supplied composed521/186 controls.",
+    "interpreter": "Python3.12.16; preserved original F1 negative witnesses also cover Python3.14.4."
+  },
+  "original_failure_evidence": {
+    "copied_capsule": "prior-role4",
+    "manifest_sha256": "0f0b0e7cb489bbfa3102bc4dbab5262151095e353e7e1735dd35b647417ac403",
+    "verified_original_members": 91,
+    "report": "prior-role4/REPORT.json",
+    "finding_extract": "FINDINGS.json",
+    "logs": ["prior-role4/witness01-py312.log", "prior-role4/witness01-py314.log"],
+    "meaning": "Original629caa23 with zero counters and2.7755575615628914e-17 cost spun for10 reads/11 files to the deadline on both Pythons; exact-zero controls returned after one read.",
+    "F2_original_status": "Role4's original F2 was source-reasoned, not an executed negative witness; no false claim of a reproduced F2 red run."
+  },
+  "remaining_authority": "Mayor verifies these exact frozen bytes and repeats only the needed integrated generation. This capsule does not grant Native/GPU authority or establish actual admission effects."
+}

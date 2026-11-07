@@ -1,0 +1,354 @@
+{
+  "actual_model_identity": {
+    "calibration_version": "synthetic-unqualified-v1",
+    "cost_hash": "4228f9b98664f8c91b3fe27e7499a0f16dc9ceed48545d3726251bd5951a8aa7",
+    "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+    "model_version": "cpu-lifecycle-v1",
+    "support_hash": "720ca806101774b956988487568f815fb0b312da17656c1faae8fc584ecbac95"
+  },
+  "agent_assignment": {
+    "authority": "Mayor-retained verified assignment; no model/catalog change or new introspection",
+    "model": "gpt-6-astra",
+    "reasoning": "max"
+  },
+  "api": {
+    "NominalPlanner.evaluate": {
+      "line": 391,
+      "signature": "self, snapshot: Snapshot, source: CausalScenario, window: DecisionWindow, *, clock_domain: str, read_state: Callable[[], StateVersion], clock: Callable[[], float]=time.monotonic"
+    },
+    "NominalPlanner.fixed_action": {
+      "line": 469,
+      "signature": "self, snapshot: Snapshot, choice: FixedChoice, window: DecisionWindow, *, clock_domain: str, read_state: Callable[[], StateVersion], clock: Callable[[], float]=time.monotonic"
+    },
+    "NominalPlanner.freeze_fixed": {
+      "line": 453,
+      "signature": "self, training: tuple[ForecastPanel, ...]"
+    },
+    "NominalPlanner.plan": {
+      "line": 440,
+      "signature": "self, snapshot: Snapshot, source: CausalScenario, window: DecisionWindow, *, policy: str, clock_domain: str, read_state: Callable[[], StateVersion], clock: Callable[[], float]=time.monotonic"
+    },
+    "NominalPlanner.select": {
+      "line": 418,
+      "signature": "self, panel: ForecastPanel, *, policy: str, clock_domain: str, read_state: Callable[[], StateVersion], clock: Callable[[], float]=time.monotonic"
+    }
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "exit_code": 0,
+      "log_sha256": "a01eec83dca0f4dccd93b9b802435bdacf1b74b7bc0d5bfe1e2a637ea5dbae46",
+      "result": "attempt-01/result.json",
+      "test_count": 10
+    },
+    {
+      "attempt": 2,
+      "exit_code": 0,
+      "log_sha256": "dc1d813139b8b5374cfa01e37dc22f4ae9841848bd479bbcdb38f6bb4371da36",
+      "result": "attempt-02/result.json",
+      "test_count": 11
+    }
+  ],
+  "cleanup": [
+    {
+      "joined": true,
+      "original_identity_gone": true,
+      "pid": 1298030,
+      "start_ticks": "92128776"
+    },
+    {
+      "joined": true,
+      "original_identity_gone": true,
+      "pid": 1304553,
+      "start_ticks": "92142628"
+    }
+  ],
+  "code_scope": [
+    "experiments/mpc-research/resume-mvp/nominal_planner.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_planner.py"
+  ],
+  "completed_at": "2026-11-04T21:55:51.329932+00:00",
+  "contract": {
+    "budgets": [
+      16,
+      32
+    ],
+    "calibration_version": "synthetic-unqualified-v1",
+    "continuation": "Hold last planned action for every policy; no hidden Fixed/OneMove tail switch",
+    "control_steps": 3,
+    "coordinator_missing": [
+      "explicit nominal permit",
+      "fresh live transport/CAS/expiry/unknown-command ownership",
+      "actual application ACK",
+      "durable loop and owned cleanup",
+      "approved disjoint Eval artifact"
+    ],
+    "deadline": "One absolute entered_at/solve_deadline/first_action_at/action_deadline window; all solver and ranking costs checked, actuation/ACK remains coordinator-owned",
+    "evaluation_window_s": 5.0,
+    "fixed": "Full constant-action training reference, frozen before Eval; runtime fixed_action invokes no simulator",
+    "full_paths": 8,
+    "future_prefix": "Hold received budget until caller-specified first_action_at after solver deadline; never backdate",
+    "max_active_requests": 512,
+    "max_events": 20000,
+    "max_offers": 512,
+    "model_defaults": {
+      "decode_interference": 0.02,
+      "decode_s_per_token": 0.004,
+      "first_overhead_s": 0.03,
+      "max_output_tokens": 4096,
+      "max_prompt_tokens": 32768,
+      "prefill_s_per_token": 5e-05
+    },
+    "model_version": "cpu-lifecycle-v1",
+    "objective_id": "gateway-resolved-success-ttft0.5-lower-count-hold-switch-sum-lex-v1",
+    "scenario_count": 1,
+    "scenario_input": "Typed caller input, provenance-bound to source state; development or past observations only. Provenance declarations do not establish nonleakage.",
+    "slo_s": 0.5,
+    "slot_s": 1.0,
+    "solver_max_s": 0.1,
+    "source_age_max_s": 0.5,
+    "tail_s": 10.0,
+    "tie_order": [
+      "exact negative resolved-good count",
+      "prefer first action holding received budget",
+      "transitions from received budget",
+      "exact budget sum",
+      "lexicographic path"
+    ]
+  },
+  "exact_test_command": [
+    "env",
+    "-u",
+    "PYTHONPATH",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "PYTHONHASHSEED=0",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1",
+    "OMP_NUM_THREADS=1",
+    "OPENBLAS_NUM_THREADS=1",
+    "MKL_NUM_THREADS=1",
+    "NUMEXPR_NUM_THREADS=1",
+    "nice",
+    "-n",
+    "19",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "experiments/mpc-research/resume-mvp",
+    "-p",
+    "test_nominal_planner.py",
+    "-v"
+  ],
+  "failures": {
+    "failed_test_attempts": [],
+    "retained_source_defect": "Attempt01 had 10PASS but source review found replaceable parameter/identity binding; old bytes retained. Attempt02 freezes that binding and adds a regression. This was not an observed failed first test run.",
+    "test_failure_count": 0
+  },
+  "final_tests": {
+    "other_python": "Not run under this bounded one-focused-run-plus-concrete-fix instruction",
+    "python": "Python 3.14.4",
+    "status": "PASS",
+    "tests": 11
+  },
+  "implementation": {
+    "binding_correction": "Concrete source-review defect after initial 10PASS: mutable NominalPlanner.parameters/identity attributes could retain an old identity while replacing parameters. Freeze the wrapper binding and add one failure-sensitive regression. No stochastic search or tuning.",
+    "data_boundary": "CausalScenario source hashes/origin/purpose are caller declarations, not proof of disjoint data. Origin evaluation_future and future-available/cutoff inputs refuse. No real data was read.",
+    "fixed": "Both constant paths required in each training panel; freeze_fixed is a nominal TRAIN forecast reference, NOT empirical GPU best-Fixed qualification. fixed_action does zero runtime rollouts.",
+    "forecast": "Calls unchanged mpc_lab.model.rollout for all eight paths, one explicit typed causal nominal scenario. No NativeScenario construction, no generated RNG scenarios.",
+    "objective": "Public resolved-complete-success TTFT<=0.5 lower count; exact Fraction ordering, not native natural_slo_good or cohort-wall ranking.",
+    "one_move": "At most one planned transition from received budget, including delayed transition; hold last action into tail.",
+    "time": "Observed budget held until absolute first_action_at; fresh source and guarded current run/domain/identity/budget-version/ledger-sequence checked through final selection; source-derived action expiry included in typed proposal."
+  },
+  "literal_receipts": [
+    {
+      "budget": 32.0,
+      "kind": "train-fixed",
+      "runtime_rollout_calls": 0,
+      "scope": "literal-CPU-only-not-Native",
+      "totals": [
+        [
+          16.0,
+          "0"
+        ],
+        [
+          32.0,
+          "1"
+        ]
+      ]
+    },
+    {
+      "after_action_good": true,
+      "during_solve_accepted": false,
+      "kind": "causal-prefix",
+      "scope": "literal-CPU-only-not-Native"
+    },
+    {
+      "kind": "mpc-vs-one-move",
+      "mpc_lower": "1",
+      "mpc_path": [
+        16.0,
+        32.0,
+        32.0
+      ],
+      "one_move_lower": "0",
+      "one_move_path": [
+        32.0,
+        32.0,
+        32.0
+      ],
+      "rollout_calls": 8,
+      "scope": "literal-CPU-only-not-Native"
+    },
+    {
+      "kind": "delayed-one-move",
+      "lower": "1",
+      "path": [
+        16.0,
+        32.0,
+        32.0
+      ],
+      "scope": "literal-CPU-only-not-Native",
+      "transitions": 1
+    }
+  ],
+  "live_permission": false,
+  "native_qualified": false,
+  "negative_controls": [
+    "real full MPC versus strong OneMove and all fixed paths",
+    "real delayed OneMove",
+    "real observed-budget time prefix",
+    "missing/duplicate/objective-mismatched panels",
+    "partial forecast and fourth-path refusal",
+    "stale/expired/backdated/incomplete entry",
+    "post-forecast deadline and clock regression",
+    "clock/identity/version and sequence changes",
+    "causal provenance and objective refusal",
+    "full-action Train Fixed selection and zero runtime simulator calls",
+    "frozen model/identity cannot be replaced or retuned under v1"
+  ],
+  "no_actions_performed": [
+    "Git",
+    "network",
+    "SSH",
+    "GPU",
+    "HTTP",
+    "actual data",
+    "model fitting",
+    "MCMC",
+    "RNG scenario generation",
+    "agents",
+    "dependency installation",
+    "product/SDK/old sealed source edits"
+  ],
+  "not_claimed": [
+    "Native or GPU performance",
+    "real actuated closed loop",
+    "predictor accuracy",
+    "out-of-sample evaluation",
+    "superiority",
+    "production readiness",
+    "SLO/safety guarantee",
+    "Native14/G06/G16 gate closure",
+    "real Train-selected strongest fixed cap",
+    "independent parent acceptance"
+  ],
+  "predecessor_acceptance": {
+    "commit": "2b4ed5bc754060cba11c16852b7798b975bc03eb",
+    "scope": "EXACT_ORDERING_AND_FULL_ACTION_FIXED_REFERENCE_ONLY",
+    "sha256": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a"
+  },
+  "preservation": {
+    "all_final_source_pins_match": true,
+    "all_frozen_source_copies_match": true,
+    "initial_attempt_files_unchanged": true,
+    "initial_plan_sha256": "36175f62a6e04d4a0c3a6aaeed5ecc7f65a6129fd2bad03eec70b70631709cd0",
+    "non_owned_sources_changed": false,
+    "original_native_gates_or_shadow_flags_edited": false
+  },
+  "remaining_integration": [
+    "explicit nominal permit",
+    "fresh live transport/CAS/expiry/unknown-command ownership",
+    "actual application ACK",
+    "durable loop and owned cleanup",
+    "approved disjoint Eval artifact",
+    "The live coordinator must honor not_before and revalidate the absolute deadline; no backdating or synthetic application ACK.",
+    "Budget/version callbacks here are trusted injected interfaces, not an implemented concurrent transport.",
+    "Cooperative checks can reject late work but are not OS hard-real-time preemption.",
+    "Complete observed gateway ledger and actual model/source identity must be bound by coordinator; no Native hidden state has been observed."
+  ],
+  "schema": "resume-p0-nominal-planner-delivery-v1",
+  "source_ids": {
+    "experiments/mpc-research/mpc-mathematical-specification.md": {
+      "bytes": 13120,
+      "sha256": "4931417a73ed16d949db8e9759173cb42fb5390f5b1b5457c468431f7d4c031d"
+    },
+    "experiments/mpc-research/resume-mvp/nominal_planner.py": {
+      "bytes": 20484,
+      "sha256": "746dc6b0e0174a5cb84617ad0e1c582df439d5a9e1cfd74cf8d520c05f5e12f8"
+    },
+    "experiments/mpc-research/resume-mvp/test_nominal_planner.py": {
+      "bytes": 14729,
+      "sha256": "4e85f8585eda4d1627a3b94c099ac78252f857aad1c4fb90e611ed9d9b4b4f4b"
+    },
+    "gateway.py": {
+      "bytes": 41800,
+      "sha256": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+    },
+    "mpc_lab/__init__.py": {
+      "bytes": 63,
+      "sha256": "29962543d64e8cdb630a240a999dd9e47ed87cccf4bd03220ca2d82b5d7be09e"
+    },
+    "mpc_lab/actuator.py": {
+      "bytes": 12329,
+      "sha256": "e31dbe92eb3a27be554db15405af0a6046a6820096e84540812d3ee88afc59d5"
+    },
+    "mpc_lab/benchmark.py": {
+      "bytes": 14048,
+      "sha256": "c84858d2f4973de890d8eaaba33ca42ec7d5d0e13f5c097feaa829f4d337df99"
+    },
+    "mpc_lab/contracts.py": {
+      "bytes": 6959,
+      "sha256": "f39f6b73b41b1433a220f182679852df5c4332d9022ce903dba9863375236e23"
+    },
+    "mpc_lab/controller.py": {
+      "bytes": 16323,
+      "sha256": "44d705101820d89677035101110c70f890f94f7d82a5a521ec87d5e09dbf08cc"
+    },
+    "mpc_lab/http_capture.py": {
+      "bytes": 11052,
+      "sha256": "0648738704771f80470849b0c0beb671d0f17c9dbc75e4095cff155b20d04be7"
+    },
+    "mpc_lab/identification.py": {
+      "bytes": 8905,
+      "sha256": "bae3888768be5508f6a5d57a48eddd80abe9e0942f95e7f57bab824707f560f8"
+    },
+    "mpc_lab/model.py": {
+      "bytes": 21361,
+      "sha256": "eadbfe1718caf86144277ebbf8604bbf245fd80174293c1aaf12d12962468aec"
+    },
+    "mpc_lab/native_state.py": {
+      "bytes": 4967,
+      "sha256": "835df8ebaa58c773074e65cedba4627b468d14b560233a7655bf9cd2240b83d6"
+    },
+    "mpc_lab/runtime.py": {
+      "bytes": 10743,
+      "sha256": "f04c58eb9b5a81e7e1c7a22aaea1cd6b59de88c568ec77d51f1487af4c85b727"
+    },
+    "prefill_lab/live_http.py": {
+      "bytes": 12223,
+      "sha256": "cbbd1f338e0d078d5c5eacdfbcec725dcfe2ed9b46c1ee1ed68ad2f26de24e1f"
+    },
+    "results/mpc-native-r24/reviews/native-team16-planner-revision02-author01/policy_planner16.py": {
+      "bytes": 26866,
+      "sha256": "164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a"
+    },
+    "telemetry.py": {
+      "bytes": 17187,
+      "sha256": "46d6fb923e558f6435d269dd6fa5cfd5b0d71eb1fd91cbb3aaca8a82385e6370"
+    }
+  },
+  "status": "CPU_IMPLEMENTATION_TESTED_PARENT_REVIEW_PENDING",
+  "test_command_cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21"
+}

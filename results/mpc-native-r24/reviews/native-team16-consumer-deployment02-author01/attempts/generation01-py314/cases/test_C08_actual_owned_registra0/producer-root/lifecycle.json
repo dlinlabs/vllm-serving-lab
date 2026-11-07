@@ -1,0 +1,23 @@
+{
+  "cleanup_completed": true,
+  "command": [
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+    "-I",
+    "-B",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-deployment02/cpu_helper02.py",
+    "--bounded-owned-CPU-only",
+    "--output",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-deployment02/attempts/generation01-py314/cases/test_C08_actual_owned_registra0/public",
+    "--state",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-deployment02/attempts/generation01-py314/cases/test_C08_actual_owned_registra0/state",
+    "--invocation",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-native-cut-consumer-deployment02/attempts/generation01-py314/cases/test_C08_actual_owned_registra0/state/CPU-invocation.json"
+  ],
+  "finished_at": 910502.379963879,
+  "native_ready": false,
+  "pid": 710075,
+  "process_group": 710075,
+  "returncode": 0,
+  "start_ticks": "91050202",
+  "started_at": 910502.022921178
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "nominal-episode03-plan-v1",
+  "task": "Smallest authorized E02-1/E02-2 correction; one frozen CPU generation",
+  "predecessor": {
+    "capsule": ".runtime/r24-resume-p0-nominal-episode02",
+    "seal": "0ecc3f73638cc0bcd312962dd077bc987553ee969d40052a5be9ef4df7da6f2e",
+    "result": "Four methods, eight failures/one error including subtests and teardown; no working composed episode, no Native experiment",
+    "preserve_all_predecessor_bytes": true
+  },
+  "allowed_public_changes": [
+    "experiments/mpc-research/resume-mvp/nominal_episode.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_episode.py"
+  ],
+  "correction": {
+    "E02-1": "Compare runtime_api.digest of both scenario bindings, retaining exact provider object identity, policy equality and every other runtime/admission/permit/deadline guard.",
+    "E02-2": "Capture and assert SIGINT/SIGTERM handlers immediately around the awaited run_episode in one coroutine/Runner invocation. Preserve assertions and receipts; no cross-Runner synchronous setup/async teardown comparison.",
+    "discrimination": "Add no-start subcases that change canonical binding content, provider identity alone and policy alone. Assert the exact Train-provider/policy refusal reason before workers/HTTP.",
+    "unchanged": "No shared-start or offered-tape retiming, timeout/solve/age/poll/budget relaxation, peer edits, model/sampling changes, source APIs, full-wall/qualification claims or new framework."
+  },
+  "selected_methods": [
+    "test_shared_start_full_outcomes_and_real_controller_feedback",
+    "test_default_off_preparation_and_configuration_refusals_do_not_start",
+    "test_returned_failure_envelopes_cancel_peer_and_preserve_results",
+    "test_caller_cancellation_joins_workers_and_persists_partial_outcomes"
+  ],
+  "validation": {
+    "source_generations": 1,
+    "attempts": 1,
+    "interpreter": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+    "test_process_wall_budget_s": 60,
+    "normal_wait_s": 55,
+    "cleanup": "TERM then KILL and join only the owned test process within the original60s budget; async tests join owned tasks and close HTTPX clients/transports.",
+    "environment": "unset PYTHONPATH; PYTHONDONTWRITEBYTECODE=1; PYTEST_DISABLE_PLUGIN_AUTOLOAD=1; PYTHONHASHSEED=0; all supported numerical thread limits1; nice-n19; -B",
+    "runner": "python3.12 -B -m unittest discover -s experiments/mpc-research/resume-mvp -p test_nominal_episode.py -v",
+    "old_or_peer_suites": false,
+    "failure_policy": "Retain exact new distinct defects and all output. No second source generation, blind retry, timing tweak, repair or suite expansion within this authorization."
+  },
+  "inputs": {
+    "additional_peer_source_limit": 6,
+    "additional_peer_byte_limit": 393216,
+    "retained_conservative_peer_set_bytes": 200013,
+    "peer_sources": [
+      "nominal_client.py",
+      "test_nominal_client.py",
+      "nominal_metrics.py",
+      "nominal_services.py",
+      "trace_workload.py (hash-only)",
+      "native-r23/score_http.py (hash-only)"
+    ],
+    "runtime_context": "Accepted runtime03, planner/permit/scenario/workload and own frozen episode02 retained read-only.",
+    "client_sha256": "933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95",
+    "metrics_sha256": "49c76b8bcda2560ed9c24770a41c3fa876082cd0e19d171daf025300452a60ec",
+    "probe_sha256": "6d938ba18240f3e0f8cb677064849a73316ee7a8dc918526c68cba37f02da6be",
+    "probe": "Original frozen five3072-Train-request burst at1.25s over5s; engineering only."
+  },
+  "source_gate_notice": {
+    "parent_reported": "Role4 RECORDERPASS and METRICSPASS, conditional SOURCE gate seal prefix3dcbc992; not independently re-audited here.",
+    "not_authority": "No Native execution or actual comparability approval. N1 parse/write and N2 fixed-body crosscheck notes do not authorize guard weakening.",
+    "caller_obligation": "Existing finally-path raw capture persistence and fail-closed write/non-collected handling remain unchanged; no invented full wall or future Eval stamp."
+  },
+  "prohibitions": [
+    "No agents, broadcasts, Git, installs, real HTTP, GPU, SSH, service launch, signal ownership or lease assumption.",
+    "No peer/product/SDK edits, Markdown, old capsule mutation, natural engineering metrics finalization or qualification PASS.",
+    "Actual admission-effect/ordered-ledger/full-wall/ownership evidence remains Mayor-owned."
+  ],
+  "deliverable": "Frozen source/diff, exact API and source pins, one bounded attempt and every failure, own cleanup receipts, structured limitations, SHA256SUMS, then idle."
+}

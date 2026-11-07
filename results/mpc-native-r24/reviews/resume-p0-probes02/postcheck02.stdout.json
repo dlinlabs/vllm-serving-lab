@@ -1,0 +1,21 @@
+{
+  "boundary_bytes": 31916,
+  "boundary_requests": 5,
+  "boundary_sha256": "6d938ba18240f3e0f8cb677064849a73316ee7a8dc918526c68cba37f02da6be",
+  "conditional_five_request_reservation": "16.2712133120",
+  "not_proved": [
+    "Actual overlapping reservations",
+    "Actual action application",
+    "Admission behavior change",
+    "Consecutive Native MPC cycles",
+    "Prediction accuracy or baseline superiority"
+  ],
+  "old_outputs_byte_identical": true,
+  "original_postcheck_failure": "postcheck01-failure.json",
+  "postcheck_retry": "Arithmetic expectation corrected; source/tests/input bytes unchanged; only the failed postcheck repeated.",
+  "status": "CPU_DERIVATION_AND_DECIMAL_POSTCHECK_PASS_NOT_NATIVE",
+  "unit_controls": 3,
+  "unit_controls_seconds": 0.053,
+  "unit_log": "py312.stderr.log",
+  "unit_python": "3.12.16"
+}

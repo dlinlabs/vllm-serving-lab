@@ -1,0 +1,66 @@
+test_cli02_describe_is_offline_stable_and_standalone (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_describe_is_offline_stable_and_standalone) ... ok
+test_cli02_input_refusals_and_partial_planning_inputs_are_retained (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_input_refusals_and_partial_planning_inputs_are_retained) ... usage: python3.12 -m unittest [-h] [--url URL] --journal JOURNAL
+                              [--scenario-file SCENARIO_FILE | --train-tape TRAIN_TAPE]
+                              [--forecast-purpose {train,evaluation,engineering}]
+                              [--cost-spec-file COST_SPEC_FILE]
+                              [--policy {mpc,one_move}] [--steps STEPS]
+                              [--episode-seconds EPISODE_SECONDS]
+                              [--poll-seconds POLL_SECONDS]
+                              [--describe-protocol] [--start-at START_AT]
+                              [--experimental-nominal-demo]
+                              [--nominal-permit NOMINAL_PERMIT]
+python3.12 -m unittest: error: argument --scenario-file: not allowed with argument --train-tape
+usage: python3.12 -m unittest [-h] [--url URL] --journal JOURNAL
+                              [--scenario-file SCENARIO_FILE | --train-tape TRAIN_TAPE]
+                              [--forecast-purpose {train,evaluation,engineering}]
+                              [--cost-spec-file COST_SPEC_FILE]
+                              [--policy {mpc,one_move}] [--steps STEPS]
+                              [--episode-seconds EPISODE_SECONDS]
+                              [--poll-seconds POLL_SECONDS]
+                              [--describe-protocol] [--start-at START_AT]
+                              [--experimental-nominal-demo]
+                              [--nominal-permit NOMINAL_PERMIT]
+python3.12 -m unittest: error: experimental POST requires a separate nominal permit and causal scenario file or Train tape
+usage: python3.12 -m unittest [-h] [--url URL] --journal JOURNAL
+                              [--scenario-file SCENARIO_FILE | --train-tape TRAIN_TAPE]
+                              [--forecast-purpose {train,evaluation,engineering}]
+                              [--cost-spec-file COST_SPEC_FILE]
+                              [--policy {mpc,one_move}] [--steps STEPS]
+                              [--episode-seconds EPISODE_SECONDS]
+                              [--poll-seconds POLL_SECONDS]
+                              [--describe-protocol] [--start-at START_AT]
+                              [--experimental-nominal-demo]
+                              [--nominal-permit NOMINAL_PERMIT]
+python3.12 -m unittest: error: --train-tape requires an explicit --forecast-purpose, used only with Train
+ok
+test_cli02_pending_restart_reuses_static_train_and_start_bindings (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_pending_restart_reuses_static_train_and_start_bindings) ... ok
+test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start (test_nominal_runtime.NominalRuntimeCLIIntegrationTests.test_cli02_train_loop_records_replayable_forecasts_polling_and_shared_start) ... ok
+test_ack_without_reobservation_stays_pending_and_ack_is_not_erased (test_nominal_runtime.NominalRuntimeTests.test_ack_without_reobservation_stays_pending_and_ack_is_not_erased) ... ok
+test_command_count_and_episode_deadline_survive_restart (test_nominal_runtime.NominalRuntimeTests.test_command_count_and_episode_deadline_survive_restart) ... ok
+test_concurrent_owner_refuses_and_cancelled_post_releases_its_lock (test_nominal_runtime.NominalRuntimeTests.test_concurrent_owner_refuses_and_cancelled_post_releases_its_lock) ... ok
+test_default_off_missing_permit_and_hold_are_not_application (test_nominal_runtime.NominalRuntimeTests.test_default_off_missing_permit_and_hold_are_not_application) ... usage: python3.12 -m unittest [-h] [--url URL] --journal JOURNAL
+                              [--scenario-file SCENARIO_FILE | --train-tape TRAIN_TAPE]
+                              [--forecast-purpose {train,evaluation,engineering}]
+                              [--cost-spec-file COST_SPEC_FILE]
+                              [--policy {mpc,one_move}] [--steps STEPS]
+                              [--episode-seconds EPISODE_SECONDS]
+                              [--poll-seconds POLL_SECONDS]
+                              [--describe-protocol] [--start-at START_AT]
+                              [--experimental-nominal-demo]
+                              [--nominal-permit NOMINAL_PERMIT]
+python3.12 -m unittest: error: experimental POST requires a separate nominal permit and causal scenario file or Train tape
+ok
+test_every_first_action_replans_and_reobserves (test_nominal_runtime.NominalRuntimeTests.test_every_first_action_replans_and_reobserves) ... ok
+test_fsync_failure_preserves_partial_and_refuses_restart_before_post (test_nominal_runtime.NominalRuntimeTests.test_fsync_failure_preserves_partial_and_refuses_restart_before_post) ... ok
+test_original_entry_covers_get_solve_and_durable_persistence (test_nominal_runtime.NominalRuntimeTests.test_original_entry_covers_get_solve_and_durable_persistence) ... ok
+test_precommit_run_clock_identity_cas_sequence_and_ledger_changes_refuse (test_nominal_runtime.NominalRuntimeTests.test_precommit_run_clock_identity_cas_sequence_and_ledger_changes_refuse) ... ok
+test_real_planner_feedback (test_nominal_runtime.NominalRuntimeTests.test_real_planner_feedback) ... ok
+test_root03_canonicalization_preserves_strict_endpoint_binding (test_nominal_runtime.NominalRuntimeTests.test_root03_canonicalization_preserves_strict_endpoint_binding) ... ok
+test_snapshot_capability_costs_freshness_and_strict_raw_json (test_nominal_runtime.NominalRuntimeTests.test_snapshot_capability_costs_freshness_and_strict_raw_json) ... ok
+test_source_configuration_and_unresolved_journal_cannot_be_substituted (test_nominal_runtime.NominalRuntimeTests.test_source_configuration_and_unresolved_journal_cannot_be_substituted) ... ok
+test_unknown_timeout_and_malformed_ack_need_observed_restart_fences (test_nominal_runtime.NominalRuntimeTests.test_unknown_timeout_and_malformed_ack_need_observed_restart_fences) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.849s
+
+OK

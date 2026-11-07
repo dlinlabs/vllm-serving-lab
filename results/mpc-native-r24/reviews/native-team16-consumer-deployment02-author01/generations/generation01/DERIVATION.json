@@ -1,0 +1,31 @@
+{
+  "dependency_aggregate_status": "UNACCEPTED_FOR_DEPLOYMENT_PENDING_INDEPENDENT_DELTA_AND_SEPARATE_MAYOR_DEPLOYMENT_APPROVAL",
+  "differences": "EXACT_SOURCE_DIFF.patch",
+  "exact_unchanged": [
+    "transport01.py",
+    "owned01.py",
+    "coverage01.py",
+    "ORIGIN_POLICY.json",
+    "consumer/consumer01.py",
+    "consumer/generation01.py",
+    "consumer/ipc01.py",
+    "consumer/validate01.py",
+    "consumer/worker01.py",
+    "consumer/fixture01.py"
+  ],
+  "new_files": [
+    "authorization02.py",
+    "pins02.py",
+    "prepare02.py",
+    "cpu_helper02.py",
+    "test_deployment02.py",
+    "run_controls02.py",
+    "consumer/seal_inputs01.py"
+  ],
+  "no_42_suite_execution": true,
+  "original_SDK_product_Source13_changed": false,
+  "private_origin_guard_changes": [
+    "Both environment keys now R24_CUT_CONSUMER02_*",
+    "Literal destination cut-consumer-state02/origins-consumer02"
+  ]
+}

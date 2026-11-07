@@ -1,0 +1,160 @@
+"""Compact event/lifecycle CPU development surrogate for admission planning.
+
+This is NOT a vLLM scheduler replica, an identified GPU service law or native
+qualification. Its service coefficients are synthetic until intervention
+fitting. It exists so planners and baselines share one coherent plant:
+
+* exact gateway reservation accounting (admit iff ``R + c <= budget``, the
+  whole cost is held until the terminal event and released exactly once,
+  a budget decrease never evicts or clips an admitted reservation);
+* one request lifecycle generating every flow: FIFO prefill phase ->
+  first content -> decode phase -> terminal (success or failure);
+* explicit latent remaining work per request, advanced at a shared,
+  piecewise-constant service slowdown, so first-content, decode progress and
+  reservation release are coupled rather than independent regressions.
+
+Service law (all work in nominal seconds, divided by the current slowdown):
+
+    slowdown(t) = service_scale * (1 + decode_interference * D(t))
+    prefill work of request i = first_overhead_s + prefill_s_per_token * p_i
+    decode work of request i  = decode_s_per_token * (output_i - 1)
+
+Prefill is a single FIFO server (head-of-line only); decoders progress in
+parallel. ``D(t)`` is the number of requests in the decode phase.
+
+Time conventions (all absolute values in ``snapshot.clock_domain``):
+
+* gateway receipt of a future offer = sampled_at + offset_s + ingress_delay_s;
+* client-scheduled time of a future offer = sampled_at + offset_s;
+* ``Outcome.first_at`` is the *client-observed* first content, i.e. gateway
+  first content plus the egress delay, and ``Outcome.terminal_at`` is the
+  *client-observed* terminal, i.e. gateway terminal plus the same egress delay
+  (so ``first_at <= terminal_at`` always). The reservation is released at the
+  *gateway* terminal (``reserved_trace``), not at the client terminal. A client
+  event later than the rollout cut is not reported: ``first_at``/
+  ``terminal_at`` are ``None`` and ``success`` stays unresolved (``None``) even
+  if the gateway already finished. ``Outcome.good`` therefore compares client
+  time to scheduled time, matching the scored label.
+* an old request without ``scheduled_at`` is assigned
+  ``received_at - scenario.ingress_delay_s``; this is an explicit scenario
+  assumption, not a measurement.
+
+Old-request latent work (declared belief, not a measurement):
+
+* awaiting old requests are assumed to have made no prefill progress
+  (pessimistic member of the aliased set), in admitted_at FIFO order;
+* old streaming requests have total output
+  ``max(1, ceil(old_output_fraction * max_tokens))``; tokens already emitted are
+  estimated from elapsed time since ``first_at`` at the nominal undisturbed
+  decode rate; at least one token always remains;
+* all old requests share ``scenario.old_success``.
+
+Sealed-ledger consistency: every old ``RequestMark.cost`` must equal
+``parameters.cost_spec.estimate(prompt_tokens, max_tokens)`` (relative
+tolerance 1e-12) because ``identity.cost_hash`` claims that formula; otherwise
+``RolloutError("ledger_cost_mismatch")``.
+
+Future offer failure semantics: ``success=False`` with ``output_tokens=k``
+fails after emitting ``k`` tokens; ``k == 0`` fails at prefill completion
+without first content.
+
+Scoring cohort (each request scored exactly once): every old (snapshot)
+request plus every future offer with ``0 <= offset_s < evaluation_window_s``.
+Offers with ``evaluation_window_s <= offset_s < evaluation_window_s + tail_s``
+are simulated and contend for reservation/service, but are not rewarded and
+are not returned in ``outcomes``. The rollout ends at
+``sampled_at + evaluation_window_s + tail_s``.
+
+``score_lower`` counts resolved good outcomes. ``score_upper`` additionally
+counts unresolved cohort members that could still be good under the scenario
+(scenario success flag true and the on-time first-content condition not yet
+violated). Both are counts of successful requests.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import math
+import random
+import time
+from dataclasses import dataclass, field
+
+from .contracts import (
+    FutureOffer,
+    ModelParameters,
+    Outcome,
+    Plan,
+    PlanningConfig,
+    RolloutError,
+    RolloutResult,
+    Scenario,
+    Snapshot,
+    finite,
+)
+
+__all__ = ["rollout", "generate_scenarios"]
+
+_EPS = 1e-12
+_DEADLINE_CHECK_EVERY = 64
+_LEDGER_REL_TOL = 1e-12
+# generate_scenarios caps, tied to the documented PlanningConfig defaults.
+MAX_GENERATED_SCENARIOS = PlanningConfig().max_scenarios
+MAX_GENERATED_OFFERS = PlanningConfig().max_events  # total across all scenarios
+
+
+@dataclass
+class _Req:
+    rid: str
+    cost: float
+    prompt: int
+    max_tokens: int
+    scheduled: float
+    egress: float
+    success: bool
+    scored: bool
+    output: int | None = None  # future offers only; None for old
+    arrival: float | None = None  # gateway receipt (future offers)
+    accepted: bool = False
+    phase: str = "pending"  # pending|prefill|decode|done|rejected
+    work: float = 0.0  # remaining nominal seconds of current phase
+    decode_work: float = 0.0  # nominal decode seconds after first content
+    emits_first: bool = True
+    first_client: float | None = None
+    terminal: float | None = None
+    final_success: bool | None = None
+    released: bool = False
+
+
+@dataclass
+class _Sim:
+    now: float
+    reserved: float
+    trace: list = field(default_factory=list)
+    events: int = 0
+
+
+def _fail(reason: str) -> None:
+    raise RolloutError(reason)
+
+
+def _validate_parameters(p: ModelParameters) -> None:
+    if not finite(p.prefill_s_per_token) or p.prefill_s_per_token < 0:
+        _fail("invalid_prefill_s_per_token")
+    if not finite(p.decode_s_per_token, positive=True):
+        _fail("invalid_decode_s_per_token")
+    if not finite(p.first_overhead_s, positive=True):
+        _fail("invalid_first_overhead_s")  # guarantees positive prefill work
+    if not finite(p.decode_interference) or p.decode_interference < 0:
+        _fail("invalid_decode_interference")
+    if not p.supported_budgets or any(not finite(b, positive=True) for b in p.supported_budgets):
+        _fail("invalid_supported_budgets")
+    for name in ("max_prompt_tokens", "max_output_tokens"):
+        v = getattr(p, name)
+        if type(v) is not int or v <= 0:
+            _fail(f"invalid_{name}")
+
+
+def _validate_config(c: PlanningConfig) -> None:
+    for name in ("slot_s", "evaluation_window_s", "slo_s"):
+        if not finite(getattr(c, name), positive=True):
+            _fail(f"invalid_{name}")

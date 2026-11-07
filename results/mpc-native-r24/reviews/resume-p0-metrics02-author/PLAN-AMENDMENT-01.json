@@ -1,0 +1,14 @@
+{
+ "amends": "PLAN.json / SCHEMA-FREEZE.json (metrics02); frozen before any client edit",
+ "trigger": "Mayor: native recorder must retain actual gateway rejection-body fields / raw response (no auth), not merely fate/status",
+ "observed_gap_in_original_client": "_admission_rejection kept only detail + estimated_request_cost; non-success body kept only as body_bytes + body_sha256; x-request-id response header already recorded as record.request_id for every response",
+ "client_capture_schema": "r24-resume-p0-nominal-client-v2 (record keys added; v1 captures are not finalized by v2 code)",
+ "record_additions": {
+  "body_text": "non-success response body retained verbatim as strict UTF-8 when <= MAX_RETAINED_BODY_BYTES (65536); else null",
+  "body_text_null_reason": "not_applicable (no non-success body) | body_read_incomplete | not_utf8 | over_65536_bytes | null when retained"
+ },
+ "rejection_record": "classification rule UNCHANGED (503 + exact detail + estimated_request_cost key); retains detail, estimated_request_cost (finite number else null, unchanged), and verbatim estimated_input_tokens, estimated_output_tokens, max_admitted_cost, budget_version, plus fields_absent (gateway field names absent from the body; never invented)",
+ "not_recorded": "request Authorization/cookies (none sent; no response headers stored except x-request-id); gateway admitted/terminal cost/budget/version telemetry is gateway-owned and joined by x-request-id, not observed by this recorder",
+ "metrics_impact": "none: normalized rows/fates unchanged",
+ "tests": "update the literal mock admission body to the gateway field shape and assert verbatim retention; one focused literal control for absent fields, non-admission 503 body, non-UTF-8 / oversized body"
+}

@@ -1,0 +1,190 @@
+33:HERE = Path(__file__).resolve().parent
+34:ROOT = HERE.parents[2]
+41:SCHEMA = 'r24-resume-p0-nominal-client-v2'
+42:BINDING_SCHEMA = 'r24-resume-p0-nominal-model-binding-v1'
+43:BINDING_KEYS = frozenset({'schema', 'served_alias', 'local_model_path', 'tokenizer_sha256', 'served_model_names',
+45:CHAT_PATH = '/v1/chat/completions'
+46:MODELS_PATH = '/v1/models'
+47:REQUEST_ID_HEADER = 'x-benchmark-request-id'
+48:RESPONSE_ID_HEADER = 'x-request-id'
+49:ADMISSION_DETAIL = 'request rejected: admission capacity exceeded'
+51:GATEWAY_REJECTION_FIELDS = ('estimated_input_tokens', 'estimated_output_tokens', 'max_admitted_cost',
+53:MAX_RETAINED_BODY_BYTES = 65536
+54:IGNORE_EOS = False
+55:LOOPBACK_HOSTS = frozenset({'127.0.0.1', 'localhost', '::1'})
+56:MAX_START_WAIT_S = 600.0
+57:STATUSES = ('collected', 'refused', 'interrupted', 'failed')
+58:EXIT_CODES = {'collected': 0, 'refused': 2, 'interrupted': 3, 'failed': 4}
+59:NOT_RUN_ERROR = 'not_run: prepared by prepare_capture only (no offers sent)'
+60:RAW_PURPOSE_RULE = ('raw-only engineering purpose: ^[a-z][a-z0-9_]*$ without "eval" or "held"; equals the trace '
+62:CONTROL_EVIDENCE_KEYS = frozenset({'acknowledged_at', 'held_verified_at', 'clock_domain', 'source'})
+64:ANOMALIES = ('invalid_sse', 'error_event', 'unexpected_choice_index', 'finish_reason_contradiction',
+66:FINISH_EVIDENCE = ('observed', 'absent', 'contradiction', 'not_applicable')
+67:TAPE_KEYS = ('kind', 'offered_tape_schema', 'offered_tape_sha256', 'generator', 'protocol_id', 'purpose', 'source_id',
+69:SOURCES = {'nominal_client.py': Path(__file__).resolve(), 'nominal_metrics.py': HERE / 'nominal_metrics.py',
+72:ROW_MAPPING = {
+84:QUALIFIERS = [
+98:NOT_CLIENT_OWNED = [
+118:class ClientRefusal(ValueError):
+122:def _finite(value):
+126:def _reject_constant(token):
+130:def _strict_json(data, label):
+140:def _finite_float(text):
+147:def _purpose(text):
+157:def _sha_hex(value):
+161:def _option_values(argv, option):
+176:def check_binding(trace, binding):
+221:def check_served_models(binding, models, max_model_len):
+238:def check_tokenizer(trace, binding, tokenizer):
+250:def load_tokenizer(path):
+256:class StreamParse:
+347:def prepare_records(trace, offered_start, run_id):
+365:def _apply(record, parsed):
+371:def _retained_body(body):
+380:def _admission_rejection(status, body):
+396:def _error(record, exc, late):
+401:async def _request(client, url, model, request, record):
+470:async def replay(client, trace, records, *, gateway_url, offered_start, drain_timeout):
+481:async def _replay(client, trace, records, *, gateway_url, offered_start, drain_timeout=None, drain_deadline=None):
+508:def normalized_row(record):
+521:def summarize_records(records):
+547:def clock_domain():
+557:def build_run(capture, *, control=None, control_missing=None, control_evidence=None, full_wall=None,
+623:def _check_comparability(capture, comparability):
+638:def _strict_load(path):
+647:def _write_new(path, value):
+656:def _loopback(url, name):
+663:def _new_capture(arm, purpose, program, argv, config):
+683:def _load_inputs(capture, trace_path, binding_path, gateway_url, backend_url, purpose, url_names):
+707:def _preflight_local(capture, trace, binding, tokenizer_loader):
+717:async def _collect(capture, trace, binding, transport, request_timeout, schedule):
+747:async def _capture(args, capture, trace, binding, transport, tokenizer_loader):
+757:def _settle(capture, ending=None):
+774:def _replay_main(args, argv, transport, tokenizer_loader):
+803:class PreparedCapture:
+812:def prepare_capture(*, trace_path, binding_path, arm, purpose, gateway_url, backend_url, request_timeout=120.0,
+850:async def capture_replay(prepared, *, offered_start, deadline, cleanup_reserve_s, clock_domain, transport=None):
+891:def write_capture(path, capture):
+897:async def _run_cancellable(coroutine):
+917:def _finalize_main(args):
+934:def main(argv=None, *, transport=None, tokenizer_loader=load_tokenizer):
+----
+   540	        'implementation_exceptions': sum(record['fate_reason'] in ('implementation_exception',
+   541	                                                                   'implementation_exception_before_send')
+   542	                                         for record in records),
+   543	        'max_send_lag_s': max(lags) if lags else None,
+   544	    }
+   545	
+   546	
+   547	def clock_domain():
+   548	    """Host-wide CLOCK_MONOTONIC identity; a driver record must carry the identical string."""
+   549	    try:
+   550	        boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+   551	    except OSError:
+   552	        boot = 'unavailable'
+   553	    info = time.get_clock_info('monotonic')
+   554	    return f'time.monotonic {info.implementation} host={socket.gethostname()} boot_id={boot}'
+   555	
+   556	
+   557	def build_run(capture, *, control=None, control_missing=None, control_evidence=None, full_wall=None,
+   558	              capture_sha256=None, comparability=None):
+   559	    """nominal_metrics run for a collected capture; full wall, control and comparability facts come only from driver
+   560	    records (comparability model alias/path/tokenizer and ignore_eos are cross-checked against this capture)."""
+----
+   800	    return code
+   801	
+   802	
+   803	class PreparedCapture:
+   804	    """``prepare_capture`` result: the raw-v2 envelope (``capture``) and its validated trace; single use."""
+   805	
+   806	    __slots__ = ('capture', 'trace', 'ready', 'started')
+   807	
+   808	    def __init__(self, capture):
+   809	        self.capture, self.trace, self.ready, self.started = capture, None, False, False
+   810	
+   811	
+   812	def prepare_capture(*, trace_path, binding_path, arm, purpose, gateway_url, backend_url, request_timeout=120.0,
+   813	                    tokenizer_loader=load_tokenizer):
+   814	    """Synchronous library preflight (no HTTP, event loop, signal handler or offer): the CLI envelope, strict
+   815	    trace/binding/URL/purpose loading and the local binding + tokenizer checks, before any offered start exists.
+   816	
+   817	    Refusals and failures are returned (``ready`` False, status 'refused'/'failed' with its error), never raised.  A
+   818	    ready envelope keeps status 'failed' with NOT_RUN_ERROR until ``capture_replay`` records its outcome.
+   819	    """
+   820	    capture = _new_capture(arm if isinstance(arm, str) else None, purpose if isinstance(purpose, str) else None,
+   821	                           'nominal_client.prepare_capture', None, {
+   822	                               'entry': 'library', 'gateway_url': None, 'backend_url': None, 'drain_timeout_s': None,
+   823	                               'request_timeout_s': request_timeout if _finite(request_timeout) else None,
+   824	                               'start_delay_s': None, 'driver_offered_start': None, 'caller_deadline': None,
+   825	                               'cleanup_reserve_s': None, 'caller_clock_domain': None,
+   826	                               'trace_path': str(trace_path), 'binding_path': str(binding_path)})
+   827	    prepared = PreparedCapture(capture)
+   828	    try:
+   829	        if arm not in nm.RUN_ARMS:
+   830	            raise ClientRefusal(f'arm must be one of {list(nm.RUN_ARMS)}')
+   831	        if not isinstance(purpose, str):
+   832	            raise ClientRefusal('purpose must be a string')
+   833	        try:
+   834	            _purpose(purpose)
+   835	        except argparse.ArgumentTypeError as exc:
+   836	            raise ClientRefusal(f'purpose refused: {exc}') from exc
+   837	        if not _finite(request_timeout) or request_timeout <= 0:
+   838	            raise ClientRefusal('request_timeout must be a finite number > 0')
+   839	        trace = _load_inputs(capture, trace_path, binding_path, gateway_url, backend_url, purpose,
+   840	                             ('gateway_url', 'backend_url'))
+   841	        _preflight_local(capture, trace, capture['binding'], tokenizer_loader)
+   842	    except Exception as exc:
+   843	        _settle(capture, exc)
+   844	        return prepared
+   845	    capture['error'] = NOT_RUN_ERROR
+   846	    prepared.trace, prepared.ready = trace, True
+   847	    return prepared
+   848	
+   849	
+   850	async def capture_replay(prepared, *, offered_start, deadline, cleanup_reserve_s, clock_domain, transport=None):
+   851	    """Await one complete raw-v2 capture inside the caller's running loop (no asyncio.run, no signal handlers).
+   852	
+   853	    ``offered_start`` is the caller's exact future absolute time.monotonic() start (never retimed); in-flight requests
+   854	    are cancelled at ``deadline - cleanup_reserve_s`` (the caller's original absolute deadline minus its reserve) and
+   855	    every request task is joined.  ``clock_domain`` must equal the envelope clock_domain.  Refusals send nothing.
+   856	    Returns ``prepared.capture`` with status collected/refused/failed; on cancellation or KeyboardInterrupt the
+   857	    envelope is finalized 'interrupted' in place (every allocated record, rows, summary) and the exception re-raised.
+   858	    No full wall, control, comparability, metrics or persistence (``write_capture``) here.
+   859	    """
+   860	    if not isinstance(prepared, PreparedCapture) or not prepared.ready or prepared.started:
+   861	        raise ClientRefusal('capture_replay needs a ready, unused PreparedCapture (one capture per preparation)')
+   862	    prepared.started = True
+   863	    capture, trace = prepared.capture, prepared.trace
+   864	    capture['error'] = None
+   865	    capture['config'].update(driver_offered_start=offered_start if _finite(offered_start) else None,
+   866	                             caller_deadline=deadline if _finite(deadline) else None,
+   867	                             cleanup_reserve_s=cleanup_reserve_s if _finite(cleanup_reserve_s) else None,
+   868	                             caller_clock_domain=clock_domain if isinstance(clock_domain, str) else None)
+   869	    try:
+   870	        if not (_finite(offered_start) and _finite(deadline) and _finite(cleanup_reserve_s)) or cleanup_reserve_s < 0:
+   871	            raise ClientRefusal('offered_start, deadline and cleanup_reserve_s must be finite numbers (reserve >= 0)')
+   872	        if clock_domain != capture['clock_domain']:
+   873	            raise ClientRefusal('caller clock_domain differs from the recorder clock domain (clock_domain())')
+   874	        drain_deadline = deadline - cleanup_reserve_s
+   875	        if drain_deadline < offered_start + trace['duration_seconds']:
+   876	            raise ClientRefusal('deadline - cleanup_reserve_s ends before the offered window: refused, never truncated')
+   877	        now = time.monotonic()
+   878	        if not now < offered_start <= now + MAX_START_WAIT_S:
+   879	            raise ClientRefusal(f'offered_start must lie in (now, now + {MAX_START_WAIT_S}s]: no rescheduling')
+   880	        await _collect(capture, trace, capture['binding'], transport, capture['config']['request_timeout_s'],
+   881	                       lambda now: (offered_start, drain_deadline))
+   882	    except BaseException as exc:
+   883	        _settle(capture, exc)
+   884	        if not isinstance(exc, Exception):
+   885	            raise
+   886	        return capture
+   887	    _settle(capture)
+   888	    return capture
+   889	
+   890	
+   891	def write_capture(path, capture):
+   892	    """Persist a capture with the CLI capture.json codec (sorted keys, indent 1, no NaN, exclusive create, fsync);
+   893	    returns the sha256 of the written bytes."""
+   894	    return _write_new(path, capture)
+   895	
+   896	

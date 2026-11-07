@@ -1,0 +1,26 @@
+{
+  "schema": "resume-p0-native-lifecycle-parent-v1",
+  "source_commit": "939cae8946887465f2dbd1e2318bae2f91a31a56",
+  "preregistration_commit": "ffb69e2c963bd3af14497bdb2167117c47e9708c",
+  "actual_startup": "PASS",
+  "actual_owned_cleanup": "PASS",
+  "scope": "ACTUAL_HOST_COMPONENT_ONLY; not Native MPC, prediction accuracy, SLO or benchmark qualification",
+  "elapsed_seconds": 85.664819525,
+  "verified": [
+    "Same authorized RTX4090 and exact two ownership locks",
+    "Real backend health/models and gateway metrics/admin state readiness; matching actual source/model/cost/tokenizer/clock identity",
+    "Normal FCFS backend optimizations, prefix cache disabled; dedicated18000/18001 and configured interpreter-bin PATH",
+    "Normal owner-context return; STOPPED, known identities gone, unknown=[], pending_spawn=null",
+    "Telemetry closed, complete, zero dropped/write errors/remaining/unflushed records",
+    "Post-cleanup same GPU1MiB/0%, no compute apps and no dedicated-port listeners at2026-11-05T01:52:05Z; nginx88 untouched"
+  ],
+  "native_qualified_cycles": 0,
+  "offered_inference_requests": 0,
+  "admin_control_POSTs": 0,
+  "evidence_directory": "resume-p0-lifecycle-host03-author",
+  "evidence_seal_sha256": "2f1d0735c0c37492011f8d17599517e1f8ef5ec8208e5a9ac070e7b16b12a07c",
+  "raw_tar_sha256": "e9f3ba8b52ca04f70bd645bb4b3e309bd8d727f13600d24d7898ef773b4dbf2c",
+  "collection_exclusions": ["output/cache", "output/scratch"],
+  "original_failures_preserved": ["resume-p0-lifecycle-host01-parent01.json", "resume-p0-lifecycle-host02-parent01.json"],
+  "next": "Wait for deployable CPU episode composition. Then preregister the exact-source five-request Train-only engineering qualification; no Train Fixed freeze or Eval before qualification."
+}

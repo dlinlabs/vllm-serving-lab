@@ -1,0 +1,40 @@
+{
+  "schema": "resume-mvp-claims-parent-v1",
+  "status": "BOUNDED_INITIAL_AUDIT_INTEGRATED_FINAL_P0_AUDIT_OPEN",
+  "reviewed_docs_commit": "db1b61d9385c9efdf6afced34aa51f051fdfd43b",
+  "author_model_id": "claude-opus-5.5",
+  "author_reasoning_effort": "max",
+  "source_scope": ".runtime/r24-resume-mvp-claims-review01",
+  "archive": "results/mpc-native-r24/reviews/resume-mvp-claims-author01",
+  "archive_files_including_seal": 40,
+  "seal_sha256": "e424eb380056045676656eaef14555817cda18eeaa8e248a6ab5f0c726ac907f",
+  "report_sha256": "668bb1f4e1fbfa81d24690ffc820086401a3b49bab110d9dac8188780f92b38a",
+  "verification_command": "sha256sum SHA256SUMS && sha256sum -c --status SHA256SUMS",
+  "audit_scope": {
+    "pinned_docs": 5,
+    "selected_reference_files": 10,
+    "selected_reference_bytes": 139374,
+    "parent_read_full_report_and_current_docs": true,
+    "parent_repeated_reference_audit": false,
+    "reviewer_used_truncated_index_outlines": ["E2", "E4"],
+    "command_provenance_limit": "The reviewer discloses an unlogged setup sha256sum whose arguments cannot be recovered. The seal is not proof of a total byte-read bound or complete command provenance.",
+    "other_limitations": "See REPORT.json claims_not_checked, unlogged_actions_disclosure and limitations. No archived helper is executed by Parent."
+  },
+  "finding_disposition": {
+    "F1": "Added disjoint development/evaluation workload identities, frozen development-only fitting/tuning/Fixed selection and decision-time information limits. Reused development traces are in-sample pilots, not the held-out P0 comparison.",
+    "F2": "Replaced achieved reproducibility and checkoutable-revision claims with auditable records/source hashes; portable reproduction remains open.",
+    "F3": "Labelled the historical command as feature/forecast reconstruction, not E1 table reconstruction; disclosed two unchecked analysis scripts.",
+    "F4": "Narrowed the failure-tooling bullet to CPU-tested prototype plus failed GPU diagnostic; added cleanup lock-release consequence and clock-error trigger.",
+    "F5": "Removed shadow claims and narrowed E2 attribution to frozen candidate ordering with full-action Fixed-reference scope; no runtime integration acceptance.",
+    "F6": "Separated current public-library reading links from the hash-recorded E1 runtime and frozen E2 implementation.",
+    "F7": "Attributed package versions to the runner and disclosed differing hosts, protocols, schedule order, replay-plan hashes and gateway environments.",
+    "F8": "Specified two scheduled-budget identification captures with per-capture denominators and rejection/SLO counts; no MPC performance claim.",
+    "F9": "Stated E3 was never live-eligible and E4 component coverage FAIL; identified warmup in the token count.",
+    "F10": "Removed self-certifying readiness/verified-wording titles; P0 remains open."
+  },
+  "revised_docs_independently_reaudited": false,
+  "new_experiments": false,
+  "native_qualification": false,
+  "p0_complete": false,
+  "resume_ready": false
+}

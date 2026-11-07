@@ -1,0 +1,90 @@
+{
+  "deadline_monotonic": 927099.919463895,
+  "error_count": 2,
+  "errors": [
+    "signal:1611895:15:PermissionError",
+    "signal:1611895:9:PermissionError"
+  ],
+  "expired": false,
+  "known": [
+    {
+      "pgid": 1611895,
+      "pid": 1611895,
+      "ppid": 1611793,
+      "sid": 1611895,
+      "start_ticks": 92709883
+    },
+    {
+      "pgid": 1611896,
+      "pid": 1611896,
+      "ppid": 1611793,
+      "sid": 1611896,
+      "start_ticks": 92709884
+    }
+  ],
+  "known_identities_gone": false,
+  "lock_paths": [
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/attempts/py312-01/evidence/poison/component.lock",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-services01/attempts/py312-01/evidence/poison/mayor.lock"
+  ],
+  "native_eligibility": false,
+  "owner": {
+    "pgid": 1611793,
+    "pid": 1611793,
+    "ppid": 1611597,
+    "sid": 1611793,
+    "start_ticks": 92709783
+  },
+  "pending_spawn": null,
+  "run_dir": "attempts/py312-01/evidence/poison/run",
+  "schema": "nominal-service-ownership-v1",
+  "service_failure": false,
+  "services": [
+    {
+      "argv": [
+        "<redacted>",
+        "<redacted>",
+        "<redacted>",
+        "<redacted>"
+      ],
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "name": "engine",
+      "redacted_env_entries": 2,
+      "root_identity": {
+        "pgid": 1611895,
+        "pid": 1611895,
+        "ppid": 1611793,
+        "sid": 1611895,
+        "start_ticks": 92709883
+      }
+    },
+    {
+      "argv": [
+        "<redacted>",
+        "<redacted>",
+        "<redacted>",
+        "<redacted>"
+      ],
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "name": "gateway",
+      "redacted_env_entries": 2,
+      "root_identity": {
+        "pgid": 1611896,
+        "pid": 1611896,
+        "ppid": 1611793,
+        "sid": 1611896,
+        "start_ticks": 92709884
+      }
+    }
+  ],
+  "source_sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed",
+  "status": "POISON",
+  "universal_OS_proof": false,
+  "unknown": []
+}

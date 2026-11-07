@@ -1,0 +1,14 @@
+{
+  "scope": "resume-p0-contract01",
+  "role": "Role7 fair existing benchmark metrics/negative cases",
+  "model": "claude-opus-5.5",
+  "reasoning_effort": "max",
+  "kind": "contract handoff only (doc + machine-readable JSON); no implementation, no tests, no runtime/native/GPU/SSH/network/git/install, no datasets/raw journals/inventories",
+  "selection_budget": {"max_files": 8, "max_bytes": 1048576},
+  "selection_discovery": "file names/sizes plus keyword-count grep (fifo/throughput/goodput/fairness) only; no content read before pinning",
+  "selected_initial_pins": "PINS-selected-initial.txt (7 files, 154292 bytes)",
+  "reserve_slot": "1 file (gateway.py or mpc_lab/controller.py etc.) only if queue/admission semantics are not resolvable from the initial 7; must be pinned before reading",
+  "tracked_status": "asserted from Mayor commits (docs b1b61d93; send-order a3e4 accepted fb884d3e; protocol16/planner rev02 tracked copies); not verified with git by Role7",
+  "deliverables": ["P0-CONTRACT.md", "p0-contract.json", "SHA256SUMS"],
+  "non_goals": ["no superiority/production/SLO-guarantee claim", "no denominator/threshold/baseline-strength change", "no G06/G16/Native14 closure", "no review of Role6 unsealed D2-F1 repair"]
+}

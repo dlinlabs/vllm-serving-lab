@@ -1,0 +1,66 @@
+{
+  "schema": "r24-resume-p0-workload01-report-v1",
+  "status": "IMPLEMENTED_AND_SEALED_PENDING_MAYOR_REVIEW (not accepted; Mayor verifies and commits)",
+  "owner": {"role": "Role2 estimation reproducibility / numerical stability", "model_id": "claude-opus-5.5", "reasoning_effort": "max", "child_or_nested_agents": 0},
+  "deliverables": {
+    "source": {
+      "experiments/mpc-research/resume-mvp/nominal_workload.py": {"bytes": 25248, "sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"},
+      "experiments/mpc-research/resume-mvp/test_nominal_workload.py": {"bytes": 19418, "sha256": "1c73aba0c9967a36b8e1fc0ac9ecd79cbf817f2d007e891f9fc96790cf5bcfe1"}
+    },
+    "capsule": ".runtime/r24-resume-p0-workload01",
+    "tapes": {
+      "tapes-v1/train.tape.json": {"bytes": 12752, "sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f", "count": 88, "seed": 4101},
+      "tapes-v1/eval.tape.json": {"bytes": 14217, "sha256": "8961340fb0c15158a93346d1807d7d34747674c604d2eef242faaaaa5e4d4fb0", "count": 104, "seed": 4102},
+      "tapes-v1/manifest.json": {"bytes": 6339, "sha256": "32f870120d62fd4855428459e5cbdec1312edfe4b9c7ae8bf9ae150b7f9a6020", "protocol_sha256": "863c432da16fd3c799d7f4a8981928a2552de1b9c697b0ebe4a0cc94e5ad5766"}
+    },
+    "plan_freeze_sha256": "22d10938fb6bc1bbbbbf7442b349a7e921e2cc187654c2aeb66c7d017812eef7",
+    "source_freeze_sha256": "85908774b8ddcad61f87366bda83352a1ba34bf2f18eb648f68e424a79d879da"
+  },
+  "results": {
+    "tests": {
+      "py314 (3.14.4)": {"attempt": "tests-py314-attempt01", "exit": 0, "ran": 12, "ok": 12, "seconds": 0.734},
+      "py312 (3.12.16)": {"attempt": "tests-py312-attempt01", "exit": 0, "ran": 12, "ok": 12, "seconds": 0.646}
+    },
+    "generate_once": {"attempt": "generate-py314-attempt01", "exit": 0, "note": "generated exactly once; never regenerated, resampled or reseeded"},
+    "verify": {"verify-py314-attempt01": 0, "verify-py312-attempt01": 0, "meaning": "each interpreter regenerated all three files in memory and matched the written bytes exactly; summaries identical apart from the command name"},
+    "failures": [],
+    "failure_note": "No RED attempt occurred; no source amendment; attempt01 snapshots equal the delivered sources.",
+    "descriptive_only": "Train class counts 256:33, 1024:26, 3072:29 (descriptive; nothing was tuned or selected). Eval rows were not inspected by this role; only generator-reported count/sha/bytes are recorded."
+  },
+  "exact_commands": {
+    "env_prefix": "env -u PYTHONPATH OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 [NOMINAL_WORKLOAD_SCRATCH=<capsule>/scratch-<py>-attempt01] nice -n 19 timeout -s TERM -k 20 <300 tests | 120 generate/verify>",
+    "tests": "<env_prefix> <python> -B -I ROOT/experiments/mpc-research/resume-mvp/test_nominal_workload.py -v",
+    "generate": "<env_prefix> ROOT/.venv/bin/python3.14 -B -I ROOT/experiments/mpc-research/resume-mvp/nominal_workload.py generate --out-dir ROOT/.runtime/r24-resume-p0-workload01/tapes-v1",
+    "verify": "<env_prefix> <python> -B -I ROOT/experiments/mpc-research/resume-mvp/nominal_workload.py verify --out-dir ROOT/.runtime/r24-resume-p0-workload01/tapes-v1",
+    "interpreters": {"py314": "ROOT/.venv/bin/python3.14", "py312": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python"},
+    "verbatim_log": "commands.log"
+  },
+  "replay_interface": {
+    "status": "BLOCKED_HANDOFF_PRECISE: compact offered tape is NOT directly parser-compatible with run_trace_pilot.py",
+    "reason": "trace_workload schema_version 1 requests need prompt text and tokenizer-measured chat-template input_tokens (verify_prompts runs before measurement)",
+    "provided": "nominal_workload.to_replay_trace(tape, model, prompt_for, count_tokens, tokenizer_sha256); output passes trace_workload.validate_trace in tests with FAKE prompt/count functions only",
+    "remaining_step_not_executed_here": "on the GPU/tokenizer host: load_tape -> to_replay_trace with prompt_for = trace_workload.synthetic_prompt(tok, requested, payload_key) and count_tokens = trace_workload.input_tokens(tok, chat messages), tokenizer_sha256 = tokenizer_fingerprint(tok); validate_trace + verify_prompts; write a new replay trace file (recipe in manifest.replay_adapter.recipe_not_executed_here)",
+    "pilot_command_mapping": "python run_trace_pilot.py --trace <replay trace json> --output-dir <new dir> --ttft-slo <PENDING Mayor> (--budget <PENDING Mayor> | --budget-schedule <PENDING Mayor>) --cache-policy disabled",
+    "pilot_notes": ["--cache-policy is self-reported; vLLM must actually be launched with prefix caching disabled and verified separately", "the pilot sends its own warmup requests (--warmup-requests, default 3) outside the tape", "replay timing fidelity is the pilot's (--max-scheduling-lag default 0.05 s), not this generator's"],
+    "native_client_mapping": "NOT_VERIFIED (peer-owned modules not read; Runtime6 owns it)"
+  },
+  "split_policy": {"train": "selection method PENDING Mayor/Role7", "eval": "held out; never used for tuning, forecasting or controller input; only the measurement harness replays it", "forecast_rng": "must use a domain different from every (generator_id, protocol_id, purpose, seed, stream) domain of this generator"},
+  "limitations": [
+    "Synthetic offered workload only; procedural holdout of two draws from one public generator with public seeds; not OOD/generalization and not an Azure or real-trace holdout.",
+    "Protocol values are Mayor choices, not capacity, accuracy or an MPC-favouring design; realized counts 88/104 are outcomes of the frozen seeds and were not tuned or resampled.",
+    "With about 100 offers per 5 s tape, TTFT p95/p99 from one replay rest on the top few observations and carry large sampling uncertainty; any p99 claim needs that stated.",
+    "Requested prompt-length classes are labels: real chat-template counts (synthetic_prompt should hit them exactly or raise) and gateway cost are unmeasured here.",
+    "Prefix-cache-disabled is a requirement for later GPU runs, unverified by this CPU component.",
+    "Ties in arrival offsets are possible (zero or sub-nanosecond gaps) and are allowed by the replay schema; class mapping bias <= 2^-64.",
+    "CPU-only tests; no tokenizer, GPU, network or native-client validation."
+  ],
+  "pins": {
+    "inputs_read": {"trace_workload.py": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f", "run_trace_pilot.py": "c02808e7cfb3aade6563620d373b1c16fc6f8af47a549c41ddf901b0cd6ad2bc"},
+    "inputs_unchanged_before_and_after_runs": true,
+    "files_read_count": 2,
+    "peer_files": "not read; resume-mvp directory listed by name/size/mtime only; peers concurrently added nominal_runtime.py and edited nominal_planner.py/test_nominal_planner.py (not touched)",
+    "bytecode_written_for_owned_modules": false
+  },
+  "scratch": "scratch-py314-attempt01 and scratch-py312-attempt01 hold raw test residue (38 files, including deliberately tampered copies) and are sealed as evidence; they are not deliverable tapes.",
+  "forbidden_actions_taken": "none (no git, network, GPU, SSH, installs, product/SDK/mpc_lab/old-sealed edits, Markdown, /tmp, peer reads, agents)"
+}

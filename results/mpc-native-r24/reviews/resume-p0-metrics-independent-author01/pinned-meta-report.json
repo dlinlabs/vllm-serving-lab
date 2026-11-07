@@ -1,0 +1,447 @@
+{
+ "adapter_qualifiers": [
+  "command argv is not recorded by run_trace_pilot (config=vars(args) preserved instead)",
+  "cache_policy is self-reported by the runner; the backend prefix-cache launch must be verified separately",
+  "backend launch provenance is not observed by the runner",
+  "analyze_trace_pilot load/control fidelity is not evaluated here; preserve the runner exit status and report",
+  "static budget: runner acknowledgement before measurement_start; gateway-internal application semantics not verified by this adapter",
+  "FIFO/FCFS backend ordering unverified (label pending)",
+  "gateway zero character-fallback and cost-spec identity are not verified here (gateway.py unread); only startup tokenizer_available and MODEL_NAME == absolute local trace model are checked",
+  "full wall not recorded by run_trace_pilot: wall-envelope rates use the offered-cohort observed envelope, a lower bound on the full wall (warmup_start/warmup_end preserved)"
+ ],
+ "api": {
+  "CLI": "python -B nominal_metrics.py --output-dir DIR --arm {fixed16,fixed32} --purpose {train,eval}: exit 0 metrics JSON on stdout; exit 1 REFUSED JSON on stderr",
+  "adapt_run_trace_pilot(output_dir, arm, purpose)": "fixed16/fixed32 only; RAW_MAPPING below",
+  "comparison_table(entries, purpose, train_selection)": "rows in ARMS order, statuses MEASURED/REFUSED/NOT_RUN plus train_selected_fixed ALIAS; no winner field",
+  "compute(run)": "pure core over strict normalized run (RUN_KEYS) and rows (ROW_KEYS); refuses, never repairs",
+  "select_train_fixed({fixed16, fixed32})": "Train-only empirical choice; SELECTED or REFUSED dict"
+ },
+ "claims_not_made": [
+  "no winner or superiority",
+  "no capacity, SLO guarantee or production claim",
+  "no G06/G16/Native14 qualification",
+  "hashes are integrity pins, not Train/Eval disjointness or leakage proof",
+  "FIFO label pending verified backend FCFS configuration",
+  "no native, GPU or Eval measurement",
+  "no G06/G16 or protocol adoption",
+  "no FIFO implementation claim",
+  "no generalization from Train in-sample engineering measurements"
+ ],
+ "final_code_snapshot": "attempts/attempt02/code-under-test (CODE-SHA256)",
+ "frozen_before_code": {
+  "PLAN.json": "cddea6a2be8a9782c4d6a8b21eecf4a629db918be1401b602a5de3a44ff5587b",
+  "RESERVE-DECISION.json": "cabca939ae9c1acbee362910790ff00a9d57084eee931f45380d90d4b772a7e1",
+  "SCHEMA-FREEZE.json": "3df6ce9eab99209986b1d4fc2987955191f7128d4e9cf541f41a9c19565f375a",
+  "SELECTION.json": "28927d877be80bcf52cf0cca46ac7f298135179d045112cd2a7e29fcaef5c9de"
+ },
+ "gaps": [
+  {
+   "detail": "sustained_load.consume_request never parses choices[].finish_reason (stop vs length unknown). requested_ignore_eos is code-constant False (payload sends explicit ignore_eos=False; run_trace_pilot never overrides; manifest.code_sha256 pins sustained_load.py) and stream_error is derivable from error_type, but neither unblocks without finish_reason, so the adapter keeps SLO null",
+   "id": "G-SLO",
+   "status": "BLOCKING natural SLO attainment/goodput, SLO fairness and Train fixed selection on run_trace_pilot outputs"
+  },
+  {
+   "detail": "unchanged run_trace_pilot hosts only static --budget or a predeclared open-loop schedule with a process-internal admin key; closed-loop arms need a coordinator journal emitting ROW_KEYS rows, measured control intervals and the same envelope scope, then compute() directly",
+   "id": "G-LOOP",
+   "status": "BLOCKING strong_one_move/mpc/causal_reactive measurement via this adapter"
+  },
+  {
+   "detail": "run_trace_pilot records warmup_start/end and measurement window but not gateway start or final drain completion; full_wall_s null; offered_cohort_observed envelope is a lower bound; arms must share one scope",
+   "id": "G-FULLWALL",
+   "status": "OPEN"
+  },
+  {
+   "detail": "label PENDING_VERIFIED_BACKEND_FCFS_CONFIG; vllm CLI default fcfs (Mayor input) is availability, not running-config proof",
+   "id": "G-FIFO",
+   "status": "OPEN"
+  },
+  {
+   "detail": "backend launch provenance not observed by the runner; cache_policy self-reported; archive actual backend argv/config per run",
+   "id": "G-BACKEND/G-CACHE",
+   "status": "OPEN"
+  },
+  {
+   "detail": "gateway zero character-fallback and cost-spec identity not verified here (gateway.py unread)",
+   "id": "G-TOKENIZER",
+   "status": "OPEN"
+  },
+  {
+   "detail": "static budget record shape depends on unread trace_control.read_plan / gateway response; adapter fails closed on unexpected status/requested_budget; first real fixed Train output must pass the CLI",
+   "id": "G-STATIC-RECORD",
+   "status": "OPEN"
+  },
+  {
+   "detail": "runner argv not recorded; config=vars(args) preserved",
+   "id": "G-ARGV",
+   "status": "OPEN"
+  },
+  {
+   "detail": "analyze_trace_pilot validity/exit status not evaluated; preserve separately",
+   "id": "G-ANALYZER",
+   "status": "OPEN"
+  },
+  {
+   "detail": "real-tokenizer conversion and replay sha/tokenizer sha from Mayor commit 02b292b4 received, not checked",
+   "id": "G-CONVERT",
+   "status": "NOT VERIFIED BY ROLE7"
+  },
+  {
+   "detail": "literal synthetic fixtures only; no real output, no mutation testing, no Eval data",
+   "id": "G-TEST-SCOPE",
+   "status": "LIMITATION"
+  }
+ ],
+ "manifest_preserved": [
+  "schema_version",
+  "status",
+  "error",
+  "config",
+  "created_at",
+  "git_commit",
+  "git_dirty",
+  "code_sha256",
+  "packages",
+  "python",
+  "gpu",
+  "models",
+  "run_id",
+  "trace_sha256",
+  "input_trace_sha256",
+  "replay_plan_sha256",
+  "control_protocol",
+  "experiment_protocol",
+  "gateway_launch",
+  "backend_launch_provenance",
+  "package_scope",
+  "host",
+  "measurement_start",
+  "measurement_end",
+  "warmup_start",
+  "warmup_end",
+  "forced_gateway_kill",
+  "collector_errors",
+  "initial_metrics",
+  "post_warmup_metrics",
+  "final_metrics"
+ ],
+ "mayor_inputs_received_not_verified": [
+  "commit 02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e Train 88/88 replay sha 5e418b89... tokenizer 4daabcf7...",
+  "host vllm 0.30.0 --help=all: --scheduling-policy {fcfs,priority} default fcfs, --no-enable-prefix-caching",
+  "model assets /workspace/pr32-r23/models/Qwen3-4B-Instruct-2507; repo-id MODEL_NAME char fallback risk"
+ ],
+ "metric_definitions": {
+  "clock_origins": "scheduled_at = offered schedule in the run clock; sent_at = client request start; first_content_at = first content event; terminal_at = client terminal",
+  "comparison_identity": "measured arms must share offered trace sha256, all-offered count and envelope scope",
+  "conditional_estimand": "TTFT conditional on fate complete (selection-biased; read with fates and the penalized TTFT)",
+  "controller_overhead": "static_fixed: no controller, 0 decisions, 0.0 s with recorded basis (no fake solver cost); measured_intervals: decisions, interval union total/within envelope/fraction, duration percentiles; otherwise null with reason; never added to request latency",
+  "denominator": "all offered rows (one per offered request id, unique); every fate retained; rates null when zero offered",
+  "groups_fairness": "per-group fates/SLO/TTFT; spread worst_min/best_max/gap/min_over_max/Jain over non-empty groups for slo_attainment_fraction and delivered_fraction; Jain null for all-zero, <2 groups or unavailable metric; worst group rejection and conditional p95 with n",
+  "natural_slo": "unchanged r23 score_http.score (sha256 pinned) only when every row carries status/finish_reason/requested_ignore_eos/stream_done/stream_error; otherwise every SLO field null with missing reasons, no TTFT-only substitute",
+  "outcomes": "fates complete/rejected/http_error/stream_error/transport_error/cancelled/not_launched/unknown; rejection, failure (http/stream/transport/cancelled), not_launched and unknown rates are separate; not_launched is never merged into rejection",
+  "penalized_estimand": "failure-penalized operational TTFT over ALL offered requests (missing first content = +inf); NOT a survival-analysis identified quantile of right-censored latency",
+  "send_lag_s": "sent_at - scheduled_at over sent rows plus n_not_sent",
+  "slo_attainment_fraction": "dimensionless natural_slo_good / all_offered (distinct from goodput)",
+  "slo_goodput_rps": "cohort (good / offered window, cohort-normalized (includes tail): all-offered cohort count / offered window seconds; not steady-state GPU throughput), in-window, and wall-envelope (good / envelope)",
+  "throughput": "offered_rps, delivered (fate complete incl. length-capped) rps per cohort window and wall envelope; completion tokens/s lower = observed usage, upper = + max_output_tokens per delivered row lacking usage, exact flag",
+  "train_selection_rule": {
+   "data": "Train only, identical offered trace sha256 and count",
+   "not": "nominal forecast freeze_fixed",
+   "primary": "natural_slo_good higher (identical offered cohort => cohort SLO goodput order)",
+   "refuse": "natural SLO unavailable, non-train, non-static, mismatched trace, missing arm",
+   "tie_1": "fewer not-delivered offered requests",
+   "tie_2": "lower budget"
+  },
+  "ttft_s": "nearest-rank rank=ceil(q*n/100) for q in 50/95/99 with n, rank, is_sample_max, max; four blocks: conditional (fate complete) from scheduled and client-send origins, and all-offered failure-penalized (missing first content = +inf) from both origins; a rank on +inf gives null with p*_null_reason rank_falls_on_failure_penalty; empty gives null_reason no_samples",
+  "windows": "offered window, envelope, envelope_scope; full_wall_s non-null only for scope full_wall"
+ },
+ "minimum_followup_code_changes": [
+  "G-SLO: additive client capture of the terminal choices[].finish_reason per row (+ explicit requested_ignore_eos and stream_error fields); then extend adapter LAUNCHED_KEYS and bump schema (extra raw keys are currently refused as schema drift)",
+  "G-LOOP: coordinator journal in the normalized row/control schema with measured decision intervals",
+  "G-FULLWALL: one monotonic arm-setup start and final-drain end recorded identically for every arm",
+  "G-FIFO/G-CACHE/G-BACKEND: per-run archived backend launch argv/config bound to the output"
+ ],
+ "model": {
+  "child_agents": 0,
+  "id": "claude-opus-5.5",
+  "reasoning_effort": "max"
+ },
+ "normalized_schema": {
+  "arms": [
+   "fixed16",
+   "fixed32",
+   "train_selected_fixed",
+   "strong_one_move",
+   "mpc",
+   "causal_reactive"
+  ],
+  "envelope_scopes": {
+   "full_wall": "caller-recorded actual wall in the run clock domain including setup, solver, HTTP, unresolved requests and final drain",
+   "offered_cohort_observed": "offered start to the later of offered end and last observed terminal; EXCLUDES pre-offer setup/solver warmup, post-terminal drain and unresolved requests: a lower bound on the full wall, not the full wall"
+  },
+  "failure_fates": [
+   "http_error",
+   "stream_error",
+   "transport_error",
+   "cancelled"
+  ],
+  "fates": [
+   "complete",
+   "rejected",
+   "http_error",
+   "stream_error",
+   "transport_error",
+   "cancelled",
+   "not_launched",
+   "unknown"
+  ],
+  "groups": {
+   "513to2048": "513..2048",
+   "gt2048": ">2048",
+   "le512": "<=512"
+  },
+  "row_keys": [
+   "completion_tokens",
+   "fate",
+   "first_content_at",
+   "group_tokens",
+   "max_output_tokens",
+   "request_id",
+   "scheduled_at",
+   "sent_at",
+   "slo",
+   "terminal_at"
+  ],
+  "run_keys": [
+   "arm",
+   "clock_domain",
+   "control",
+   "control_missing",
+   "envelope_end",
+   "envelope_scope",
+   "envelope_start",
+   "offered_duration_s",
+   "offered_start",
+   "provenance",
+   "purpose",
+   "rows",
+   "slo_missing"
+  ],
+  "slo_keys": [
+   "finish_reason",
+   "requested_ignore_eos",
+   "status",
+   "stream_done",
+   "stream_error"
+  ]
+ },
+ "not_read": [
+  "Eval/Train tape rows and any outcomes",
+  "trace_control.py",
+  "gateway.py",
+  "analyze_trace_pilot.py",
+  "peer unsealed runtime/planner/coordinator sources",
+  "legacy comparison16 scorer (unchanged, unused)"
+ ],
+ "other_access": [
+  "experiments/mpc-research/resume-mvp directory NAMES listed (incl. foreign __pycache__ names); no peer content read (prepare_replay.py, nominal_runtime.py, nominal_planner.py, nominal_permit.py, nominal_scenario.py unread)",
+  "score_http.py bytes executed by tests only after the pinned sha256 check"
+ ],
+ "owned_files": {
+  "experiments/mpc-research/resume-mvp/nominal_metrics.py": {
+   "bytes": 56373,
+   "equals_attempt02_snapshot": true,
+   "sha256": "e0119f34437f81dae4c8bb97501a2c0e6d7ec5decfa23f0eb6491db6e6afa58e"
+  },
+  "experiments/mpc-research/resume-mvp/test_nominal_metrics.py": {
+   "bytes": 25027,
+   "equals_attempt02_snapshot": true,
+   "sha256": "cca0c280182075e3300a35121cbfae51be272dfa100145420cce167d71f55617"
+  }
+ },
+ "post_freeze_amendments": [
+  "A1 adapter refuses closed-loop arms entirely (freeze allowed control null)",
+  "A2 static fixed detection: config.budget_schedule null, config.budget == arm budget, exactly one actuation record with sent <= acknowledged < measurement_start and target == measurement_start; optional status must be acknowledged and optional requested_budget must equal the budget (fail-closed otherwise)",
+  "A3 gateway_launch.settings ADMISSION_MODE cost_aware and MAX_ADMITTED_COST == str(float(budget))",
+  "A4 config.cache_policy must be disabled (self-reported; see G-CACHE)",
+  "A5 trace request keys validated exactly; offered tape schema and purpose provenance required",
+  "A6 send_lag_s block; summarize/comparison_table field details; control dict internal keys",
+  "A7 (after Mayor full-wall note) required envelope_scope offered_cohort_observed|full_wall, windows.full_wall_s null with reason unless full_wall; comparison_table refuses mixed envelope scopes",
+  "A8 (after Mayor MODEL_NAME note) trace model must be an absolute local path equal to gateway MODEL_NAME and initial_metrics.tokenizer_available true; initial/post_warmup/final gateway metrics preserved"
+ ],
+ "raw_mapping": {
+  "clock_domain": "runner time.monotonic(); scheduled_at must equal measurement_start + arrival_seconds",
+  "completion_tokens": "output_tokens (usage.completion_tokens from the include_usage chunk) or null",
+  "control": "fixed arms only: static --budget verified; closed-loop arms are refused by this adapter",
+  "envelope": "scope offered_cohort_observed: start = measurement_start; end = max(measurement_end, every finished_at); full wall (gateway start, warmup, budget install, final drain) is not one recorded monotonic interval, so full_wall_s stays null",
+  "fate": {
+   "cancelled": "error_type CancelledError",
+   "complete": "success true",
+   "http_error": "error_type HTTPStatusError",
+   "not_launched": "placeholder NotLaunched, message \"collection interrupted\", no observation",
+   "rejected": "rejected true (HTTP 503 admission-capacity body)",
+   "stream_error": "error_type InvalidSSE|IncompleteStream|EmptyContentStream",
+   "transport_error": "any other error_type (httpx exception class name)",
+   "unknown": "placeholder with any other message (send state unknown) or an unmatched combination"
+  },
+  "files": {
+   "budget_changes.json": "budget actuation records (static fixed: exactly one, acknowledged before measurement_start)",
+   "client.json": "{\"requests\": rows}; row = dataclasses.asdict(RequestResult) + trace_id + expected_input_tokens, or the run_trace_pilot.unlaunched placeholder",
+   "manifest.json": "schema_version 1, status, config=vars(args), measurement_start/end, provenance",
+   "trace.json": "trace_workload schema_version 1 copy; sha256 must equal manifest.trace_sha256"
+  },
+  "first_content_at": "first_content_at (first SSE event with content)",
+  "group_tokens": "expected_input_tokens (== trace input_tokens: tokenizer-measured chat-template count)",
+  "max_output_tokens": "max_output_tokens (== trace max_tokens)",
+  "model": "trace model must be an absolute local path equal to gateway_launch.settings.MODEL_NAME, and initial_metrics.tokenizer_available must be true",
+  "request_id": "trace_id (client row order must equal trace order)",
+  "scheduled_at": "scheduled_at",
+  "sent_at": "started_at (consume_request start, before POST)",
+  "slo": "null for every row: natural SLO refused (see SLO_MISSING_RUN_TRACE_PILOT)",
+  "terminal_at": "finished_at (consume_request finally)"
+ },
+ "role": "PR32 team16 Role7: fair existing benchmark metrics / negative cases",
+ "schema": "r24-resume-p0-nominal-metrics01-report-v1",
+ "scope": ".runtime/r24-resume-p0-nominal-metrics01",
+ "slo_missing_run_trace_pilot": [
+  "finish_reason: sustained_load.consume_request never records it (stop vs length unknown)",
+  "requested_ignore_eos: not recorded per row (replay uses the code default; not a per-row observation)",
+  "stream_error: no distinct per-row field (only error_type)"
+ ],
+ "source_budget": {
+  "bytes": 91265,
+  "files": 6,
+  "limit_bytes": 262144,
+  "limit_files": 6
+ },
+ "sources": [
+  {
+   "access": "VIEWED (content read; re-viewed/grepped spans only within this selected file)",
+   "bytes": 29647,
+   "current_sha256_matches_pin": true,
+   "path": "run_trace_pilot.py",
+   "pinned_sha256": "c02808e7cfb3aade6563620d373b1c16fc6f8af47a549c41ddf901b0cd6ad2bc"
+  },
+  {
+   "access": "VIEWED (content read; re-viewed/grepped spans only within this selected file)",
+   "bytes": 4745,
+   "current_sha256_matches_pin": true,
+   "path": "trace_workload.py",
+   "pinned_sha256": "98f6c818bc61d7f9e07392b6f79b77819b2b3748198e3f16dfbe710309eb8c3f"
+  },
+  {
+   "access": "VIEWED (content read; re-viewed/grepped spans only within this selected file)",
+   "bytes": 3914,
+   "current_sha256_matches_pin": true,
+   "path": "experiments/mpc-research/native-r23/score_http.py",
+   "pinned_sha256": "9a173ab99e668534dfe18df9be0b9e8447e06a1a673f63aebb16b9ef5217081d"
+  },
+  {
+   "access": "VIEWED (content read; re-viewed/grepped spans only within this selected file)",
+   "bytes": 25248,
+   "current_sha256_matches_pin": true,
+   "path": "experiments/mpc-research/resume-mvp/nominal_workload.py",
+   "pinned_sha256": "614ae110e901110f875383b9ee0a66b08fe75e3a58a923b1d30dbd9c21d88bd4"
+  },
+  {
+   "access": "VIEWED (content read; re-viewed/grepped spans only within this selected file)",
+   "bytes": 16777,
+   "current_sha256_matches_pin": true,
+   "path": "sustained_load.py",
+   "pinned_sha256": "278906b8b19060c4fb9262a93ad5fe6f7af025d9a29104727293f743c5b96219"
+  },
+  {
+   "access": "VIEWED (content read; re-viewed/grepped spans only within this selected file)",
+   "bytes": 10934,
+   "current_sha256_matches_pin": true,
+   "path": "run_budget_pilot.py",
+   "pinned_sha256": "86dae6812b46a73388f6b10b67b199a97fbd3528035f8e15dc336a5d623cb435"
+  }
+ ],
+ "started": "2026-11-04T22:17:05.557Z",
+ "status": "FIRST_IMPLEMENTATION_CHECKPOINT: additive calculator + run_trace_pilot fixed-arm adapter; focused literal-event CPU tests 40/40 PASS on py3.14.4 and py3.12.16 (attempt02, no retries of a passing attempt). Natural SLO is BLOCKED for run_trace_pilot outputs (G-SLO: finish_reason not captured) so Train fixed selection returns REFUSED on them; closed-loop arms are not adapted (G-LOOP). No native run, no Eval read, no winner/qualification.",
+ "tape_preserved": [
+  "kind",
+  "offered_tape_schema",
+  "offered_tape_sha256",
+  "generator",
+  "protocol_id",
+  "purpose",
+  "source_id",
+  "tokenizer_sha256",
+  "measured_equals_requested_count"
+ ],
+ "tests": {
+  "attempt01_failure": "TEST EXPECTATION DEFECT (preserved): complete row with first_content_at=None was refused by the completeness rule, not the expected clock-order message; attempt02 changed only that expected message; nominal_metrics.py unchanged",
+  "attempts": [
+   {
+    "attempt": "attempt01",
+    "code_sha256": {
+     "nominal_metrics.py": "e0119f34437f81dae4c8bb97501a2c0e6d7ec5decfa23f0eb6491db6e6afa58e",
+     "test_nominal_metrics.py": "d501e74f5bef22c05f2519408326b537868c02dc04daf6f1ec57b4aeefed4ce7"
+    },
+    "command": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 120 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -m pytest -q -p no:cacheprovider --noconftest -c /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/pytest-empty.ini --rootdir=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/attempts/attempt01/py314 --basetemp=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/attempts/attempt01/py314/basetemp test_nominal_metrics.py",
+    "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp",
+    "end": "2026-11-04T22:38:19.664Z",
+    "exit": 1,
+    "log": "attempts/attempt01/py314/pytest.log",
+    "python": "py314",
+    "start": "2026-11-04T22:38:19.383Z",
+    "summary_line": "1 failed, 39 passed in 0.11s"
+   },
+   {
+    "attempt": "attempt01",
+    "code_sha256": {
+     "nominal_metrics.py": "e0119f34437f81dae4c8bb97501a2c0e6d7ec5decfa23f0eb6491db6e6afa58e",
+     "test_nominal_metrics.py": "d501e74f5bef22c05f2519408326b537868c02dc04daf6f1ec57b4aeefed4ce7"
+    },
+    "command": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 120 nice -n19 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B -m pytest -q -p no:cacheprovider --noconftest -c /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/pytest-empty.ini --rootdir=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/attempts/attempt01/py312 --basetemp=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/attempts/attempt01/py312/basetemp test_nominal_metrics.py",
+    "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp",
+    "end": "2026-11-04T22:38:19.932Z",
+    "exit": 1,
+    "log": "attempts/attempt01/py312/pytest.log",
+    "python": "py312",
+    "start": "2026-11-04T22:38:19.671Z",
+    "summary_line": "1 failed, 39 passed in 0.12s"
+   },
+   {
+    "attempt": "attempt02",
+    "code_sha256": {
+     "nominal_metrics.py": "e0119f34437f81dae4c8bb97501a2c0e6d7ec5decfa23f0eb6491db6e6afa58e",
+     "test_nominal_metrics.py": "cca0c280182075e3300a35121cbfae51be272dfa100145420cce167d71f55617"
+    },
+    "command": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 120 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -m pytest -q -p no:cacheprovider --noconftest -c /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/pytest-empty.ini --rootdir=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/attempts/attempt02/py314 --basetemp=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/attempts/attempt02/py314/basetemp test_nominal_metrics.py",
+    "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp",
+    "end": "2026-11-04T22:38:55.602Z",
+    "exit": 0,
+    "log": "attempts/attempt02/py314/pytest.log",
+    "python": "py314",
+    "start": "2026-11-04T22:38:55.307Z",
+    "summary_line": "40 passed in 0.12s"
+   },
+   {
+    "attempt": "attempt02",
+    "code_sha256": {
+     "nominal_metrics.py": "e0119f34437f81dae4c8bb97501a2c0e6d7ec5decfa23f0eb6491db6e6afa58e",
+     "test_nominal_metrics.py": "cca0c280182075e3300a35121cbfae51be272dfa100145420cce167d71f55617"
+    },
+    "command": "env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 120 nice -n19 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B -m pytest -q -p no:cacheprovider --noconftest -c /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/pytest-empty.ini --rootdir=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/attempts/attempt02/py312 --basetemp=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics01/attempts/attempt02/py312/basetemp test_nominal_metrics.py",
+    "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp",
+    "end": "2026-11-04T22:38:55.823Z",
+    "exit": 0,
+    "log": "attempts/attempt02/py312/pytest.log",
+    "python": "py312",
+    "start": "2026-11-04T22:38:55.610Z",
+    "summary_line": "40 passed in 0.09s"
+   }
+  ],
+  "bytecode": "PYTHONDONTWRITEBYTECODE=1 and -B; no nominal_metrics pyc created",
+  "count_per_python": 40,
+  "file": "experiments/mpc-research/resume-mvp/test_nominal_metrics.py",
+  "kind": "literal CPU events: complete/reject/pending(not_launched)/unknown/cancelled/stream_error, length-censored completion, missing usage, zero denominators, group edges, all-zero Jain, clock-order/type refusals, overhead union, static fixed, envelope scope, adapter mapping and refusals (incl. model/tokenizer fidelity), Train selection ties/refusals, table alias/no winner, CLI",
+  "not_done": [
+   "mutation testing",
+   "any real run_trace_pilot output",
+   "any native/GPU run"
+  ]
+ }
+}

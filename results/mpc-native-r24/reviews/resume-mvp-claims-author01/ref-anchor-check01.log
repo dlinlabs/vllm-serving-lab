@@ -1,0 +1,52 @@
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:11:     "attempted": 7643,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:12:     "success": 1976,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:13:     "rejected": 5667,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:14:     "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:15:     "client_p99_ttft": 2.4125834047736134,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:16:     "scheduled_p99_ttft": 2.413431863154983,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:18:     "slo_successes": 572,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:21:     "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:32:     "medium_input": {
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:69:       "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-a-r1/report.json:75:     "budget_mode": "scheduled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:11:     "attempted": 7643,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:12:     "success": 2059,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:13:     "rejected": 5584,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:14:     "failed": 0,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:15:     "client_p99_ttft": 2.202635321232957,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:16:     "scheduled_p99_ttft": 2.203232305971907,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:18:     "slo_successes": 736,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:21:     "slo_definition": "stream completed successfully; first content minus scheduled arrival <= TTFT SLO"
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/captures/shared-client-b-r1/report.json:75:     "budget_mode": "scheduled",
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:3: Published 2026-10-18 UTC (2026-10-17 in Los Angeles). The rental GPUs have been
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:4: returned. **C remains uncollected and unscored; MPC has not been evaluated.**
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:25: All long scheduled captures use the existing Azure development trace,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:26: 7,643 offered requests / 300 s, fixed output cap 128, Qwen3-4B-Instruct-2507,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:27: context 8192, prefix cache disabled, TTFT SLO 0.5 s, unchanged 50 ms load/control
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:28: gates, process sampler, gateway/runner diagnostics and bounded runner GC deferral.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:34: | [Original A](captures/multilevel-v1-a-r1/report.json) | frozen excitation-v1 | **Invalid / aborted** at 210 s | Failure evidence, excluded from shared-model training |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:35: | [Shared smoke/A](captures/shared-client-a-r1/report.json) | shared-client-qualification-v1 | Six gates pass for both | Development A, 572 SLO successes / 1.907 per second |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:36: | [Fresh-host smoke/B](captures/shared-client-b-r1/report.json) | shared-client-b-v1 | Six gates pass for both | Development B, 736 SLO successes / 2.453 per second |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:37: | Held-out C | Not collected | Not applicable | Retained for a future, separately frozen model test |
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:43: actuation experiments. A/B use different rental hosts with the same RTX 4090,
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:44: 595.91.07 driver and core runtime versions. Full-run score differences are
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:45: descriptive and do not isolate schedule or host effects.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:51: - Both A/B saved reports reproduce exactly from raw files. All 15 recorded
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:52:   runtime/dependency file hashes match `d0ccb2c`; recorded `git_dirty=true`
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:53:   is retained. The [verification record](verification.json) contains every
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:54:   comparison, and original manifests remain unchanged.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:68: The published [baseline report](analysis/forecast_summary.md) is explicitly
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:69: development-only. A/B each contribute 600 overlapping 0.5 s rows. Chronological
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:70: and leave-one-run-out validation exclude labels unavailable at the training cut;
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/report.md:71: the latter still reuses the same offered arrival trace, not new unseen traffic.
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:1: """Rebuild qualified A/B features and development forecasts from verified raw captures."""
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:30:         for name, expected in manifest['code_sha256'].items():
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:31:             path = code / name
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:32:             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:33:                 parser.error(f'{name} differs from captured code; use --code-root at d0ccb2c')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:42:     run(code / 'identification_features.py', *captures, '--output-dir', output / 'features')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:43:     run(code / 'forecast_baselines.py', output / 'features', '--output-dir', output / 'forecast')
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:44:     if args.extended:
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:45:         for name in ('diagnose_models.py', 'version_ablation.py', 'nonlinear_diagnostic.py', 'interaction_diagnostic.py'):
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:46:             run(HERE / 'analysis' / name)
+/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/shared-client-20261018/reproduce.py:47:     print(json.dumps(dict(output=str(output), C_used=False, development_only=True)))

@@ -1,0 +1,224 @@
+{
+  "MPC_or_SLO_or_accuracy_claim": false,
+  "actual_GPU_service_or_network_execution": false,
+  "actual_execution_authorized": false,
+  "actual_host_cleanup_qualified": false,
+  "aggregate_control_wall_seconds": 4.040126190986484,
+  "attempts_per_interpreter": 1,
+  "failed_test_attempts": 0,
+  "fresh_checks_monotonic": 927493.030587662,
+  "fresh_owned_identity_checks": [
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611597,
+      "start_ticks": 92709579
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611598,
+      "start_ticks": 92709581
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611607,
+      "start_ticks": 92709589
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611610,
+      "start_ticks": 92709590
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611618,
+      "start_ticks": 92709597
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611619,
+      "start_ticks": 92709598
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611620,
+      "start_ticks": 92709599
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611652,
+      "start_ticks": 92709618
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611653,
+      "start_ticks": 92709619
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611696,
+      "start_ticks": 92709680
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611703,
+      "start_ticks": 92709682
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611793,
+      "start_ticks": 92709783
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611804,
+      "start_ticks": 92709790
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611805,
+      "start_ticks": 92709792
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611813,
+      "start_ticks": 92709799
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611814,
+      "start_ticks": 92709801
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611815,
+      "start_ticks": 92709801
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611829,
+      "start_ticks": 92709820
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611830,
+      "start_ticks": 92709821
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611895,
+      "start_ticks": 92709883
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 1611896,
+      "start_ticks": 92709884
+    }
+  ],
+  "generations": 1,
+  "helper_source_lines": 442,
+  "identity_basis": "retained user/Mayor verification; no new model lookup/change",
+  "intentional_negative_evidence_preserved": true,
+  "interpreters": {
+    "py312": {
+      "all_monitor_threads_joined": true,
+      "errors": 0,
+      "failures": 0,
+      "known_service_identities": 9,
+      "poison_preserved_after_guardian": true,
+      "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+      "test_names": [
+        "test_01_default_off",
+        "test_02_each_lock_exclusive",
+        "test_03_known_child_startup_failure",
+        "test_04_finally_descendant_reaping_and_privacy",
+        "test_05_original_deadline",
+        "test_06_nonjoin_poison_and_refusal"
+      ],
+      "tests": 6
+    },
+    "py314": {
+      "all_monitor_threads_joined": true,
+      "errors": 0,
+      "failures": 0,
+      "known_service_identities": 9,
+      "poison_preserved_after_guardian": true,
+      "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+      "test_names": [
+        "test_01_default_off",
+        "test_02_each_lock_exclusive",
+        "test_03_known_child_startup_failure",
+        "test_04_finally_descendant_reaping_and_privacy",
+        "test_05_original_deadline",
+        "test_06_nonjoin_poison_and_refusal"
+      ],
+      "tests": 6
+    }
+  },
+  "known_service_descendant_identities": 18,
+  "model_id": "gpt-6-astra",
+  "native_eligibility": false,
+  "new_control_reruns": 0,
+  "owner_crash_cleanup_guaranteed": false,
+  "production_lock_binding_verified": false,
+  "reasoning_effort": "max",
+  "schema": "role3-resume-p0-nominal-services-delivery-v1",
+  "scientific_gates_changed": false,
+  "source_bindings": [
+    {
+      "path": "frozen/nominal_services.py",
+      "sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed"
+    },
+    {
+      "path": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/nominal_services.py",
+      "sha256": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed"
+    },
+    {
+      "path": "frozen/test_nominal_services.py",
+      "sha256": "528a534e6805eb3c0c772821d0cc728b840530611eb460b6e1453f6dd555f467"
+    },
+    {
+      "path": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp/test_nominal_services.py",
+      "sha256": "528a534e6805eb3c0c772821d0cc728b840530611eb460b6e1453f6dd555f467"
+    },
+    {
+      "path": "COMMANDS.txt",
+      "sha256": "58d332226d0ba2fd91388f680705f0ca08118ece04e790268691966267fb5871"
+    },
+    {
+      "path": "PLAN.json",
+      "sha256": "0ac9d9831aac5647764367dfcdd4bc486afeeafe074c087acc4b4e65b8e85007"
+    },
+    {
+      "path": "freeze_inputs.py",
+      "sha256": "a12bf7ea648671b47c100cfe82294df1199e23545de70f6b9f911e246d2d14d6"
+    },
+    {
+      "path": "run_controls.py",
+      "sha256": "c75f48f66e8f39ae62204b30a352432688f2e86c8bb92fa88caa5360baed2897"
+    }
+  ],
+  "status": "CPU_OWNERSHIP_CONTROLS_PASS_ONLY_PENDING_MAYOR_REVIEW",
+  "test_source_lines": 285,
+  "universal_OS_proof": false
+}

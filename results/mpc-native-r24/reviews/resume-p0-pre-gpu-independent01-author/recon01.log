@@ -1,0 +1,49 @@
+== snapshot pins
+9ba8a0c2eb40508fffb92e54234a1b437744efc20eca87e09c5613e734abbe03  inputs/B3-frozen.patch
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  inputs/native_nominal_qualification.py
+7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac  inputs/test_native_nominal_qualification.py
+== patch file headers
+1:diff --git a/experiments/mpc-research/resume-mvp/native_nominal_qualification.py b/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+2:index 379e74373..27f5df283 100644
+3:--- a/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+4:+++ b/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+5:@@ -2,134 +2,402 @@
+492:diff --git a/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py b/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+493:index 158b2f4a0..dab682a0e 100644
+494:--- a/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+495:+++ b/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+496:@@ -1,20 +1,407 @@
+== reverse-apply
+File experiments/mpc-research/resume-mvp/native_nominal_qualification.py is read-only; trying to patch anyway
+patching file experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+File experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py is read-only; trying to patch anyway
+patching file experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+== before/after sha
+1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c  recon/before/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+ddc8a07689ba1f72d099dee471e70023c8d58d017580321aa549b00487dad41c  recon/before/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  recon/after/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac  recon/after/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+ 152 7290 recon/before/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+  33 1345 recon/before/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+ 185 8635 total
+== git-blob sha1
+379e7437337681f426d8344c5910c4b155c02714 recon/before/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+158b2f4a0fa3837c38e659fb97f446f976e50f21 recon/before/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+27f5df2836ad0bbb9a121034f9b69870724443ab recon/after/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+dab682a0e930fe057d080a4f265f983a5eb17148 recon/after/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+== forward round trip
+File experiments/mpc-research/resume-mvp/native_nominal_qualification.py is read-only; trying to patch anyway
+patching file experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+File experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py is read-only; trying to patch anyway
+patching file experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+ROUNDTRIP_EXACT
+== Role6 manifest lines for before/after hashes
+214:629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  attempts/green/sources/native_nominal_qualification.py
+215:7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac  attempts/green/sources/test_native_nominal_qualification.py
+229:1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c  attempts/red/sources/native_nominal_qualification.py
+237:1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c  sources/before/native_nominal_qualification.py
+239:629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  sources/candidate/native_nominal_qualification.py
+240:7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac  sources/candidate/test_native_nominal_qualification.py
+== Role6 files not in manifest
+SEAL.json
+SHA256SUMS

@@ -1,0 +1,55 @@
+{
+  "scope": "Default-OFF, Train-only qualification evidence caller; not qualification authority",
+  "owned_public_files": [
+    "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+    "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py"
+  ],
+  "entry_points": {
+    "async": "await native_nominal_qualification.collect(owner=owner, root=root, output=output, key=key, report=report)",
+    "sync_body": "body(**context) invokes asyncio.run(collect(**context)); use only outside a running event loop, within the Mayor-owned services.run callback",
+    "CLI": "python -B experiments/mpc-research/resume-mvp/native_nominal_qualification.py [--execute] --source-root ROOT --output-root NEW_OUTPUT [--seconds 480] [--cleanup-reserve 30] [--term-grace 10]",
+    "default": "Without --execute, unchanged services.run OFF gate returns 2 before effects",
+    "success": "collect returns None; report contains strict-JSON engineering_episode and qualification_caller evidence, not a Native PASS",
+    "failure": "Original BaseException is reraised with its original traceback; secondary errors remain in caller_errors/notes and qualification_caller_report"
+  },
+  "caller_prerequisites": [
+    "Existing live Mayor-owned NominalServices scope; this module does not acquire a lease or grant authority.",
+    "Original owner.deadline, owner.reserve and owner.check(); deadline/reserve must not change.",
+    "Prepared unique output directory and actual services/ownership.json engine argv receipt.",
+    "report.source with identity, SDK clock_domain, cost_spec and absolute nominal_protocol.json entry in source_pins; report.configuration.engine matches owned actual argv.",
+    "Exact caller source and accepted adapter must receive external Mayor approval before --execute; source/qualification proposal is not that approval.",
+    "Same approved immutable warmup3 and Train five-request engineering inputs at results/mpc-native-r24/reviews/resume-p0-probes02/inputs/{warmup,admission-boundary}.json."
+  ],
+  "traffic_and_timing": {
+    "before_traffic": "Re-read startup-pinned protocol; require exact accepted adapter935c2679; record caller, adapter and protocol hashes in qualification-source-binding.json.",
+    "warmup": "Use unchanged prepare_capture/capture_replay, original D/R and recorder's own clock label; persist raw capture even on failure/interruption.",
+    "before_S": "Inspect prepared.error before recorder/trace; prove metrics drain and zero tokenizer fallback, then obtain actual source identity/clock/cost state.",
+    "S": "Unchanged single S=entered+1.0; never retime.",
+    "permit": "Unchanged entered+20.0 expiry and max_commands=8, under separate Mayor authority; S+max(episode_s,trace_window) must fit both permit expiry and original D-R.",
+    "episode": "Accepted run_episode, RuntimeLimits and runtime/permit/entry/solve/age/version/budget guards remain unchanged.",
+    "final": "Attempt raw-recorded metrics drain on success/failure within original D-R and owner.check; close the caller client; recheck source hashes; persist caller receipts."
+  },
+  "accounting": {
+    "episode_planned_requests": "5, a declared plan only",
+    "episode_trace_requests": "Validated trace count only after successful preparation; otherwise null",
+    "offered_requests_from_driver": "Allocated in-place capture record count; no longer the planned trace count",
+    "episode_sent_requests": "Count of non-null sent_at when every record exposes it; otherwise null",
+    "unknown": "Absent capture after entering run is unknown/null, not invented zero; actual unknown/not_launched fates remain unchanged in raw capture",
+    "clock_labels": "Preserve different real SDK_source, warmup_recorder and episode_recorder labels; do not substitute the SDK string into recorder.capture_replay"
+  },
+  "outputs": {
+    "qualification-source-binding.json": "Caller/accepted adapter/protocol SHA pins written before traffic",
+    "runtime-binding.json": "Actual runtime protocol description plus exact caller/adapter SHA, original offered_start and unchanged permit bounds",
+    "pre-episode-metrics-NNNN.json_and_final-metrics-NNNN.json": "Every attempt with raw response/status, parsed value or error, timestamps and positive timeout; semantic drain/fallback failures also remain in caller_errors",
+    "pre-control-state-observation.json": "Raw bounded source-state GET receipt, including failures",
+    "warmup-capture.json": "Unchanged accepted recorder codec; .write-error.json on encoding/write failure if storage permits",
+    "warmup-not-run.json": "Explicit absence when no warmup capture was constructed",
+    "episode-not-run-capture.json": "Distinct caller raw capture before run, or explicitly labeled absent-capture-v1 receipt rather than counterfeit raw-v2",
+    "caller-episode-capture.json": "Distinct caller persistence of in-place capture after run; does not overwrite adapter evidence",
+    "episode-not-run.json": "Caller-owned NOT_RUN receipt with original reason and actual allocation/sent counts",
+    "episode-invalid-result.json": "Strict-safe error and repr for unscorable adapter return; never insert invalid return into terminal report",
+    "qualification-caller.json": "Strict-safe terminal accounting/primary/secondary errors; missing file from a write failure is itself fatal, not successful collection"
+  },
+  "binding_boundary": "Caller SHA is external runtime-binding provenance. Accepted adapter immutable preparation inputs, scenario binding, runtime protocol schema and permit internal source-digest ABI were not modified.",
+  "full_wall": "Always null here; only Mayor lifecycle cleanup can finalize actual startup-to-final-drain full wall."
+}

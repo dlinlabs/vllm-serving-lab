@@ -1,0 +1,33 @@
+{
+  "arguments": [
+    "/workspace/pr32-r23/venv/bin/vllm",
+    "serve",
+    "/root/.cache/huggingface/hub/models--Qwen--Qwen3-4B-Instruct-2507/snapshots/cdbee75f17c01a7cc42f958dc650907174af0554",
+    "--served-model-name",
+    "Qwen/Qwen3-4B-Instruct-2507",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8000",
+    "--dtype",
+    "bfloat16",
+    "--max-model-len",
+    "8192",
+    "--max-num-seqs",
+    "32",
+    "--max-num-batched-tokens",
+    "2048",
+    "--gpu-memory-utilization",
+    "0.8",
+    "--no-enable-prefix-caching",
+    "--tensor-parallel-size",
+    "1",
+    "--enable-request-id-headers"
+  ],
+  "executable": "/workspace/pr32-r23/venv/bin/vllm",
+  "pid": 70956,
+  "private_origin_guard_appended": true,
+  "source13_first": true,
+  "spawned_redactor_process": false,
+  "start_ticks": 136107428
+}

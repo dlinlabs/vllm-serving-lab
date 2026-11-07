@@ -1,0 +1,37 @@
+{
+  "auth_values_captured": false,
+  "body_complete": true,
+  "call_settings": {
+    "absolute_deadline": 1361157.205756355,
+    "body_cap_bytes": 1048576,
+    "http_timeout_s": 0.2,
+    "maximum_http_exchanges": 1900
+  },
+  "client_clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+  "client_headers_at": 1361137.273133437,
+  "client_receive_at": 1361137.273385789,
+  "client_send_at": 1361137.259685627,
+  "credential_removed": false,
+  "dispatch_attempted": true,
+  "error_type": null,
+  "http_status": 200,
+  "method": "POST",
+  "path": "/pr33-native/batch",
+  "request_body": "{\"operation\":\"begin\",\"trial_id\":\"nv2-team16-owner-inflight01-fixed32\"}",
+  "request_id": null,
+  "reserved_at": 1361137.259406895,
+  "response_body_base64": "eyJzY2hlbWEiOiJuYXRpdmUtdjItYmF0Y2gtY2FwdHVyZS12MSIsImJyaWRnZV9zaGEyNTYiOiI1ZDc2ZDk5NDkyMWJiMTYwODhjYWJmOWI4ZjllYmU4ODQzYzE3ZjdiYWNiNGIxZGM5NzliZjI1NWFkOGNjZWY4IiwicGxhbl9zaGEyNTYiOiIwZjJhYTVkNTIxMTIwNWQ2ZTg3MzM3MTQ2MGFhMzdjNmJkNGIyNzc2NzQwYjYwZGIyNjAzMjQzYzA2YTFlYjE3Iiwic291cmNlX2NvbW1pdCI6IjEwNGU2NWE2OWRmNzM5OTdiOTc3YmNlMjU4OGI2NTVhZTcxNGY0NWQiLCJydW5faWQiOiJhY2E5NDY3MjM1NjY0NmIyOTljM2FiMTk0YTM2NzAzYSIsImNsb2NrX2RvbWFpbiI6ImxpbnV4LW1vbm90b25pYzoyYmMxNTY3YS00MGE0LTQwMWQtYjVhMS0zYWZiMGVmM2I5NTQ6dGltZTpbNDAyNjU0MTA1NV0iLCJjb21tYW5kX3N0YXJ0ZWRfYXQiOjEzNjExMzcuMjYwOTA1NTc2LCJtZWFzdXJlbWVudF9zY29wZSI6IkN1cnJlbnQtc3RyZWFtIHByZXBhcmF0aW9uL2ZvcndhcmQgQ1VEQSBzcGFuO2VuZ2luZS93b3JrZXIgaG9zdCB0aW1lc3RhbXBzLiBOb3Qga2VybmVsIGJ1c3kgb3Igd2hvbGUtcGlwZWxpbmUgR1BVIHNlcnZpY2UuIiwidHJpYWxfaWQiOiJudjItdGVhbTE2LW93bmVyLWluZmxpZ2h0MDEtZml4ZWQzMiIsImJlZ2luIjp7ImV4dGVybmFsIjp0cnVlfX0=",
+  "response_body_sha256": "a043283bdc44e39ff6ef1e950ab872105fe0a2d237e2f2b38e86409abac49430",
+  "response_bytes_captured": 653,
+  "response_headers": {
+    "content-type": "application/json",
+    "x-request-id": "76b30ad46f504d48a260725d0700dc7d"
+  },
+  "role": "capture-begin",
+  "sequence": 67,
+  "target": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "scheme": "http"
+  }
+}

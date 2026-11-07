@@ -1,0 +1,104 @@
+     1	"""Separate opt-in for bounded, uncalibrated gateway experiments, not Native qualification."""
+     2	
+     3	from dataclasses import dataclass
+     4	import hashlib
+     5	from pathlib import Path
+     6	
+     7	from mpc_lab.contracts import Identity, Snapshot, digest, finite, implementation_hash
+     8	from mpc_lab.controller import validate_snapshot
+     9	
+    10	
+    11	SCOPE = "gateway-nominal-unqualified-v1"
+    12	
+    13	
+    14	def source_digest() -> str:
+    15	    directory = Path(__file__).resolve().parent
+    16	    names = (
+    17	        "nominal_permit.py", "nominal_planner.py", "nominal_runtime.py",
+    18	        "nominal_scenario.py", "nominal_workload.py",
+    19	    )
+    20	    return digest({
+    21	        "public_implementation": implementation_hash(),
+    22	        "nominal": {
+    23	            name: hashlib.sha256((directory / name).read_bytes()).hexdigest()
+    24	            for name in names
+    25	        },
+    26	    })
+    27	
+    28	
+    29	def _sha256(value: object) -> bool:
+    30	    return (
+    31	        isinstance(value, str) and len(value) == 64
+    32	        and all(character in "0123456789abcdef" for character in value)
+    33	    )
+    34	
+    35	
+    36	@dataclass(frozen=True)
+    37	class NominalDemoPermit:
+    38	    identity: Identity
+    39	    run_id: str
+    40	    clock_domain: str
+    41	    source_sha256: str
+    42	    protocol_sha256: str
+    43	    not_before: float
+    44	    expires_at: float
+    45	    max_commands: int = 8
+    46	    approved: bool = False
+    47	    scope: str = SCOPE
+    48	
+    49	    def refusal_reason(
+    50	        self, snapshot: Snapshot, *, enabled: bool, expected_identity: Identity,
+    51	        current_source_sha256: str, protocol_sha256: str, current_clock_domain: str,
+    52	        budget: float,
+    53	        entered_at: float, deadline: float, now: float, issued_commands: int,
+    54	    ) -> str | None:
+    55	        if enabled is not True or self.approved is not True or self.scope != SCOPE:
+    56	            return "nominal_not_authorized"
+    57	        if (
+    58	            self.identity != expected_identity
+    59	            or expected_identity.model_version != "cpu-lifecycle-v1"
+    60	            or expected_identity.calibration_version != "synthetic-unqualified-v1"
+    61	        ):
+    62	            return "nominal_identity_mismatch"
+    63	        if (
+    64	            not _sha256(self.source_sha256)
+    65	            or not _sha256(self.protocol_sha256)
+    66	            or self.source_sha256 != current_source_sha256
+    67	            or self.protocol_sha256 != protocol_sha256
+    68	        ):
+    69	            return "nominal_source_or_protocol_mismatch"
+    70	        if (
+    71	            not isinstance(self.run_id, str) or not self.run_id
+    72	            or not isinstance(self.clock_domain, str) or not self.clock_domain
+    73	            or current_clock_domain != self.clock_domain
+    74	            or snapshot.run_id != self.run_id
+    75	            or snapshot.clock_domain != self.clock_domain
+    76	        ):
+    77	            return "nominal_run_or_clock_mismatch"
+    78	        if (
+    79	            not finite(self.not_before) or not finite(self.expires_at)
+    80	            or not 0 <= self.not_before < self.expires_at
+    81	            or self.expires_at - self.not_before > 60.0
+    82	            or type(self.max_commands) is not int or not 1 <= self.max_commands <= 8
+    83	            or type(issued_commands) is not int or issued_commands < 0
+    84	        ):
+    85	            return "nominal_invalid_limits"
+    86	        if not all(finite(value) for value in (entered_at, deadline, now)):
+    87	            return "nominal_invalid_deadline"
+    88	        reason = validate_snapshot(
+    89	            snapshot, now=now, clock_domain=current_clock_domain,
+    90	            expected_identity=expected_identity, max_age_s=0.5,
+    91	        )
+    92	        if reason:
+    93	            return reason
+    94	        if (
+    95	            not self.not_before <= entered_at <= snapshot.sampled_at <= now
+    96	            or not now < deadline <= entered_at + 0.5
+    97	            or not now < self.expires_at
+    98	        ):
+    99	            return "nominal_expired_or_restarted_deadline"
+   100	        if not finite(budget) or budget not in (16.0, 32.0) or snapshot.budget not in (16.0, 32.0):
+   101	            return "nominal_unsupported_budget"
+   102	        if issued_commands >= self.max_commands:
+   103	            return "nominal_command_limit"
+   104	        return None

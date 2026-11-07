@@ -1,0 +1,4 @@
+#!/bin/bash
+# attempt01-py314: single run, no retries; failures preserved
+cd /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/experiments/mpc-research/resume-mvp
+exec env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 timeout 120 nice -n19 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -m pytest -q -p no:cacheprovider --noconftest -c /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/pytest-empty.ini --rootdir=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/attempts/attempt01-py314 --basetemp=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-nominal-metrics02/attempts/attempt01-py314/basetemp test_nominal_metrics.py test_nominal_client.py

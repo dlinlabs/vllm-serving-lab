@@ -1,0 +1,40 @@
+{
+  "schema": "resume-p0-metrics-independent-parent-disposition-v1",
+  "base_commit": "f5de0fd0ddff5f0444970445861d4d7fa03bd7fb",
+  "reviewer": {
+    "role": 4,
+    "model": "claude-opus-5.5",
+    "reasoning_effort": "max"
+  },
+  "author_capsule": ".runtime/r24-resume-p0-metrics-independent01",
+  "archive": "results/mpc-native-r24/reviews/resume-p0-metrics-independent-author01",
+  "author_seal_sha256": "43b80aff6fb02be80a3d79b60fe7c56c9f4bbd3a461477344c79cb3acaf093bb",
+  "author_manifest_entries": 39,
+  "archive_files_including_manifest": 40,
+  "archive_bytes": 463884,
+  "parent_verification": "Original manifest digest and all 39 entries verified; no symbolic links found. Preserve the complete finite capsule, including original preparation failures and both witness logs. No author suite or witness rerun by Mayor.",
+  "review_disposition": "BOUNDED_INDEPENDENT_REVIEW_ACCEPTED_AS_EVIDENCE_NOT_METRICS_ACCEPTANCE",
+  "metrics01_disposition": "NOT_ACCEPTED_FOR_CLAIM_QUALIFIED_TRAIN_SELECTION_OR_COMPARISON",
+  "findings": {
+    "F1": "BLOCKING: require explicit cross-arm comparability for hardware/model/resources/code/client generation configuration, schedule and measurement semantics.",
+    "F2": "BLOCKING: require complete frozen Train-selection provenance, refuse known same-trace reuse, retain selection evidence in the Eval table. Unequal hashes alone do not prove disjointness.",
+    "F3": "BLOCKING_FOR_DIRECT_PRODUCERS: reject early sends and expose negative-lag diagnostics.",
+    "F4": "BLOCKING_FOR_DIRECT_PRODUCERS: validate the entire offered cohort against immutable trace-derived count and ordered IDs.",
+    "F5": "BLOCKING_FOR_DIRECT_PRODUCERS: validate scheduled-window membership and observation/envelope containment.",
+    "F6": "CORRECT_BEFORE_FINAL_TABLE: retain group sizes and worst-group identity; unweighted group-rate Jain is descriptive, not an uncertainty estimate.",
+    "F7": "CORRECT_BEFORE_FINAL_TABLE: preserve envelope-bound direction and delivered-only token-rate qualifiers.",
+    "F8": "INTEGRATION_BINDING_PENDING: runtime01 checks the expected snapshot/CostSpec identity, but the prior tokenizer/model binding still needs explicit composed Native preflight evidence. The source-only review did not read runtime/planner validation. Not dismissed or claimed closed.",
+    "F9": "DECLARED_MODEL_LIMITATION: the rolling stationary 15-second forecast can extend beyond the public five-second workload. This is not leakage or measured accuracy; require explicit final documentation and retain actual failures. Do not silently retune the frozen model on Eval."
+  },
+  "handoff": {
+    "owner": "Role7 retained claude-opus-5.5/max",
+    "sequence": "Seal the current bounded client delivery before changing shared metric imports, then produce a surgical metrics02 correction and focused regressions. Independent recheck follows a sealed correction.",
+    "scope": "No product, natural-scorer, baseline-quality or threshold changes; no network/GPU/SSH/Git by agents."
+  },
+  "witness_scope": "Literal synthetic rows only; four predicates confirmed once per Python 3.14.4 and 3.12.16. This demonstrates accepted malformed or incomparable inputs, not incidence in real producers.",
+  "nonclaims": [
+    "No new Native inference, model accuracy or MPC performance result.",
+    "No Native14 clearance, GPU execution authority, production or SLO guarantee.",
+    "No P0 completion or Resume Ready declaration."
+  ]
+}

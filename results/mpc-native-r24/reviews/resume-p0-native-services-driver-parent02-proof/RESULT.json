@@ -1,0 +1,26 @@
+{
+  "schema": "native-lifecycle-interruption-parent-cpu-v1",
+  "scope": "MOCKED_CPU_ONLY_NOT_NATIVE",
+  "negative_original_regression_exit": 1,
+  "original_false_pass_reproduced": true,
+  "positive_exit": 0,
+  "positive_summary": {
+    "actual_servers_HTTP_GPU_NVML_SSH_model_or_asset_calls": 0,
+    "errors": 0,
+    "evidence_kind": "CPU_MOCK_ONLY_NOT_HOST_VALIDATION",
+    "failures": 0,
+    "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+    "tests": 6
+  },
+  "positive_wall_seconds": 0.21466920000966638,
+  "source_pins_stable": {
+    "native_services_smoke.py": "cccc7e7bfadc4ddc02a5f3c64054f0a047fb094e5ce2e44d466ffff42ee89421",
+    "test_native_services_smoke.py": "5a3889c43d3aea9c764a11f92b1b02902906b8c5b442aa36af6421d7a0b0c297",
+    "nominal_services.py": "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed"
+  },
+  "interrupt_propagation_preserved": true,
+  "interruption_recorded_and_not_passed": true,
+  "actual_host_or_model_identity_path_executed": false,
+  "original_scope_deviation_preserved": true,
+  "observed_utc": "2026-11-05T00:31:52Z"
+}

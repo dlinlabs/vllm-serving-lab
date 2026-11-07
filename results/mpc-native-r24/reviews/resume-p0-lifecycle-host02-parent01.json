@@ -1,0 +1,26 @@
+{
+  "schema": "resume-p0-native-lifecycle-parent-v1",
+  "source_commit": "b70f70e17e64d71a12649d2fc9226b70860c4fa5",
+  "preregistration_commit": "62a209eee1e164b5fffc133c9804ad3074d25d1e",
+  "actual_startup": "FAIL",
+  "root_cause": "FlashInfer sampling warmup raises FileNotFoundError for ninja. Ninja1.13.2 exists in interpreter virtualenv bin, but inherited noninteractive SSH PATH excludes it.",
+  "elapsed_seconds": 81.418574569,
+  "actual_owned_cleanup": "PASS",
+  "cleanup_scope": "STOPPED; known identities gone; unknown=[]; pending_spawn=null; telemetry closed, complete, zero drops/write errors/unflushed/remaining; same GPU idle1MiB/0%, no compute apps and no dedicated-port listeners at01:46:01Z. Infrastructure nginx88 untouched.",
+  "native_qualified_cycles": 0,
+  "offered_inference_requests": 0,
+  "admin_control_POSTs": 0,
+  "evidence_directory": "resume-p0-lifecycle-host02-author",
+  "evidence_seal_sha256": "0ed95caf07e6e11693c1d7a0946d4c2beca34ccd73b527b5089736b90e43202a",
+  "raw_tar_sha256": "4d956a2d2a5f6a1e540f6ae9d4d7a4b27e6b5975ae99332b8f41c8c7064984b1",
+  "correction": {
+    "scope": "Prepend configured interpreter bin to both child service PATHs; preserve inherited PATH. No new package, backend flag, model, scoring or safety change.",
+    "source_sha256": "bbc1d1caba98ac8cba7c16321cf07001d4460ba593c538261f7755616b0256a6",
+    "test_sha256": "e1d6b6d995950ccc91d8d57d49f8c8cfe4d64576774caac464e1fcc5ddd16299",
+    "new_regression_before_fix": "FAIL as expected, virtualenv ninja unresolved",
+    "after_fix": "Seven mocked CPU controls PASS once Python3.12; not actual host qualification",
+    "proof_directory": "resume-p0-native-services-path04-proof",
+    "proof_seal_sha256": "5ac38ee4e86f236e0aae2d5cb37aa80770bbfad094376e95e792e90dae6b5297"
+  },
+  "next": "New exact-source preregistration before one corrected existing-host lifecycle attempt. No blind rerun or native MPC claim."
+}

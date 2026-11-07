@@ -1,0 +1,12 @@
+108:  108                      and Path(module.__file__).resolve().is_relative_to(root),
+114:  114      checked(Path(contracts.__file__).resolve() == root / "mpc_lab/contracts.py"
+115:  115              and Path(live.__file__).resolve() == root / "prefill_lab/live_http.py"
+116:  116              and Path(nominal_services.__file__).resolve() == root / RELATIVE / "nominal_services.py",
+119:  119               root / RELATIVE / "nominal_services.py", Path(__file__).resolve(),
+120:  120               Path(contracts.__file__).resolve(), Path(live.__file__).resolve()]
+198:  198              "failed_requests", "current_in_flight", "current_waiting", "current_admitted_cost")),
+217:  217  def run(args, *, body=None):
+220:  220      checked(args.source_root and args.output_root, "explicit source/output roots required")
+221:  221      root, output = Path(args.source_root), Path(args.output_root)
+243:  243          report["source"] = expected
+278:  278                  body(owner=owner, root=root, output=output, key=key, report=report)

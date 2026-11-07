@@ -1,0 +1,53 @@
+{
+  "scope": "Causal nominal forecast component and permit dependency acceptance; not real closed-loop acceptance",
+  "status": "CPU_COMPONENT_ACCEPTED",
+  "plan": "resume-p0-scenario-parent01-plan.json",
+  "author_archive": "resume-p0-scenario01-author",
+  "author_seal_sha256": "dee31c6b3792895fd74462b1efb2551628fbebbc0df928c151b563efb2cbd6ae",
+  "verified_members_excluding_seal": 30,
+  "parent_review": "Full 177-line factory, tests and report read. Frozen Train bytes and module hashes checked by the factory; no per-decision tape reads or workload regeneration.",
+  "frozen_prior": {
+    "train_only": true,
+    "offers": 88,
+    "duration_s": 5,
+    "rate_per_s": 17.6,
+    "prompt_output_counts": [[256,128,33],[1024,128,26],[3072,128,29]],
+    "content_sha256": "f88892b9dee76dcaeb831f7e2819429a6f51d927fee18e4823fa4efcd8601dfc",
+    "real_tokenizer_evidence_commit": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e"
+  },
+  "forecast": {
+    "assumptions": "Stationary nominal Poisson arrivals, independent sampled Train marks, maximum output 128, old output fraction 1, success true, unit service scale and zero transport delays.",
+    "horizon_s": 15,
+    "score_window_s": 5,
+    "contention_tail_s": 10,
+    "cap": 512,
+    "over_cap": "Refuse without truncation or resampling.",
+    "causality": "Prior frozen before source snapshot; availability measured after generation/hash, then freshness rechecked.",
+    "same_decision": "One immutable realization/panel for all paths and both policy selections.",
+    "between_runs": "Seed includes actual source state/run/time. Distinct policy episodes need not receive identical random realizations; exact realized inputs must be retained for replay.",
+    "not_measured": "This is not a fitted Native arrival/service law or proof of prediction accuracy."
+  },
+  "parent_changes": {
+    "nominal_permit.py_sha256": "05b7d0aebcede0851300ee70e9947e50ea6c94e6bd3ed2dc1283e10c5fcf6503",
+    "test_nominal_permit.py_sha256": "c8ef7d7bf7cc7a9f169d3d6db42e61f00e4f8c7fc2b142a9b90fd1b7019d1ec9",
+    "test_nominal_scenario.py_sha256": "5c9c17d32ba4be946a28f2f3c035d6d17c39b1051a5d8faa37fbb0ad73cc4da5",
+    "meaning": "Bind both new forecast dependencies; verify invalidation of a previously matching permit; use committed Train fixture."
+  },
+  "parent_control": {
+    "proof": "resume-p0-scenario-parent01",
+    "python": "3.12.16",
+    "attempts": 1,
+    "passed": 14,
+    "exit": 0,
+    "elapsed_s": 0.035,
+    "log_sha256": "70b443082f255b4ce7830d3056669882c1bccd8d506d3c8320037f6c94e40045",
+    "source": "Scoped Git materialization: exact four staged source/test blobs plus specified files from 23c5e1df9b6d36bc086e8e6e06c09cfaa50fc68e.",
+    "not_full_reproduction": "No experimental runtime02, HTTP, Eval data or GPU inference used; not complete P0 benchmark reproduction."
+  },
+  "integration_pending": [
+    "Runtime02 CLI must use this factory and pacing, retain actual CausalScenario inputs, and expose protocol without self-authorizing.",
+    "All final action-bearing dependencies and actual protocol must be frozen before separate live approval.",
+    "Native model accuracy and legacy qualification gates remain unchanged."
+  ],
+  "Native_or_Resume_Ready": false
+}

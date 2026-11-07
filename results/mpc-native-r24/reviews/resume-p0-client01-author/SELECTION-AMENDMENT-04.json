@@ -1,0 +1,12 @@
+{
+ "amendment": 4,
+ "reason": "Frozen PLAN dry_validation plus the Mayor request to preserve raw engineering-purpose replay support: parse-only compatibility check of the recorder loader/purpose/binding path against the frozen Train replay and the Mayor-committed engineering probe inputs (archive f5de0fd0ddff5f0444970445861d4d7fa03bd7fb, sources/inputs 4e0f025c89ab7765816600cd194424709791bd51; commits NOT verified by this agent, no git). Not a review/retest of the Mayor helper.",
+ "files": [
+  {"path": ".runtime/r24-resume-p0-tokenizer02/returned/train.replay.json", "bytes": 257950, "sha256_expected": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7"},
+  {"path": "results/mpc-native-r24/reviews/resume-p0-probes01/inputs/qualification.json", "bytes": 17396, "sha256_expected": "fe480796606b86aec3b2d4c91388a4846d98035b5a9810131e39fd40b627b333"},
+  {"path": "results/mpc-native-r24/reviews/resume-p0-probes01/inputs/warmup.json", "bytes": 9579, "sha256_expected": "3a893f485e11204088f03cf08415d1e9d56028ce0a7ee476477ad3d24c2808b2"}
+ ],
+ "read_mode": "machine parse only by dry_check.py (strict JSON, trace_workload.validate_trace, recorder _purpose/check_binding with a literal binding); prompts, request rows and outcomes are never printed or viewed; no tokenizer/model load; Eval never read",
+ "printed_fields": "sha256/bytes, model, request count, duration, output_cap, provenance key names, provenance purpose/tape metadata (strings truncated to 200 chars), binding verdict",
+ "frozen_at_utc": "2026-11-04T23:20Z"
+}

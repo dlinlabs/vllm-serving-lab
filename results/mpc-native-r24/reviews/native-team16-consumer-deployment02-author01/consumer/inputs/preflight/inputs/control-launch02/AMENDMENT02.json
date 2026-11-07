@@ -1,0 +1,16 @@
+{
+  "schema": "team16-launch02-before-source-amendment-v1",
+  "client_amendment": "../r24-team16-native-control-probe02/AMENDMENT02.json",
+  "client_amendment_copy_and_hash": "INPUTS.json binds an exact local copy before source changes or CPU attempts",
+  "native01_disposition": "FAIL remains immutable. No native rerun of either spent01 capsule.",
+  "normal_post_client_phase": "7s natural child/service teardown plus SDK/source postflight, not5s followed by SIGTERM",
+  "teardown_allocation_s": {"natural_or_abnormal_cooperative": 7, "frozen_owned_SIGKILL_reap": 30, "root_join": 2, "reserve": 1, "total": 40},
+  "failure": "Natural deadline exhaustion, interruption, missing/unknown outcome or source/clock mismatch never becomes component success, even if all owned PIDs later join.",
+  "retained_limits_s": {"startup": 180, "client_active": 20, "client_final_readonly": 3, "teardown": 40, "postflight_IO": 17, "total_soft": 260},
+  "remote_private_state": "/workspace/pr32-r23/control-state02",
+  "remote_TMPDIR": "/workspace/pr32-r23/control-state02/t",
+  "unchanged_startup": "Exact Source13/native-v2 launch/model cache. One cap16 warmup, existing100ms startup full-queue polling, read-only gateway readiness at32 and empty requests. No old collector/main or spent entry.",
+  "no_new_native_execution_by_author": true,
+  "native_mpc_permitted": false,
+  "deployable": false
+}

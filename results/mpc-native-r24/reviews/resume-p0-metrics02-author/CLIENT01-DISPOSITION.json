@@ -1,0 +1,18 @@
+{
+ "subject": ".runtime/r24-resume-p0-nominal-client01",
+ "seal": {"SHA256SUMS_sha256": "0ccdbf13e3d4c6a60aecc1d84e5bc9985203d02ae6104ed5ed97631cd69c1881", "entries": 119, "sealed_before_audit_read": true, "mutated_after_seal": false},
+ "client01_status": "sealed first checkpoint: nominal_client.py ad850c63..., test_nominal_client.py 753c0ca6..., 40/40 per Python (3.14.4, 3.12.16) against nominal_metrics.py e0119f34 (metrics01); CPU literal controls only",
+ "audit": {"scope": ".runtime/r24-resume-p0-metrics-independent01", "SHA256SUMS_sha256": "43b80aff6fb02be80a3d79b60fe7c56c9f4bbd3a461477344c79cb3acaf093bb", "entries": 39, "verified_by": "sha256sum -c on this host before reading REPORT.json"},
+ "remaining_metrics_blockers_for_client01_outputs": [
+  "metrics01 NOT accepted for benchmark/Train selection: client01 finalize run.json/metrics.json (nominal_metrics e0119f34) are NOT benchmark, Train-selection or comparison evidence",
+  "F1 HIGH: client01 build_run provenance carries binding evidence but metrics01 never compares hardware/GPU/model assets/served alias/backend+gateway/resource/code/package/client generation settings/clock/schedule/duration across arms",
+  "F2: train_selection provenance (frozen artifact, decided_by, candidates, same-trace reuse) unbound in comparison tables",
+  "F3: client01 sends only when monotonic >= scheduled (sleep loop) and records send_lag_s, but metrics01 neither refuses early sends nor exposes min/negative lag",
+  "F4: client01 rows are one-per-offered-request by construction, but metrics01 cannot bind them to the offered count / ordered request-id digest of the frozen trace",
+  "F5: client01 derives offered_cohort_observed end = max(offered end, terminals) and full_wall containment, but metrics01 does not enforce row-window/envelope binding for compute()-direct producers",
+  "F6/F7 LOW labels (group n/k/worst-group identity; scope-dependent wall-rate direction; delivered-only token qualifier)",
+  "A8: run_trace_pilot adapter _model_fidelity public-alias vs local-asset equality restriction (adapter path only; not used by client01)"
+ ],
+ "consequence": "client01 direct compute integration must be updated to the revised metrics02 contract (schema coordinated after the client01 seal); no dynamic patch of client01 or of any running control",
+ "not_in_scope": "F8/F9 forecaster findings (Mayor dispositions separately; scenario/planner not modified)"
+}

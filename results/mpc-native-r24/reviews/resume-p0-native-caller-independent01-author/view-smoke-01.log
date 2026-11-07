@@ -1,0 +1,343 @@
+     1	"""Default-OFF lifecycle; CLI offers no inference or admin POST."""
+     2	
+     3	import argparse
+     4	import asyncio
+     5	from dataclasses import asdict
+     6	import hashlib
+     7	import importlib.metadata
+     8	import json
+     9	import math
+    10	import os
+    11	from pathlib import Path
+    12	import platform
+    13	import secrets
+    14	import subprocess
+    15	import sys
+    16	import time
+    17	
+    18	
+    19	MODEL = "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507"
+    20	ALIAS = "Qwen/Qwen3-4B-Instruct-2507"
+    21	TOKENIZER = "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5"
+    22	GPU = "GPU-8610519d-3680-ae5f-cdfc-40037bfb5013"
+    23	BACKEND_PORT = 18000
+    24	GATEWAY_PORT = 18001
+    25	LOCKS = ("/workspace/pr32-r23/r24-team16-mayor-gpu.lock",
+    26	         "/workspace/pr32-r23/native-component-GPU-8610519d.lock")
+    27	HELPER_SHA = "5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed"
+    28	RELATIVE = Path("experiments/mpc-research/resume-mvp")
+    29	SETTINGS = dict(scheduling_policy="fcfs", enable_prefix_caching=False,
+    30	                max_model_len=8192, max_num_seqs=256, max_num_batched_tokens=8192,
+    31	                gpu_memory_utilization=0.9, enforce_eager=False, tensor_parallel_size=1)
+    32	
+    33	
+    34	class ProbeError(RuntimeError):
+    35	    pass
+    36	
+    37	
+    38	def stamp():
+    39	    return dict(monotonic=time.monotonic(), unix_ns=time.time_ns())
+    40	
+    41	
+    42	def write(path, value, secret="", append=False):
+    43	    text = json.dumps(value, sort_keys=True, allow_nan=False)
+    44	    if secret:
+    45	        text = text.replace(secret, "<redacted>")
+    46	    with path.open("a" if append else "x") as stream:
+    47	        stream.write(text + "\n")
+    48	        stream.flush()
+    49	        os.fsync(stream.fileno())
+    50	
+    51	
+    52	def checked(condition, reason):
+    53	    if not condition:
+    54	        raise ProbeError(reason)
+    55	
+    56	
+    57	def configuration(root, output, protocol, identity):
+    58	    backend = protocol["backend"]
+    59	    checked(tuple(protocol["hardware"]["lock_paths"]) == LOCKS
+    60	            and protocol["hardware"]["gpu_uuid"] == GPU, "production lock/GPU mismatch")
+    61	    checked(backend["local_assets"] == MODEL and backend["served_alias"] == ALIAS
+    62	            and backend["tokenizer_fingerprint"] == TOKENIZER
+    63	            and backend["required_common_settings"] == SETTINGS, "backend proposal mismatch")
+    64	    checked(protocol["controller"]["model_version"] == "cpu-lifecycle-v1"
+    65	            and protocol["controller"]["calibration_version"] == "synthetic-unqualified-v1",
+    66	            "nominal labels mismatch")
+    67	    checked(identity["model_version"] == protocol["controller"]["model_version"]
+    68	            and identity["calibration_version"] == protocol["controller"]["calibration_version"],
+    69	            "local ModelParameters labels mismatch")
+    70	    env = dict(PATH=str(Path(sys.executable).parent) + os.pathsep + os.environ.get("PATH", os.defpath),
+    71	               HOME=os.environ.get("HOME", str(output)),
+    72	               CUDA_VISIBLE_DEVICES=GPU, HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1",
+    73	               HF_DATASETS_OFFLINE="1", PYTHONDONTWRITEBYTECODE="1",
+    74	               OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1",
+    75	               NUMEXPR_NUM_THREADS="1", TMPDIR=str(output / "scratch"),
+    76	               XDG_CACHE_HOME=str(output / "cache"),
+    77	               VLLM_CACHE_ROOT=str(output / "cache/vllm"),
+    78	               TORCHINDUCTOR_CACHE_DIR=str(output / "cache/inductor"),
+    79	               TRITON_CACHE_DIR=str(output / "cache/triton"))
+    80	    gateway_env = dict(env, VLLM_URL=f"http://127.0.0.1:{BACKEND_PORT}", MODEL_NAME=MODEL,
+    81	                       ADMISSION_MODE="cost_aware", MAX_ADMITTED_COST="32",
+    82	                       MPC_LAB_ENABLED="true", MPC_OWNER_LEDGER_ENABLED="true",
+    83	                       MPC_TOKENIZER_IDENTITY=TOKENIZER, MPC_MODEL_VERSION=identity["model_version"],
+    84	                       MPC_CALIBRATION_VERSION=identity["calibration_version"],
+    85	                       MPC_SUPPORT_HASH=identity["support_hash"],
+    86	                       COST_INTERCEPT="0.259", INPUT_TOKEN_COST="0.000758",
+    87	                       OUTPUT_TOKEN_COST="0.0052083333", MIN_REQUEST_COST="0.1",
+    88	                       DEFAULT_MAX_TOKENS="128", WEB_CONCURRENCY="1", UVICORN_WORKERS="1",
+    89	                       SHARED_UPSTREAM_CLIENT="1", BENCHMARK_REQUEST_IDS="1",
+    90	                       TELEMETRY_JSONL=str(output / "telemetry.jsonl"),
+    91	                       TELEMETRY_STATUS_JSON=str(output / "telemetry-status.json"))
+    92	    return dict(lock_paths=list(LOCKS), safe_environment=dict(engine=env, gateway=gateway_env),
+    93	                engine=[str(Path(sys.executable).parent / "vllm"), "serve", MODEL,
+    94	                        "--served-model-name", ALIAS, "--host", "127.0.0.1", "--port", str(BACKEND_PORT),
+    95	                        "--scheduling-policy", "fcfs", "--no-enable-prefix-caching",
+    96	                        "--max-model-len", "8192", "--max-num-seqs", "256",
+    97	                        "--max-num-batched-tokens", "8192", "--gpu-memory-utilization", "0.9",
+    98	                        "--tensor-parallel-size", "1"],
+    99	                gateway=[sys.executable, "-m", "uvicorn", "gateway:app", "--app-dir", str(root),
+   100	                         "--host", "127.0.0.1", "--port", str(GATEWAY_PORT), "--workers", "1"])
+   101	
+   102	
+   103	def source_info(root):
+   104	    sys.path[:0] = [str(root), str(root / RELATIVE)]
+   105	    for name, module in tuple(sys.modules.items()):
+   106	        if name == "mpc_lab" or name.startswith("mpc_lab.") or name == "prefill_lab" or name.startswith("prefill_lab."):
+   107	            checked(getattr(module, "__file__", None)
+   108	                    and Path(module.__file__).resolve().is_relative_to(root),
+   109	                    "stale cached SDK module; use isolated source-root process")
+   110	    import mpc_lab.contracts as contracts
+   111	    import prefill_lab.live_http as live
+   112	    import nominal_services
+   113	
+   114	    checked(Path(contracts.__file__).resolve() == root / "mpc_lab/contracts.py"
+   115	            and Path(live.__file__).resolve() == root / "prefill_lab/live_http.py"
+   116	            and Path(nominal_services.__file__).resolve() == root / RELATIVE / "nominal_services.py",
+   117	            "source bootstrap mismatch")
+   118	    paths = [root / "gateway.py", root / RELATIVE / "nominal_protocol.json",
+   119	             root / RELATIVE / "nominal_services.py", Path(__file__).resolve(),
+   120	             Path(contracts.__file__).resolve(), Path(live.__file__).resolve()]
+   121	    pins = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
+   122	    checked(pins[str(root / RELATIVE / "nominal_services.py")] == HELPER_SHA,
+   123	            "accepted ownership helper changed")
+   124	    versions = {name: importlib.metadata.version(name) for name in ("vllm", "httpx", "uvicorn", "transformers")}
+   125	    versions["python"] = platform.python_version()
+   126	    checked(versions["python"] == "3.12.3" and versions["vllm"] == "0.30.0",
+   127	            "preregistered host version mismatch")
+   128	    spec = contracts.CostSpec(
+   129	        intercept=.259, input_per_token=.000758, output_per_token=.0052083333, minimum=.1,
+   130	        default_max_tokens=128,
+   131	        tokenizer_identity=TOKENIZER + f";model={MODEL};available=True;fallback=chars4-chat-v1")
+   132	    identity = contracts.ModelParameters(cost_spec=spec).identity
+   133	    return dict(identity=asdict(identity), cost_spec=asdict(spec),
+   134	                cost_spec_fingerprint=spec.fingerprint, clock_domain=live.clock_domain(),
+   135	                versions=versions, source_pins=pins, evidence_kind="ACTUAL_HOST_COMPONENT_ONLY")
+   136	
+   137	
+   138	def existing_assets(config):
+   139	    return Path(config["engine"][0]).is_file() and Path(MODEL).is_dir()
+   140	
+   141	
+   142	def gpu_receipt(deadline):
+   143	    result = dict(start=stamp(), argv=[], commands=[])
+   144	    for query in ("--query-gpu=uuid,name", "--query-compute-apps=gpu_uuid,pid,used_memory"):
+   145	        remaining = deadline - time.monotonic()
+   146	        checked(remaining > 0, "no original GPU-receipt budget")
+   147	        argv = ["nvidia-smi", "-i", GPU, query, "--format=csv,noheader,nounits"]
+   148	        process = subprocess.run(argv, capture_output=True, text=True, timeout=min(5, remaining))
+   149	        result["argv"].append(argv)
+   150	        result["commands"].append(dict(returncode=process.returncode, stdout=process.stdout, stderr=process.stderr))
+   151	    result["end"] = stamp()
+   152	    result["idle_selected_gpu"] = (
+   153	        all(row["returncode"] == 0 for row in result["commands"])
+   154	        and result["commands"][0]["stdout"].split(",")[0].strip() == GPU
+   155	        and result["commands"][1]["stdout"].strip() == "")
+   156	    return result
+   157	
+   158	
+   159	def http_client():
+   160	    import httpx
+   161	    return httpx.AsyncClient(trust_env=False, follow_redirects=False)
+   162	
+   163	
+   164	async def read_ready(cutoff, key, event):
+   165	    values = {}
+   166	    async with asyncio.timeout_at(cutoff), http_client() as client:
+   167	        for name, url in (
+   168	                ("health", f"http://127.0.0.1:{BACKEND_PORT}/health"),
+   169	                ("models", f"http://127.0.0.1:{BACKEND_PORT}/v1/models"),
+   170	                ("metrics", f"http://127.0.0.1:{GATEWAY_PORT}/metrics"),
+   171	                ("state", f"http://127.0.0.1:{GATEWAY_PORT}/admin/mpc/state")):
+   172	            remaining = cutoff - time.monotonic()
+   173	            checked(remaining > 0, "readiness original deadline")
+   174	            started = stamp()
+   175	            response = await client.get(url, timeout=min(2, remaining),
+   176	                                        headers={"x-admin-api-key": key} if name == "state" else {})
+   177	            event(dict(kind="GET", name=name, start=started, end=stamp(), status=response.status_code,
+   178	                       body=response.text[:65536], body_truncated=len(response.text) > 65536))
+   179	            if response.status_code in (502, 503):
+   180	                raise ConnectionError("service not ready")
+   181	            checked(response.status_code == 200, "readiness HTTP status mismatch")
+   182	            try:
+   183	                values[name] = None if name == "health" else response.json()
+   184	            except ValueError as error:
+   185	                raise ProbeError("non-JSON readiness response") from error
+   186	    return values
+   187	
+   188	
+   189	def validate_ready(values, expected):
+   190	    metrics, state = values["metrics"], values["state"]
+   191	    checked({row["id"] for row in values["models"]["data"]} == {ALIAS}, "served alias mismatch")
+   192	    checked(metrics["tokenizer_available"] is True and metrics["tokenizer_fallback_requests"] == 0
+   193	            and metrics["tokenizer_model"] == MODEL, "tokenizer unavailable/fallback/mismatch")
+   194	    checked(metrics["admission_mode"] == "cost_aware" and metrics["max_admitted_cost"] == 32
+   195	            and metrics["initial_admission_budget"] == 32 and metrics["budget_version"] == 0,
+   196	            "fixed startup cap mismatch")
+   197	    checked(all(metrics[name] == 0 for name in ("accepted_requests", "rejected_requests",
+   198	            "failed_requests", "current_in_flight", "current_waiting", "current_admitted_cost")),
+   199	            "unexpected request activity")
+   200	    checked(metrics["shared_upstream_client"] is True, "shared transport missing")
+   201	    checked(state["identity"] == expected["identity"]
+   202	            and state["cost_spec"] == expected["cost_spec"]
+   203	            and state["clock_domain"] == expected["clock_domain"], "source/CostSpec/clock identity mismatch")
+   204	
+   205	
+   206	def owner_scope(config, output, deadline, ready, key, args):
+   207	    from nominal_services import NominalServices, Service
+   208	    services = tuple(Service(name, tuple(config[name]),
+   209	                             dict(config["safe_environment"][name],
+   210	                                  **({"ADMIN_API_KEY": key} if name == "gateway" else {})),
+   211	                             tuple(config[name])) for name in ("engine", "gateway"))
+   212	    return NominalServices(services, lock_paths=LOCKS, run_dir=output / "services",
+   213	                           deadline=deadline, ready=ready, execute=True,
+   214	                           cleanup_reserve=args.cleanup_reserve, term_grace=args.term_grace)
+   215	
+   216	
+   217	def run(args, *, body=None):
+   218	    if not args.execute:
+   219	        return 2
+   220	    checked(args.source_root and args.output_root, "explicit source/output roots required")
+   221	    root, output = Path(args.source_root), Path(args.output_root)
+   222	    checked(root.is_absolute() and output.is_absolute(), "absolute source/output roots required")
+   223	    checked(all(math.isfinite(x) for x in (args.seconds, args.cleanup_reserve, args.term_grace))
+   224	            and 0 < args.term_grace < args.cleanup_reserve < args.seconds, "invalid original budget")
+   225	    root, output = root.resolve(strict=True), output.absolute()
+   226	    os.umask(0o077)
+   227	    output.mkdir(mode=0o700)
+   228	    began = stamp()
+   229	    deadline, key, scope = began["monotonic"] + args.seconds, "", None
+   230	    report = dict(start=began, deadline_monotonic=deadline, cleanup_reserve=args.cleanup_reserve,
+   231	                  term_grace=args.term_grace, lifecycle_passed=False, offered_requests_from_driver=0,
+   232	                  admin_POSTs=0, inference_or_MPC_or_benchmark_result=False, native_qualification=False,
+   233	                  actual_execution_authority="external Mayor preregistration, not this flag or protocol",
+   234	                  ownership_receipt=None, post_gpu=None, errors=[])
+   235	
+   236	    def event(value):
+   237	        write(output / "events.jsonl", value, key, append=True)
+   238	
+   239	    try:
+   240	        protocol_path = root / RELATIVE / "nominal_protocol.json"
+   241	        protocol = json.loads(protocol_path.read_text())
+   242	        expected = source_info(root)
+   243	        report["source"] = expected
+   244	        config = configuration(root, output, protocol, expected["identity"])
+   245	        report["configuration"] = config
+   246	        for name in ("scratch", "cache"):
+   247	            (output / name).mkdir()
+   248	        checked(existing_assets(config), "missing existing local assets/entrypoint")
+   249	        write(output / "frozen-run-inputs.json", dict(report, frozen_before_service_spawn=True))
+   250	        report["pre_gpu"] = gpu_receipt(deadline)
+   251	        write(output / "pre-gpu.json", report["pre_gpu"])
+   252	        checked(report["pre_gpu"]["idle_selected_gpu"], "selected GPU not proven idle")
+   253	        key = secrets.token_hex(32)
+   254	        cutoff = deadline - args.cleanup_reserve
+   255	
+   256	        def ready(owner, remaining):
+   257	            try:
+   258	                values = asyncio.run(read_ready(cutoff, key, event))
+   259	            except ProbeError:
+   260	                raise
+   261	            except Exception as error:
+   262	                event(dict(kind="readiness_retry", at=stamp(), error_type=type(error).__name__))
+   263	                time.sleep(min(.5, max(0, cutoff - time.monotonic())))
+   264	                return False
+   265	            event(dict(kind="readiness_values", at=stamp(), values=values))
+   266	            validate_ready(values, expected)
+   267	            report["readiness"] = dict(at=stamp(), values=values)
+   268	            return True
+   269	
+   270	        event(dict(kind="ownership_enter_begin", at=stamp()))
+   271	        scope = owner_scope(config, output, deadline, ready, key, args)
+   272	        with scope as owner:
+   273	            owner.check()
+   274	            report["ready_body"] = stamp()
+   275	            if body is not None:
+   276	                report.update(inference_or_MPC_or_benchmark_result=True,
+   277	                              offered_requests_from_driver=None, admin_POSTs=None)
+   278	                body(owner=owner, root=root, output=output, key=key, report=report)
+   279	        report["ownership_exit_returned"] = stamp()
+   280	    except BaseException as error:
+   281	        report["errors"].append(dict(type=type(error).__name__, message=str(error)))
+   282	        event(dict(kind="failure", at=stamp(), type=type(error).__name__, message=str(error)))
+   283	        if not isinstance(error, Exception):
+   284	            raise
+   285	    finally:
+   286	        try:
+   287	            receipt_path = output / "services/ownership.json"
+   288	            if receipt_path.is_file():
+   289	                report["ownership_receipt"] = json.loads(receipt_path.read_text())
+   290	        except Exception as error:
+   291	            report["errors"].append(dict(type=type(error).__name__, message=str(error)))
+   292	        receipt = report["ownership_receipt"]
+   293	        closed = False
+   294	        try:
+   295	            closed = bool(receipt and receipt.get("status") == "STOPPED"
+   296	                          and receipt.get("known_identities_gone") is True
+   297	                          and receipt.get("unknown") == [] and receipt.get("pending_spawn") is None
+   298	                          and receipt.get("lock_paths") == sorted(LOCKS)
+   299	                          and scope is not None
+   300	                          and (scope._thread is None or not scope._thread.is_alive()) and scope._gone())
+   301	        except Exception as error:
+   302	            report["errors"].append(dict(type=type(error).__name__, message=str(error)))
+   303	        report["known_closure_checked"] = dict(at=stamp(), closed=closed)
+   304	        if not closed:
+   305	            report["errors"].append(dict(
+   306	                type="OwnershipNotClosed",
+   307	                message="No joined STOPPED/known-gone exact-lock receipt; post-GPU call skipped"))
+   308	        if closed:
+   309	            try:
+   310	                report["post_gpu"] = gpu_receipt(deadline)
+   311	                write(output / "post-gpu.json", report["post_gpu"])
+   312	                status = json.loads((output / "telemetry-status.json").read_text())
+   313	                report["telemetry_status"] = status
+   314	                checked(status["status"] == "closed" and status["mpc_ledger_complete"] is True
+   315	                        and all(status[name] == 0 for name in (
+   316	                            "dropped", "write_errors", "mpc_remaining_requests",
+   317	                            "mpc_unflushed_records", "mpc_final_sequence", "mpc_producer_final_sequence")),
+   318	                        "telemetry closure or no-request ledger mismatch")
+   319	                checked(report["post_gpu"]["idle_selected_gpu"], "post GPU not proven idle")
+   320	            except Exception as error:
+   321	                report["errors"].append(dict(type=type(error).__name__, message=str(error)))
+   322	        report["end"] = stamp()
+   323	        report["lifecycle_passed"] = bool(
+   324	            not report["errors"] and closed and "readiness" in report
+   325	            and "ownership_exit_returned" in report
+   326	            and report["post_gpu"] and report["end"]["monotonic"] <= deadline)
+   327	        write(output / "report.json", report, key)
+   328	    return 0 if report["lifecycle_passed"] else 1
+   329	
+   330	
+   331	def main(argv=None):
+   332	    parser = argparse.ArgumentParser(description=__doc__)
+   333	    parser.add_argument("--execute", action="store_true")
+   334	    parser.add_argument("--source-root")
+   335	    parser.add_argument("--output-root")
+   336	    parser.add_argument("--seconds", type=float, default=480)
+   337	    parser.add_argument("--cleanup-reserve", type=float, default=30)
+   338	    parser.add_argument("--term-grace", type=float, default=10)
+   339	    return run(parser.parse_args(argv))
+   340	
+   341	
+   342	if __name__ == "__main__":
+   343	    raise SystemExit(main())

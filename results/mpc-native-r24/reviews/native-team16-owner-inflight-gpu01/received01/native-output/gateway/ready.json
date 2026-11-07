@@ -1,0 +1,84 @@
+{
+  "cleanup_completed": false,
+  "command": [
+    "/workspace/pr32-r23/venv/bin/python",
+    "-I",
+    "-B",
+    "/workspace/pr32-r23/r24-team16-native-owner-inflight-adapter01/service01.py",
+    "--service",
+    "gateway",
+    "--owner-pid",
+    "70951",
+    "--owner-start-ticks",
+    "136107294"
+  ],
+  "native_ready": true,
+  "pid": 70958,
+  "process_group": 70958,
+  "readiness": {
+    "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+    "gateway_run_id": "e73ed70410a44bb3a6f59497b74cdba0",
+    "same_budget_ack": {
+      "acknowledgment": {
+        "applied_at": 1361137.215303426,
+        "budget": 32,
+        "budget_version": 1,
+        "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+        "operation_id": "team16-owner-inflight01-bootstrap32",
+        "previous_budget": 32.0,
+        "run_id": "e73ed70410a44bb3a6f59497b74cdba0",
+        "schema": "mpc-admission-v1",
+        "status": "applied"
+      },
+      "command": {
+        "budget": 32,
+        "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+        "expected_version": 0,
+        "identity": {
+          "calibration_version": "unfitted-not-validated",
+          "cost_hash": "cf8162ea687a697d698f26d0bd663fdb9a2f172dce71add05d267ac3dfb43833",
+          "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+          "model_version": "native-id-unfitted-v1",
+          "support_hash": "7e6d49ca4a15ab8630fed9a7fa150eb3ab8f2e1a7b0d9585cc8a6c48f666498d"
+        },
+        "not_after": 1361137.701306701,
+        "operation_id": "team16-owner-inflight01-bootstrap32",
+        "run_id": "e73ed70410a44bb3a6f59497b74cdba0",
+        "schema": "mpc-admission-v1"
+      },
+      "status": "applied"
+    },
+    "snapshot": {
+      "budget": 32.0,
+      "budget_version": 0,
+      "capabilities": [
+        "mpc-budget-cas-expiry-v1"
+      ],
+      "clock_domain": "linux-monotonic:2bc1567a-40a4-401d-b5a1-3afb0ef3b954:time:[4026541055]",
+      "complete": true,
+      "cost_spec": {
+        "default_max_tokens": 128,
+        "estimator_version": "gateway-token-estimate-v1",
+        "input_per_token": 0.000758,
+        "intercept": 0.259,
+        "minimum": 0.1,
+        "output_per_token": 0.0052083333,
+        "tokenizer_identity": "gateway-token-estimate-v1;Qwen3-4B-2507;model=/root/.cache/huggingface/hub/models--Qwen--Qwen3-4B-Instruct-2507/snapshots/cdbee75f17c01a7cc42f958dc650907174af0554;available=True;fallback=chars4-chat-v1"
+      },
+      "identity": {
+        "calibration_version": "unfitted-not-validated",
+        "cost_hash": "cf8162ea687a697d698f26d0bd663fdb9a2f172dce71add05d267ac3dfb43833",
+        "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+        "model_version": "native-id-unfitted-v1",
+        "support_hash": "7e6d49ca4a15ab8630fed9a7fa150eb3ab8f2e1a7b0d9585cc8a6c48f666498d"
+      },
+      "requests": [],
+      "run_id": "e73ed70410a44bb3a6f59497b74cdba0",
+      "sampled_at": 1361137.201306701,
+      "schema": "mpc-admission-v1",
+      "sequence": 0
+    }
+  },
+  "start_ticks": "136107428",
+  "started_at": 1361074.291444422
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "resume-p0-engineering-probes-plan-v1",
+  "status": "CPU_DATA_DERIVATION_ONLY_NOT_NATIVE_AUTHORITY",
+  "base_commit": "4c4a444a0194e605ec4c55b6188d76dfeb0d7e83",
+  "question": "Can the preregistered warmup and changed-action qualification inputs be reproduced without new tokenization, Eval access, or manual prompt changes?",
+  "source": "results/mpc-native-r24/reviews/resume-p0-tokenizer02-raw/returned/train.replay.json",
+  "source_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+  "implementation": "experiments/mpc-research/resume-mvp/prepare_probes.py",
+  "tests": "experiments/mpc-research/resume-mvp/test_prepare_probes.py",
+  "python": "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python",
+  "test_command": "NOMINAL_PROBE_SCRATCH=$ROOT/.runtime/r24-resume-p0-probes01/py312 $PY312 -B -m unittest discover -s experiments/mpc-research/resume-mvp -p test_prepare_probes.py -v",
+  "controls": [
+    "Preserve exact previously measured prompts, token counts, output caps, model and tokenizer identity.",
+    "Warmup chooses the first Train request of each token class 256/1024/3072, at offsets 0/1/2 seconds.",
+    "Qualification uses the first four Train requests at offsets 0.25/1.25/2.25/3.25 seconds in a five-second envelope.",
+    "Declare purpose engineering, not held-out or performance comparison.",
+    "Reject any changed input bytes and never overwrite an existing output directory."
+  ],
+  "scope_exclusions": [
+    "No Eval reading, inference, HTTP, SSH, GPU access, servers, fitting or permit generation.",
+    "No evidence of closed-loop application, prediction accuracy or benchmark performance."
+  ]
+}

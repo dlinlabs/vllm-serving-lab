@@ -1,0 +1,137 @@
+NATIVE SERVICES SMOKE: DEFAULT OFF, COMPONENT ONLY, HOST EXECUTION HELD
+
+Public entrypoint:
+  experiments/mpc-research/resume-mvp/native_services_smoke.py
+Public controls:
+  experiments/mpc-research/resume-mvp/test_native_services_smoke.py
+
+This delivery does NOT authorize host startup. Current strict order:
+  runtime03 acceptance
+  -> recorder + F1-F5 metrics completion
+  -> Role4 independent recorder/metrics acceptance
+  -> actual GPU ownership/startup/cleanup
+  -> five-request Train qualification
+  -> consecutive apply/reobserve plus actual admission behavior
+  -> Train fixed16/32 measurements and freeze
+  -> held-out Eval.
+The communicated client-v2 commit 7ca6338dee89f2d0749138a215a80a0601d2d4c8 is
+not independent acceptance. No peer source was needed for integration.
+
+Prospective command, ONLY after the required gates and separate Mayor
+preregistration of the exact source package, output, authority and bounds:
+
+  <existing-host-venv>/bin/python -B \
+    <approved-source-root>/experiments/mpc-research/resume-mvp/native_services_smoke.py \
+    --source-root <approved-absolute-source-root> \
+    --output-root <new-private-absolute-output-directory> \
+    --seconds 480 --cleanup-reserve 30 --term-grace 10 --execute
+
+The placeholders are not a generated authorization/configuration. Never run this
+command as part of these CPU controls. Omitting --execute returns2 without source,
+output, secret, GPU, HTTP or service side effects. The driver requires a fresh
+output directory, existing local model assets and the vllm executable beside the
+selected interpreter. Real source_info requires Python3.12.3/vLLM0.30.0.
+No install, download, source/SDK change, inference request or admin POST is made.
+The engine can perform its own ordinary startup profiling/graph warmup; zero
+offered inference requests does not assert zero internal GPU computation.
+
+Binding:
+* Exact GPU: GPU-8610519d-3680-ae5f-cdfc-40037bfb5013.
+* Exact locks, read/checked against nominal_protocol:
+    /workspace/pr32-r23/r24-team16-mayor-gpu.lock
+    /workspace/pr32-r23/native-component-GPU-8610519d.lock
+  No alternate lock argument or silent per-run substitute.
+* Engine: sibling venv/bin/vllm serve the cached local Qwen3-4B-Instruct-2507,
+  served alias Qwen/Qwen3-4B-Instruct-2507, localhost8000, fcfs, prefix caching
+  disabled, context8192, seq256, batch8192, GPU memory.9, TP1.
+  No enforce-eager, disabled graphs or baseline weakening.
+* Gateway: this interpreter -m uvicorn gateway:app --app-dir exact source-root,
+  localhost8001, workers1. Explicit cost_aware/cap32, MPC lab and owner ledger,
+  shared upstream client, benchmark IDs, single-worker env and private telemetry.
+  MODEL_NAME is the local model directory, not the public served alias.
+* HF offline settings prohibit downloads. Compiler/runtime cache and scratch
+  paths are explicitly inside the new output directory; native optimizations stay
+  enabled. These fresh per-probe caches are not a performance-comparison setting.
+
+Identity and source:
+source_info(root) prepends source-root before editable SDK search locations,
+refuses stale cached mpc_lab/prefill_lab modules, and verifies the imported
+contracts, clock helper and accepted ownership helper originate at exact paths.
+It pins the relevant runtime source bytes and checks the accepted helper SHA
+5249221b9bd795c8265039502746fe30a394e774a52040f9fcf6261146919bed.
+
+The intended CostSpec uses the unchanged gateway coefficients:
+  intercept .259, input_per_token .000758, output_per_token .0052083333,
+  minimum .1, default_max_tokens128;
+  tokenizer_identity =
+    4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5
+    ;model=/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507
+    ;available=True;fallback=chars4-chat-v1
+  (one continuous string, without whitespace/newlines).
+
+Expected full identity is contracts.ModelParameters(cost_spec=spec).identity.
+configuration(root, output, protocol, asdict(identity)) sets the gateway
+MPC_MODEL_VERSION/MPC_CALIBRATION_VERSION/MPC_SUPPORT_HASH from that identity.
+No arbitrary support hash is used. The labels remain cpu-lifecycle-v1 and
+synthetic-unqualified-v1; the support/source/cost hashes are bindings, NOT authority.
+No synthetic service law is simulated, fitted or used to forecast in this driver.
+
+Readiness and clocks:
+The synchronous owner callback uses in-process httpx.AsyncClient and one
+asyncio absolute cutoff, with each GET clipped to the remaining work budget.
+GET only: backend /health and /v1/models, gateway /metrics and /admin/mpc/state.
+Required: served alias, loaded local tokenizer, fallback0, startup/current cap32
+and version0, cost_aware/shared transport, no observed request activity, full
+actual state identity and CostSpec equal the locally derived expectation, and
+matching clock domain. The full state remains recorded; this is not a replacement
+for runtime03's downstream state validator.
+Each GET, readiness, scope entry, scope-return, closure check and report end gets
+real host monotonic and wall-clock readings. Private admin auth is generated
+in process, passed only in gateway environment and the admin-GET header, never
+argv/config/report. Report/event serialization redacts that exact secret.
+Raw response bodies are retained up to64KiB per GET with explicit truncation.
+
+One original deadline:
+480s starts once after creating the new output directory, before imports/source
+inspection and pre-GPU query. The same absolute deadline goes to NominalServices.
+30s is reserved for cleanup, including its clipped10s TERM grace; no grace resets.
+Pre/post nvidia-smi subprocesses are outside the service context and individually
+bounded by the ORIGINAL remainder. Post-query is skipped if known closure is
+uncertain, poisoned, unjoined or absent. They are never run by CPU tests.
+Accepted NominalServices still owns all actual service signalling/reaping/poison.
+
+Receipts:
+  frozen-run-inputs.json: safe argv/env, source pins/versions, expected identity,
+                         original deadline/bounds before service spawn;
+  events.jsonl: readiness/status/body/failure and clock evidence;
+  services/ownership.json and the two exact lock-side markers: accepted helper's
+                         root/known-descendant PID/starttick/PGID/SID states;
+  pre-gpu.json/post-gpu.json: raw query returncode/stdout/stderr and clocks;
+  telemetry.jsonl/telemetry-status.json: existing gateway writer output;
+  report.json: readiness, scope-return/closure timestamps, raw ownership/status,
+               failures, post-query state and bounded component-only outcome.
+Success requires STOPPED/known-gone, empty unknown/pending, exact locks, joined
+monitor and fresh known-identity check, closed complete zero-request telemetry,
+post-query idle, no errors and final timestamp inside the original deadline.
+POISON is never cleared. Failure is not a retry authorization.
+
+In-process episode handoff:
+The smoke driver intentionally has NO after-ready episode callback and exits its
+scope immediately after readiness. Do not expand it into a campaign/client.
+Mayor can run the separately owned nominal_episode adapter directly inside the
+accepted public NominalServices context, using the same identity/config binding
+and bounded readiness pattern. The episode must be IN-PROCESS after readiness;
+no client/controller/helper subprocess may be spawned inside that owner scope.
+It must use the original scope/work deadline and its own preregistered common
+client/controller START. This delivery does not read or modify that adapter.
+
+Limits:
+Actual imports/versions/model assets, HTTP responses, GPU readiness and shutdown
+remain unexecuted here. The selected tokenizer fingerprint is a supplied verified
+binding; this driver does not rehash model/tokenizer assets or prove tokenization
+on offered requests. Source/argv intent is not independent proof of running GPU
+optimization behavior. Accepted helper's isolated-owner, ordinary OS/filesystem,
+bounded-callback, escaped-process and owner-crash limitations remain unchanged.
+The measured run region excludes interpreter/argument setup and final report
+fsync; Mayor must retain outer command wall time. This is not a benchmark full-wall
+denominator, Native inference result, control/admission behavior proof or B gate.

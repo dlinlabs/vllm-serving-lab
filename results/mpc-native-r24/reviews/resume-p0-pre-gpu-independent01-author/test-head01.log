@@ -1,0 +1,77 @@
+158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3  test_native_services_smoke.py
+7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac  test_native_nominal_qualification.py
+== smoke test 1-24
+"""Mocked CPU controls; no real service, HTTP, asset, GPU or source-model execution."""
+
+import argparse
+import copy
+import json
+import os
+from pathlib import Path
+import shutil
+import sys
+import types
+import unittest
+from unittest.mock import patch
+import xml.etree.ElementTree as ET
+
+import native_services_smoke as driver
+
+
+ROOT = Path(os.environ["NATIVE_SMOKE_TEST_OUTPUT"])
+assert not ROOT.is_absolute()
+ROOT.mkdir()
+PROTOCOL = json.loads(Path(os.environ["NATIVE_SMOKE_PROTOCOL"]).read_text())
+KEY = "CPU-MOCK-ONLY-NOT-AN-ACTUAL-ADMIN-KEY"
+IDENTITY = dict(model_version="cpu-lifecycle-v1", calibration_version="synthetic-unqualified-v1",
+                support_hash="MOCK-derived-ModelParameters-support", cost_hash="MOCK-cost",
+== qual test 1-30
+"""CPU-only caller accounting, guarded MockTransport observations and persistence controls."""
+
+import asyncio
+from contextlib import ExitStack
+from dataclasses import asdict
+import hashlib
+import json
+import os
+from pathlib import Path
+import time
+import types
+import unittest
+from unittest.mock import AsyncMock, patch
+
+import httpx
+import native_nominal_qualification as driver
+import nominal_client
+import nominal_episode
+import nominal_runtime
+from mpc_lab.contracts import ModelParameters
+from nominal_planner import NominalPlanner
+
+
+ROOT = Path(os.environ["NATIVE_SMOKE_TEST_OUTPUT"]) / "qualification"
+ROOT.mkdir(parents=True, exist_ok=True)
+REAL_CLIENT = httpx.AsyncClient
+REAL_CAPTURE_WRITE = nominal_client.write_capture
+REAL_WRITE = driver.services.write
+
+
+== imports of .runtime or absolute fixture paths
+3:import asyncio
+4:from contextlib import ExitStack
+5:from dataclasses import asdict
+6:import hashlib
+7:import json
+8:import os
+9:from pathlib import Path
+10:import time
+11:import types
+12:import unittest
+13:from unittest.mock import AsyncMock, patch
+15:import httpx
+16:import native_nominal_qualification as driver
+17:import nominal_client
+18:import nominal_episode
+19:import nominal_runtime
+20:from mpc_lab.contracts import ModelParameters
+21:from nominal_planner import NominalPlanner

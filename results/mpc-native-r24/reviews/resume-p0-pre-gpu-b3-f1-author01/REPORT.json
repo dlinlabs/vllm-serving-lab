@@ -1,0 +1,141 @@
+{
+  "CPU_blockers_reproduced_after_fix": [],
+  "GPU_or_real_network": false,
+  "accepted_core_guards_unchanged": true,
+  "caller_sha256": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+  "cleanup": {
+    "blocked_events": [],
+    "mock_clients_closed": 4,
+    "remaining_tasks": [],
+    "tracked_helper_identities_gone": 4
+  },
+  "controls": {
+    "cases": [
+      {
+        "case": "epsilon-idle",
+        "client_closed": true,
+        "drained": true,
+        "elapsed_s": 0.002736200112849474,
+        "error": null,
+        "evidence": "attempt/outputs/native-smoke-qualification/drain-residue-epsilon-idle/DRAIN-CHECK.json",
+        "metric_evidence_files": 1,
+        "metrics": {
+          "current_admitted_cost": 2.7755575615628914e-17,
+          "current_in_flight": 0,
+          "current_waiting": 0,
+          "tokenizer_fallback_requests": 0
+        },
+        "reads": 1,
+        "remaining_tasks": []
+      },
+      {
+        "case": "non-negligible-cost",
+        "client_closed": true,
+        "drained": false,
+        "elapsed_s": 0.5045243988279253,
+        "error": "original work deadline exhausted",
+        "evidence": "attempt/outputs/native-smoke-qualification/drain-residue-non-negligible-cost/DRAIN-CHECK.json",
+        "metric_evidence_files": 11,
+        "metrics": {
+          "current_admitted_cost": 1e-06,
+          "current_in_flight": 0,
+          "current_waiting": 0,
+          "tokenizer_fallback_requests": 0
+        },
+        "reads": 10,
+        "remaining_tasks": []
+      },
+      {
+        "case": "one-in-flight",
+        "client_closed": true,
+        "drained": false,
+        "elapsed_s": 0.5029671001248062,
+        "error": "original work deadline exhausted",
+        "evidence": "attempt/outputs/native-smoke-qualification/drain-residue-one-in-flight/DRAIN-CHECK.json",
+        "metric_evidence_files": 11,
+        "metrics": {
+          "current_admitted_cost": 0.0,
+          "current_in_flight": 1,
+          "current_waiting": 0,
+          "tokenizer_fallback_requests": 0
+        },
+        "reads": 10,
+        "remaining_tasks": []
+      },
+      {
+        "case": "one-waiting",
+        "client_closed": true,
+        "drained": false,
+        "elapsed_s": 0.5028070991393179,
+        "error": "original work deadline exhausted",
+        "evidence": "attempt/outputs/native-smoke-qualification/drain-residue-one-waiting/DRAIN-CHECK.json",
+        "metric_evidence_files": 10,
+        "metrics": {
+          "current_admitted_cost": 0.0,
+          "current_in_flight": 0,
+          "current_waiting": 1,
+          "tokenizer_fallback_requests": 0
+        },
+        "reads": 9,
+        "remaining_tasks": []
+      }
+    ],
+    "corrected_generations": 1,
+    "drain_subcases": 4,
+    "errors": 0,
+    "failures": 0,
+    "max_seconds": 60,
+    "methods": 2,
+    "passed_methods": 2,
+    "passed_subcases": 4,
+    "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+    "reverse_import_order": {
+      "order": [
+        "qualification",
+        "smoke"
+      ],
+      "qualification_created": true,
+      "qualification_module": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py",
+      "qualification_root": ".runtime/r24-pre-gpu-b3-f1-role6/attempt/outputs/native-smoke-qualification",
+      "smoke_absent_after_qualification": true,
+      "smoke_absent_initially": true,
+      "smoke_created": true,
+      "smoke_module": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/test_native_services_smoke.py",
+      "smoke_root": ".runtime/r24-pre-gpu-b3-f1-role6/attempt/outputs/native-smoke"
+    },
+    "worker_elapsed_s": 3.4246262959204614
+  },
+  "details": [
+    "HANDOFF.json",
+    "LIMITATIONS.json",
+    "FINDINGS.json",
+    "correction.diff",
+    "COMMANDS.json",
+    "CLEANUP.json",
+    "SOURCE-POSTCHECK.json"
+  ],
+  "finalizer_identity": {
+    "pid": 3039640,
+    "start_ticks": "111394656",
+    "state": "R"
+  },
+  "native_qualification": false,
+  "no_SSH_Git_installs_models_agents_peer_edits": true,
+  "not_rerun": "Prior13 caller methods, peer methods and Mayor's521/186 composed controls.",
+  "original_failures_preserved": {
+    "F1": "Original629caa23 dual-Python W1 confirmed; epsilon spun to deadline, zero control passed first read.",
+    "F2": "Original static finding preserved; actual reverse-order corrected control now PASS.",
+    "path": "prior-role4",
+    "reviewer_erratum": "E1 acknowledged exact cost-zero checklist premise was incorrect; original report unchanged.",
+    "role4_members": 91,
+    "role4_seal": "0f0b0e7cb489bbfa3102bc4dbab5262151095e353e7e1735dd35b647417ac403"
+  },
+  "peer_sources_unchanged": true,
+  "remaining": "Mayor exact-source acceptance and the needed integrated generation; actual Native cycles/admission effects/ledger/cleanup/full wall remain unperformed by this task.",
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "scope": "Only one production drain predicate; test sibling ROOT plus one new drain method.",
+  "source_diff_mechanically_verified": true,
+  "stable_source_pins": 12,
+  "status": "F1_F2_FOCUSED_CPU_PASS_PENDING_MAYOR_EXACT_SOURCE_ACCEPTANCE",
+  "test_sha256": "76b7e93688f0ba766456368716ded4cfe1809491c27f32fa5e76e812d2959d83"
+}

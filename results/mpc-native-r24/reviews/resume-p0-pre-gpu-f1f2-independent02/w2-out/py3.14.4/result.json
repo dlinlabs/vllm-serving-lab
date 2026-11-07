@@ -1,0 +1,415 @@
+{
+ "above_repr": "1.0000000000000003e-09",
+ "dont_write_bytecode": 1,
+ "executable": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14",
+ "isolated": 1,
+ "label": "CPU/mock witness only; not Native evidence",
+ "mismatches": [],
+ "outcomes": {
+  "fixed": {
+   "c1": {
+    "caller_drains": {
+     "final": {
+      "drained": true,
+      "observed_at": 1114290.732663457,
+      "readings": 1
+     }
+    },
+    "elapsed_s": 0.004737100098282099,
+    "error": null,
+    "evidence_files_written": 1,
+    "extra_drain_record_keys": [
+     "drained",
+     "observed_at",
+     "readings"
+    ],
+    "extra_drain_record_strict_json": true,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 1,
+    "outcome": "drained",
+    "readings_with_value": 1,
+    "served": {
+     "current_admitted_cost": 2.7755575615628914e-17,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "2.7755575615628914e-17"
+   },
+   "c2": {
+    "caller_drains": {
+     "final": {
+      "drained": true,
+      "observed_at": 1114290.736830857,
+      "readings": 1
+     }
+    },
+    "elapsed_s": 0.0026264998596161604,
+    "error": null,
+    "evidence_files_written": 1,
+    "extra_drain_record_keys": [
+     "drained",
+     "observed_at",
+     "readings"
+    ],
+    "extra_drain_record_strict_json": true,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 1,
+    "outcome": "drained",
+    "readings_with_value": 1,
+    "served": {
+     "current_admitted_cost": 1e-09,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "1e-09"
+   },
+   "c3": {
+    "caller_drains": null,
+    "elapsed_s": 0.50424720114097,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 1.0000000000000003e-09,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "1.0000000000000003e-09"
+   },
+   "c4": {
+    "caller_drains": null,
+    "elapsed_s": 0.5032868001144379,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 1e-06,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "1e-06"
+   },
+   "c5": {
+    "caller_drains": null,
+    "elapsed_s": 0.5024809010792524,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 0.0,
+     "current_in_flight": 1,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "0.0"
+   },
+   "c6": {
+    "caller_drains": null,
+    "elapsed_s": 0.5027222998905927,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 0.0,
+     "current_in_flight": 0,
+     "current_waiting": 1,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "0.0"
+   },
+   "c7": {
+    "caller_drains": null,
+    "elapsed_s": 0.0020339000038802624,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "tokenizer fallback after traffic",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 1,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 1,
+    "outcome": "fallback",
+    "readings_with_value": 1,
+    "served": {
+     "current_admitted_cost": 0.0,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 1
+    },
+    "served_cost_repr": "0.0"
+   },
+   "c8": {
+    "caller_drains": null,
+    "elapsed_s": 0.0019839999731630087,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "invalid drain/fallback metric",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 1,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 1,
+    "outcome": "invalid",
+    "readings_with_value": 1,
+    "served": {
+     "current_admitted_cost": -1e-12,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "-1e-12"
+   }
+  },
+  "old": {
+   "c1": {
+    "caller_drains": null,
+    "elapsed_s": 0.5035901009105146,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 2.7755575615628914e-17,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "2.7755575615628914e-17"
+   },
+   "c2": {
+    "caller_drains": null,
+    "elapsed_s": 0.5040080000180751,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 1e-09,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "1e-09"
+   },
+   "c3": {
+    "caller_drains": null,
+    "elapsed_s": 0.5031644010450691,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 1.0000000000000003e-09,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "1.0000000000000003e-09"
+   },
+   "c4": {
+    "caller_drains": null,
+    "elapsed_s": 0.5031052001286298,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 1e-06,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "1e-06"
+   },
+   "c5": {
+    "caller_drains": null,
+    "elapsed_s": 0.5031425999477506,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 0.0,
+     "current_in_flight": 1,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "0.0"
+   },
+   "c6": {
+    "caller_drains": null,
+    "elapsed_s": 0.5030837010126561,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "original work deadline exhausted",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 11,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 10,
+    "outcome": "deadline",
+    "readings_with_value": 10,
+    "served": {
+     "current_admitted_cost": 0.0,
+     "current_in_flight": 0,
+     "current_waiting": 1,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "0.0"
+   },
+   "c7": {
+    "caller_drains": null,
+    "elapsed_s": 0.00223280000500381,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "tokenizer fallback after traffic",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 1,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 1,
+    "outcome": "fallback",
+    "readings_with_value": 1,
+    "served": {
+     "current_admitted_cost": 0.0,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 1
+    },
+    "served_cost_repr": "0.0"
+   },
+   "c8": {
+    "caller_drains": null,
+    "elapsed_s": 0.0021736000198870897,
+    "error": {
+     "is_services_ProbeError": true,
+     "message": "invalid drain/fallback metric",
+     "type": "ProbeError"
+    },
+    "evidence_files_written": 1,
+    "extra_drain_record_keys": null,
+    "extra_drain_record_strict_json": null,
+    "extra_first_evidence_has_served_cost_text": true,
+    "mock_GETs": 1,
+    "outcome": "invalid",
+    "readings_with_value": 1,
+    "served": {
+     "current_admitted_cost": -1e-12,
+     "current_in_flight": 0,
+     "current_waiting": 0,
+     "tokenizer_fallback_requests": 0
+    },
+    "served_cost_repr": "-1e-12"
+   }
+  }
+ },
+ "pins_after": {
+  "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-f1f2-final-review-role4/inputs/new/native_nominal_qualification.py": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+  "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-f1f2-final-review-role4/inputs/old/native_nominal_qualification.py": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+  "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/native_nominal_qualification.py": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+  "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c"
+ },
+ "pins_before": {
+  "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-f1f2-final-review-role4/inputs/new/native_nominal_qualification.py": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+  "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-f1f2-final-review-role4/inputs/old/native_nominal_qualification.py": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+  "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/native_nominal_qualification.py": "9018acee9f659c821929d69443621bfd482edb5a6dbed15ae8bcba5a140894ec",
+  "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c"
+ },
+ "pins_ok_before": true,
+ "pins_unchanged": true,
+ "prereg": "r24-pre-gpu-f1f2-recheck-prereg-role4/PREREG.json",
+ "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+ "residue_repr": "2.7755575615628914e-17",
+ "schema": "role4-W2-result-v1",
+ "services_module": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/native_services_smoke.py",
+ "services_same_object": true,
+ "status": "CONFIRMED"
+}

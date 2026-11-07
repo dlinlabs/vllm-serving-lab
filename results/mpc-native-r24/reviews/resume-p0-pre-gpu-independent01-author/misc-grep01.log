@@ -1,0 +1,55 @@
+== patch files
+1:diff --git a/experiments/mpc-research/resume-mvp/native_nominal_qualification.py b/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+2:index 379e74373..27f5df283 100644
+3:--- a/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+4:+++ b/experiments/mpc-research/resume-mvp/native_nominal_qualification.py
+492:diff --git a/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py b/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+493:index 158b2f4a0..dab682a0e 100644
+494:--- a/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+495:+++ b/experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py
+== before caller permit/model-binding/write
+recon:
+after
+before
+roundtrip
+
+recon/after:
+experiments
+
+recon/after/experiments:
+mpc-research
+
+recon/after/experiments/mpc-research:
+resume-mvp
+
+recon/after/experiments/mpc-research/resume-mvp:
+native_nominal_qualification.py
+test_native_nominal_qualification.py
+
+recon/before:
+experiments
+
+recon/before/experiments:
+mpc-research
+
+recon/before/experiments/mpc-research:
+resume-mvp
+
+recon/before/experiments/mpc-research/resume-mvp:
+native_nominal_qualification.py
+test_native_nominal_qualification.py
+
+recon/roundtrip:
+experiments
+
+recon/roundtrip/experiments:
+mpc-research
+
+recon/roundtrip/experiments/mpc-research:
+resume-mvp
+
+recon/roundtrip/experiments/mpc-research/resume-mvp:
+native_nominal_qualification.py
+test_native_nominal_qualification.py
+== B2 REPORT H rows
+verdict: {'b2': 'PASS_SOURCE', 'meaning': 'All MUST rows B2-1..B2-7 PASS on the frozen bytes. The critical rows B2-2 and B2-4 have sealed controls that FAIL on the old bytes and PASS on the new bytes, with identical test bytes. All pins verified. B2 source acceptance is recommended to the Mayor, who decides.', 'blocking_findings': 0, 'requested_fixes': [], 'optional_change': 'O1 only (non-blocking).', 'not_implied': ['No B3 (caller) acceptance, no full caller or Native approval, no GPU or execution authorization.', 'No Native qualification, controller cycles, admission effect, MPC or performance claim.']}

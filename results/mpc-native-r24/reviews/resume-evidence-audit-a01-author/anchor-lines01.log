@@ -1,0 +1,45 @@
+PINS_OK
+docs/resume_bullets.md:6:prototype, not a completed native MPC deployment. Evidence IDs refer to
+docs/resume_bullets.md:15:  forecast inputs, Fixed/OneMove comparisons and deadline/version guards;
+docs/resume_bullets.md:16:  corrected a Fixed-policy timing bias before native benchmarking.
+docs/resume_bullets.md:20:commit; second bullet E2/E6/E8. The historical feature/forecast reconstruction
+docs/resume_bullets.md:31:  realized model assumptions, tokenizer-validation evidence and explicit
+docs/resume_bullets.md:45:  commits, including reproducible workload generation and real-tokenizer
+docs/resume_bullets.md:55:fully validated GPU scheduling. Do not combine CPU test totals across versions.
+docs/resume_project_summary.md:3:Status: **A: scoped resume evidence package finalized; B: native MPC P0 open**.
+docs/resume_project_summary.md:45:| Corrected baseline timing and validated replay inputs | E6: Fixed no longer inherits solver-only waiting/deadlines. E7: real-tokenizer Train conversion; this was CP
+docs/resume_project_summary.md:61:| P0 | Explain original work, actuator, states, model limitations, objective and constraints without conflating gateway and engine state. | Initial independent claim 
+docs/resume_project_summary.md:112:- Implemented a frozen finite-horizon policy planner with CPU-tested exact
+docs/resume_project_summary.md:113:  candidate ordering and deadline/version checks; corrected baseline timing
+docs/benchmark_results.md:77:| E2 | Frozen policy planner: 130 CPU cases passed per Python in accepted Parent replays. Acceptance is exact candidate ordering with full-action Fixed-reference scope; ru
+docs/benchmark_results.md:93:| E6 | Fixed-policy solver-wait/deadline bias corrected; Mayor's combined component controls passed. Model-ranked Fixed is not empirical baseline selection. | [Component a
+docs/benchmark_results.md:94:| E7 | All 88 frozen Train prompts matched requested chat-template token counts with the real cached tokenizer. CPU conversion on the existing host, no inference. | [Resul
+docs/benchmark_results.md:98:uncalibrated service assumptions. Its stationary rolling 15-second horizon can
+docs/benchmark_results.md:104:identity, frozen selection provenance, complete offered cohorts and timestamp
+docs/benchmark_results.md:106:not override those blockers. No new native MPC measurements are available.
+docs/benchmark_results.md:115:| Receding-horizon MPC | Not measured | Not measured | Not measured | Not measured | Not measured | Not measured |
+docs/architecture.md:39:The public library and frozen team16 prototypes are separate versions. Do not
+docs/architecture.md:56:`164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a`,
+docs/interview_defense.md:23:CPU-tested planner components exist; E2 accepts exact candidate ordering within
+docs/interview_defense.md:26:The current nominal continuation adds the E6 Fixed-timing correction and E8
+docs/interview_defense.md:58:Fixed holds a development-selected budget. FIFO specifies service order and
+docs/interview_defense.md:118:evidence boundaries. Do not claim a native MPC deployment, measured speedup or
+results/mpc-native-r24/reviews/resume-p0-components-parent02.json:3:  "predecessor_commit": "814a9b5aa38dd8783ae643270b5aed59e1bc12b7",
+results/mpc-native-r24/reviews/resume-p0-components-parent02.json:8:    "source_sha256": "e492a2548f378dcf0511abc56bde4a6bc06bdc9c62854e9dd1053b5f95ec2ea1",
+results/mpc-native-r24/reviews/resume-p0-components-parent02.json:12:    "review": "Parent previously read full planner01; now read the exact final source/test diff and report, including both intentio
+results/mpc-native-r24/reviews/resume-p0-components-parent02.json:14:    "strong_fixed": "freeze_fixed remains only a model-ranked reference. Empirical Train cap selection and static installation are 
+results/mpc-native-r24/reviews/resume-p0-components-parent02.json:22:    "train": {"offers": 88, "sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f"},
+results/mpc-native-r24/reviews/resume-p0-components-parent02.json:38:    "not_proved": ["HTTP integration", "actual loop", "GPU prediction accuracy", "fair measured comparison", "clean-checkout end-to
+results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json:4:  "preregistration_commit": "1e9540caa9dd37f927d5389d05be3d973d234bf7",
+results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json:7:  "original_failed_attempt": "resume-p0-tokenizer01-raw",
+results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json:11:  "actual_tokenizer_source": "/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507",
+results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json:12:  "tokenizer_sha256": "4daabcf7fab3bce457d30dbd14e7eb9c5e79d77c15916f6abdb85b7b8bf0d2c5",
+results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json:13:  "train_tape_sha256": "40bd755b441d6b38c0f2827cdb81afe50f637a579c471a2b1b4ef72b26c6192f",
+results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json:14:  "train_replay_sha256": "5e418b8939179bac16d146d08f7acfa4d617b78adc4c324caca8ec0893ba52e7",
+results/mpc-native-r24/reviews/resume-p0-tokenizer02-result.json:40:  "new_serving_preflight_requirement": "Root gateway loads tokenizer using MODEL_NAME and can silently fall back to a character heur
+results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json:16:    "real_tokenizer_evidence_commit": "02b292b4dbe55c274eba0d0b435bc5f9fc2bac9e"
+results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json:26:    "same_decision": "One immutable realization/panel for all paths and both policy selections.",
+results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json:27:    "between_runs": "Seed includes actual source state/run/time. Distinct policy episodes need not receive identical random re
+results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json:33:    "test_nominal_scenario.py_sha256": "5c9c17d32ba4be946a28f2f3c035d6d17c39b1051a5d8faa37fbb0ad73cc4da5",
+results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json:44:    "source": "Scoped Git materialization: exact four staged source/test blobs plus specified files from 23c5e1df9b6d36bc086e8
+results/mpc-native-r24/reviews/resume-p0-scenario-parent01-result.json:48:    "Runtime02 CLI must use this factory and pacing, retain actual CausalScenario inputs, and expose protocol without self-aut

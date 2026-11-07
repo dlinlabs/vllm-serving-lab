@@ -1,0 +1,22 @@
+{
+  "attempts": 1,
+  "common_failure": "runtime_configuration_or_parameter_binding_changed",
+  "expected_parser_refusals": "Mutually exclusive sources, missing permit, missing forecast purpose: stderr retained; these expected negatives do not explain away the real binding defect.",
+  "failure_boundary": "wait_for_start->_binding before runtime.run; the transport/replay/pending controls do not establish success.",
+  "raw_stderr": "attempts/generation01-py312/stderr.log",
+  "raw_stdout": "attempts/generation01-py312/stdout.log",
+  "retries": 0,
+  "source_generations": 1,
+  "source_repair_after_freeze": false,
+  "source_supported_diagnosis": {
+    "HTTPX": "URL.raw_path returns '/' for an absent path, so BaseClient._enforce_trailing_slash may retain the original bare-host URL string. Thus http://cpu.invalid and http://cpu.invalid/ can mismatch.",
+    "correction_status": "NOT APPLIED OR TESTED in this once-frozen attempt.",
+    "evidence": "Actual frozen control argv use the bare-host form; offline protocol output includes the slash; both chosen local3.12 HTTPX _client.py234-237 and _urls.py283-297 were read-only inspected.",
+    "guard": "_binding() compares str(self.client.base_url) to that canonical string.",
+    "kind": "inconsistent_root_URL_canonicalization",
+    "minimal_corrective_direction": "Use the same strict HTTP-root URL canonicalization in _protocol and _binding. Preserve rejection of non-root paths, query/fragment/userinfo and changed origins. Do not mask the bug by only changing test URLs to include a slash.",
+    "no_additional_diagnostic_control_run": true,
+    "protocol": "_protocol() uses str(endpoint.copy_with(path='/'))."
+  },
+  "unexpected_control_result": "1 PASS, 1 FAIL, 2 ERROR; process exit1"
+}

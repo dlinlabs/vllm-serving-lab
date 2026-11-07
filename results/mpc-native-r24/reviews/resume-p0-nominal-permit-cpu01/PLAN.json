@@ -1,0 +1,24 @@
+{
+  "schema": "resume-p0-nominal-permit-cpu-validation-v1",
+  "purpose": "Validate separate default-off nominal experimental authorization boundaries before any real actuation.",
+  "source": [
+    "experiments/mpc-research/resume-mvp/nominal_permit.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_permit.py"
+  ],
+  "command": ".venv/bin/python -m unittest discover -s experiments/mpc-research/resume-mvp -p test_nominal_permit.py -v",
+  "scope": "CPU-only pure guards; in-memory cpu-test-only identities; no transport, real approval or operator permit artifact.",
+  "limits": {
+    "permit_duration_seconds_max": 60,
+    "commands_max": 8,
+    "entry_to_commit_deadline_seconds_max": 0.5,
+    "snapshot_age_seconds_max": 0.5,
+    "budgets": [16, 32]
+  },
+  "unchanged": ["gateway.py", "mpc_lab", "Native qualification gates", "ActuationPermit", "IdentificationPermit"],
+  "nonclaims": [
+    "No Native calibration, live actuation authority, physical safety guarantee or P0 completion.",
+    "Pure guard tests do not establish durable pending, HTTP CAS, cost semantics, process cleanup or actual applied-state evidence.",
+    "source_digest is usable only after all three nominal modules and public implementation are frozen."
+  ],
+  "exploration_disclosure": "One initial gateway.py glob search inadvertently matched historical gateway copies in runtime/result trees. Subsequent reads use the exact current root gateway.py path; no copied variant is used to establish current endpoint behavior."
+}

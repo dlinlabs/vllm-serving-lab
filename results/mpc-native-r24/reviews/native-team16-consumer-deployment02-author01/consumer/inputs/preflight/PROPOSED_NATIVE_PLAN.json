@@ -1,0 +1,67 @@
+{
+  "experiment_id": "r24-team16-native-owner-acquisition-preflight01",
+  "gateway_prefix_extension": {
+    "launcher_sha256": "e8c03ccd48e9b9b25c0b0c74199ea5ee10a4f0f0cb2c3c3a5434999f41ac1f0d",
+    "schema": "r24-gateway-flushed-prefix-v1",
+    "source_sha256": "9cd3c7dee081a34a965f3bba4db3494c0283c79d7fd8449123811ffbc6e81cbb"
+  },
+  "input_post_extension": {
+    "source_sha256": "d5ce7432035568e764fba97dd5a71c31d16a3571262b2e2593212ab132342764",
+    "vllm_core_sha256": "268bf40534a853812867ae8e80040f190983cb364b41182b55969aace20c93f5"
+  },
+  "native_execution_authorized": false,
+  "native_mpc_permitted": false,
+  "owner_bootstrap_extension": {
+    "native_mpc_permitted": false,
+    "scope": "InitialCaptureClosure, unchanged"
+  },
+  "partition": "train",
+  "phase_frontier_extension": {
+    "schema": "r24-native-live-phase-v1",
+    "source_sha256": "7dd866bac25fe5d211c82d196f0954c6d737b9a351da4cb9d9ce6522c6a8fa9b"
+  },
+  "prepared_forward_extension": {
+    "enabled": true,
+    "native_sources": {
+      "prefill_lab.plugin": "7bdb7585047e42e8ec035e543fc6b1f79df425fc6706348989dd0856d42b82e2",
+      "vllm.v1.worker.gpu.model_runner": "174c93db921c23cf0396eee4764be25b2bd2d4b6a06e9fa41ce3598b884ce8ce",
+      "vllm.v1.worker.gpu_worker": "6994436e4547c0996ab555b3e814e8ccea26b650dfc1b378b97d640745309347"
+    },
+    "observer": "light",
+    "schema": "r24-prepared-forward-worker-extension-v1",
+    "sources": {
+      "launch_queue_service.py": "dc3de7382af5d020ffb552262feed135c1b0c591838b214528d080242ff931c3",
+      "prepared_forward_capture.py": "6e6813d5c0225e248b6542fdc82aa6e25c62f91067b7eac62454924bab30b267",
+      "prepared_forward_hook.py": "84a6c54857b9a550d1a7ac8bad3cdb1cbdb745d1080c386ccd1d9e1aac719077",
+      "prepared_forward_plugin.py": "e3b13496d5d8b34066ac4b0b1d32734a68acdd50ad5757d3d18f17f91e633e93",
+      "prepared_forward_region.py": "fc6dcd007f5f8c8215bdd8ff83771848c6775e70e9dc50eaff19d4dbf17e5000",
+      "queue_observer.py": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93"
+    }
+  },
+  "queue_observer_extension": {
+    "launcher_sha256": "dc3de7382af5d020ffb552262feed135c1b0c591838b214528d080242ff931c3",
+    "minimum_monitor_sleep_s": 0.1,
+    "package_manifest_sha256": "de36ad18dbb4d8dcec3cca215668d46f4437327bea6af3f16350f4cda6180bdf",
+    "protocol_file": "queue-shadow01.json",
+    "protocol_sha256": "49c75d05f3cb70742adc1f7418a1273091220ea380f15109c90eb5d227ead6bf",
+    "scope": "Native queue evidence for single-arm mode qualification,not scientific fit.",
+    "source_sha256": "e0787a2cd2d0b4cfb5ada14c004d1d76a62ddcbfb120b5cea9de02af38a1aa93"
+  },
+  "schema": "native-v2-batch-capture-plan-v1",
+  "scope": "Proposed fixed32 owner-acquisition component; no model, forecast or comparison.",
+  "source_commit": "104e65a69df73997b977bce2588b655ae714f45d",
+  "trace_sha256": "736eb274f2efad525486d7fc441cf8ca4431e9a60e68832e3c37414af53b9bc0",
+  "trials": [
+    {
+      "budget": 32,
+      "budget_steps": [],
+      "observer": "light",
+      "request_ids": [
+        "a31c0b04c00d5075bb1bd26d3885adbf",
+        "5ad532ddb7e35075b1133d8379e0ae4a"
+      ],
+      "seed": 170003,
+      "trial_id": "nv2-team16-owner-acquisition01-fixed32"
+    }
+  ]
+}

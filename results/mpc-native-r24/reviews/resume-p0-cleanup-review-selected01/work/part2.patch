@@ -1,0 +1,72 @@
+--- immutable-deployment02/owned01.py
++++ cleanup-successor01/candidate/owned01.py
+@@ -112,7 +112,10 @@
+ 
+     def reap_owned(self, deadline):
+         sent = set()
+-        while time.monotonic() < deadline:
++        first_pass = True
++        self.last_reap_attempt = dict(started_at=time.monotonic(), deadline=deadline)
++        while first_pass or time.monotonic() < deadline:
++            first_pass = False
+             self.remember()
+             for pid in reversed(tuple(self.identities)):
+                 key = (pid, self.identities[pid])
+@@ -142,7 +145,11 @@
+                     pass
+             if not any(self.helper.alive(pid, self.identities) for pid in self.identities):
+                 break
+-            time.sleep(0.02)
++            remaining = deadline - time.monotonic()
++            if remaining <= 0:
++                break
++            time.sleep(min(0.02, remaining))
++        self.last_reap_attempt["finished_at"] = time.monotonic()
+         return [pid for pid in self.identities if self.helper.alive(pid, self.identities)]
+ 
+     def signal(self, root, sig):
+@@ -160,7 +167,7 @@
+         natural, reap, join, reserve = allocation
+         deadline = min(anchor + sum(allocation), float("inf") if hard_deadline is None else hard_deadline)
+         called_at = time.monotonic()
+-        events = []
++        events, errors = [], []
+         if cancelled and client is not None:
+             events.append(dict(action="cancel_owned_client", sent=self.signal(client, signal.SIGTERM)))
+         services_signalled = False
+@@ -190,7 +197,7 @@
+         readers = []
+         for root in self.roots:
+             try:
+-                root["process"].wait(timeout=max(0.001, join_deadline - time.monotonic()))
++                root["process"].wait(timeout=max(0, join_deadline - time.monotonic()))
+             except subprocess.TimeoutExpired:
+                 survivors.append(root["process"].pid)
+             if root["reader"]:
+@@ -203,7 +210,12 @@
+             receipt = dict(root.get("receipt", {}), returncode=root["process"].returncode,
+                            cleanup_completed=root["process"].returncode is not None,
+                            finished_at=time.monotonic())
+-            c.write(root["directory"] / "lifecycle.json", receipt)
++            try:
++                c.write(root["directory"] / "lifecycle.json", receipt)
++            except BaseException as error:
++                errors.append(dict(phase="owned_lifecycle_receipt", pid=root["process"].pid,
++                                   error_type=type(error).__name__, errno=getattr(error, "errno", None),
++                                   path=str(root["directory"] / "lifecycle.json")))
+         # Reap adopted zombies individually; never wait/kill arbitrary PIDs.
+         for pid in self.identities:
+             try:
+@@ -216,8 +228,10 @@
+         survivors = sorted(set(survivors) | {
+             pid for pid in self.identities if self.helper.alive(pid, self.identities)})
+         return dict(started_at=anchor, called_at=called_at, finished_at=time.monotonic(), deadline=deadline,
+-                    events=events, readers=readers, surviving_owned_pids=survivors,
++                    events=events, errors=errors, readers=readers, surviving_owned_pids=survivors,
++                    scoped_reap_attempt=getattr(self, "last_reap_attempt", None),
++                    deadline_exhausted_at_entry=called_at >= deadline,
+                     owned_pid_start_ticks=self.identities,
+                     all_joined=not survivors and all(row["joined"] for row in readers)
+                     and all(root["process"].returncode is not None for root in self.roots),
+-                    capture_complete=all(row["eof"] and not row["error_type"] for row in readers))
++                    capture_complete=not errors and all(row["eof"] and not row["error_type"] for row in readers))

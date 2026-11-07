@@ -1,0 +1,42 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12",
+    "-B",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-team16-planner-revision02/run_tests.py",
+    "witnesses"
+  ],
+  "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21",
+  "env_overrides": {
+    "BLIS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONHASHSEED": "0",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "env_unset": [
+    "PYTHONPATH"
+  ],
+  "input_pins_verified_before": 532,
+  "label": "before-fix-py312-attempt01",
+  "runner_sha256": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+  "source_snapshot_sha256": {
+    "freeze_inputs.py": "d28377e3069589907c6a764cf30f62908d6c5f0520005578df82381cb5f01894",
+    "policy_planner16.py": "eb02844885814ebb01150e8db1d29aa90c29d859a5074a265968543b505c4a06",
+    "run_attempt.py": "840cf583a70034db7f4f74ec169b6613899597a210406b2ee384b08f68d30404",
+    "run_tests.py": "0e72de4a5e8ebcac7350df4bca5ef2051023562798fe888c1e3aec84273f80d1",
+    "test_parent_numerical_review.py": "61dd075793c6d78cdd6151d95e0a35ab5ac4983114d926bc2f58ecdd447d4ebe",
+    "test_policy_planner16.py": "a3d07cbf19172d4b555356f7398501c5f3bc76e3ec73482bee2dfe2757ac4a44",
+    "test_policy_planner16_numerical_revision.py": "0e0851fec5cce8f07b9efd8c863bd6801232ce68f20f02606ca4960bebfb554d",
+    "test_predecessor_witnesses.py": "b86d67f539dee141dabef9b93924b80a88bb2722c40fc790bf7b73ac87a478d9",
+    "test_role7_planner_controls.py": "f60c9ddab18e040eb81e69fb735c83683db1a7e6265fd7d362ef36730aa8ea0f"
+  },
+  "started_unix_s": 1793769344.1002326,
+  "suite": "witnesses"
+}

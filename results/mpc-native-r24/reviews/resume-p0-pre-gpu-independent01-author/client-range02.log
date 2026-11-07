@@ -1,0 +1,23 @@
+933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95  nominal_client.py
+            'finish_reasons_seen': list(self.finish_reasons), 'finish_reason_events': self.finish_events,
+            'anomalies': [name for name in ANOMALIES if name in anomalies], 'usage': usage,
+            'usage_events': len(self.usages), 'completion_tokens': tokens,
+            'completion_tokens_evidence': tokens_evidence, 'prompt_tokens': prompt if type(prompt) is int else None,
+        }
+
+
+def prepare_records(trace, offered_start, run_id):
+    """One placeholder per offered request (fate not_launched until sent), allocated before any send."""
+    namespace = uuid.UUID(run_id)
+    return [{
+        'trace_id': request['trace_id'], 'client_request_id': uuid.uuid5(namespace, request['trace_id']).hex,
+        'request_id': None, 'expected_input_tokens': request['input_tokens'], 'max_tokens': request['max_tokens'],
+        'scheduled_at': offered_start + request['arrival_seconds'], 'sent_at': None, 'send_lag_s': None,
+        'response_headers_at': None, 'first_content_at': None, 'last_content_at': None, 'done_at': None,
+        'terminal_at': None, 'http_status': None, 'fate': 'not_launched', 'fate_reason': 'not_sent',
+        'stream_done': False, 'data_events': 0, 'content_events': 0, 'finish_reason': None,
+        'finish_reason_evidence': 'not_applicable', 'finish_reasons_seen': [], 'finish_reason_events': 0,
+        'anomalies': [], 'usage': None, 'usage_events': 0, 'completion_tokens': None,
+        'completion_tokens_evidence': 'not_applicable', 'prompt_tokens': None, 'prompt_tokens_match': None,
+        'rejection': None, 'body_bytes': None, 'body_sha256': None, 'body_text': None,
+738:        records = capture['records'] = prepare_records(trace, offered_start, capture['run_id'])

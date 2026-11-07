@@ -1,0 +1,5 @@
+0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570  gateway.py
+388:async def snapshot_metrics() -> Dict[str, Any]:
+390:        metrics = dict(state)
+928:@app.get("/metrics")
+929:async def metrics():

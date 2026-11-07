@@ -1,0 +1,41 @@
+[
+  {
+    "cancel_requested": [
+      "recorder"
+    ],
+    "failures": [
+      {
+        "reason": "controller_returned_failure_refusal_pending_or_incomplete",
+        "worker": "controller"
+      }
+    ],
+    "kind": "controller_refused",
+    "status": "failed"
+  },
+  {
+    "cancel_requested": [
+      "controller"
+    ],
+    "failures": [
+      {
+        "reason": "recorder_returned_refused",
+        "worker": "recorder"
+      }
+    ],
+    "kind": "recorder_refused",
+    "status": "failed"
+  },
+  {
+    "cancel_requested": [
+      "controller"
+    ],
+    "failures": [
+      {
+        "reason": "recorder_returned_failed",
+        "worker": "recorder"
+      }
+    ],
+    "kind": "recorder_failed",
+    "status": "failed"
+  }
+]

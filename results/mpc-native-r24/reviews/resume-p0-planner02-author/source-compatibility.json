@@ -1,0 +1,19 @@
+{
+  "MPC_solver_window_and_deadline_expressions_exact_AST_match": true,
+  "fixed_changes": [
+    "private guard solver=False checks actual action deadline instead",
+    "Fixed stamps not_before and TimedPlan from final guard current time",
+    "FixedChoice/freeze_fixed explicitly MODEL-only; no empirical GPU selector added"
+  ],
+  "scope": "Source structural check, not an extra application/test execution",
+  "unchanged_method_ASTs": {
+    "__init__": true,
+    "_decision": true,
+    "_input": true,
+    "_panel": true,
+    "_result": true,
+    "evaluate": true,
+    "plan": true,
+    "select": true
+  }
+}

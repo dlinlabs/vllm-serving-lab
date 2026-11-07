@@ -1,0 +1,383 @@
+1: """Focused literal-event CPU tests for nominal_metrics (no native data, no network)."""
+2: import hashlib
+3: import json
+4: import math
+5: 
+6: import pytest
+7: 
+8: import nominal_metrics as nm
+9: 
+10: 
+11: def slo(status='complete', finish='stop', ignore=False, done=True, error=False):
+12:     return {'status': status, 'finish_reason': finish, 'requested_ignore_eos': ignore, 'stream_done': done,
+13:             'stream_error': error}
+14: 
+15: 
+16: def row(rid, fate, sched, sent=None, first=None, term=None, tokens=100, ct=None, slo_fields=None, cap=128):
+17:     return {'request_id': rid, 'group_tokens': tokens, 'max_output_tokens': cap, 'scheduled_at': sched,
+18:             'sent_at': sent, 'first_content_at': first, 'terminal_at': term, 'fate': fate,
+19:             'completion_tokens': ct, 'slo': slo_fields}
+20: 
+21: 
+22: def run(rows, arm='strong_one_move', purpose='train', missing=('finish_reason: literal test',), control=None,
+23:         control_missing='no controller journal in literal test', start=10.0, duration=5.0, envelope=(10.0, 20.0),
+24:         identity='a' * 64, scope='offered_cohort_observed'):
+25:     return {'arm': arm, 'purpose': purpose, 'clock_domain': 'literal', 'offered_start': start,
+26:             'offered_duration_s': duration, 'envelope_start': envelope[0], 'envelope_end': envelope[1],
+27:             'envelope_scope': scope, 'rows': rows, 'slo_missing': None if missing is None else list(missing),
+28:             'control': control, 'control_missing': control_missing, 'provenance': {'offered_trace_sha256': identity}}
+29: 
+30: 
+31: def static(budget):
+32:     return {'kind': 'static_fixed', 'budget': budget, 'basis': 'literal static install before offered start'}
+33: 
+34: 
+35: def keys_recursive(value):
+36:     if isinstance(value, dict):
+37:         for key, item in value.items():
+38:             yield key
+39:             yield from keys_recursive(item)
+40:     elif isinstance(value, list):
+41:         for item in value:
+42:             yield from keys_recursive(item)
+43: 
+44: 
+45: def test_nearest_rank_counts_and_sample_max_flags():
+46:     block = nm.percentile_block([float(v) for v in range(20, 0, -1)])
+47:     assert (block['n'], block['p50'], block['p95'], block['p99']) == (20, 10.0, 19.0, 20.0)
+48:     assert (block['p95_rank'], block['p95_is_sample_max'], block['p99_is_sample_max']) == (19, False, True)
+49:     small = nm.percentile_block([float(v) for v in range(1, 20)])
+50:     assert (small['p50'], small['p95'], small['p95_is_sample_max']) == (10.0, 19.0, True)
+51:     empty = nm.percentile_block([])
+52:     assert (empty['n'], empty['p50'], empty['null_reason']) == (0, None, 'no_samples')
+53: 
+54: 
+55: def test_all_offered_fates_ttft_origins_penalty_and_usage_bounds():
+56:     rows = [row('a', 'complete', 10.0, 10.01, 10.21, 11.0, ct=20),
+57:             row('b', 'complete', 10.5, 10.5, 10.9, 11.5, ct=None),
+58:             row('c', 'rejected', 11.0, 11.0, None, 11.01),
+59:             row('d', 'not_launched', 12.0),
+60:             row('e', 'cancelled', 13.0, 13.0, None, 19.0),
+61:             row('f', 'unknown', 14.0),
+62:             row('g', 'stream_error', 14.5, 14.5, 14.6, 15.0, ct=3)]
+63:     metrics = nm.compute(run(rows))
+64:     outcomes = metrics['outcomes']
+65:     assert metrics['all_offered'] == 7
+66:     assert outcomes['fates'] == {'complete': 2, 'rejected': 1, 'http_error': 0, 'stream_error': 1,
+67:                                  'transport_error': 0, 'cancelled': 1, 'not_launched': 1, 'unknown': 1}
+68:     assert outcomes['rejection_rate'] == pytest.approx(1 / 7)  # not_launched is never merged into rejection
+69:     assert outcomes['failure_rate'] == pytest.approx(2 / 7)
+70:     assert outcomes['not_launched_rate'] == pytest.approx(1 / 7) and outcomes['unknown_rate'] == pytest.approx(1 / 7)
+71:     ttft = metrics['ttft_s']
+72:     assert ttft['conditional_scheduled']['n'] == 2
+73:     assert ttft['conditional_scheduled']['p50'] == pytest.approx(0.21)
+74:     assert ttft['conditional_client_send']['p50'] == pytest.approx(0.20)
+75:     assert ttft['conditional_scheduled']['p95'] == pytest.approx(0.4)
+76:     assert ttft['conditional_scheduled']['p95_is_sample_max'] is True
+77:     penalized = ttft['all_offered_penalized_scheduled']
+78:     assert (penalized['n'], penalized['n_failure_penalty'], penalized['p50_rank']) == (7, 4, 4)
+79:     assert penalized['p50'] is None and penalized['p50_null_reason'] == 'rank_falls_on_failure_penalty'
+80:     assert 'NOT a survival-analysis' in penalized['estimand']
+81:     assert metrics['send_lag_s']['n'] == 5 and metrics['send_lag_s']['n_not_sent'] == 2
+82:     throughput = metrics['throughput']
+83:     assert throughput['delivered'] == 2 and throughput['cohort_normalized_delivered_rps'] == pytest.approx(0.4)
+84:     assert throughput['wall_envelope_delivered_rps'] == pytest.approx(0.2)
+85:     assert (throughput['completion_tokens_observed'], throughput['completion_tokens_upper_bound']) == (20, 148)
+86:     assert throughput['cohort_normalized_completion_tokens_per_s'] == {'lower': 4.0, 'upper': 29.6, 'exact': False}
+87:     assert throughput['wall_envelope_completion_tokens_per_s'] == {'lower': 2.0, 'upper': 14.8, 'exact': False}
+88:     assert throughput['undelivered_reported_completion_tokens'] == 3
+89:     natural = metrics['natural_slo']
+90:     assert natural['available'] is False and natural['natural_slo_good'] is None
+91:     assert natural['null_reason'] == 'natural_slo_fields_unavailable' and natural['missing']
+92:     assert metrics['controller_overhead']['available'] is False
+93:     assert metrics['controller_overhead']['null_reason'] == 'no controller journal in literal test'
+94:     windows = metrics['windows']
+95:     assert windows['envelope_scope'] == 'offered_cohort_observed' and windows['full_wall_s'] is None
+96:     assert 'full wall not recorded' in windows['full_wall_null_reason']
+97:     json.dumps(metrics, allow_nan=False)
+98: 
+99: 
+100: def test_unchanged_natural_slo_length_censoring_groups_and_jain():
+101:     rows = [row('g1', 'complete', 0.0, 0.0, 0.3, 0.66, tokens=512, ct=10, slo_fields=slo()),
+102:             row('g2', 'complete', 1.0, 1.0, 1.3, 1.66, tokens=513, ct=10, slo_fields=slo(finish='length')),
+103:             row('g3', 'complete', 2.0, 2.0, 2.6, 2.96, tokens=2048, ct=10, slo_fields=slo()),
+104:             row('g4', 'rejected', 3.0, 3.0, None, 3.01, tokens=2049,
+105:                 slo_fields=slo(status='rejected', finish=None, done=False)),
+106:             row('g5', 'complete', 4.0, 4.0, 4.2, 4.45, tokens=100, ct=1, slo_fields=slo()),
+107:             row('g6', 'complete', 4.9, 4.9, 5.2, 5.56, tokens=3000, ct=10, slo_fields=slo())]
+108:     metrics = nm.compute(run(rows, missing=None, start=0.0, duration=5.0, envelope=(0.0, 8.0)))
+109:     natural = metrics['natural_slo']
+110:     assert natural['score_http_sha256'] == nm.SCORE_HTTP_SHA256
+111:     assert natural['rule']['schema'] == 'r23-natural-endpoint-slo-v1'
+112:     assert (natural['all_offered'], natural['natural_slo_good']) == (6, 3)
+113:     assert natural['slo_attainment_fraction'] == pytest.approx(0.5)
+114:     assert natural['cohort_slo_goodput_rps'] == pytest.approx(0.6)
+115:     assert natural['in_window_slo_goodput_rps'] == pytest.approx(0.4)
+116:     assert natural['wall_envelope_slo_goodput_rps'] == pytest.approx(0.375)
+117:     assert natural['censored_cap_completions'] == 1 and natural['finish_reasons']['length'] == 1
+118:     assert natural['one_token_complete'] == 1
+119:     groups = metrics['groups']
+120:     assert [groups[name]['n_offered'] for name in nm.GROUPS] == [2, 2, 2]
+121:     assert [groups[name]['slo_attainment_fraction'] for name in nm.GROUPS] == [1.0, 0.0, 0.5]
+122:     spread = metrics['fairness']['slo_attainment_fraction']
+123:     assert spread['jain'] == pytest.approx(0.6)
+124:     assert (spread['worst_min'], spread['best_max'], spread['gap'], spread['min_over_max']) == (0.0, 1.0, 1.0, 0.0)
+125:     assert metrics['fairness']['worst_group_rejection_rate'] == 0.5
+126:     assert metrics['fairness']['worst_group_ttft_conditional_scheduled_p95_group'] == '513to2048'
+127: 
+128: 
+129: def test_group_edges_zero_denominators_and_all_zero_jain():
+130:     assert [nm.group_of(n) for n in (1, 512, 513, 2048, 2049)] == ['le512', 'le512', '513to2048', '513to2048',
+131:                                                                  'gt2048']
+132:     rejected = [row('r1', 'rejected', 10.0, 10.0, None, 10.1, tokens=100),
+133:                 row('r2', 'rejected', 11.0, 11.0, None, 11.1, tokens=3000)]
+134:     metrics = nm.compute(run(rejected))
+135:     spread = metrics['fairness']['delivered_fraction']
+136:     assert (spread['k'], spread['jain'], spread['min_over_max']) == (2, None, None)
+137:     assert spread['null_reason'].startswith('all_zero') and spread['worst_min'] == 0.0
+138:     assert metrics['fairness']['slo_attainment_fraction']['null_reason'] == 'metric_unavailable'
+139:     assert metrics['groups']['513to2048']['rejection_rate'] is None  # empty group: null, never 0 or 1
+140:     assert metrics['throughput']['cohort_normalized_delivered_rps'] == 0.0
+141:     assert metrics['throughput']['cohort_normalized_completion_tokens_per_s'] == {'lower': 0.0, 'upper': 0.0,
+142:                                                                                   'exact': True}
+143:     single = nm.compute(run(rejected[:1]))['fairness']['delivered_fraction']
+144:     assert single['null_reason'] == 'fewer_than_two_nonempty_groups' and single['jain'] is None
+145:     empty = nm.compute(run([]))
+146:     assert empty['outcomes']['rejection_rate'] is None and empty['outcomes']['delivered_fraction'] is None
+147:     assert empty['ttft_s']['all_offered_penalized_scheduled']['null_reason'] == 'no_samples'
+148: 
+149: 
+150: @pytest.mark.parametrize('mutate, message', [
+151:     (lambda r: r['rows'][0].update(first_content_at=10.005), 'clock order'),
+152:     (lambda r: r['rows'][0].update(sent_at=9.0, first_content_at=9.5), 'clock order'),
+153:     (lambda r: r['rows'][0].update(terminal_at=10.1), 'clock order'),
+154:     (lambda r: r['rows'][0].update(first_content_at=None), 'complete requires sent_at, first_content_at'),
+155:     (lambda r: r['rows'][1].update(sent_at=12.0, terminal_at=12.5), 'not_launched carries'),
+156:     (lambda r: r['rows'][0].update(scheduled_at=True), 'finite int/float'),
+157:     (lambda r: r['rows'][0].update(scheduled_at=math.nan), 'finite int/float'),
+158:     (lambda r: r['rows'][1].update(request_id='a'), 'unique'),
+159:     (lambda r: r['rows'][1].update(fate='length'), 'fate must be one of'),
+160:     (lambda r: r.update(envelope_end=14.0), 'envelope must cover'),
+161:     (lambda r: r.update(envelope_scope='offered_window_only'), 'envelope_scope must be one of'),
+162:     (lambda r: r.update(arm='fixed16'), 'fixed arms require'),
+163:     (lambda r: r.update(arm='train_selected_fixed'), 'table alias'),
+164:     (lambda r: r['rows'][0].update(slo=slo()), 'every row or on none'),
+165:     (lambda r: r.update(control=static(16.0), control_missing=None), 'static_fixed control must belong'),
+166: ])
+167: def test_strict_input_refusals(mutate, message):
+168:     literal = run([row('a', 'complete', 10.0, 10.01, 10.21, 11.0, ct=20), row('b', 'not_launched', 12.0)])
+169:     nm.compute(literal)
+170:     mutate(literal)
+171:     with pytest.raises(nm.MetricsInputError, match=message):
+172:         nm.compute(literal)
+173: 
+174: 
+175: def test_slo_status_must_coincide_with_fate():
+176:     literal = run([row('a', 'rejected', 10.0, 10.0, None, 10.1, slo_fields=slo())], missing=None)
+177:     with pytest.raises(nm.MetricsInputError, match='coincide'):
+178:         nm.compute(literal)
+179: 
+180: 
+181: def test_controller_overhead_union_static_and_null():
+182:     control = {'kind': 'measured_intervals', 'source': 'literal journal',
+183:                'intervals': [[11.0, 11.5], [11.25, 12.0], [19.5, 21.0], [8.0, 9.0]]}
+184:     overhead = nm.compute(run([], control=control, control_missing=None))['controller_overhead']
+185:     assert overhead['decisions'] == 4 and overhead['union_total_s'] == pytest.approx(3.5)
+186:     assert overhead['union_within_envelope_s'] == pytest.approx(1.5)
+187:     assert overhead['union_fraction_of_envelope'] == pytest.approx(0.15)
+188:     assert overhead['durations_s']['n'] == 4 and overhead['durations_s']['max'] == pytest.approx(1.5)
+189:     fixed = nm.compute(run([], arm='fixed32', control=static(32.0), control_missing=None))['controller_overhead']
+190:     assert (fixed['decisions'], fixed['union_total_s'], fixed['kind']) == (0, 0.0, 'static_fixed')
+191:     with pytest.raises(nm.MetricsInputError, match='no controller decision intervals'):
+192:         nm.compute(run([], arm='fixed16', control=control, control_missing=None))
+193:     full = nm.compute(run([], control=control, control_missing=None, envelope=(8.0, 22.0), scope='full_wall'))
+194:     assert (full['windows']['full_wall_s'], full['windows']['full_wall_null_reason']) == (14.0, None)
+195:     assert full['controller_overhead']['union_within_envelope_s'] == pytest.approx(3.5)
+196: 
+197: 
+198: def write_raw(directory, mutate=None):
+199:     model = '/workspace/pr32-r23/models/Qwen3-4B-Instruct-2507'
+200:     trace = {'schema_version': 1, 'max_model_len': 8192, 'model': model,
+201:              'duration_seconds': 5.0, 'output_cap': 128,
+202:              'requests': [{'trace_id': f'p0w1-train-000{i}', 'arrival_seconds': arrival, 'input_tokens': tokens,
+203:                            'max_tokens': 128, 'prompt': 'literal'}
+204:                           for i, (arrival, tokens) in enumerate([(0.1, 300), (0.2, 1100), (0.3, 3100), (0.4, 600),
+205:                                                                  (4.9, 700)])],
+206:              'provenance': {'kind': 'SYNTHETIC_OFFERED_WORKLOAD_TAPE', 'offered_tape_schema': nm.OFFERED_TAPE_SCHEMA,
+207:                             'offered_tape_sha256': 'b' * 64, 'purpose': 'train', 'source_id': 'literal:train',
+208:                             'protocol_id': 'literal', 'requested_prompt_tokens': [256, 1024, 3072, 256, 1024]}}
+209:     start = 1000.0
+210: 
+211:     def launched(i, **fields):
+212:         request = trace['requests'][i]
+213:         base = {'scheduled_at': start + request['arrival_seconds'], 'workload': 'trace', 'request_id': f'gw-{i}',
+214:                 'client_request_id': f'c{i}', 'stream_complete': False, 'started_at': None, 'first_content_at': None,
+215:                 'finished_at': None, 'status': 200, 'ttft': None, 'end_to_end': None, 'input_tokens': None,
+216:                 'output_tokens': None, 'total_tokens': None, 'max_output_tokens': 128, 'error_type': None,
+217:                 'error_message': None, 'error_phase': None, 'success': False, 'rejected': False,
+218:                 'trace_id': request['trace_id'], 'expected_input_tokens': request['input_tokens']}
+219:         base.update(fields)
+220:         return base
+221: 
+222:     def placeholder(i, message):
+223:         request = trace['requests'][i]
+224:         return {'trace_id': request['trace_id'], 'client_request_id': f'c{i}', 'request_id': None,
+225:                 'scheduled_at': start + request['arrival_seconds'], 'started_at': None, 'first_content_at': None,
+226:                 'finished_at': None, 'status': None, 'ttft': None, 'end_to_end': None, 'stream_complete': False,
+227:                 'input_tokens': None, 'output_tokens': None, 'max_output_tokens': 128,
+228:                 'expected_input_tokens': request['input_tokens'], 'success': False, 'rejected': False,
+229:                 'error_type': 'NotLaunched', 'error_message': message, 'error_phase': 'scheduler'}
+230: 
+231:     client = {'requests': [
+232:         launched(0, stream_complete=True, started_at=1000.1005, first_content_at=1000.3, finished_at=1001.0,
+233:                  ttft=1000.3 - 1000.1005, input_tokens=300, output_tokens=50, total_tokens=350, success=True),
+234:         launched(1, status=503, rejected=True, started_at=1000.2, finished_at=1000.21),
+235:         launched(2, started_at=1000.3, finished_at=1006.0, error_type='CancelledError',
+236:                  error_message='replay drain timeout or collection interrupted', error_phase='response_body'),
+237:         placeholder(3, 'collection interrupted'),
+238:         placeholder(4, 'KeyError: literal implementation failure')]}
+239:     manifest = {'schema_version': 1, 'status': 'collected', 'git_commit': 'c' * 40, 'git_dirty': False,
+240:                 'config': {'budget': 16.0, 'budget_schedule': None, 'cache_policy': 'disabled', 'ttft_slo': 0.5,
+241:                            'e2e_slo': None, 'trace': 'literal.json'},
+242:                 'measurement_start': start, 'measurement_end': start + 5.0,
+243:                 'initial_metrics': {'tokenizer_available': True},
+244:                 'gateway_launch': {'settings': {'ADMISSION_MODE': 'cost_aware', 'MAX_ADMITTED_COST': '16.0',
+245:                                                 'MODEL_NAME': model}}}
+246:     changes = [{'sent': 999.5, 'acknowledged': 999.6, 'target': start}]
+247:     files = {'trace.json': trace, 'client.json': client, 'manifest.json': manifest, 'budget_changes.json': changes}
+248:     if mutate is not None:
+249:         mutate(files)
+250:     texts = {name: value if isinstance(value, str) else json.dumps(value) for name, value in files.items()}
+251:     if 'trace_sha256' not in manifest:
+252:         manifest['trace_sha256'] = hashlib.sha256(texts['trace.json'].encode()).hexdigest()
+253:         texts['manifest.json'] = json.dumps(manifest) if not isinstance(files['manifest.json'], str) \
+254:             else texts['manifest.json']
+255:     directory.mkdir()
+256:     for name, text in texts.items():
+257:         (directory / name).write_text(text)
+258:     return directory
+259: 
+260: 
+261: def test_adapter_exact_mapping_static_fixed_and_refused_natural_slo(tmp_path):
+262:     adapted = nm.adapt_run_trace_pilot(write_raw(tmp_path / 'raw'), arm='fixed16', purpose='train')
+263:     rows = adapted['rows']
+264:     assert [r['fate'] for r in rows] == ['complete', 'rejected', 'cancelled', 'not_launched', 'unknown']
+265:     assert rows[0]['sent_at'] == 1000.1005 and rows[0]['terminal_at'] == 1001.0 and rows[0]['completion_tokens'] == 50
+266:     assert rows[0]['group_tokens'] == 300 and rows[4]['sent_at'] is None and rows[4]['terminal_at'] is None
+267:     assert all(r['slo'] is None for r in rows) and 'finish_reason' in adapted['slo_missing'][0]
+268:     assert adapted['envelope_end'] == 1006.0 and adapted['control']['budget'] == 16.0
+269:     provenance = adapted['provenance']
+270:     assert provenance['manifest']['git_commit'] == 'c' * 40 and provenance['offered_tape']['purpose'] == 'train'
+271:     assert provenance['raw_error_type_counts'] == {'None': 2, 'CancelledError': 1, 'NotLaunched': 2}
+272:     assert provenance['client_config_slo_not_used'] == {'ttft_slo': 0.5, 'e2e_slo': None}
+273:     metrics = nm.compute(adapted)
+274:     assert metrics['natural_slo']['available'] is False and metrics['controller_overhead']['decisions'] == 0
+275:     assert metrics['outcomes']['fates']['not_launched'] == 1 and metrics['outcomes']['fates']['unknown'] == 1
+276:     json.dumps(metrics, allow_nan=False)
+277: 
+278: 
+279: def _set(path, value):
+280:     def mutate(files):
+281:         target = files
+282:         for key in path[:-1]:
+283:             target = target[key]
+284:         target[path[-1]] = value
+285:     return mutate
+286: 
+287: 
+288: @pytest.mark.parametrize('mutate, kwargs, message', [
+289:     (_set(['manifest.json', 'status'], 'failed'), {}, 'collected'),
+290:     (_set(['manifest.json', 'trace_sha256'], 'd' * 64), {}, 'trace.json sha256'),
+291:     (None, {'purpose': 'eval'}, 'purpose'),
+292:     (None, {'arm': 'mpc'}, 'closed-loop'),
+293:     (_set(['manifest.json', 'config', 'cache_policy'], 'unknown'), {}, 'cache_policy'),
+294:     (_set(['client.json', 'requests', 1, 'scheduled_at'], 1000.21), {}, 'scheduled_at'),
+295:     (_set(['manifest.json', 'config', 'budget_schedule'], 'schedule.json'), {}, 'budget-schedule'),
+296:     (_set(['budget_changes.json', 0, 'acknowledged'], 1000.5), {}, 'before measurement_start'),
+297:     (_set(['manifest.json', 'gateway_launch', 'settings', 'MAX_ADMITTED_COST'], '32.0'), {}, 'launch settings'),
+298:     (_set(['trace.json', 'model'], 'Qwen/Qwen3-4B-Instruct-2507'), {}, 'absolute local model path'),
+299:     (_set(['manifest.json', 'gateway_launch', 'settings', 'MODEL_NAME'], '/other/model'), {}, 'MODEL_NAME'),
+300:     (_set(['manifest.json', 'initial_metrics', 'tokenizer_available'], False), {}, 'tokenizer_available'),
+301:     (_set(['client.json', 'requests', 0, 'finish_reason'], 'stop'), {}, 'schema drift'),
+302:     (_set(['client.json', 'requests', 0, 'ttft'], 0.5), {}, 'ttft'),
+303:     (_set(['client.json'], '{"requests": [], "requests": []}'), {}, 'duplicate JSON object key'),
+304: ])
+305: def test_adapter_refusals(tmp_path, mutate, kwargs, message):
+306:     arguments = dict({'arm': 'fixed16', 'purpose': 'train'}, **kwargs)
+307:     with pytest.raises(nm.AdapterRefusal, match=message):
+308:         nm.adapt_run_trace_pilot(write_raw(tmp_path / 'raw', mutate), **arguments)
+309: 
+310: 
+311: def _fixed(arm, outcomes, identity='e' * 64, purpose='train', missing=None, scope='offered_cohort_observed'):
+312:     rows = []
+313:     for index, kind in enumerate(outcomes):
+314:         sched = 10.0 + index * 0.1
+315:         if kind == 'good':
+316:             rows.append(row(f'{arm}{index}', 'complete', sched, sched, sched + 0.1, sched + 0.46, ct=10,
+317:                             slo_fields=None if missing else slo()))
+318:         elif kind == 'slow':
+319:             rows.append(row(f'{arm}{index}', 'complete', sched, sched, sched + 0.9, sched + 1.3, ct=10,
+320:                             slo_fields=None if missing else slo()))
+321:         else:
+322:             rows.append(row(f'{arm}{index}', 'rejected', sched, sched, None, sched + 0.01,
+323:                             slo_fields=None if missing else slo(status='rejected', finish=None, done=False)))
+324:     return nm.compute(run(rows, arm=arm, purpose=purpose, missing=missing, control=static(nm.FIXED_BUDGETS[arm]),
+325:                           control_missing=None, identity=identity, scope=scope))
+326: 
+327: 
+328: def test_train_selection_primary_ties_and_refusals():
+329:     chosen = nm.select_train_fixed({'fixed16': _fixed('fixed16', ['good', 'rej', 'rej']),
+330:                                     'fixed32': _fixed('fixed32', ['good', 'good', 'rej'])})
+331:     assert (chosen['status'], chosen['selected_arm'], chosen['decided_by']) == ('SELECTED', 'fixed32',
+332:                                                                                 'primary_natural_slo_good')
+333:     tie1 = nm.select_train_fixed({'fixed16': _fixed('fixed16', ['good', 'slow', 'rej']),
+334:                                   'fixed32': _fixed('fixed32', ['good', 'rej', 'rej'])})
+335:     assert (tie1['selected_arm'], tie1['decided_by']) == ('fixed16', 'tie_1_fewer_not_delivered')
+336:     tie2 = nm.select_train_fixed({'fixed16': _fixed('fixed16', ['good', 'rej']),
+337:                                   'fixed32': _fixed('fixed32', ['rej', 'good'])})
+338:     assert (tie2['selected_arm'], tie2['decided_by']) == ('fixed16', 'tie_2_lower_budget')
+339:     refusals = [
+340:         {'fixed16': _fixed('fixed16', ['good'], missing=['finish_reason']), 'fixed32': _fixed('fixed32', ['good'])},
+341:         {'fixed16': _fixed('fixed16', ['good'], purpose='eval'), 'fixed32': _fixed('fixed32', ['good'])},
+342:         {'fixed16': _fixed('fixed16', ['good']), 'fixed32': _fixed('fixed32', ['good'], identity='f' * 64)},
+343:         {'fixed16': _fixed('fixed16', ['good'])},
+344:     ]
+345:     reasons = [nm.select_train_fixed(item) for item in refusals]
+346:     assert [item['status'] for item in reasons] == ['REFUSED'] * 4
+347:     assert 'no TTFT-only substitute' in reasons[0]['reason'] and 'Train only' in reasons[1]['reason']
+348: 
+349: 
+350: def test_comparison_table_alias_refusals_and_no_winner():
+351:     f16, f32 = _fixed('fixed16', ['good', 'rej']), _fixed('fixed32', ['good', 'good'])
+352:     selection = nm.select_train_fixed({'fixed16': f16, 'fixed32': f32})
+353:     table = nm.comparison_table({'fixed16': {'status': 'MEASURED', 'metrics': f16},
+354:                                  'fixed32': {'status': 'MEASURED', 'metrics': f32},
+355:                                  'mpc': {'status': 'REFUSED', 'reason': 'model not qualified'}},
+356:                                 purpose='train', train_selection=selection)
+357:     assert [r['arm'] for r in table['rows']] == list(nm.ARMS)
+358:     by_arm = {r['arm']: r for r in table['rows']}
+359:     assert by_arm['train_selected_fixed']['alias_of'] == 'fixed32'
+360:     assert by_arm['train_selected_fixed']['status'] == 'ALIAS'
+361:     assert by_arm['mpc']['status'] == 'REFUSED' and by_arm['strong_one_move']['status'] == 'NOT_RUN'
+362:     assert by_arm['fixed32']['summary']['slo_attainment_fraction'] == 1.0
+363:     assert table['fifo_label'] == 'PENDING_VERIFIED_BACKEND_FCFS_CONFIG'
+364:     assert not [key for key in keys_recursive(table) if 'winner' in key or 'best_arm' in key]
+365:     other = _fixed('fixed32', ['good', 'good'], identity='f' * 64)
+366:     with pytest.raises(nm.MetricsInputError, match='incomparable'):
+367:         nm.comparison_table({'fixed16': {'status': 'MEASURED', 'metrics': f16},
+368:                              'fixed32': {'status': 'MEASURED', 'metrics': other}}, purpose='train')
+369:     full_wall = _fixed('fixed32', ['good', 'good'], scope='full_wall')
+370:     with pytest.raises(nm.MetricsInputError, match='envelope scope: incomparable'):
+371:         nm.comparison_table({'fixed16': {'status': 'MEASURED', 'metrics': f16},
+372:                              'fixed32': {'status': 'MEASURED', 'metrics': full_wall}}, purpose='train')
+373:     with pytest.raises(nm.MetricsInputError, match='this arm/split'):
+374:         nm.comparison_table({'fixed16': {'status': 'MEASURED', 'metrics': f16}}, purpose='eval')
+375: 
+376: 
+377: def test_cli_measures_fixed_run_and_reports_refusal(tmp_path, capsys):
+378:     directory = write_raw(tmp_path / 'raw')
+379:     assert nm.main(['--output-dir', str(directory), '--arm', 'fixed16', '--purpose', 'train']) == 0
+380:     printed = json.loads(capsys.readouterr().out)
+381:     assert printed['outcomes']['fates']['complete'] == 1 and printed['natural_slo']['available'] is False
+382:     assert nm.main(['--output-dir', str(directory), '--arm', 'fixed16', '--purpose', 'eval']) == 1
+383:     assert '"status": "REFUSED"' in capsys.readouterr().err

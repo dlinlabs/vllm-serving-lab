@@ -1,0 +1,17 @@
+{
+  "scope": "CPU_MOCK_ONLY",
+  "source_pins": {
+    "native_services_smoke.py": "70de7480c5e827a081babbbec7bc61e1f567285aa5c2669d68bd0434de8f4ec2",
+    "test_native_services_smoke.py": "9a8c1226f1c1255a141060fed079f860a2daf24c926c131a375e341051b253ba"
+  },
+  "summary": {
+    "actual_servers_HTTP_GPU_NVML_SSH_model_or_asset_calls": 0,
+    "errors": 0,
+    "evidence_kind": "CPU_MOCK_ONLY_NOT_HOST_VALIDATION",
+    "failures": 0,
+    "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+    "tests": 6
+  },
+  "changes": "Ports only, including upstream and readiness; host nginx untouched",
+  "attempts": 1
+}

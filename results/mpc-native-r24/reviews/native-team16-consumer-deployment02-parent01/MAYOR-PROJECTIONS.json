@@ -1,0 +1,140 @@
+{
+  "py312": {
+    "CPU_no_cut_component_pass": false,
+    "Native_execution": false,
+    "actual_application_at": null,
+    "actual_mock_overlap": true,
+    "all_joined": true,
+    "bootstrap_events": [
+      {
+        "generation": 1,
+        "kind": "control_history_published",
+        "phase": "CAS_intent"
+      },
+      {
+        "generation": 2,
+        "kind": "control_history_published",
+        "phase": "CAS_receipts"
+      },
+      {
+        "generation": 3,
+        "kind": "control_history_published",
+        "phase": "capture_metadata_received"
+      },
+      {
+        "generation": 4,
+        "kind": "control_history_published",
+        "phase": "capture_begin_received"
+      },
+      {
+        "generation": 5,
+        "kind": "bootstrap_confirmed",
+        "phase": "confirmed"
+      }
+    ],
+    "capture_complete": true,
+    "fixture_raw_unchanged": true,
+    "lifecycle_calls": [
+      "startup",
+      "one_activate",
+      "bootstrap",
+      [
+        "public_history_published",
+        "e81e60e95e0bbdacba572fefbbd591b9"
+      ],
+      [
+        "offer_intent",
+        "e81e60e95e0bbdacba572fefbbd591b9"
+      ],
+      "managed-1",
+      [
+        "public_history_published",
+        "8fbc40ce9c6f9da0721622d3a03af523"
+      ],
+      [
+        "offer_intent",
+        "8fbc40ce9c6f9da0721622d3a03af523"
+      ],
+      "managed-2",
+      "final",
+      "end_ACK"
+    ],
+    "new_offers_sha256": "da129b9980b9875dcddf89c7d5649d131da1a53462078b6cf1dccd749301cf77",
+    "new_plan_sha256": "468d95d00448aa0a1404b6c7d26015f2f66a6e1ab4b07640f7325266bdef3930",
+    "privacy_negative_guards": [
+      true,
+      true
+    ],
+    "registered_owned_count": 2,
+    "true_close_byte_equal": true
+  },
+  "py314": {
+    "CPU_no_cut_component_pass": false,
+    "Native_execution": false,
+    "actual_application_at": null,
+    "actual_mock_overlap": true,
+    "all_joined": true,
+    "bootstrap_events": [
+      {
+        "generation": 1,
+        "kind": "control_history_published",
+        "phase": "CAS_intent"
+      },
+      {
+        "generation": 2,
+        "kind": "control_history_published",
+        "phase": "CAS_receipts"
+      },
+      {
+        "generation": 3,
+        "kind": "control_history_published",
+        "phase": "capture_metadata_received"
+      },
+      {
+        "generation": 4,
+        "kind": "control_history_published",
+        "phase": "capture_begin_received"
+      },
+      {
+        "generation": 5,
+        "kind": "bootstrap_confirmed",
+        "phase": "confirmed"
+      }
+    ],
+    "capture_complete": true,
+    "fixture_raw_unchanged": true,
+    "lifecycle_calls": [
+      "startup",
+      "one_activate",
+      "bootstrap",
+      [
+        "public_history_published",
+        "e81e60e95e0bbdacba572fefbbd591b9"
+      ],
+      [
+        "offer_intent",
+        "e81e60e95e0bbdacba572fefbbd591b9"
+      ],
+      "managed-1",
+      [
+        "public_history_published",
+        "8fbc40ce9c6f9da0721622d3a03af523"
+      ],
+      [
+        "offer_intent",
+        "8fbc40ce9c6f9da0721622d3a03af523"
+      ],
+      "managed-2",
+      "final",
+      "end_ACK"
+    ],
+    "new_offers_sha256": "da129b9980b9875dcddf89c7d5649d131da1a53462078b6cf1dccd749301cf77",
+    "new_plan_sha256": "468d95d00448aa0a1404b6c7d26015f2f66a6e1ab4b07640f7325266bdef3930",
+    "privacy_negative_guards": [
+      true,
+      true
+    ],
+    "registered_owned_count": 2,
+    "true_close_byte_equal": true
+  }
+}

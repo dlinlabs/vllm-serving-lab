@@ -1,0 +1,106 @@
+PINS_OK
+== docs/resume_bullets.md
+18:Evidence: first bullet E1, including trace identity, archived outcomes,
+20:commit; second bullet E2/E6/E8. The historical feature/forecast reconstruction
+21:command is not a command that rebuilds the E1 outcome table.
+22:The historical captures are not MPC performance measurements. E6's
+34:Evidence: E2/E6/E7/E8 and the [architecture](architecture.md). First-action
+48:Evidence: E1/E4/E5/E6/E7/E8. Do not substitute "production deployed" for
+53:Do not claim MPC speedup, superior goodput, production use, guaranteed p99,
+== docs/resume_project_summary.md
+3:Status: **A: scoped resume evidence package finalized; B: native MPC P0 open**.
+4:Evidence cutoff: 2026-11-04. Negative results are acceptable; unsupported claims are not.
+11:package, not a declaration that all native P0 gates passed.
+41:| Instrumented, audited real-GPU serving captures | E1: archived request outcomes, state reconstruction and applied-control timing. These are scheduled identification runs, not MPC runs. |
+42:| Implemented a frozen policy-planner component | E2: Parent-accepted exact candidate ordering, with full-action Fixed-reference scope and CPU deadline/version checks. Runtime integration is not accepted. |
+43:| Implemented and tested observation/consumer deployment components | E3: bounded CPU integration evidence; subsequent D2-F1 blocks live release of that composition. |
+44:| Preserved negative results and release blockers | E4: component coverage FAIL (one of two required observations). E5: source-identified cleanup-bypass path. Neither is relabelled PASS. |
+45:| Corrected baseline timing and validated replay inputs | E6: Fixed no longer inherits solver-only waiting/deadlines. E7: real-tokenizer Train conversion; this was CPU work, not GPU inference. |
+46:| Implemented causal Train-only forecast generation | E8: bounded CPU component acceptance; nominal assumptions, not measured native accuracy. |
+56:baseline, convergence of the Native14 posterior, and production deployment are
+61:| P0 | Explain original work, actuator, states, model limitations, objective and constraints without conflating gateway and engine state. | Initial independent claim audit delivered; Mayor corrections incorporated. Final P0 audit remains
+62:| P0 | One runnable, source-pinned path demonstrating repeated real observation, prediction, optimization, first-action application and reobservation. Retain refusals, timeouts and actual applied-state evidence. | **Missing native end-to
+63:| P0 | Safe bounded operation: queue/admission limits, overload outcomes, stale-state refusal, unknown-command handling, timeout cleanup and private-config handling. | New isolated service ownership and runtime integration pending. The l
+64:| P0 | Comparable descriptive GPU results for MPC, strong development-selected Fixed, FIFO and strong OneMove; same workload, model, resource limits and scoring. Predeclare evaluation data disjoint from predictor/scenario fitting and all
+65:| P0 | Report TTFT p50/p95/p99, SLO goodput, throughput, rejection, fairness and full controller overhead, with sample counts and failures. | Historical measurements are partial; current MPC table is unfilled. |
+66:| P0 | Portable commands/configurations, raw-to-table reconstruction and exact code/data commits; audit every quantitative resume claim. | Historical bundles exist; clean-checkout MVP reproduction remains unverified. |
+67:| P1 | Better decision-relevant forecasts, overhead reduction, broader workload/load coverage and repeatability estimates. | Only if a P0 result justifies the change. |
+68:| P2 | Native14 mixing research, full empirical-pool quantiles, new proposal geometry, extensive posterior qualification, large confirmatory campaigns and additional hardware. | Separate research backlog; must not delay P0 or application
+72:Native14 qualification, waive safety checks, or be presented as a calibrated
+77:1. Reuse accepted planner/accounting components. Finish the isolated runtime,
+80:2. Freeze one MVP protocol: exact commands, state/action interface, development-
+86:3. Perform the smallest bounded real-loop engineering qualification. Require
+89:4. If the smoke passes, run the predeclared sequential policy comparison on the
+91:5. Reconstruct the table, audit claims and commit the evidence. Declare
+93:   applications do not wait for that declaration. Move optional research to P1/P2.
+96:record: the specific P0 claim it establishes, why existing evidence is
+98:trace/config/command/commit. A run with no new P0 answer is deferred.
+101:The E1 Azure trace is development data, not held-out evaluation. A replay of it
+118:The [initial independent audit and Mayor disposition](../results/mpc-native-r24/reviews/resume-mvp-claims-parent01.json)
+119:record wording corrections, bounded evidence and unresolved P0 requirements.
+126:| Sampling & Mixing | Estimation reproducibility and numerical limitations; no convergence campaign for P0. |
+== docs/architecture.md
+33:| Measurement | Scheduled arrivals, actual applications, request/state/diagnostic records. | [`trace_control.py`](../trace_control.py), [`telemetry.py`](../telemetry.py), E1 in [results](benchmark_results.md) |
+34:| Public prediction/planning library | Experimental scenario rollouts and policy selection. | [`mpc_lab/model.py`](../mpc_lab/model.py), [`mpc_lab/controller.py`](../mpc_lab/controller.py); not the E2 tested implementation |
+35:| Frozen team16 planner | Exact candidate ordering and numerical/deadline/version controls, within its accepted scope. | E2 frozen `policy_planner16.py`; runtime integration not accepted |
+39:The public library and frozen team16 prototypes are separate versions. Do not
+53:in E1. E1 used the manifest-recorded runtime hashes with `git_dirty=true`;
+54:attribution to current files requires matching those hashes. E2 tested the
+55:frozen team16 planner with SHA256
+56:`164f3947b71392112e0672b4ae0aab6f602c3380d1f4a61a63f14766ee10db6a`,
+87:and E2 for configuration-specific details. Native14 is a separate failed-
+91:For the isolated nominal MVP (E6/E8), the planner scores model-resolved
+107:final receipt. Pre-return metadata is not proof of completed cleanup. D2-F1
+== docs/interview_defense.md
+23:CPU-tested planner components exist; E2 accepts exact candidate ordering within
+26:The current nominal continuation adds the E6 Fixed-timing correction and E8
+44:Native14 did not meet its sampling qualification; its uncertainty is not
+53:justify accuracy guarantees. Advanced mixing/quantiles belong in P2 unless
+54:they answer a concrete P0 question.
+69:not the evaluation trace's future arrivals. The E1 Azure trace was development
+77:trade-off. Conditional p99 is descriptive, not a service-level guarantee.
+89:exact reservation release and owned-process cleanup. D2-F1 shows why truthful
+97:E1 provides audited historical native serving measurements under scheduled
+98:budgets; E2/E3 provide bounded CPU component evidence. E4 is a partial native
+101:Each offered 7,643 requests in 300 seconds: A rejected 5,667, B rejected 5,584;
+102:572 and 736, respectively, met the TTFT SLO. Those deliberately varied,
+112:still a P0 item. A negative result is better than an inflated claim.
+== docs/benchmark_results.md
+7:## E1: historical native serving measurements, not MPC
+9:Hardware/configuration as recorded by the runner: RTX 4090, reported 24,564 MiB,
+10:driver 595.91.07; configured model Qwen3-4B-Instruct-2507; runner environment
+11:vLLM 0.30.0, Torch 2.13.0+cu130, Python 3.12.3. The manifests explicitly say
+16:synthetic prompts, output cap 128, context 8192 and 300-second arrival windows.
+17:Source output lengths are not replayed. TTFT SLO is 0.5 seconds.
+19:| Capture | Offered | Completed success | Rejected | Failed | SLO-good completions | SLO goodput (req/s) | Client TTFT p99 (s) |
+21:| Shared A | 7,643 | 1,976 | 5,667 | 0 | 572 | 1.906667 | 2.412583 |
+22:| Shared B | 7,643 | 2,059 | 5,584 | 0 | 736 | 2.453333 | 2.202635 |
+24:TTFT p99 is conditional on successful requests; rejection is shown alongside
+37:### E1 evidence chain and reconstruction limits
+41:| Reports | [A report](../results/shared-client-20261018/captures/shared-client-a-r1/report.json), [B report](../results/shared-client-20261018/captures/shared-client-b-r1/report.json) |
+42:| Configuration and trace identity | [A manifest](../results/shared-client-20261018/captures/shared-client-a-r1/manifest.json), [B manifest](../results/shared-client-20261018/captures/shared-client-b-r1/manifest.json) |
+43:| Complete raw archives and file hashes | [Raw-bundle index](../results/shared-client-20261018/raw-bundle/index.json); browsing subsets are not complete raw captures |
+44:| Trace SHA256 | `62f3f182bcb889c846b5a46a05a53766ef20c5f79008e9050a4fe33707bc4e2e` |
+45:| Archived independent audits | [verification.json](../results/shared-client-20261018/verification.json) |
+46:| Exact collection declarations and commands | [Historical report](../results/shared-client-20261018/report.md), [A runbook](../experiments/shared-client-qualification-v1.md), [B runbook](../experiments/shared-client-b-v1.md) |
+47:| Recorded runtime commit | `d0ccb2c0d3711e1b2a69bb4ec248c61961ce3586` |
+48:| Evidence publication commit | `aea7694a0af2d1dadc883b4b9e33d1a9bdb61098` |
+54:python results/shared-client-20261018/reproduce.py \
+60:This command does not regenerate the E1 outcome table. `reproduce.py` checks
+61:the 15 manifest-recorded runtime files, then runs `identification_features.py`
+63:It is not a fully source-pinned reproduction path. E1 table reconstruction
+70:This is a P0 portability gap. No dependencies were installed and no captures
+98:uncalibrated service assumptions. Its stationary rolling 15-second horizon can
+102:The [independent metrics audit and Mayor disposition](../results/mpc-native-r24/reviews/resume-p0-metrics-independent-parent01.json)
+103:block claim-qualified Train selection/comparison on metrics01: common-environment
+110:| Policy | TTFT p50/p95/p99 | SLO goodput | Throughput | Rejection | Fairness | Controller overhead |
+118:metric or fairness index. These are P0 implementation/specification gaps, not
+136:E1 A/B both use the same development trace; held-out C was not collected.
+138:pilot, not the held-out P0 comparison or an out-of-sample accuracy claim.
+161:The [Role7 proposal and Mayor disposition](../results/mpc-native-r24/reviews/resume-p0-metrics-contract-parent01.json)
+165:The earlier contract proposal used boundaries 512 and 2048 tokens; the current
+166:frozen nominal workload has exact prompt classes 256, 1024 and 3072 tokens,
+167:verified on Train in E7. Preserve its declared grouping and scorer through
+== async
+docs/architecture.md:62:R, awaiting-first-content Q, streaming D, ages and arrival/outcome history.
+docs/resume_bullets.md:41:- Implemented an asynchronous inference gateway with reservation accounting,

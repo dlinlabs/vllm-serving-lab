@@ -1,0 +1,14 @@
+7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac  inputs/test_native_nominal_qualification.py
+76:        return dict(current_in_flight=0, current_waiting=0, current_admitted_cost=0,
+229:                        "current_in_flight": 0, "current_waiting": 0,
+230:                        "current_admitted_cost": 0, "tokenizer_fallback_requests": 0})
+309:    def test_complete_collect_keeps_counts_domains_bindings_and_all_drain_readings(self):
+312:        fixture.metrics = [{**zero, "current_in_flight": 1, "current_admitted_cost": 3.2}, zero,
+313:                           {**zero, "current_waiting": 1}, zero]
+324:        self.assertEqual(fixture.report["caller_drains"]["pre-episode"]["readings"], 2)
+325:        self.assertEqual(fixture.report["caller_drains"]["final"]["readings"], 2)
+341:    def test_drain_and_fallback_failure_close_without_losing_readings(self):
+351:                    fixture.metrics = [{**zero, "current_in_flight": 1}] * 2
+== gateway-range02 line span
+0
+  936

@@ -1,0 +1,58 @@
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  inputs/native_nominal_qualification.py
+PROBES = Path("results/mpc-native-r24/reviews/resume-p0-probes02/inputs")
+ADAPTER_SHA256 = "935c2679c4b9fffdffb23ce88ca5351f91fa84e25c8c1edccedddaea4e4262a8"
+DRAIN_FIELDS = ("current_in_flight", "current_waiting", "current_admitted_cost")
+
+        raise
+
+
+def remaining(owner, deadline, reserve):
+    services.checked(owner.deadline == deadline and owner.reserve == reserve,
+                     "original owner deadline/reserve changed")
+    owner.check()
+    value = deadline - reserve - time.monotonic()
+    services.checked(math.isfinite(value) and value > 0, "original work deadline exhausted")
+    return value
+
+
+async def observe(client, path, *, owner, deadline, reserve, output, key, report, name):
+    evidence = {"path": path, "entered_at": time.monotonic(), "status_code": None, "raw": None}
+    primary = None
+    try:
+        timeout = min(2.0, remaining(owner, deadline, reserve))
+        evidence["timeout_s"] = timeout
+        async with asyncio.timeout(timeout):
+            response = await client.get(path, headers={"x-admin-api-key": key}, timeout=timeout)
+        evidence.update(status_code=response.status_code, raw=response.text)
+        response.raise_for_status()
+        value = strict_load(response.content)
+        evidence["value"] = value
+        return value
+    except BaseException as error:
+        primary = error
+        evidence["error"] = error_record(error)
+        raise
+    finally:
+        evidence["returned_at"] = time.monotonic()
+        report.setdefault("caller_observations", []).append(evidence)
+        preserving(lambda: services.write(output / (name + ".json"), evidence, key),
+                   primary, report, name + "_persistence")
+
+
+async def drain(client, *, owner, deadline, reserve, output, key, report, phase):
+    attempt = 0
+    while True:
+        attempt += 1
+        metrics = await observe(
+            client, "/metrics", owner=owner, deadline=deadline, reserve=reserve,
+            output=output, key=key, report=report, name=f"{phase}-metrics-{attempt:04d}")
+        values = [metrics[name] for name in (*DRAIN_FIELDS, "tokenizer_fallback_requests")]
+        services.checked(all(type(value) in (int, float) and math.isfinite(value) and value >= 0
+                             for value in values), "invalid drain/fallback metric")
+        services.checked(metrics["tokenizer_fallback_requests"] == 0, "tokenizer fallback after traffic")
+        if all(metrics[name] == 0 for name in DRAIN_FIELDS):
+            report.setdefault("caller_drains", {})[phase] = {
+                "drained": True, "observed_at": time.monotonic(), "readings": attempt}
+            return
+        await asyncio.sleep(min(0.05, remaining(owner, deadline, reserve)))
+

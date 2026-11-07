@@ -1,0 +1,72 @@
+{
+  "checklist_errata": [
+    {
+      "corrected_criterion": "current_in_flight == 0, current_waiting == 0 and tokenizer_fallback_requests == 0 exactly, and current_admitted_cost <= 1e-9.",
+      "disposition": "The author satisfied the sealed letter. The defect is in the runtime behavior, and the reviewer-side checklist error is disclosed here. The sealed CHECKLIST.json is not modified.",
+      "error": "The '== 0' branch rested on an unverified assumption that the gateway returns its float ledger to exactly 0.0 at idle. Gateway 456/467/517-521 refute that assumption.",
+      "id": "E1",
+      "row": "B3-5",
+      "sealed_text": "admitted cost == 0 or a pre-registered |x| <= 1e-9 (I3)"
+    }
+  ],
+  "findings": [
+    {
+      "actual_run_probability": "UNKNOWN. It depends on how much the warmup and Train probe requests actually overlap and on the actual token-derived costs; the probe inputs were deliberately not read. On synthetic costs, 10 of 120 five-request finish orders and 2 of 20 pairs left a positive residue (W1).",
+      "class": "liveness false negative (fail-closed); no false PASS",
+      "confidence": "HIGH: the gateway arithmetic is source-proven and the defect is witnessed on the frozen drain() bytes under both Pythons",
+      "effect": [
+        "Pre-episode drain, after the 3-request warmup: if a residue is present it never succeeds. Each reading (every <= 50 ms) costs one GET, one evidence file and one in-memory caller_observations entry, until remaining() refuses at D - R. collect() then fails NOT_RUN at stage pre_episode_drain with no episode traffic, consuming the GPU lease.",
+        "Final drain, after a possibly valid 5-request episode: the same spin, after which failure('final_drain') makes the receipt FAILED (or adds a note) even though the episode collected correctly.",
+        "No false PASS: the counters remain exact, and the fallback check is unaffected."
+      ],
+      "file": "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+      "id": "F1",
+      "lines": {
+        "DRAIN_FIELDS": "17",
+        "drain": "100-115",
+        "final_drain_call": "334-339",
+        "pre_drain_call": "267-269",
+        "predicate": "111"
+      },
+      "mechanism": "When two or more admitted requests overlap, (a + b) - a need not equal b in binary floating point. The remaining subtraction can leave a positive residue; a negative residue is clipped to 0.0 by max(). Example: costs 0.1 and 0.2 admitted together leave 2.7755575615628914e-17 after both finish, in FIFO or LIFO order. Sequential non-overlapping requests return exactly 0.0.",
+      "regression_control": "Add one test to test_native_nominal_qualification.py using the existing MockTransport pattern. (a) Serve /metrics {current_in_flight: 0, current_waiting: 0, current_admitted_cost: 2.7755575615628914e-17, tokenizer_fallback_requests: 0}: drain() must return with caller_drains[phase].readings == 1. This sub-case fails on 629caa23 (spins to the deadline; see W1). (b) Same with cost 1e-6, or current_in_flight 1 with cost 0.0: still busy, refused at the original deadline with no caller_drains entry.",
+      "rereview_scope_after_fix": "Only the diff of drain() (and the optional caller_drains fields) plus the one test. The Mayor can verify this mechanically.",
+      "severity": "BLOCKING_PRE_GPU",
+      "sha256": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+      "smallest_fix": {
+        "file": "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+        "optional_same_commit": "Record \"admitted_cost\": metrics[\"current_admitted_cost\"] and \"admitted_cost_abs_tol\": 1e-9 in the caller_drains entry (112-113) so that raw audit sees the residual.",
+        "rationale": "The counters stay exact integers, so an admitted or waiting request is never masked. 1e-9 equals the gateway's own abs_tol for cost-ledger completeness (gateway 165/294/838), and MIN_REQUEST_COST is 0.1 (gateway 37/385, smoke 87). The value is already validated as finite and >= 0 at 108-109, so <= 1e-9 is equivalent to abs(x) <= 1e-9. DRAIN_FIELDS stays as it is for the validation at 107.",
+        "replace_line_111": "        if all(metrics[name] == 0 for name in DRAIN_FIELDS):",
+        "with_lines": [
+          "        if (metrics[\"current_in_flight\"] == 0 and metrics[\"current_waiting\"] == 0",
+          "                and metrics[\"current_admitted_cost\"] <= 1e-9):"
+        ]
+      },
+      "source_evidence": [
+        "gateway.py 0b1a80ad 232: current_admitted_cost starts at 0.0",
+        "gateway.py 456, 467: projected_cost = current_admitted_cost + request_cost; current_admitted_cost = projected_cost",
+        "gateway.py 517-521: current_in_flight = max(0, n - 1); current_admitted_cost = max(0.0, current_admitted_cost - request_cost). There is no reset to exactly 0.0 at idle, and a grep shows no other writes (gateway-cost-grep02.log)",
+        "gateway.py 388-392: /metrics serves dict(state) unrounded",
+        "gateway.py 165, 294, 838: the gateway compares its own cost ledger with math.isclose(rel_tol=1e-12, abs_tol=1e-9)",
+        "native_services_smoke.py 585e606f 81-82, 87: the actual run uses ADMISSION_MODE=cost_aware, MAX_ADMITTED_COST=32, MPC_LAB_ENABLED=true, OUTPUT_TOKEN_COST=0.0052083333, MIN_REQUEST_COST=0.1",
+        "gateway.py 37, 385: request cost is floored at MIN_REQUEST_COST (default 0.1)"
+      ],
+      "witness": "W1"
+    },
+    {
+      "confidence": "HIGH on mechanism (pathlib Path.mkdir() without exist_ok raises FileExistsError); the trigger depends on module import order. Static reasoning; not executed.",
+      "effect": "If the qualification test module is imported before the smoke test module in one process with the same NATIVE_SMOKE_TEST_OUTPUT, the smoke module's import-time ROOT.mkdir() raises FileExistsError and causes a collection error. Name-sorted directory collection does this, because test_native_nominal_qualification.py sorts before test_native_services_smoke.py. The Mayor's composed runner lists the smoke test first and passed. There is no source or product effect.",
+      "files": {
+        "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py@7d087a88": "24-25: ROOT = Path(os.environ['NATIVE_SMOKE_TEST_OUTPUT']) / 'qualification'; ROOT.mkdir(parents=True, exist_ok=True)",
+        "experiments/mpc-research/resume-mvp/test_native_services_smoke.py@158c4e32": "18-20: ROOT = Path(os.environ['NATIVE_SMOKE_TEST_OUTPUT']); assert not ROOT.is_absolute(); ROOT.mkdir()"
+      },
+      "id": "F2",
+      "severity": "LOW_NONBLOCKING_TEST_HARNESS",
+      "smallest_fix": "Give the qualification test its own output root (a separate env var, or a sibling directory not nested under the smoke ROOT). Alternatively, record 'smoke test module first, fresh output dir' as a precondition of the portable/package runner."
+    }
+  ],
+  "interpretation": "Original F1 CONFIRMED on both Pythons; F2 originally static-only. Evidence copied, not rerun or altered.",
+  "source": "prior-role4/REPORT.json",
+  "source_sha256": "746626a667b02fff1e2c690d6f2a82a50bc720775423991207355bbf939d6ff5"
+}

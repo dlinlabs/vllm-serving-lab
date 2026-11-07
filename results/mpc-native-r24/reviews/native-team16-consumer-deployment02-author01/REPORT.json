@@ -1,0 +1,56 @@
+{
+  "G06": "not_closed",
+  "G16": "pending",
+  "Native14": "FAIL",
+  "Parent_CPU_engineering_notice": {
+    "aggregate_dependency_status": "UNACCEPTED_FOR_DEPLOYMENT_PENDING_INDEPENDENT_DELTA_AND_SEPARATE_MAYOR_DEPLOYMENT_APPROVAL",
+    "commit": "5317b0223cb96d5c9f53a0ffae5c71745cbf2e32",
+    "full_parent_archive_not_copied": true,
+    "scope": "CPU engineering only;not independent delta/deployment/Native/G06",
+    "sha256": "b4b24fc62d30ce99ea9b1229d004fb2bc974016bed3030de3184b23feadbd960",
+    "source": "/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/results/mpc-native-r24/reviews/native-team16-consumer-successor-parent01.json"
+  },
+  "accepted_successor_runtime_logic_changed": false,
+  "actual_application_at": null,
+  "actual_owned_CPU_identities": 4,
+  "additional_original_verifier_bindings": 1,
+  "all_helpers_joined": true,
+  "author_Native_or_network_or_GPU_or_git_or_install": false,
+  "decision_at": null,
+  "deliverable": "Actual default-OFF fresh client/launcher/service,external Mayor gate,matching plan/offers/op/capture,owned registration/true-close/privacy paths.",
+  "dependency_aggregate_status": "UNACCEPTED_FOR_DEPLOYMENT_PENDING_INDEPENDENT_DELTA_AND_SEPARATE_MAYOR_DEPLOYMENT_APPROVAL",
+  "exact_dependency": "13bc7f834a9bd0cbc0b8c69765642974e4ba8b1bce5f523666e1f7629f5f1393",
+  "legacy42_reason_migration": "LEGACY42_REASON_MIGRATION.patch",
+  "model_id": "gpt-6-astra",
+  "native_mpc_permitted": false,
+  "not_live_fairness_proof": true,
+  "not_live_readiness": true,
+  "observer_deployable": false,
+  "old42suite_run": false,
+  "original_product_SDK_Source13_changed": false,
+  "planner_entry_at": null,
+  "prediction_qualified": false,
+  "qualified_model": false,
+  "reasoning_effort": "max",
+  "remaining_prerequisites": "REMAINING_PREREGISTRATION.json",
+  "schema": "consumer-deployment02-CPU-source-candidate-report-v1",
+  "source_copy_bindings": 128,
+  "source_differences": [
+    "EXACT_SOURCE_DIFF.patch",
+    "GENERATION02_EXACT_DIFF.patch"
+  ],
+  "source_freeze": {
+    "generation": 2,
+    "input_freeze_sha256": "2b48c35787384e84be9196c474d0756d3a85dda496619ef1846016b43adb5248",
+    "live_runtime_source_changed": false,
+    "predecessor_source_freeze_sha256": "926fed4b2e87a6e01d0b56524e792c46ffef70eb2711d4e2a291bf7253373fa1",
+    "prospective_only": true,
+    "selected_controls": [
+      "C07"
+    ],
+    "source_freeze_sha256": "84e7d2ec9cead355a09b1651d6e8381b63dddd53c6c1731668edfa0f6de65f6b",
+    "tests_started": false
+  },
+  "status": "SEALED_REVIEW_CANDIDATE_NOT_MAYOR_DEPLOYMENT_ACCEPTED",
+  "validation": "9 unique controls/Python resolved:8 generation01 plus1 corrected generation02;10 executions/Python,2 original harness failures preserved."
+}

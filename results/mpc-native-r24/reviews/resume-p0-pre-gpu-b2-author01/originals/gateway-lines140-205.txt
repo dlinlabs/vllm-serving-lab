@@ -1,0 +1,66 @@
+        if telemetry.diagnostics is not None or MPC_OWNER_LEDGER_ENABLED:
+            async def final_drain():
+                if telemetry.diagnostics is not None:
+                    await telemetry.diagnostics.stop()
+                telemetry.sample(await snapshot_metrics())
+                await telemetry.flush(TELEMETRY_JSONL)
+                if MPC_OWNER_LEDGER_ENABLED and telemetry.records:
+                    await telemetry.flush(TELEMETRY_JSONL)
+            results.extend(await asyncio.gather(final_drain(), return_exceptions=True))
+        errors = [result for result in results if isinstance(result, BaseException)]
+        telemetry.enabled = False
+        if TELEMETRY_STATUS_JSON:
+            failed = (not started or errors or telemetry.dropped or telemetry.write_errors or
+                      (telemetry.diagnostics is not None and not telemetry.diagnostics.health()['complete']))
+            status = dict(run_id=telemetry.run_id, status='failed' if failed else 'closed', closed_at=time.monotonic(),
+                          dropped=telemetry.dropped, write_errors=telemetry.write_errors)
+            if errors:
+                status['error_types'] = [type(error).__name__ for error in errors]
+            if telemetry.diagnostics is not None:
+                status.update(diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+                              diagnostics=telemetry.diagnostics.health())
+            if MPC_OWNER_LEDGER_ENABLED:
+                complete = (
+                    len(mpc_requests) == state["current_in_flight"]
+                    and math.isclose(math.fsum(mark.cost for mark in mpc_requests.values()),
+                                     state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9)
+                )
+                status.update(
+                    mpc_ledger_schema_version=2, mpc_producer_final_sequence=mpc_sequence,
+                    mpc_remaining_requests=len(mpc_requests), mpc_ledger_complete=complete,
+                    mpc_unflushed_records=len(telemetry.records),
+                )
+                if not complete or state["current_in_flight"]:
+                    status["status"] = "failed"
+            def persist_status():
+                if MPC_OWNER_LEDGER_ENABLED:
+                    # Seal after the loop-owned writer has stopped; this is not an fsync guarantee.
+                    digest = hashlib.sha256()
+                    size = 0
+                    last_sequence = 0
+                    ledger_rows = 0
+                    contiguous = True
+                    with Path(TELEMETRY_JSONL).open("rb") as handle:
+                        for line in handle:
+                            digest.update(line)
+                            size += len(line)
+                            row = json.loads(line)
+                            contiguous = contiguous and row.get("run_id") == telemetry.run_id
+                            if row.get("event") == "mpc_ledger":
+                                sequence = row.get("sequence")
+                                contiguous = contiguous and (
+                                    row.get("ledger_schema_version") == 2
+                                    and type(sequence) is int and sequence == last_sequence + 1
+                                )
+                                last_sequence = sequence
+                                ledger_rows += 1
+                    status["mpc_ledger_complete"] = (
+                        status["mpc_ledger_complete"] and contiguous
+                        and last_sequence == status["mpc_producer_final_sequence"]
+                        and not status["mpc_unflushed_records"]
+                    )
+                    if not status["mpc_ledger_complete"]:
+                        status["status"] = "failed"
+                    status.update(telemetry_file_sha256=digest.hexdigest(),
+                                  telemetry_file_bytes=size, mpc_final_sequence=last_sequence,
+                                  mpc_ledger_rows_written=ledger_rows)

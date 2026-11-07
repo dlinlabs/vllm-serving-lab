@@ -1,0 +1,265 @@
+{
+  "capture_begin_record": {
+    "auth_values_captured": false,
+    "body_complete": true,
+    "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "client_headers_at": 912885.808922437,
+    "client_receive_at": 912885.808922437,
+    "client_send_at": 912885.808901837,
+    "credential_removed": false,
+    "error_type": null,
+    "http_status": 200,
+    "method": "POST",
+    "path": "/pr33-native/batch",
+    "request_body": "{\"operation\": \"begin\", \"trial_id\": \"nv2-team16-cut-consumer02-fixed32\"}",
+    "response_body_base64": "eyJiZWdpbiI6IHsiZXh0ZXJuYWwiOiB0cnVlfSwgImJyaWRnZV9zaGEyNTYiOiAiNWQ3NmQ5OTQ5MjFiYjE2MDg4Y2FiZjliOGY5ZWJlODg0M2MxN2Y3YmFjYjRiMWRjOTc5YmYyNTVhZDhjY2VmOCIsICJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21tYW5kX3N0YXJ0ZWRfYXQiOiA5MTI4ODUuODA4OTIxNTM3LCAicGxhbl9zaGEyNTYiOiAiOWNjNDcyN2EyNTFlNDIyOTZjYTU2YjI5OGExM2UzZDI5OWY2MWMwOWZlZjc3MzgyNTRiZTQ4Mzk3YjNiZDQzYiIsICJydW5faWQiOiAic3ludGhldGljLWJhdGNoLWNhcHR1cmUiLCAic2NoZW1hIjogIm5hdGl2ZS12Mi1iYXRjaC1jYXB0dXJlLXYxIiwgInNvdXJjZV9jb21taXQiOiAiMTA0ZTY1YTY5ZGY3Mzk5N2I5NzdiY2UyNTg4YjY1NWFlNzE0ZjQ1ZCIsICJ0cmlhbF9pZCI6ICJudjItdGVhbTE2LWN1dC1jb25zdW1lcjAyLWZpeGVkMzIifQ==",
+    "response_body_sha256": "4eda5a48dc332ea0015506576884479f7170053e55a3993ffbf0d25a5408616d",
+    "response_headers": {}
+  },
+  "capture_metadata_record": {
+    "auth_values_captured": false,
+    "body_complete": true,
+    "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "client_headers_at": 912885.808859337,
+    "client_receive_at": 912885.808859337,
+    "client_send_at": 912885.808825537,
+    "credential_removed": false,
+    "error_type": null,
+    "http_status": 200,
+    "method": "POST",
+    "path": "/pr33-native/batch",
+    "request_body": "{\"operation\": \"metadata\"}",
+    "response_body_base64": "eyJicmlkZ2Vfc2hhMjU2IjogIjVkNzZkOTk0OTIxYmIxNjA4OGNhYmY5YjhmOWViZTg4NDNjMTdmN2JhY2I0YjFkYzk3OWJmMjU1YWQ4Y2NlZjgiLCAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLCAiY29tbWFuZF9zdGFydGVkX2F0IjogOTEyODg1LjgwODgyNjMzNywgInBsYW5fc2hhMjU2IjogIjljYzQ3MjdhMjUxZTQyMjk2Y2E1NmIyOThhMTNlM2QyOTlmNjFjMDlmZWY3NzM4MjU0YmU0ODM5N2IzYmQ0M2IiLCAicnVuX2lkIjogInN5bnRoZXRpYy1iYXRjaC1jYXB0dXJlIiwgInJ1bnRpbWUiOiB7InBpcGVsaW5lX3BhcmFsbGVsX3NpemUiOiAxLCAicHJvY2Vzc19pZCI6IDExMSwgInNvdXJjZSI6IHsiZmlsZXMiOiB7ImNvbXBpbGF0aW9uL2JyZWFrYWJsZV9jdWRhZ3JhcGgucHkiOiAiM2NjNDI3NjEyYTA4ZTJiOWIzZmVlNDc1NDgwMjY0MDBjMWQwNzc2ZTJkNDc0NzUzNWU1OWVmNTUxMmJkZjFlOCIsICJjb21waWxhdGlvbi9jdWRhX2dyYXBoLnB5IjogIjA1Yzg2MzkyZDdmYWU5NjdhYzczMDc2ZGJhN2UwMTk5MGEwZTNhZTYxOWU0ODY2NDUwYTBjMWJlNTZiZDExOTIiLCAiY29uZmlnL21vZGVsLnB5IjogImY0MTY4YjY3Y2M5M2NlNzJmZjJhNmQ0YzY2OTc0MjIzZTMyZmQwZjFmYWI0YzA1ZTQ0YmQ2OGEyNzVlMThkNjkiLCAiY29uZmlnL3NjaGVkdWxlci5weSI6ICI4MjIxNzlkYTYyYmU0YmNhMDYxOWM4NTkwMDgyYWUwOTEyM2Y1YzQ0MTVmOWNjMjAzN2JlNjczNzQ4MjM5ZWRiIiwgImNvbmZpZy92bGxtLnB5IjogIjk1NmI4MTJlNWE3MTliY2JmYTNhMzk1ODgwMTM2MWIzOGI5YzkyOGM5NmI4YzA3MzMxMWJiYjk2Mzc2ZGZiN2EiLCAiZW50cnlwb2ludHMvbGF1bmNoZXJzL2FwaV9zZXJ2ZXIvZW50cnkucHkiOiAiZGI2ODlmODQ4NmU1ZDJjOWViNTlkMzQ3ZTAzYTI3Y2U4MzdkMDE0ZjhkM2Q3Zjg0ZDU1YTBlMzgyODEzY2E4NCIsICJlbnRyeXBvaW50cy9vcGVuYWkvY29tcGxldGlvbi9wcm90b2NvbC5weSI6ICI1Zjc5MzA2MzVmZDM5MjQ4MjYwMTUyMTEwMzJmYjI5ODIwNmIyN2M3ZjA0Y2Q2Y2QyMjI0YmIxMjhlNGEzYTUwIiwgImVudHJ5cG9pbnRzL29wZW5haS9jb21wbGV0aW9uL3NlcnZpbmcucHkiOiAiNzVkMDVkZGRkZjMwMzczNGEwNzhhM2U0MmZjYjE3M2ZlZjU4ZWE1NmRhMDliYzBiNWM3NTI1Y2I5YmJiZjUyNyIsICJlbnZzLnB5IjogImZiZDM3MGIyZjU2ZmY3OThkMzczZTg1NzA1YzllMDQ0Y2NhZTg5M2VmOTc0ZjI4MDBlZWM0ZWY2ZjJiNGZiN2YiLCAiZm9yd2FyZF9jb250ZXh0LnB5IjogImNjMTQ3MzQ3N2RjYzdiNzYyYzM5MDFiMjVjYzdiZjM1YzA2YTJjNDJmMTkzMTM2ZmVkNTUzYWJmNmZlMzNmMGUiLCAicGx1Z2lucy9fX2luaXRfXy5weSI6ICJmYjZlNmVlNDMyYzVhNGFlMjA3YWFmZmU0YjU0NmFjYTkzODFmNTZlZTg0OThiMGEzZTBkOWFmMmQyODlkMDIzIiwgInBsdWdpbnMvZW5kcG9pbnRfcGx1Z2lucy9pbnRlcmZhY2UucHkiOiAiOTI5MzYxNmNjZDNjZGY3MjVmYTA4N2QzZjc2YTUxOGRiYTg3MWVmMmM3OTY0NDY5OTBmYTJhMGE1ZmMxNTllZSIsICJzYW1wbGluZ19wYXJhbXMucHkiOiAiZjIxZWZjOThiZjhjZThhYWI4OGViNjdhZGI0MjA3Mjg1ZTUwOWExNjdkOTc2ZTE0ZDNlMmU4MjgyZTAyNGJlYSIsICJ2MS9jb3JlL3NjaGVkL2FzeW5jX3NjaGVkdWxlci5weSI6ICJlNTg2YTBlZjNjNjc3OGJlNTZhOTNlN2Y5YmI3MTJkNGRlOWRlNmU3ZDdmZTdlM2UxZDUxZGFlODNlY2ZjNTA4IiwgInYxL2NvcmUvc2NoZWQvb3V0cHV0LnB5IjogIjNhNjZjOGVmYWVmZTEwYzU3MmY2ZjMzY2YxZjhhYTQ2MTA3NThjOTQ1MTMwY2FkNjJlYjlmNzMzMTAwNTY3N2MiLCAidjEvY29yZS9zY2hlZC9zY2hlZHVsZXIucHkiOiAiYzFkYjQ1ZjNiYmFkM2E4NzVkZDg2MzgzMzFiODg3MGM0MzgwYWMxYWI0NzM0MjY1YmE1Yzg2MzgzM2E4Mjg4NCIsICJ2MS9jdWRhZ3JhcGhfZGlzcGF0Y2hlci5weSI6ICI1MWY2MzI3NTNhZjcyOWFlZWU2Y2U0YTgwMmQ5ZDc0YjY0ZjIyZWVmMDJhNTI0ZjM2ZTJhMjRiMDdlZjBjZjYzIiwgInYxL2VuZ2luZS9fX2luaXRfXy5weSI6ICI0ZTU5ODI4Nzg3NjM0MTIzMDI2YTZiNDI0ZjQ4YzIxZDY5MTkxM2RkMzM4YjU5ZGQxM2YyNWZhMjYwZjIyODRiIiwgInYxL2VuZ2luZS9hc3luY19sbG0ucHkiOiAiNTJjYmY0MDRmMWRiYzk5YzZiZWJmNGE1MGE3ZWIxOGZmODQyYTFmNTMxMDZhNDVmMzY1NTIzMTkyZDgxNmJlMSIsICJ2MS9lbmdpbmUvY29yZS5weSI6ICIyNjhiZjQwNTM0YTg1MzgxMjg2N2FlOGU4MDA0MGYxOTA5ODNjYjM2NGI0MTE4MmI1NTk2OWFhY2UyMGM5M2Y1IiwgInYxL2VuZ2luZS9jb3JlX2NsaWVudC5weSI6ICJmZDZjYTBjYjc0OTliMzA4NmVlZjJmYzU3Njc0YjdhY2U1NmVmMWM2NDhmMDllOTJlMTQ0YjI1NWI3OTAxOGY4IiwgInYxL2VuZ2luZS9vdXRwdXRfcHJvY2Vzc29yLnB5IjogImU0N2I4NmNkNjljZTFjMWUzZjUzZGFjNjU1ZWFhNzVjMzJhNDA1N2QxMGY0YTFkYjE2YmI4M2EzOTdmMmEzMjkiLCAidjEvZXhlY3V0b3IvdW5pcHJvY19leGVjdXRvci5weSI6ICIzY2IwMzliODBmZTliMDNkYzExMjJmOTNjMWY4YTQwOThlZjEzNTUxMDRiMzE3ZmY2ZGYyNTM1OGY0MzQ5NDk0IiwgInYxL21ldHJpY3MvbG9nZ2Vycy5weSI6ICJjMTJiNGZiZWJmZTg4NmI2OTcxMjdmMTExNGVhYTBiYjgzYzU0YTc4Njc1OTE5ZDE3OGI2MTljM2Q4ZDVkNjU1IiwgInYxL21ldHJpY3Mvc3RhdHMucHkiOiAiYWYxOTgzZGRjMzJmYTRkMzI4NGU3MjIxMmM2NTI1ZGFmOTYxZGQ4NDQyOTAyM2EwMmQ2MTJiNjhiMzExMmNmMyIsICJ2MS9yZXF1ZXN0LnB5IjogImRhNjEwZDUyMDNlNzJkMmQ1MjRhZGM1ZmIzOWRmMTE1MDJhMjM1MjBmMmYzMWQ5YTQ0Y2YxM2QzNDNmOWMyNWQiLCAidjEvd29ya2VyL2dwdS9hc3luY191dGlscy5weSI6ICI3N2UxN2E0NTcwZWFkMmJlMzBhZTliMDA4ODhjZjA3N2EzYjg3MzAxOGMxMmNhMDU0OWI4NTNiZmRhMDJjMWJhIiwgInYxL3dvcmtlci9ncHUvYXR0bl91dGlscy5weSI6ICJiOWI4MWU1OWRkYTI3MjBiMWY5YzQzNDQ3MTM4MWY4NzkyMjg4MzI0NDNlNTI3NTZlNDY5YjRhZDQ5MDU4ODhmIiwgInYxL3dvcmtlci9ncHUvY3VkYWdyYXBoX3V0aWxzLnB5IjogIjZlOWMwNDI4OTA2MDM1MzVlMzAwYTQwZGY4ZWUxNTlkYmVkMTA1OGE2NGE4M2FlNTBmZjAzMjllMzMyZTA1ZmYiLCAidjEvd29ya2VyL2dwdS9kcF91dGlscy5weSI6ICJlMjY4NjdiYzg5ZTZiZmM5MzNjYWJjNWVkMTNlNWRjN2I4ZDJkMzAzMDExOGNhMWNhNjRjODc4NWRhYmMwZmMxIiwgInYxL3dvcmtlci9ncHUvaW5wdXRfYmF0Y2gucHkiOiAiZDVkZDk1NmViMzE5YmQ2OWRkOWU3NjIwNDc4MzNkODFhZDQwYjIxZmNlNjE5ZmNiMjEzMzc1OWU3MzYyMDY5NCIsICJ2MS93b3JrZXIvZ3B1L21vZGVsX3J1bm5lci5weSI6ICIxNzRjOTNkYjkyMWMyM2NmMDM5NmVlZTQ3NjRiZTI1YjJiZDJkNGI2YTA2ZTlmYTQxY2UzNTk4Yjg4NGNlOGNlIiwgInYxL3dvcmtlci9ncHUvc2FtcGxlL291dHB1dC5weSI6ICJkNmUyOThjMGYxOTdkNDg3YThmYWFmNzIwMGY1MDBmYTgzZGYxZDdhNGJiZjQzMzljYWRkNmExODAwOGY3ZjljIiwgInYxL3dvcmtlci9ncHUvc3RhdGVzLnB5IjogIjk5NDE4ZjVkZjQzY2E2MTJkZWQ3MjYwOWZlZTAxMTYyMGIwNjViMmNhYjJmMjQ5Y2NiMzg3MDk2YmY0YWU3MWEiLCAidjEvd29ya2VyL2dwdV9tb2RlbF9ydW5uZXIucHkiOiAiODdjMjlkMDhjMGJiZjY2OTkzZDhiOTg0ODExZTczMjVlMzVlNjQzNjI0MmE3NzNmZWI1NWVjODhmMTZiMmM1MSIsICJ2MS93b3JrZXIvZ3B1X3dvcmtlci5weSI6ICI2OTk0NDM2ZTQ1NDdjMDk5NmFiNTU1YjNlODE0ZThjY2VhMjZiNjUwZGZjMWIzNzhiOTdkNjQwNzQ1MzA5MzQ3IiwgInYxL3dvcmtlci91dGlscy5weSI6ICIwY2EzZWM2YmY0ZDIwMDc2MTQ1YjdmZTY0ZTU2NDk2MmFkZWJlZGM4Zjc1YTg1NmI1MTdiYTBiMmYyZDc3YWNmIiwgInYxL3dvcmtlci93b3JrZXJfYmFzZS5weSI6ICI0YTFhNTI2NmI5MTJmZTk3OTkxZDhkYzg5ZDkyYjkyMzk5MGRhOWY2Y2I0YjgxN2QwMGQ1MmU5YzBkMjZkZDdjIn0sICJ1cHN0cmVhbSI6ICJodHRwczovL2dpdGh1Yi5jb20vdmxsbS1wcm9qZWN0L3ZsbG0vdHJlZS92MC4zMC4wIiwgInZlcnNpb24iOiAiMC4zMC4wIn0sICJ0ZW5zb3JfcGFyYWxsZWxfc2l6ZSI6IDEsICJ3b3JrZXJzIjogW3sic291cmNlIjogeyJmaWxlcyI6IHsiY29tcGlsYXRpb24vYnJlYWthYmxlX2N1ZGFncmFwaC5weSI6ICIzY2M0Mjc2MTJhMDhlMmI5YjNmZWU0NzU0ODAyNjQwMGMxZDA3NzZlMmQ0NzQ3NTM1ZTU5ZWY1NTEyYmRmMWU4IiwgImNvbXBpbGF0aW9uL2N1ZGFfZ3JhcGgucHkiOiAiMDVjODYzOTJkN2ZhZTk2N2FjNzMwNzZkYmE3ZTAxOTkwYTBlM2FlNjE5ZTQ4NjY0NTBhMGMxYmU1NmJkMTE5MiIsICJjb25maWcvbW9kZWwucHkiOiAiZjQxNjhiNjdjYzkzY2U3MmZmMmE2ZDRjNjY5NzQyMjNlMzJmZDBmMWZhYjRjMDVlNDRiZDY4YTI3NWUxOGQ2OSIsICJjb25maWcvc2NoZWR1bGVyLnB5IjogIjgyMjE3OWRhNjJiZTRiY2EwNjE5Yzg1OTAwODJhZTA5MTIzZjVjNDQxNWY5Y2MyMDM3YmU2NzM3NDgyMzllZGIiLCAiY29uZmlnL3ZsbG0ucHkiOiAiOTU2YjgxMmU1YTcxOWJjYmZhM2EzOTU4ODAxMzYxYjM4YjljOTI4Yzk2YjhjMDczMzExYmJiOTYzNzZkZmI3YSIsICJlbnRyeXBvaW50cy9sYXVuY2hlcnMvYXBpX3NlcnZlci9lbnRyeS5weSI6ICJkYjY4OWY4NDg2ZTVkMmM5ZWI1OWQzNDdlMDNhMjdjZTgzN2QwMTRmOGQzZDdmODRkNTVhMGUzODI4MTNjYTg0IiwgImVudHJ5cG9pbnRzL29wZW5haS9jb21wbGV0aW9uL3Byb3RvY29sLnB5IjogIjVmNzkzMDYzNWZkMzkyNDgyNjAxNTIxMTAzMmZiMjk4MjA2YjI3YzdmMDRjZDZjZDIyMjRiYjEyOGU0YTNhNTAiLCAiZW50cnlwb2ludHMvb3BlbmFpL2NvbXBsZXRpb24vc2VydmluZy5weSI6ICI3NWQwNWRkZGRmMzAzNzM0YTA3OGEzZTQyZmNiMTczZmVmNThlYTU2ZGEwOWJjMGI1Yzc1MjVjYjliYmJmNTI3IiwgImVudnMucHkiOiAiZmJkMzcwYjJmNTZmZjc5OGQzNzNlODU3MDVjOWUwNDRjY2FlODkzZWY5NzRmMjgwMGVlYzRlZjZmMmI0ZmI3ZiIsICJmb3J3YXJkX2NvbnRleHQucHkiOiAiY2MxNDczNDc3ZGNjN2I3NjJjMzkwMWIyNWNjN2JmMzVjMDZhMmM0MmYxOTMxMzZmZWQ1NTNhYmY2ZmUzM2YwZSIsICJwbHVnaW5zL19faW5pdF9fLnB5IjogImZiNmU2ZWU0MzJjNWE0YWUyMDdhYWZmZTRiNTQ2YWNhOTM4MWY1NmVlODQ5OGIwYTNlMGQ5YWYyZDI4OWQwMjMiLCAicGx1Z2lucy9lbmRwb2ludF9wbHVnaW5zL2ludGVyZmFjZS5weSI6ICI5MjkzNjE2Y2NkM2NkZjcyNWZhMDg3ZDNmNzZhNTE4ZGJhODcxZWYyYzc5NjQ0Njk5MGZhMmEwYTVmYzE1OWVlIiwgInNhbXBsaW5nX3BhcmFtcy5weSI6ICJmMjFlZmM5OGJmOGNlOGFhYjg4ZWI2N2FkYjQyMDcyODVlNTA5YTE2N2Q5NzZlMTRkM2UyZTgyODJlMDI0YmVhIiwgInYxL2NvcmUvc2NoZWQvYXN5bmNfc2NoZWR1bGVyLnB5IjogImU1ODZhMGVmM2M2Nzc4YmU1NmE5M2U3ZjliYjcxMmQ0ZGU5ZGU2ZTdkN2ZlN2UzZTFkNTFkYWU4M2VjZmM1MDgiLCAidjEvY29yZS9zY2hlZC9vdXRwdXQucHkiOiAiM2E2NmM4ZWZhZWZlMTBjNTcyZjZmMzNjZjFmOGFhNDYxMDc1OGM5NDUxMzBjYWQ2MmViOWY3MzMxMDA1Njc3YyIsICJ2MS9jb3JlL3NjaGVkL3NjaGVkdWxlci5weSI6ICJjMWRiNDVmM2JiYWQzYTg3NWRkODYzODMzMWI4ODcwYzQzODBhYzFhYjQ3MzQyNjViYTVjODYzODMzYTgyODg0IiwgInYxL2N1ZGFncmFwaF9kaXNwYXRjaGVyLnB5IjogIjUxZjYzMjc1M2FmNzI5YWVlZTZjZTRhODAyZDlkNzRiNjRmMjJlZWYwMmE1MjRmMzZlMmEyNGIwN2VmMGNmNjMiLCAidjEvZW5naW5lL19faW5pdF9fLnB5IjogIjRlNTk4Mjg3ODc2MzQxMjMwMjZhNmI0MjRmNDhjMjFkNjkxOTEzZGQzMzhiNTlkZDEzZjI1ZmEyNjBmMjI4NGIiLCAidjEvZW5naW5lL2FzeW5jX2xsbS5weSI6ICI1MmNiZjQwNGYxZGJjOTljNmJlYmY0YTUwYTdlYjE4ZmY4NDJhMWY1MzEwNmE0NWYzNjU1MjMxOTJkODE2YmUxIiwgInYxL2VuZ2luZS9jb3JlLnB5IjogIjI2OGJmNDA1MzRhODUzODEyODY3YWU4ZTgwMDQwZjE5MDk4M2NiMzY0YjQxMTgyYjU1OTY5YWFjZTIwYzkzZjUiLCAidjEvZW5naW5lL2NvcmVfY2xpZW50LnB5IjogImZkNmNhMGNiNzQ5OWIzMDg2ZWVmMmZjNTc2NzRiN2FjZTU2ZWYxYzY0OGYwOWU5MmUxNDRiMjU1Yjc5MDE4ZjgiLCAidjEvZW5naW5lL291dHB1dF9wcm9jZXNzb3IucHkiOiAiZTQ3Yjg2Y2Q2OWNlMWMxZTNmNTNkYWM2NTVlYWE3NWMzMmE0MDU3ZDEwZjRhMWRiMTZiYjgzYTM5N2YyYTMyOSIsICJ2MS9leGVjdXRvci91bmlwcm9jX2V4ZWN1dG9yLnB5IjogIjNjYjAzOWI4MGZlOWIwM2RjMTEyMmY5M2MxZjhhNDA5OGVmMTM1NTEwNGIzMTdmZjZkZjI1MzU4ZjQzNDk0OTQiLCAidjEvbWV0cmljcy9sb2dnZXJzLnB5IjogImMxMmI0ZmJlYmZlODg2YjY5NzEyN2YxMTE0ZWFhMGJiODNjNTRhNzg2NzU5MTlkMTc4YjYxOWMzZDhkNWQ2NTUiLCAidjEvbWV0cmljcy9zdGF0cy5weSI6ICJhZjE5ODNkZGMzMmZhNGQzMjg0ZTcyMjEyYzY1MjVkYWY5NjFkZDg0NDI5MDIzYTAyZDYxMmI2OGIzMTEyY2YzIiwgInYxL3JlcXVlc3QucHkiOiAiZGE2MTBkNTIwM2U3MmQyZDUyNGFkYzVmYjM5ZGYxMTUwMmEyMzUyMGYyZjMxZDlhNDRjZjEzZDM0M2Y5YzI1ZCIsICJ2MS93b3JrZXIvZ3B1L2FzeW5jX3V0aWxzLnB5IjogIjc3ZTE3YTQ1NzBlYWQyYmUzMGFlOWIwMDg4OGNmMDc3YTNiODczMDE4YzEyY2EwNTQ5Yjg1M2JmZGEwMmMxYmEiLCAidjEvd29ya2VyL2dwdS9hdHRuX3V0aWxzLnB5IjogImI5YjgxZTU5ZGRhMjcyMGIxZjljNDM0NDcxMzgxZjg3OTIyODgzMjQ0M2U1Mjc1NmU0NjliNGFkNDkwNTg4OGYiLCAidjEvd29ya2VyL2dwdS9jdWRhZ3JhcGhfdXRpbHMucHkiOiAiNmU5YzA0Mjg5MDYwMzUzNWUzMDBhNDBkZjhlZTE1OWRiZWQxMDU4YTY0YTgzYWU1MGZmMDMyOWUzMzJlMDVmZiIsICJ2MS93b3JrZXIvZ3B1L2RwX3V0aWxzLnB5IjogImUyNjg2N2JjODllNmJmYzkzM2NhYmM1ZWQxM2U1ZGM3YjhkMmQzMDMwMTE4Y2ExY2E2NGM4Nzg1ZGFiYzBmYzEiLCAidjEvd29ya2VyL2dwdS9pbnB1dF9iYXRjaC5weSI6ICJkNWRkOTU2ZWIzMTliZDY5ZGQ5ZTc2MjA0NzgzM2Q4MWFkNDBiMjFmY2U2MTlmY2IyMTMzNzU5ZTczNjIwNjk0IiwgInYxL3dvcmtlci9ncHUvbW9kZWxfcnVubmVyLnB5IjogIjE3NGM5M2RiOTIxYzIzY2YwMzk2ZWVlNDc2NGJlMjViMmJkMmQ0YjZhMDZlOWZhNDFjZTM1OThiODg0Y2U4Y2UiLCAidjEvd29ya2VyL2dwdS9zYW1wbGUvb3V0cHV0LnB5IjogImQ2ZTI5OGMwZjE5N2Q0ODdhOGZhYWY3MjAwZjUwMGZhODNkZjFkN2E0YmJmNDMzOWNhZGQ2YTE4MDA4ZjdmOWMiLCAidjEvd29ya2VyL2dwdS9zdGF0ZXMucHkiOiAiOTk0MThmNWRmNDNjYTYxMmRlZDcyNjA5ZmVlMDExNjIwYjA2NWIyY2FiMmYyNDljY2IzODcwOTZiZjRhZTcxYSIsICJ2MS93b3JrZXIvZ3B1X21vZGVsX3J1bm5lci5weSI6ICI4N2MyOWQwOGMwYmJmNjY5OTNkOGI5ODQ4MTFlNzMyNWUzNWU2NDM2MjQyYTc3M2ZlYjU1ZWM4OGYxNmIyYzUxIiwgInYxL3dvcmtlci9ncHVfd29ya2VyLnB5IjogIjY5OTQ0MzZlNDU0N2MwOTk2YWI1NTViM2U4MTRlOGNjZWEyNmI2NTBkZmMxYjM3OGI5N2Q2NDA3NDUzMDkzNDciLCAidjEvd29ya2VyL3V0aWxzLnB5IjogIjBjYTNlYzZiZjRkMjAwNzYxNDViN2ZlNjRlNTY0OTYyYWRlYmVkYzhmNzVhODU2YjUxN2JhMGIyZjJkNzdhY2YiLCAidjEvd29ya2VyL3dvcmtlcl9iYXNlLnB5IjogIjRhMWE1MjY2YjkxMmZlOTc5OTFkOGRjODlkOTJiOTIzOTkwZGE5ZjZjYjRiODE3ZDAwZDUyZTljMGQyNmRkN2MifSwgInVwc3RyZWFtIjogImh0dHBzOi8vZ2l0aHViLmNvbS92bGxtLXByb2plY3QvdmxsbS90cmVlL3YwLjMwLjAiLCAidmVyc2lvbiI6ICIwLjMwLjAifX1dfSwgInNjaGVtYSI6ICJuYXRpdmUtdjItYmF0Y2gtY2FwdHVyZS12MSIsICJzb3VyY2VfY29tbWl0IjogIjEwNGU2NWE2OWRmNzM5OTdiOTc3YmNlMjU4OGI2NTVhZTcxNGY0NWQiLCAid29ya2VyX2Nsb2NrcyI6IFt7ImJyaWRnZV9zaGEyNTYiOiAiNWQ3NmQ5OTQ5MjFiYjE2MDg4Y2FiZjliOGY5ZWJlODg0M2MxN2Y3YmFjYjRiMWRjOTc5YmYyNTVhZDhjY2VmOCIsICJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJwcm9jZXNzX2lkIjogMTExfV19",
+    "response_body_sha256": "6cd28dd308e25c38decf6a7641a90a5fdc9c0005db5ec949118cafb5911f65f2",
+    "response_headers": {}
+  },
+  "cas_command_record": {
+    "auth_values_captured": false,
+    "body_complete": true,
+    "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "client_headers_at": 912885.806965737,
+    "client_receive_at": 912885.806965737,
+    "client_send_at": 912885.806840337,
+    "credential_removed": false,
+    "error_type": null,
+    "http_status": 200,
+    "method": "POST",
+    "path": "/admin/mpc/budget",
+    "request_body": "{\"budget\": 32, \"clock_domain\": \"linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]\", \"expected_version\": 0, \"identity\": {\"calibration_version\": \"unqualified\", \"cost_hash\": \"c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8\", \"implementation_hash\": \"5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea\", \"model_version\": \"synthetic\", \"support_hash\": \"unqualified\"}, \"not_after\": 912886.299269237, \"operation_id\": \"opteam16-cut-consumer02\", \"run_id\": \"synthetic-gateway\", \"schema\": \"mpc-admission-v1\"}",
+    "response_body_base64": "eyJhcHBsaWVkX2F0IjogOTEyODg1LjgwNjk0NDczNywgImJ1ZGdldCI6IDMyLCAiYnVkZ2V0X3ZlcnNpb24iOiAxLCAiY2xvY2tfZG9tYWluIjogImxpbnV4LW1vbm90b25pYzpiZjI1ZTIxNS0xMzc3LTQ1ODUtYTVmYS1mNTE4MWY5NmY0Njc6dGltZTpbNDAyNjUzMTgzNF0iLCAib3BlcmF0aW9uX2lkIjogIm9wdGVhbTE2LWN1dC1jb25zdW1lcjAyIiwgInByZXZpb3VzX2J1ZGdldCI6IDMyLCAicnVuX2lkIjogInN5bnRoZXRpYy1nYXRld2F5IiwgInNjaGVtYSI6ICJtcGMtYWRtaXNzaW9uLXYxIiwgInN0YXR1cyI6ICJhcHBsaWVkIn0=",
+    "response_body_sha256": "5e5b8452f51792b079507fdce44be303538e2db7e38cde0077524f233684d322",
+    "response_headers": {}
+  },
+  "drain_records": [
+    {
+      "auth_values_captured": false,
+      "body_complete": true,
+      "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "client_headers_at": 912885.799086137,
+      "client_receive_at": 912885.799086137,
+      "client_send_at": 912885.798907437,
+      "credential_removed": false,
+      "error_type": null,
+      "http_status": 200,
+      "method": "GET",
+      "path": "/pr33-native/queue-state",
+      "request_body": null,
+      "response_body_base64": "eyJiYXNlIjogeyJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21wbGV0ZSI6IHRydWUsICJmcm9udGVuZF9zYW1wbGVkX2F0IjogOTEyODg1Ljc5OTA4NTQzNywgImZyb250ZW5kX3VuZmluaXNoZWQiOiAwLCAib2JzZXJ2ZXJfc2hhMjU2IjogIjc3NjMzZGM3NjUyMDY2ZTQ1Yjc2ODBkMjk3ZDNlMzZkZGI5N2EzZTEyMjIyZGU5ZjUyNmE3NmI5YTAxZDY2YjQiLCAib3JwaGFuZWQiOiAwLCAicGVuZGluZ19iYXRjaGVzIjogMCwgInJlcXVlc3RzIjogW10sICJydW5faWQiOiAic3ludGhldGljLW5hdGl2ZSIsICJydW5uaW5nIjogMCwgInNhbXBsZWRfYXQiOiA5MTI4ODUuNzk5MDc5NjM3LCAic2NoZW1hIjogInByMzMtbmF0aXZlLXJlYWQtb25seS12MSIsICJ3YWl0aW5nIjogMH0sICJjb21wbGV0ZSI6IHRydWUsICJxdWV1ZV9vYnNlcnZlcl9zaGEyNTYiOiAiZTA3ODdhMmNkMmQwYjRjZmI1YWRhMTRjMDA0ZDFkNzZhNjJkZGNiZmIxMjBiNWNlYTlkZTAyYWYzOGExYWE5MyIsICJxdWV1ZV9vbGRlc3RfZmlyc3QiOiBbXSwgInF1ZXVlZF9naG9zdF9yZXF1ZXN0X2lkcyI6IFtdLCAicmVmdXNhbF9yZWFzb25zIjogW10sICJzYW1wbGVfZmluaXNoZWRfYXQiOiA5MTI4ODUuNzk5MDg1MDM3LCAic2FtcGxlX3N0YXJ0ZWRfYXQiOiA5MTI4ODUuNzk4OTA5MjM3LCAic2NoZWR1bGVyX3N0YXRlIjogeyJyZXF1ZXN0cyI6IHt9LCAicnVubmluZyI6IFtdLCAid2FpdGluZyI6IFtdfSwgInNjaGVtYSI6ICJyMjMtbmF0aXZlLXF1ZXVlLXJlYWQtb25seS12MSIsICJza2lwcGVkX3dhaXRpbmciOiBbXSwgInN0cmVhbWluZ193YWl0aW5nIjogMH0=",
+      "response_body_sha256": "bee0981dfe61d0ed25d6cfa9f68b5f13a9b94924d11250fd5a5b35256ddc01bd",
+      "response_headers": {}
+    },
+    {
+      "auth_values_captured": false,
+      "body_complete": true,
+      "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "client_headers_at": 912885.799238037,
+      "client_receive_at": 912885.799238037,
+      "client_send_at": 912885.799117437,
+      "credential_removed": false,
+      "error_type": null,
+      "http_status": 200,
+      "method": "GET",
+      "path": "/pr33-native/queue-state",
+      "request_body": null,
+      "response_body_base64": "eyJiYXNlIjogeyJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21wbGV0ZSI6IHRydWUsICJmcm9udGVuZF9zYW1wbGVkX2F0IjogOTEyODg1Ljc5OTIzNzYzNywgImZyb250ZW5kX3VuZmluaXNoZWQiOiAwLCAib2JzZXJ2ZXJfc2hhMjU2IjogIjc3NjMzZGM3NjUyMDY2ZTQ1Yjc2ODBkMjk3ZDNlMzZkZGI5N2EzZTEyMjIyZGU5ZjUyNmE3NmI5YTAxZDY2YjQiLCAib3JwaGFuZWQiOiAwLCAicGVuZGluZ19iYXRjaGVzIjogMCwgInJlcXVlc3RzIjogW10sICJydW5faWQiOiAic3ludGhldGljLW5hdGl2ZSIsICJydW5uaW5nIjogMCwgInNhbXBsZWRfYXQiOiA5MTI4ODUuNzk5MjM1NzM3LCAic2NoZW1hIjogInByMzMtbmF0aXZlLXJlYWQtb25seS12MSIsICJ3YWl0aW5nIjogMH0sICJjb21wbGV0ZSI6IHRydWUsICJxdWV1ZV9vYnNlcnZlcl9zaGEyNTYiOiAiZTA3ODdhMmNkMmQwYjRjZmI1YWRhMTRjMDA0ZDFkNzZhNjJkZGNiZmIxMjBiNWNlYTlkZTAyYWYzOGExYWE5MyIsICJxdWV1ZV9vbGRlc3RfZmlyc3QiOiBbXSwgInF1ZXVlZF9naG9zdF9yZXF1ZXN0X2lkcyI6IFtdLCAicmVmdXNhbF9yZWFzb25zIjogW10sICJzYW1wbGVfZmluaXNoZWRfYXQiOiA5MTI4ODUuNzk5MjM3NDM3LCAic2FtcGxlX3N0YXJ0ZWRfYXQiOiA5MTI4ODUuNzk5MTE4MjM3LCAic2NoZWR1bGVyX3N0YXRlIjogeyJyZXF1ZXN0cyI6IHt9LCAicnVubmluZyI6IFtdLCAid2FpdGluZyI6IFtdfSwgInNjaGVtYSI6ICJyMjMtbmF0aXZlLXF1ZXVlLXJlYWQtb25seS12MSIsICJza2lwcGVkX3dhaXRpbmciOiBbXSwgInN0cmVhbWluZ193YWl0aW5nIjogMH0=",
+      "response_body_sha256": "810a854057b3d005f1ffa18af87167d3ed8732a9fcb7dd9787a6139a97b76e92",
+      "response_headers": {}
+    }
+  ],
+  "gateway_confirm_record": {
+    "auth_values_captured": false,
+    "body_complete": true,
+    "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "client_headers_at": 912885.807039437,
+    "client_receive_at": 912885.807039437,
+    "client_send_at": 912885.806982737,
+    "credential_removed": false,
+    "error_type": null,
+    "http_status": 200,
+    "method": "GET",
+    "path": "/admin/mpc/state",
+    "request_body": null,
+    "response_body_base64": "eyJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMSwgImNhcGFiaWxpdGllcyI6IFsibXBjLWJ1ZGdldC1jYXMtZXhwaXJ5LXYxIl0sICJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21wbGV0ZSI6IHRydWUsICJjb3N0X3NwZWMiOiB7ImRlZmF1bHRfbWF4X3Rva2VucyI6IDEyOCwgImVzdGltYXRvcl92ZXJzaW9uIjogImdhdGV3YXktdG9rZW4tZXN0aW1hdGUtdjEiLCAiaW5wdXRfcGVyX3Rva2VuIjogMCwgImludGVyY2VwdCI6IDE2LCAibWluaW11bSI6IDAuMSwgIm91dHB1dF9wZXJfdG9rZW4iOiAwLCAidG9rZW5pemVyX2lkZW50aXR5IjogInVucXVhbGlmaWVkIn0sICJpZGVudGl0eSI6IHsiY2FsaWJyYXRpb25fdmVyc2lvbiI6ICJ1bnF1YWxpZmllZCIsICJjb3N0X2hhc2giOiAiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsICJpbXBsZW1lbnRhdGlvbl9oYXNoIjogIjU1MjMzMTVjNWM1OTA4MzgzNGY5MmVjMDgyNDVjODQ5NzExYzdmMDk3YzFkNmE2MjljNjY3NzBlNDFmYjNlZWEiLCAibW9kZWxfdmVyc2lvbiI6ICJzeW50aGV0aWMiLCAic3VwcG9ydF9oYXNoIjogInVucXVhbGlmaWVkIn0sICJyZXF1ZXN0cyI6IFtdLCAicnVuX2lkIjogInN5bnRoZXRpYy1nYXRld2F5IiwgInNhbXBsZWRfYXQiOiA5MTI4ODUuODA2OTg3MjM3LCAic2NoZW1hIjogIm1wYy1hZG1pc3Npb24tdjEiLCAic2VxdWVuY2UiOiAxfQ==",
+    "response_body_sha256": "a42aee751122b7badf14e436605c0ec3b13de53812e706f2bb499b9d7c67f3c8",
+    "response_headers": {}
+  },
+  "gateway_initial_record": {
+    "auth_values_captured": false,
+    "body_complete": true,
+    "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "client_headers_at": 912885.799329537,
+    "client_receive_at": 912885.799329537,
+    "client_send_at": 912885.799257837,
+    "credential_removed": false,
+    "error_type": null,
+    "http_status": 200,
+    "method": "GET",
+    "path": "/admin/mpc/state",
+    "request_body": null,
+    "response_body_base64": "eyJidWRnZXQiOiAzMiwgImJ1ZGdldF92ZXJzaW9uIjogMCwgImNhcGFiaWxpdGllcyI6IFsibXBjLWJ1ZGdldC1jYXMtZXhwaXJ5LXYxIl0sICJjbG9ja19kb21haW4iOiAibGludXgtbW9ub3RvbmljOmJmMjVlMjE1LTEzNzctNDU4NS1hNWZhLWY1MTgxZjk2ZjQ2Nzp0aW1lOls0MDI2NTMxODM0XSIsICJjb21wbGV0ZSI6IHRydWUsICJjb3N0X3NwZWMiOiB7ImRlZmF1bHRfbWF4X3Rva2VucyI6IDEyOCwgImVzdGltYXRvcl92ZXJzaW9uIjogImdhdGV3YXktdG9rZW4tZXN0aW1hdGUtdjEiLCAiaW5wdXRfcGVyX3Rva2VuIjogMCwgImludGVyY2VwdCI6IDE2LCAibWluaW11bSI6IDAuMSwgIm91dHB1dF9wZXJfdG9rZW4iOiAwLCAidG9rZW5pemVyX2lkZW50aXR5IjogInVucXVhbGlmaWVkIn0sICJpZGVudGl0eSI6IHsiY2FsaWJyYXRpb25fdmVyc2lvbiI6ICJ1bnF1YWxpZmllZCIsICJjb3N0X2hhc2giOiAiYzM4NzQyNTkwNjg5NTJkNWY5Mjk3ZGIyZDZkMjhlNTU4YWYxN2RmMDMwMTUyNzAyZTgxYTYyZTU0MTgxMzVlOCIsICJpbXBsZW1lbnRhdGlvbl9oYXNoIjogIjU1MjMzMTVjNWM1OTA4MzgzNGY5MmVjMDgyNDVjODQ5NzExYzdmMDk3YzFkNmE2MjljNjY3NzBlNDFmYjNlZWEiLCAibW9kZWxfdmVyc2lvbiI6ICJzeW50aGV0aWMiLCAic3VwcG9ydF9oYXNoIjogInVucXVhbGlmaWVkIn0sICJyZXF1ZXN0cyI6IFtdLCAicnVuX2lkIjogInN5bnRoZXRpYy1nYXRld2F5IiwgInNhbXBsZWRfYXQiOiA5MTI4ODUuNzk5MjY5MjM3LCAic2NoZW1hIjogIm1wYy1hZG1pc3Npb24tdjEiLCAic2VxdWVuY2UiOiAwfQ==",
+    "response_body_sha256": "035eb150563be87526540fafa0aeab88255edadb5e3bc5f8639849a778b74492",
+    "response_headers": {}
+  },
+  "gateway_owned": {
+    "cleanup_completed": false,
+    "native_ready": true,
+    "pid": 200,
+    "process_group": 200,
+    "readiness": {
+      "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+      "gateway_run_id": "synthetic-gateway",
+      "same_budget_ack": {
+        "acknowledgment": {
+          "applied_at": 912885.806944737,
+          "budget": 32,
+          "budget_version": 1,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "operation_id": "opteam16-cut-consumer02",
+          "previous_budget": 32,
+          "run_id": "synthetic-gateway",
+          "schema": "mpc-admission-v1",
+          "status": "applied"
+        },
+        "command": {
+          "budget": 32,
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "expected_version": 0,
+          "identity": {
+            "calibration_version": "unqualified",
+            "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+            "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+            "model_version": "synthetic",
+            "support_hash": "unqualified"
+          },
+          "not_after": 912886.299269237,
+          "operation_id": "opteam16-cut-consumer02",
+          "run_id": "synthetic-gateway",
+          "schema": "mpc-admission-v1"
+        },
+        "status": "applied"
+      },
+      "snapshot": {
+        "budget": 32,
+        "budget_version": 0,
+        "capabilities": [
+          "mpc-budget-cas-expiry-v1"
+        ],
+        "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+        "complete": true,
+        "cost_spec": {
+          "default_max_tokens": 128,
+          "estimator_version": "gateway-token-estimate-v1",
+          "input_per_token": 0,
+          "intercept": 16,
+          "minimum": 0.1,
+          "output_per_token": 0,
+          "tokenizer_identity": "unqualified"
+        },
+        "identity": {
+          "calibration_version": "unqualified",
+          "cost_hash": "c3874259068952d5f9297db2d6d28e558af17df030152702e81a62e5418135e8",
+          "implementation_hash": "5523315c5c59083834f92ec08245c849711c7f097c1d6a629c66770e41fb3eea",
+          "model_version": "synthetic",
+          "support_hash": "unqualified"
+        },
+        "requests": [],
+        "run_id": "synthetic-gateway",
+        "sampled_at": 912885.799269237,
+        "schema": "mpc-admission-v1",
+        "sequence": 0
+      }
+    },
+    "start_ticks": "40",
+    "started_at": 99
+  },
+  "native_owned": {
+    "cleanup_completed": false,
+    "native_ready": true,
+    "pid": 100,
+    "process_group": 100,
+    "readiness": {
+      "frames": [
+        {
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "complete": true,
+          "frontend_sampled_at": 912885.799085437,
+          "frontend_unfinished": 0,
+          "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+          "orphaned": 0,
+          "pending_batches": 0,
+          "requests": [],
+          "run_id": "synthetic-native",
+          "running": 0,
+          "sampled_at": 912885.799079637,
+          "schema": "pr33-native-read-only-v1",
+          "waiting": 0
+        },
+        {
+          "clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+          "complete": true,
+          "frontend_sampled_at": 912885.799237637,
+          "frontend_unfinished": 0,
+          "observer_sha256": "77633dc7652066e45b7680d297d3e36ddb97a3e12222de9f526a76b9a01d66b4",
+          "orphaned": 0,
+          "pending_batches": 0,
+          "requests": [],
+          "run_id": "synthetic-native",
+          "running": 0,
+          "sampled_at": 912885.799235737,
+          "schema": "pr33-native-read-only-v1",
+          "waiting": 0
+        }
+      ],
+      "warmup_response": {
+        "choices": [
+          {
+            "finish_reason": "stop"
+          }
+        ],
+        "id": "chatcmpl-ffffffffffffffffffffffffffffffff",
+        "usage": {
+          "completion_tokens": 1
+        }
+      }
+    },
+    "start_ticks": "10",
+    "started_at": 99
+  },
+  "warmup_record": {
+    "auth_values_captured": false,
+    "body_complete": true,
+    "client_clock_domain": "linux-monotonic:bf25e215-1377-4585-a5fa-f5181f96f467:time:[4026531834]",
+    "client_headers_at": 912885.798880437,
+    "client_receive_at": 912885.798880437,
+    "client_send_at": 912885.798849737,
+    "credential_removed": false,
+    "error_type": null,
+    "http_status": 200,
+    "method": "POST",
+    "path": "/v1/chat/completions",
+    "request_body": "{\"max_tokens\": 16}",
+    "response_body_base64": "eyJjaG9pY2VzIjogW3siZmluaXNoX3JlYXNvbiI6ICJzdG9wIn1dLCAiaWQiOiAiY2hhdGNtcGwtZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmYiLCAidXNhZ2UiOiB7ImNvbXBsZXRpb25fdG9rZW5zIjogMX19",
+    "response_body_sha256": "10762cfaeee08016dac69101213b027fda795fb1005802a30a54bce37cf29cd5",
+    "response_headers": {}
+  }
+}

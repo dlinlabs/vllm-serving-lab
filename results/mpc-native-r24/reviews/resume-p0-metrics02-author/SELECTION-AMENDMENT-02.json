@@ -1,0 +1,7 @@
+{
+ "amends": "SELECTION.json + SELECTION-AMENDMENT-01.json (metrics02)",
+ "reason": "Mayor final integration evidence detail: the native recorder must retain the actual gateway rejection-body fields / raw response (no auth), not merely fate/status, so the Mayor can reconstruct the admission boundary with the ordered owner ledger. The recorder (owned nominal_client.py) currently keeps only detail + estimated_request_cost and a body digest.",
+ "added_read_only_span": {"path": "gateway.py (ROOT, product, NOT modified)", "sha256_hash_read_whole_file": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570", "bytes": 41800, "viewed_lines": "653-692 only (rejection response construction cited by the Mayor)"},
+ "added_edit_scope": "nominal_client.py rejection capture (_admission_rejection/_send body retention) + one focused literal CPU control in test_nominal_client.py; no product/gateway edits, no network/GPU",
+ "not_read": ["results/mpc-native-r24/reviews/resume-p0-probes02/inputs/admission-boundary.json (engineering input; not needed for this source change)", "qualification proposal v2 body", "peer runtime/planner/scenario/services files"]
+}
