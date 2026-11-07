@@ -1,0 +1,128 @@
+2f02ed4ee1d3b2724b38aa60e14613f78a774401f59e7bede2417daf9f5c7175  integrated-verification.json
+a737ebbe06812e14ee0d0677c61c2c21335fea812ecf9c6fea8d42c010caad15  integrated-cpu01/command.json
+0e49cc7d323925dbc435535f2dc2544a983f3ebd09ae35818014f5e986d03145  integrated-cpu01/pytest.log
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  integrated-cpu01/pytest.exit-code
+6c779433e4a6a5270365f8757be6b6805ea115ab3beb3ed75c8fee33dbb5e879  integrated-cpu01/junit.xml
+=====
+{
+  "status": "PASS_COMPOSED_CPU_ONLY",
+  "source_pins": {
+    "native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+    "test_native_services_smoke.py": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3",
+    "native_nominal_qualification.py": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+    "test_native_nominal_qualification.py": "7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac"
+  },
+  "pytest_summary": "521 passed, 186 subtests passed",
+  "junit_successful_cases": 521,
+  "independent_acceptance": "PENDING",
+  "Native_qualified": false,
+  "GPU_contacted": false
+}
+
+=====
+{
+  "scope": "CPU/mock only; not Native acceptance or a full repository test run",
+  "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+  "command": [
+    "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--junitxml",
+    "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-mayor01/integrated-cpu01/junit.xml",
+    "experiments/mpc-research/resume-mvp/test_native_services_smoke.py",
+    "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_episode.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_runtime.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_planner.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_permit.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_scenario.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_metrics.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_workload.py",
+    "experiments/mpc-research/resume-mvp/test_nominal_client.py",
+    "tests/test_mpc_actuator.py",
+    "tests/test_mpc_benchmark.py",
+    "tests/test_mpc_contracts.py",
+    "tests/test_mpc_controller.py",
+    "tests/test_mpc_gateway.py",
+    "tests/test_mpc_http_capture.py",
+    "tests/test_mpc_identification.py",
+    "tests/test_mpc_integration.py",
+    "tests/test_mpc_model.py",
+    "tests/test_mpc_native_state.py",
+    "tests/test_mpc_runtime.py",
+    "tests/test_gateway_diagnostics.py",
+    "tests/test_telemetry.py"
+  ],
+  "environment_overrides": {
+    "PYTHONPATH": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp:/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+    "NATIVE_SMOKE_TEST_OUTPUT": ".runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/native",
+    "NATIVE_SMOKE_PROTOCOL": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/nominal_protocol.json",
+    "NOMINAL_RUNTIME_TEST_DIR": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/runtime",
+    "NOMINAL_EPISODE_TEST_DIR": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/episode",
+    "NOMINAL_WORKLOAD_SCRATCH": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/workload"
+  },
+  "started_utc": "2026-11-07T02:39:47.444396+00:00"
+}
+
+=====
+............................................................................... [ 15%]
+..................................................... [ 25%]
+.......................................... [ 33%]
+........................................................................ [ 47%]
+........................................................................ [ 61%]
+........................................................................ [ 74%]
+........................................................................ [ 88%]
+...........................................................              [100%]
+521 passed, 186 subtests passed in 25.88s
+=====
+0
+=====
+<testsuite name="pytest" errors="0" failures="0" skipped="0" tests="707" time="25.862" timestamp="2026-11-06T18:39:47.759739-08:00" hostname="DESKTOP-Q3SLA74">
+=====
+0
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_complete_collect_keeps_counts_domains_bindings_and_all_drain_readings"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_default_off_never_enters_native_body"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_drain_and_fallback_failure_close_without_losing_readings"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_episode_cancel_preserves_allocated_partial_counts_and_primary"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_get_failure_survives_capture_and_error_receipt_write_failures"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_non_json_result_and_terminal_write_failure_fail_closed"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_nonfinite_capture_write_keeps_error_receipt_and_fails"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_oversized_window_refuses_before_permit_or_episode"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_pre_control_error_keeps_not_run_capture_and_zero_offers"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_preparation_error_keeps_primary_reason_and_zero_offers"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_prepare_exception_and_none_recorder_keep_not_run_reason"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_protocol_pin_and_positive_remaining_budget_fail_before_traffic"
+      1 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls" name="test_warmup_interrupts_survive_capture_persistence_failure"
+=====
+    110 classname="tests.test_mpc_controller"
+     64 classname="tests.test_mpc_gateway"
+     46 classname="experiments.mpc-research.resume-mvp.test_nominal_metrics"
+     43 classname="experiments.mpc-research.resume-mvp.test_nominal_client"
+     38 classname="tests.test_mpc_runtime"
+     33 classname="tests.test_mpc_model"
+     27 classname="tests.test_mpc_http_capture"
+     25 classname="tests.test_gateway_diagnostics"
+     16 classname="tests.test_mpc_actuator"
+     15 classname="experiments.mpc-research.resume-mvp.test_nominal_planner.NominalPlannerTests"
+     13 classname="tests.test_mpc_native_state"
+     13 classname="experiments.mpc-research.resume-mvp.test_nominal_runtime.NominalRuntimeTests"
+     13 classname="experiments.mpc-research.resume-mvp.test_native_services_smoke.Controls"
+     13 classname="experiments.mpc-research.resume-mvp.test_native_nominal_qualification.Controls"
+      9 classname="experiments.mpc-research.resume-mvp.test_nominal_permit.NominalPermitTests"
+      5 classname="tests.test_telemetry"
+      5 classname="tests.test_mpc_identification"
+      5 classname="experiments.mpc-research.resume-mvp.test_nominal_workload.GenerationTest"
+      5 classname="experiments.mpc-research.resume-mvp.test_nominal_scenario.NominalScenarioTests"
+      4 classname="tests.test_mpc_benchmark"
+      4 classname="experiments.mpc-research.resume-mvp.test_nominal_runtime.NominalRuntimeCLIIntegrationTests"
+      4 classname="experiments.mpc-research.resume-mvp.test_nominal_episode.NominalEpisodeTests"
+      2 classname="tests.test_mpc_integration"
+      2 classname="tests.test_mpc_contracts"
+      2 classname="experiments.mpc-research.resume-mvp.test_nominal_workload.RngSpecTest"
+      2 classname="experiments.mpc-research.resume-mvp.test_nominal_workload.OutputsTest"
+      1 classname="experiments.mpc-research.resume-mvp.test_nominal_workload.ReplayAdapterTest"
+      1 classname="experiments.mpc-research.resume-mvp.test_nominal_workload.ProtocolValidationTest"
+      1 classname="experiments.mpc-research.resume-mvp.test_nominal_workload.CliTest"

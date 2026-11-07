@@ -1,0 +1,420 @@
+    1  """CPU-only caller accounting, guarded MockTransport observations and persistence controls."""
+    2  
+    3  import asyncio
+    4  from contextlib import ExitStack
+    5  from dataclasses import asdict
+    6  import hashlib
+    7  import json
+    8  import os
+    9  from pathlib import Path
+   10  import time
+   11  import types
+   12  import unittest
+   13  from unittest.mock import AsyncMock, patch
+   14  
+   15  import httpx
+   16  import native_nominal_qualification as driver
+   17  import nominal_client
+   18  import nominal_episode
+   19  import nominal_runtime
+   20  from mpc_lab.contracts import ModelParameters
+   21  from nominal_planner import NominalPlanner
+   22  
+   23  
+   24  ROOT = Path(os.environ["NATIVE_SMOKE_TEST_OUTPUT"]) / "qualification"
+   25  ROOT.mkdir(parents=True, exist_ok=True)
+   26  REAL_CLIENT = httpx.AsyncClient
+   27  REAL_CAPTURE_WRITE = nominal_client.write_capture
+   28  REAL_WRITE = driver.services.write
+   29  
+   30  
+   31  class CallerFixture:
+   32      """Literal capture/episode boundaries; real caller, binding, codec and MockTransport GETs."""
+   33  
+   34      def __init__(self, case, name):
+   35          self.case = case
+   36          self.output = ROOT / name
+   37          (self.output / "services").mkdir(parents=True)
+   38          self.protocol_path = Path(os.environ["NATIVE_SMOKE_PROTOCOL"]).resolve()
+   39          self.root = self.protocol_path.parents[3]
+   40          self.argv = ["CPU-vllm", "serve", driver.services.MODEL]
+   41          (self.output / "services/ownership.json").write_text(json.dumps({
+   42              "services": [{"name": "engine", "argv": self.argv}]}))
+   43          parameters = ModelParameters()
+   44          self.report = {"source": {
+   45              "cost_spec": asdict(parameters.cost_spec), "identity": asdict(NominalPlanner(parameters).identity),
+   46              "clock_domain": nominal_runtime.clock_domain(),
+   47              "source_pins": {str(self.protocol_path): hashlib.sha256(self.protocol_path.read_bytes()).hexdigest()}},
+   48              "configuration": {"engine": self.argv}}
+   49          self.owner = types.SimpleNamespace(deadline=time.monotonic() + 480, reserve=30, check=self.check)
+   50          self.original_deadline = self.owner.deadline
+   51          self.clients, self.calls, self.metrics, self.observed_starts = [], [], [], []
+   52          self.prepare_error = self.state_error = self.warmup_error = self.episode_error = None
+   53          self.fail_writes, self.fail_capture_writes = set(), set()
+   54          self.warmup_calls = self.episode_calls = self.checks = 0
+   55          self.expire_after_metrics = None
+   56          self.bad_result = None
+   57          self.record_count = 5
+   58          domain = nominal_client.clock_domain()
+   59          self.warmup = types.SimpleNamespace(ready=True, capture={
+   60              "scope": "CPU-only fixture", "clock_domain": domain, "status": "failed",
+   61              "error": nominal_client.NOT_RUN_ERROR, "records": None})
+   62          self.prepared = types.SimpleNamespace(
+   63              error=None, recorder=types.SimpleNamespace(
+   64                  capture={"scope": "CPU-only fixture", "clock_domain": domain, "status": "failed",
+   65                           "error": nominal_client.NOT_RUN_ERROR, "records": None},
+   66                  trace={"duration_seconds": 5, "requests": [{"trace_id": f"CPU-{i}"} for i in range(5)]}),
+   67              scenario_binding={"scope": "CPU-only caller boundary"}, scenario_factory=lambda _: None)
+   68  
+   69      def check(self):
+   70          self.checks += 1
+   71          if self.expire_after_metrics is not None and sum(call["path"] == "/metrics" for call in self.calls) >= self.expire_after_metrics:
+   72              raise driver.services.ProbeError("CPU original owner work budget exhausted")
+   73  
+   74      @staticmethod
+   75      def zero_metrics():
+   76          return dict(current_in_flight=0, current_waiting=0, current_admitted_cost=0,
+   77                      tokenizer_fallback_requests=0)
+   78  
+   79      def handle(self, request):
+   80          self.case.assertTrue((self.output / "qualification-source-binding.json").is_file())
+   81          self.case.assertTrue(all(value > 0 for value in request.extensions["timeout"].values()))
+   82          self.calls.append({"path": request.url.path, "timeout": request.extensions["timeout"]})
+   83          if request.url.path == "/metrics":
+   84              value = self.metrics.pop(0) if self.metrics else self.zero_metrics()
+   85              return httpx.Response(200, json=value)
+   86          self.case.assertEqual(request.url.path, "/admin/mpc/state")
+   87          if self.state_error is not None:
+   88              raise self.state_error
+   89          return httpx.Response(200, json={
+   90              **{name: self.report["source"][name] for name in ("identity", "clock_domain", "cost_spec")},
+   91              "run_id": "CPU-only-qualified-caller-fixture"})
+   92  
+   93      def client(self, **kwargs):
+   94          value = REAL_CLIENT(transport=httpx.MockTransport(self.handle), **kwargs)
+   95          self.clients.append(value)
+   96          return value
+   97  
+   98      async def warmup_replay(self, prepared, **kwargs):
+   99          self.warmup_calls += 1
+  100          self.case.assertTrue((self.output / "qualification-source-binding.json").is_file())
+  101          self.case.assertEqual(kwargs["deadline"], self.original_deadline)
+  102          self.case.assertEqual(kwargs["cleanup_reserve_s"], 30)
+  103          self.case.assertEqual(kwargs["clock_domain"], prepared.capture["clock_domain"])
+  104          self.case.assertNotEqual(kwargs["clock_domain"], self.report["source"]["clock_domain"])
+  105          prepared.capture.update(
+  106              status="collected", error=None,
+  107              records=[{"fate": "complete", "stream_done": True, "finish_reason": "stop",
+  108                        "sent_at": time.monotonic()} for _ in range(3)],
+  109              summary={"prompt_tokens_mismatch": 0})
+  110          if self.warmup_error is not None:
+  111              prepared.capture["status"] = "interrupted"
+  112              raise self.warmup_error
+  113          return prepared.capture
+  114  
+  115      def episode_prepare(self, **kwargs):
+  116          self.case.assertEqual(kwargs["trace_path"], self.root / driver.PROBES / "admission-boundary.json")
+  117          if self.prepare_error is not None:
+  118              raise self.prepare_error
+  119          return self.prepared
+  120  
+  121      async def episode_run(self, prepared, runtime, *, owner, offered_start, enabled):
+  122          self.episode_calls += 1
+  123          self.case.assertTrue(enabled)
+  124          self.case.assertIs(owner, self.owner)
+  125          self.case.assertEqual(runtime.start_at, offered_start)
+  126          self.case.assertEqual(runtime.permit.expires_at - runtime.permit.not_before, 20)
+  127          self.case.assertEqual(runtime.permit.max_commands, 8)
+  128          self.case.assertEqual(offered_start, runtime.permit.not_before + 1)
+  129          self.case.assertLessEqual(offered_start + 5, min(owner.deadline - owner.reserve, runtime.permit.expires_at))
+  130          binding = json.loads((self.output / "runtime-binding.json").read_text())
+  131          self.case.assertEqual(binding["description"]["protocol_sha256"], runtime.protocol_sha256)
+  132          self.case.assertEqual(binding["caller_sha256"], hashlib.sha256(Path(driver.__file__).read_bytes()).hexdigest())
+  133          self.case.assertEqual(binding["adapter_sha256"], driver.ADAPTER_SHA256)
+  134          self.observed_starts.append(offered_start)
+  135          fates = ("complete", "rejected", "unknown", "complete", "not_launched")
+  136          prepared.recorder.capture.update(status="collected", error=None, records=[
+  137              {"trace_id": f"CPU-{i}", "fate": fates[i],
+  138               "scheduled_at": offered_start + 1.25, "sent_at": offered_start + 1.25 if i < 4 else None}
+  139              for i in range(self.record_count)])
+  140          if self.episode_error is not None:
+  141              prepared.recorder.capture["status"] = "interrupted"
+  142              raise self.episode_error
+  143          return self.bad_result if self.bad_result is not None else {
+  144              "status": "collected", "failures": [], "all_workers_joined": True,
+  145              "persistence_errors": [], "missing_record_ids": [], "qualification": None}
+  146  
+  147      def write(self, path, *args, **kwargs):
+  148          if path.name in self.fail_writes:
+  149              raise OSError("CPU receipt write failure: " + path.name)
+  150          return REAL_WRITE(path, *args, **kwargs)
+  151  
+  152      def capture_write(self, path, capture):
+  153          if path.name in self.fail_capture_writes:
+  154              raise OSError("CPU raw capture write failure: " + path.name)
+  155          return REAL_CAPTURE_WRITE(path, capture)
+  156  
+  157      def run(self):
+  158          async def invoke():
+  159              try:
+  160                  await driver.collect(owner=self.owner, root=self.root, output=self.output,
+  161                                       key="CPU-key", report=self.report)
+  162              except BaseException as error:
+  163                  return error
+  164              finally:
+  165                  self.case.assertTrue(all(client.is_closed for client in self.clients))
+  166                  self.case.assertEqual([task for task in asyncio.all_tasks()
+  167                                         if task is not asyncio.current_task() and not task.done()], [])
+  168              return None
+  169  
+  170          with ExitStack() as stack:
+  171              for target, name, value in (
+  172                  (httpx, "AsyncClient", self.client),
+  173                  (httpx.AsyncHTTPTransport, "handle_async_request", AsyncMock(side_effect=AssertionError("real HTTP forbidden"))),
+  174                  (nominal_client, "prepare_capture", lambda **_: self.warmup),
+  175                  (nominal_client, "capture_replay", self.warmup_replay),
+  176                  (nominal_client, "write_capture", self.capture_write),
+  177                  (nominal_episode, "prepare_episode", self.episode_prepare),
+  178                  (nominal_episode, "run_episode", self.episode_run),
+  179                  (driver.services, "write", self.write),
+  180              ):
+  181                  stack.enter_context(patch.object(target, name, new=value))
+  182              error = asyncio.run(invoke())
+  183          (self.output / "CPU-CALLER-CHECK.json").write_text(json.dumps({
+  184              "error": None if error is None else driver.error_record(error),
+  185              "calls": self.calls, "checks": self.checks, "warmup_calls": self.warmup_calls,
+  186              "episode_calls": self.episode_calls, "clients_closed": [c.is_closed for c in self.clients],
+  187              "remaining_tasks": [], "real_HTTP_or_services": False,
+  188              "report": self.report,
+  189          }, sort_keys=True, allow_nan=False))
+  190          return error
+  191  
+  192  
+  193  class Controls(unittest.TestCase):
+  194      def early_exit(self, name, prepared_error=None):
+  195          protocol_path = Path(os.environ["NATIVE_SMOKE_PROTOCOL"]).resolve()
+  196          root, output = protocol_path.parents[3], ROOT / name
+  197          (output / "services").mkdir(parents=True)
+  198          argv = ["CPU-vllm", "serve", driver.services.MODEL]
+  199          (output / "services/ownership.json").write_text(json.dumps({
+  200              "services": [{"name": "engine", "argv": argv}]}))
+  201          report = {"source": {
+  202              "cost_spec": {}, "identity": {}, "clock_domain": "CPU-source-clock",
+  203              "source_pins": {str(protocol_path): hashlib.sha256(protocol_path.read_bytes()).hexdigest()}},
+  204              "configuration": {"engine": argv}, "offered_requests_from_driver": None}
+  205          warmup = types.SimpleNamespace(ready=True, capture={
+  206              "clock_domain": "CPU-recorder-clock", "status": "collected", "error": None,
+  207              "records": [{"fate": "complete", "stream_done": True, "finish_reason": "stop",
+  208                           "sent_at": time.monotonic()} for _ in range(3)],
+  209              "summary": {"prompt_tokens_mismatch": 0}})
+  210          prepared = types.SimpleNamespace(
+  211              error=prepared_error, recorder=types.SimpleNamespace(
+  212                  trace={"duration_seconds": 5, "requests": [{"trace_id": f"CPU-{i}"} for i in range(5)]},
+  213                  capture={"clock_domain": "CPU-recorder-clock", "status": "failed",
+  214                           "error": "not_run", "records": None}))
+  215  
+  216          class Client:
+  217              async def __aenter__(self):
+  218                  return self
+  219  
+  220              async def __aexit__(self, *_):
+  221                  return False
+  222  
+  223              async def aclose(self):
+  224                  pass
+  225  
+  226              async def get(self, path, **_kwargs):
+  227                  if path == "/metrics":
+  228                      return httpx.Response(200, request=httpx.Request("GET", "http://CPU/metrics"), json={
+  229                          "current_in_flight": 0, "current_waiting": 0,
+  230                          "current_admitted_cost": 0, "tokenizer_fallback_requests": 0})
+  231                  raise RuntimeError("CPU pre-control GET failure")
+  232  
+  233          with patch.object(nominal_client, "prepare_capture", return_value=warmup), \
+  234                  patch.object(nominal_client, "capture_replay", new=AsyncMock(return_value=warmup.capture)), \
+  235                  patch.object(nominal_episode, "prepare_episode", return_value=prepared), \
+  236                  patch.object(nominal_episode, "run_episode", new=AsyncMock()) as run_episode, \
+  237                  patch.object(httpx, "AsyncClient", new=lambda **_: Client()):
+  238              expected = driver.services.ProbeError if prepared_error else RuntimeError
+  239              with self.assertRaises(expected):
+  240                  asyncio.run(driver.collect(
+  241                      owner=types.SimpleNamespace(check=lambda: None, deadline=time.monotonic() + 480, reserve=30),
+  242                      root=root, output=output, key="", report=report))
+  243              run_episode.assert_not_awaited()
+  244          self.assertEqual(report["offered_requests_from_driver"], 0)
+  245          receipt = json.loads((output / "episode-not-run.json").read_text())
+  246          self.assertEqual(receipt["records_allocated"], 0)
+  247          self.assertEqual(receipt["sent"], 0)
+  248          self.assertEqual(receipt["prepared_error"], prepared_error)
+  249          self.assertTrue((output / "episode-not-run-capture.json").is_file())
+  250          return report
+  251  
+  252      def test_pre_control_error_keeps_not_run_capture_and_zero_offers(self):
+  253          report = self.early_exit("pre-control-error")
+  254          self.assertEqual(report["episode_trace_requests"], 5)
+  255  
+  256      def test_preparation_error_keeps_primary_reason_and_zero_offers(self):
+  257          self.early_exit("prepare-error", {"message": "CPU preparation refused"})
+  258  
+  259      def test_prepare_exception_and_none_recorder_keep_not_run_reason(self):
+  260          for kind in ("raised", "no-recorder"):
+  261              with self.subTest(kind=kind):
+  262                  fixture = CallerFixture(self, kind)
+  263                  primary = RuntimeError("CPU prepare raised original reason")
+  264                  if kind == "raised":
+  265                      fixture.prepare_error = primary
+  266                  else:
+  267                      fixture.prepared.error = {"message": "CPU local preparation refused"}
+  268                      fixture.prepared.recorder = None
+  269                  error = fixture.run()
+  270                  if kind == "raised":
+  271                      self.assertIs(error, primary)
+  272                  else:
+  273                      self.assertIsInstance(error, driver.services.ProbeError)
+  274                      self.assertIn("CPU local preparation refused", str(error))
+  275                  receipt = json.loads((fixture.output / "episode-not-run.json").read_text())
+  276                  self.assertEqual((receipt["records_allocated"], receipt["sent"]), (0, 0))
+  277                  self.assertEqual(fixture.report["offered_requests_from_driver"], 0)
+  278                  self.assertEqual(fixture.episode_calls, 0)
+  279                  absent = json.loads((fixture.output / "episode-not-run-capture.json").read_text())
+  280                  self.assertFalse(absent["raw_v2_capture_available"])
+  281  
+  282      def test_get_failure_survives_capture_and_error_receipt_write_failures(self):
+  283          fixture = CallerFixture(self, "get-plus-write-error")
+  284          primary = RuntimeError("CPU original GET failure")
+  285          fixture.state_error = primary
+  286          fixture.fail_capture_writes.add("episode-not-run-capture.json")
+  287          fixture.fail_writes.add("episode-not-run-capture.write-error.json")
+  288          self.assertIs(fixture.run(), primary)
+  289          self.assertTrue(any("write" in str(row) for row in fixture.report["caller_errors"]))
+  290          self.assertIn("write-error receipt also failed", str(fixture.report["caller_errors"]))
+  291          self.assertEqual(fixture.report["offered_requests_from_driver"], 0)
+  292          self.assertEqual(fixture.report["episode_trace_requests"], 5)
+  293          receipt = json.loads((fixture.output / "episode-not-run.json").read_text())
+  294          self.assertEqual(receipt["primary_error"]["message"], str(primary))
+  295  
+  296      def test_warmup_interrupts_survive_capture_persistence_failure(self):
+  297          for name, primary in (("warmup-KI", KeyboardInterrupt("CPU original warmup interrupt")),
+  298                                ("warmup-cancel", asyncio.CancelledError("CPU original warmup cancellation"))):
+  299              with self.subTest(name=name):
+  300                  fixture = CallerFixture(self, name)
+  301                  fixture.warmup_error = primary
+  302                  fixture.fail_capture_writes.add("warmup-capture.json")
+  303                  self.assertIs(fixture.run(), primary)
+  304                  self.assertEqual(fixture.episode_calls, 0)
+  305                  self.assertEqual(fixture.report["offered_requests_from_driver"], 0)
+  306                  self.assertTrue((fixture.output / "warmup-capture.write-error.json").is_file())
+  307                  self.assertTrue((fixture.output / "episode-not-run.json").is_file())
+  308  
+  309      def test_complete_collect_keeps_counts_domains_bindings_and_all_drain_readings(self):
+  310          fixture = CallerFixture(self, "complete")
+  311          zero = fixture.zero_metrics()
+  312          fixture.metrics = [{**zero, "current_in_flight": 1, "current_admitted_cost": 3.2}, zero,
+  313                             {**zero, "current_waiting": 1}, zero]
+  314          self.assertIsNone(fixture.run())
+  315          self.assertEqual(fixture.report["warmup_offered_requests"], 3)
+  316          self.assertEqual(fixture.report["episode_trace_requests"], 5)
+  317          self.assertEqual(fixture.report["offered_requests_from_driver"], 5)
+  318          self.assertEqual(fixture.report["episode_sent_requests"], 4)
+  319          self.assertEqual(fixture.report["qualification_caller"]["status"], "COLLECTED")
+  320          raw = json.loads((fixture.output / "caller-episode-capture.json").read_text())
+  321          self.assertEqual(raw, fixture.prepared.recorder.capture)
+  322          self.assertIn("unknown", [row["fate"] for row in raw["records"]])
+  323          self.assertEqual(len(list(fixture.output.glob("*-metrics-*.json"))), 4)
+  324          self.assertEqual(fixture.report["caller_drains"]["pre-episode"]["readings"], 2)
+  325          self.assertEqual(fixture.report["caller_drains"]["final"]["readings"], 2)
+  326          self.assertEqual(fixture.report["qualification_caller"]["deadline"], fixture.original_deadline)
+  327          self.assertIsNone(fixture.report["qualification_caller"]["full_wall"])
+  328  
+  329      def test_episode_cancel_preserves_allocated_partial_counts_and_primary(self):
+  330          fixture = CallerFixture(self, "episode-cancel")
+  331          primary = asyncio.CancelledError("CPU episode interrupted after allocation")
+  332          fixture.episode_error, fixture.record_count = primary, 2
+  333          self.assertIs(fixture.run(), primary)
+  334          self.assertEqual(fixture.report["episode_planned_requests"], 5)
+  335          self.assertEqual(fixture.report["offered_requests_from_driver"], 2)
+  336          self.assertEqual(fixture.report["episode_sent_requests"], 2)
+  337          self.assertEqual(fixture.report["qualification_caller"]["status"], "INTERRUPTED")
+  338          raw = json.loads((fixture.output / "caller-episode-capture.json").read_text())
+  339          self.assertEqual(len(raw["records"]), 2)
+  340  
+  341      def test_drain_and_fallback_failure_close_without_losing_readings(self):
+  342          for kind in ("pre-fallback", "post-fallback", "busy-until-budget"):
+  343              with self.subTest(kind=kind):
+  344                  fixture = CallerFixture(self, kind)
+  345                  zero = fixture.zero_metrics()
+  346                  if kind == "pre-fallback":
+  347                      fixture.metrics = [{**zero, "tokenizer_fallback_requests": 1}]
+  348                  elif kind == "post-fallback":
+  349                      fixture.metrics = [zero, {**zero, "tokenizer_fallback_requests": 1}]
+  350                  else:
+  351                      fixture.metrics = [{**zero, "current_in_flight": 1}] * 2
+  352                      fixture.expire_after_metrics = 2
+  353                  error = fixture.run()
+  354                  self.assertIsInstance(error, driver.services.ProbeError)
+  355                  self.assertEqual(fixture.episode_calls, int(kind == "post-fallback"))
+  356                  self.assertTrue(list(fixture.output.glob("*-metrics-*.json")))
+  357                  self.assertIsNotNone(fixture.report["qualification_caller"]["primary_error"])
+  358  
+  359      def test_protocol_pin_and_positive_remaining_budget_fail_before_traffic(self):
+  360          for kind in ("protocol-drift", "expired"):
+  361              with self.subTest(kind=kind):
+  362                  fixture = CallerFixture(self, kind)
+  363                  if kind == "protocol-drift":
+  364                      fixture.report["source"]["source_pins"][str(fixture.protocol_path)] = "0" * 64
+  365                  else:
+  366                      fixture.owner.deadline = time.monotonic() - 1
+  367                      fixture.original_deadline = fixture.owner.deadline
+  368                  self.assertIsInstance(fixture.run(), driver.services.ProbeError)
+  369                  self.assertEqual(fixture.calls, [])
+  370                  self.assertEqual(fixture.warmup_calls, 0)
+  371                  self.assertEqual(fixture.report["episode_sent_requests"], 0)
+  372  
+  373      def test_oversized_window_refuses_before_permit_or_episode(self):
+  374          for kind in ("window-exceeds-permit", "window-exceeds-owner"):
+  375              with self.subTest(kind=kind):
+  376                  fixture = CallerFixture(self, kind)
+  377                  if kind == "window-exceeds-permit":
+  378                      fixture.prepared.recorder.trace["duration_seconds"] = 20
+  379                  else:
+  380                      fixture.owner.deadline = time.monotonic() + 34
+  381                      fixture.original_deadline = fixture.owner.deadline
+  382                  error = fixture.run()
+  383                  self.assertIsInstance(error, driver.services.ProbeError)
+  384                  self.assertIn("permit expiry", str(error))
+  385                  self.assertEqual(fixture.episode_calls, 0)
+  386                  self.assertFalse((fixture.output / "runtime-binding.json").exists())
+  387  
+  388      def test_non_json_result_and_terminal_write_failure_fail_closed(self):
+  389          for kind in ("nonfinite-result", "mixed-keys", "terminal-write"):
+  390              with self.subTest(kind=kind):
+  391                  fixture = CallerFixture(self, kind)
+  392                  if kind == "nonfinite-result":
+  393                      fixture.bad_result = {"untrusted": float("inf")}
+  394                  elif kind == "mixed-keys":
+  395                      fixture.bad_result = {1: "not-string", "other": "mixed"}
+  396                  else:
+  397                      fixture.fail_writes.add("qualification-caller.json")
+  398                  error = fixture.run()
+  399                  self.assertIsNotNone(error)
+  400                  json.dumps(fixture.report, sort_keys=True, allow_nan=False)
+  401                  self.assertEqual(fixture.report["qualification_caller"]["status"], "FAILED")
+  402                  self.assertEqual(fixture.report["offered_requests_from_driver"], 5)
+  403                  self.assertTrue((fixture.output / "caller-episode-capture.json").is_file())
+  404  
+  405      def test_default_off_never_enters_native_body(self):
+  406          forbidden = AssertionError("OFF performed an effect")
+  407          with patch.object(driver, "body", side_effect=forbidden), \
+  408                  patch.object(driver.services, "source_info", side_effect=forbidden), \
+  409                  patch.object(driver.services, "gpu_receipt", side_effect=forbidden), \
+  410                  patch.object(Path, "mkdir", side_effect=forbidden):
+  411              self.assertEqual(driver.main([]), 2)
+  412  
+  413      def test_nonfinite_capture_write_keeps_error_receipt_and_fails(self):
+  414          path = ROOT / "nonfinite-capture.json"
+  415          with self.assertRaises(ValueError):
+  416              driver.persist_capture(nominal_client, path, {"nonconforming": float("inf")}, "")
+  417          receipt = json.loads(path.with_suffix(".write-error.json").read_text())
+  418          self.assertTrue(receipt["capture_unscorable"])
+  419          self.assertEqual(receipt["type"], "ValueError")
+  420          self.assertFalse(path.exists())

@@ -1,0 +1,71 @@
+{
+  "Native_readiness_or_cycles_or_qualification_proven": false,
+  "actual_GPU_network_SSH_service_model_execution": false,
+  "attempts": 2,
+  "baseline_driver_sha256": "832c252ae0e7fc634a425acebd79edd796833bc93092e03bf1bf48190fc2b54c",
+  "changed_public_paths": {
+    "experiments/mpc-research/resume-mvp/native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+    "experiments/mpc-research/resume-mvp/test_native_services_smoke.py": "158c4e32f7c7141c02e84481557d9bc568e21fc0671be86ddcd7b69377ad23d3"
+  },
+  "closure_check_monotonic": 1110386.572103605,
+  "driver_edit_limited_to_closed_finalization_branch": true,
+  "fresh_control_identity_closure": [
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 2837508,
+      "start_ticks": 111009011
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 2837511,
+      "start_ticks": 111009014
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 2840826,
+      "start_ticks": 111015748
+    },
+    {
+      "current_start_ticks": null,
+      "original_identity_gone": true,
+      "pid": 2840839,
+      "start_ticks": 111015750
+    }
+  ],
+  "git_used": false,
+  "model_id": "gpt-6-astra",
+  "original_failure_preserved": true,
+  "original_nine_test_methods_unchanged": true,
+  "reasoning_effort": "max",
+  "results": {
+    "green01": {
+      "errors": 0,
+      "exit": 0,
+      "failures": 0,
+      "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+      "tests": 13,
+      "wall_seconds": 0.41541978903114796
+    },
+    "red01": {
+      "errors": 0,
+      "exit": 1,
+      "failures": 6,
+      "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+      "tests": 4,
+      "wall_seconds": 0.31532519892789423
+    }
+  },
+  "retries": 0,
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "schema": "role3-pre-gpu-b2-delivery-v1",
+  "status": "B2_CPU_REPAIR_VERIFIED_PENDING_MAYOR_ACCEPTANCE",
+  "supplied_head": "832ab593c8666b8bfa3761b3061355a2c94748c8",
+  "tests_unchanged_between_red_green": true,
+  "unaddressed": [
+    "B3 caller/result handling (Role6 scope)",
+    "actual-host preflight/Native verification"
+  ]
+}

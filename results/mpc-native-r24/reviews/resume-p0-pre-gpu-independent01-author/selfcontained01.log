@@ -1,0 +1,27 @@
+24:ROOT = Path(os.environ["NATIVE_SMOKE_TEST_OUTPUT"]) / "qualification"
+38:        self.protocol_path = Path(os.environ["NATIVE_SMOKE_PROTOCOL"]).resolve()
+47:            "source_pins": {str(self.protocol_path): hashlib.sha256(self.protocol_path.read_bytes()).hexdigest()}},
+116:        self.case.assertEqual(kwargs["trace_path"], self.root / driver.PROBES / "admission-boundary.json")
+130:        binding = json.loads((self.output / "runtime-binding.json").read_text())
+132:        self.case.assertEqual(binding["caller_sha256"], hashlib.sha256(Path(driver.__file__).read_bytes()).hexdigest())
+195:        protocol_path = Path(os.environ["NATIVE_SMOKE_PROTOCOL"]).resolve()
+203:            "source_pins": {str(protocol_path): hashlib.sha256(protocol_path.read_bytes()).hexdigest()}},
+245:        receipt = json.loads((output / "episode-not-run.json").read_text())
+275:                receipt = json.loads((fixture.output / "episode-not-run.json").read_text())
+279:                absent = json.loads((fixture.output / "episode-not-run-capture.json").read_text())
+293:        receipt = json.loads((fixture.output / "episode-not-run.json").read_text())
+320:        raw = json.loads((fixture.output / "caller-episode-capture.json").read_text())
+338:        raw = json.loads((fixture.output / "caller-episode-capture.json").read_text())
+417:        receipt = json.loads(path.with_suffix(".write-error.json").read_text())
+== command env
+/command[0] /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python
+/environment_overrides/PYTHONPATH /home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp:/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105
+/environment_overrides/NATIVE_SMOKE_TEST_OUTPUT .runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/native
+/environment_overrides/NATIVE_SMOKE_PROTOCOL /home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/nominal_protocol.json
+/environment_overrides/NOMINAL_RUNTIME_TEST_DIR /home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/runtime
+/environment_overrides/NOMINAL_EPISODE_TEST_DIR /home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/episode
+/environment_overrides/NOMINAL_WORKLOAD_SCRATCH /home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-mayor01/integrated-cpu01/scratch/workload
+== mpc_lab presence
+experiments/mpc-research/resume-mvp/nominal_planner.py
+mpc_lab
+mpc_lab/contracts.py

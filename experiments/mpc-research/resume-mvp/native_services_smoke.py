@@ -309,14 +309,29 @@ def run(args, *, body=None):
             try:
                 report["post_gpu"] = gpu_receipt(deadline)
                 write(output / "post-gpu.json", report["post_gpu"])
+                checked(report["post_gpu"]["idle_selected_gpu"], "post GPU not proven idle")
+            except Exception as error:
+                report["errors"].append(dict(type=type(error).__name__, message=str(error)))
+            try:
                 status = json.loads((output / "telemetry-status.json").read_text())
                 report["telemetry_status"] = status
+                zero_fields = ("dropped", "write_errors", "mpc_remaining_requests",
+                               "mpc_unflushed_records")
+                if body is None:
+                    zero_fields += ("mpc_final_sequence", "mpc_producer_final_sequence")
                 checked(status["status"] == "closed" and status["mpc_ledger_complete"] is True
-                        and all(status[name] == 0 for name in (
-                            "dropped", "write_errors", "mpc_remaining_requests",
-                            "mpc_unflushed_records", "mpc_final_sequence", "mpc_producer_final_sequence")),
-                        "telemetry closure or no-request ledger mismatch")
-                checked(report["post_gpu"]["idle_selected_gpu"], "post GPU not proven idle")
+                        and all(status[name] == 0 for name in zero_fields),
+                        "telemetry closure or no-request ledger mismatch" if body is None
+                        else "telemetry closure or body ledger mismatch")
+                if body is not None:
+                    final, producer = status["mpc_final_sequence"], status["mpc_producer_final_sequence"]
+                    checked(type(final) is int and final >= 0
+                            and type(producer) is int and producer >= 0 and final == producer,
+                            "telemetry body ledger sequence mismatch")
+                    if "mpc_ledger_rows_written" in status:
+                        rows = status["mpc_ledger_rows_written"]
+                        checked(type(rows) is int and rows == final,
+                                "telemetry body ledger row count mismatch")
             except Exception as error:
                 report["errors"].append(dict(type=type(error).__name__, message=str(error)))
         report["end"] = stamp()

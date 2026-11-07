@@ -1,0 +1,62 @@
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  inputs/native_nominal_qualification.py
+def capture_of(prepared):
+    return getattr(getattr(prepared, "recorder", None), "capture", None)
+
+
+def counts(capture, entered):
+    if not isinstance(capture, dict):
+        return {"records_allocated": None if entered else 0, "sent": None if entered else 0}
+    records = capture.get("records")
+    if records is None:
+        return {"records_allocated": 0, "sent": 0}
+    services.checked(isinstance(records, list), "capture records must be a list or null")
+    known = all(isinstance(row, dict) and "sent_at" in row for row in records)
+    return {"records_allocated": len(records),
+            "sent": sum(row["sent_at"] is not None for row in records) if known else None}
+
+
+        try:
+            stage = "warmup_prepare"
+            warmup = recorder.prepare_capture(
+                trace_path=root / PROBES / "warmup.json", binding_path=binding_path,
+                arm="fixed32", purpose="engineering", gateway_url=gateway, backend_url=backend)
+            services.checked(warmup.ready, "warmup local preflight failed: " + str(warmup.capture.get("error")))
+            report["caller_clock_domains"] = {
+                "SDK_source": expected["clock_domain"], "warmup_recorder": warmup.capture["clock_domain"]}
+            remaining(owner, deadline, reserve)
+            recheck(bound)
+            stage = "warmup_replay"
+            await recorder.capture_replay(
+                warmup, offered_start=time.monotonic() + 1.0, deadline=deadline,
+                cleanup_reserve_s=reserve, clock_domain=warmup.capture["clock_domain"])
+        except BaseException as error:
+            warm_error = error
+            raise
+        finally:
+            capture = getattr(warmup, "capture", None)
+            if capture is not None:
+                report["warmup_capture_sha256"] = preserving(
+                    lambda: persist_capture(recorder, output / "warmup-capture.json", capture, key),
+                    warm_error, report, "warmup_capture_persistence")
+        stage = "warmup_validation"
+        services.checked(
+            warmup.capture["status"] == "collected" and len(warmup.capture["records"]) == 3
+            and all(r["fate"] == "complete" and r["stream_done"]
+                    and r["finish_reason"] in ("stop", "length") for r in warmup.capture["records"])
+            and warmup.capture["summary"]["prompt_tokens_mismatch"] == 0,
+            "warmup did not complete with valid outcomes")
+        remaining(owner, deadline, reserve)
+        stage = "episode_prepare"
+        prepared = episode.prepare_episode(
+            output_dir=output / "episode", binding_path=binding_path, gateway_url=gateway,
+            backend_url=backend, policy="mpc", trace_path=root / PROBES / "admission-boundary.json")
+        prepared_error = getattr(prepared, "error", None)
+        services.checked(prepared_error is None,
+                         "episode local preparation failed: " + str(prepared_error))
+        handle = getattr(prepared, "recorder", None)
+        services.checked(handle is not None and isinstance(handle.trace, dict),
+                         "episode preparation has no recorder/trace")
+        report["episode_trace_requests"] = len(handle.trace["requests"])
+        services.checked(report["episode_trace_requests"] == 5, "immutable five-request probe required")
+        report["caller_clock_domains"]["episode_recorder"] = handle.capture["clock_domain"]
+        parameters = ModelParameters(cost_spec=CostSpec(**expected["cost_spec"]))

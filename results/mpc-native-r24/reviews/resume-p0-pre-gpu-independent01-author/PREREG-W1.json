@@ -1,0 +1,25 @@
+{
+  "schema": "role4-witness-preregistration-v1",
+  "id": "W1",
+  "author": "PR32 team16 Role4 independent validation (claude-opus-5.5 max)",
+  "written_before_execution": true,
+  "purpose": "Single bounded CPU witness for candidate finding F1: the frozen caller drain() success predicate requires current_admitted_cost == 0 exactly (caller lines 17 and 109), while gateway arithmetic adds on admission (gateway 456, 467) and subtracts with max(0.0, current - cost) on finish (gateway 518-521) with no reset at idle, and /metrics returns dict(state) unrounded (gateway 388-392, 928-930).",
+  "inputs_pinned": {
+    "experiments/mpc-research/resume-mvp/native_nominal_qualification.py": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+    "experiments/mpc-research/resume-mvp/native_services_smoke.py": "585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c",
+    "gateway.py (read for hash only; not imported)": "0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570"
+  },
+  "parts": {
+    "P1_arithmetic_replica": "SYNTHETIC literal costs only. Replica of gateway lines 456/467 (cur + cost) and 518-521 (max(0.0, cur - cost)). Cases: costs (0.1, 0.2) admitted together then finished FIFO and LIFO; five synthetic formula-form costs max(0.1, 0.259 + 0.000758*i + 0.0052083333*o) for literal (i, o) pairs admitted together and finished in all 120 orders; all 10 pairs FIFO and LIFO; sequential non-overlap control. The formula form is an illustration, not a claim about actual request costs or Train inputs.",
+    "P2_frozen_drain": "Import the frozen caller from the worktree (hash verified before and after) and await its drain() with an httpx.MockTransport client (no sockets). Case residue: /metrics returns current_in_flight 0, current_waiting 0, tokenizer_fallback_requests 0 and current_admitted_cost equal to the P1 (0.1, 0.2) FIFO residue. Control zero: identical with current_admitted_cost 0.0. Owner stub: deadline = now + 0.6 s, reserve = 0.1 s, check() no-op. Evidence files go to a fresh witness01-out subdirectory of this capsule.",
+    "P3_hypothetical_predicate": "Evaluate, on the recorded P2 readings only, the proposed predicate in_flight == 0 and waiting == 0 and fallback == 0 and abs(cost) <= 1e-9. Hypothetical; no source is modified."
+  },
+  "hypothesis_H1": "P1 yields a strictly positive residue for at least one overlapping order; P2 residue case raises ProbeError('original work deadline exhausted') after >= 2 readings whose counters are all 0 and whose cost equals the residue, and records no caller_drains entry; P2 zero control returns after exactly 1 reading with caller_drains[final].drained True.",
+  "interpretation": {
+    "CONFIRMED (exit 0)": "F1 holds: the frozen drain treats an idle gateway with positive float residue as busy until the original work deadline, so a valid run can end NOT_RUN (pre-episode) or FAILED (final) and spill one evidence file per reading.",
+    "REFUTED (exit 3)": "F1 is withdrawn; any mismatch is reported verbatim.",
+    "ERROR (other nonzero)": "Witness defect; reported, not interpreted as caller evidence."
+  },
+  "bounds": "One execution per interpreter (Python 3.14.4 and 3.12.16), timeout 60 s each, nice -n19, single-thread env, -B -I, PYTHONPATH unset, no bytecode, no network, no GPU, no Git, no Train/Eval data, no source edits. Failures and outputs are retained.",
+  "non_claims": "CPU/mock witness only; says nothing about actual gateway traffic overlap in the frozen Train probes, Native qualification, MPC benefit or performance."
+}

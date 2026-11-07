@@ -1,0 +1,23 @@
+# MANUAL 2026-11-07T02:15:46Z: capsule created by PR32 team16 Role4 (claude-opus-5.5, max, no child agents) for pre-GPU B2/B3 acceptance CHECKLIST only (no review of live peer files). Worktree W=/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105 (branch/HEAD supplied by Mayor: snapshot/mpc-p0-evidence-20261105 832ab593c8666b8bfa3761b3061355a2c94748c8; no Git used). run_logged.sh copied from own sealed capsule mpc-local-r21/.runtime/r24-resume-p0-native-caller-independent01 (expect sha f88f7a4a). Authorized reads only: prior sealed REPORT copy, gateway.py 140-205, accepted recorder clock-label/source API ranges.
+# 2026-11-07T02:15:58Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-review-plan-role4
+bash -c set\ -u\;\ W=../..\;\ O=/home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.runtime/r24-resume-p0-native-caller-independent01\;\ P=\$W/results/mpc-native-r24/reviews/resume-p0-native-caller-independent01-author\;\ echo\ \"==\ prior\ sealed\ original\ vs\ Mayor\ copy\"\;\ sha256sum\ \"\$O/REPORT.json\"\ \"\$O/SHA256SUMS\"\ \"\$P/REPORT.json\"\ \"\$P/SHA256SUMS\"\;\ echo\ \"==\ copy\ seal\ self-consistency\"\;\ \(cd\ \"\$P\"\ \&\&\ sha256sum\ -c\ --strict\ --quiet\ SHA256SUMS\ \&\&\ echo\ COPY_SEAL_CONSISTENT\)\;\ echo\ \"==\ copy\ file\ set\ equals\ SHA256SUMS\ entries\ plus\ SHA256SUMS\"\;\ diff\ \<\(cd\ \"\$P\"\ \&\&\ find\ .\ -type\ f\ \!\ -name\ SHA256SUMS\ -printf\ \"%P\\n\"\ \|\ LC_ALL=C\ sort\)\ \<\(awk\ \"\{print\ \\\$2\}\"\ \"\$P/SHA256SUMS\"\ \|\ LC_ALL=C\ sort\)\ \&\&\ echo\ COPY_FILESET_EXACT\;\ find\ \"\$P\"\ -type\ l\ \|\ wc\ -l\;\ echo\ \"==\ authorized\ inputs\ \(worktree\)\"\;\ cd\ \"\$W\"\;\ sha256sum\ gateway.py\ experiments/mpc-research/resume-mvp/nominal_client.py\;\ wc\ -lc\ gateway.py\ experiments/mpc-research/resume-mvp/nominal_client.py > pin01.log 2>&1
+exit=0
+# 2026-11-07T02:16:05Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-review-plan-role4
+awk NR\>=140\&\&NR\<=205\{printf\ \"%5d\ \ %s\\n\"\,\ NR\,\ \$0\} ../../gateway.py > read-gateway-140-205.log 2>&1
+exit=0
+# 2026-11-07T02:16:05Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-review-plan-role4
+grep -nE def\ clock_domain\|clock_domain\ \*=\|import\ .\*clock_domain\|from\ .\*\ import\ .\*clock\|monotonic\ host\|host/boot\|boot_id\|def\ _clock\|CLOCK ../../experiments/mpc-research/resume-mvp/nominal_client.py > grep-client-clock01.log 2>&1
+exit=0
+# 2026-11-07T02:16:09Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-review-plan-role4
+awk \(NR\>=540\&\&NR\<=560\)\|\|\(NR\>=660\&\&NR\<=670\)\|\|\(NR\>=860\&\&NR\<=880\)\{printf\ \"%5d\ \ %s\\n\"\,\ NR\,\ \$0\} ../../experiments/mpc-research/resume-mvp/nominal_client.py > read-client-clock-api01.log 2>&1
+exit=0
+# 2026-11-07T02:19:30Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-review-plan-role4
+cat ../../results/mpc-native-r24/reviews/resume-p0-native-caller-independent01-author/REPORT.json > read-prior-report01.log 2>&1
+exit=0
+# 2026-11-07T02:29:46Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-review-plan-role4
+env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 /home/daniel_lin/gt/pr32/mayor/mpc-local-r21/.venv/bin/python3.14 -B -I check_checklist.py CHECKLIST.json > checklist-check01-py314.log 2>&1
+exit=0
+# 2026-11-07T02:29:46Z cwd=/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/.runtime/r24-pre-gpu-review-plan-role4
+env -u PYTHONPATH PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n19 timeout 60 /home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python3.12 -B -I check_checklist.py CHECKLIST.json > checklist-check01-py312.log 2>&1
+exit=0
+# MANUAL 2026-11-07T02:29:56Z: FINAL. CHECKLIST.json (sha c17f6a3f, 19 rows: 17 MUST, 2 SHOULD) and check_checklist.py were authored with the editor tool; strict check PASS on py3.14.4 and py3.12.16 (logged). Unlogged reads disclosed: an ls of the Mayor copy dir and file-type tests before pin01; view-tool displays of own logs read-gateway-140-205.log and read-prior-report01.log; ls/cat of own capsule files. Mayor B2-complete notice (smoke 585e606f, test 158c4e32, patch b22c13dd, Role3 seal 3f7e6804) arrived during drafting; no B2 or B3 artifact and no live peer file was read before this seal. L5 prior fix WITHDRAWN. Plan only, not acceptance; no GPU authorization. Author claude-opus-5.5 max, 0 child agents.

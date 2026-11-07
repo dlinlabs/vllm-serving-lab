@@ -1,0 +1,20 @@
+0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570  gateway.py
+24:ADMISSION_MODE = os.getenv("ADMISSION_MODE", "baseline").strip().lower()
+165:                                     state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9)
+221:sem = asyncio.Semaphore(MAX_IN_FLIGHT) if ADMISSION_MODE == "protected" else None
+232:    "current_admitted_cost": 0.0,
+294:                and math.isclose(reserved, state["current_admitted_cost"],
+434:    if ADMISSION_MODE == "baseline":
+441:    if ADMISSION_MODE == "cost_aware":
+456:            projected_cost = state["current_admitted_cost"] + request_cost
+467:            state["current_admitted_cost"] = projected_cost
+511:async def finish_request(request_cost: float, *, request_id=None) -> None:
+512:    if ADMISSION_MODE == "baseline":
+515:    if ADMISSION_MODE == "cost_aware":
+518:            state["current_admitted_cost"] = max(
+520:                state["current_admitted_cost"] - request_cost,
+603:                                await finish_request(request_cost, request_id=request_id)
+605:                                await finish_request(request_cost)
+659:        if ADMISSION_MODE == "cost_aware":
+804:            "current_admitted_cost": state["current_admitted_cost"],
+838:                state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9,

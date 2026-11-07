@@ -1,0 +1,66 @@
+  140          if telemetry.diagnostics is not None or MPC_OWNER_LEDGER_ENABLED:
+  141              async def final_drain():
+  142                  if telemetry.diagnostics is not None:
+  143                      await telemetry.diagnostics.stop()
+  144                  telemetry.sample(await snapshot_metrics())
+  145                  await telemetry.flush(TELEMETRY_JSONL)
+  146                  if MPC_OWNER_LEDGER_ENABLED and telemetry.records:
+  147                      await telemetry.flush(TELEMETRY_JSONL)
+  148              results.extend(await asyncio.gather(final_drain(), return_exceptions=True))
+  149          errors = [result for result in results if isinstance(result, BaseException)]
+  150          telemetry.enabled = False
+  151          if TELEMETRY_STATUS_JSON:
+  152              failed = (not started or errors or telemetry.dropped or telemetry.write_errors or
+  153                        (telemetry.diagnostics is not None and not telemetry.diagnostics.health()['complete']))
+  154              status = dict(run_id=telemetry.run_id, status='failed' if failed else 'closed', closed_at=time.monotonic(),
+  155                            dropped=telemetry.dropped, write_errors=telemetry.write_errors)
+  156              if errors:
+  157                  status['error_types'] = [type(error).__name__ for error in errors]
+  158              if telemetry.diagnostics is not None:
+  159                  status.update(diagnostics_schema_version=DIAGNOSTICS_SCHEMA,
+  160                                diagnostics=telemetry.diagnostics.health())
+  161              if MPC_OWNER_LEDGER_ENABLED:
+  162                  complete = (
+  163                      len(mpc_requests) == state["current_in_flight"]
+  164                      and math.isclose(math.fsum(mark.cost for mark in mpc_requests.values()),
+  165                                       state["current_admitted_cost"], rel_tol=1e-12, abs_tol=1e-9)
+  166                  )
+  167                  status.update(
+  168                      mpc_ledger_schema_version=2, mpc_producer_final_sequence=mpc_sequence,
+  169                      mpc_remaining_requests=len(mpc_requests), mpc_ledger_complete=complete,
+  170                      mpc_unflushed_records=len(telemetry.records),
+  171                  )
+  172                  if not complete or state["current_in_flight"]:
+  173                      status["status"] = "failed"
+  174              def persist_status():
+  175                  if MPC_OWNER_LEDGER_ENABLED:
+  176                      # Seal after the loop-owned writer has stopped; this is not an fsync guarantee.
+  177                      digest = hashlib.sha256()
+  178                      size = 0
+  179                      last_sequence = 0
+  180                      ledger_rows = 0
+  181                      contiguous = True
+  182                      with Path(TELEMETRY_JSONL).open("rb") as handle:
+  183                          for line in handle:
+  184                              digest.update(line)
+  185                              size += len(line)
+  186                              row = json.loads(line)
+  187                              contiguous = contiguous and row.get("run_id") == telemetry.run_id
+  188                              if row.get("event") == "mpc_ledger":
+  189                                  sequence = row.get("sequence")
+  190                                  contiguous = contiguous and (
+  191                                      row.get("ledger_schema_version") == 2
+  192                                      and type(sequence) is int and sequence == last_sequence + 1
+  193                                  )
+  194                                  last_sequence = sequence
+  195                                  ledger_rows += 1
+  196                      status["mpc_ledger_complete"] = (
+  197                          status["mpc_ledger_complete"] and contiguous
+  198                          and last_sequence == status["mpc_producer_final_sequence"]
+  199                          and not status["mpc_unflushed_records"]
+  200                      )
+  201                      if not status["mpc_ledger_complete"]:
+  202                          status["status"] = "failed"
+  203                      status.update(telemetry_file_sha256=digest.hexdigest(),
+  204                                    telemetry_file_bytes=size, mpc_final_sequence=last_sequence,
+  205                                    mpc_ledger_rows_written=ledger_rows)

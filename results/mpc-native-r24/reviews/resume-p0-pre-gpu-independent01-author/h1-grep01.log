@@ -1,0 +1,6 @@
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  inputs/native_nominal_qualification.py
+47:        report["caller_errors"].append({"stage": stage, "error": error_record(error)})
+165:    report.update(caller_errors=[], episode_planned_requests=5, episode_trace_requests=None,
+171:        report["caller_errors"].append({"stage": where, "error": error_record(error)})
+325:                         and not result["persistence_errors"] and not result["missing_record_ids"],
+376:            "errors": report["caller_errors"], "records_allocated": allocated["records_allocated"],

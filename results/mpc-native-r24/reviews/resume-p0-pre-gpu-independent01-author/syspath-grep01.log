@@ -1,0 +1,8 @@
+585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c  native_services_smoke.py
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  native_nominal_qualification.py
+native_services_smoke.py:28:RELATIVE = Path("experiments/mpc-research/resume-mvp")
+native_services_smoke.py:70:    env = dict(PATH=str(Path(sys.executable).parent) + os.pathsep + os.environ.get("PATH", os.defpath),
+native_services_smoke.py:73:               HF_DATASETS_OFFLINE="1", PYTHONDONTWRITEBYTECODE="1",
+native_services_smoke.py:93:                engine=[str(Path(sys.executable).parent / "vllm"), "serve", MODEL,
+native_services_smoke.py:99:                gateway=[sys.executable, "-m", "uvicorn", "gateway:app", "--app-dir", str(root),
+native_services_smoke.py:104:    sys.path[:0] = [str(root), str(root / RELATIVE)]

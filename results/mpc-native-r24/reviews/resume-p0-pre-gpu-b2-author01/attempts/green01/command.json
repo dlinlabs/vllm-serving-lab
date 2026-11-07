@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "nice",
+    "-n",
+    "19",
+    "/home/daniel_lin/.copilot/session-state/73eaad21-e7ed-4c46-9f3f-a2626aa1cc3d/files/r24-mpc-py312-venv/bin/python",
+    "-B",
+    ".runtime/r24-pre-gpu-b2-role3/execute_controls.py",
+    "green01"
+  ],
+  "cwd": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "NATIVE_SMOKE_PROTOCOL": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp/nominal_protocol.json",
+    "NATIVE_SMOKE_TEST_OUTPUT": ".runtime/r24-pre-gpu-b2-role3/attempts/green01/evidence",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105:/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105/experiments/mpc-research/resume-mvp"
+  },
+  "original_deadline": 1110217.505854047,
+  "runner_identity": {
+    "pid": 2840826,
+    "start_ticks": 111015748
+  },
+  "unset": [
+    "PYTHONPROFILEIMPORTTIME",
+    "PYTEST_ADDOPTS",
+    "PYTEST_PLUGINS"
+  ]
+}

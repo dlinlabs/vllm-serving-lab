@@ -1,0 +1,5 @@
+547:def clock_domain():
+548:    """Host-wide CLOCK_MONOTONIC identity; a driver record must carry the identical string."""
+550:        boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+554:    return f'time.monotonic {info.implementation} host={socket.gethostname()} boot_id={boot}'
+868:                             caller_clock_domain=clock_domain if isinstance(clock_domain, str) else None)

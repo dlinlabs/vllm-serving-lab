@@ -1,0 +1,4 @@
+0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570  gateway.py
+37:MIN_REQUEST_COST = float(os.getenv("MIN_REQUEST_COST", "0.1"))
+257:        minimum=MIN_REQUEST_COST,
+385:    return max(MIN_REQUEST_COST, cost), input_tokens, max_output_tokens, used_fallback

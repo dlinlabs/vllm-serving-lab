@@ -1,0 +1,11 @@
+933e4161d4eadd7b9730f4d122387aad15932343bcc18de7580e9ea92b86fe95  nominal_client.py
+216:        'backend_argv_sha256': hashlib.sha256(json.dumps(argv).encode()).hexdigest(),
+429:                record['body_bytes'], record['body_sha256'] = len(body), hashlib.sha256(body).hexdigest()
+653:    return hashlib.sha256(data).hexdigest()
+691:    capture['trace_sha256'] = hashlib.sha256(data).hexdigest()
+699:    capture['binding_sha256'] = hashlib.sha256(binding_data).hexdigest()
+803:class PreparedCapture:
+812:def prepare_capture(*, trace_path, binding_path, arm, purpose, gateway_url, backend_url, request_timeout=120.0,
+850:async def capture_replay(prepared, *, offered_start, deadline, cleanup_reserve_s, clock_domain, transport=None):
+891:def write_capture(path, capture):
+924:                    full_wall=full_wall, capture_sha256=hashlib.sha256(capture_data).hexdigest(),

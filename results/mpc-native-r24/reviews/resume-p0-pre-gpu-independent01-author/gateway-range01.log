@@ -1,0 +1,52 @@
+0b1a80ade258d8875ba80a072c4f360bfa5d4a7ac312bd222c0571380b341570  gateway.py
+  450              ):
+  451                  state["rejected_requests"] += 1
+  452                  state["rejected_cost"] += request_cost
+  453                  telemetry.emit("mpc_owner_ledger_refused", reason="owner_mark_or_writer_unavailable")
+  454                  return AdmissionDecision(False, state["admission_budget"], state["budget_version"])
+  455  
+  456              projected_cost = state["current_admitted_cost"] + request_cost
+  457              budget = state["admission_budget"]
+  458              version = state["budget_version"]
+  459              if projected_cost > budget:
+  460                  state["rejected_requests"] += 1
+  461                  state["rejected_cost"] += request_cost
+  462                  return AdmissionDecision(False, budget, version)
+  463  
+  464              state["accepted_requests"] += 1
+  465              state["accepted_cost"] += request_cost
+  466              state["current_in_flight"] += 1
+  467              state["current_admitted_cost"] = projected_cost
+  468              state["peak_admitted_cost"] = max(
+  469                  state["peak_admitted_cost"],
+  470                  projected_cost,
+  508          raise
+  509  
+  510  
+  511  async def finish_request(request_cost: float, *, request_id=None) -> None:
+  512      if ADMISSION_MODE == "baseline":
+  513          return
+  514  
+  515      if ADMISSION_MODE == "cost_aware":
+  516          async with state_lock:
+  517              state["current_in_flight"] = max(0, state["current_in_flight"] - 1)
+  518              state["current_admitted_cost"] = max(
+  519                  0.0,
+  520                  state["current_admitted_cost"] - request_cost,
+  521              )
+  522              if MPC_LAB_ENABLED:
+  523                  mpc_requests.pop(request_id, None)
+  524                  mpc_changed(request_id, "terminal", request_cost)
+  525          return
+  526  
+  527      async with state_lock:
+  528          state["current_in_flight"] = max(0, state["current_in_flight"] - 1)
+  798          if MPC_LAB_ENABLED:
+  799              mpc_changed()
+  800          applied_at = time.monotonic()
+  801          result = {
+  802              "previous_budget": previous_budget,
+  803              "budget": budget,
+  804              "current_admitted_cost": state["current_admitted_cost"],
+  805              "budget_version": state["budget_version"],
+  806              "applied_at": applied_at,

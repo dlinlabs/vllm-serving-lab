@@ -1,0 +1,53 @@
+  540          'implementation_exceptions': sum(record['fate_reason'] in ('implementation_exception',
+  541                                                                     'implementation_exception_before_send')
+  542                                           for record in records),
+  543          'max_send_lag_s': max(lags) if lags else None,
+  544      }
+  545  
+  546  
+  547  def clock_domain():
+  548      """Host-wide CLOCK_MONOTONIC identity; a driver record must carry the identical string."""
+  549      try:
+  550          boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+  551      except OSError:
+  552          boot = 'unavailable'
+  553      info = time.get_clock_info('monotonic')
+  554      return f'time.monotonic {info.implementation} host={socket.gethostname()} boot_id={boot}'
+  555  
+  556  
+  557  def build_run(capture, *, control=None, control_missing=None, control_evidence=None, full_wall=None,
+  558                capture_sha256=None, comparability=None):
+  559      """nominal_metrics run for a collected capture; full wall, control and comparability facts come only from driver
+  560      records (comparability model alias/path/tokenizer and ignore_eos are cross-checked against this capture)."""
+  660      return url.rstrip('/')
+  661  
+  662  
+  663  def _new_capture(arm, purpose, program, argv, config):
+  664      """The raw-v2 capture envelope (status 'failed' until an outcome is recorded); shared by the CLI and library."""
+  665      return {
+  666          'schema': SCHEMA, 'status': 'failed', 'error': None, 'arm': arm, 'purpose': purpose,
+  667          'run_id': str(uuid.uuid4()), 'clock_domain': clock_domain(), 'program': program, 'argv': argv,
+  668          'config': config,
+  669          'host': socket.gethostname(), 'pid': os.getpid(), 'python': sys.version, 'httpx': httpx.__version__,
+  670          'sources_sha256': None,
+  860      if not isinstance(prepared, PreparedCapture) or not prepared.ready or prepared.started:
+  861          raise ClientRefusal('capture_replay needs a ready, unused PreparedCapture (one capture per preparation)')
+  862      prepared.started = True
+  863      capture, trace = prepared.capture, prepared.trace
+  864      capture['error'] = None
+  865      capture['config'].update(driver_offered_start=offered_start if _finite(offered_start) else None,
+  866                               caller_deadline=deadline if _finite(deadline) else None,
+  867                               cleanup_reserve_s=cleanup_reserve_s if _finite(cleanup_reserve_s) else None,
+  868                               caller_clock_domain=clock_domain if isinstance(clock_domain, str) else None)
+  869      try:
+  870          if not (_finite(offered_start) and _finite(deadline) and _finite(cleanup_reserve_s)) or cleanup_reserve_s < 0:
+  871              raise ClientRefusal('offered_start, deadline and cleanup_reserve_s must be finite numbers (reserve >= 0)')
+  872          if clock_domain != capture['clock_domain']:
+  873              raise ClientRefusal('caller clock_domain differs from the recorder clock domain (clock_domain())')
+  874          drain_deadline = deadline - cleanup_reserve_s
+  875          if drain_deadline < offered_start + trace['duration_seconds']:
+  876              raise ClientRefusal('deadline - cleanup_reserve_s ends before the offered window: refused, never truncated')
+  877          now = time.monotonic()
+  878          if not now < offered_start <= now + MAX_START_WAIT_S:
+  879              raise ClientRefusal(f'offered_start must lie in (now, now + {MAX_START_WAIT_S}s]: no rescheduling')
+  880          await _collect(capture, trace, capture['binding'], transport, capture['config']['request_timeout_s'],

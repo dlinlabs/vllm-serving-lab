@@ -1,0 +1,152 @@
+    1  """Default-OFF, Train-only engineering collection; qualification requires raw evidence audit."""
+    2  
+    3  import argparse
+    4  import asyncio
+    5  import json
+    6  from pathlib import Path
+    7  import time
+    8  
+    9  import native_services_smoke as services
+   10  
+   11  
+   12  PROBES = Path("results/mpc-native-r24/reviews/resume-p0-probes02/inputs")
+   13  
+   14  
+   15  def persist_capture(client, path, capture, key):
+   16      try:
+   17          return client.write_capture(path, capture)
+   18      except BaseException as error:
+   19          services.write(path.with_suffix(".write-error.json"), {
+   20              "capture_unscorable": True, "type": type(error).__name__, "message": str(error),
+   21          }, key)
+   22          raise
+   23  
+   24  
+   25  async def collect(*, owner, root, output, key, report):
+   26      import httpx
+   27      import nominal_client as recorder
+   28      import nominal_episode as episode
+   29      import nominal_runtime as runtime_api
+   30      from mpc_lab.contracts import CostSpec, ModelParameters
+   31      from nominal_permit import NominalDemoPermit
+   32      from nominal_planner import NominalPlanner
+   33  
+   34      expected, config = report["source"], report["configuration"]
+   35      protocol = json.loads((root / services.RELATIVE / "nominal_protocol.json").read_text())
+   36      gateway = f"http://127.0.0.1:{services.GATEWAY_PORT}"
+   37      backend = f"http://127.0.0.1:{services.BACKEND_PORT}"
+   38      owner.check()
+   39      ownership_path = output / "services/ownership.json"
+   40      ownership = json.loads(ownership_path.read_text())
+   41      actual_engine = next(s["argv"] for s in ownership["services"] if s["name"] == "engine")
+   42      services.checked(actual_engine == config["engine"], "owned backend argv mismatch")
+   43      binding = {
+   44          "schema": recorder.BINDING_SCHEMA, "served_alias": services.ALIAS,
+   45          "local_model_path": services.MODEL, "tokenizer_sha256": services.TOKENIZER,
+   46          "served_model_names": [services.ALIAS], "backend_argv": actual_engine,
+   47          "backend_argv_source": str(ownership_path) + " (owned actual spawn receipt)",
+   48      }
+   49      binding_path = output / "model-binding.json"
+   50      services.write(binding_path, binding)
+   51      warmup = recorder.prepare_capture(
+   52          trace_path=root / PROBES / "warmup.json", binding_path=binding_path,
+   53          arm="fixed32", purpose="engineering", gateway_url=gateway, backend_url=backend,
+   54      )
+   55      try:
+   56          services.checked(warmup.ready, "warmup local preflight failed")
+   57          owner.check()
+   58          await recorder.capture_replay(
+   59              warmup, offered_start=time.monotonic() + 1.0, deadline=owner.deadline,
+   60              cleanup_reserve_s=owner.reserve, clock_domain=warmup.capture["clock_domain"],
+   61          )
+   62      finally:
+   63          report["warmup_capture_sha256"] = persist_capture(
+   64              recorder, output / "warmup-capture.json", warmup.capture, key)
+   65      services.checked(
+   66          warmup.capture["status"] == "collected" and len(warmup.capture["records"]) == 3
+   67          and all(r["fate"] == "complete" and r["stream_done"]
+   68                  and r["finish_reason"] in ("stop", "length") for r in warmup.capture["records"])
+   69          and warmup.capture["summary"]["prompt_tokens_mismatch"] == 0,
+   70          "warmup did not complete with valid outcomes",
+   71      )
+   72      owner.check()
+   73      prepared = episode.prepare_episode(
+   74          output_dir=output / "episode", binding_path=binding_path,
+   75          gateway_url=gateway, backend_url=backend, policy="mpc",
+   76          trace_path=root / PROBES / "admission-boundary.json",
+   77      )
+   78      report["offered_requests_from_driver"] = len(prepared.recorder.trace["requests"]) \
+   79          if prepared.recorder.trace is not None else None
+   80      report["warmup_offered_requests"] = 3
+   81      services.checked(prepared.error is None, "episode local preparation failed")
+   82      parameters = ModelParameters(cost_spec=CostSpec(**expected["cost_spec"]))
+   83      planner = NominalPlanner(parameters)
+   84      settings = protocol["controller"]
+   85      limits = runtime_api.RuntimeLimits(
+   86          iterations=settings["iterations"], episode_s=settings["episode_s"],
+   87          decision_s=settings["entry_to_action_deadline_s_max"],
+   88          solve_s=settings["solve_budget_s"], poll_s=settings["poll_s"],
+   89      )
+   90      async with httpx.AsyncClient(base_url=gateway, trust_env=False, follow_redirects=False) as client:
+   91          owner.check()
+   92          response = await client.get("/admin/mpc/state", headers={"x-admin-api-key": key},
+   93                                      timeout=min(2.0, owner.deadline - owner.reserve - time.monotonic()))
+   94          response.raise_for_status()
+   95          state = response.json()
+   96          services.checked(state["identity"] == expected["identity"]
+   97                           and state["clock_domain"] == expected["clock_domain"]
+   98                           and state["cost_spec"] == expected["cost_spec"],
+   99                           "post-warmup source/clock/cost mismatch")
+  100          services.write(output / "pre-control-state.json", state, key)
+  101          entered = time.monotonic()
+  102          start = entered + 1.0
+  103          services.checked(start + limits.episode_s < owner.deadline - owner.reserve,
+  104                           "insufficient original work deadline")
+  105          journal = output / "runtime-journal.json"
+  106          described = runtime_api.describe_protocol(
+  107              planner, journal, endpoint=gateway, scenario_binding=prepared.scenario_binding,
+  108              policy="mpc", limits=limits, start_at=start,
+  109          )
+  110          permit = NominalDemoPermit(
+  111              identity=planner.identity, run_id=state["run_id"],
+  112              clock_domain=expected["clock_domain"], source_sha256=described["source_sha256"],
+  113              protocol_sha256=described["protocol_sha256"],
+  114              not_before=entered, expires_at=entered + 20.0, max_commands=8, approved=True,
+  115          )
+  116          services.write(output / "runtime-binding.json", {
+  117              "description": described, "offered_start": start,
+  118              "permit_not_before": entered, "permit_expires_at": entered + 20.0,
+  119              "permit_max_commands": 8, "authority": "separate Mayor exact-source preregistration",
+  120          }, key)
+  121          runtime = runtime_api.NominalRuntime(
+  122              client, planner, prepared.scenario_factory, journal,
+  123              admin_key=key, scenario_binding=prepared.scenario_binding, permit=permit,
+  124              enabled=True, policy="mpc", limits=limits, parameters=parameters, start_at=start,
+  125          )
+  126          result = await episode.run_episode(
+  127              prepared, runtime, owner=owner, offered_start=start, enabled=True)
+  128          report["engineering_episode"] = result
+  129          services.checked(not result["failures"] and result["all_workers_joined"]
+  130                           and not result["persistence_errors"] and not result["missing_record_ids"],
+  131                           "engineering episode failed or incomplete; see raw episode evidence")
+  132      owner.check()
+  133  
+  134  
+  135  def body(**context):
+  136      asyncio.run(collect(**context))
+  137  
+  138  
+  139  def main(argv=None):
+  140      parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+  141      parser.add_argument("--execute", action="store_true")
+  142      parser.add_argument("--source-root")
+  143      parser.add_argument("--output-root")
+  144      parser.add_argument("--seconds", type=float, default=480)
+  145      parser.add_argument("--cleanup-reserve", type=float, default=30)
+  146      parser.add_argument("--term-grace", type=float, default=10)
+  147      args = parser.parse_args(argv)
+  148      return services.run(args, body=body)
+  149  
+  150  
+  151  if __name__ == "__main__":
+  152      raise SystemExit(main())

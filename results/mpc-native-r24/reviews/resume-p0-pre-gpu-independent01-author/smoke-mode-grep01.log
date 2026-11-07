@@ -1,0 +1,5 @@
+585e606f7dd60d5154f0d3f0f8bbac9094732e00b8e4ad2a60d93bdbb6f69d4c  native_services_smoke.py
+81:                       ADMISSION_MODE="cost_aware", MAX_ADMITTED_COST="32",
+82:                       MPC_LAB_ENABLED="true", MPC_OWNER_LEDGER_ENABLED="true",
+87:                       OUTPUT_TOKEN_COST="0.0052083333", MIN_REQUEST_COST="0.1",
+194:    checked(metrics["admission_mode"] == "cost_aware" and metrics["max_admitted_cost"] == 32

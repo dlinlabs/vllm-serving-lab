@@ -1,0 +1,38 @@
+629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122  inputs/native_nominal_qualification.py
+== smoke-owned keys/files
+95:        report.setdefault("caller_observations", []).append(evidence)
+112:            report.setdefault("caller_drains", {})[phase] = {
+165:    report.update(caller_errors=[], episode_planned_requests=5, episode_trace_requests=None,
+195:        expected, config = report["source"], report["configuration"]
+203:        ownership_path = output / "services/ownership.json"
+== all report key writes
+222:report["caller_clock_domains"] =
+259:report["caller_clock_domains"][
+199:report["caller_source_binding"] =
+317:report["engineering_episode"] =
+351:report["episode_sent_requests"] =
+257:report["episode_trace_requests"] =
+258:report["episode_trace_requests"] =
+350:report["offered_requests_from_driver"] =
+385:report["qualification_caller"] =
+352:report["warmup_offered_requests"] =
+353:report["warmup_sent_requests"] =
+== output names
+96:output / (name
+106:name=f"{phase}-metrics-{attempt:04d}"
+198:output / "qualification-source-binding.json
+203:output / "services/ownership.json
+207:output / "model-binding.json
+237:output / "warmup-capture.json
+249:output / "episode
+269:phase="pre-episode"
+273:name="pre-control-state-observation"
+278:output / "pre-control-state.json
+289:output / "runtime-journal.json
+298:output / "runtime-binding.json
+319:output / "episode-invalid-result.json
+337:phase="final"
+354:output / ("caller-episode-capture.json
+364:output / "warmup-not-run.json
+390:output / "episode-not-run.json
+393:output / "qualification-caller.json

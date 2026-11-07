@@ -1,0 +1,736 @@
+===== REPORT.json 6140c75eddb6f297098c561979d2d6542ab6b4a84cfd1a4fe421fe32d2137790
+6140c75eddb6f297098c561979d2d6542ab6b4a84cfd1a4fe421fe32d2137790  REPORT.json
+{
+  "CPU_results": {
+    "corrected": "13 PASS / 0 FAIL / 0 ERROR, one Python3.12.16 generation",
+    "corrected_process_seconds": 0.615468299947679,
+    "detailed_fixture_calls": 17,
+    "known_helpers_gone": 6,
+    "max_seconds": 60,
+    "original_red": "2 FAIL / 0 ERROR, one old-source attempt",
+    "real_mock_clients_closed": 15,
+    "tracked_stable_paths": 15
+  },
+  "Git": "User-declared branch/HEAD, not inspected or changed with Git.",
+  "accepted_adapter_sha256": "935c2679c4b9fffdffb23ce88ca5351f91fa84e25c8c1edccedddaea4e4262a8",
+  "accepted_core_ABIs_unchanged": true,
+  "declared_HEAD": "832ab593c8666b8bfa3761b3061355a2c94748c8",
+  "declared_branch": "snapshot/mpc-p0-evidence-20261105",
+  "details": [
+    "INTERFACE.json",
+    "LIMITATIONS.json",
+    "COMMANDS.json",
+    "CONTROL-RESULTS.json",
+    "FAILURES.json",
+    "CLEANUP.json",
+    "SOURCE-POSTCHECK.json"
+  ],
+  "external_caller_hash_binding_only": true,
+  "finalized_at_monotonic": 1111163.659000137,
+  "finalizer_identity": {
+    "pid": 2894684,
+    "start_ticks": "111116346",
+    "state": "R"
+  },
+  "finalizer_python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+  "full_wall": null,
+  "implemented": [
+    "B3: planned/validated/allocated/sent accounting; error-first/None-safe preparation; durable finally NOT_RUN/capture/terminal evidence.",
+    "L2/L3: original BaseException identity/type/traceback survives secondary persistence/cleanup failures; strict-safe report before adapter result insertion.",
+    "L4: bounded pre-S and final/failure zero-in-flight/waiting/admitted-cost and zero-fallback drain; all raw readings/errors retained.",
+    "L6/B1: protocol re-read against startup pins; accepted adapter/caller source binding before traffic, rechecks and exact caller SHA in runtime-binding.",
+    "L7/L9: positive remaining GET bounds and original episode/window fit inside unchanged20s/max8 permit and original D-R; no retiming.",
+    "Rejected incorrect L5 advice; distinct real SDK and recorder clock labels preserved."
+  ],
+  "native_qualification": false,
+  "no_real_HTTP_GPU_SSH_services_Git_agents_installs": true,
+  "original_caller_sha256": "1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c",
+  "owned_sources": {
+    "experiments/mpc-research/resume-mvp/native_nominal_qualification.py": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+    "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py": "7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac"
+  },
+  "remaining_blockers": [
+    "No corrected-generation CPU defect reproduced; Mayor exact-source/integrated independent approval remains required.",
+    "Role3 native_services_smoke.py is independently owned and not sealed by this capsule.",
+    "Actual Native consecutive cycles/admission effects/ledger/request fates/final drain/cleanup/full wall remain unperformed and Mayor-owned."
+  ],
+  "root": "/home/daniel_lin/gt/pr32/mayor/mpc-p0-pr-20261105",
+  "status": "CPU_CONTROLS_PASS_PENDING_MAYOR_INDEPENDENT_ACCEPTANCE",
+  "task": "B3 qualification caller and directly coupled obligations"
+}
+
+===== INTERFACE.json c1a1985ab6211e831706e73787e654eadec483e1735e00695e411f8180b0e55d
+c1a1985ab6211e831706e73787e654eadec483e1735e00695e411f8180b0e55d  INTERFACE.json
+{
+  "scope": "Default-OFF, Train-only qualification evidence caller; not qualification authority",
+  "owned_public_files": [
+    "experiments/mpc-research/resume-mvp/native_nominal_qualification.py",
+    "experiments/mpc-research/resume-mvp/test_native_nominal_qualification.py"
+  ],
+  "entry_points": {
+    "async": "await native_nominal_qualification.collect(owner=owner, root=root, output=output, key=key, report=report)",
+    "sync_body": "body(**context) invokes asyncio.run(collect(**context)); use only outside a running event loop, within the Mayor-owned services.run callback",
+    "CLI": "python -B experiments/mpc-research/resume-mvp/native_nominal_qualification.py [--execute] --source-root ROOT --output-root NEW_OUTPUT [--seconds 480] [--cleanup-reserve 30] [--term-grace 10]",
+    "default": "Without --execute, unchanged services.run OFF gate returns 2 before effects",
+    "success": "collect returns None; report contains strict-JSON engineering_episode and qualification_caller evidence, not a Native PASS",
+    "failure": "Original BaseException is reraised with its original traceback; secondary errors remain in caller_errors/notes and qualification_caller_report"
+  },
+  "caller_prerequisites": [
+    "Existing live Mayor-owned NominalServices scope; this module does not acquire a lease or grant authority.",
+    "Original owner.deadline, owner.reserve and owner.check(); deadline/reserve must not change.",
+    "Prepared unique output directory and actual services/ownership.json engine argv receipt.",
+    "report.source with identity, SDK clock_domain, cost_spec and absolute nominal_protocol.json entry in source_pins; report.configuration.engine matches owned actual argv.",
+    "Exact caller source and accepted adapter must receive external Mayor approval before --execute; source/qualification proposal is not that approval.",
+    "Same approved immutable warmup3 and Train five-request engineering inputs at results/mpc-native-r24/reviews/resume-p0-probes02/inputs/{warmup,admission-boundary}.json."
+  ],
+  "traffic_and_timing": {
+    "before_traffic": "Re-read startup-pinned protocol; require exact accepted adapter935c2679; record caller, adapter and protocol hashes in qualification-source-binding.json.",
+    "warmup": "Use unchanged prepare_capture/capture_replay, original D/R and recorder's own clock label; persist raw capture even on failure/interruption.",
+    "before_S": "Inspect prepared.error before recorder/trace; prove metrics drain and zero tokenizer fallback, then obtain actual source identity/clock/cost state.",
+    "S": "Unchanged single S=entered+1.0; never retime.",
+    "permit": "Unchanged entered+20.0 expiry and max_commands=8, under separate Mayor authority; S+max(episode_s,trace_window) must fit both permit expiry and original D-R.",
+    "episode": "Accepted run_episode, RuntimeLimits and runtime/permit/entry/solve/age/version/budget guards remain unchanged.",
+    "final": "Attempt raw-recorded metrics drain on success/failure within original D-R and owner.check; close the caller client; recheck source hashes; persist caller receipts."
+  },
+  "accounting": {
+    "episode_planned_requests": "5, a declared plan only",
+    "episode_trace_requests": "Validated trace count only after successful preparation; otherwise null",
+    "offered_requests_from_driver": "Allocated in-place capture record count; no longer the planned trace count",
+    "episode_sent_requests": "Count of non-null sent_at when every record exposes it; otherwise null",
+    "unknown": "Absent capture after entering run is unknown/null, not invented zero; actual unknown/not_launched fates remain unchanged in raw capture",
+    "clock_labels": "Preserve different real SDK_source, warmup_recorder and episode_recorder labels; do not substitute the SDK string into recorder.capture_replay"
+  },
+  "outputs": {
+    "qualification-source-binding.json": "Caller/accepted adapter/protocol SHA pins written before traffic",
+    "runtime-binding.json": "Actual runtime protocol description plus exact caller/adapter SHA, original offered_start and unchanged permit bounds",
+    "pre-episode-metrics-NNNN.json_and_final-metrics-NNNN.json": "Every attempt with raw response/status, parsed value or error, timestamps and positive timeout; semantic drain/fallback failures also remain in caller_errors",
+    "pre-control-state-observation.json": "Raw bounded source-state GET receipt, including failures",
+    "warmup-capture.json": "Unchanged accepted recorder codec; .write-error.json on encoding/write failure if storage permits",
+    "warmup-not-run.json": "Explicit absence when no warmup capture was constructed",
+    "episode-not-run-capture.json": "Distinct caller raw capture before run, or explicitly labeled absent-capture-v1 receipt rather than counterfeit raw-v2",
+    "caller-episode-capture.json": "Distinct caller persistence of in-place capture after run; does not overwrite adapter evidence",
+    "episode-not-run.json": "Caller-owned NOT_RUN receipt with original reason and actual allocation/sent counts",
+    "episode-invalid-result.json": "Strict-safe error and repr for unscorable adapter return; never insert invalid return into terminal report",
+    "qualification-caller.json": "Strict-safe terminal accounting/primary/secondary errors; missing file from a write failure is itself fatal, not successful collection"
+  },
+  "binding_boundary": "Caller SHA is external runtime-binding provenance. Accepted adapter immutable preparation inputs, scenario binding, runtime protocol schema and permit internal source-digest ABI were not modified.",
+  "full_wall": "Always null here; only Mayor lifecycle cleanup can finalize actual startup-to-final-drain full wall."
+}
+
+===== LIMITATIONS.json 8da19244d73b9de4a3b58b1f2968470b622b69b9ef3eaa283f21c902a6eab1f8
+8da19244d73b9de4a3b58b1f2968470b622b69b9ef3eaa283f21c902a6eab1f8  LIMITATIONS.json
+{
+  "status": "CPU caller controls only; no Native execution or qualification",
+  "scope": [
+    "Real qualification caller, strict recorder write codec, NominalRuntime construction/protocol/permit and HTTPX MockTransport GETs are exercised.",
+    "Warmup prepare/replay and episode prepare/run execution boundaries are explicit fixtures. No actual accepted replay, runtime.run, planner cycle, first-action apply or inference is claimed by this generation.",
+    "Seventeen detailed CallerFixture executions verify real mock-client closure and no remaining tasks. The two retained draft witness fixtures use a simpler fake client; they do not prove transport resource behavior.",
+    "The 13 successful test methods include expected preparation, GET, drain/fallback, cancellation, KeyboardInterrupt, codec and persistence failures. Their evidence remains preserved; expected errors are not Native failed experiments.",
+    "The original caller failed both red accounting witnesses before correction; original bytes, commands, logs and outputs are retained."
+  ],
+  "remaining_pre_host_requirements": [
+    "Mayor independent review/approval of these exact caller/test bytes and integration with Role3's separately owned native_services_smoke.py.",
+    "The concurrently owned smoke source is not frozen or independently accepted by this capsule. No claim is made about unrelated concurrent worktree changes or that caller controls replace Role3 lifecycle controls.",
+    "Mayor must approve exact integrated source/data/environment and separate execution authority; protocol proposal and CPU-created fixture permits grant no host authority.",
+    "Actual accepted episode/recorder composition and all current source gates must remain the approved hashes; no accepted peer/core/SDK/product/gateway source was edited here."
+  ],
+  "remaining_native_obligations": [
+    "At least two consecutive timestamped actual observe-predict-plan-first-action-apply-reobserve cycles; CPU mocks, holds or cap ACKs are not such evidence.",
+    "Ordered actual gateway admission/budget-version ledger and admitted/rejected outcomes proving an admission behavior change, not merely a configuration change.",
+    "All real request fates/SSE finish_reason/unknowns and actual fallback/drain evidence under the unchanged five-request Train engineering probe; no Eval tuning.",
+    "Actual bounded root/leaf shutdown, lock/poison receipts and final lifecycle drain; full wall finalized only after Mayor-owned cleanup.",
+    "Resource availability and lease/host execution authority remain Mayor/user responsibilities; this task did not inspect, acquire, renew or assume a GPU lease."
+  ],
+  "technical_boundaries": [
+    "A failing filesystem/codec cannot guarantee durable raw capture or terminal receipt. The caller fails closed, keeps the primary exception, records secondary failures where possible and attaches the in-memory terminal report.",
+    "Absent raw capture uses an explicit non-v2 absence receipt, not fabricated recorder data. Unknown counts after entering run are null when unavailable.",
+    "Caller SHA is recorded before traffic and in runtime-binding.json and rechecked, but is not inserted into the accepted permit's internal source-digest schema or frozen episode preparation handle.",
+    "Recorder and SDK clock-domain labels are intentionally different strings on the same host; incorrect review L5 substitution was rejected.",
+    "No full historical suite or second interpreter was run. One bounded corrected Python3.12 generation followed one original-source red attempt.",
+    "No Git, commits, agents, installs, real HTTP/network, services, GPU, SSH, model research or old-checkout work was performed."
+  ]
+}
+
+===== CONTROL-RESULTS.json 2f31fee26c7e7f9fb1c4a1b98e2d92bd7179835dd63457b934895fb3fa6b323b
+2f31fee26c7e7f9fb1c4a1b98e2d92bd7179835dd63457b934895fb3fa6b323b  CONTROL-RESULTS.json
+{
+  "cases": [
+    {
+      "allocated": 0,
+      "case": "busy-until-budget",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/busy-until-budget/CPU-CALLER-CHECK.json",
+      "mock_GETs": 2,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "pre_episode_drain",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 5,
+      "case": "complete",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": null,
+      "evidence": "attempts/green/artifacts/qualification/complete/CPU-CALLER-CHECK.json",
+      "mock_GETs": 5,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "completed",
+      "status": "COLLECTED"
+    },
+    {
+      "allocated": 2,
+      "case": "episode-cancel",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "CancelledError",
+      "evidence": "attempts/green/artifacts/qualification/episode-cancel/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 2,
+      "stage": "episode_run",
+      "status": "INTERRUPTED"
+    },
+    {
+      "allocated": 0,
+      "case": "expired",
+      "clients_closed": 0,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/expired/CPU-CALLER-CHECK.json",
+      "mock_GETs": 0,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "source_preflight",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "get-plus-write-error",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "RuntimeError",
+      "evidence": "attempts/green/artifacts/qualification/get-plus-write-error/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "pre_control_state",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 5,
+      "case": "mixed-keys",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "TypeError",
+      "evidence": "attempts/green/artifacts/qualification/mixed-keys/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "episode_result_validation",
+      "status": "FAILED"
+    },
+    {
+      "allocated": 0,
+      "case": "no-recorder",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/no-recorder/CPU-CALLER-CHECK.json",
+      "mock_GETs": 1,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "episode_prepare",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 5,
+      "case": "nonfinite-result",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "ValueError",
+      "evidence": "attempts/green/artifacts/qualification/nonfinite-result/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "episode_result_validation",
+      "status": "FAILED"
+    },
+    {
+      "allocated": 5,
+      "case": "post-fallback",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/post-fallback/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "completed",
+      "status": "FAILED"
+    },
+    {
+      "allocated": 0,
+      "case": "pre-fallback",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/pre-fallback/CPU-CALLER-CHECK.json",
+      "mock_GETs": 2,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "pre_episode_drain",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "protocol-drift",
+      "clients_closed": 0,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/protocol-drift/CPU-CALLER-CHECK.json",
+      "mock_GETs": 0,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "source_preflight",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "raised",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "RuntimeError",
+      "evidence": "attempts/green/artifacts/qualification/raised/CPU-CALLER-CHECK.json",
+      "mock_GETs": 1,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "episode_prepare",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 5,
+      "case": "terminal-write",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "OSError",
+      "evidence": "attempts/green/artifacts/qualification/terminal-write/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "completed",
+      "status": "FAILED"
+    },
+    {
+      "allocated": 0,
+      "case": "warmup-KI",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "KeyboardInterrupt",
+      "evidence": "attempts/green/artifacts/qualification/warmup-KI/CPU-CALLER-CHECK.json",
+      "mock_GETs": 1,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "warmup_replay",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "warmup-cancel",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "CancelledError",
+      "evidence": "attempts/green/artifacts/qualification/warmup-cancel/CPU-CALLER-CHECK.json",
+      "mock_GETs": 1,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "warmup_replay",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "window-exceeds-owner",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/window-exceeds-owner/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "runtime_binding",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "window-exceeds-permit",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/window-exceeds-permit/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "runtime_binding",
+      "status": "NOT_RUN"
+    }
+  ],
+  "green": {
+    "errors": 0,
+    "failed": 0,
+    "methods": 13,
+    "passed": 13,
+    "result": {
+      "Native": false,
+      "attempt": "green",
+      "deadline": 1110927.779944403,
+      "elapsed_s": 0.615468299947679,
+      "identity_after_wait": null,
+      "joined": true,
+      "original_identity": {
+        "pid": 2878628,
+        "start_ticks": "111086778",
+        "state": "R"
+      },
+      "original_identity_gone": true,
+      "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+      "returncode": 0,
+      "timed_out": false
+    },
+    "unittest_elapsed_s": 0.453
+  },
+  "note": "The two simple retained draft witness fixtures are not included in detailed case/GET/client totals.",
+  "red": {
+    "errors": 0,
+    "failed": 2,
+    "methods": 2,
+    "passed": 0,
+    "result": {
+      "Native": false,
+      "attempt": "red",
+      "deadline": 1110107.290655942,
+      "elapsed_s": 0.26480460609309375,
+      "identity_after_wait": null,
+      "joined": true,
+      "original_identity": {
+        "pid": 2836072,
+        "start_ticks": "111004729",
+        "state": "R"
+      },
+      "original_identity_gone": true,
+      "python": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+      "returncode": 1,
+      "timed_out": false
+    }
+  },
+  "scoped_mock_GET_count": 37
+}
+
+===== FAILURES.json 6b676704661e3f63526f1472e24d1e8e3547888200c2ab7220257c2159666fa3
+6b676704661e3f63526f1472e24d1e8e3547888200c2ab7220257c2159666fa3  FAILURES.json
+{
+  "additional_codec_error_receipt": "attempts/green/artifacts/qualification/nonfinite-capture.write-error.json",
+  "durability_failure_is_not_hidden": "Deliberately failed raw/terminal writes may leave no corresponding capture/receipt; preserved CPU-CALLER-CHECK reports and sidecars expose those failures. No durable-capture guarantee is claimed on a failed filesystem.",
+  "expected_injected_error_evidence": [
+    {
+      "allocated": 0,
+      "case": "busy-until-budget",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/busy-until-budget/CPU-CALLER-CHECK.json",
+      "mock_GETs": 2,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "pre_episode_drain",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 2,
+      "case": "episode-cancel",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "CancelledError",
+      "evidence": "attempts/green/artifacts/qualification/episode-cancel/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 2,
+      "stage": "episode_run",
+      "status": "INTERRUPTED"
+    },
+    {
+      "allocated": 0,
+      "case": "expired",
+      "clients_closed": 0,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/expired/CPU-CALLER-CHECK.json",
+      "mock_GETs": 0,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "source_preflight",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "get-plus-write-error",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "RuntimeError",
+      "evidence": "attempts/green/artifacts/qualification/get-plus-write-error/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "pre_control_state",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 5,
+      "case": "mixed-keys",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "TypeError",
+      "evidence": "attempts/green/artifacts/qualification/mixed-keys/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "episode_result_validation",
+      "status": "FAILED"
+    },
+    {
+      "allocated": 0,
+      "case": "no-recorder",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/no-recorder/CPU-CALLER-CHECK.json",
+      "mock_GETs": 1,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "episode_prepare",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 5,
+      "case": "nonfinite-result",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "ValueError",
+      "evidence": "attempts/green/artifacts/qualification/nonfinite-result/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "episode_result_validation",
+      "status": "FAILED"
+    },
+    {
+      "allocated": 5,
+      "case": "post-fallback",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/post-fallback/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "completed",
+      "status": "FAILED"
+    },
+    {
+      "allocated": 0,
+      "case": "pre-fallback",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/pre-fallback/CPU-CALLER-CHECK.json",
+      "mock_GETs": 2,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "pre_episode_drain",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "protocol-drift",
+      "clients_closed": 0,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/protocol-drift/CPU-CALLER-CHECK.json",
+      "mock_GETs": 0,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "source_preflight",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "raised",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "RuntimeError",
+      "evidence": "attempts/green/artifacts/qualification/raised/CPU-CALLER-CHECK.json",
+      "mock_GETs": 1,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "episode_prepare",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 5,
+      "case": "terminal-write",
+      "clients_closed": 1,
+      "episode_boundary_calls": 1,
+      "error": "OSError",
+      "evidence": "attempts/green/artifacts/qualification/terminal-write/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 4,
+      "stage": "completed",
+      "status": "FAILED"
+    },
+    {
+      "allocated": 0,
+      "case": "warmup-KI",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "KeyboardInterrupt",
+      "evidence": "attempts/green/artifacts/qualification/warmup-KI/CPU-CALLER-CHECK.json",
+      "mock_GETs": 1,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "warmup_replay",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "warmup-cancel",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "CancelledError",
+      "evidence": "attempts/green/artifacts/qualification/warmup-cancel/CPU-CALLER-CHECK.json",
+      "mock_GETs": 1,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "warmup_replay",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "window-exceeds-owner",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/window-exceeds-owner/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "runtime_binding",
+      "status": "NOT_RUN"
+    },
+    {
+      "allocated": 0,
+      "case": "window-exceeds-permit",
+      "clients_closed": 1,
+      "episode_boundary_calls": 0,
+      "error": "ProbeError",
+      "evidence": "attempts/green/artifacts/qualification/window-exceeds-permit/CPU-CALLER-CHECK.json",
+      "mock_GETs": 3,
+      "remaining_tasks": [],
+      "sent": 0,
+      "stage": "runtime_binding",
+      "status": "NOT_RUN"
+    }
+  ],
+  "green_unexpected_failures": 0,
+  "original_red": {
+    "caller_sha256": "1b2ad22e9a73870827c285c7caa77e95cab0491ca7043d204c7233914fc9675c",
+    "failures": 2,
+    "log": "attempts/red/stderr.log",
+    "meaning": "Original caller counted planned five as offers before prepare error handling or any episode run.",
+    "message": "AssertionError: 5 != 0",
+    "not_Native": true
+  }
+}
+
+===== CLEANUP.json 40fae760174f0f5382bc674cb417b63a3e04d76acb32a8076713ffac7a04a2e1
+40fae760174f0f5382bc674cb417b63a3e04d76acb32a8076713ffac7a04a2e1  CLEANUP.json
+{
+  "all_known_helpers_gone": true,
+  "detailed_async_fixture_calls": 17,
+  "known_processes": [
+    {
+      "current": null,
+      "original": {
+        "pid": 2834760,
+        "start_ticks": "111002100",
+        "state": "R"
+      },
+      "original_identity_gone": true
+    },
+    {
+      "current": null,
+      "original": {
+        "pid": 2878621,
+        "start_ticks": "111085692"
+      },
+      "original_identity_gone": true
+    },
+    {
+      "current": null,
+      "original": {
+        "pid": 2836071,
+        "start_ticks": "111004714",
+        "state": "R"
+      },
+      "original_identity_gone": true
+    },
+    {
+      "current": null,
+      "original": {
+        "pid": 2836072,
+        "start_ticks": "111004729",
+        "state": "R"
+      },
+      "original_identity_gone": true
+    },
+    {
+      "current": null,
+      "original": {
+        "pid": 2878626,
+        "start_ticks": "111086762",
+        "state": "R"
+      },
+      "original_identity_gone": true
+    },
+    {
+      "current": null,
+      "original": {
+        "pid": 2878628,
+        "start_ticks": "111086778",
+        "state": "R"
+      },
+      "original_identity_gone": true
+    }
+  ],
+  "real_mock_clients_closed": 15,
+  "remaining_fixture_tasks": [],
+  "scope": "Only recorded owned helper identities and fixture-owned resources; no global process scan or unrelated process changes.",
+  "simple_fake_client_witnesses": 2
+}
+
+===== SEAL.json 69bbb16f31c7e78d4adb9f78d57de40dce7529771db7259787083c80747a9e89
+{
+  "caller_sha256": "629caa23cb7d7cdedc4103499e44ab51968bac0ead3cc640ed4601d87d8e4122",
+  "excluded_self_referential_members": [
+    "SEAL.json",
+    "SHA256SUMS"
+  ],
+  "manifest_sha256": "b08511ad3048fdecaf4bbc45eeff198ef0bcc958255b86b96ec681777c037b0e",
+  "native_qualification": false,
+  "status": "SEALED_CPU_ONLY_PENDING_MAYOR_ACCEPTANCE",
+  "test_sha256": "7d087a88a1c6fed3e4a71e52739294f77bfdb00572b5f311c1b4a95c5203acac",
+  "verified_members": 240
+}
+
